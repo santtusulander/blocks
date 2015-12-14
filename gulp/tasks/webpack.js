@@ -22,6 +22,7 @@ gulp.task("webpack", function(callback) {
     });
     new WebpackDevServer(webpack(webpackConfig), {
       hot: true,
+      historyApiFallback: true,
       stats: {
         colors: true
       }
