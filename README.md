@@ -11,13 +11,17 @@ This project requires the use of Node, Gulp, and Sass.
 ## Installation
 
 ### NodeJS
-```shell
-$ brew install node
+
+Download at https://nodejs.org/en/download/
+
+### Gulp
+
+``` shell
+$ npm install -g gulp
 
 // If you get an error message, you will likely need to use the 'sudo' command.
-$ sudo brew install node
+$ sudo npm install -g gulp
 ```
-*Note: If you do not have Homebrew installed please visit [brew.sh](http://brew.sh/) or if you do not wish to install Homebrew visit [nodejs.org](http://nodejs.org)*
 
 ### Sass
 
