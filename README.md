@@ -32,12 +32,12 @@ $ sudo gem install sass
 
 1. Clone the repo
    ``` shell
-   $ git clone git@gitlab.idean.com:1907-Ericsson-CDN-UX/web.git ericsson-portal
+   $ git clone git@github.com:VidScale/udnportal.git
    ```
 
 2. Navigate to the cloned directory
    ``` shell
-   $ cd ericsson-portal/
+   $ cd udnportal/
    ```
 
 3. Install dependencies
