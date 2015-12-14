@@ -12,7 +12,7 @@ module.exports = {
   scss: {
     src: './src/styles/**/*.scss',
     dest: dist + '/styles',
-    lint: '.scss-lint.yml',
+    lint: './scss-lint.yml',
     autoprefixer: {
       browsers: ['last 2 versions', 'IE 9']
     }
@@ -24,7 +24,7 @@ module.exports = {
       css: [src + 'styles/style.scss']
     },
     output: {
-      publicPath: 'http://localhost:3000',
+      publicPath: 'http://localhost:3000/',
       path: dist,
       filename: 'js/app.js'
     },

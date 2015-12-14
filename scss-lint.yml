@@ -1,6 +1,5 @@
 exclude:
   - 'node_modules/**'
-  - 'src/scss/vendor/**'
 
 linters:
   # Reports when you use improper spacing around ! (the "bang") in !important and !default declarations.

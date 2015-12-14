@@ -17,6 +17,7 @@
     "eslint-plugin-react": "^3.11.3",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.4",
+    "history": "~1.13.1",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-cached": "^1.1.0",
