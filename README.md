@@ -6,13 +6,18 @@
 This is a portal for administering the Ericsson UDN.
 
 ## Development Requirements
-This project requires the use of Node, Gulp, and Sass.
+This project requires the use of Node, Ruby, Gulp, and Sass.
 
 ## Installation
 
 ### NodeJS
 
 Download at https://nodejs.org/en/download/
+
+### Ruby
+
+Install ruby as instructed for your platform
+https://www.ruby-lang.org/en/documentation/installation/
 
 ### Gulp
 
@@ -26,7 +31,7 @@ $ sudo npm install -g gulp
 ### Sass
 
 ``` shell
-$ gem install sass
+$ gem install sass scss_lint
 
 // If you get an error message, you will likely need to use the 'sudo' command.
 $ sudo gem install sass
