@@ -3,24 +3,29 @@ import React from 'react'
 // React-Bootstrap
 // ===============
 
-import { Breadcrumb } from 'react-bootstrap';
-import { BreadcrumbItem } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-import { ButtonGroup } from 'react-bootstrap';
-import { ButtonToolbar } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
-import { DropdownButton } from 'react-bootstrap';
-import { Input } from 'react-bootstrap';
-import { Label } from 'react-bootstrap';
-import { MenuItem } from 'react-bootstrap';
-import { OverlayTrigger } from 'react-bootstrap';
-import { Pagination } from 'react-bootstrap';
-import { Popover } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
-import { SplitButton } from 'react-bootstrap';
-import { Table } from 'react-bootstrap';
-import { Tab } from 'react-bootstrap';
-import { Tabs } from 'react-bootstrap';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Col,
+  DropdownButton,
+  Input,
+  Label,
+  MenuItem,
+  OverlayTrigger,
+  Pagination,
+  Popover,
+  Row,
+  SplitButton,
+  Table,
+  Tab,
+  Tabs
+} from 'react-bootstrap';
+
+
+require('./styles/styleguide.scss')
 
 
 class Styleguide extends React.Component {
@@ -314,7 +319,7 @@ class Styleguide extends React.Component {
                     </Col>
                     <Col xs={2}>
                       <OverlayTrigger trigger="click" rootClose={true} overlay={
-                        <Popover title="Info">
+                        <Popover id="popover1" title="Info">
                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         </Popover>
                       }>
