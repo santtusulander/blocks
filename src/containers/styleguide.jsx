@@ -25,7 +25,7 @@ import {
 } from 'react-bootstrap';
 
 
-require('./styles/styleguide.scss')
+require('../styles/styleguide.scss')
 
 
 class Styleguide extends React.Component {
