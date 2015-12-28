@@ -7,6 +7,7 @@ import Styleguide from './containers/styleguide'
 import Hostname from './containers/configure/hostname'
 import CacheRules from './containers/configure/cache-rules'
 import AddCacheRule from './containers/configure/add-cache-rule'
+import AdvancedCacheRules from './containers/configure/advanced-cache-rules'
 
 module.exports = (
   <Route path="/" component={Main}>
@@ -15,5 +16,6 @@ module.exports = (
     <Route path="configure/hostname" component={Hostname}/>
     <Route path="configure/cache-rules" component={CacheRules}/>
     <Route path="configure/add-cache-rule" component={AddCacheRule}/>
+    <Route path="configure/advanced-cache-rules" component={AdvancedCacheRules}/>
   </Route>
 );
