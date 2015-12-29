@@ -292,15 +292,6 @@ class Edge extends React.Component {
                   <option value="4">MIME-Type</option>
                 </Input>
               </Col>
-              <Col xs={2}>
-                <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
-                  <Popover id="popover-rule-type" title="Info">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Popover>
-                }>
-                  <Button bsStyle="info">?</Button>
-                </OverlayTrigger>
-              </Col>
             </Row>
 
 
@@ -309,15 +300,6 @@ class Edge extends React.Component {
             <Row>
               <Col xs={10}>
                 <Input type="text" id="configure__edge__add-cache-rule__rule-value" label="Rule Value" placeholder="text/html" />
-              </Col>
-              <Col xs={2}>
-                <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
-                  <Popover id="popover-rule-value" title="Info">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Popover>
-                }>
-                  <Button bsStyle="info">?</Button>
-                </OverlayTrigger>
               </Col>
             </Row>
 
@@ -331,15 +313,6 @@ class Edge extends React.Component {
                   <option value="2">Doesn't Match</option>
                 </Input>
               </Col>
-              <Col xs={2}>
-                <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
-                  <Popover id="popover-rule-type" title="Info">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Popover>
-                }>
-                  <Button bsStyle="info">?</Button>
-                </OverlayTrigger>
-              </Col>
             </Row>
 
 
@@ -348,15 +321,6 @@ class Edge extends React.Component {
             <Row>
               <Col xs={10}>
                 <Input type="checkbox" id="configure__edge__add-cache-rule__no-store" label="No-Store" />
-              </Col>
-              <Col xs={2}>
-                <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
-                  <Popover id="popover-rule-type" title="Info">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Popover>
-                }>
-                  <Button bsStyle="info">?</Button>
-                </OverlayTrigger>
               </Col>
             </Row>
 
@@ -380,15 +344,6 @@ class Edge extends React.Component {
                     </Col>
                   </Row>
                 </Input>
-              </Col>
-              <Col xs={2}>
-                <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
-                  <Popover id="popover-rule-value" title="Info">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Popover>
-                }>
-                  <Button bsStyle="info">?</Button>
-                </OverlayTrigger>
               </Col>
             </Row>
 
