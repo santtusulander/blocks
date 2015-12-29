@@ -5,11 +5,13 @@ import Main from './containers/main'
 import Home from './containers/home'
 import Styleguide from './containers/styleguide'
 import Edge from './containers/configure/edge'
+import Login from './containers/login'
 
 module.exports = (
   <Route path="/" component={Main}>
     <IndexRoute component={Home}/>
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/edge" component={Edge}/>
+    <Route path="login" component={Login}/>
   </Route>
 );
