@@ -1,4 +1,9 @@
 import React from 'react'
+import Immutable from 'immutable'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import * as serviceActionCreators from '../../redux/modules/service'
 
 // React-Bootstrap
 // ===============
@@ -13,21 +18,34 @@ import {
   Panel,
   Popover,
   Row,
-  Table,
+  Table
 } from 'react-bootstrap';
 
 
-class Edge extends React.Component {
-  onSubmit() {
+export class Edge extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this)
+    this.submitForm = this.submitForm.bind(this)
+  }
+  handleChange(change) {
+    let activeService = this.props.activeService
+    this.props.serviceActions.changeActiveService(
+      activeService.mergeDeep(change)
+    )
+  }
+  submitForm() {
     alert('form submitted');
   }
   render() {
+    let activeService = this.props.activeService
     return (
       <div className="container">
 
         <h1 className="page-header">Configure - Hostname</h1>
 
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.submitForm}>
 
 
           {/* SECTION - Hostname */}
@@ -39,7 +57,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="text" id="configure__edge__hostname__origin-hostname" label="Origin Hostname" />
+                <Input type="text" label="Origin Hostname"
+                  value={activeService.get('origin_host_name')}
+                  onChange={e => {
+                    this.handleChange({origin_host_name: e.target.value})
+                  }}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -57,7 +79,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="number" id="configure__edge__hostname__origin-port" label="Origin Port" />
+                <Input type="number" label="Origin Port"
+                  value={activeService.get('origin_host_port')}
+                  onChange={e => {
+                    this.handleChange({origin_host_port: e.target.value})
+                  }}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -75,12 +101,17 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="select" id="configure__edge__hostname__origin-hostname-value" label="Origin Hostname Value">
-                  <option value="1">Use Origin Hostname</option>
-                  <option value="2">Use Published Hostname</option>
-                  <option value="3">Use Other Hostname Value</option>
+                <Input type="select" label="Origin Hostname Value"
+                  value={activeService.get('host_header')}
+                  onChange={e => {
+                    this.handleChange({host_header: e.target.value})
+                  }}>
+                  <option value="origin_host_name">Use Origin Hostname</option>
+                  <option value="published_name">Use Published Hostname</option>
+                  <option value="other">Use Other Hostname Value</option>
                 </Input>
-                <Input type="text" id="configure__edge__hostname__origin-hostname-value-other" placeholder="origin.foo.com" />
+                <Input type="text" placeholder="origin.foo.com"
+                  style={activeService.get('host_header') === 'other' ? {} : {display:'none'}}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -374,6 +405,21 @@ class Edge extends React.Component {
 }
 
 Edge.displayName = 'Edge'
-Edge.propTypes = {}
+Edge.propTypes = {
+  activeService: React.PropTypes.instanceOf(Immutable.Map),
+  serviceActions: React.PropTypes.object
+}
 
-module.exports = Edge
+function mapStateToProps(state) {
+  return {
+    activeService: state.service.get('activeService')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    serviceActions: bindActionCreators(serviceActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Edge);
