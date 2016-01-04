@@ -7,7 +7,7 @@ import {
   Button,
   ButtonToolbar,
   Input,
-  Panel,
+  Panel
 } from 'react-bootstrap';
 
 
