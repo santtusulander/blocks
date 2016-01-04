@@ -13,8 +13,47 @@ const START_FETCH = 'START_FETCH'
 const UPDATED = 'UPDATED'
 const ACTIVE_SERVICE_CHANGED = 'ACTIVE_SERVICE_CHANGED'
 
+const emptyService = Immutable.fromJS({
+  edge_configuration: {
+    published_name: "",
+    origin_host_name: "",
+    origin_host_port: "",
+    host_header: "origin_host_name",
+    origin_path_append: ""
+  },
+  response_policies: [
+    {
+      defaults: {
+        match: "*",
+        policies: [
+          {
+            type: "cache",
+            action: "set",
+            honor_origin_cache_policies: true
+          },
+          {
+            type: "cache",
+            action: "set",
+            ignore_case: false
+          },
+          {
+            type: "cache",
+            action: "set",
+            honor_etags: true
+          },
+          {
+            type: "cache",
+            action: "set",
+            cache_errors: "10s"
+          }
+        ]
+      }
+    }
+  ]
+});
+
 const emptyServices = Immutable.Map({
-  activeService: Immutable.Map(),
+  activeService: emptyService,
   allServices: Immutable.List(),
   fetching: false
 })
