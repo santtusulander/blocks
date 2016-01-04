@@ -1,4 +1,9 @@
 import React from 'react'
+import Immutable from 'immutable'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import * as serviceActionCreators from '../../redux/modules/service'
 
 // React-Bootstrap
 // ===============
@@ -13,21 +18,72 @@ import {
   Panel,
   Popover,
   Row,
-  Table,
+  Table
 } from 'react-bootstrap';
 
 
-class Edge extends React.Component {
-  onSubmit() {
+export class Edge extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this)
+    this.submitForm = this.submitForm.bind(this)
+  }
+  handleChange(path) {
+    return e => {
+      let activeService = this.props.activeService
+      this.props.serviceActions.changeActiveService(
+        activeService.setIn(path, e.target.value)
+      )
+    }
+  }
+  handleChangeCheckbox(path) {
+    return e => {
+      let activeService = this.props.activeService
+      this.props.serviceActions.changeActiveService(
+        activeService.setIn(path, e.target.checked)
+      )
+    }
+  }
+  submitForm() {
     alert('form submitted');
   }
   render() {
+    let activeService = this.props.activeService;
+    let edgeConfiguration = activeService.get('edge_configuration');
+    let defaultResponsePoliciesPath = Immutable.List([
+      'response_policies',
+      activeService.get('response_policies')
+        .findIndex(policyGroup => policyGroup.has('defaults')),
+      'defaults',
+      'policies']);
+    let defaultResponsePoliciesPaths = {
+      honor_origin_cache_policies: defaultResponsePoliciesPath
+        .push(
+          activeService.getIn(defaultResponsePoliciesPath)
+            .findIndex(policy => policy.has('honor_origin_cache_policies')),
+            'honor_origin_cache_policies'),
+      ignore_case: defaultResponsePoliciesPath
+        .push(
+          activeService.getIn(defaultResponsePoliciesPath)
+            .findIndex(policy => policy.has('ignore_case')),
+            'ignore_case'),
+      honor_etags: defaultResponsePoliciesPath
+        .push(
+          activeService.getIn(defaultResponsePoliciesPath)
+            .findIndex(policy => policy.has('honor_etags')),
+            'honor_etags')
+    };
+
+    let isOtherHostHeader = ['origin_host_name', 'published_name'].indexOf(edgeConfiguration.get('host_header')) === -1;
+
     return (
       <div className="container">
 
         <h1 className="page-header">Configure - Hostname</h1>
 
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.submitForm}>
 
 
           {/* SECTION - Hostname */}
@@ -39,7 +95,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="text" id="configure__edge__hostname__origin-hostname" label="Origin Hostname" />
+                <Input type="text" label="Origin Hostname"
+                  value={edgeConfiguration.get('origin_host_name')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'origin_host_name']
+                  )}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -57,7 +117,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="number" id="configure__edge__hostname__origin-port" label="Origin Port" />
+                <Input type="number" label="Origin Port"
+                  value={edgeConfiguration.get('origin_host_port')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'origin_host_port']
+                  )}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -75,12 +139,21 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="select" id="configure__edge__hostname__origin-hostname-value" label="Origin Hostname Value">
-                  <option value="1">Use Origin Hostname</option>
-                  <option value="2">Use Published Hostname</option>
-                  <option value="3">Use Other Hostname Value</option>
+                <Input type="select" label="Origin Hostname Value"
+                  value={edgeConfiguration.get('host_header')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'host_header']
+                  )}>
+                  <option value="">Use Other Hostname Value</option>
+                  <option value="origin_host_name">Use Origin Hostname</option>
+                  <option value="published_name">Use Published Hostname</option>
                 </Input>
-                <Input type="text" id="configure__edge__hostname__origin-hostname-value-other" placeholder="origin.foo.com" />
+                <Input type="text" placeholder="origin.foo.com"
+                  value={edgeConfiguration.get('host_header')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'host_header']
+                  )}
+                  style={isOtherHostHeader ? {} : {display:'none'}}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -98,7 +171,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="text" id="configure__edge__hostname__origin-forward-path" label="Origin Forward Path (optional)" />
+                <Input type="text" label="Origin Forward Path (optional)"
+                  value={edgeConfiguration.get('origin_path_append')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'origin_path_append']
+                  )}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -116,7 +193,11 @@ class Edge extends React.Component {
 
             <Row>
               <Col xs={10}>
-                <Input type="text" id="configure__edge__hostname__origin-forward-path" label="Published Hostname Value" buttonAfter={<Button bsStyle="success">Add</Button>} />
+                <Input type="text" label="Published Hostname Value"
+                  value={edgeConfiguration.get('published_name')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'published_name']
+                  )}/>
               </Col>
               <Col xs={2}>
                 <OverlayTrigger trigger="click" placement="top" rootClose={true} overlay={
@@ -129,6 +210,7 @@ class Edge extends React.Component {
               </Col>
             </Row>
 
+            {/* TODO: API supports only one value, but wireframe shows multiple
             <Row>
               <Col xs={10}>
                 <FormControls.Static>foo.bar.com</FormControls.Static>
@@ -152,6 +234,7 @@ class Edge extends React.Component {
                 </ButtonToolbar>
               </Col>
             </Row>
+            */}
 
           </Panel>
 
@@ -171,17 +254,23 @@ class Edge extends React.Component {
 
                 { /* Honor Origin Cache Control */}
 
-                <Input type="checkbox" id="configure__edge__cache-rules__honor-origin-cache-control" label="Honor Origin Cache Control" />
+                <Input type="checkbox" label="Honor Origin Cache Control"
+                  checked={activeService.getIn(defaultResponsePoliciesPaths.honor_origin_cache_policies)}
+                  onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.honor_origin_cache_policies)}/>
 
 
                 { /* Ignore case from origin */}
 
-                <Input type="checkbox" id="configure__edge__cache-rules__ignore-case-from-origin" label="Ignore case from origin" />
+                <Input type="checkbox" label="Ignore case from origin"
+                  checked={activeService.getIn(defaultResponsePoliciesPaths.ignore_case)}
+                  onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.ignore_case)}/>
 
 
                 { /* Enable e-Tag support */}
 
-                <Input type="checkbox" id="configure__edge__cache-rules__enable-e-tag-support" label="Enable e-Tag support" />
+                <Input type="checkbox" label="Enable e-Tag support"
+                  checked={activeService.getIn(defaultResponsePoliciesPaths.honor_etags)}
+                  onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.honor_etags)}/>
 
               </Col>
             </Row>
@@ -374,6 +463,21 @@ class Edge extends React.Component {
 }
 
 Edge.displayName = 'Edge'
-Edge.propTypes = {}
+Edge.propTypes = {
+  activeService: React.PropTypes.instanceOf(Immutable.Map),
+  serviceActions: React.PropTypes.object
+}
 
-module.exports = Edge
+function mapStateToProps(state) {
+  return {
+    activeService: state.service.get('activeService')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    serviceActions: bindActionCreators(serviceActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Edge);

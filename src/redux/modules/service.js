@@ -11,9 +11,49 @@ const FETCHED = 'FETCHED'
 const FETCHED_ALL = 'FETCHED_ALL'
 const START_FETCH = 'START_FETCH'
 const UPDATED = 'UPDATED'
+const ACTIVE_SERVICE_CHANGED = 'ACTIVE_SERVICE_CHANGED'
+
+const emptyService = Immutable.fromJS({
+  edge_configuration: {
+    published_name: "",
+    origin_host_name: "",
+    origin_host_port: "",
+    host_header: "origin_host_name",
+    origin_path_append: ""
+  },
+  response_policies: [
+    {
+      defaults: {
+        match: "*",
+        policies: [
+          {
+            type: "cache",
+            action: "set",
+            honor_origin_cache_policies: true
+          },
+          {
+            type: "cache",
+            action: "set",
+            ignore_case: false
+          },
+          {
+            type: "cache",
+            action: "set",
+            honor_etags: true
+          },
+          {
+            type: "cache",
+            action: "set",
+            cache_errors: "10s"
+          }
+        ]
+      }
+    }
+  ]
+});
 
 const emptyServices = Immutable.Map({
-  activeService: null,
+  activeService: emptyService,
   allServices: Immutable.List(),
   fetching: false
 })
@@ -95,6 +135,9 @@ export default handleActions({
         fetching: false
       })
     }
+  },
+  ACTIVE_SERVICE_CHANGED: (state, action) => {
+    return state.set('activeService', action.payload)
   }
 }, emptyServices)
 
@@ -154,3 +197,5 @@ export const updateService = createAction(UPDATED, (brand, account, group, servi
 })
 
 export const startFetching = createAction(START_FETCH)
+
+export const changeActiveService = createAction(ACTIVE_SERVICE_CHANGED)
