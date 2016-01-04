@@ -33,12 +33,15 @@ class Purge extends React.Component {
 
             {/* A URL */}
 
-            <Input type="textarea" id="configure__purge__url" label="A URL" placeholder="http://www.foo.com/logo.gif" help="List of up to 100 URLs that need to be purged. Separated by space or comma." />
+            <Input type="textarea" id="configure__purge__url" label="A URL"
+              placeholder="http://www.foo.com/logo.gif"
+              help="List of up to 100 URLs that need to be purged. Separated by space or comma." />
 
 
             {/* A directory */}
 
-            <Input type="text" id="configure__purge__directory" label="A directory" placeholder="/images/*" />
+            <Input type="text" id="configure__purge__directory"
+              label="A directory" placeholder="/images/*" />
 
           </Panel>
 
@@ -52,12 +55,14 @@ class Purge extends React.Component {
 
             {/* Invalidate content on platform */}
 
-            <Input type="radio" name="configure__purge__content-removal-method" label="Invalidate content on platform" />
+            <Input type="radio" name="configure__purge__content-removal-method"
+              label="Invalidate content on platform" />
 
 
             {/* Delete content from platform */}
 
-            <Input type="radio" name="configure__purge__content-removal-method" label="Delete content from platform" />
+            <Input type="radio" name="configure__purge__content-removal-method"
+              label="Delete content from platform" />
 
           </Panel>
 
@@ -71,17 +76,20 @@ class Purge extends React.Component {
 
             {/* Don't send me any notification upon completion */}
 
-            <Input type="radio" name="configure__purge__notification" label="Don't send me any notification upon completion" />
+            <Input type="radio" name="configure__purge__notification"
+              label="Don't send me any notification upon completion" />
 
 
             {/* Send me an email when the purge is completed */}
 
-            <Input type="radio" name="configure__purge__notification" label="Send me an email when the purge is completed" />
+            <Input type="radio" name="configure__purge__notification"
+              label="Send me an email when the purge is completed" />
 
 
             {/* Email Address */}
 
-            <Input type="text" id="configure__purge__email-address" label="Email Address" />
+            <Input type="text" id="configure__purge__email-address"
+              label="Email Address" />
 
           </Panel>
 
