@@ -59,7 +59,7 @@
     "testPathDirs": [
       "src"
     ],
-    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "moduleFileExtensions": [
       "js",
       "jsx"

@@ -24,10 +24,6 @@ import {
   Tabs
 } from 'react-bootstrap';
 
-
-require('../styles/styleguide.scss')
-
-
 class Styleguide extends React.Component {
   render() {
     return (
