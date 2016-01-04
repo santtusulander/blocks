@@ -7,7 +7,7 @@ import {
   Button,
   Col,
   Input,
-  Row,
+  Row
 } from 'react-bootstrap';
 
 

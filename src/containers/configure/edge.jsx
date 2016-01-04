@@ -13,7 +13,7 @@ import {
   Panel,
   Popover,
   Row,
-  Table,
+  Table
 } from 'react-bootstrap';
 
 
