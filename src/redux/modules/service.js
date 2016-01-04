@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {acceptJSON, urlBase} from '../util'
+import {defaultHeaders, urlBase} from '../util'
 
 const CREATED = 'CREATED'
 const DELETED = 'DELETED'
@@ -145,7 +145,7 @@ export default handleActions({
 
 export const createService = createAction(CREATED, (brand, account, group) => {
   return axios.post(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -156,7 +156,7 @@ export const createService = createAction(CREATED, (brand, account, group) => {
 
 export const deleteService = createAction(DELETED, (brand, account, group, id) => {
   return axios.delete(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then(() => {
     return {id: id}
@@ -165,7 +165,7 @@ export const deleteService = createAction(DELETED, (brand, account, group, id) =
 
 export const fetchService = createAction(FETCHED, (brand, account, group, id) => {
   return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -176,7 +176,7 @@ export const fetchService = createAction(FETCHED, (brand, account, group, id) =>
 
 export const fetchServices = createAction(FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -187,7 +187,7 @@ export const fetchServices = createAction(FETCHED_ALL, (brand, account, group) =
 
 export const updateService = createAction(UPDATED, (brand, account, group, service) => {
   return axios.put(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${service.get('summary').get('published_name')}`, service, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {

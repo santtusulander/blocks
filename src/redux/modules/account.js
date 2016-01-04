@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {acceptJSON, urlBase} from '../util'
+import {defaultHeaders, urlBase} from '../util'
 
 const CREATED = 'CREATED'
 const DELETED = 'DELETED'
@@ -102,7 +102,7 @@ export default handleActions({
 
 export const createAccount = createAction(CREATED, (brand) => {
   return axios.post(`${urlBase}/vcdn/v2/${brand}/accounts`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -113,7 +113,7 @@ export const createAccount = createAction(CREATED, (brand) => {
 
 export const deleteAccount = createAction(DELETED, (brand, id) => {
   return axios.delete(`${urlBase}/vcdn/v2/${brand}/accounts/${id}`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then(() => {
     return {id: id}
@@ -122,7 +122,7 @@ export const deleteAccount = createAction(DELETED, (brand, id) => {
 
 export const fetchAccount = createAction(FETCHED, (brand, id) => {
   return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${id}`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -133,7 +133,7 @@ export const fetchAccount = createAction(FETCHED, (brand, id) => {
 
 export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
   return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts`, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -144,7 +144,7 @@ export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
 
 export const updateAccount = createAction(UPDATED, (brand, account) => {
   return axios.put(`${urlBase}/vcdn/v2/${brand}/accounts/${account.id}`, account, {
-    headers: acceptJSON
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
