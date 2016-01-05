@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {acceptJSON, urlBase} from '../util'
+import {defaultHeaders, urlBase} from '../util'
 
 const CREATED = 'CREATED'
 const DELETED = 'DELETED'
@@ -101,8 +101,8 @@ export default handleActions({
 // ACTIONS
 
 export const createGroup = createAction(CREATED, (brand, account) => {
-  return axios.post(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups`, {
-    headers: acceptJSON
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -112,8 +112,8 @@ export const createGroup = createAction(CREATED, (brand, account) => {
 })
 
 export const deleteGroup = createAction(DELETED, (brand, account, id) => {
-  return axios.delete(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${id}`, {
-    headers: acceptJSON
+  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
+    headers: defaultHeaders
   })
   .then(() => {
     return {id: id}
@@ -121,8 +121,8 @@ export const deleteGroup = createAction(DELETED, (brand, account, id) => {
 })
 
 export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${id}`, {
-    headers: acceptJSON
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -132,8 +132,8 @@ export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups`, {
-    headers: acceptJSON
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
@@ -143,8 +143,8 @@ export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
 })
 
 export const updateGroup = createAction(UPDATED, (brand, account, group) => {
-  return axios.put(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group.id}`, group, {
-    headers: acceptJSON
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.id}`, group, {
+    headers: defaultHeaders
   })
   .then((res) => {
     if(res) {

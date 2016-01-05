@@ -7,6 +7,7 @@ import Styleguide from './containers/styleguide'
 import Edge from './containers/configure/edge'
 import Purge from './containers/configure/purge'
 import Login from './containers/login'
+import Accounts from './containers/accounts'
 
 module.exports = (
   <Route path="/" component={Main}>
@@ -15,5 +16,6 @@ module.exports = (
     <Route path="configure/edge" component={Edge}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
+    <Route path="accounts" component={Accounts}/>
   </Route>
 );
