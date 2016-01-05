@@ -1,10 +1,11 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../edge.jsx')
+jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
+
 const Edge = require('../edge.jsx').Edge
 
-describe('Login', () => {
+describe('Edge', () => {
   it('should exist', () => {
     let edge = TestUtils.renderIntoDocument(
       <Edge />

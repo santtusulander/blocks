@@ -12,7 +12,6 @@ import {
   Button,
   ButtonToolbar,
   Col,
-  FormControls,
   Input,
   OverlayTrigger,
   Panel,
@@ -51,6 +50,11 @@ export class Edge extends React.Component {
   }
   render() {
     let activeService = this.props.activeService;
+    if(!activeService || !activeService.size) {
+      return (
+        <div className="container">Loading...</div>
+      )
+    }
     let edgeConfiguration = activeService.get('edge_configuration');
     let defaultResponsePoliciesPath = Immutable.List([
       'response_policies',
