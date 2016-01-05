@@ -11,6 +11,7 @@ const FETCHED = 'FETCHED'
 const FETCHED_ALL = 'FETCHED_ALL'
 const START_FETCH = 'START_FETCH'
 const UPDATED = 'UPDATED'
+const DEACTIVATED = 'DEACTIVATED'
 
 const emptyAccounts = Immutable.Map({
   activeAccount: null,
@@ -95,6 +96,9 @@ export default handleActions({
         fetching: false
       })
     }
+  },
+  DEACTIVATED: (state) => {
+    return state.set('activeAccount', null)
   }
 }, emptyAccounts)
 
@@ -154,3 +158,5 @@ export const updateAccount = createAction(UPDATED, (brand, account) => {
 })
 
 export const startFetching = createAction(START_FETCH)
+
+export const deactivateAccount = createAction(DEACTIVATED)

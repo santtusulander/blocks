@@ -7,7 +7,7 @@ import { Table } from 'react-bootstrap';
 import * as accountActionCreators from '../redux/modules/account'
 
 const Account = account =>
-  <tr>
+  <tr onClick={account.toggleActive}>
     <td>{account.id}</td>
     <td>{account.name}</td>
     <td>{account.description}</td>
@@ -15,9 +15,24 @@ const Account = account =>
 Account.displayName = "Account"
 
 export class Accounts extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
+  }
   componentWillMount() {
     this.props.accountActions.startFetching()
     this.props.accountActions.fetchAccounts('udn')
+  }
+  toggleActiveAccount(id) {
+    return () => {
+      if(this.props.activeAccount && this.props.activeAccount.get('id') === id) {
+        this.props.accountActions.deactivateAccount()
+      }
+      else {
+        this.props.accountActions.fetchAccount('udn', id)
+      }
+    }
   }
   render() {
     return (
@@ -36,7 +51,8 @@ export class Accounts extends React.Component {
               <tr><td colSpan="3">Loading...</td></tr> :
               this.props.accounts.map((account, i) =>
                 <Account key={i} id={account}
-                  name="Nameeee" description="Desc"/>
+                  name="Nameeee" description="Desc"
+                  toggleActive={this.toggleActiveAccount(account)}/>
               )}
           </tbody>
         </Table>
