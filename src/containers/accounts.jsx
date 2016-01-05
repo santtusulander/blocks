@@ -14,7 +14,7 @@ const Account = account =>
   </tr>
 Account.displayName = "Account"
 
-class Accounts extends React.Component {
+export class Accounts extends React.Component {
   componentWillMount() {
     this.props.accountActions.startFetching()
     this.props.accountActions.fetchAccounts('udn')

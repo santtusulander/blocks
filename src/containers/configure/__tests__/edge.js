@@ -2,7 +2,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../edge.jsx')
-const Edge = require('../edge.jsx')
+const Edge = require('../edge.jsx').Edge
 
 describe('Login', () => {
   it('should exist', () => {
