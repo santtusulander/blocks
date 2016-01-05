@@ -2,9 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table } from 'react-bootstrap';
+import { Table, Modal } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
+import EditAccount from '../components/edit-account'
 
 const Account = account =>
   <tr onClick={account.toggleActive}>
@@ -35,6 +36,7 @@ export class Accounts extends React.Component {
     }
   }
   render() {
+    const activeAccount = this.props.activeAccount
     return (
       <div className="container">
         <h1 className="page-header">Accounts</h1>
@@ -51,13 +53,23 @@ export class Accounts extends React.Component {
               <tr><td colSpan="3">Loading...</td></tr> :
               this.props.accounts.map((account, i) =>
                 <Account key={i} id={account}
-                  name="Nameeee" description="Desc"
+                  name="Name" description="Desc"
                   toggleActive={this.toggleActiveAccount(account)}/>
               )}
           </tbody>
         </Table>
+        {activeAccount ?
+          <Modal show={true}
+            onHide={this.toggleActiveAccount(activeAccount.get('id'))}>
+            <Modal.Header closeButton={true}>
+              <Modal.Title>Edit {activeAccount.get('name')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <EditAccount account={activeAccount}/>
+            </Modal.Body>
+          </Modal> : null
+        }
       </div>
-
     );
   }
 }
