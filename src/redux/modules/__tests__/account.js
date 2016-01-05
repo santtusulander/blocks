@@ -15,7 +15,7 @@
 // describe('Account Module', () => {
 //   it('should have a create action', () => {
 //     createAccount('aaa')
-//     expect(axios.post.mock.calls[0][0]).toBe('http://localhost:3000/vcdn/v2/aaa/accounts')
+//     expect(axios.post.mock.calls[0][0]).toBe('http://localhost:3000/VCDN/v2/aaa/accounts')
 //   });
   // it('should have a delete action', () => {
   //   console.log(deleteAccount)

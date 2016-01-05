@@ -101,7 +101,7 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(CREATED, (brand) => {
-  return axios.post(`${urlBase}/vcdn/v2/${brand}/accounts`, {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -112,7 +112,7 @@ export const createAccount = createAction(CREATED, (brand) => {
 })
 
 export const deleteAccount = createAction(DELETED, (brand, id) => {
-  return axios.delete(`${urlBase}/vcdn/v2/${brand}/accounts/${id}`, {
+  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
     headers: defaultHeaders
   })
   .then(() => {
@@ -121,7 +121,7 @@ export const deleteAccount = createAction(DELETED, (brand, id) => {
 })
 
 export const fetchAccount = createAction(FETCHED, (brand, id) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${id}`, {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -132,7 +132,7 @@ export const fetchAccount = createAction(FETCHED, (brand, id) => {
 })
 
 export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts`, {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -143,7 +143,7 @@ export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
 })
 
 export const updateAccount = createAction(UPDATED, (brand, account) => {
-  return axios.put(`${urlBase}/vcdn/v2/${brand}/accounts/${account.id}`, account, {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.id}`, account, {
     headers: defaultHeaders
   })
   .then((res) => {

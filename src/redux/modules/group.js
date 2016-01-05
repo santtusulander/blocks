@@ -101,7 +101,7 @@ export default handleActions({
 // ACTIONS
 
 export const createGroup = createAction(CREATED, (brand, account) => {
-  return axios.post(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups`, {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -112,7 +112,7 @@ export const createGroup = createAction(CREATED, (brand, account) => {
 })
 
 export const deleteGroup = createAction(DELETED, (brand, account, id) => {
-  return axios.delete(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${id}`, {
+  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
     headers: defaultHeaders
   })
   .then(() => {
@@ -121,7 +121,7 @@ export const deleteGroup = createAction(DELETED, (brand, account, id) => {
 })
 
 export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${id}`, {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -132,7 +132,7 @@ export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
-  return axios.get(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups`, {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -143,7 +143,7 @@ export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
 })
 
 export const updateGroup = createAction(UPDATED, (brand, account, group) => {
-  return axios.put(`${urlBase}/vcdn/v2/${brand}/accounts/${account}/groups/${group.id}`, group, {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.id}`, group, {
     headers: defaultHeaders
   })
   .then((res) => {
