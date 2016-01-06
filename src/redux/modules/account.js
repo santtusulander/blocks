@@ -27,7 +27,7 @@ export default handleActions({
       const newAccount = Immutable.fromJS(action.payload)
       return state.merge({
         activeAccount: newAccount,
-        allAccounts: state.get('allAccounts').push(newAccount)
+        allAccounts: state.get('allAccounts').push(newAccount.get('account_id'))
       })
     }
   },
@@ -35,7 +35,7 @@ export default handleActions({
     next(state, action) {
       let newAllAccounts = state.get('allAccounts')
         .filterNot(account => {
-          return account.get('id') === action.payload.id
+          return account === action.payload.id
         })
       return state.merge({
         allAccounts: newAllAccounts,
@@ -115,7 +115,7 @@ export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
     headers: defaultHeaders
   })
   .then(() => {
-    return {activeAccount: null}
+    return {id: id}
   });
 })
 

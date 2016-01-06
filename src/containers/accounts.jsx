@@ -12,6 +12,9 @@ const Account = account =>
     <td>{account.id}</td>
     <td>{account.name}</td>
     <td>{account.description}</td>
+    <td>
+      <a href="#" onClick={account.delete}>Delete</a>
+    </td>
   </tr>
 Account.displayName = "Account"
 
@@ -49,6 +52,9 @@ export class Accounts extends React.Component {
   createNewAccount() {
     this.props.accountActions.createAccount('udn')
   }
+  deleteAccount(id) {
+    this.props.accountActions.deleteAccount('udn', id)
+  }
   render() {
     const activeAccount = this.props.activeAccount
     return (
@@ -61,15 +67,21 @@ export class Accounts extends React.Component {
               <th>ID</th>
               <th>Name</th>
               <th>Description</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>
             {this.props.fetching ?
-              <tr><td colSpan="3">Loading...</td></tr> :
+              <tr><td colSpan="4">Loading...</td></tr> :
               this.props.accounts.map((account, i) =>
                 <Account key={i} id={account}
                   name="Name" description="Desc"
-                  toggleActive={this.toggleActiveAccount(account)}/>
+                  toggleActive={this.toggleActiveAccount(account)}
+                  delete={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    this.deleteAccount(account)
+                  }}/>
               )}
           </tbody>
         </Table>

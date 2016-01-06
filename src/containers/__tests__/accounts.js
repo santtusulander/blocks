@@ -13,7 +13,8 @@ function accountActionsMaker() {
     fetchAccount: jest.genMockFunction(),
     changeActiveAccount: jest.genMockFunction(),
     updateAccount: jest.genMockFunction(),
-    createAccount: jest.genMockFunction()
+    createAccount: jest.genMockFunction(),
+    deleteAccount: jest.genMockFunction()
   }
 }
 
@@ -114,5 +115,16 @@ describe('Accounts', () => {
     let add = TestUtils.findRenderedDOMComponentWithTag(accounts, 'button')
     TestUtils.Simulate.click(add)
     expect(accountActions.createAccount.mock.calls.length).toBe(1)
+  })
+
+  it('should delete an account when clicked', () => {
+    const accountActions = accountActionsMaker()
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActions}
+        accounts={Immutable.List([1])}/>
+    )
+    let links = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'a')
+    TestUtils.Simulate.click(links[0])
+    expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn',1])
   })
 })
