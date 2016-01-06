@@ -84,7 +84,7 @@ $gradient-green:      #30ab54;
 $gradient-green-haze: #009045;
 $gradient-teal:       #009f80;
 $gradient-bondi-blue: #0082b6;
-$gradient-royal-vlue: #00529b;
+$gradient-royal-blue: #00529b;
 $gradient-blue:       #246ab3;
 $gradient-navy:       #151f77;
 $gradient-purple:     #5f1f70;
@@ -97,7 +97,7 @@ $gradient-full:      linear-gradient($gradient-lime, $gradient-green-haze, $grad
 
 // Large Blends
 $gradient-lg-green:  linear-gradient($gradient-lime, $gradient-teal);
-$gradient-lg-blue:   linear-gradient($gradient-teal, $gradient-endeavour);
+$gradient-lg-blue:   linear-gradient($gradient-teal, $gradient-royal-blue);
 $gradient-lg-purple: linear-gradient($gradient-navy, $gradient-magenta);
 
 // Small Blends
