@@ -12,7 +12,8 @@ function accountActionsMaker() {
     fetchAccounts: jest.genMockFunction(),
     fetchAccount: jest.genMockFunction(),
     changeActiveAccount: jest.genMockFunction(),
-    updateAccount: jest.genMockFunction()
+    updateAccount: jest.genMockFunction(),
+    createAccount: jest.genMockFunction()
   }
 }
 
@@ -102,5 +103,16 @@ describe('Accounts', () => {
       account_id: 1,
       name: 'aaa'
     })
+  })
+
+  it('should add a new account when button is clicked', () => {
+    const accountActions = accountActionsMaker()
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActions}
+        accounts={Immutable.List()}/>
+    )
+    let add = TestUtils.findRenderedDOMComponentWithTag(accounts, 'button')
+    TestUtils.Simulate.click(add)
+    expect(accountActions.createAccount.mock.calls.length).toBe(1)
   })
 })
