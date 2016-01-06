@@ -12,6 +12,7 @@ const FETCHED_ALL = 'FETCHED_ALL'
 const START_FETCH = 'START_FETCH'
 const UPDATED = 'UPDATED'
 const DEACTIVATED = 'DEACTIVATED'
+const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
 
 const emptyAccounts = Immutable.Map({
   activeAccount: null,
@@ -82,7 +83,7 @@ export default handleActions({
   UPDATED: {
     next(state, action) {
       const index = state.get('allAccounts').findIndex(account => {
-        return account.get('id') === action.payload.id
+        return account.account_id === action.payload.account_id
       })
       let newAccount = Immutable.fromJS(action.payload)
       return state.merge({
@@ -97,8 +98,8 @@ export default handleActions({
       })
     }
   },
-  DEACTIVATED: (state) => {
-    return state.set('activeAccount', null)
+  ACTIVE_ACCOUNT_CHANGED: (state, action) => {
+    return state.set('activeAccount', action.payload)
   }
 }, emptyAccounts)
 
@@ -120,7 +121,7 @@ export const deleteAccount = createAction(DELETED, (brand, id) => {
     headers: defaultHeaders
   })
   .then(() => {
-    return {id: id}
+    return {activeAccount: null}
   });
 })
 
@@ -147,7 +148,7 @@ export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
 })
 
 export const updateAccount = createAction(UPDATED, (brand, account) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.id}`, account, {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -159,4 +160,4 @@ export const updateAccount = createAction(UPDATED, (brand, account) => {
 
 export const startFetching = createAction(START_FETCH)
 
-export const deactivateAccount = createAction(DEACTIVATED)
+export const changeActiveAccount = createAction(ACTIVE_ACCOUNT_CHANGED)

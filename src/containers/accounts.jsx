@@ -19,6 +19,8 @@ export class Accounts extends React.Component {
   constructor(props) {
     super(props);
 
+    this.changeActiveAccountValue = this.changeActiveAccountValue.bind(this)
+    this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
     this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
   }
   componentWillMount() {
@@ -27,13 +29,21 @@ export class Accounts extends React.Component {
   }
   toggleActiveAccount(id) {
     return () => {
-      if(this.props.activeAccount && this.props.activeAccount.get('id') === id) {
-        this.props.accountActions.deactivateAccount()
+      if(this.props.activeAccount && this.props.activeAccount.get('account_id') === id){
+        this.props.accountActions.changeActiveAccount(null)
       }
       else {
         this.props.accountActions.fetchAccount('udn', id)
       }
     }
+  }
+  changeActiveAccountValue(valPath, value) {
+    this.props.accountActions.changeActiveAccount(
+      this.props.activeAccount.setIn(valPath, value)
+    )
+  }
+  saveActiveAccountChanges() {
+    this.props.accountActions.updateAccount('udn', this.props.activeAccount.toJS())
   }
   render() {
     const activeAccount = this.props.activeAccount
@@ -60,12 +70,14 @@ export class Accounts extends React.Component {
         </Table>
         {activeAccount ?
           <Modal show={true}
-            onHide={this.toggleActiveAccount(activeAccount.get('id'))}>
+            onHide={this.toggleActiveAccount(activeAccount.get('account_id'))}>
             <Modal.Header closeButton={true}>
-              <Modal.Title>Edit {activeAccount.get('name')}</Modal.Title>
+              <Modal.Title>Edit Account</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <EditAccount account={activeAccount}/>
+              <EditAccount account={activeAccount}
+                changeValue={this.changeActiveAccountValue}
+                saveChanges={this.saveActiveAccountChanges}/>
             </Modal.Body>
           </Modal> : null
         }

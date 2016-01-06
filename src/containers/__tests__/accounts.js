@@ -11,7 +11,8 @@ function accountActionsMaker() {
     startFetching: jest.genMockFunction(),
     fetchAccounts: jest.genMockFunction(),
     fetchAccount: jest.genMockFunction(),
-    deactivateAccount: jest.genMockFunction()
+    changeActiveAccount: jest.genMockFunction(),
+    updateAccount: jest.genMockFunction()
   }
 }
 
@@ -68,10 +69,38 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
-        activeAccount={Immutable.Map({id:1})}/>
+        activeAccount={Immutable.Map({account_id:1})}/>
     )
     let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
     TestUtils.Simulate.click(trs[1])
-    expect(accountActions.deactivateAccount.mock.calls.length).toBe(1)
+    expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
   });
+
+  it('should be able to change the active account', () => {
+    const accountActions = accountActionsMaker()
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActions}
+        accounts={Immutable.List([1])}
+        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}/>
+    )
+    accounts.changeActiveAccountValue(['name'], 'bbb')
+    expect(accountActions.changeActiveAccount.mock.calls[0][0].toJS()).toEqual({
+      account_id: 1,
+      name: 'bbb'
+    })
+  })
+
+  it('should be able save updates to the active account', () => {
+    const accountActions = accountActionsMaker()
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActions}
+        accounts={Immutable.List([1])}
+        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}/>
+    )
+    accounts.saveActiveAccountChanges()
+    expect(accountActions.updateAccount.mock.calls[0][1]).toEqual({
+      account_id: 1,
+      name: 'aaa'
+    })
+  })
 })
