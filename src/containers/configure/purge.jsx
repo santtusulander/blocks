@@ -12,7 +12,12 @@ import {
 
 
 class Purge extends React.Component {
-  onSubmit() {
+  constructor(props) {
+    super(props);
+
+    this.submitForm = this.submitForm.bind(this)
+  }
+  submitForm() {
     alert('form submitted');
   }
   render() {
@@ -21,7 +26,7 @@ class Purge extends React.Component {
 
         <h1 className="page-header">Configure - Purge</h1>
 
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.submitForm}>
 
 
           {/* SECTION - What do you want to remove? */}
