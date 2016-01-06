@@ -5,13 +5,13 @@
   display: block;
   margin-bottom: 10px;
 
-  &:before,
-  &:after {
-    content: ' ';
+  &::before,
+  &::after {
     display: table;
+    content: ' ';
   }
 
-  &:after {
+  &::after {
     clear: both;
   }
 }
