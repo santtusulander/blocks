@@ -17,7 +17,7 @@ module.exports = (
     <Route path="configure/edge" component={Edge}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
-    <Route path="accounts" component={Accounts}/>
+    <Route path="accounts/:brand" component={Accounts}/>
     <Route path="groups/:brand/:account" component={Groups}/>
   </Route>
 );
