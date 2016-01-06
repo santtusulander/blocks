@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Modal } from 'react-bootstrap';
+import { Table, Modal, Button } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
@@ -22,6 +22,7 @@ export class Accounts extends React.Component {
     this.changeActiveAccountValue = this.changeActiveAccountValue.bind(this)
     this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
     this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
+    this.createNewAccount = this.createNewAccount.bind(this)
   }
   componentWillMount() {
     this.props.accountActions.startFetching()
@@ -45,11 +46,15 @@ export class Accounts extends React.Component {
   saveActiveAccountChanges() {
     this.props.accountActions.updateAccount('udn', this.props.activeAccount.toJS())
   }
+  createNewAccount() {
+    this.props.accountActions.createAccount('udn')
+  }
   render() {
     const activeAccount = this.props.activeAccount
     return (
       <div className="container">
         <h1 className="page-header">Accounts</h1>
+        <Button onClick={this.createNewAccount}>Add New</Button>
         <Table>
           <thead>
             <tr>

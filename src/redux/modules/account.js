@@ -5,13 +5,12 @@ import Immutable from 'immutable'
 
 import {defaultHeaders, urlBase} from '../util'
 
-const CREATED = 'CREATED'
-const DELETED = 'DELETED'
-const FETCHED = 'FETCHED'
-const FETCHED_ALL = 'FETCHED_ALL'
-const START_FETCH = 'START_FETCH'
-const UPDATED = 'UPDATED'
-const DEACTIVATED = 'DEACTIVATED'
+const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
+const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
+const ACCOUNT_FETCHED = 'ACCOUNT_FETCHED'
+const ACCOUNT_FETCHED_ALL = 'ACCOUNT_FETCHED_ALL'
+const ACCOUNT_START_FETCH = 'ACCOUNT_START_FETCH'
+const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
 const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
 
 const emptyAccounts = Immutable.Map({
@@ -23,7 +22,7 @@ const emptyAccounts = Immutable.Map({
 // REDUCERS
 
 export default handleActions({
-  CREATED: {
+  ACCOUNT_CREATED: {
     next(state, action) {
       const newAccount = Immutable.fromJS(action.payload)
       return state.merge({
@@ -32,7 +31,7 @@ export default handleActions({
       })
     }
   },
-  DELETED: {
+  ACCOUNT_DELETED: {
     next(state, action) {
       let newAllAccounts = state.get('allAccounts')
         .filterNot(account => {
@@ -49,7 +48,7 @@ export default handleActions({
       })
     }
   },
-  FETCHED: {
+  ACCOUNT_FETCHED: {
     next(state, action) {
       return state.merge({
         activeAccount: Immutable.fromJS(action.payload),
@@ -63,7 +62,7 @@ export default handleActions({
       })
     }
   },
-  FETCHED_ALL: {
+  ACCOUNT_FETCHED_ALL: {
     next(state, action) {
       return state.merge({
         allAccounts: Immutable.fromJS(action.payload),
@@ -77,18 +76,13 @@ export default handleActions({
       })
     }
   },
-  START_FETCH: (state) => {
+  ACCOUNT_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
-  UPDATED: {
-    next(state, action) {
-      const index = state.get('allAccounts').findIndex(account => {
-        return account.account_id === action.payload.account_id
-      })
-      let newAccount = Immutable.fromJS(action.payload)
+  ACCOUNT_UPDATED: {
+    next(state) {
       return state.merge({
-        activeAccount: newAccount,
-        allAccounts: state.get('allAccounts').set(index, newAccount),
+        activeAccount: null,
         fetching: false
       })
     },
@@ -105,8 +99,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createAccount = createAction(CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/`, {
+export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/`, {}, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -116,7 +110,7 @@ export const createAccount = createAction(CREATED, (brand) => {
   })
 })
 
-export const deleteAccount = createAction(DELETED, (brand, id) => {
+export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
   return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
     headers: defaultHeaders
   })
@@ -125,7 +119,7 @@ export const deleteAccount = createAction(DELETED, (brand, id) => {
   });
 })
 
-export const fetchAccount = createAction(FETCHED, (brand, id) => {
+export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
     headers: defaultHeaders
   })
@@ -136,7 +130,7 @@ export const fetchAccount = createAction(FETCHED, (brand, id) => {
   });
 })
 
-export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
+export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/`, {
     headers: defaultHeaders
   })
@@ -147,17 +141,17 @@ export const fetchAccounts = createAction(FETCHED_ALL, (brand) => {
   });
 })
 
-export const updateAccount = createAction(UPDATED, (brand, account) => {
+export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, account) => {
   return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account, {
     headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
-      return res.data;
+      return account;
     }
   })
 })
 
-export const startFetching = createAction(START_FETCH)
+export const startFetching = createAction(ACCOUNT_START_FETCH)
 
 export const changeActiveAccount = createAction(ACTIVE_ACCOUNT_CHANGED)
