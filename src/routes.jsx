@@ -18,6 +18,6 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
     <Route path="accounts" component={Accounts}/>
-    <Route path="groups/:account" component={Groups}/>
+    <Route path="groups/:brand/:account" component={Groups}/>
   </Route>
 );
