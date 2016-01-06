@@ -18,7 +18,7 @@ function groupActionsMaker() {
   }
 }
 
-const urlParams = {account: 1}
+const urlParams = {brand: 'udn', account: 1}
 
 describe('Groups', () => {
   it('should exist', () => {

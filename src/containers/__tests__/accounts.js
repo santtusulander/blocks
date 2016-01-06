@@ -18,10 +18,13 @@ function accountActionsMaker() {
   }
 }
 
+const urlParams = {brand: 'udn'}
+
 describe('Accounts', () => {
   it('should exist', () => {
     let accounts = TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActionsMaker()} fetching={true}/>
+      <Accounts accountActions={accountActionsMaker()} fetching={true}
+        params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(accounts)).toBeTruthy()
   });
@@ -29,7 +32,8 @@ describe('Accounts', () => {
   it('should request data on mount', () => {
     const accountActions = accountActionsMaker()
     TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActions} fetching={true}/>
+      <Accounts accountActions={accountActions} fetching={true}
+        params={urlParams}/>
     )
     expect(accountActions.startFetching.mock.calls.length).toBe(1)
     expect(accountActions.fetchAccounts.mock.calls[0][0]).toBe('udn')
@@ -37,7 +41,8 @@ describe('Accounts', () => {
 
   it('should show a loading message', () => {
     let accounts = TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActionsMaker()} fetching={true}/>
+      <Accounts accountActions={accountActionsMaker()} fetching={true}
+        params={urlParams}/>
     )
     let tbody = TestUtils.findRenderedDOMComponentWithTag(accounts, 'tbody')
     expect(ReactDOM.findDOMNode(tbody).textContent).toContain('Loading...')
@@ -46,7 +51,8 @@ describe('Accounts', () => {
   it('should show existing accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
-        accounts={Immutable.List([1,2])}/>
+        accounts={Immutable.List([1,2])}
+        params={urlParams}/>
     )
     let tbody = TestUtils.findRenderedDOMComponentWithTag(accounts, 'tbody')
     expect(ReactDOM.findDOMNode(tbody).textContent).not.toContain('Loading...')
@@ -59,7 +65,8 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
-        accounts={Immutable.List([1])}/>
+        accounts={Immutable.List([1])}
+        params={urlParams}/>
     )
     let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
     TestUtils.Simulate.click(trs[1])
@@ -71,7 +78,8 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
-        activeAccount={Immutable.Map({account_id:1})}/>
+        activeAccount={Immutable.Map({account_id:1})}
+        params={urlParams}/>
     )
     let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
     TestUtils.Simulate.click(trs[1])
@@ -83,7 +91,8 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
-        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}/>
+        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
+        params={urlParams}/>
     )
     accounts.changeActiveAccountValue(['name'], 'bbb')
     expect(accountActions.changeActiveAccount.mock.calls[0][0].toJS()).toEqual({
@@ -97,7 +106,8 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
-        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}/>
+        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
+        params={urlParams}/>
     )
     accounts.saveActiveAccountChanges()
     expect(accountActions.updateAccount.mock.calls[0][1]).toEqual({
@@ -110,7 +120,8 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
-        accounts={Immutable.List()}/>
+        accounts={Immutable.List()}
+        params={urlParams}/>
     )
     let add = TestUtils.findRenderedDOMComponentWithTag(accounts, 'button')
     TestUtils.Simulate.click(add)
@@ -121,7 +132,8 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
-        accounts={Immutable.List([1])}/>
+        accounts={Immutable.List([1])}
+        params={urlParams}/>
     )
     let links = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'a')
     TestUtils.Simulate.click(links[0])

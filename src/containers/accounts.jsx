@@ -29,7 +29,7 @@ export class Accounts extends React.Component {
   }
   componentWillMount() {
     this.props.accountActions.startFetching()
-    this.props.accountActions.fetchAccounts('udn')
+    this.props.accountActions.fetchAccounts(this.props.params.brand)
   }
   toggleActiveAccount(id) {
     return () => {
@@ -37,7 +37,7 @@ export class Accounts extends React.Component {
         this.props.accountActions.changeActiveAccount(null)
       }
       else {
-        this.props.accountActions.fetchAccount('udn', id)
+        this.props.accountActions.fetchAccount(this.props.params.brand, id)
       }
     }
   }
@@ -47,13 +47,13 @@ export class Accounts extends React.Component {
     )
   }
   saveActiveAccountChanges() {
-    this.props.accountActions.updateAccount('udn', this.props.activeAccount.toJS())
+    this.props.accountActions.updateAccount(this.props.params.brand, this.props.activeAccount.toJS())
   }
   createNewAccount() {
-    this.props.accountActions.createAccount('udn')
+    this.props.accountActions.createAccount(this.props.params.brand)
   }
   deleteAccount(id) {
-    this.props.accountActions.deleteAccount('udn', id)
+    this.props.accountActions.deleteAccount(this.props.params.brand, id)
   }
   render() {
     const activeAccount = this.props.activeAccount
@@ -108,7 +108,8 @@ Accounts.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  params: React.PropTypes.object
 }
 
 function mapStateToProps(state) {

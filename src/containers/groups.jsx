@@ -29,7 +29,10 @@ export class Groups extends React.Component {
   }
   componentWillMount() {
     this.props.groupActions.startFetching()
-    this.props.groupActions.fetchGroups('udn', this.props.params.account)
+    this.props.groupActions.fetchGroups(
+      this.props.params.brand,
+      this.props.params.account
+    )
   }
   toggleActiveGroup(id) {
     return () => {
@@ -37,7 +40,11 @@ export class Groups extends React.Component {
         this.props.groupActions.changeActiveGroup(null)
       }
       else {
-        this.props.groupActions.fetchGroup('udn', this.props.params.account, id)
+        this.props.groupActions.fetchGroup(
+          this.props.params.brand,
+          this.props.params.account,
+          id
+        )
       }
     }
   }
@@ -48,14 +55,23 @@ export class Groups extends React.Component {
   }
   saveActiveGroupChanges() {
     this.props.groupActions.updateGroup(
-      'udn', this.props.params.account, this.props.activeGroup.toJS()
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.activeGroup.toJS()
     )
   }
   createNewGroup() {
-    this.props.groupActions.createGroup('udn', this.props.params.account)
+    this.props.groupActions.createGroup(
+      this.props.params.brand,
+      this.props.params.account
+    )
   }
   deleteGroup(id) {
-    this.props.groupActions.deleteGroup('udn', this.props.params.account, id)
+    this.props.groupActions.deleteGroup(
+      this.props.params.brand,
+      this.props.params.account,
+      id
+    )
   }
   render() {
     const activeGroup = this.props.activeGroup
