@@ -13,7 +13,7 @@ const START_FETCH = 'START_FETCH'
 const UPDATED = 'UPDATED'
 const ACTIVE_SERVICE_CHANGED = 'ACTIVE_SERVICE_CHANGED'
 
-const emptyService = Immutable.fromJS({
+const emptyHost = Immutable.fromJS({
   edge_configuration: {
     published_name: "",
     origin_host_name: "",
@@ -52,9 +52,9 @@ const emptyService = Immutable.fromJS({
   ]
 });
 
-const emptyServices = Immutable.Map({
-  activeService: emptyService,
-  allServices: Immutable.List(),
+const emptyHosts = Immutable.Map({
+  activeHost: emptyHost,
+  allHosts: Immutable.List(),
   fetching: false
 })
 
@@ -63,21 +63,21 @@ const emptyServices = Immutable.Map({
 export default handleActions({
   CREATED: {
     next(state, action) {
-      const newService = Immutable.fromJS(action.payload)
+      const newHost = Immutable.fromJS(action.payload)
       return state.merge({
-        activeService: newService,
-        allServices: state.get('allServices').push(newService)
+        activeHost: newHost,
+        allHosts: state.get('allHosts').push(newHost)
       })
     }
   },
   DELETED: {
     next(state, action) {
-      let newAllServices = state.get('allServices')
-        .filterNot(service => {
-          return service.get('summary').get('published_name') === action.payload.id
+      let newAllHosts = state.get('allHosts')
+        .filterNot(host => {
+          return host.get('summary').get('published_name') === action.payload.id
         })
       return state.merge({
-        allServices: newAllServices,
+        allHosts: newAllHosts,
         fetching: false
       })
     },
@@ -90,13 +90,13 @@ export default handleActions({
   FETCHED: {
     next(state, action) {
       return state.merge({
-        activeService: Immutable.fromJS(action.payload),
+        activeHost: Immutable.fromJS(action.payload),
         fetching: false
       })
     },
     throw(state) {
       return state.merge({
-        activeService: null,
+        activeHost: null,
         fetching: false
       })
     }
@@ -104,13 +104,13 @@ export default handleActions({
   FETCHED_ALL: {
     next(state, action) {
       return state.merge({
-        allServices: Immutable.fromJS(action.payload),
+        allHosts: Immutable.fromJS(action.payload),
         fetching: false
       })
     },
     throw(state) {
       return state.merge({
-        allServices: Immutable.List(),
+        allHosts: Immutable.List(),
         fetching: false
       })
     }
@@ -120,13 +120,13 @@ export default handleActions({
   },
   UPDATED: {
     next(state, action) {
-      const index = state.get('allServices').findIndex(service => {
-        return service.get('summary').get('published_name') === action.payload.id
+      const index = state.get('allHosts').findIndex(host => {
+        return host.get('summary').get('published_name') === action.payload.id
       })
-      let newService = Immutable.fromJS(action.payload)
+      let newHost = Immutable.fromJS(action.payload)
       return state.merge({
-        activeService: newService,
-        allServices: state.get('allServices').set(index, newService),
+        activeHost: newHost,
+        allHosts: state.get('allHosts').set(index, newHost),
         fetching: false
       })
     },
@@ -137,13 +137,13 @@ export default handleActions({
     }
   },
   ACTIVE_SERVICE_CHANGED: (state, action) => {
-    return state.set('activeService', action.payload)
+    return state.set('activeHost', action.payload)
   }
-}, emptyServices)
+}, emptyHosts)
 
 // ACTIONS
 
-export const createService = createAction(CREATED, (brand, account, group) => {
+export const createHost = createAction(CREATED, (brand, account, group) => {
   return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`, {
     headers: defaultHeaders
   })
@@ -154,7 +154,7 @@ export const createService = createAction(CREATED, (brand, account, group) => {
   })
 })
 
-export const deleteService = createAction(DELETED, (brand, account, group, id) => {
+export const deleteHost = createAction(DELETED, (brand, account, group, id) => {
   return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
     headers: defaultHeaders
   })
@@ -163,7 +163,7 @@ export const deleteService = createAction(DELETED, (brand, account, group, id) =
   });
 })
 
-export const fetchService = createAction(FETCHED, (brand, account, group, id) => {
+export const fetchHost = createAction(FETCHED, (brand, account, group, id) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
     headers: defaultHeaders
   })
@@ -174,7 +174,7 @@ export const fetchService = createAction(FETCHED, (brand, account, group, id) =>
   });
 })
 
-export const fetchServices = createAction(FETCHED_ALL, (brand, account, group) => {
+export const fetchHosts = createAction(FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`, {
     headers: defaultHeaders
   })
@@ -185,8 +185,8 @@ export const fetchServices = createAction(FETCHED_ALL, (brand, account, group) =
   });
 })
 
-export const updateService = createAction(UPDATED, (brand, account, group, service) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${service.get('summary').get('published_name')}`, service, {
+export const updateHost = createAction(UPDATED, (brand, account, group, host) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${host.get('summary').get('published_name')}`, host, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -198,4 +198,4 @@ export const updateService = createAction(UPDATED, (brand, account, group, servi
 
 export const startFetching = createAction(START_FETCH)
 
-export const changeActiveService = createAction(ACTIVE_SERVICE_CHANGED)
+export const changeActiveHost = createAction(ACTIVE_SERVICE_CHANGED)
