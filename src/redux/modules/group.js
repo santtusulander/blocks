@@ -5,12 +5,13 @@ import Immutable from 'immutable'
 
 import {defaultHeaders, urlBase} from '../util'
 
-const CREATED = 'CREATED'
-const DELETED = 'DELETED'
-const FETCHED = 'FETCHED'
-const FETCHED_ALL = 'FETCHED_ALL'
-const START_FETCH = 'START_FETCH'
-const UPDATED = 'UPDATED'
+const GROUP_CREATED = 'GROUP_CREATED'
+const GROUP_DELETED = 'GROUP_DELETED'
+const GROUP_FETCHED = 'GROUP_FETCHED'
+const GROUP_FETCHED_ALL = 'GROUP_FETCHED_ALL'
+const GROUP_START_FETCH = 'GROUP_START_FETCH'
+const GROUP_UPDATED = 'GROUP_UPDATED'
+const ACTIVE_GROUP_CHANGED = 'ACTIVE_GROUP_CHANGED'
 
 const emptyGroups = Immutable.Map({
   activeGroup: null,
@@ -21,20 +22,20 @@ const emptyGroups = Immutable.Map({
 // REDUCERS
 
 export default handleActions({
-  CREATED: {
+  GROUP_CREATED: {
     next(state, action) {
       const newGroup = Immutable.fromJS(action.payload)
       return state.merge({
         activeGroup: newGroup,
-        allGroups: state.get('allGroups').push(newGroup)
+        allGroups: state.get('allGroups').push(newGroup.get('group_id'))
       })
     }
   },
-  DELETED: {
+  GROUP_DELETED: {
     next(state, action) {
       let newAllGroups = state.get('allGroups')
         .filterNot(group => {
-          return group.get('id') === action.payload.id
+          return group === action.payload.id
         })
       return state.merge({
         allGroups: newAllGroups,
@@ -47,7 +48,7 @@ export default handleActions({
       })
     }
   },
-  FETCHED: {
+  GROUP_FETCHED: {
     next(state, action) {
       return state.merge({
         activeGroup: Immutable.fromJS(action.payload),
@@ -61,7 +62,7 @@ export default handleActions({
       })
     }
   },
-  FETCHED_ALL: {
+  GROUP_FETCHED_ALL: {
     next(state, action) {
       return state.merge({
         allGroups: Immutable.fromJS(action.payload),
@@ -75,18 +76,13 @@ export default handleActions({
       })
     }
   },
-  START_FETCH: (state) => {
+  GROUP_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
-  UPDATED: {
-    next(state, action) {
-      const index = state.get('allGroups').findIndex(group => {
-        return group.get('id') === action.payload.id
-      })
-      let newGroup = Immutable.fromJS(action.payload)
+  GROUP_UPDATED: {
+    next(state) {
       return state.merge({
-        activeGroup: newGroup,
-        allGroups: state.get('allGroups').set(index, newGroup),
+        activeGroup: null,
         fetching: false
       })
     },
@@ -95,13 +91,16 @@ export default handleActions({
         fetching: false
       })
     }
+  },
+  ACTIVE_GROUP_CHANGED: (state, action) => {
+    return state.set('activeGroup', action.payload)
   }
 }, emptyGroups)
 
 // ACTIONS
 
-export const createGroup = createAction(CREATED, (brand, account) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
+export const createGroup = createAction(GROUP_CREATED, (brand, account) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {}, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -111,7 +110,7 @@ export const createGroup = createAction(CREATED, (brand, account) => {
   })
 })
 
-export const deleteGroup = createAction(DELETED, (brand, account, id) => {
+export const deleteGroup = createAction(GROUP_DELETED, (brand, account, id) => {
   return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
     headers: defaultHeaders
   })
@@ -120,7 +119,7 @@ export const deleteGroup = createAction(DELETED, (brand, account, id) => {
   });
 })
 
-export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
+export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, {
     headers: defaultHeaders
   })
@@ -131,7 +130,7 @@ export const fetchGroup = createAction(FETCHED, (brand, account, id) => {
   });
 })
 
-export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
+export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {
     headers: defaultHeaders
   })
@@ -142,15 +141,17 @@ export const fetchGroups = createAction(FETCHED_ALL, (brand, account) => {
   });
 })
 
-export const updateGroup = createAction(UPDATED, (brand, account, group) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.id}`, group, {
+export const updateGroup = createAction(GROUP_UPDATED, (brand, account, group) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.group_id}`, group, {
     headers: defaultHeaders
   })
   .then((res) => {
     if(res) {
-      return res.data;
+      return group;
     }
   })
 })
 
-export const startFetching = createAction(START_FETCH)
+export const startFetching = createAction(GROUP_START_FETCH)
+
+export const changeActiveGroup = createAction(ACTIVE_GROUP_CHANGED)
