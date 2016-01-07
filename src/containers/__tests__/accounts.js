@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 jest.dontMock('../accounts.jsx')
+jest.dontMock('../../components/account.jsx')
 const Accounts = require('../accounts.jsx').Accounts
 
 function accountActionsMaker() {
@@ -135,8 +136,7 @@ describe('Accounts', () => {
         accounts={Immutable.List([1])}
         params={urlParams}/>
     )
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'a')
-    TestUtils.Simulate.click(links[0])
+    accounts.deleteAccount(1)
     expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn',1])
   })
 })
