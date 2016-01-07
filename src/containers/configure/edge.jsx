@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as serviceActionCreators from '../../redux/modules/service'
+import * as hostActionCreators from '../../redux/modules/host'
 
 // React-Bootstrap
 // ===============
@@ -31,17 +31,17 @@ export class Edge extends React.Component {
   }
   handleChange(path) {
     return e => {
-      let activeService = this.props.activeService
-      this.props.serviceActions.changeActiveService(
-        activeService.setIn(path, e.target.value)
+      let activeHost = this.props.activeHost
+      this.props.hostActions.changeActiveHost(
+        activeHost.setIn(path, e.target.value)
       )
     }
   }
   handleChangeCheckbox(path) {
     return e => {
-      let activeService = this.props.activeService
-      this.props.serviceActions.changeActiveService(
-        activeService.setIn(path, e.target.checked)
+      let activeHost = this.props.activeHost
+      this.props.hostActions.changeActiveHost(
+        activeHost.setIn(path, e.target.checked)
       )
     }
   }
@@ -49,33 +49,33 @@ export class Edge extends React.Component {
     alert('form submitted');
   }
   render() {
-    let activeService = this.props.activeService;
-    if(!activeService || !activeService.size) {
+    let activeHost = this.props.activeHost;
+    if(!activeHost || !activeHost.size) {
       return (
         <div className="container">Loading...</div>
       )
     }
-    let edgeConfiguration = activeService.get('edge_configuration');
+    let edgeConfiguration = activeHost.get('edge_configuration');
     let defaultResponsePoliciesPath = Immutable.List([
       'response_policies',
-      activeService.get('response_policies')
+      activeHost.get('response_policies')
         .findIndex(policyGroup => policyGroup.has('defaults')),
       'defaults',
       'policies']);
     let defaultResponsePoliciesPaths = {
       honor_origin_cache_policies: defaultResponsePoliciesPath
         .push(
-          activeService.getIn(defaultResponsePoliciesPath)
+          activeHost.getIn(defaultResponsePoliciesPath)
             .findIndex(policy => policy.has('honor_origin_cache_policies')),
             'honor_origin_cache_policies'),
       ignore_case: defaultResponsePoliciesPath
         .push(
-          activeService.getIn(defaultResponsePoliciesPath)
+          activeHost.getIn(defaultResponsePoliciesPath)
             .findIndex(policy => policy.has('ignore_case')),
             'ignore_case'),
       honor_etags: defaultResponsePoliciesPath
         .push(
-          activeService.getIn(defaultResponsePoliciesPath)
+          activeHost.getIn(defaultResponsePoliciesPath)
             .findIndex(policy => policy.has('honor_etags')),
             'honor_etags')
     };
@@ -259,21 +259,21 @@ export class Edge extends React.Component {
                 { /* Honor Origin Cache Control */}
 
                 <Input type="checkbox" label="Honor Origin Cache Control"
-                  checked={activeService.getIn(defaultResponsePoliciesPaths.honor_origin_cache_policies)}
+                  checked={activeHost.getIn(defaultResponsePoliciesPaths.honor_origin_cache_policies)}
                   onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.honor_origin_cache_policies)}/>
 
 
                 { /* Ignore case from origin */}
 
                 <Input type="checkbox" label="Ignore case from origin"
-                  checked={activeService.getIn(defaultResponsePoliciesPaths.ignore_case)}
+                  checked={activeHost.getIn(defaultResponsePoliciesPaths.ignore_case)}
                   onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.ignore_case)}/>
 
 
                 { /* Enable e-Tag support */}
 
                 <Input type="checkbox" label="Enable e-Tag support"
-                  checked={activeService.getIn(defaultResponsePoliciesPaths.honor_etags)}
+                  checked={activeHost.getIn(defaultResponsePoliciesPaths.honor_etags)}
                   onChange={this.handleChangeCheckbox(defaultResponsePoliciesPaths.honor_etags)}/>
 
               </Col>
@@ -468,19 +468,19 @@ export class Edge extends React.Component {
 
 Edge.displayName = 'Edge'
 Edge.propTypes = {
-  activeService: React.PropTypes.instanceOf(Immutable.Map),
-  serviceActions: React.PropTypes.object
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  hostActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    activeService: state.service.get('activeService')
+    activeHost: state.host.get('activeHost')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    serviceActions: bindActionCreators(serviceActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch)
   };
 }
 
