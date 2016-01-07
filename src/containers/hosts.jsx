@@ -2,9 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Modal, Button } from 'react-bootstrap';
+import { Table, Modal } from 'react-bootstrap';
 
 import * as hostActionCreators from '../redux/modules/host'
+import AddHost from '../components/add-host'
 // import EditHost from '../components/edit-host'
 
 const Host = host =>
@@ -63,11 +64,12 @@ export class Hosts extends React.Component {
       this.props.activeHost.toJS()
     )
   }
-  createNewHost() {
+  createNewHost(id) {
     this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
-      this.props.params.group
+      this.props.params.group,
+      id
     )
   }
   deleteHost(id) {
@@ -83,7 +85,7 @@ export class Hosts extends React.Component {
     return (
       <div className="container">
         <h1 className="page-header">Hosts</h1>
-        <Button onClick={this.createNewHost}>Add New</Button>
+        <AddHost createHost={this.createNewHost}/>
         <Table>
           <thead>
             <tr>
