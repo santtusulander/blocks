@@ -12,7 +12,7 @@ module.exports = {
   scss: {
     src: './src/styles/**/*.scss',
     dest: dist + '/styles',
-    lint: './scss-lint.yml',
+    lint: './.scss-lint.yml',
     autoprefixer: {
       browsers: ['last 2 versions', 'IE 9']
     }
