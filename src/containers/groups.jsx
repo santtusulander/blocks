@@ -6,17 +6,7 @@ import { Table, Modal, Button } from 'react-bootstrap';
 
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
-
-const Group = group =>
-  <tr onClick={group.toggleActive}>
-    <td>{group.id}</td>
-    <td>{group.name}</td>
-    <td>{group.description}</td>
-    <td>
-      <a href="#" onClick={group.delete}>Delete</a>
-    </td>
-  </tr>
-Group.displayName = "Group"
+import Group from '../components/group'
 
 export class Groups extends React.Component {
   constructor(props) {
@@ -95,11 +85,7 @@ export class Groups extends React.Component {
                 <Group key={i} id={group}
                   name="Name" description="Desc"
                   toggleActive={this.toggleActiveGroup(group)}
-                  delete={(e) => {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    this.deleteGroup(group)
-                  }}/>
+                  delete={this.deleteGroup(group)}/>
               )}
           </tbody>
         </Table>
