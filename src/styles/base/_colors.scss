@@ -1,0 +1,108 @@
+// Primary colors
+// ==============
+
+$white:              #fff;
+$ericsson-dark-blue: #032a5d;
+
+
+// Secondary colors
+// ================
+
+$purple:     #7b0663;
+$red:        #e32119;
+$orange:     #f08a00;
+$yellow:     #fabb00;
+$green:      #89ba17;
+$dark-green: #00625f;
+$pale-blue:  #00a9d4;
+$black:      #000;
+$grey:       #333;
+$silver:     #b1b3b4;
+$link-blue:  #0066b3;
+
+
+// Tints
+// =====
+
+$purple-80:     #8f3f7b;
+$purple-60:     #a66c99;
+$purple-40:     #c19cbb;
+$purple-20:     #dfcddd;
+
+$red-80:        #e95c38;
+$red-60:        #ef8962;
+$red-40:        #f7ba98;
+$red-20:        #fbdbca;
+
+$orange-80:     #f5a241;
+$orange-60:     #f9ba72;
+$orange-40:     #fcd2a2;
+$orange-20:     #fee9d1;
+
+$yellow-80:     #fdc844;
+$yellow-60:     #fed57a;
+$yellow-40:     #ffe4aa;
+$yellow-20:     #fff1d6;
+
+$green-80:      #a5c753;
+$green-60:      #bed682;
+$green-40:      #d5e4af;
+$green-20:      #ebf2d9;
+
+$dark-green-80: #007b78;
+$dark-green-60: #549895;
+$dark-green-40: #90b9b6;
+$dark-green-20: #c8dbd9;
+
+$pale-blue-80:  #5fbadd;
+$pale-blue-60:  #92cce5;
+$pale-blue-40:  #badeee;
+$pale-blue-20:  #deeef7;
+
+$grey-80:       #58585a;
+$grey-60:       #87888a;
+$grey-40:       #b1b3b4;
+$grey-20:       #d9dada;
+
+$silver-80:     #c2c2c2;
+$silver-60:     #d2d2d2;
+$silver-40:     #e2e1e1;
+$silver-20:     #f0f0f0;
+
+$dark-blue-80:  #2e4275;
+$dark-blue-60:  #5b6592;
+$dark-blue-40:  #8d92b4;
+$dark-blue-20:  #c3c5d9;
+
+
+// Gradients
+// =========
+
+// Gradient colors
+$gradient-lime:       #a1c517;
+$gradient-green:      #30ab54;
+$gradient-green-haze: #009045;
+$gradient-teal:       #009f80;
+$gradient-bondi-blue: #0082b6;
+$gradient-royal-blue: #00529b;
+$gradient-blue:       #246ab3;
+$gradient-navy:       #151f77;
+$gradient-purple:     #5f1f70;
+$gradient-magenta:    #db004f;
+$gradient-red:        #e2001a;
+$gradient-orange:     #f08a00;
+
+// Full Blend
+$gradient-full:      linear-gradient($gradient-lime, $gradient-green-haze, $gradient-bondi-blue, $gradient-navy, $gradient-magenta);
+
+// Large Blends
+$gradient-lg-green:  linear-gradient($gradient-lime, $gradient-teal);
+$gradient-lg-blue:   linear-gradient($gradient-teal, $gradient-royal-blue);
+$gradient-lg-purple: linear-gradient($gradient-navy, $gradient-magenta);
+
+// Small Blends
+$gradient-sm-green:  linear-gradient($gradient-lime, $gradient-green);
+$gradient-sm-teal:   linear-gradient($gradient-teal, $gradient-bondi-blue);
+$gradient-sm-blue:   linear-gradient($gradient-blue, $gradient-purple);
+$gradient-sm-purple: linear-gradient($gradient-purple, $gradient-magenta);
+$gradient-sm-red:    linear-gradient($gradient-red, $gradient-orange);
