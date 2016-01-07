@@ -62,10 +62,7 @@ export class Hosts extends React.Component {
                   brand={this.props.params.brand}
                   account={this.props.params.account}
                   group={this.props.params.group}
-                  delete={(e) => {
-                    e.preventDefault()
-                    this.deleteHost(host)
-                  }}/>
+                  delete={this.deleteHost(host)}/>
               )}
           </tbody>
         </Table>
