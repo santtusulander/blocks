@@ -6,17 +6,7 @@ import { Table, Modal, Button } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
-
-const Account = account =>
-  <tr onClick={account.toggleActive}>
-    <td>{account.id}</td>
-    <td>{account.name}</td>
-    <td>{account.description}</td>
-    <td>
-      <a href="#" onClick={account.delete}>Delete</a>
-    </td>
-  </tr>
-Account.displayName = "Account"
+import Account from '../components/account'
 
 export class Accounts extends React.Component {
   constructor(props) {
@@ -77,11 +67,7 @@ export class Accounts extends React.Component {
                 <Account key={i} id={account}
                   name="Name" description="Desc"
                   toggleActive={this.toggleActiveAccount(account)}
-                  delete={(e) => {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    this.deleteAccount(account)
-                  }}/>
+                  delete={this.deleteAccount(account)}/>
               )}
           </tbody>
         </Table>
