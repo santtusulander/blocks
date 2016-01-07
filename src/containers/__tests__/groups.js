@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 jest.dontMock('../groups.jsx')
+jest.dontMock('../../components/group.jsx')
 const Groups = require('../groups.jsx').Groups
 
 function groupActionsMaker() {
@@ -135,8 +136,7 @@ describe('Groups', () => {
         groups={Immutable.List([1])}
         params={urlParams}/>
     )
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'a')
-    TestUtils.Simulate.click(links[0])
+    groups.deleteGroup(1)
     expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn',1,1])
   })
 })
