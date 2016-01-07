@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -7,19 +6,7 @@ import { Table } from 'react-bootstrap';
 
 import * as hostActionCreators from '../redux/modules/host'
 import AddHost from '../components/add-host'
-
-const Host = host =>
-  <tr onClick={host.toggleActive}>
-    <td>{host.id}</td>
-    <td>{host.name}</td>
-    <td>{host.description}</td>
-    <td>
-      <Link to={`/configure/${host.brand}/${host.account}/${host.group}/${host.id}`}>
-        Configure
-      </Link> <a href="#" onClick={host.delete}>Delete</a>
-    </td>
-  </tr>
-Host.displayName = "Host"
+import Host from '../components/host'
 
 export class Hosts extends React.Component {
   constructor(props) {
