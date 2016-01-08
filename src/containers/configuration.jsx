@@ -12,20 +12,17 @@ import ConfigurationSecurity from '../components/configuration/security'
 import ConfigurationCertificates from '../components/configuration/certificates'
 import ConfigurationChangeLog from '../components/configuration/change-log'
 
-// React-Bootstrap
-// ===============
-
-import {
-  Panel
-} from 'react-bootstrap';
-
-
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      activeTab: 'details'
+    }
+
     this.changeValue = this.changeValue.bind(this)
     this.submitForm = this.submitForm.bind(this)
+    this.activateTab = this.activateTab.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -44,6 +41,12 @@ export class Configuration extends React.Component {
   }
   submitForm() {
     alert('form submitted');
+  }
+  activateTab(tabName) {
+    return e => {
+      e.preventDefault()
+      this.setState({activeTab: tabName})
+    }
   }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
@@ -94,26 +97,60 @@ export class Configuration extends React.Component {
     return (
       <div className="container">
 
-        <h1 className="page-header">Configure - Hostname</h1>
-
-        <Panel>
+        <h1 className="page-header">Configure {this.props.params.host}</h1>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('details')}>
+          Details
+        </a>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('cache')}>
+          Cache
+        </a>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('performance')}>
+          Performance
+        </a>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('security')}>
+          Security
+        </a>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('certificates')}>
+          Certificates
+        </a>
+        <a href="#" className="config-tab"
+          onClick={this.activateTab('change-log')}>
+          Change Log
+        </a>
+        {this.state.activeTab === 'details' ?
           <ConfigurationDetails
             edgeConfiguration={activeConfig.get('edge_configuration')}
             changeValue={this.changeValue}
             saveChanges={this.submitForm}/>
-        </Panel>
+          : null}
 
-        <Panel>
+        {this.state.activeTab === 'cache' ?
           <ConfigurationCache
             config={activeConfig}
             changeValue={this.changeValue}
             saveChanges={this.submitForm}/>
-        </Panel>
+          : null}
 
-        <Panel><ConfigurationPerformance/></Panel>
-        <Panel><ConfigurationSecurity/></Panel>
-        <Panel><ConfigurationCertificates/></Panel>
-        <Panel><ConfigurationChangeLog/></Panel>
+        {this.state.activeTab === 'performance' ?
+          <ConfigurationPerformance/>
+          : null}
+
+        {this.state.activeTab === 'security' ?
+          <ConfigurationSecurity/>
+          : null}
+
+        {this.state.activeTab === 'certificates' ?
+          <ConfigurationCertificates/>
+          : null}
+
+        {this.state.activeTab === 'change-log' ?
+          <ConfigurationChangeLog/>
+          : null}
 
       </div>
     );
