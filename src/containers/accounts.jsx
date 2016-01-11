@@ -67,7 +67,7 @@ export class Accounts extends React.Component {
                 <Account key={i} id={account}
                   name="Name" description="Desc"
                   toggleActive={this.toggleActiveAccount(account)}
-                  delete={this.deleteAccount(account)}/>
+                  delete={this.deleteAccount}/>
               )}
           </tbody>
         </Table>

@@ -85,7 +85,7 @@ export class Groups extends React.Component {
                 <Group key={i} id={group}
                   name="Name" description="Desc"
                   toggleActive={this.toggleActiveGroup(group)}
-                  delete={this.deleteGroup(group)}/>
+                  delete={this.deleteGroup}/>
               )}
           </tbody>
         </Table>

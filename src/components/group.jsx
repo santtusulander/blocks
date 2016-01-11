@@ -9,7 +9,7 @@ class Group extends React.Component {
   deleteGroup(e) {
     e.stopPropagation()
     e.preventDefault()
-    this.props.delete()
+    this.props.delete(this.props.id)
   }
   render() {
     return (
@@ -29,7 +29,7 @@ Group.displayName = 'Group'
 Group.propTypes = {
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
-  id: React.PropTypes.number,
+  id: React.PropTypes.string,
   name: React.PropTypes.string,
   toggleActive: React.PropTypes.func
 }
