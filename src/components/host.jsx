@@ -10,7 +10,7 @@ class Host extends React.Component {
   deleteHost(e) {
     e.stopPropagation()
     e.preventDefault()
-    this.props.delete()
+    this.props.delete(this.props.id)
   }
   render() {
     return (
@@ -19,7 +19,7 @@ class Host extends React.Component {
         <td>{this.props.name}</td>
         <td>{this.props.description}</td>
         <td>
-          <Link to={`/configure/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
+          <Link to={`/configurations/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
             Configure
           </Link> <a href="#" onClick={this.deleteHost}>Delete</a>
         </td>

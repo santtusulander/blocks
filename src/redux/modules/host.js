@@ -13,45 +13,6 @@ const HOST_START_FETCH = 'HOST_START_FETCH'
 const HOST_UPDATED = 'HOST_UPDATED'
 const ACTIVE_HOST_CHANGED = 'ACTIVE_HOST_CHANGED'
 
-// const emptyHost = Immutable.fromJS({
-//   edge_configuration: {
-//     published_name: "",
-//     origin_host_name: "",
-//     origin_host_port: "",
-//     host_header: "origin_host_name",
-//     origin_path_append: ""
-//   },
-//   response_policies: [
-//     {
-//       defaults: {
-//         match: "*",
-//         policies: [
-//           {
-//             type: "cache",
-//             action: "set",
-//             honor_origin_cache_policies: true
-//           },
-//           {
-//             type: "cache",
-//             action: "set",
-//             ignore_case: false
-//           },
-//           {
-//             type: "cache",
-//             action: "set",
-//             honor_etags: true
-//           },
-//           {
-//             type: "cache",
-//             action: "set",
-//             cache_errors: "10s"
-//           }
-//         ]
-//       }
-//     }
-//   ]
-// });
-
 const emptyHosts = Immutable.Map({
   activeHost: null,
   allHosts: Immutable.List(),

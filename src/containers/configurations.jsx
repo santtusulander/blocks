@@ -5,45 +5,48 @@ import { bindActionCreators } from 'redux'
 import { Table } from 'react-bootstrap';
 
 import * as hostActionCreators from '../redux/modules/host'
-import AddHost from '../components/add-host'
-import Host from '../components/host'
+// import AddConfiguration from '../components/add-configuration'
+// import Configuration from '../components/configuration'
 
-export class Hosts extends React.Component {
+export class Configurations extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createNewHost = this.createNewHost.bind(this)
-    this.deleteHost = this.deleteHost.bind(this)
+    this.createNewConfiguration = this.createNewConfiguration.bind(this)
+    this.deleteConfiguration = this.deleteConfiguration.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHosts(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-  }
-  createNewHost(id) {
-    this.props.hostActions.createHost(
+    this.props.hostActions.fetchHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.params.host
+    )
+  }
+  createNewConfiguration(id) {
+    this.props.hostActions.createConfiguration(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.params.host,
       id
     )
   }
-  deleteHost(id) {
-    this.props.hostActions.deleteHost(
+  deleteConfiguration(id) {
+    this.props.hostActions.deleteConfiguration(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.params.host,
       id
     )
   }
   render() {
     return (
       <div className="container">
-        <h1 className="page-header">Hosts</h1>
-        <AddHost createHost={this.createNewHost}/>
+        <h1 className="page-header">Configurations</h1>
+        {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
         <Table>
           <thead>
             <tr>
@@ -56,13 +59,8 @@ export class Hosts extends React.Component {
           <tbody>
             {this.props.fetching ?
               <tr><td colSpan="4">Loading...</td></tr> :
-              this.props.hosts.map((host, i) =>
-                <Host key={i} id={host}
-                  name="Name" description="Desc"
-                  brand={this.props.params.brand}
-                  account={this.props.params.account}
-                  group={this.props.params.group}
-                  delete={this.deleteHost}/>
+              this.props.configurations.map((configuration, i) =>
+                <tr key={i}><td colSpan="4">Configuration</td></tr>
               )}
           </tbody>
         </Table>
@@ -71,17 +69,22 @@ export class Hosts extends React.Component {
   }
 }
 
-Hosts.displayName = 'Hosts'
-Hosts.propTypes = {
+Configurations.displayName = 'Configurations'
+Configurations.propTypes = {
+  configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
-  hosts: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
+  let activeHosts = state.host.get('activeHost')
+  let configs = Immutable.List()
+  if(activeHosts) {
+    configs = activeHosts.get('services').get(0).get('configurations')
+  }
   return {
-    hosts: state.host.get('allHosts'),
+    configurations: configs,
     fetching: state.host.get('fetching')
   };
 }
@@ -92,4 +95,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Hosts);
+export default connect(mapStateToProps, mapDispatchToProps)(Configurations);
