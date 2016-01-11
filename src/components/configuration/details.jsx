@@ -26,7 +26,7 @@ class ConfigurationDetails extends React.Component {
         this.props.edgeConfiguration.get('host_header')
       ) === -1;
     return (
-      <form className="configuration-details" onSubmit={this.saveChanges}>
+      <form className="configuration-details" onSubmit={this.handleSave}>
 
         {/* Origin Hostname */}
 

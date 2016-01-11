@@ -18,13 +18,14 @@ class ConfigurationCacheRule extends React.Component {
   }
   render() {
     return (
-      <form className="configuration-cache-rules" onSubmit={this.saveChanges}>
+      <form className="configuration-cache-rules" onSubmit={this.handleSave}>
 
         {/* Rule Type */}
 
         <Row>
           <Col xs={10}>
-            <Input type="select" id="configure__edge__add-cache-rule__rule-type" label="Rule Type">
+            <Input type="select" id="configure__edge__add-cache-rule__rule-type"
+              label="Rule Type" onChange={this.handleChange(['path'])}>
               <option value="1">Extension</option>
               <option value="2">Directory</option>
               <option value="3">File Type</option>
@@ -38,7 +39,9 @@ class ConfigurationCacheRule extends React.Component {
 
         <Row>
           <Col xs={10}>
-            <Input type="text" id="configure__edge__add-cache-rule__rule-value" label="Rule Value" placeholder="text/html" />
+            <Input type="text" id="configure__edge__add-cache-rule__rule-value"
+              label="Rule Value" placeholder="text/html"
+              onChange={this.handleChange(['path'])}/>
           </Col>
         </Row>
 
@@ -47,7 +50,9 @@ class ConfigurationCacheRule extends React.Component {
 
         <Row>
           <Col xs={10}>
-            <Input type="select" id="configure__edge__add-cache-rule__rule-match">
+            <Input type="select"
+              id="configure__edge__add-cache-rule__rule-match"
+              onChange={this.handleChange(['path'])}>
               <option value="1">Matches</option>
               <option value="2">Doesn't Match</option>
             </Input>
@@ -59,7 +64,10 @@ class ConfigurationCacheRule extends React.Component {
 
         <Row>
           <Col xs={10}>
-            <Input type="checkbox" id="configure__edge__add-cache-rule__no-store" label="No-Store" />
+            <Input type="checkbox"
+              id="configure__edge__add-cache-rule__no-store"
+              label="No-Store"
+              onChange={this.handleChange(['path'])}/>
           </Col>
         </Row>
 
@@ -71,10 +79,15 @@ class ConfigurationCacheRule extends React.Component {
             <Input label="TTL Value">
               <Row>
                 <Col xs={6}>
-                  <Input type="number" id="configure__edge__add-cache-rule__ttl-value" placeholder="number" />
+                  <Input type="number"
+                    id="configure__edge__add-cache-rule__ttl-value"
+                    placeholder="number"
+                    onChange={this.handleChange(['path'])}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="select" id="configure__edge__add-cache-rule__ttl-value-extension">
+                  <Input type="select"
+                    id="configure__edge__add-cache-rule__ttl-value-extension"
+                    onChange={this.handleChange(['path'])}>
                     <option value="1">seconds</option>
                     <option value="2">minutes</option>
                     <option value="3">hours</option>
@@ -101,7 +114,7 @@ class ConfigurationCacheRule extends React.Component {
 ConfigurationCacheRule.displayName = 'ConfigurationCacheRule'
 ConfigurationCacheRule.propTypes = {
   changeValue: React.PropTypes.func,
-  edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
+  rule: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
 }
 

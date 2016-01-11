@@ -21,7 +21,7 @@ export class Configuration extends React.Component {
     }
 
     this.changeValue = this.changeValue.bind(this)
-    this.submitForm = this.submitForm.bind(this)
+    this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
     this.activateTab = this.activateTab.bind(this)
   }
   componentWillMount() {
@@ -39,8 +39,13 @@ export class Configuration extends React.Component {
       activeHost.setIn(path, value)
     )
   }
-  submitForm() {
-    alert('form submitted');
+  saveActiveHostChanges() {
+    this.props.hostActions.updateHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.activeHost.toJS()
+    )
   }
   activateTab(tabName) {
     return e => {

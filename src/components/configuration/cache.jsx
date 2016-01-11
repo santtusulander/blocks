@@ -47,7 +47,7 @@ class ConfigurationCache extends React.Component {
             'honor_etags')
     };
     return (
-      <form className="configuration-cache" onSubmit={this.saveChanges}>
+      <form className="configuration-cache" onSubmit={this.handleSave}>
 
         {/* Origin Cache Control */}
 
