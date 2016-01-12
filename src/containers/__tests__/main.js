@@ -1,7 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../main.jsx')
+jest.autoMockOff()
 const Main = require('../main.jsx')
 
 describe('Main', () => {
