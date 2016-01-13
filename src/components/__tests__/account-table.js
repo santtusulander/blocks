@@ -2,15 +2,15 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../account.jsx')
-const Account = require('../account.jsx')
+jest.dontMock('../account-table.jsx')
+const AccountTable = require('../account-table.jsx')
 
-describe('Account', () => {
+describe('AccountTable', () => {
   it('should exist', () => {
     let account = TestUtils.renderIntoDocument(
       <table>
         <tbody>
-          <Account account={Immutable.Map()}/>
+          <AccountTable account={Immutable.Map()}/>
         </tbody>
       </table>
     );
@@ -22,7 +22,7 @@ describe('Account', () => {
     let deleteAccount = TestUtils.renderIntoDocument(
       <table>
         <tbody>
-          <Account account={Immutable.Map()} delete={deleteFunc}/>
+          <AccountTable account={Immutable.Map()} delete={deleteFunc}/>
         </tbody>
       </table>
     )
@@ -35,7 +35,7 @@ describe('Account', () => {
     let account = TestUtils.renderIntoDocument(
       <table>
         <tbody>
-          <Account account={Immutable.Map()} toggleActive={toggleActive}/>
+          <AccountTable account={Immutable.Map()} toggleActive={toggleActive}/>
         </tbody>
       </table>
     )

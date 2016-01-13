@@ -4,7 +4,8 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 jest.dontMock('../accounts.jsx')
-jest.dontMock('../../components/account.jsx')
+jest.dontMock('../../components/account-table.jsx')
+jest.dontMock('../../components/account-chart.jsx')
 const Accounts = require('../accounts.jsx').Accounts
 
 function accountActionsMaker() {
