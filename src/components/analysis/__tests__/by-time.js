@@ -54,7 +54,7 @@ describe('AnalysisByTime', () => {
     moment.mockClear()
     momentFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
-      <AnalysisByTime width={400} height={200} padding={10}
+      <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
@@ -69,14 +69,27 @@ describe('AnalysisByTime', () => {
     numeral.mockClear()
     numeralFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
-      <AnalysisByTime width={400} height={200} padding={10}
+      <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[4].getAttribute('x')).toBe('0')
     expect(texts[4].getAttribute('y')).toBe('123.33333333333334')
-    expect(numeral.mock.calls.length).toEqual(3)
+    expect(numeral.mock.calls.length).toBe(3)
     expect(numeral.mock.calls[0]).toEqual([2])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0a')
+  });
+
+  it('should have ability to turn axes off', () => {
+    moment.mockClear()
+    numeral.mockClear()
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime width={400} height={200} padding={10} axes={false}
+        primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
+    );
+    let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
+    expect(texts.length).toBe(0)
+    expect(moment.mock.calls.length).toBe(0)
+    expect(numeral.mock.calls.length).toBe(0)
   });
 })

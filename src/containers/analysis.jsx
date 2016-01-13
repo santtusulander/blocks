@@ -87,9 +87,9 @@ class Analysis extends React.Component {
       <div className="analysis-container container">
         <h1 className="page-header">Analysis</h1>
         <div ref="byTimeHolder">
-          <AnalysisByTime
+          <AnalysisByTime axes={true} padding={20}
             primaryData={fakeRecentData} secondaryData={fakeAverageData}
-            width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2} padding={20}/>
+            width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
         </div>
       </div>
     );
