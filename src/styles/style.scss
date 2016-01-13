@@ -4,8 +4,26 @@
 @import 'vendor/bootstrap/stylesheets/bootstrap-compass';
 @import 'vendor/bootstrap/stylesheets/bootstrap';
 
+
+// Base
+// ====
+
 @import 'base/colors';
 
+
+// Components
+// ==========
+
+@import 'components/account-chart';
+
+
+// Transitions
+// ===========
+
 @import 'transitions/content';
+
+
+// Styleguide
+// ==========
 
 @import 'containers/styleguide';

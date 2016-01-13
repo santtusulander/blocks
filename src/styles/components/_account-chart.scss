@@ -1,0 +1,68 @@
+// Account chart
+// =============
+
+$circle-border: rgba(0, 0, 0, 0.2);
+$circle-gradient-end: rgba(255, 255, 255, 0.3);
+
+.account-chart {
+  position: relative;
+  float: left;
+  width: 560px;
+  height: 560px;
+  cursor: pointer;
+  border-radius: 50%;
+
+  .circle-base {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    margin: -200px 0 0 -200px;
+    background-color: $black;
+    border: 10px solid $circle-border;
+    border-radius: 50%;
+
+    .circle-gradient {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient($pale-blue, $circle-gradient-end);
+      border-radius: 50%;
+      opacity: 0.3;
+      transition: opacity 250ms;
+    }
+  }
+
+  .glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $pale-blue;
+    border-radius: 50%;
+    opacity: 0.1;
+    transition: opacity 250ms;
+  }
+
+  .text-content {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    color: $white;
+    text-align: center;
+  }
+
+  .account-chart-name {
+    font-size: 30px;
+  }
+
+  &:hover {
+
+    .circle-gradient {
+      opacity: 0.5;
+    }
+
+    .glow {
+      opacity: 0.2;
+    }
+  }
+}
