@@ -1,6 +1,6 @@
 import React from 'react'
 
-class Account extends React.Component {
+class AccountTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -25,8 +25,8 @@ class Account extends React.Component {
   }
 }
 
-Account.displayName = 'Account'
-Account.propTypes = {
+AccountTable.displayName = 'Account'
+AccountTable.propTypes = {
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   id: React.PropTypes.string,
@@ -34,4 +34,4 @@ Account.propTypes = {
   toggleActive: React.PropTypes.func
 }
 
-module.exports = Account
+module.exports = AccountTable
