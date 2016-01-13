@@ -15,12 +15,12 @@
     "babel-preset-react": "^6.3.13",
     "css-loader": "^0.23.0",
     "eslint-plugin-react": "^3.11.3",
-    "extract-text-webpack-plugin": "^0.9.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-cached": "^1.1.0",
-    "gulp-env": "^0.2.0",
+    "gulp-env": "^0.4.0",
     "gulp-eslint": "^1.0.0",
     "gulp-scss-lint": "^0.3.6",
     "gulp-util": "^3.0.7",
@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "axios": "^0.8.0",
+    "d3": "^3.5.12",
     "immutable": "^3.7.5",
     "react": "^0.14.3",
     "react-bootstrap": "^0.28.1",
@@ -67,7 +68,8 @@
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/immutable",
       "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/react-bootstrap"
+      "<rootDir>/node_modules/react-bootstrap",
+      "<rootDir>/node_modules/d3"
     ]
   },
   "repository": {
