@@ -5,7 +5,7 @@ import numeral from 'numeral'
 
 class AnalysisByTime extends React.Component {
   render() {
-    if(!this.props.width) {
+    if(!this.props.width || !this.props.primaryData) {
       return <div>Loading...</div>
     }
 
