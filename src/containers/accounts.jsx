@@ -2,12 +2,12 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Modal, Button, ButtonGroup } from 'react-bootstrap';
+import { Modal, Button, ButtonGroup, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
-import AccountTable from '../components/account-table'
-import AccountChart from '../components/account-chart'
+import ContentItemList from '../components/content-item-list'
+import ContentItemChart from '../components/content-item-chart'
 
 export class Accounts extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export class Accounts extends React.Component {
     this.createNewAccount = this.createNewAccount.bind(this)
     this.changeActiveView = this.changeActiveView.bind(this)
     this.state = {
-      activeView: 'Table'
+      activeView: 'chart'
     }
   }
   componentWillMount() {
@@ -50,57 +50,55 @@ export class Accounts extends React.Component {
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
   }
-  changeActiveView(e) {
-    this.setState({
-      activeView: e.target.innerText
-    })
+  changeActiveView(type) {
+    return () => {
+      this.setState({
+        activeView: type
+      })
+    }
   }
   render() {
     const activeAccount = this.props.activeAccount
-    let content = this.state.activeView === 'Table' ?
-    (<Table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Description</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
-        {this.props.fetching ?
-          <tr><td colSpan="4">Loading...</td></tr> :
-          this.props.accounts.map((account, i) =>
-            <AccountTable key={i} id={account}
-              name="Name" description="Desc"
-              toggleActive={this.toggleActiveAccount(account)}
-              delete={this.deleteAccount}/>
-          )
-        }
-      </tbody>
-    </Table>) : this.state.activeView === 'Grid' &&
-    (this.props.fetching ?
-      <p>Loading...</p> :
-      this.props.accounts.map((accountChart, i) =>
-        <AccountChart key={i} id={accountChart}
-          name="Name" description="Desc"
-          toggleActive={this.toggleActiveAccount(accountChart)}
-          delete={this.deleteAccount}/>
-      )
-    )
     return (
       <div className="container-fluid">
-        <header className="content-header">
-          <ButtonGroup>
-            <Button onClick={this.changeActiveView} active={this.state.activeView === 'Table'}>Table</Button>
-            <Button onClick={this.changeActiveView} active={this.state.activeView === 'Grid'}>Grid</Button>
-          </ButtonGroup>
+        <header className="content-header clearfix">
+          <h1>Accounts</h1>
+          <Breadcrumb>
+            <BreadcrumbItem>Content</BreadcrumbItem>
+          </Breadcrumb>
 
-          <h1 className="page-header">Accounts</h1>
-          <Button onClick={this.createNewAccount}>Add New</Button>
+          <div className="pull-right">
+            <Button onClick={this.createNewAccount}>Add New</Button>
+
+            <ButtonGroup>
+              <Button onClick={this.changeActiveView('chart')}
+                active={this.state.activeView === 'chart'}>Chart</Button>
+              <Button onClick={this.changeActiveView('list')}
+                active={this.state.activeView === 'list'}>List</Button>
+            </ButtonGroup>
+          </div>
         </header>
 
-        {content}
+        {this.state.activeView === 'chart' ?
+          (this.props.fetching ?
+            <p>Loading...</p> :
+            this.props.accounts.map((accountChart, i) =>
+              <ContentItemChart key={i} id={accountChart}
+                name="Name" description="Desc"
+                toggleActive={this.toggleActiveAccount(accountChart)}
+                delete={this.deleteAccount}/>
+            )
+          ) : this.state.activeView === 'list' &&
+            (this.props.fetching ?
+            <p>Loading...</p> :
+            this.props.accounts.map((account, i) =>
+              <ContentItemList key={i} id={account}
+                name="Name" description="Desc"
+                toggleActive={this.toggleActiveAccount(account)}
+                delete={this.deleteAccount}/>
+            )
+          )
+        }
 
         {activeAccount ?
           <Modal show={true}
