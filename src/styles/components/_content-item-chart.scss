@@ -1,10 +1,7 @@
-// Account chart
-// =============
+// Content Item Chart
+// ==================
 
-$circle-border: rgba(0, 0, 0, 0.2);
-$circle-gradient-end: rgba(255, 255, 255, 0.3);
-
-.account-chart {
+.content-item-chart {
   position: relative;
   float: left;
   width: 560px;
@@ -19,17 +16,25 @@ $circle-gradient-end: rgba(255, 255, 255, 0.3);
     width: 400px;
     height: 400px;
     margin: -200px 0 0 -200px;
-    background-color: $black;
-    border: 10px solid $circle-border;
     border-radius: 50%;
 
-    .circle-gradient {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient($pale-blue, $circle-gradient-end);
-      border-radius: 50%;
-      opacity: 0.3;
-      transition: opacity 250ms;
+    .dark-theme & {
+      background-color: $black;
+    }
+  }
+
+  .circle-gradient {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 250ms;
+
+    .dark-theme & {
+      background: linear-gradient($pale-blue, rgba($white, 0.3));
+      background-position: center -10px;
+      background-size: calc(100% + 20px);
+      border: 10px solid rgba($black, 0.2);
     }
   }
 
@@ -37,21 +42,23 @@ $circle-gradient-end: rgba(255, 255, 255, 0.3);
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: $pale-blue;
     border-radius: 50%;
     opacity: 0.1;
     transition: opacity 250ms;
+
+    .dark-theme & {
+      background-color: $pale-blue;
+    }
   }
 
   .text-content {
     position: absolute;
     top: 20%;
     width: 100%;
-    color: $white;
     text-align: center;
   }
 
-  .account-chart-name {
+  .content-item-chart-name {
     font-size: 30px;
   }
 
