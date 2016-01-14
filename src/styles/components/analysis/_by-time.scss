@@ -1,0 +1,19 @@
+.analysis-by-time {
+  path {
+    fill: transparent;
+    stroke-width: 1px;
+  }
+
+  .primary {
+    stroke: $grey;
+  }
+
+  .secondary {
+    stroke: $silver;
+    stroke-dasharray: 5,5;
+  }
+
+  .axis-tick {
+    stroke: $silver;
+  }
+}
