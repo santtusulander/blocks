@@ -1,6 +1,7 @@
 import React from 'react'
 
 import AnalysisByTime from '../components/analysis/by-time'
+import AnalysisByLocation from '../components/analysis/by-location'
 
 const fakeRecentData = [
   {epoch_start: 1451606400, bytes: 39405, requests: 943},
@@ -67,6 +68,7 @@ class Analysis extends React.Component {
     super(props);
 
     this.state = {
+      byLocationWidth: 0,
       byTimeWidth: 0
     }
 
@@ -80,12 +82,20 @@ class Analysis extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   measureContainers() {
-    this.setState({byTimeWidth: this.refs.byTimeHolder.clientWidth})
+    this.setState({
+      byLocationWidth: this.refs.byLocationHolder.clientWidth,
+      byTimeWidth: this.refs.byTimeHolder.clientWidth
+    })
   }
   render() {
     return (
       <div className="analysis-container container">
         <h1 className="page-header">Analysis</h1>
+        <div ref="byLocationHolder">
+          <AnalysisByLocation padding={20}
+            width={this.state.byLocationWidth}
+            height={this.state.byLocationWidth / 2}/>
+        </div>
         <div ref="byTimeHolder">
           <AnalysisByTime axes={true} padding={20}
             primaryData={fakeRecentData} secondaryData={fakeAverageData}
