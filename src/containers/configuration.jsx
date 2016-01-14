@@ -42,44 +42,159 @@ export class Configuration extends React.Component {
   saveActiveHostChanges() {
     // TODO: This is test code while trying to get saves working
     const activeConfig = Immutable.fromJS({
-      edge_configuration: {
-        published_name: "aaa",
-        origin_host_name: "bbb",
-        origin_host_port: "111",
-        host_header: "origin_host_name",
-        origin_path_append: "ddd"
+      "config_id": "1",
+      "configuration_status": {
+        "last_edited_by": "Stan Laurel",
+        "last_edited": "10 Jan 2016 - 10:52"
       },
-      response_policies: [
+      "edge_configuration": {
+        "published_name": "example.com"
+      },
+      "default_policies": [
         {
-          defaults: {
-            match: "*",
-            policies: [
+          "set": {
+            "cache_control": {
+              "honor_origin": true,
+              "check_etag": "weak"
+            }
+          }
+        },
+        {
+          "set": {
+            "cache_name": {
+              "ignore_case": false
+            }
+          }
+        }
+      ],
+      "request_policies": [
+        {
+          "match": {
+            "field": "request_path",
+            "cases": [
+              [
+                "/videos/(.*)\\.mp4",
+                [
+                  {
+                    "set": {
+                      "cache_name": {
+                        "name": [
+                          {
+                            "field": "text",
+                            "field_detail": "content/"
+                          },
+                          {
+                            "field": "request_query_arg",
+                            "field_detail": "itag"
+                          },
+                          {
+                            "field": "text",
+                            "field_detail": "/"
+                          },
+                          {
+                            "field": "group",
+                            "field_detail": "1"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              ],
+              [
+                "(.*)\\.m3u8",
+                [
+                  {
+                    "set": {
+                      "cache_control": {
+                        "max-age": 10
+                      }
+                    }
+                  }
+                ]
+              ]
+            ],
+            "default": [
               {
-                type: "cache",
-                action: "set",
-                honor_origin_cache_policies: true
-              },
-              {
-                type: "cache",
-                action: "set",
-                ignore_case: false
-              },
-              {
-                type: "cache",
-                action: "set",
-                honor_etags: true
-              },
-              {
-                type: "cache",
-                action: "set",
-                cache_errors: "10s"
+                "set": {
+                  "cache_control": {
+                    "no-store": true
+                  }
+                }
               }
+            ]
+          }
+        },
+        {
+          "match": {
+            "field": "request_cookie",
+            "field_detail": "client_type",
+            "cases": [
+              [
+                "mobile",
+                [
+                  {
+                    "set": {
+                      "header": {
+                        "action": "set",
+                        "header": "X-optimize",
+                        "value": "yes"
+                      }
+                    }
+                  }
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "response_policies": [
+        {
+          "match": {
+            "field": "response_code",
+            "cases": [
+              [
+                "307",
+                [
+                  {
+                    "match": {
+                      "field": "response_header",
+                      "field_detail": "Location",
+                      "cases": [
+                        [
+                          "origin1.example.com/(.*)",
+                          [
+                            {
+                              "set": {
+                                "header": {
+                                  "action": "set",
+                                  "header": "Location",
+                                  "value": [
+                                    {
+                                      "field": "text",
+                                      "field_detail": "origin2.example.com/"
+                                    },
+                                    {
+                                      "field": "group",
+                                      "field_detail": "1"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        ]
+                      ]
+                    }
+                  }
+                ]
+              ]
             ]
           }
         }
       ]
     })
-    const newHost = this.props.activeHost.setIn(['services',0,'configurations',0],Immutable.Map({v1:activeConfig}))
+    const newHost = this.props.activeHost.setIn(['services',0,'configurations',0],activeConfig)
 
     this.props.hostActions.updateHost(
       this.props.params.brand,
