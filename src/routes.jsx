@@ -13,6 +13,8 @@ import Hosts from './containers/hosts'
 import Configurations from './containers/configurations'
 import Configuration from './containers/configuration'
 
+import ContentTransition from './transitions/content'
+
 module.exports = (
   <Route path="/" component={Main}>
     <IndexRoute component={Home}/>
@@ -20,9 +22,11 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
     <Route path="analysis" component={Analysis}/>
-    <Route path="accounts/:brand" component={Accounts}/>
-    <Route path="groups/:brand/:account" component={Groups}/>
-    <Route path="hosts/:brand/:account/:group" component={Hosts}/>
+    <Route path="content" component={ContentTransition}>
+      <Route path="accounts/:brand" component={Accounts}/>
+      <Route path="groups/:brand/:account" component={Groups}/>
+      <Route path="hosts/:brand/:account/:group" component={Hosts}/>
+    </Route>
     <Route path="configurations/:brand/:account/:group/:host" component={Configurations}/>
     <Route path="configuration/:brand/:account/:group/:host/:version" component={Configuration}/>
   </Route>
