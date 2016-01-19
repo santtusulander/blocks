@@ -1,0 +1,13 @@
+.analysis-by-location {
+  .country {
+    opacity: 1;
+    transition: transform 500ms linear, opacity 5s;
+    fill: transparent;
+    stroke-width: 1px;
+    stroke: $grey;
+  }
+
+  .hidden {
+    opacity: 0;
+  }
+}
