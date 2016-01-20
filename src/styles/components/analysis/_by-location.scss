@@ -2,12 +2,24 @@
   .country {
     opacity: 1;
     transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;
-    fill: transparent;
-    stroke-width: 1px;
+    fill: $silver;
+    stroke-width: 1;
     stroke: $grey;
   }
 
   .hiddenpath {
     opacity: 0;
+  }
+
+  .above-avg {
+    fill: $purple;
+  }
+
+  .below-avg {
+    fill: $green;
+  }
+
+  .avg {
+    fill: $pale-blue;
   }
 }

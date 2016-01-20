@@ -121,29 +121,84 @@ export class AnalysisByLocation extends React.Component {
         height={this.props.height}>
         {countries.map((country, i) => {
           let hideCountry = false
+          const id = country.id.toLowerCase()
           if(!this.state.statesHidden &&
-            this.props.activeCountry === country.id.toLowerCase()) {
+            this.props.activeCountry === id) {
             hideCountry = true
+          }
+          const data = this.props.countryData.find(
+            data => data.get('id').toLowerCase() === id
+          )
+          let classes = 'country'
+          if(hideCountry) {
+            classes += ' hiddenpath'
+          }
+          if(data) {
+            if(data.get('trending') < 0) {
+              classes += ' below-avg'
+            }
+            else if(data.get('trending') > 0) {
+              classes += ' above-avg'
+            }
+            else {
+              classes += ' avg'
+            }
           }
           return (
             <path key={i} d={path(country)}
-              className={'country' + (hideCountry ? ' hiddenpath' : '')}
+              className={classes}
               style={pathStyle}
               onClick={this.selectCountry(country, path)}/>
           )
         })}
         {states ? states.map((state, i) => {
+          const data = this.props.stateData.find(
+            data => data.get('id') === state.properties.name
+          )
+          let classes = 'country'
+          if(this.state.statesHidden) {
+            classes += ' hiddenpath'
+          }
+          if(data) {
+            if(data.get('trending') < 0) {
+              classes += ' below-avg'
+            }
+            else if(data.get('trending') > 0) {
+              classes += ' above-avg'
+            }
+            else {
+              classes += ' avg'
+            }
+          }
           return (
             <path key={i} d={path(state)}
-              className={'country' + (this.state.statesHidden ? ' hiddenpath' : '')}
+              className={classes}
               style={pathStyle}
               onClick={this.selectState(state, path)}/>
           )
         }) : null}
         {cities ? cities.map((city, i) => {
+          const data = this.props.cityData.find(
+            data => data.get('name') === city.properties.name && data.get('state') === city.properties.state
+          )
+          let classes = 'country'
+          if(this.state.citiesHidden) {
+            classes += ' hiddenpath'
+          }
+          if(data) {
+            if(data.get('trending') < 0) {
+              classes += ' below-avg'
+            }
+            else if(data.get('trending') > 0) {
+              classes += ' above-avg'
+            }
+            else {
+              classes += ' avg'
+            }
+          }
           return (
             <path key={i} d={path.pointRadius(20 / this.state.zoom[2])(city)}
-              className={'country' + (this.state.citiesHidden ? ' hiddenpath' : '')}
+              className={classes}
               style={pathStyle}/>
           )
         }) : null}
@@ -157,9 +212,12 @@ AnalysisByLocation.propTypes = {
   activeCountry: React.PropTypes.string,
   activeState: React.PropTypes.string,
   cities: React.PropTypes.instanceOf(Immutable.Map),
+  cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
+  countryData: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
+  stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
