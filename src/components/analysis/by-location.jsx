@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 
 import * as topoActionCreators from '../../redux/modules/topo'
 
-class AnalysisByTime extends React.Component {
+export class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
 
@@ -27,6 +27,10 @@ class AnalysisByTime extends React.Component {
   selectCountry(country, path) {
     const id = country.id.toLowerCase()
     return () => {
+      this.setState({
+        statesHidden: true,
+        citiesHidden: true
+      })
       this.props.topoActions.changeActiveCountry(id)
       this.props.topoActions.fetchStates(id).then(() => {
         this.setState({zoom: this.getZoomBounds(country, path)})
@@ -37,11 +41,15 @@ class AnalysisByTime extends React.Component {
     }
   }
   selectState(state, path) {
-    const id = state.id.toLowerCase()
+    const name = state.properties.name
     return () => {
-      this.props.topoActions.changeActiveState(id)
-      this.props.topoActions.fetchCities(this.props.activeCountry, id).then(() => {
-        console.log(this.getZoomBounds(state, path))
+      this.setState({citiesHidden: true})
+      this.props.topoActions.changeActiveState(name)
+      this.props.topoActions.fetchCities(this.props.activeCountry).then(() => {
+        this.setState({zoom: this.getZoomBounds(state, path)})
+        setTimeout(() => {
+          this.setState({citiesHidden: false})
+        }, 500)
       })
     }
   }
@@ -75,7 +83,18 @@ class AnalysisByTime extends React.Component {
       ).features
     }
 
+    let cities = null
+    if(this.props.cities.size) {
+      cities = topojson.feature(
+        this.props.cities.toJS(),
+        this.props.cities.toJS().objects.cities
+      ).features.filter(d => {
+        return this.props.activeState == d.properties.state
+      })
+    }
+
     let transform = ''
+    let strokeWidth = 1
     if(this.state.zoom) {
       let projTranslate = projection.translate()
       transform = "translate(" +
@@ -88,6 +107,11 @@ class AnalysisByTime extends React.Component {
       "px,-" +
       this.state.zoom[1] +
       "px)"
+      strokeWidth = 1.0 / this.state.zoom[2] + "px"
+    }
+    const pathStyle = {
+      transform: transform,
+      strokeWidth: strokeWidth
     }
 
     return (
@@ -96,18 +120,31 @@ class AnalysisByTime extends React.Component {
         width={this.props.width}
         height={this.props.height}>
         {countries.map((country, i) => {
+          let hideCountry = false
+          if(!this.state.statesHidden &&
+            this.props.activeCountry === country.id.toLowerCase()) {
+            hideCountry = true
+          }
           return (
-            <path key={i} d={path(country)} className="country"
-              style={{transform:transform}}
+            <path key={i} d={path(country)}
+              className={'country' + (hideCountry ? ' hiddenpath' : '')}
+              style={pathStyle}
               onClick={this.selectCountry(country, path)}/>
           )
         })}
         {states ? states.map((state, i) => {
           return (
             <path key={i} d={path(state)}
-              className={'country' + (this.state.statesHidden ? ' hidden' : '')}
-              style={{transform:transform}}
+              className={'country' + (this.state.statesHidden ? ' hiddenpath' : '')}
+              style={pathStyle}
               onClick={this.selectState(state, path)}/>
+          )
+        }) : null}
+        {cities ? cities.map((city, i) => {
+          return (
+            <path key={i} d={path.pointRadius(20 / this.state.zoom[2])(city)}
+              className={'country' + (this.state.citiesHidden ? ' hiddenpath' : '')}
+              style={pathStyle}/>
           )
         }) : null}
       </svg>
@@ -115,8 +152,8 @@ class AnalysisByTime extends React.Component {
   }
 }
 
-AnalysisByTime.displayName = 'AnalysisByTime'
-AnalysisByTime.propTypes = {
+AnalysisByLocation.displayName = 'AnalysisByLocation'
+AnalysisByLocation.propTypes = {
   activeCountry: React.PropTypes.string,
   activeState: React.PropTypes.string,
   cities: React.PropTypes.instanceOf(Immutable.Map),
@@ -145,4 +182,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalysisByTime);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalysisByLocation);
