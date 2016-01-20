@@ -7,6 +7,18 @@ import { bindActionCreators } from 'redux'
 
 import * as topoActionCreators from '../../redux/modules/topo'
 
+function getTrendClass(trendData) {
+  if(trendData.get('trending') < 0) {
+    return 'below-avg'
+  }
+  else if(trendData.get('trending') > 0) {
+    return 'above-avg'
+  }
+  else {
+    return 'avg'
+  }
+}
+
 export class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
@@ -76,7 +88,7 @@ export class AnalysisByLocation extends React.Component {
     ).features
 
     let states = null
-    if(this.props.states.size) {
+    if(this.props.states && this.props.states.size) {
       states = topojson.feature(
         this.props.states.toJS(),
         this.props.states.toJS().objects.states
@@ -84,7 +96,7 @@ export class AnalysisByLocation extends React.Component {
     }
 
     let cities = null
-    if(this.props.cities.size) {
+    if(this.props.cities && this.props.cities.size) {
       cities = topojson.feature(
         this.props.cities.toJS(),
         this.props.cities.toJS().objects.cities
@@ -134,15 +146,7 @@ export class AnalysisByLocation extends React.Component {
             classes += ' hiddenpath'
           }
           if(data) {
-            if(data.get('trending') < 0) {
-              classes += ' below-avg'
-            }
-            else if(data.get('trending') > 0) {
-              classes += ' above-avg'
-            }
-            else {
-              classes += ' avg'
-            }
+            classes += ' ' + getTrendClass(data)
           }
           return (
             <path key={i} d={path(country)}
@@ -160,15 +164,7 @@ export class AnalysisByLocation extends React.Component {
             classes += ' hiddenpath'
           }
           if(data) {
-            if(data.get('trending') < 0) {
-              classes += ' below-avg'
-            }
-            else if(data.get('trending') > 0) {
-              classes += ' above-avg'
-            }
-            else {
-              classes += ' avg'
-            }
+            classes += ' ' + getTrendClass(data)
           }
           return (
             <path key={i} d={path(state)}
@@ -186,18 +182,11 @@ export class AnalysisByLocation extends React.Component {
             classes += ' hiddenpath'
           }
           if(data) {
-            if(data.get('trending') < 0) {
-              classes += ' below-avg'
-            }
-            else if(data.get('trending') > 0) {
-              classes += ' above-avg'
-            }
-            else {
-              classes += ' avg'
-            }
+            classes += ' ' + getTrendClass(data)
           }
+          let zoomLevel = this.state.zoom ? this.state.zoom[2] : 1
           return (
-            <path key={i} d={path.pointRadius(20 / this.state.zoom[2])(city)}
+            <path key={i} d={path.pointRadius(20 / zoomLevel)(city)}
               className={classes}
               style={pathStyle}/>
           )
