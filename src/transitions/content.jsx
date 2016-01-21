@@ -34,7 +34,7 @@ export class ContentTransition extends React.Component {
   }
 }
 
-ContentTransition.displayName = 'Contenttransition'
+ContentTransition.displayName = 'ContentTransition'
 ContentTransition.propTypes = {
   children: React.PropTypes.node,
   location: React.PropTypes.object
