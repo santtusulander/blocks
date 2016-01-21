@@ -189,9 +189,11 @@ export class Accounts extends React.Component {
             <Button onClick={this.createNewAccount}>Add New</Button>
 
             <ButtonGroup>
-              <Button onClick={this.changeActiveView('chart')}
+              <Button className="toggle-view"
+                onClick={this.changeActiveView('chart')}
                 active={this.state.activeView === 'chart'}>Chart</Button>
-              <Button onClick={this.changeActiveView('list')}
+              <Button className="toggle-view"
+                onClick={this.changeActiveView('list')}
                 active={this.state.activeView === 'list'}>List</Button>
             </ButtonGroup>
           </div>

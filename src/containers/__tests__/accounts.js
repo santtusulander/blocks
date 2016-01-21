@@ -4,9 +4,9 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 jest.dontMock('../accounts.jsx')
-jest.dontMock('../../components/content-item-chart.jsx')
-jest.dontMock('../../components/content-item-list.jsx')
 const Accounts = require('../accounts.jsx').Accounts
+const ContentItemChart = require('../../components/content-item-chart.jsx')
+const ContentItemList = require('../../components/content-item-list.jsx')
 
 function accountActionsMaker() {
   return {
@@ -50,34 +50,44 @@ describe('Accounts', () => {
     expect(ReactDOM.findDOMNode(p[0]).textContent).toContain('Loading...')
   });
 
-  it('should show existing accounts', () => {
+  it('should show existing accounts as charts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
         accounts={Immutable.List([1,2])}
         params={urlParams}/>
     )
-    // Need to fix this
-    // let p = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'p')
-    // expect(ReactDOM.findDOMNode(p[0]).textContent).not.toContain('Loading...')
     let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    expect(div.length).toBeGreaterThan(3)
-    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('1')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
+    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
   });
 
-  it('should activate an account for edit when clicked', () => {
+  it('should show existing accounts as lists', () => {
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActionsMaker()}
+        accounts={Immutable.List([1,2])}
+        params={urlParams}/>
+    )
+    let btn = TestUtils.scryRenderedDOMComponentsWithClass(accounts, 'toggle-view')
+    TestUtils.Simulate.click(btn[1])
+    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
+  });
+
+  it('should activate an account for edit when toggled', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
         params={urlParams}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    TestUtils.Simulate.click(div[1])
-    // Need to fix this
-    // expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn',1])
+    accounts.toggleActiveAccount(1)()
+    expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn',1])
   });
 
-  it('should deactivate an account when clicked if already active', () => {
+  it('should deactivate an account when toggled if already active', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
@@ -85,10 +95,8 @@ describe('Accounts', () => {
         activeAccount={Immutable.Map({account_id:1})}
         params={urlParams}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    TestUtils.Simulate.click(div[0])
-    // Need to fix this
-    // expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
+    accounts.toggleActiveAccount(1)()
+    expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
   });
 
   it('should be able to change the active account', () => {
