@@ -31,6 +31,7 @@ export class AnalysisByLocation extends React.Component {
 
     this.selectCountry = this.selectCountry.bind(this)
     this.selectState = this.selectState.bind(this)
+    this.zoomOut = this.zoomOut.bind(this)
   }
   componentWillMount() {
     this.props.topoActions.startFetching()
@@ -44,8 +45,11 @@ export class AnalysisByLocation extends React.Component {
         citiesHidden: true
       })
       this.props.topoActions.changeActiveCountry(id)
-      this.props.topoActions.fetchStates(id).then(() => {
+      this.props.topoActions.fetchStates(id).then((action) => {
         this.setState({zoom: this.getZoomBounds(country, path)})
+        if(action.error) {
+          return false;
+        }
         setTimeout(() => {
           this.setState({statesHidden: false})
         }, 500)
@@ -57,8 +61,11 @@ export class AnalysisByLocation extends React.Component {
     return () => {
       this.setState({citiesHidden: true})
       this.props.topoActions.changeActiveState(name)
-      this.props.topoActions.fetchCities(this.props.activeCountry).then(() => {
+      this.props.topoActions.fetchCities(this.props.activeCountry).then((action) => {
         this.setState({zoom: this.getZoomBounds(state, path)})
+        if(action.error) {
+          return false;
+        }
         setTimeout(() => {
           this.setState({citiesHidden: false})
         }, 500)
@@ -73,6 +80,26 @@ export class AnalysisByLocation extends React.Component {
     const x = (bounds[1][0] + bounds[0][0]) / 2
     const y = (bounds[1][1] + bounds[0][1]) / 2 + (this.props.height / z / 6)
     return [x, y, z]
+  }
+  zoomOut(path) {
+    return (e) => {
+      e.preventDefault()
+      if(this.props.activeState) {
+        this.props.topoActions.changeActiveState(null)
+        const countries = topojson.feature(
+          this.props.countries.toJS(),
+          this.props.countries.toJS().objects.countries
+        ).features
+        const country = countries.find(
+          data => data.id.toLowerCase() === this.props.activeCountry
+        )
+        this.setState({zoom: this.getZoomBounds(country, path)})
+      }
+      else if(this.props.activeCountry) {
+        this.props.topoActions.changeActiveCountry(null)
+        this.setState({zoom: null})
+      }
+    }
   }
   render() {
     if(!this.props.width || !this.props.countries.size || this.props.fetching) {
@@ -127,71 +154,79 @@ export class AnalysisByLocation extends React.Component {
     }
 
     return (
-      <svg
-        className='analysis-by-location'
-        width={this.props.width}
-        height={this.props.height}>
-        {countries.map((country, i) => {
-          let hideCountry = false
-          const id = country.id.toLowerCase()
-          if(!this.state.statesHidden &&
-            this.props.activeCountry === id) {
-            hideCountry = true
-          }
-          const data = this.props.countryData.find(
-            data => data.get('id').toLowerCase() === id
-          )
-          let classes = 'country'
-          if(hideCountry) {
-            classes += ' hiddenpath'
-          }
-          if(data) {
-            classes += ' ' + getTrendClass(data)
-          }
-          return (
-            <path key={i} d={path(country)}
-              className={classes}
-              style={pathStyle}
-              onClick={this.selectCountry(country, path)}/>
-          )
-        })}
-        {states ? states.map((state, i) => {
-          const data = this.props.stateData.find(
-            data => data.get('id') === state.properties.name
-          )
-          let classes = 'country'
-          if(this.state.statesHidden) {
-            classes += ' hiddenpath'
-          }
-          if(data) {
-            classes += ' ' + getTrendClass(data)
-          }
-          return (
-            <path key={i} d={path(state)}
-              className={classes}
-              style={pathStyle}
-              onClick={this.selectState(state, path)}/>
-          )
-        }) : null}
-        {cities ? cities.map((city, i) => {
-          const data = this.props.cityData.find(
-            data => data.get('name') === city.properties.name && data.get('state') === city.properties.state
-          )
-          let classes = 'country'
-          if(this.state.citiesHidden) {
-            classes += ' hiddenpath'
-          }
-          if(data) {
-            classes += ' ' + getTrendClass(data)
-          }
-          let zoomLevel = this.state.zoom ? this.state.zoom[2] : 1
-          return (
-            <path key={i} d={path.pointRadius(20 / zoomLevel)(city)}
-              className={classes}
-              style={pathStyle}/>
-          )
-        }) : null}
-      </svg>
+      <div className='analysis-by-location'>
+        <svg
+          width={this.props.width}
+          height={this.props.height}>
+          {countries.map((country, i) => {
+            let hideCountry = false
+            const id = country.id.toLowerCase()
+            if(!this.state.statesHidden &&
+              this.props.activeCountry === id) {
+              hideCountry = true
+            }
+            const data = this.props.countryData.find(
+              data => data.get('id').toLowerCase() === id
+            )
+            let classes = 'country'
+            if(hideCountry) {
+              classes += ' hiddenpath'
+            }
+            if(data) {
+              classes += ' ' + getTrendClass(data)
+            }
+            return (
+              <path key={i} d={path(country)}
+                className={classes}
+                style={pathStyle}
+                onClick={this.selectCountry(country, path)}/>
+            )
+          })}
+          {states ? states.map((state, i) => {
+            const data = this.props.stateData.find(
+              data => data.get('id') === state.properties.name
+            )
+            let classes = 'country'
+            if(this.state.statesHidden) {
+              classes += ' hiddenpath'
+            }
+            if(data) {
+              classes += ' ' + getTrendClass(data)
+            }
+            return (
+              <path key={i} d={path(state)}
+                className={classes}
+                style={pathStyle}
+                onClick={this.selectState(state, path)}/>
+            )
+          }) : null}
+          {cities ? cities.map((city, i) => {
+            const data = this.props.cityData.find(
+              data => data.get('name') === city.properties.name && data.get('state') === city.properties.state
+            )
+            let classes = 'country'
+            if(this.state.citiesHidden) {
+              classes += ' hiddenpath'
+            }
+            if(data) {
+              classes += ' ' + getTrendClass(data)
+            }
+            let zoomLevel = this.state.zoom ? this.state.zoom[2] : 1
+            return (
+              <path key={i} d={path.pointRadius(20 / zoomLevel)(city)}
+                className={classes}
+                style={pathStyle}/>
+            )
+          }) : null}
+        </svg>
+        <div className="zoom-out">
+          <a href="#" onClick={this.zoomOut(path)}
+            title="Zoom Out"
+            className={this.props.activeCountry || this.props.activeState ? '' : 'hidden'}>
+            -
+          </a>
+        </div>
+      </div>
     )
   }
 }
