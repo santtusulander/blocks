@@ -45,8 +45,11 @@ export class AnalysisByLocation extends React.Component {
         citiesHidden: true
       })
       this.props.topoActions.changeActiveCountry(id)
-      this.props.topoActions.fetchStates(id).then(() => {
+      this.props.topoActions.fetchStates(id).then((action) => {
         this.setState({zoom: this.getZoomBounds(country, path)})
+        if(action.error) {
+          return false;
+        }
         setTimeout(() => {
           this.setState({statesHidden: false})
         }, 500)
@@ -58,8 +61,11 @@ export class AnalysisByLocation extends React.Component {
     return () => {
       this.setState({citiesHidden: true})
       this.props.topoActions.changeActiveState(name)
-      this.props.topoActions.fetchCities(this.props.activeCountry).then(() => {
+      this.props.topoActions.fetchCities(this.props.activeCountry).then((action) => {
         this.setState({zoom: this.getZoomBounds(state, path)})
+        if(action.error) {
+          return false;
+        }
         setTimeout(() => {
           this.setState({citiesHidden: false})
         }, 500)

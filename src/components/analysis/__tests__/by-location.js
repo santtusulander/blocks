@@ -25,10 +25,10 @@ function topoActionsMaker() {
     startFetching: jest.genMockFunction(),
     fetchCountries: jest.genMockFunction(),
     fetchStates: jest.genMockFunction().mockImplementation(() => {
-      return {then: cb => cb()}
+      return {then: cb => cb({error:false})}
     }),
     fetchCities: jest.genMockFunction().mockImplementation(() => {
-      return {then: cb => cb()}
+      return {then: cb => cb({error:false})}
     }),
     changeActiveCountry: jest.genMockFunction(),
     changeActiveState: jest.genMockFunction()
