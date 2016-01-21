@@ -1,0 +1,19 @@
+// Content Item List
+// =================
+
+.content-item-list {
+  position: relative;
+  margin-top: 40px;
+  cursor: pointer;
+
+  .content-item-list-row {
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+  }
+
+  .content-item-list-name {
+    font-size: 30px;
+  }
+}

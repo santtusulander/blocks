@@ -1,0 +1,42 @@
+.analysis-by-location {
+  position: relative;
+
+  .country {
+    opacity: 1;
+    transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;
+    fill: $silver;
+    stroke-width: 1;
+    stroke: $grey;
+  }
+
+  .hiddenpath {
+    opacity: 0;
+  }
+
+  .above-avg {
+    fill: $purple;
+  }
+
+  .below-avg {
+    fill: $green;
+  }
+
+  .avg {
+    fill: $pale-blue;
+  }
+
+  .zoom-out {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    border-radius: 3px;
+
+    a {
+      padding: 5px 10px;
+      color: $grey;
+      text-decoration: none;
+      background-color: $silver;
+    }
+  }
+}
