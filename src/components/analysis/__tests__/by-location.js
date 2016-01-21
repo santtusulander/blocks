@@ -190,4 +190,39 @@ describe('AnalysisByLocation', () => {
     expect(topoActions.changeActiveState.mock.calls[0][0]).toBe('Georgia')
     expect(topoActions.fetchCities.mock.calls[0][0]).toBe('usa')
   });
+
+  it('zooms out from a country when the zoom out is clicked', () => {
+    const topoActions = topoActionsMaker()
+    let byLocation = TestUtils.renderIntoDocument(
+      <AnalysisByLocation topoActions={topoActions}
+        fetching={false} width={400} height={200}
+        countries={fakeCountries}
+        countryData={fakeCountryData}
+        activeCountry='usa'
+        states={fakeStates}
+        stateData={fakeStateData}/>
+    );
+    let zoom = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'a')
+    TestUtils.Simulate.click(zoom[0])
+    expect(topoActions.changeActiveCountry.mock.calls[0][0]).toBe(null)
+  });
+
+  it('zooms out from a state when the zoom out is clicked', () => {
+    const topoActions = topoActionsMaker()
+    let byLocation = TestUtils.renderIntoDocument(
+      <AnalysisByLocation topoActions={topoActions}
+        fetching={false} width={400} height={200}
+        countries={fakeCountries}
+        countryData={fakeCountryData}
+        activeCountry='usa'
+        states={fakeStates}
+        stateData={fakeStateData}
+        activeState='Georgia'
+        cities={fakeCities}
+        cityData={fakeCityData}/>
+    );
+    let zoom = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'a')
+    TestUtils.Simulate.click(zoom[0])
+    expect(topoActions.changeActiveState.mock.calls[0][0]).toBe(null)
+  });
 })
