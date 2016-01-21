@@ -4,8 +4,6 @@
 .content-item-chart {
   position: relative;
   float: left;
-  width: 560px;
-  height: 560px;
   cursor: pointer;
   border-radius: 50%;
 
@@ -13,9 +11,6 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 400px;
-    height: 400px;
-    margin: -200px 0 0 -200px;
     border-radius: 50%;
 
     .dark-theme & {
@@ -49,6 +44,34 @@
     .dark-theme & {
       background-color: $pale-blue;
     }
+  }
+
+  .content-item-chart-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    &.difference-arc {
+      fill: $pale-blue;
+
+      g {
+        transform: translate(280px, 280px);
+      }
+    }
+  }
+
+  .primary-data .content-item-chart-line {
+    stroke: $pale-blue;
+    stroke-width: 1.5;
+    fill: $pale-blue;
+  }
+
+  .secondary-data .content-item-chart-line {
+    stroke: transparent;
+    fill: rgba($pale-blue, 0.2);
   }
 
   .text-content {

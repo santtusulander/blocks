@@ -4,9 +4,9 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 jest.dontMock('../accounts.jsx')
-jest.dontMock('../../components/content-item-chart.jsx')
-jest.dontMock('../../components/content-item-list.jsx')
 const Accounts = require('../accounts.jsx').Accounts
+const ContentItemChart = require('../../components/content-item-chart.jsx')
+const ContentItemList = require('../../components/content-item-list.jsx')
 
 function accountActionsMaker() {
   return {
@@ -46,36 +46,48 @@ describe('Accounts', () => {
       <Accounts accountActions={accountActionsMaker()} fetching={true}
         params={urlParams}/>
     )
-    let tbody = TestUtils.findRenderedDOMComponentWithTag(accounts, 'tbody')
-    expect(ReactDOM.findDOMNode(tbody).textContent).toContain('Loading...')
+    let p = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'p')
+    expect(ReactDOM.findDOMNode(p[0]).textContent).toContain('Loading...')
   });
 
-  it('should show existing accounts', () => {
+  it('should show existing accounts as charts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
         accounts={Immutable.List([1,2])}
         params={urlParams}/>
     )
-    let tbody = TestUtils.findRenderedDOMComponentWithTag(accounts, 'tbody')
-    expect(ReactDOM.findDOMNode(tbody).textContent).not.toContain('Loading...')
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
-    expect(trs.length).toBe(3)
-    expect(ReactDOM.findDOMNode(trs[1]).textContent).toContain('1')
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
+    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
   });
 
-  it('should activate an account for edit when clicked', () => {
+  it('should show existing accounts as lists', () => {
+    let accounts = TestUtils.renderIntoDocument(
+      <Accounts accountActions={accountActionsMaker()}
+        accounts={Immutable.List([1,2])}
+        params={urlParams}/>
+    )
+    let btn = TestUtils.scryRenderedDOMComponentsWithClass(accounts, 'toggle-view')
+    TestUtils.Simulate.click(btn[1])
+    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
+  });
+
+  it('should activate an account for edit when toggled', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         accounts={Immutable.List([1])}
         params={urlParams}/>
     )
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
-    TestUtils.Simulate.click(trs[1])
+    accounts.toggleActiveAccount(1)()
     expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn',1])
   });
 
-  it('should deactivate an account when clicked if already active', () => {
+  it('should deactivate an account when toggled if already active', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
@@ -83,8 +95,7 @@ describe('Accounts', () => {
         activeAccount={Immutable.Map({account_id:1})}
         params={urlParams}/>
     )
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'tr')
-    TestUtils.Simulate.click(trs[1])
+    accounts.toggleActiveAccount(1)()
     expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
   });
 
@@ -125,8 +136,8 @@ describe('Accounts', () => {
         accounts={Immutable.List()}
         params={urlParams}/>
     )
-    let add = TestUtils.findRenderedDOMComponentWithTag(accounts, 'button')
-    TestUtils.Simulate.click(add)
+    let add = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'button')
+    TestUtils.Simulate.click(add[0])
     expect(accountActions.createAccount.mock.calls.length).toBe(1)
   })
 
