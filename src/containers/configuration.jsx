@@ -81,7 +81,7 @@ export class Configuration extends React.Component {
     return (
       <div className="container">
 
-        <h1 className="page-header">Configure {this.props.params.host}</h1>
+        <h1 className="page-header">{this.props.params.host}</h1>
         <a href="#" className="config-tab"
           onClick={this.activateTab('details')}>
           Details

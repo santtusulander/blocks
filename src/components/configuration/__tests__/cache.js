@@ -5,6 +5,24 @@ import Immutable from 'immutable'
 jest.dontMock('../cache.jsx')
 const ConfigurationCache = require('../cache.jsx')
 
+const fakeConfig = Immutable.fromJS({"default_policies": [
+  {
+    "set": {
+      "cache_control": {
+        "honor_origin": true,
+        "check_etag": "weak"
+      }
+    }
+  },
+  {
+    "set": {
+      "cache_name": {
+        "ignore_case": false
+      }
+    }
+  }
+]})
+
 describe('ConfigurationCache', () => {
   it('should exist', () => {
     let cache = TestUtils.renderIntoDocument(
@@ -17,29 +35,15 @@ describe('ConfigurationCache', () => {
     const changeValue = jest.genMockFunction()
     let cache = TestUtils.renderIntoDocument(
       <ConfigurationCache changeValue={changeValue}
-        config={Immutable.fromJS({response_policies: [
-          {
-            defaults: {
-              match: "*",
-              policies: [
-                {
-                  honor_origin_cache_policies: true
-                }
-              ]
-            }
-          }
-        ]})}/>
+        config={fakeConfig}/>
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cache, 'input');
     inputs[0].checked = true
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0].toJS()).toEqual([
-      'response_policies',
+      'default_policies',
       0,
-      'defaults',
-      'policies',
-      0,
-      'honor_origin_cache_policies'
+      'honor_origin'
     ])
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
@@ -48,18 +52,7 @@ describe('ConfigurationCache', () => {
     const saveChanges = jest.genMockFunction()
     let cache = TestUtils.renderIntoDocument(
       <ConfigurationCache saveChanges={saveChanges}
-        config={Immutable.fromJS({response_policies: [
-          {
-            defaults: {
-              match: "*",
-              policies: [
-                {
-                  honor_origin_cache_policies: true
-                }
-              ]
-            }
-          }
-        ]})}/>
+        config={fakeConfig}/>
     );
     let form = TestUtils.findRenderedDOMComponentWithTag(cache, 'form');
     TestUtils.Simulate.submit(form)

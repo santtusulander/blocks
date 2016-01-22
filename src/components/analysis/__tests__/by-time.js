@@ -73,7 +73,7 @@ describe('AnalysisByTime', () => {
         primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[4].getAttribute('x')).toBe('0')
+    expect(texts[4].getAttribute('x')).toBe('10')
     expect(texts[4].getAttribute('y')).toBe('123.33333333333334')
     expect(numeral.mock.calls.length).toBe(3)
     expect(numeral.mock.calls[0]).toEqual([2])
