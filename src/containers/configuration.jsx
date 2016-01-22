@@ -33,10 +33,25 @@ export class Configuration extends React.Component {
       this.props.params.host
     )
   }
+  getActiveConfig() {
+    return this.props.activeHost.get('services').get(0).get('configurations').find(
+      config => {
+        return config.get('config_id') === this.props.params.version
+      }
+    )
+  }
   changeValue(path, value) {
-    let activeHost = this.props.activeHost
+    const hostIndex = this.props.activeHost.get('services').get(0).get('configurations').findIndex(
+      config => {
+        return config.get('config_id') === this.props.params.version
+      }
+    )
+
     this.props.hostActions.changeActiveHost(
-      activeHost.setIn(path, value)
+      this.props.activeHost.setIn(
+        ['services', 0, 'configurations', hostIndex],
+        this.getActiveConfig().setIn(path, value)
+      )
     )
   }
   saveActiveHostChanges() {
@@ -57,47 +72,11 @@ export class Configuration extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div className="container">Loading...</div>
     }
-    // const activeConfig = this.props.activeHost.get('services').get(0).find(
-    //   config => config.get('version') === this.props.params.version
-    // )
-    const activeConfig = Immutable.fromJS({
-      edge_configuration: {
-        published_name: "aaa",
-        origin_host_name: "bbb",
-        origin_host_port: "111",
-        host_header: "origin_host_name",
-        origin_path_append: "ddd"
-      },
-      response_policies: [
-        {
-          defaults: {
-            match: "*",
-            policies: [
-              {
-                type: "cache",
-                action: "set",
-                honor_origin_cache_policies: true
-              },
-              {
-                type: "cache",
-                action: "set",
-                ignore_case: false
-              },
-              {
-                type: "cache",
-                action: "set",
-                honor_etags: true
-              },
-              {
-                type: "cache",
-                action: "set",
-                cache_errors: "10s"
-              }
-            ]
-          }
-        }
-      ]
-    })
+    const activeConfig = this.props.activeHost.get('services').get(0).get('configurations').find(
+      config => {
+        return config.get('config_id') === this.props.params.version
+      }
+    )
 
     return (
       <div className="container">
@@ -131,14 +110,14 @@ export class Configuration extends React.Component {
           <ConfigurationDetails
             edgeConfiguration={activeConfig.get('edge_configuration')}
             changeValue={this.changeValue}
-            saveChanges={this.submitForm}/>
+            saveChanges={this.saveActiveHostChanges}/>
           : null}
 
         {this.state.activeTab === 'cache' ?
           <ConfigurationCache
             config={activeConfig}
             changeValue={this.changeValue}
-            saveChanges={this.submitForm}/>
+            saveChanges={this.saveActiveHostChanges}/>
           : null}
 
         {this.state.activeTab === 'performance' ?
