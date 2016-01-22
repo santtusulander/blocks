@@ -188,11 +188,11 @@ export class Accounts extends React.Component {
           <div className="pull-right">
             <Button onClick={this.createNewAccount}>Add New</Button>
 
-            <Button className={'btn-icon',
-              this.state.activeView === 'chart' ? 'hidden' : ''}
+            <Button className={this.state.activeView === 'chart' ?
+              'btn-icon toggle-view hidden' : 'btn-icon toggle-view'}
               onClick={this.changeActiveView('chart')}>Chart</Button>
-            <Button className={'btn-icon',
-              this.state.activeView === 'list' ? 'hidden' : ''}
+            <Button className={this.state.activeView === 'list' ?
+              'btn-icon toggle-view hidden' : 'btn-icon toggle-view'}
               onClick={this.changeActiveView('list')}>List</Button>
           </div>
         </header>
