@@ -1,19 +1,28 @@
 .analysis-by-time {
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
   path {
     fill: transparent;
     stroke-width: 1px;
   }
 
   .primary {
-    stroke: $grey;
+    stroke: $green;
   }
 
   .secondary {
-    stroke: $silver;
-    stroke-dasharray: 5,5;
+    stroke: $pale-blue;
   }
 
   .axis-tick {
     stroke: $silver;
+  }
+
+  text {
+    fill: $white;
+    font-size: 12px;
   }
 }

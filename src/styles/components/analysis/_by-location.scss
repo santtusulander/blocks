@@ -1,6 +1,10 @@
 .analysis-by-location {
   position: relative;
 
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
   .country {
     opacity: 1;
     transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;
