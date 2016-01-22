@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonGroup, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Modal, Button, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
@@ -188,12 +188,12 @@ export class Accounts extends React.Component {
           <div className="pull-right">
             <Button onClick={this.createNewAccount}>Add New</Button>
 
-            <ButtonGroup>
-              <Button onClick={this.changeActiveView('chart')}
-                active={this.state.activeView === 'chart'}>Chart</Button>
-              <Button onClick={this.changeActiveView('list')}
-                active={this.state.activeView === 'list'}>List</Button>
-            </ButtonGroup>
+            <Button className={'btn-icon',
+              this.state.activeView === 'chart' ? 'hidden' : ''}
+              onClick={this.changeActiveView('chart')}>Chart</Button>
+            <Button className={'btn-icon',
+              this.state.activeView === 'list' ? 'hidden' : ''}
+              onClick={this.changeActiveView('list')}>List</Button>
           </div>
         </header>
 

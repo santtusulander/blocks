@@ -17,60 +17,64 @@ import {
 class Header extends React.Component {
   render() {
     return (
-      <Navbar fixedTop={true}>
+      <Navbar className="header" fixedTop={true} fluid={true}>
+        <div className="header-gradient"></div>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">Logo</a>
+            <a href="#">Ericsson</a>
           </Navbar.Brand>
         </Navbar.Header>
-        <Nav>
-          <li>
+        <Nav className="main-nav">
+          <li className="main-nav-item active">
             <Dropdown id="dropdown-content">
-              <Link to={`/`}>
+              <Link className="main-nav-link" to={`/`}>
                 Content
               </Link>
-              <Dropdown.Toggle className="pull-right"/>
+              <Dropdown.Toggle bsStyle='link' className="pull-right"/>
               <Dropdown.Menu>
-                <MenuItem eventKey="1" active={true}>Disney Interactive</MenuItem>
-                <MenuItem eventKey="2">Disney Cruises</MenuItem>
-                <MenuItem eventKey="3">Disney Entertainment</MenuItem>
+                <MenuItem eventKey="1" active={true}><span>Disney Interactive</span></MenuItem>
+                <MenuItem eventKey="2"><span>Disney Cruises</span></MenuItem>
+                <MenuItem eventKey="3"><span>Lucas Arts</span></MenuItem>
+                <MenuItem eventKey="4"><span>Star Wars</span></MenuItem>
+                <MenuItem eventKey="5"><span>Ads</span></MenuItem>
+                <MenuItem eventKey="6"><span>Marvel</span></MenuItem>
               </Dropdown.Menu>
             </Dropdown>
           </li>
-          <li>
-            <Link to={`/`}>
+          <li className="main-nav-item">
+            <Link className="main-nav-link" to={`/`}>
               Security
             </Link>
           </li>
-          <li>
-            <Link to={`/`}>
+          <li className="main-nav-item">
+            <Link className="main-nav-link" to={`/`}>
               Services
             </Link>
           </li>
-          <li>
-            <Link to={`/`}>
+          <li className="main-nav-item">
+            <Link className="main-nav-link" to={`/`}>
               Purge
             </Link>
           </li>
         </Nav>
         <Nav pullRight={true}>
           <li>
+            <Button bsStyle="primary" className="btn-icon">
+              !
+            </Button>
+          </li>
+          <li>
+            <Button bsStyle="primary" className="btn-icon">
+              ?
+            </Button>
+          </li>
+          <li>
             <form>
               <Input type="text" placeholder="Search" />
             </form>
           </li>
           <li>
-            <Button>
-              Alerts
-            </Button>
-          </li>
-          <li>
-            <Button>
-              ?
-            </Button>
-          </li>
-          <li>
-            <DropdownButton title="user" id="dropdonw-1">
+            <DropdownButton bsStyle="primary" title="user" id="dropdonw-1">
               <MenuItem header={true}>John Doe</MenuItem>
               <MenuItem eventKey="1">Disney</MenuItem>
               <MenuItem eventKey="2">UDN Admin</MenuItem>

@@ -7,9 +7,9 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
-  ButtonGroup,
   ButtonToolbar,
   Col,
+  Dropdown,
   DropdownButton,
   Input,
   Label,
@@ -94,125 +94,57 @@ class Styleguide extends React.Component {
 
           <hr />
 
-          <Tabs defaultActiveKey={1} bsStyle="pills" position="left" className="styleguide-row">
-
-            <Tab eventKey={1} title="Tab 1">
-              <h4>Tab 1</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={2} title="Tab 2">
-              <h4>Tab 2</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={3} title="Tab 3">
-              <h4>Tab 3</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-          </Tabs>
-
 
           <h1 className="page-header">Buttons</h1>
 
           <ButtonToolbar className="styleguide-row">
-            <Button>Default button</Button>
-            <Button bsStyle="success">Success button</Button>
-            <Button bsStyle="info">Info button</Button>
-            <Button bsStyle="warning">Warning button</Button>
-            <Button bsStyle="danger">Danger button</Button>
+            <Button bsStyle="primary">Default button</Button>
+            <Button className="btn-secondary">Secondary button</Button>
+            <Button className="btn-secondary active">Active secondary button</Button>
             <Button bsStyle="link">Link button</Button>
+            <Button bsStyle="primary" className="btn-icon">?</Button>
+            <Button bsStyle="primary" className="btn-icon btn-round">+</Button>
           </ButtonToolbar>
 
           <ButtonToolbar className="styleguide-row">
-            <Button disabled={true}>Default button</Button>
-            <Button bsStyle="success" disabled={true}>Success button</Button>
-            <Button bsStyle="info" disabled={true}>Info button</Button>
-            <Button bsStyle="warning" disabled={true}>Warning button</Button>
-            <Button bsStyle="danger" disabled={true}>Danger button</Button>
+            <Button bsStyle="primary" disabled={true}>Default button</Button>
+            <Button className="btn-secondary" disabled={true}>Secondary button</Button>
+            <Button className="btn-secondary active" disabled={true}>Active secondary button</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
+            <Button bsStyle="primary" className="btn-icon" disabled={true}>?</Button>
+            <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}>+</Button>
           </ButtonToolbar>
-
-
-          <hr />
-
-          <p>
-            <Button bsStyle="primary" bsSize="large">Large button</Button>
-          </p>
-
-          <p>
-            <Button bsStyle="primary">Default button</Button>
-          </p>
-
-          <p>
-            <Button bsStyle="primary" bsSize="small">Small button</Button>
-          </p>
-
-          <p>
-            <Button bsStyle="primary" bsSize="xsmall">X-Small button</Button>
-          </p>
-
-
-          <hr />
-
-          <ButtonGroup className="styleguide-row" bsSize="large">
-            <Button>Left</Button>
-            <Button>Middle</Button>
-            <Button>Right</Button>
-          </ButtonGroup>
-
-          <ButtonGroup className="styleguide-row">
-            <Button>Left</Button>
-            <Button>Middle</Button>
-            <Button>Right</Button>
-          </ButtonGroup>
-
-          <ButtonGroup className="styleguide-row" bsSize="small">
-            <Button>Left</Button>
-            <Button>Middle</Button>
-            <Button>Right</Button>
-          </ButtonGroup>
-
-          <ButtonGroup className="styleguide-row" bsSize="xsmall">
-            <Button>Left</Button>
-            <Button>Middle</Button>
-            <Button>Right</Button>
-          </ButtonGroup>
 
 
           <h1 className="page-header">Dropdowns</h1>
 
           <ButtonToolbar>
-            <DropdownButton id="dropdown1" bsStyle="primary" title="Dropdown">
-              <MenuItem eventKey="1">Dropdown item</MenuItem>
-              <MenuItem eventKey="2">Dropdown item</MenuItem>
-              <MenuItem eventKey="3" active={true}>Active Dropdown item</MenuItem>
-              <MenuItem divider={true} />
-              <MenuItem eventKey="4">Separated Dropdown item</MenuItem>
+            <DropdownButton bsStyle="primary" id="dropdown1" title="Dropdown menu">
+              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
+              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
             </DropdownButton>
 
-            <SplitButton id="dropdown2" bsStyle="primary" title="Split Button">
-              <MenuItem eventKey="1">Dropdown item</MenuItem>
-              <MenuItem eventKey="2">Dropdown item</MenuItem>
-              <MenuItem eventKey="3" active={true}>Active Dropdown item</MenuItem>
-              <MenuItem divider={true} />
-              <MenuItem eventKey="4">Separated Dropdown item</MenuItem>
+            <SplitButton bsStyle="primary" id="dropdown2" title="Split Button with Dropdown">
+              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
+              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
             </SplitButton>
 
-            <DropdownButton id="dropdown3" bsStyle="primary" title="Dropup" dropup={true}>
-              <MenuItem eventKey="1">Dropup item</MenuItem>
-              <MenuItem eventKey="2">Dropup item</MenuItem>
-              <MenuItem eventKey="3" active={true}>Active Dropup item</MenuItem>
-              <MenuItem divider={true} />
-              <MenuItem eventKey="4">Separated Dropup item</MenuItem>
+            <DropdownButton bsStyle="primary" id="dropdown3" title="Dropup menu" dropup={true}>
+              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
+              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
+              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
             </DropdownButton>
           </ButtonToolbar>
 
 
           <h1 className="page-header">Tables</h1>
 
-          <Table striped={true} bordered={true} hover={true}>
+          <Table striped={true}>
             <thead>
               <tr>
                 <th>Rule Priority</th>
@@ -281,7 +213,7 @@ class Styleguide extends React.Component {
 
               <Input type="password" label="Password Input" />
 
-              <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" addonAfter=".00" />
+              <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
 
               <Input type="textarea" label="Text Area" placeholder="Enter text" />
 
@@ -313,15 +245,13 @@ class Styleguide extends React.Component {
                     <Col xs={10}>
                       <input type="text" className="form-control" />
                     </Col>
-                    <Col xs={2}>
                       <OverlayTrigger trigger="click" rootClose={true} overlay={
                         <Popover id="popover1" title="Info">
                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         </Popover>
                       }>
-                        <Button bsStyle="info">?</Button>
+                        <Button bsStyle="link" className="col-xs-2 btn-icon">?</Button>
                       </OverlayTrigger>
-                    </Col>
                   </Row>
                 </Input>
 
@@ -330,19 +260,6 @@ class Styleguide extends React.Component {
                 <Input type="checkbox" label="Inline Checkbox" wrapperClassName="col-xs-offset-3 col-xs-9" />
 
               </form>
-
-            </div>
-
-          </div>
-
-
-          <hr />
-
-          <div className="row">
-
-            <div className="col-xs-6">
-
-              <Input type="file" label="File Selector" />
 
             </div>
 
@@ -382,31 +299,21 @@ class Styleguide extends React.Component {
 
           <hr />
 
-          <div className="row">
+          <label>Select</label>
 
-            <div className="col-xs-6">
+          <div>
 
-              <Input type="select" label="Select" placeholder="Select">
-                <option value="other">Option 1</option>
-                <option value="other">Option 2</option>
-                <option value="other">Option 3</option>
-                <option value="other">Option 4</option>
-                <option value="other">Option 5</option>
-              </Input>
-
-            </div>
-
-            <div className="col-xs-6">
-
-              <Input type="select" label="Multiple Select" multiple={true}>
-                <option value="other">Option 1</option>
-                <option value="other">Option 2</option>
-                <option value="other">Option 3</option>
-                <option value="other">Option 4</option>
-                <option value="other">Option 5</option>
-              </Input>
-
-            </div>
+            <Dropdown id="dropdown-select" className="dropdown-select">
+              <Dropdown.Toggle>
+                View <b>Production</b>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <MenuItem eventKey="1" active={true}>Production</MenuItem>
+                <MenuItem eventKey="2">Staging</MenuItem>
+                <MenuItem eventKey="3">In Process</MenuItem>
+                <MenuItem eventKey="4">History</MenuItem>
+              </Dropdown.Menu>
+            </Dropdown>
 
           </div>
 
