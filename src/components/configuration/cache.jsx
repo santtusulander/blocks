@@ -24,27 +24,23 @@ class ConfigurationCache extends React.Component {
       )
     }
     let policyPath = Immutable.List([
-      'response_policies',
-      config.get('response_policies')
-        .findIndex(policyGroup => policyGroup.has('defaults')),
-      'defaults',
-      'policies']);
+      'default_policies']);
     let policyPaths = {
       honor_origin_cache_policies: policyPath
         .push(
           config.getIn(policyPath)
-            .findIndex(policy => policy.has('honor_origin_cache_policies')),
-            'honor_origin_cache_policies'),
-      ignore_case: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.has('ignore_case')),
-            'ignore_case'),
+            .findIndex(policy => policy.get('set').has('cache_control')),
+            'honor_origin'),
       honor_etags: policyPath
         .push(
           config.getIn(policyPath)
-            .findIndex(policy => policy.has('honor_etags')),
-            'honor_etags')
+            .findIndex(policy => policy.get('set').has('cache_control')),
+            'check_etag'),
+      ignore_case: policyPath
+        .push(
+          config.getIn(policyPath)
+            .findIndex(policy => policy.get('set').has('cache_name')),
+            'ignore_case')
     };
     return (
       <form className="configuration-cache" onSubmit={this.handleSave}>
