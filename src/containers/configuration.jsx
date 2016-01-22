@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {Nav, NavItem} from 'react-bootstrap'
 
 import * as hostActionCreators from '../redux/modules/host'
 
@@ -63,10 +64,7 @@ export class Configuration extends React.Component {
     )
   }
   activateTab(tabName) {
-    return e => {
-      e.preventDefault()
-      this.setState({activeTab: tabName})
-    }
+    this.setState({activeTab: tabName})
   }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
@@ -82,30 +80,28 @@ export class Configuration extends React.Component {
       <div className="container">
 
         <h1 className="page-header">{this.props.params.host}</h1>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('details')}>
-          Details
-        </a>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('cache')}>
-          Cache
-        </a>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('performance')}>
-          Performance
-        </a>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('security')}>
-          Security
-        </a>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('certificates')}>
-          Certificates
-        </a>
-        <a href="#" className="config-tab"
-          onClick={this.activateTab('change-log')}>
-          Change Log
-        </a>
+
+        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+          onSelect={this.activateTab}>
+          <NavItem eventKey={'details'}>
+            Details
+          </NavItem>
+          <NavItem eventKey={'cache'}>
+            Cache
+          </NavItem>
+          <NavItem eventKey={'performance'}>
+            Performance
+          </NavItem>
+          <NavItem eventKey={'security'}>
+            Security
+          </NavItem>
+          <NavItem eventKey={'certificates'}>
+            Certificates
+          </NavItem>
+          <NavItem eventKey={'change-log'}>
+            Change Log
+          </NavItem>
+        </Nav>
         {this.state.activeTab === 'details' ?
           <ConfigurationDetails
             edgeConfiguration={activeConfig.get('edge_configuration')}
