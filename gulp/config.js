@@ -58,8 +58,18 @@ module.exports = {
         },
         {
           test: /\.(woff|woff2|eot|ttf|svg)$/,
-          exclude: /node_modules/,
+          exclude: /(node_modules|img|icons)/,
           loader: 'file?name=/assets/fonts/[name].[ext]'
+        },
+        {
+          test: /\.svg$/,
+          exclude: /(node_modules|fonts|icons)/,
+          loader: 'file?name=src/assets/img/[name].[ext]'
+        },
+        {
+          test: /\.svg$/,
+          exclude: /(node_modules|fonts|img)/,
+          loader: 'file?name=src/assets/icons/[name].[ext]'
         }
       ]
     }
