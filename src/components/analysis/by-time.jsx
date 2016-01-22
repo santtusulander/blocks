@@ -63,11 +63,7 @@ class AnalysisByTime extends React.Component {
             if(i) {
               axes.push(
                 <g key={i}>
-                  <line
-                    x1={this.props.padding*2} y1={yScale(tick)}
-                    x2={this.props.width - this.props.padding} y2={yScale(tick)}
-                    className="axis-tick"/>
-                  <text x={0} y={yScale(tick)}>
+                  <text x={this.props.padding} y={yScale(tick)}>
                     {numeral(tick).format('0a')}
                   </text>
                 </g>

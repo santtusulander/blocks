@@ -157,13 +157,13 @@ class Analysis extends React.Component {
         </Row>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
-          <AnalysisByTime axes={true} padding={20}
+          <AnalysisByTime axes={true} padding={40}
             primaryData={fakeRecentData} secondaryData={fakeAverageData}
             width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
         </div>
         <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
-          <AnalysisByLocation padding={20}
+          <AnalysisByLocation
             width={this.state.byLocationWidth}
             height={this.state.byLocationWidth / 2}
             countryData={fakeCountryData}
