@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { Row, Col, Nav, NavItem } from 'react-bootstrap'
 
 import AnalysisByTime from '../components/analysis/by-time'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -109,6 +110,7 @@ class Analysis extends React.Component {
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+    this.changeTab = this.changeTab.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -123,10 +125,43 @@ class Analysis extends React.Component {
       byTimeWidth: this.refs.byTimeHolder.clientWidth
     })
   }
+  changeTab() {
+    console.log('change tab')
+  }
   render() {
     return (
       <div className="analysis-container container">
-        <h1 className="page-header">Analysis</h1>
+        <Nav bsStyle="tabs" activeKey={1} onSelect={this.changeTab}>
+          <NavItem eventKey={1}>Traffic</NavItem>
+          <NavItem eventKey={2}>Visitors</NavItem>
+        </Nav>
+        <Row>
+          <Col sm={3} xs={6}>
+            <h3>Out</h3>
+            <div className="summary-data">
+              <h4>Transferred out to Internet</h4>
+              <div className="stat">
+                2,211
+              </div>
+            </div>
+          </Col>
+          <Col sm={3} xs={6}>
+            <h3>In</h3>
+            <div className="summary-data">
+              <h4>Transferred out to Internet</h4>
+              <div className="stat">
+                2,211
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <h3>TRANSFER BY TIME</h3>
+        <div ref="byTimeHolder">
+          <AnalysisByTime axes={true} padding={20}
+            primaryData={fakeRecentData} secondaryData={fakeAverageData}
+            width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+        </div>
+        <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
           <AnalysisByLocation padding={20}
             width={this.state.byLocationWidth}
@@ -135,11 +170,69 @@ class Analysis extends React.Component {
             stateData={fakeStateData}
             cityData={fakeCityData}/>
         </div>
-        <div ref="byTimeHolder">
-          <AnalysisByTime axes={true} padding={20}
-            primaryData={fakeRecentData} secondaryData={fakeAverageData}
-            width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
-        </div>
+        <h3>BY COUNTRY</h3>
+        <table className="table by-country-table">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Traffic GB</th>
+              <th>% of Traffic</th>
+              <th>Period Trend</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>United States</td>
+              <td>1,235,789</td>
+              <td>44%</td>
+              <td>Chart</td>
+              <td>+64%</td>
+            </tr>
+            <tr>
+              <td>Germany</td>
+              <td>424,242</td>
+              <td>22%</td>
+              <td>Chart</td>
+              <td>+1%</td>
+            </tr>
+            <tr>
+              <td>United Kingdom</td>
+              <td>321,214</td>
+              <td>7%</td>
+              <td>Chart</td>
+              <td>+65%</td>
+            </tr>
+            <tr>
+              <td>France</td>
+              <td>10,000</td>
+              <td>7%</td>
+              <td>Chart</td>
+              <td>-7%</td>
+            </tr>
+            <tr>
+              <td>Australia</td>
+              <td>424</td>
+              <td>7%</td>
+              <td>Chart</td>
+              <td>+7%</td>
+            </tr>
+            <tr>
+              <td>Finland</td>
+              <td>100</td>
+              <td>7%</td>
+              <td>Chart</td>
+              <td>+3%</td>
+            </tr>
+            <tr>
+              <td>Rest</td>
+              <td>1,221,122</td>
+              <td>20%</td>
+              <td>Chart</td>
+              <td>+10%</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }

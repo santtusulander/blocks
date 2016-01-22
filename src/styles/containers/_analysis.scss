@@ -1,0 +1,15 @@
+.analysis-container {
+  padding-top: 60px;
+
+  .by-country-table {
+    th {
+      text-transform: uppercase;
+    }
+
+    td:nth-child(2),
+    td:nth-child(3),
+    td:nth-child(5) {
+      text-align: right;
+    }
+  }
+}
