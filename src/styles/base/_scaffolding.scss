@@ -1,0 +1,21 @@
+// Scaffolding
+// ===========
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  padding-top: $header-height;
+  font-size: 20px;
+
+  &.dark-theme {
+    color: $dt-text-color;
+    background-attachment: fixed;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
+      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
+    background-size: 100%;
+  }
+}

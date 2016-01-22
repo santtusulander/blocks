@@ -1,0 +1,19 @@
+// Button Groups
+// =============
+
+.btn-group > .btn + .dropdown-toggle {
+  width: $btn-height;
+  padding-right: 0;
+  padding-left: 0;
+
+  .btn + .btn,
+  .btn + .btn-group,
+  .btn-group + .btn,
+  .btn-group + .btn-group {
+    margin-left: 0;
+  }
+
+  .dark-theme & {
+    border-left: 1px solid rgba($black, 0.2);
+  }
+}

@@ -1,0 +1,75 @@
+// Header
+// ======
+
+.header {
+  height: $header-height;
+  background-color: rgba($black, 0.5);
+  border: 0;
+}
+
+.header-gradient {
+  height: 10px;
+  margin: 0 -15px;
+  background: $gradient-full;
+}
+
+.navbar-default {
+  // scss-lint:disable SelectorDepth NestingDepth
+  // Need to override Bootstrap
+
+  .navbar-brand {
+    width: $bar-height;
+    height: $bar-height;
+    text-indent: -9999em;
+
+    &,
+    &:hover {
+      background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
+      background-size: 30px 40px;
+    }
+  }
+
+  .navbar-nav > .main-nav-item {
+
+    .dropdown .main-nav-link {
+      padding: 0 80px;
+    }
+
+    .dropdown-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+      float: none;
+      width: $bar-height;
+      height: $bar-height;
+      background-color: transparent;
+      border: 0;
+
+      &:hover .caret {
+        color: $white;
+      }
+    }
+
+    .open > .btn-default.dropdown-toggle,
+    .open > .btn-default.dropdown-toggle {
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: inherit;
+      }
+    }
+  }
+
+  // Open dropdowns
+  .open > a {
+
+    &,
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+}

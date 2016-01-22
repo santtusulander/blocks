@@ -93,16 +93,24 @@ $gradient-red:        #e2001a;
 $gradient-orange:     #f08a00;
 
 // Full Blend
-$gradient-full:      linear-gradient($gradient-lime, $gradient-green-haze, $gradient-bondi-blue, $gradient-navy, $gradient-magenta);
+$gradient-full:      linear-gradient(to right, $gradient-lime, $gradient-green-haze, $gradient-bondi-blue, $gradient-navy, $gradient-magenta);
 
 // Large Blends
-$gradient-lg-green:  linear-gradient($gradient-lime, $gradient-teal);
-$gradient-lg-blue:   linear-gradient($gradient-teal, $gradient-royal-blue);
-$gradient-lg-purple: linear-gradient($gradient-navy, $gradient-magenta);
+$gradient-lg-green:  linear-gradient(to right, $gradient-lime, $gradient-teal);
+$gradient-lg-blue:   linear-gradient(to right, $gradient-teal, $gradient-royal-blue);
+$gradient-lg-purple: linear-gradient(to right, $gradient-navy, $gradient-magenta);
 
 // Small Blends
-$gradient-sm-green:  linear-gradient($gradient-lime, $gradient-green);
-$gradient-sm-teal:   linear-gradient($gradient-teal, $gradient-bondi-blue);
-$gradient-sm-blue:   linear-gradient($gradient-blue, $gradient-purple);
-$gradient-sm-purple: linear-gradient($gradient-purple, $gradient-magenta);
-$gradient-sm-red:    linear-gradient($gradient-red, $gradient-orange);
+$gradient-sm-green:  linear-gradient(to right, $gradient-lime, $gradient-green);
+$gradient-sm-teal:   linear-gradient(to right, $gradient-teal, $gradient-bondi-blue);
+$gradient-sm-blue:   linear-gradient(to right, $gradient-blue, $gradient-purple);
+$gradient-sm-purple: linear-gradient(to right, $gradient-purple, $gradient-magenta);
+$gradient-sm-red:    linear-gradient(to right, $gradient-red, $gradient-orange);
+
+
+// Themes
+// ======
+
+// Dark Theme
+
+$dt-text-color: #d2d2d2;

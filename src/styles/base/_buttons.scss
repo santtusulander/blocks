@@ -1,0 +1,129 @@
+//
+// Buttons
+// --------------------------------------------------
+
+
+.btn {
+  height: $btn-height;
+  min-width: 180px;
+  padding: 0 30px;
+  font-size: inherit;
+  font-weight: normal;
+  line-height: $btn-height;
+  border: 0;
+  border-radius: 2px;
+
+  &.dropdown-toggle,
+  &.btn-icon,
+  &.btn-link {
+    min-width: 0;
+  }
+
+  &.btn-icon {
+    width: $btn-height;
+    padding: 0;
+  }
+
+  &.btn-round {
+    border-radius: $btn-height / 2;
+  }
+}
+
+.dark-theme {
+
+  .dropdown-select {
+
+    .dropdown-toggle {
+
+      &,
+      &:hover,
+      &:active,
+      &.active {
+        width: 100%;
+        color: $dt-text-color;
+        text-align: left;
+        background-color: rgba($black, 0.2);
+        box-shadow: none;
+      }
+
+      &:hover:enabled {
+        color: $pale-blue;
+      }
+
+      &.active {
+        background-color: rgba($black, 0.2);
+      }
+    }
+
+    &.open .dropdown-toggle {
+
+      &,
+      &:hover {
+        color: $pale-blue;
+        background-color: rgba($black, 0.2);
+        box-shadow: none;
+      }
+    }
+  }
+
+  .btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: $dt-text-color;
+      background-color: rgba($pale-blue, 0.1);
+      box-shadow: none;
+    }
+
+    &:hover:enabled,
+    &:active:enabled,
+    &.active:enabled {
+      color: $pale-blue;
+    }
+  }
+
+  .open:not(.dropdown-select) > .dropdown-toggle,
+  .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+      color: $pale-blue;
+      background-color: rgba($pale-blue, 0.1);
+      box-shadow: none;
+    }
+  }
+
+  .btn-secondary {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: $purple;
+    }
+
+    &:hover:enabled {
+      color: $pale-blue;
+    }
+
+    &.active {
+      background-color: $pale-blue;
+    }
+  }
+
+  .btn-link {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      text-decoration: none;
+    }
+
+    &:hover:enabled {
+      color: $pale-blue;
+    }
+  }
+}

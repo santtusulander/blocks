@@ -1,0 +1,23 @@
+//
+// Breadcrumbs
+// --------------------------------------------------
+
+
+.breadcrumb {
+  padding: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+
+  > li {
+    display: inline-block;
+
+    + li::before {
+      padding: 0 10px;
+      content: '\203A';
+    }
+  }
+
+  > .active {
+    color: $white;
+  }
+}

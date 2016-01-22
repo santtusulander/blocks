@@ -1,0 +1,110 @@
+// Forms
+// =====
+
+label {
+  margin-bottom: 15px;
+  font-weight: normal;
+}
+
+.form-control {
+  height: $bar-height;
+  padding: 25px 30px;
+  font-size: inherit;
+  color: inherit;
+  background-color: rgba($black, 0.2);
+  border: 0;
+  border-radius: 2px;
+  box-shadow: none;
+
+  .dark-theme &::placeholder {
+    color: rgba($dt-text-color, 0.5);
+  }
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-horizontal {
+
+  @media (min-width: $screen-sm-min) {
+    .control-label {
+      padding-top: 26px;
+    }
+  }
+}
+
+.checkbox {
+
+  label {
+    padding-left: 0;
+  }
+
+  input {
+    display: none;
+
+    + span::before {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: -2px 20px 2px 0;
+      vertical-align: middle;
+      cursor: pointer;
+      border-radius: 2px;
+      content: '';
+
+      .dark-theme & {
+        background: rgba($black, 0.2);
+      }
+    }
+
+    .dark-theme &:checked + span::before {
+      background-image: url('../assets/icons/dt-icon-checkbox.svg');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 17px 16px;
+    }
+  }
+}
+
+.radio {
+
+  label {
+    padding-left: 0;
+  }
+
+  input {
+    display: none;
+
+    + span::before {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: -2px 20px 2px 0;
+      vertical-align: middle;
+      cursor: pointer;
+      border-radius: 50%;
+      content: '';
+
+      .dark-theme & {
+        background-color: rgba($black, 0.2);
+      }
+    }
+
+    .dark-theme &:checked + span {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        background-color: $dt-text-color;
+        border-radius: 50%;
+        content: '';
+      }
+    }
+  }
+}
