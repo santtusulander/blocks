@@ -3,6 +3,7 @@ var gutil = require("gulp-util");
 var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var config = require('../config');
 
@@ -14,7 +15,12 @@ gulp.task("webpack", function(callback) {
     webpackConfig.devtool = "source-map";
     webpackConfig.plugins = [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin()
+      new webpack.NoErrorsPlugin(),
+      new CopyWebpackPlugin([
+        {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
+        {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
+        {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'}
+      ])
     ];
     Object.keys(webpackConfig.entry).map(function(key){
       webpackConfig.entry[key].unshift('webpack-dev-server/client?http://localhost:'+config.webpackPort);

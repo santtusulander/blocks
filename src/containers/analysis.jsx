@@ -1,6 +1,8 @@
 import React from 'react'
+import Immutable from 'immutable'
 
 import AnalysisByTime from '../components/analysis/by-time'
+import AnalysisByLocation from '../components/analysis/by-location'
 
 const fakeRecentData = [
   {epoch_start: 1451606400, bytes: 39405, requests: 943},
@@ -62,11 +64,47 @@ const fakeAverageData = [
   {epoch_start: 1451609000, bytes: 23435, requests: 654}
 ]
 
+const fakeCountryData = Immutable.fromJS([
+  {id: 'usa', trending: -1},
+  {id: 'can', trending: 1},
+  {id: 'mex', trending: 0},
+  {id: 'aus', trending: 0},
+  {id: 'bra', trending: -1},
+  {id: 'rus', trending: 1}
+])
+
+const fakeStateData = Immutable.fromJS([
+  {id: 'Alabama', trending: -1},
+  {id: 'Alaska', trending: 1},
+  {id: 'Arkansas', trending: 0},
+  {id: 'Arizona', trending: -1},
+  {id: 'California', trending: -1},
+  {id: 'Connecticut', trending: 0},
+  {id: 'Delaware', trending: -1},
+  {id: 'Florida', trending: 1},
+  {id: 'Georgia', trending: 1},
+  {id: 'Oregon', trending: -1},
+  {id: 'Michigan', trending: -1},
+  {id: 'Nevada', trending: 0},
+  {id: 'Utah', trending: 1}
+])
+
+const fakeCityData = Immutable.fromJS([
+  {name: 'Atlanta', state: 'Georgia', trending: 1},
+  {name: 'Savannah', state: 'Georgia', trending: 0},
+  {name: 'San Francisco', state: 'California', trending: 1},
+  {name: 'Sacramento', state: 'California', trending: -1},
+  {name: 'San Bernardino', state: 'California', trending: 0},
+  {name: 'Los Angeles', state: 'California', trending: 1},
+  {name: 'San Diego', state: 'California', trending: 0}
+])
+
 class Analysis extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      byLocationWidth: 0,
       byTimeWidth: 0
     }
 
@@ -80,12 +118,23 @@ class Analysis extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   measureContainers() {
-    this.setState({byTimeWidth: this.refs.byTimeHolder.clientWidth})
+    this.setState({
+      byLocationWidth: this.refs.byLocationHolder.clientWidth,
+      byTimeWidth: this.refs.byTimeHolder.clientWidth
+    })
   }
   render() {
     return (
       <div className="analysis-container container">
         <h1 className="page-header">Analysis</h1>
+        <div ref="byLocationHolder">
+          <AnalysisByLocation padding={20}
+            width={this.state.byLocationWidth}
+            height={this.state.byLocationWidth / 2}
+            countryData={fakeCountryData}
+            stateData={fakeStateData}
+            cityData={fakeCityData}/>
+        </div>
         <div ref="byTimeHolder">
           <AnalysisByTime axes={true} padding={20}
             primaryData={fakeRecentData} secondaryData={fakeAverageData}

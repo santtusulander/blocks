@@ -17,7 +17,7 @@ describe('ContentItemList', () => {
     let deleteItem = TestUtils.renderIntoDocument(
       <ContentItemList account={Immutable.Map()} delete={deleteFunc}/>
     )
-    let links = deleteItem.getElementsByTagName('a')
+    let links = TestUtils.scryRenderedDOMComponentsWithTag(deleteItem, 'a')
     TestUtils.Simulate.click(links[0])
     expect(deleteFunc.mock.calls.length).toEqual(1)
   })
@@ -26,8 +26,8 @@ describe('ContentItemList', () => {
     let contentItem = TestUtils.renderIntoDocument(
       <ContentItemList account={Immutable.Map()} toggleActive={toggleActive}/>
     )
-    let tr = contentItem.getElementsByTagName('div')
-    TestUtils.Simulate.click(tr[0])
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(contentItem, 'div')
+    TestUtils.Simulate.click(div[0])
     expect(toggleActive.mock.calls.length).toEqual(1)
   })
 })
