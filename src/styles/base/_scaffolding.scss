@@ -8,7 +8,7 @@ body {
 
 body {
   padding-top: $header-height;
-  font-size: 20px;
+  font-size: $font-size;
 
   &.dark-theme {
     color: $dt-text-color;

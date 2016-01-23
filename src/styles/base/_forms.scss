@@ -19,10 +19,31 @@ label {
   .dark-theme &::placeholder {
     color: rgba($dt-text-color, 0.5);
   }
+
+  .header & {
+    width: 500px;
+    height: $header-btn-height;
+    padding-left: 50px;
+    margin-top: ($bar-height - $header-btn-height) / 2;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: $header-btn-height / 2;
+
+    .dark-theme & {
+      background-image: url('../assets/icons/dt-icon-search.svg');
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+    }
+  }
 }
 
 .form-group {
   margin-bottom: 25px;
+
+  .header & {
+    margin-bottom: 0;
+  }
 }
 
 .form-horizontal {

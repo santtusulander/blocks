@@ -2,13 +2,13 @@
 // ======
 
 .header {
-  height: $header-height;
+  height: $header-height + 10px;
   background-color: rgba($black, 0.5);
   border: 0;
 }
 
 .header-gradient {
-  height: 10px;
+  height: $header-gradient-height;
   margin: 0 -15px;
   background: $gradient-full;
 }
@@ -36,15 +36,19 @@
     }
 
     .dropdown-toggle {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: block;
-      float: none;
-      width: $bar-height;
-      height: $bar-height;
-      background-color: transparent;
-      border: 0;
+
+      &,
+      &:focus {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: block;
+        float: none;
+        width: $bar-height;
+        height: $bar-height;
+        background-color: transparent;
+        border: 0;
+      }
 
       &:hover .caret {
         color: $white;
