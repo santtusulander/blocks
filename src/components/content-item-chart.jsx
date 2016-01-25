@@ -127,8 +127,9 @@ class ContentItemChart extends React.Component {
           </svg>
           <div className="circle-base"
             style={{width: innerRadius * 2, height: innerRadius * 2,
-            marginTop: -innerRadius, marginLeft: -innerRadius}}></div>
-          <div className="circle-gradient"></div>
+            marginTop: -innerRadius, marginLeft: -innerRadius}}>
+            <div className="circle-gradient"></div>
+          </div>
           <svg className="content-item-chart-svg difference-arc">
             <g>
               <path className="content-item-chart-line"
