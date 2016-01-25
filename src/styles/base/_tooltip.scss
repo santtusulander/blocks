@@ -1,0 +1,46 @@
+// Tooltip
+// =======
+
+.content-item-chart-tooltip {
+  z-index: 1020;
+  min-width: 280px;
+  font-size: inherit;
+
+  &.in {
+    opacity: 1;
+  }
+
+  &.top {
+    padding: 0;
+    margin: 0;
+  }
+
+  .tooltip-inner {
+    max-width: 100%;
+    padding: 25px 30px;
+    color: inherit;
+    text-align: left;
+    border-radius: 0;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.3);
+    }
+  }
+
+  .tooltip-header {
+    padding: 0 30px 10px;
+    margin: 0 -30px 10px;
+
+    .dark-theme & {
+      border-bottom: 1px solid rgba($black, 0.1);
+    }
+  }
+
+  .data-suffix {
+    font-size: 15px;
+  }
+
+  .tooltip-arrow {
+    display: none;
+  }
+}
