@@ -162,8 +162,8 @@ class ContentItemChart extends React.Component {
                   9
                 </Button>
                 <Button bsSize="small"
-                   className="btn-tertiary btn-icon btn-round invisible"
-                  onClick={this.props.toggleActive}>
+                   className="edit-content-item btn-tertiary btn-icon
+                   btn-round invisible" onClick={this.props.toggleActive}>
                   <span className="icon icon-edit"></span>
                 </Button>
               </ButtonToolbar>
