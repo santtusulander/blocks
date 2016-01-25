@@ -8,25 +8,27 @@
   .country {
     opacity: 1;
     transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;
-    fill: $silver;
+    fill: rgba($pale-blue, 0.2);
     stroke-width: 1;
-    stroke: $grey;
+    stroke: rgba($pale-blue, 0.4);
   }
+
+
 
   .hiddenpath {
     opacity: 0;
   }
 
   .above-avg {
-    fill: $purple;
+    fill: rgba($purple, 0.8);
   }
 
   .below-avg {
-    fill: $green;
+    fill: rgba($green, 0.8);
   }
 
   .avg {
-    fill: $pale-blue;
+    fill: rgba($pale-blue, 0.8);
   }
 
   .zoom-out {
