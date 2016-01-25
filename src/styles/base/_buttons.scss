@@ -20,12 +20,23 @@
   }
 
   &.btn-icon {
+    position: relative;
     width: $btn-height;
     padding: 0;
+    line-height: $btn-height;
     vertical-align: middle;
 
     &.btn-header {
       width: $header-btn-height;
+    }
+  }
+
+  &.btn-sm {
+    height: $btn-sm-height;
+
+    &.btn-icon {
+      width: $btn-sm-height;
+      line-height: $btn-sm-height;
     }
   }
 
