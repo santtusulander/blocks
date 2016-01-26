@@ -7,6 +7,12 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var config = require('../config');
 
+var assetCopy = new CopyWebpackPlugin([
+  {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
+  {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
+  {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'}
+]);
+
 gulp.task("webpack", function(callback) {
   var dev = process.env.NODE_ENV === 'development';
   var webpackConfig = config.webpack;
@@ -16,11 +22,7 @@ gulp.task("webpack", function(callback) {
     webpackConfig.plugins = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
-      new CopyWebpackPlugin([
-        {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
-        {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
-        {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'}
-      ])
+      assetCopy
     ];
     Object.keys(webpackConfig.entry).map(function(key){
       webpackConfig.entry[key].unshift('webpack-dev-server/client?http://localhost:'+config.webpackPort);
@@ -41,7 +43,8 @@ gulp.task("webpack", function(callback) {
   else {
     webpackConfig.plugins = [
       // new webpack.optimize.UglifyJsPlugin({minimize: true}),
-      new ExtractTextPlugin("styles/style.css")
+      new ExtractTextPlugin("styles/style.css"),
+      assetCopy
     ];
     webpackConfig.module.loaders.forEach(function(loader, i) {
       if(loader.test.test('.scss')) {
