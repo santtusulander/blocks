@@ -26,7 +26,7 @@
 // Need to override bootstrap styles
 .dropdown-menu {
   width: 100%;
-  min-width: 200px;
+  min-width: 250px;
   padding: 0;
   margin: 0;
   font-size: inherit;
@@ -34,6 +34,11 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
+
+  .navbar-right &:not(.dropdown-menu-right) {
+    right: auto;
+    left: 0;
+  }
 
   .open & {
     animation: showDropdown 250ms ease-out;
@@ -61,15 +66,25 @@
     }
   }
 
+  &.dropdown-user-menu {
+    width: 600px;
+    min-height: calc(100vh - #{$header-total-height});
+    font-size: 30px;
+  }
+
   > li {
+    display: table;
+    width: 100%;
     min-height: 80px;
 
-    > a {
-      min-height: $bar-height;
-      padding: 0 30px;
+    > a,
+    > .dropdown-main-header {
+      display: table-cell;
+      padding: 15px 30px;
       line-height: 1.1em;
       color: inherit;
       white-space: normal;
+      vertical-align: middle;
 
       .dark-theme & {
 
@@ -78,23 +93,24 @@
           color: $white;
           background-color: transparent;
         }
-
-        span {
-          display: inline-block;
-          vertical-align: middle;
-        }
       }
+    }
 
-      &::before {
-        display: inline-block;
-        min-height: $bar-height;
-        vertical-align: middle;
-        content: '';
+    &.dropdown-header {
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+
+      .dark-theme & {
+        background: rgba($black, 0.2);
       }
     }
 
     &.active::after {
-      background-color: rgba($pale-blue, 0.1);
+
+      .dark-theme & {
+        background-color: rgba($pale-blue, 0.1);
+      }
     }
   }
 }

@@ -7,7 +7,6 @@ import { Link } from 'react-router'
 import {
   Button,
   Dropdown,
-  DropdownButton,
   Input,
   MenuItem,
   Nav,
@@ -30,14 +29,14 @@ class Header extends React.Component {
               <Link className="main-nav-link" to={`/`}>
                 Content
               </Link>
-              <Dropdown.Toggle bsStyle='link' className="pull-right"/>
+              <Dropdown.Toggle bsStyle='link'/>
               <Dropdown.Menu>
                 <MenuItem eventKey="1" active={true}><span>Disney Interactive</span></MenuItem>
-                <MenuItem eventKey="2"><span>Disney Cruises</span></MenuItem>
-                <MenuItem eventKey="3"><span>Lucas Arts</span></MenuItem>
-                <MenuItem eventKey="4"><span>Star Wars</span></MenuItem>
-                <MenuItem eventKey="5"><span>Ads</span></MenuItem>
-                <MenuItem eventKey="6"><span>Marvel</span></MenuItem>
+                <MenuItem eventKey="2">Disney Cruises</MenuItem>
+                <MenuItem eventKey="3">Lucas Arts</MenuItem>
+                <MenuItem eventKey="4">Star Wars</MenuItem>
+                <MenuItem eventKey="5">Ads</MenuItem>
+                <MenuItem eventKey="6">Marvel</MenuItem>
               </Dropdown.Menu>
             </Dropdown>
           </li>
@@ -59,29 +58,48 @@ class Header extends React.Component {
         </Nav>
         <Nav pullRight={true}>
           <li>
-            <Button bsStyle="primary" className="btn-icon">
-              !
-            </Button>
+            <Dropdown id="dropdown-content">
+              <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
+                btn-alerts" noCaret={true}>
+                <span className="icon icon-alerts"></span>
+                <span className="btn-alerts-count">9</span>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <MenuItem eventKey="1">Alert 1</MenuItem>
+                <MenuItem eventKey="2">Alert 2</MenuItem>
+                <MenuItem eventKey="3">Alert 3</MenuItem>
+              </Dropdown.Menu>
+            </Dropdown>
           </li>
           <li>
-            <Button bsStyle="primary" className="btn-icon">
-              ?
-            </Button>
+            <Button className="btn-header btn-tertiary btn-icon
+              btn-round">?</Button>
           </li>
           <li>
-            <form>
-              <Input type="text" placeholder="Search" />
-            </form>
+            <Input className="header-search-input"
+              type="text" placeholder="Search" />
           </li>
           <li>
-            <DropdownButton bsStyle="primary" title="user" id="dropdonw-1">
-              <MenuItem header={true}>John Doe</MenuItem>
-              <MenuItem eventKey="1">Disney</MenuItem>
-              <MenuItem eventKey="2">UDN Admin</MenuItem>
-              <MenuItem eventKey="3">Account Management</MenuItem>
-              <MenuItem eventKey="4">Lights On</MenuItem>
-              <MenuItem eventKey="5">Log Out</MenuItem>
-            </DropdownButton>
+            <Dropdown id="dropdown-content" pullRight={true}>
+              <Dropdown.Toggle bsStyle="primary"
+                className="btn-icon btn-round btn-user-menu"
+                noCaret={true} id="user-dropdown">
+                <img src="/src/assets/img/img-user.jpg"></img>
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="dropdown-user-menu">
+                <MenuItem header={true}>
+                  <span className="dropdown-main-header">Username</span>
+                </MenuItem>
+                <MenuItem eventKey="1">
+                  <span className="helper-header">Company</span>
+                  Disney Studios
+                </MenuItem>
+                <MenuItem eventKey="2">UDN Admin</MenuItem>
+                <MenuItem eventKey="3">Account Management</MenuItem>
+                <MenuItem eventKey="4">Lights On</MenuItem>
+                <MenuItem eventKey="5">Log Out</MenuItem>
+              </Dropdown.Menu>
+            </Dropdown>
           </li>
         </Nav>
       </Navbar>

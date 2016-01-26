@@ -200,17 +200,19 @@ export class Accounts extends React.Component {
         {this.state.activeView === 'chart' ?
           (this.props.fetching ?
             <p>Loading...</p> :
-            this.props.accounts.map((accountChart, i) =>
-              <ContentItemChart key={i} id={accountChart}
-                name="Name" description="Desc"
-                toggleActive={this.toggleActiveAccount(accountChart)}
-                delete={this.deleteAccount}
-                primaryData={fakeRecentData}
-                secondaryData={fakeAverageData}
-                barWidth="1"
-                chartWidth="560"
-                barMaxHeight="80" />
-            )
+            <div className="content-item-grid">
+              {this.props.accounts.map((accountChart, i) =>
+                <ContentItemChart key={i} id={accountChart}
+                  name="Name" description="Desc"
+                  toggleActive={this.toggleActiveAccount(accountChart)}
+                  delete={this.deleteAccount}
+                  primaryData={fakeRecentData}
+                  secondaryData={fakeAverageData}
+                  barWidth="1"
+                  chartWidth="560"
+                  barMaxHeight="80" />
+              )}
+            </div>
           ) : this.state.activeView === 'list' &&
             (this.props.fetching ?
             <p>Loading...</p> :

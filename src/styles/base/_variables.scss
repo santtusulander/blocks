@@ -1,7 +1,15 @@
 // Variables
 // =========
 
-$header-height: 90px;
+$font-size: 20px;
+
+$header-height: 80px;
+$header-gradient-height: 10px;
+$header-total-height: $header-height + $header-gradient-height;
+
 $bar-height: 80px;
+
 $btn-height: 60px;
+$header-btn-height: 50px;
+
 $btn-sm-height: 50px;

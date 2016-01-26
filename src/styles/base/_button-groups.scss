@@ -17,3 +17,25 @@
     border-left: 1px solid rgba($black, 0.2);
   }
 }
+
+.btn-toolbar {
+  margin-left: 0;
+
+  .btn,
+  .btn-group,
+  .input-group {
+    float: none;
+  }
+
+  > .btn,
+  > .btn-group,
+  > .input-group {
+    margin-left: 0;
+
+    + .btn,
+    + .btn-group,
+    + .input-group {
+      margin-left: 20px;
+    }
+  }
+}

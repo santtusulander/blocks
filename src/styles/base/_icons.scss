@@ -1,0 +1,45 @@
+// Icons
+// =====
+
+.icon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  line-height: 1;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  .btn-icon & {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.icon-alerts {
+  width: 18px;
+  height: 25px;
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-alerts.svg');
+  }
+}
+
+.icon-chart {
+  width: 22px;
+  height: 20px;
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-chart.svg');
+  }
+}
+
+.icon-edit {
+  width: 15px;
+  height: 15px;
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-edit.svg');
+  }
+}

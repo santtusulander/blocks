@@ -8,7 +8,7 @@ body {
 
 body {
   padding-top: $header-height;
-  font-size: 20px;
+  font-size: $font-size;
 
   &.dark-theme {
     color: $dt-text-color;
@@ -18,4 +18,8 @@ body {
       linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
     background-size: 100%;
   }
+}
+
+.invisible {
+  opacity: 0;
 }
