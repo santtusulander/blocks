@@ -14,15 +14,10 @@ const numeralFormatMock = jest.genMockFunction()
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
-const fakePrimaryData = [
+const fakeData = [
   {epoch_start: 1451606400, bytes: 3, requests: 1},
   {epoch_start: 1451606500, bytes: 2, requests: 2},
   {epoch_start: 1451606600, bytes: 1, requests: 3}
-]
-const fakeSecondaryData = [
-  {epoch_start: 1451606400, bytes: 6, requests: 4},
-  {epoch_start: 1451606500, bytes: 5, requests: 5},
-  {epoch_start: 1451606600, bytes: 4, requests: 6}
 ]
 
 describe('AnalysisByTime', () => {
@@ -41,13 +36,13 @@ describe('AnalysisByTime', () => {
     expect(div.textContent).toContain('Loading');
   });
 
-  it('should have primary and secondary paths', () => {
+  it('should have a data path', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10}
-        primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
+        data={fakeData}/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'path')
-    expect(paths.length).toBe(2);
+    expect(paths.length).toBe(1);
   });
 
   it('should have an x axis', () => {
@@ -55,7 +50,7 @@ describe('AnalysisByTime', () => {
     momentFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
+        data={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
@@ -70,13 +65,13 @@ describe('AnalysisByTime', () => {
     numeralFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
+        data={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[4].getAttribute('x')).toBe('10')
     expect(texts[4].getAttribute('y')).toBe('123.33333333333334')
     expect(numeral.mock.calls.length).toBe(3)
-    expect(numeral.mock.calls[0]).toEqual([2])
+    expect(numeral.mock.calls[0]).toEqual([1])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0a')
   });
 
@@ -85,7 +80,7 @@ describe('AnalysisByTime', () => {
     numeral.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
-        primaryData={fakePrimaryData} secondaryData={fakeSecondaryData}/>
+        data={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts.length).toBe(0)
