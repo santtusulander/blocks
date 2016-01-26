@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 export class ContentTransition extends React.Component {
@@ -9,14 +8,6 @@ export class ContentTransition extends React.Component {
   render() {
     return (
       <div>
-
-        {/* Hard coded links to click through the pages */}
-        <br /><br /><br />
-        <ul>
-          <li><Link to="/content/accounts/udn">Accounts</Link></li>
-          <li><Link to="/content/groups/udn/9">Groups</Link></li>
-          <li><Link to="/content/hosts/udn/9/1">Hosts</Link></li>
-        </ul>
 
         <ReactCSSTransitionGroup
           component="div"
