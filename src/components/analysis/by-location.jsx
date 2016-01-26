@@ -249,7 +249,7 @@ export class AnalysisByLocation extends React.Component {
           </div>
         </div>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
-          className={this.state.tooltipCountry ? '' : 'hidden'}>
+          hidden={!this.state.tooltipCountry}>
           {this.state.tooltipCountry} {this.state.tooltipPercent}%
         </Tooltip>
       </div>

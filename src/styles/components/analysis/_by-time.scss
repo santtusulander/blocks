@@ -1,4 +1,5 @@
 .analysis-by-time {
+  position: relative;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
@@ -7,14 +8,7 @@
   path {
     fill: transparent;
     stroke-width: 1px;
-  }
-
-  .primary {
     stroke: $green;
-  }
-
-  .secondary {
-    stroke: $pale-blue;
   }
 
   .axis-tick {
@@ -22,7 +16,7 @@
   }
 
   text {
-    fill: $white;
     font-size: 12px;
+    fill: $white;
   }
 }
