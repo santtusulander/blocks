@@ -1,5 +1,8 @@
 .analysis-by-location {
-  position: relative;
+
+  .chart {
+    position: relative;
+  }
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
