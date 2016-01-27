@@ -97,11 +97,11 @@ export class Groups extends React.Component {
           <Modal show={true} dialogClassName="configuration-sidebar"
             backdrop={false}
             onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
-            <Modal.Header className="configuration-sidebar-header">
+            <Modal.Header>
               <h1>Edit Group</h1>
               <p>Lorem ipsum dolor</p>
             </Modal.Header>
-            <Modal.Body className="configuration-sidebar-body">
+            <Modal.Body>
               <EditGroup group={activeGroup}
                 changeValue={this.changeActiveGroupValue}
                 saveChanges={this.saveActiveGroupChanges}
