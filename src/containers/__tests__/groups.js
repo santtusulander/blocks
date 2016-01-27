@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 
 jest.dontMock('../groups.jsx')
 jest.dontMock('../../components/group.jsx')
+jest.dontMock('../../components/configuration-sidebar.jsx')
 const Groups = require('../groups.jsx').Groups
 
 function groupActionsMaker() {
