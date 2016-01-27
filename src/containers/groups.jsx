@@ -7,7 +7,6 @@ import { Table, Button } from 'react-bootstrap';
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
 import Group from '../components/group'
-import ConfigurationSidebar from '../components/configuration-sidebar'
 
 export class Groups extends React.Component {
   constructor(props) {
@@ -94,22 +93,6 @@ export class Groups extends React.Component {
               )}
           </tbody>
         </Table>
-        <ConfigurationSidebar hidden={!activeGroup}>
-          {activeGroup &&
-            <div>
-              <div className="configuration-sidebar-header">
-                <h1>Edit Group</h1>
-                <p>Lorem ipsum dolor</p>
-              </div>
-              <div className="configuration-sidebar-body">
-                <EditGroup group={activeGroup}
-                  changeValue={this.changeActiveGroupValue}
-                  saveChanges={this.saveActiveGroupChanges}
-                  cancelChanges={this.cancelActiveGroupChanges}/>
-              </div>
-            </div>
-          }
-        </ConfigurationSidebar>
       </div>
     );
   }
