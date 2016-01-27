@@ -25,13 +25,6 @@
 @import 'base/tooltip';
 
 
-
-// Containers
-// ==========
-
-@import 'containers/content';
-
-
 // Components
 // ==========
 
@@ -39,7 +32,16 @@
 @import 'components/content-item-list';
 @import 'components/header';
 @import 'components/tooltip';
+@import 'components/analysis/by-time';
+@import 'components/analysis/by-location';
 
+// Layouts
+// ===========
+
+@import 'components/layout/sidebar';
+@import 'components/layout/content';
+@import 'components/layout/page-container';
+@import 'components/layout/page-header';
 
 // Transitions
 // ===========
@@ -52,11 +54,8 @@
 
 @import 'containers/styleguide';
 
-@import 'components/analysis/by-time';
-@import 'components/analysis/by-location';
-
 // Containers
 // ==========
 
-
 @import 'containers/analysis';
+@import 'containers/content';

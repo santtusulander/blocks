@@ -1,0 +1,8 @@
+.sidebar-layout {
+  position: fixed;
+  top: 90px;
+  left: 0;
+  width: 400px;
+  height: calc(100vh - 90px);
+  background: linear-gradient(to bottom, $gradient-blue, $gradient-purple);
+}

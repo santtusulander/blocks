@@ -10,7 +10,6 @@ import Analysis from './containers/analysis'
 import Accounts from './containers/accounts'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
-import Configurations from './containers/configurations'
 import Configuration from './containers/configuration'
 
 import ContentTransition from './transitions/content'
@@ -27,7 +26,6 @@ module.exports = (
       <Route path="groups/:brand/:account" component={Groups}/>
       <Route path="hosts/:brand/:account/:group" component={Hosts}/>
     </Route>
-    <Route path="configurations/:brand/:account/:group/:host" component={Configurations}/>
-    <Route path="configuration/:brand/:account/:group/:host/:version" component={Configuration}/>
+    <Route path="configuration/:brand/:account/:group/:host" component={Configuration}/>
   </Route>
 );

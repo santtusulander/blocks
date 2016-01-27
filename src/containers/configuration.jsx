@@ -6,24 +6,33 @@ import {Nav, NavItem} from 'react-bootstrap'
 
 import * as hostActionCreators from '../redux/modules/host'
 
+import PageContainer from '../components/layout/page-container'
+import Sidebar from '../components/layout/sidebar'
+import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
+
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationCache from '../components/configuration/cache'
 import ConfigurationPerformance from '../components/configuration/performance'
 import ConfigurationSecurity from '../components/configuration/security'
 import ConfigurationCertificates from '../components/configuration/certificates'
 import ConfigurationChangeLog from '../components/configuration/change-log'
+import ConfigurationVersions from '../components/configuration/versions'
 
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeTab: 'details'
+      activeTab: 'details',
+      activeConfig: 0
     }
 
     this.changeValue = this.changeValue.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
     this.activateTab = this.activateTab.bind(this)
+    this.activateVersion = this.activateVersion.bind(this)
+    this.deleteVersion = this.deleteVersion.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -35,22 +44,12 @@ export class Configuration extends React.Component {
     )
   }
   getActiveConfig() {
-    return this.props.activeHost.get('services').get(0).get('configurations').find(
-      config => {
-        return config.get('config_id') === this.props.params.version
-      }
-    )
+    return this.props.activeHost.get('services').get(0).get('configurations').get(this.state.activeConfig)
   }
   changeValue(path, value) {
-    const hostIndex = this.props.activeHost.get('services').get(0).get('configurations').findIndex(
-      config => {
-        return config.get('config_id') === this.props.params.version
-      }
-    )
-
     this.props.hostActions.changeActiveHost(
       this.props.activeHost.setIn(
-        ['services', 0, 'configurations', hostIndex],
+        ['services', 0, 'configurations', this.state.activeConfig],
         this.getActiveConfig().setIn(path, value)
       )
     )
@@ -66,73 +65,104 @@ export class Configuration extends React.Component {
   activateTab(tabName) {
     this.setState({activeTab: tabName})
   }
+  activateVersion(index) {
+    this.setState({activeConfig: index})
+  }
+  deleteVersion(id) {
+    this.props.hostActions.deleteConfiguration(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.params.host,
+      id
+    )
+  }
+  createNewVersion(id) {
+    this.props.hostActions.createConfiguration(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.params.host,
+      id
+    )
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div className="container">Loading...</div>
     }
-    const activeConfig = this.props.activeHost.get('services').get(0).get('configurations').find(
-      config => {
-        return config.get('config_id') === this.props.params.version
-      }
-    )
+    const activeConfig = this.getActiveConfig()
 
     return (
-      <div className="container">
+      <PageContainer hasSidebar={true} className="configuration-container">
+        <Sidebar>
+          <ConfigurationVersions
+            fetching={this.props.fetching}
+            configurations={this.props.activeHost.get('services').get(0).get('configurations')}
+            delete={this.deleteVersion}
+            activate={this.activateVersion}/>
+        </Sidebar>
+        <Content>
+          {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
-        <h1 className="page-header">{this.props.params.host}</h1>
+          <PageHeader>
+            <h1>{this.props.params.host}</h1>
+          </PageHeader>
 
-        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-          onSelect={this.activateTab}>
-          <NavItem eventKey={'details'}>
-            Details
-          </NavItem>
-          <NavItem eventKey={'cache'}>
-            Cache
-          </NavItem>
-          <NavItem eventKey={'performance'}>
-            Performance
-          </NavItem>
-          <NavItem eventKey={'security'}>
-            Security
-          </NavItem>
-          <NavItem eventKey={'certificates'}>
-            Certificates
-          </NavItem>
-          <NavItem eventKey={'change-log'}>
-            Change Log
-          </NavItem>
-        </Nav>
-        {this.state.activeTab === 'details' ?
-          <ConfigurationDetails
-            edgeConfiguration={activeConfig.get('edge_configuration')}
-            changeValue={this.changeValue}
-            saveChanges={this.saveActiveHostChanges}/>
-          : null}
+          <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+            onSelect={this.activateTab}>
+            <NavItem eventKey={'details'}>
+              Details
+            </NavItem>
+            <NavItem eventKey={'cache'}>
+              Cache
+            </NavItem>
+            <NavItem eventKey={'performance'}>
+              Performance
+            </NavItem>
+            <NavItem eventKey={'security'}>
+              Security
+            </NavItem>
+            <NavItem eventKey={'certificates'}>
+              Certificates
+            </NavItem>
+            <NavItem eventKey={'change-log'}>
+              Change Log
+            </NavItem>
+          </Nav>
 
-        {this.state.activeTab === 'cache' ?
-          <ConfigurationCache
-            config={activeConfig}
-            changeValue={this.changeValue}
-            saveChanges={this.saveActiveHostChanges}/>
-          : null}
+          <div className="container">
+            {this.state.activeTab === 'details' ?
+              <ConfigurationDetails
+                edgeConfiguration={activeConfig.get('edge_configuration')}
+                changeValue={this.changeValue}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
 
-        {this.state.activeTab === 'performance' ?
-          <ConfigurationPerformance/>
-          : null}
+            {this.state.activeTab === 'cache' ?
+              <ConfigurationCache
+                config={activeConfig}
+                changeValue={this.changeValue}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
 
-        {this.state.activeTab === 'security' ?
-          <ConfigurationSecurity/>
-          : null}
+            {this.state.activeTab === 'performance' ?
+              <ConfigurationPerformance/>
+              : null}
 
-        {this.state.activeTab === 'certificates' ?
-          <ConfigurationCertificates/>
-          : null}
+            {this.state.activeTab === 'security' ?
+              <ConfigurationSecurity/>
+              : null}
 
-        {this.state.activeTab === 'change-log' ?
-          <ConfigurationChangeLog/>
-          : null}
+            {this.state.activeTab === 'certificates' ?
+              <ConfigurationCertificates/>
+              : null}
 
-      </div>
+            {this.state.activeTab === 'change-log' ?
+              <ConfigurationChangeLog/>
+              : null}
+          </div>
+        </Content>
+      </PageContainer>
     );
   }
 }
