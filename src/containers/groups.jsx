@@ -2,11 +2,12 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Modal, Button } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
 import Group from '../components/group'
+import ConfigurationSidebar from '../components/configuration-sidebar'
 
 export class Groups extends React.Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export class Groups extends React.Component {
 
     this.changeActiveGroupValue = this.changeActiveGroupValue.bind(this)
     this.saveActiveGroupChanges = this.saveActiveGroupChanges.bind(this)
+    this.cancelActiveGroupChanges = this.cancelActiveGroupChanges.bind(this)
     this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
     this.createNewGroup = this.createNewGroup.bind(this)
   }
@@ -49,6 +51,9 @@ export class Groups extends React.Component {
       this.props.params.account,
       this.props.activeGroup.toJS()
     )
+  }
+  cancelActiveGroupChanges() {
+    this.props.groupActions.changeActiveGroup(null)
   }
   createNewGroup() {
     this.props.groupActions.createGroup(
@@ -89,19 +94,22 @@ export class Groups extends React.Component {
               )}
           </tbody>
         </Table>
-        {activeGroup ?
-          <Modal show={true}
-            onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
-            <Modal.Header closeButton={true}>
-              <Modal.Title>Edit Group</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <EditGroup group={activeGroup}
-                changeValue={this.changeActiveGroupValue}
-                saveChanges={this.saveActiveGroupChanges}/>
-            </Modal.Body>
-          </Modal> : null
-        }
+        <ConfigurationSidebar hidden={!activeGroup}>
+          {activeGroup &&
+            <div>
+              <div className="configuration-sidebar-header">
+                <h1>Edit Group</h1>
+                <p>Lorem ipsum dolor</p>
+              </div>
+              <div className="configuration-sidebar-body">
+                <EditGroup group={activeGroup}
+                  changeValue={this.changeActiveGroupValue}
+                  saveChanges={this.saveActiveGroupChanges}
+                  cancelChanges={this.cancelActiveGroupChanges}/>
+              </div>
+            </div>
+          }
+        </ConfigurationSidebar>
       </div>
     );
   }
