@@ -14,6 +14,7 @@ export class Groups extends React.Component {
 
     this.changeActiveGroupValue = this.changeActiveGroupValue.bind(this)
     this.saveActiveGroupChanges = this.saveActiveGroupChanges.bind(this)
+    this.cancelActiveGroupChanges = this.cancelActiveGroupChanges.bind(this)
     this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
     this.createNewGroup = this.createNewGroup.bind(this)
   }
@@ -49,6 +50,9 @@ export class Groups extends React.Component {
       this.props.params.account,
       this.props.activeGroup.toJS()
     )
+  }
+  cancelActiveGroupChanges() {
+    this.props.groupActions.changeActiveGroup(null)
   }
   createNewGroup() {
     this.props.groupActions.createGroup(
@@ -90,15 +94,18 @@ export class Groups extends React.Component {
           </tbody>
         </Table>
         {activeGroup ?
-          <Modal show={true}
+          <Modal show={true} dialogClassName="configuration-sidebar"
+            backdrop={false}
             onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
-            <Modal.Header closeButton={true}>
-              <Modal.Title>Edit Group</Modal.Title>
+            <Modal.Header className="configuration-sidebar-header">
+              <h1>Edit Group</h1>
+              <p>Lorem ipsum dolor</p>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="configuration-sidebar-body">
               <EditGroup group={activeGroup}
                 changeValue={this.changeActiveGroupValue}
-                saveChanges={this.saveActiveGroupChanges}/>
+                saveChanges={this.saveActiveGroupChanges}
+                cancelChanges={this.toggleActiveGroup(activeGroup.get('group_id'))}/>
             </Modal.Body>
           </Modal> : null
         }
