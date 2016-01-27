@@ -6,6 +6,11 @@ import {Nav, NavItem} from 'react-bootstrap'
 
 import * as hostActionCreators from '../redux/modules/host'
 
+import PageContainer from '../components/layout/page-container'
+import Sidebar from '../components/layout/sidebar'
+import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
+
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationCache from '../components/configuration/cache'
 import ConfigurationPerformance from '../components/configuration/performance'
@@ -88,69 +93,76 @@ export class Configuration extends React.Component {
     const activeConfig = this.getActiveConfig()
 
     return (
-      <div className="container">
-        {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
+      <PageContainer hasSidebar={true} className="configuration-container">
+        <Sidebar>
+          <ConfigurationVersions
+            fetching={this.props.fetching}
+            configurations={this.props.activeHost.get('services').get(0).get('configurations')}
+            delete={this.deleteVersion}
+            activate={this.activateVersion}/>
+        </Sidebar>
+        <Content>
+          {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
-        <h1 className="page-header">{this.props.params.host}</h1>
+          <PageHeader>
+            <h1>{this.props.params.host}</h1>
+          </PageHeader>
 
-        <ConfigurationVersions
-          fetching={this.props.fetching}
-          configurations={this.props.activeHost.get('services').get(0).get('configurations')}
-          delete={this.deleteVersion}
-          activate={this.activateVersion}/>
+          <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+            onSelect={this.activateTab}>
+            <NavItem eventKey={'details'}>
+              Details
+            </NavItem>
+            <NavItem eventKey={'cache'}>
+              Cache
+            </NavItem>
+            <NavItem eventKey={'performance'}>
+              Performance
+            </NavItem>
+            <NavItem eventKey={'security'}>
+              Security
+            </NavItem>
+            <NavItem eventKey={'certificates'}>
+              Certificates
+            </NavItem>
+            <NavItem eventKey={'change-log'}>
+              Change Log
+            </NavItem>
+          </Nav>
 
-        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-          onSelect={this.activateTab}>
-          <NavItem eventKey={'details'}>
-            Details
-          </NavItem>
-          <NavItem eventKey={'cache'}>
-            Cache
-          </NavItem>
-          <NavItem eventKey={'performance'}>
-            Performance
-          </NavItem>
-          <NavItem eventKey={'security'}>
-            Security
-          </NavItem>
-          <NavItem eventKey={'certificates'}>
-            Certificates
-          </NavItem>
-          <NavItem eventKey={'change-log'}>
-            Change Log
-          </NavItem>
-        </Nav>
-        {this.state.activeTab === 'details' ?
-          <ConfigurationDetails
-            edgeConfiguration={activeConfig.get('edge_configuration')}
-            changeValue={this.changeValue}
-            saveChanges={this.saveActiveHostChanges}/>
-          : null}
+          <div className="container">
+            {this.state.activeTab === 'details' ?
+              <ConfigurationDetails
+                edgeConfiguration={activeConfig.get('edge_configuration')}
+                changeValue={this.changeValue}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
 
-        {this.state.activeTab === 'cache' ?
-          <ConfigurationCache
-            config={activeConfig}
-            changeValue={this.changeValue}
-            saveChanges={this.saveActiveHostChanges}/>
-          : null}
+            {this.state.activeTab === 'cache' ?
+              <ConfigurationCache
+                config={activeConfig}
+                changeValue={this.changeValue}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
 
-        {this.state.activeTab === 'performance' ?
-          <ConfigurationPerformance/>
-          : null}
+            {this.state.activeTab === 'performance' ?
+              <ConfigurationPerformance/>
+              : null}
 
-        {this.state.activeTab === 'security' ?
-          <ConfigurationSecurity/>
-          : null}
+            {this.state.activeTab === 'security' ?
+              <ConfigurationSecurity/>
+              : null}
 
-        {this.state.activeTab === 'certificates' ?
-          <ConfigurationCertificates/>
-          : null}
+            {this.state.activeTab === 'certificates' ?
+              <ConfigurationCertificates/>
+              : null}
 
-        {this.state.activeTab === 'change-log' ?
-          <ConfigurationChangeLog/>
-          : null}
-
-      </div>
+            {this.state.activeTab === 'change-log' ?
+              <ConfigurationChangeLog/>
+              : null}
+          </div>
+        </Content>
+      </PageContainer>
     );
   }
 }
