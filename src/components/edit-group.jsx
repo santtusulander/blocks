@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Button, Input} from 'react-bootstrap'
+import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
 class EditGroup extends React.Component {
   constructor(props) {
@@ -8,6 +8,7 @@ class EditGroup extends React.Component {
 
     this.changeValue = this.changeValue.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
+    this.cancelChanges = this.cancelChanges.bind(this)
   }
   changeValue(valPath) {
     return (e) => {
@@ -17,6 +18,10 @@ class EditGroup extends React.Component {
   saveChanges(e) {
     e.preventDefault()
     this.props.saveChanges()
+  }
+  cancelChanges(e) {
+    e.preventDefault()
+    this.props.cancelChanges()
   }
   render() {
     return (
@@ -39,7 +44,10 @@ class EditGroup extends React.Component {
         <Input type="text" label="Postal Code" id="edit_group__postal_code"
           value={this.props.group.getIn(['postal_code'])}
           onChange={this.changeValue(['postal_code'])}/>
-        <Button type="submit" bsStyle="primary">Save</Button>
+        <ButtonToolbar>
+          <Button bsStyle="primary" onClick={this.cancelChanges}>Cancel</Button>
+          <Button type="submit" bsStyle="primary">Save</Button>
+        </ButtonToolbar>
       </form>
     )
   }
@@ -47,6 +55,7 @@ class EditGroup extends React.Component {
 
 EditGroup.displayName = 'EditGroup'
 EditGroup.propTypes = {
+  cancelChanges: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   group: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
