@@ -1,15 +1,24 @@
 // Variables
 // =========
 
+
+// Base
+// ====
+
 $font-size: 20px;
+
+$bar-height: 80px;
+
+$btn-height: 60px;
+$btn-sm-height: 50px;
+$header-btn-height: 50px;
+
+
+// Components
+// ==========
 
 $header-height: 80px;
 $header-gradient-height: 10px;
 $header-total-height: $header-height + $header-gradient-height;
 
-$bar-height: 80px;
-
-$btn-height: 60px;
-$header-btn-height: 50px;
-
-$btn-sm-height: 50px;
+$configuration-sidebar-width: 1060px;

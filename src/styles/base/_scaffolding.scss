@@ -7,7 +7,6 @@ body {
 }
 
 body {
-  padding-top: $header-height;
   font-size: $font-size;
 
   &.dark-theme {
@@ -22,4 +21,19 @@ body {
 
 .invisible {
   opacity: 0;
+}
+
+.main-content {
+  padding-top: $header-height;
+
+  .show-configuration-sidebar & {
+    position: fixed;
+    right: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+    filter: blur(15px);
+    // Enable hardware acceleration
+    transform: translate3d(0, 0, 0);
+  }
 }
