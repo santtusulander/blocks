@@ -1,6 +1,5 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Table } from 'react-bootstrap'
 
 export class ConfigurationVersions extends React.Component {
   constructor(props) {
@@ -22,34 +21,26 @@ export class ConfigurationVersions extends React.Component {
     }
   }
   render() {
+    if(this.props.fetching) {
+      return <div>Loading...</div>
+    }
     return (
       <div className="configuration-versions">
-        <Table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.fetching ?
-              <tr><td colSpan="4">Loading...</td></tr> :
-              this.props.configurations.map((configuration, i) =>
-                <tr key={i}>
-                  <td>{configuration.get('config_id')}</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>
-                    <a href="#" onClick={this.activate(i)}>edit</a>
-                    &nbsp;
-                    <a href="#" onClick={this.delete(configuration.get('config_id'))}>delete</a>
-                  </td>
-                </tr>
-              )}
-          </tbody>
-        </Table>
+        <h2>{this.props.propertyName}</h2>
+        <p>In Production</p>
+        <h3>Production</h3>
+        <h3>Staging</h3>
+        <h3>In Process</h3>
+        {this.props.configurations.map((configuration, i) => {
+          return (
+            <div key={i}>
+              {configuration.get('config_id')}
+              <a href="#" onClick={this.activate(i)}>edit</a>
+              &nbsp;
+              <a href="#" onClick={this.delete(configuration.get('config_id'))}>delete</a>
+            </div>
+          )
+        })}
       </div>
     );
   }
@@ -60,7 +51,8 @@ ConfigurationVersions.propTypes = {
   activate: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  propertyName: React.PropTypes.string
 }
 
 module.exports = ConfigurationVersions
