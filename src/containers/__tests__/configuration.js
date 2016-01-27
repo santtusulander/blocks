@@ -17,7 +17,8 @@ function hostActionsMaker() {
     startFetching: jest.genMockFunction(),
     fetchHost: jest.genMockFunction(),
     updateHost: jest.genMockFunction(),
-    changeActiveHost: jest.genMockFunction()
+    changeActiveHost: jest.genMockFunction(),
+    deleteConfiguration: jest.genMockFunction()
   }
 }
 
@@ -260,7 +261,7 @@ describe('Configuration', () => {
         params={urlParams}/>
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[1]);
+    TestUtils.Simulate.click(links[3]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -283,7 +284,7 @@ describe('Configuration', () => {
         params={urlParams}/>
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[2]);
+    TestUtils.Simulate.click(links[4]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -306,7 +307,7 @@ describe('Configuration', () => {
         params={urlParams}/>
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[3]);
+    TestUtils.Simulate.click(links[5]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -329,7 +330,7 @@ describe('Configuration', () => {
         params={urlParams}/>
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[4]);
+    TestUtils.Simulate.click(links[6]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -352,7 +353,7 @@ describe('Configuration', () => {
         params={urlParams}/>
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[5]);
+    TestUtils.Simulate.click(links[7]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);

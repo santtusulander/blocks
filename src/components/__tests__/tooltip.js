@@ -1,6 +1,6 @@
-import React from 'react/addons';
-
-let TestUtils = React.addons.TestUtils;
+import React from 'react';
+import ReactDOM from 'react-dom'
+import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../tooltip.jsx');
 const Tooltip = require('../tooltip.jsx');
@@ -14,9 +14,9 @@ describe('Tooltip', function() {
     // Verify that it uses the coordinates
     let container = TestUtils.findRenderedDOMComponentWithTag(
       tooltip, 'div');
-    expect(React.findDOMNode(container).style.top)
+    expect(ReactDOM.findDOMNode(container).style.top)
       .toEqual('200px');
-    expect(React.findDOMNode(container).style.left)
+    expect(ReactDOM.findDOMNode(container).style.left)
       .toEqual('100px');
   });
 
@@ -28,7 +28,7 @@ describe('Tooltip', function() {
     // Verify that it has the hidden class
     let container = TestUtils.findRenderedDOMComponentWithTag(
       tooltip, 'div');
-    expect(React.findDOMNode(container).className)
+    expect(ReactDOM.findDOMNode(container).className)
       .toContain('hidden');
   });
 
@@ -40,7 +40,7 @@ describe('Tooltip', function() {
     // Verify that it does not have the hidden class
     let container = TestUtils.findRenderedDOMComponentWithTag(
       tooltip, 'div');
-    expect(React.findDOMNode(container).className)
+    expect(ReactDOM.findDOMNode(container).className)
       .not.toContain('hidden');
   });
 
@@ -52,7 +52,7 @@ describe('Tooltip', function() {
     // Verify that it has the passed class
     let container = TestUtils.findRenderedDOMComponentWithTag(
       tooltip, 'div');
-    expect(React.findDOMNode(container).className)
+    expect(ReactDOM.findDOMNode(container).className)
       .toContain('aaa');
   });
 
@@ -66,7 +66,7 @@ describe('Tooltip', function() {
     // Verify that it has the child element
     let child = TestUtils.findRenderedDOMComponentWithClass(
       tooltip, 'test');
-    expect(React.findDOMNode(child).textContent)
+    expect(ReactDOM.findDOMNode(child).textContent)
       .toEqual('Test');
   });
 });

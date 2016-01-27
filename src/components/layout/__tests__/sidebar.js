@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../sidebar.jsx')
@@ -20,7 +21,7 @@ describe('Content layout', () => {
     // Verify that it has the passed class
     let container = TestUtils.findRenderedDOMComponentWithTag(
       layout, 'div');
-    expect(React.findDOMNode(container).className)
+    expect(ReactDOM.findDOMNode(container).className)
       .toContain('aaa');
   });
 
@@ -34,7 +35,7 @@ describe('Content layout', () => {
     // Verify that it has the child element
     let child = TestUtils.findRenderedDOMComponentWithClass(
       layout, 'test');
-    expect(React.findDOMNode(child).textContent)
+    expect(ReactDOM.findDOMNode(child).textContent)
       .toEqual('Test');
   });
 })
