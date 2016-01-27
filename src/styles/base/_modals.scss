@@ -1,0 +1,43 @@
+// Modals
+// ======
+
+.modal-dialog {
+
+  // Configuration Sidebar
+  // =====================
+
+  &.configuration-sidebar {
+    float: right;
+    width: $configuration-sidebar-width;
+    margin: 0;
+
+    .fade & {
+      transform: translate(100%, 0);
+      transition: transform 0.3s ease-out;
+    }
+
+    .in & {
+      transform: translate(0, 0);
+    }
+
+    .modal-content {
+      background-color: $black;
+      background-image: linear-gradient(rgba($pale-blue, 0.7),
+        rgba($ericsson-dark-blue, 0.7));
+      background-size: 100%;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .configuration-sidebar-header {
+      height: 250px;
+      padding: 60px 80px 0;
+      background: rgba($pale-blue, 0.2);
+      border: 0;
+    }
+
+    .configuration-sidebar-body {
+      padding: 70px 80px;
+    }
+  }
+}

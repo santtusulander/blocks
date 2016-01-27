@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Button } from 'react-bootstrap';
+import { Table, Modal, Button } from 'react-bootstrap';
 
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
@@ -93,6 +93,22 @@ export class Groups extends React.Component {
               )}
           </tbody>
         </Table>
+        {activeGroup ?
+          <Modal show={true} dialogClassName="configuration-sidebar"
+            backdrop={false}
+            onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
+            <Modal.Header className="configuration-sidebar-header">
+              <h1>Edit Group</h1>
+              <p>Lorem ipsum dolor</p>
+            </Modal.Header>
+            <Modal.Body className="configuration-sidebar-body">
+              <EditGroup group={activeGroup}
+                changeValue={this.changeActiveGroupValue}
+                saveChanges={this.saveActiveGroupChanges}
+                cancelChanges={this.toggleActiveGroup(activeGroup.get('group_id'))}/>
+            </Modal.Body>
+          </Modal> : null
+        }
       </div>
     );
   }
