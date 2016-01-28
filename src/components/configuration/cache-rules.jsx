@@ -8,14 +8,13 @@ class ConfigurationCacheRules extends React.Component {
       return <div>Loading...</div>
     }
     return (
-      <div className="configuration-default-policies">
+      <div className="configuration-cache-rules">
         <Table striped={true}>
           <thead>
             <tr>
               <th>Rule Priority</th>
               <th>Rule Type</th>
               <th>Rule</th>
-              <th>Match Condition</th>
               <th></th>
             </tr>
           </thead>
@@ -26,7 +25,6 @@ class ConfigurationCacheRules extends React.Component {
                   <td>{i + 1}</td>
                   <td>{policy.get('match').get('field')}</td>
                   <td>{policy.get('match').get('cases').map(pcase => pcase.get(0)).join(', ')}</td>
-                  <td>positive</td>
                   <td><a href="#">edit</a> <a href="#">delete</a></td>
                 </tr>
               )
@@ -37,15 +35,12 @@ class ConfigurationCacheRules extends React.Component {
                   <td>{i + 1}</td>
                   <td>{policy.get('match').get('field')}</td>
                   <td>{policy.get('match').get('cases').map(pcase => pcase.get(0)).join(', ')}</td>
-                  <td>positive</td>
                   <td><a href="#">edit</a> <a href="#">delete</a></td>
                 </tr>
               )
             })}
           </tbody>
         </Table>
-
-        <Button bsStyle="primary">Add Cache Rule</Button>
       </div>
     )
   }

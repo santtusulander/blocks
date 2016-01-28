@@ -10,8 +10,13 @@ class ConfigurationCache extends React.Component {
   constructor(props) {
     super(props);
 
+    this.addRule = this.addRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
+  }
+  addRule(e) {
+    e.preventDefault()
+    // console.log('add a rule')
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
@@ -93,7 +98,16 @@ class ConfigurationCache extends React.Component {
         <h3>Edge Cache Control</h3>
         <ConfigurationDefaultPolicies/>
 
-        <h3>CDN Cache Rules</h3>
+        <Row>
+          <Col sm={8}>
+            <h3>CDN Cache Rules</h3>
+          </Col>
+          <Col sm={4} className="text-right">
+            <a href="#" className="add-rule" onClick={this.addRule}>
+              Add Cache Rule
+            </a>
+          </Col>
+        </Row>
         <ConfigurationCacheRules
           requestPolicies={config.get('request_policies')}
           responsePolicies={config.get('response_policies')}/>
