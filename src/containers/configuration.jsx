@@ -94,7 +94,7 @@ export class Configuration extends React.Component {
 
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
-        <Sidebar>
+        <Sidebar className="version-sidebar">
           <ConfigurationVersions
             fetching={this.props.fetching}
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
@@ -106,12 +106,17 @@ export class Configuration extends React.Component {
 
           <PageHeader>
             <h1>{this.props.params.host}</h1>
+            <p className="text-sm">
+              <span className="right-separator">www.domain.com</span>
+              <span className="right-separator">01/04/2016</span>
+              <span className="right-separator">12:01 am</span>
+              John Doe</p>
           </PageHeader>
 
           <Nav bsStyle="tabs" activeKey={this.state.activeTab}
             onSelect={this.activateTab}>
             <NavItem eventKey={'details'}>
-              Details
+              Hostname
             </NavItem>
             <NavItem eventKey={'cache'}>
               Cache
@@ -130,7 +135,7 @@ export class Configuration extends React.Component {
             </NavItem>
           </Nav>
 
-          <div className="container">
+          <div className="container-fluid content-container">
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}
