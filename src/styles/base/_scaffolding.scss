@@ -24,7 +24,7 @@ body {
 }
 
 .main-content {
-  padding-top: $header-height;
+  padding-top: $header-total-height;
 
   .modal-open & {
     filter: blur(15px);
