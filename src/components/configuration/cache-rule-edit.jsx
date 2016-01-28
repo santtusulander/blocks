@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Input, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-class ConfigurationCacheRule extends React.Component {
+class ConfigurationCacheRuleEdit extends React.Component {
   constructor(props) {
     super(props);
 
@@ -111,11 +111,11 @@ class ConfigurationCacheRule extends React.Component {
   }
 }
 
-ConfigurationCacheRule.displayName = 'ConfigurationCacheRule'
-ConfigurationCacheRule.propTypes = {
+ConfigurationCacheRuleEdit.displayName = 'ConfigurationCacheRuleEdit'
+ConfigurationCacheRuleEdit.propTypes = {
   changeValue: React.PropTypes.func,
   rule: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationCacheRule
+module.exports = ConfigurationCacheRuleEdit
