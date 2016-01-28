@@ -1,13 +1,13 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../cache-rule.jsx')
-const ConfigurationCacheRule = require('../cache-rule.jsx')
+jest.dontMock('../cache-rule-edit.jsx')
+const ConfigurationCacheRuleEdit = require('../cache-rule-edit.jsx')
 
-describe('ConfigurationCacheRule', () => {
+describe('ConfigurationCacheRuleEdit', () => {
   it('should exist', () => {
     let cacheRule = TestUtils.renderIntoDocument(
-      <ConfigurationCacheRule />
+      <ConfigurationCacheRuleEdit />
     );
     expect(TestUtils.isCompositeComponent(cacheRule)).toBeTruthy();
   });
@@ -15,7 +15,7 @@ describe('ConfigurationCacheRule', () => {
   it('should change values', () => {
     const changeValue = jest.genMockFunction()
     let cacheRule = TestUtils.renderIntoDocument(
-      <ConfigurationCacheRule changeValue={changeValue} />
+      <ConfigurationCacheRuleEdit changeValue={changeValue} />
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cacheRule, 'input');
     inputs[1].value = "new"
@@ -27,7 +27,7 @@ describe('ConfigurationCacheRule', () => {
   it('should save changes', () => {
     const saveChanges = jest.genMockFunction()
     let cacheRule = TestUtils.renderIntoDocument(
-      <ConfigurationCacheRule saveChanges={saveChanges}/>
+      <ConfigurationCacheRuleEdit saveChanges={saveChanges}/>
     );
     let form = TestUtils.findRenderedDOMComponentWithTag(cacheRule, 'form');
     TestUtils.Simulate.submit(form)
