@@ -26,7 +26,6 @@ class Toggle extends React.Component {
 Toggle.displayName = 'Toggle'
 Toggle.propTypes = {
   changeValue: React.PropTypes.func,
-  children: React.PropTypes.node,
   value: React.PropTypes.bool
 };
 
