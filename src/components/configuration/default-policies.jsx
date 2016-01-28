@@ -5,7 +5,7 @@ class ConfigurationDefaultPolicies extends React.Component {
   render() {
     return (
       <div className="configuration-default-policies">
-        <Table striped={true} bordered={true} hover={true}>
+        <Table striped={true}>
           <thead>
             <tr>
               <th>Rule Type</th>

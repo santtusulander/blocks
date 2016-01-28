@@ -37,14 +37,8 @@ describe('ConfigurationCache', () => {
       <ConfigurationCache changeValue={changeValue}
         config={fakeConfig}/>
     );
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cache, 'input');
-    inputs[0].checked = true
-    TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0].toJS()).toEqual([
-      'default_policies',
-      0,
-      'honor_origin'
-    ])
+    cache.handleChange('some path')(true)
+    expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
 
