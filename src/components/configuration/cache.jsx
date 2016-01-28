@@ -2,6 +2,8 @@ import React from 'react'
 import {Button, Input, Row, Col, Table} from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import ConfigurationDefaultPolicies from './default-policies'
+
 class ConfigurationCache extends React.Component {
   constructor(props) {
     super(props);
@@ -73,46 +75,13 @@ class ConfigurationCache extends React.Component {
           </Col>
         </Row>
 
-        <Button type="submit">Done</Button>
+        <hr/>
 
-
-        {/* Edge Cache Control */}
-
-        <h2>Edge Cache Control</h2>
-
-
-        {/* Default Cache Rules */}
-
-        <h3>Default Cache Rules</h3>
+        <h3>Edge Cache Control</h3>
 
         <Row>
           <Col xs={8}>
-            <Table striped={true} bordered={true} hover={true}>
-              <thead>
-                <tr>
-                  <th>Rule Type</th>
-                  <th>TTL Value</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>DEFAULT</td>
-                  <td>no-store</td>
-                  <td><a href="#">edit</a></td>
-                </tr>
-                <tr>
-                  <td>Error Response</td>
-                  <td>10 s</td>
-                  <td><a href="#">edit</a></td>
-                </tr>
-                <tr>
-                  <td>Redirect</td>
-                  <td>no-store</td>
-                  <td><a href="#">edit</a></td>
-                </tr>
-              </tbody>
-            </Table>
+            <ConfigurationDefaultPolicies/>
           </Col>
         </Row>
 
