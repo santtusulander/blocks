@@ -56,7 +56,7 @@ class ConfigurationCache extends React.Component {
 
         { /* Honor Origin Cache Control */}
         <Row>
-          <Col xs={4}>
+          <Col xs={4} className="toggle-label">
             Honor Origin Cache Control
           </Col>
           <Col xs={8}>
@@ -68,7 +68,7 @@ class ConfigurationCache extends React.Component {
 
         { /* Ignore case from origin */}
         <Row>
-          <Col xs={4}>
+          <Col xs={4} className="toggle-label">
             Ignore case from origin
           </Col>
           <Col xs={8}>
@@ -79,7 +79,7 @@ class ConfigurationCache extends React.Component {
 
         { /* Enable e-Tag support */}
         <Row>
-          <Col xs={4}>
+          <Col xs={4} className="toggle-label">
             Enable e-Tag support
           </Col>
           <Col xs={8}>
@@ -91,11 +91,7 @@ class ConfigurationCache extends React.Component {
         <hr/>
 
         <h3>Edge Cache Control</h3>
-        <Row>
-          <Col xs={8}>
-            <ConfigurationDefaultPolicies/>
-          </Col>
-        </Row>
+        <ConfigurationDefaultPolicies/>
 
         <h3>CDN Cache Rules</h3>
         <ConfigurationCacheRules

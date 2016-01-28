@@ -9,7 +9,7 @@ class ConfigurationCacheRules extends React.Component {
     }
     return (
       <div className="configuration-default-policies">
-        <Table striped={true} bordered={true} hover={true}>
+        <Table striped={true}>
           <thead>
             <tr>
               <th>Rule Priority</th>
