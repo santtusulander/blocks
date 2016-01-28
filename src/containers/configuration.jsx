@@ -94,7 +94,7 @@ export class Configuration extends React.Component {
 
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
-        <Sidebar className="version-sidebar">
+        <Sidebar>
           <ConfigurationVersions
             fetching={this.props.fetching}
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
