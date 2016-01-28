@@ -1,6 +1,44 @@
 // Type
 // ====
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+}
+
 h1 {
   font-size: 60px;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+p {
+
+  .right-separator {
+    display: inline-block;
+    margin-right: 12px;
+
+    &::after {
+      margin-left: 12px;
+      content: '';
+
+      .dark-theme & {
+        border-right: 1px solid $dt-text-color;
+      }
+    }
+  }
+}
+
+.text-sm {
+  font-size: $font-size-sm;
 }

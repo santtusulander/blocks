@@ -1,4 +1,10 @@
+// Page Container Layout
+// =====================
+
 .page-container-layout {
   position: relative;
-  min-height: calc(100vh - 108px);
+
+  &.has-sidebar {
+    padding-left: $sidebar-width;
+  }
 }

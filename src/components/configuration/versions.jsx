@@ -26,11 +26,45 @@ export class ConfigurationVersions extends React.Component {
     }
     return (
       <div className="configuration-versions">
-        <h2>{this.props.propertyName}</h2>
-        <p>In Production</p>
-        <h3>Production</h3>
-        <h3>Staging</h3>
-        <h3>In Process</h3>
+        <div className="sidebar-header">
+          <h3>{this.props.propertyName} www.lorem.com</h3>
+          <p className="text-sm">In Production</p>
+        </div>
+        <a className="sidebar-section-header">
+          PRODUCTION
+        </a>
+        <ul className="version-list">
+          <li>
+            <a href="#" className="version-link active">
+              <div className="version-title">Prod_version title</div>
+            </a>
+          </li>
+        </ul>
+        <a className="sidebar-section-header">
+          STAGING
+        </a>
+        <ul className="version-list">
+          <li>
+            <a href="#" className="version-link">
+              <div className="version-title">Staging_version title</div>
+            </a>
+          </li>
+        </ul>
+        <a className="sidebar-section-header">
+          IN PROCESS
+        </a>
+        <ul className="version-list">
+          <li>
+            <a href="#" className="version-link">
+              <div className="version-title">Staging_version title</div>
+            </a>
+          </li>
+          <li>
+            <a href="#" className="version-link">
+              <div className="version-title">Staging_version title</div>
+            </a>
+          </li>
+        </ul>
         {this.props.configurations.map((configuration, i) => {
           return (
             <div key={i}>
