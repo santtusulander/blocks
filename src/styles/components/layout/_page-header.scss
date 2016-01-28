@@ -1,7 +1,11 @@
+// Page Header Layout
+// ==================
+
 .page-header-layout {
-  padding: 20px;
+  min-height: $page-header-height;
+  padding: 30px 40px 10px;
 
   h1 {
-    margin: 0;
+    margin: 0 0 5px;
   }
 }
