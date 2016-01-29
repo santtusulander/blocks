@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import {Button} from 'react-bootstrap'
 
 import Version from './version'
 
@@ -51,6 +52,17 @@ export class ConfigurationVersions extends React.Component {
         <div className="sidebar-header">
           <h3>{this.props.propertyName}</h3>
           <p className="text-sm">{highestAttainment}</p>
+          <div className="sidebar-actions">
+            <Button bsStyle="success" className="add-btn">
+              +
+            </Button>
+            <Button bsStyle="primary" className="view-log-btn">
+              View Log
+            </Button>
+            <Button bsStyle="primary" className="delete-btn">
+              Delete
+            </Button>
+          </div>
         </div>
         <a className="sidebar-section-header">
           PRODUCTION
