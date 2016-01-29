@@ -3,5 +3,8 @@
 
 .page-container-layout {
   position: relative;
-  padding-left: $sidebar-width;
+
+  &.has-sidebar {
+    padding-left: $sidebar-width;
+  }
 }

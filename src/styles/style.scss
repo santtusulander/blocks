@@ -36,17 +36,21 @@
 @import 'components/select';
 @import 'components/toggle';
 @import 'components/tooltip';
+
+// Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
+
+// Configuration
 @import 'components/configuration/cache';
+@import 'components/configuration/versions';
 
 // Layouts
-// ===========
-
-@import 'components/layout/sidebar';
 @import 'components/layout/content';
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
+@import 'components/layout/sidebar';
+
 
 // Transitions
 // ===========
