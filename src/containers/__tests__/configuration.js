@@ -402,4 +402,18 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
   })
+
+  it('should add a verson', () => {
+    const hostActions = hostActionsMaker()
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActions}
+        activeHost={fakeHost}
+        params={urlParams}/>
+    );
+    config.cloneActiveVersion()
+    expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
+    expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations.length).toBe(2)
+  })
 })

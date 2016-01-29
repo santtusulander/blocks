@@ -33,6 +33,7 @@ export class Configuration extends React.Component {
     this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.deleteVersion = this.deleteVersion.bind(this)
+    this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -88,6 +89,21 @@ export class Configuration extends React.Component {
       id
     )
   }
+  cloneActiveVersion() {
+    let newVersion = this.getActiveConfig()
+    newVersion = newVersion
+      .set('label', `Copy of ${newVersion.get('label') || newVersion.get('config_id')}`)
+      .set('config_id', this.props.activeHost.getIn(['services',0,'configurations']).size)
+      .setIn(['configuration_status','environment'], 'in_process')
+    const newHost = this.props.activeHost.setIn(['services',0,'configurations'],
+      this.props.activeHost.getIn(['services',0,'configurations']).push(newVersion))
+    this.props.hostActions.updateHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      newHost.toJS()
+    )
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div className="container">Loading...</div>
@@ -102,7 +118,8 @@ export class Configuration extends React.Component {
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
             activate={this.activateVersion}
             propertyName={this.props.params.host}
-            activeIndex={this.state.activeConfig}/>
+            activeIndex={this.state.activeConfig}
+            addVersion={this.cloneActiveVersion}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}

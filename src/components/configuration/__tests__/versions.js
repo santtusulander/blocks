@@ -37,4 +37,14 @@ describe('ConfigurationVersions', () => {
       ConfigurationVersion)
     expect(versionComponents.length).toBe(3)
   })
+
+  it('should add a verson', () => {
+    let addVersion = jest.genMockFunction()
+    let versions = TestUtils.renderIntoDocument(
+      <ConfigurationVersions configurations={fakeConfigs} addVersion={addVersion}/>
+    )
+    let button = TestUtils.findRenderedDOMComponentWithClass(versions, 'add-btn');
+    TestUtils.Simulate.click(button);
+    expect(addVersion.mock.calls.length).toEqual(1)
+  })
 })

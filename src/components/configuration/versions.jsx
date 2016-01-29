@@ -55,7 +55,8 @@ export class ConfigurationVersions extends React.Component {
           <h3>{this.props.propertyName}</h3>
           <p className="text-sm">{highestAttainment}</p>
           <div className="sidebar-actions">
-            <Button bsStyle="success" className="add-btn">
+            <Button bsStyle="success" className="add-btn"
+              onClick={this.props.addVersion}>
               +
             </Button>
             <Button bsStyle="primary" className="view-log-btn">
@@ -102,6 +103,7 @@ ConfigurationVersions.displayName = 'ConfigurationVersions'
 ConfigurationVersions.propTypes = {
   activate: React.PropTypes.func,
   activeIndex: React.PropTypes.number,
+  addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   propertyName: React.PropTypes.string
