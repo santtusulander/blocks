@@ -260,8 +260,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[3]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[1]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -283,8 +284,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[4]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[2]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -306,8 +308,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[5]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[3]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -329,8 +332,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[6]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[4]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -352,8 +356,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[7]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[5]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
