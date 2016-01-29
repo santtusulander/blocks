@@ -9,6 +9,7 @@ function versionFactory(configuration, i) {
   return (
     <Version key={i}
       activate={this.activate(id)}
+      active={configuration.get('active')}
       label={configuration.get('label') || id}/>
   )
 }
@@ -29,7 +30,8 @@ export class ConfigurationVersions extends React.Component {
       return <div>Loading...</div>
     }
     let highestAttainment = 'In Process'
-    const configs = this.props.configurations.reduce((built, config) => {
+    const configs = this.props.configurations.reduce((built, config, i) => {
+      config = config.set('active', i === this.props.activeIndex)
       if(config.get('configuration_status').get('environment') == 'production'){
         if(highestAttainment == 'In Process' || highestAttainment == 'In Staging') {
           highestAttainment = 'In Production'

@@ -13,7 +13,8 @@ class ConfigurationVersion extends React.Component {
   render() {
     return (
       <li>
-        <a href="#" className="version-link"
+        <a href="#"
+          className={this.props.active ? 'active version-link' : 'version-link'}
           onClick={this.props.activate}>
           <div className="version-title">
             {this.props.label}
@@ -27,6 +28,7 @@ class ConfigurationVersion extends React.Component {
 ConfigurationVersion.displayName = 'ConfigurationVersion'
 ConfigurationVersion.propTypes = {
   activate: React.PropTypes.func,
+  active: React.PropTypes.bool,
   label: React.PropTypes.string
 }
 
