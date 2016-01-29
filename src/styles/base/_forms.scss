@@ -8,6 +8,7 @@ label {
 
 .form-control {
   height: $bar-height;
+  max-width: 900px;
   padding: 25px 30px;
   font-size: inherit;
   color: inherit;
@@ -38,20 +39,54 @@ label {
   }
 }
 
+.form-groups {
+  position: relative;
+
+  .input-connector {
+    $input-connector-width: 20px;
+
+    position: absolute;
+    top: $bar-height / 2;
+    bottom: ($bar-height / 2) + $form-group-padding;
+    left: ($grid-gutter-width / 4) - $input-connector-width;
+    width: $input-connector-width;
+    opacity: 0;
+    transition: opacity 250ms ease;
+
+    &.show {
+      opacity: 1;
+    }
+
+    .dark-theme & {
+      border: 1px solid rgba($black, 0.2);
+      border-right: 0;
+    }
+  }
+}
+
 .form-group {
-  margin-bottom: 25px;
+  padding-bottom: $form-group-padding;
+  margin-bottom: 0;
 
   .header & {
+    padding-bottom: 0;
     margin-bottom: 0;
   }
 }
 
 .form-horizontal {
 
-  @media (min-width: $screen-sm-min) {
-    .control-label {
-      padding-top: 26px;
-    }
+  .control-label {
+    padding-top: 26px;
+    text-align: inherit;
+  }
+
+  .form-groups .control-label {
+    position: absolute;
+    top: 50%;
+    padding-top: 0;
+    padding-bottom: $form-group-padding;
+    transform: translateY(-50%);
   }
 }
 
