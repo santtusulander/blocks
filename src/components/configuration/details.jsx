@@ -19,7 +19,6 @@ class ConfigurationDetails extends React.Component {
   handleSelectChange(path) {
     return value => {
       this.props.changeValue(path, value)
-      // console.log(e.target.id)
     }
   }
   handleSave(e) {
