@@ -17,7 +17,7 @@ describe('ConfigurationVersion', () => {
     let version = TestUtils.renderIntoDocument(
       <ConfigurationVersion activate={activate}/>
     )
-    let link = TestUtils.findRenderedDOMComponentsWithClass(version,
+    let link = TestUtils.findRenderedDOMComponentWithClass(version,
       'version-link')
     TestUtils.Simulate.click(link)
     expect(activate.mock.calls.length).toEqual(1)

@@ -29,7 +29,21 @@ export class ConfigurationVersions extends React.Component {
     }
     let highestAttainment = 'In Process'
     const configs = this.props.configurations.reduce((built, config) => {
-      built.inprocess.push(config)
+      if(config.get('configuration_status').get('environment') == 'production'){
+        if(highestAttainment == 'In Process' || highestAttainment == 'In Staging') {
+          highestAttainment = 'In Production'
+        }
+        built.production.push(config)
+      }
+      else if(config.get('configuration_status').get('environment') == 'staging'){
+        if(highestAttainment == 'In Process') {
+          highestAttainment = 'In Staging'
+        }
+        built.staging.push(config)
+      }
+      else {
+        built.inprocess.push(config)
+      }
       return built
     }, {production: [], staging: [], inprocess: []})
     return (

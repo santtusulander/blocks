@@ -4,15 +4,18 @@ import Immutable from 'immutable'
 
 jest.dontMock('../versions.jsx')
 const ConfigurationVersions = require('../versions.jsx')
+const ConfigurationVersion = require('../version.jsx')
 
 const fakeConfigs = Immutable.fromJS([
-
+  {config_id: 1, configuration_status: {environment: 'staging'}},
+  {config_id: 2, configuration_status: {environment: 'production'}},
+  {config_id: 3, configuration_status: {}}
 ])
 
 describe('ConfigurationVersions', () => {
   it('should exist', () => {
     let versions = TestUtils.renderIntoDocument(
-      <ConfigurationVersions />
+      <ConfigurationVersions fetching={true} />
     );
     expect(TestUtils.isCompositeComponent(versions)).toBeTruthy();
   });
@@ -22,9 +25,16 @@ describe('ConfigurationVersions', () => {
     let versions = TestUtils.renderIntoDocument(
       <ConfigurationVersions configurations={fakeConfigs} activate={activate}/>
     )
-    let links = TestUtils.scryRenderedDOMComponentsWithClass(versions,
-      'version-link')
-    TestUtils.Simulate.click(links[0])
-    expect(activate.mock.calls.length).toEqual(1)
+    versions.activate(1)()
+    expect(activate.mock.calls[0][0]).toEqual(1)
+  })
+
+  it('should display configurations', () => {
+    let versions = TestUtils.renderIntoDocument(
+      <ConfigurationVersions configurations={fakeConfigs}/>
+    )
+    let versionComponents = TestUtils.scryRenderedComponentsWithType(versions,
+      ConfigurationVersion)
+    expect(versionComponents.length).toBe(3)
   })
 })
