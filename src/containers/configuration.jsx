@@ -125,12 +125,19 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
           <PageHeader>
-            <h1>{this.props.params.host}</h1>
+            <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>
             <p className="text-sm">
-              <span className="right-separator">www.domain.com</span>
-              <span className="right-separator">01/04/2016</span>
-              <span className="right-separator">12:01 am</span>
-              John Doe</p>
+              <span className="right-separator">
+                {activeConfig.get('edge_configuration').get('origin_host_name')}
+              </span>
+              <span className="right-separator">
+                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[0]}
+              </span>
+              <span className="right-separator">
+                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[1]} am
+              </span>
+              {activeConfig.get('configuration_status').get('last_edited_by')}
+            </p>
           </PageHeader>
 
           <Nav bsStyle="tabs" activeKey={this.state.activeTab}
