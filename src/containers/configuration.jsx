@@ -65,7 +65,9 @@ export class Configuration extends React.Component {
   activateTab(tabName) {
     this.setState({activeTab: tabName})
   }
-  activateVersion(index) {
+  activateVersion(id) {
+    const index = this.props.activeHost.get('services').get(0)
+      .get('configurations').findIndex(config => config.get('config_id') === id)
     this.setState({activeConfig: index})
   }
   deleteVersion(id) {
@@ -98,8 +100,9 @@ export class Configuration extends React.Component {
           <ConfigurationVersions
             fetching={this.props.fetching}
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
-            delete={this.deleteVersion}
-            activate={this.activateVersion}/>
+            activate={this.activateVersion}
+            propertyName={this.props.params.host}
+            activeIndex={this.state.activeConfig}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}

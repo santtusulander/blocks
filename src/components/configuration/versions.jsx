@@ -1,80 +1,70 @@
 import React from 'react'
 import Immutable from 'immutable'
 
+import Version from './version'
+
+function versionFactory(configuration, i) {
+  const id = configuration.get('config_id')
+  return (
+    <Version key={i}
+      activate={this.activate(id)}
+      label={configuration.get('label') || id}/>
+  )
+}
+
 export class ConfigurationVersions extends React.Component {
   constructor(props) {
     super(props);
 
     this.activate = this.activate.bind(this)
-    this.delete = this.delete.bind(this)
   }
-  activate(index) {
-    return e => {
-      e.stopPropagation()
-      this.props.activate(index)
-    }
-  }
-  delete(id) {
-    return e => {
-      e.stopPropagation()
-      this.props.delete(id)
+  activate(id) {
+    return () => {
+      this.props.activate(id)
     }
   }
   render() {
     if(this.props.fetching) {
       return <div>Loading...</div>
     }
+    let highestAttainment = 'In Process'
+    const configs = this.props.configurations.reduce((built, config) => {
+      built.inprocess.push(config)
+      return built
+    }, {production: [], staging: [], inprocess: []})
     return (
       <div className="configuration-versions">
         <div className="sidebar-header">
-          <h3>{this.props.propertyName} www.lorem.com</h3>
-          <p className="text-sm">In Production</p>
+          <h3>{this.props.propertyName}</h3>
+          <p className="text-sm">{highestAttainment}</p>
         </div>
         <a className="sidebar-section-header">
           PRODUCTION
         </a>
         <ul className="version-list">
-          <li>
-            <a href="#" className="version-link active">
-              <div className="version-title">Prod_version title</div>
-            </a>
-          </li>
+          {configs.production.length ?
+            configs.production.map(versionFactory.bind(this)) :
+            <li className="empty-msg">None in production</li>
+          }
         </ul>
         <a className="sidebar-section-header">
           STAGING
         </a>
         <ul className="version-list">
-          <li>
-            <a href="#" className="version-link">
-              <div className="version-title">Staging_version title</div>
-            </a>
-          </li>
+          {configs.staging.length ?
+            configs.staging.map(versionFactory.bind(this)) :
+            <li className="empty-msg">None in staging</li>
+          }
         </ul>
         <a className="sidebar-section-header">
           IN PROCESS
         </a>
         <ul className="version-list">
-          <li>
-            <a href="#" className="version-link">
-              <div className="version-title">Staging_version title</div>
-            </a>
-          </li>
-          <li>
-            <a href="#" className="version-link">
-              <div className="version-title">Staging_version title</div>
-            </a>
-          </li>
+          {configs.inprocess.length ?
+            configs.inprocess.map(versionFactory.bind(this)) :
+            <li className="empty-msg">None in process</li>
+          }
         </ul>
-        {this.props.configurations.map((configuration, i) => {
-          return (
-            <div key={i}>
-              {configuration.get('config_id')}
-              <a href="#" onClick={this.activate(i)}>edit</a>
-              &nbsp;
-              <a href="#" onClick={this.delete(configuration.get('config_id'))}>delete</a>
-            </div>
-          )
-        })}
       </div>
     );
   }
@@ -83,8 +73,8 @@ export class ConfigurationVersions extends React.Component {
 ConfigurationVersions.displayName = 'ConfigurationVersions'
 ConfigurationVersions.propTypes = {
   activate: React.PropTypes.func,
+  activeIndex: React.PropTypes.number,
   configurations: React.PropTypes.instanceOf(Immutable.List),
-  delete: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   propertyName: React.PropTypes.string
 }
