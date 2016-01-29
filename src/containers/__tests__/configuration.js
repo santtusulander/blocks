@@ -260,8 +260,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[3]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[1]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -283,8 +284,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[4]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[2]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -306,8 +308,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[5]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[3]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -329,8 +332,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[6]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[4]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -352,8 +356,9 @@ describe('Configuration', () => {
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    let links = TestUtils.scryRenderedDOMComponentsWithTag(config, 'a');
-    TestUtils.Simulate.click(links[7]);
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[5]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -396,5 +401,19 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
+  })
+
+  it('should add a verson', () => {
+    const hostActions = hostActionsMaker()
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActions}
+        activeHost={fakeHost}
+        params={urlParams}/>
+    );
+    config.cloneActiveVersion()
+    expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
+    expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations.length).toBe(2)
   })
 })
