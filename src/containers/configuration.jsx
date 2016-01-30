@@ -33,6 +33,7 @@ export class Configuration extends React.Component {
     this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.deleteVersion = this.deleteVersion.bind(this)
+    this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -65,7 +66,9 @@ export class Configuration extends React.Component {
   activateTab(tabName) {
     this.setState({activeTab: tabName})
   }
-  activateVersion(index) {
+  activateVersion(id) {
+    const index = this.props.activeHost.get('services').get(0)
+      .get('configurations').findIndex(config => config.get('config_id') === id)
     this.setState({activeConfig: index})
   }
   deleteVersion(id) {
@@ -86,6 +89,21 @@ export class Configuration extends React.Component {
       id
     )
   }
+  cloneActiveVersion() {
+    let newVersion = this.getActiveConfig()
+    newVersion = newVersion
+      .set('label', `Copy of ${newVersion.get('label') || newVersion.get('config_id')}`)
+      .set('config_id', this.props.activeHost.getIn(['services',0,'configurations']).size)
+      .setIn(['configuration_status','environment'], 'in_process')
+    const newHost = this.props.activeHost.setIn(['services',0,'configurations'],
+      this.props.activeHost.getIn(['services',0,'configurations']).push(newVersion))
+    this.props.hostActions.updateHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      newHost.toJS()
+    )
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div className="container">Loading...</div>
@@ -98,19 +116,28 @@ export class Configuration extends React.Component {
           <ConfigurationVersions
             fetching={this.props.fetching}
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
-            delete={this.deleteVersion}
-            activate={this.activateVersion}/>
+            activate={this.activateVersion}
+            propertyName={this.props.params.host}
+            activeIndex={this.state.activeConfig}
+            addVersion={this.cloneActiveVersion}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
           <PageHeader>
-            <h1>{this.props.params.host}</h1>
+            <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>
             <p className="text-sm">
-              <span className="right-separator">www.domain.com</span>
-              <span className="right-separator">01/04/2016</span>
-              <span className="right-separator">12:01 am</span>
-              John Doe</p>
+              <span className="right-separator">
+                {activeConfig.get('edge_configuration').get('origin_host_name')}
+              </span>
+              <span className="right-separator">
+                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[0]}
+              </span>
+              <span className="right-separator">
+                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[1]} am
+              </span>
+              {activeConfig.get('configuration_status').get('last_edited_by')}
+            </p>
           </PageHeader>
 
           <Nav bsStyle="tabs" activeKey={this.state.activeTab}
