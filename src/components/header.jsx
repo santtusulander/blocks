@@ -41,6 +41,11 @@ class Header extends React.Component {
             </Dropdown>
           </li>
           <li className="main-nav-item">
+            <Link className="main-nav-link" to={`/configurations`}>
+              Configurations
+            </Link>
+          </li>
+          <li className="main-nav-item">
             <Link className="main-nav-link" to={`/`}>
               Security
             </Link>
