@@ -9,20 +9,18 @@
   background-position: center center;
   background-repeat: no-repeat;
 
+  .dark-theme & {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
+  }
+
   .btn-icon & {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-}
-
-.icon-alerts {
-  width: 18px;
-  height: 25px;
-
-  .dark-theme & {
-    background-image: url('../assets/icons/dt-icon-alerts.svg');
+    fill: inherit;
+    stroke: inherit;
   }
 }
 

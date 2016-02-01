@@ -19,6 +19,17 @@
     min-width: 0;
   }
 
+  &.btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      text-transform: uppercase;
+      box-shadow: none;
+    }
+  }
+
   &.btn-icon {
     position: relative;
     width: $btn-height;
@@ -137,13 +148,16 @@
     &.active {
       color: $dt-text-color;
       background-color: rgba($pale-blue, 0.1);
-      box-shadow: none;
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
     }
 
     &:hover:enabled,
     &:active:enabled,
     &.active:enabled {
       color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
     }
   }
 
@@ -183,10 +197,31 @@
     &:hover {
       color: $dt-text-color;
       background-color: rgba($black, 0.2);
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
     }
 
     &:hover:enabled {
       color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .btn-success {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: $btn-success-bg;
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:enabled {
+      color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
     }
   }
 
