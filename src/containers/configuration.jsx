@@ -10,6 +10,7 @@ import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
+import Dialog from '../components/layout/dialog'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationCache from '../components/configuration/cache'
@@ -199,6 +200,17 @@ export class Configuration extends React.Component {
               <ConfigurationChangeLog/>
               : null}
           </div>
+
+          <Dialog>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="primary">CANCEL</Button>
+              <Button className="btn btn-save">SAVE</Button>
+            </ButtonToolbar>
+            <div>
+            <p className="configuration-dialog-title">5 Changes</p>
+            <p>[versionname], [versionname], [versionname], [versionname], [versionname]</p></div>
+          </Dialog>
+
         </Content>
       </PageContainer>
     );
