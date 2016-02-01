@@ -27,19 +27,6 @@
       transform: translateY(-50%);
     }
   }
-
-  .add-btn {
-    width: 50px;
-    min-width: initial;
-    padding: 0;
-  }
-
-  .view-log-btn,
-  .delete-btn {
-    width: calc(50% - 35px);
-    min-width: initial;
-    margin-left: 10px;
-  }
 }
 
 .empty-msg {
