@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Nav, NavItem} from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem } from 'react-bootstrap'
 
 import * as hostActionCreators from '../redux/modules/host'
 
@@ -125,6 +125,12 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
           <PageHeader>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="primary">Publish</Button>
+              <Button bsStyle="primary">Copy</Button>
+              <Button bsStyle="primary">Retire</Button>
+            </ButtonToolbar>
+
             <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>
             <p className="text-sm">
               <span className="right-separator">
