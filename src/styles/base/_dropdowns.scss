@@ -1,25 +1,8 @@
 // Dropdowns
 // =========
 
-.dropdown-select {
-  min-width: 300px;
-}
-
 .caret {
   border-width: 5px;
-
-  .dropdown-select & {
-    float: right;
-    width: 10px;
-    height: 15px;
-    margin-top: ($btn-height / 2) - 7.5px;
-    margin-left: 30px;
-    border: 0;
-
-    .dark-theme & {
-      background: url('../assets/icons/dt-icon-caret-select.svg') center center no-repeat;
-    }
-  }
 }
 
 // scss-lint:disable SelectorDepth NestingDepth

@@ -1,16 +1,15 @@
 // Input groups
 // ============
 
-.input-group-addon {
+.input-group {
+  max-width: 980px;
+}
 
-  .dark-theme & {
-    min-width: $bar-height;
-    font-size: inherit;
-    color: inherit;
-    background-color: rgba($black, 0.2);
-    border: 0;
-    border-right: 1px solid rgba($black, 0.2);
-    border-bottom-left-radius: 2px;
-    border-top-left-radius: 2px;
-  }
+.input-group-addon {
+  min-width: $bar-height;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: 0;
 }

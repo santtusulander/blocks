@@ -22,6 +22,7 @@
 @import 'base/input-groups';
 @import 'base/modals';
 @import 'base/navs';
+@import 'base/panels';
 @import 'base/tables';
 @import 'base/tooltip';
 
@@ -32,22 +33,23 @@
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
 @import 'components/header';
-@import 'components/tooltip';
+@import 'components/select';
 @import 'components/toggle';
+@import 'components/tooltip';
 
 // Analysis
-@import 'components/analysis/by-time';
 @import 'components/analysis/by-location';
+@import 'components/analysis/by-time';
 
 // Configuration
 @import 'components/configuration/cache';
 @import 'components/configuration/versions';
 
 // Layouts
-@import 'components/layout/sidebar';
 @import 'components/layout/content';
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
+@import 'components/layout/sidebar';
 
 
 // Transitions

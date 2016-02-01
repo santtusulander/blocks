@@ -1,0 +1,28 @@
+// Select
+// ======
+
+.dropdown-select {
+  min-width: 300px;
+
+  &.input-select {
+    width: 100%;
+    max-width: 900px;
+
+    .dropdown-toggle {
+      height: $bar-height;
+    }
+  }
+
+  .caret {
+    float: right;
+    width: 10px;
+    height: 15px;
+    margin-top: ($btn-height / 2) - 7.5px;
+    margin-left: 30px;
+    border: 0;
+
+    .dark-theme & {
+      background: url('../assets/icons/dt-icon-caret-select.svg') center center no-repeat;
+    }
+  }
+}
