@@ -1,4 +1,8 @@
 import React from 'react'
+import Immutable from 'immutable'
+import moment from 'moment'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {Table} from 'react-bootstrap'
 
 import PageContainer from '../components/layout/page-container'
@@ -34,30 +38,39 @@ export class Configurations extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>modernfamily.com</td>
-                  <td>01/01/2016, 12:12pm</td>
-                  <td>John Doe</td>
-                  <td>Production</td>
-                  <td>Disney / ABC</td>
-                  <td><a href="#">purge</a> <a href="#">edit</a></td>
-                </tr>
-                <tr>
-                  <td>modernfamily.com</td>
-                  <td>01/01/2016, 12:12pm</td>
-                  <td>John Doe</td>
-                  <td>Production</td>
-                  <td>Disney / ABC</td>
-                  <td><a href="#">purge</a> <a href="#">edit</a></td>
-                </tr>
-                <tr>
-                  <td>modernfamily.com</td>
-                  <td>01/01/2016, 12:12pm</td>
-                  <td>John Doe</td>
-                  <td>Production</td>
-                  <td>Disney / ABC</td>
-                  <td><a href="#">purge</a> <a href="#">edit</a></td>
-                </tr>
+                {this.props.properties.map((property, i) => {
+                  const propertyAccount = this.props.accounts.find(account => {
+                    return account.get('account_id') == property.get('account_id')
+                  })
+                  const propertyGroup = this.props.groups.find(group => {
+                    return group.get('group_id') == property.get('group_id')
+                  })
+                  return (
+                    <tr key={i}>
+                      <td>{property.get('property')}</td>
+                      <td>
+                        {moment(property.get('last_edited'), 'X')
+                          .format('MM/DD/YYYY, h:mm a')}
+                      </td>
+                      <td>{property.get('last_editor')}</td>
+                      <td>{property.get('status')}</td>
+                      <td>
+                        {propertyAccount ? propertyAccount.get('name') : ''}
+                        &nbsp;/&nbsp;
+                        {propertyGroup ? propertyGroup.get('name') : ''}
+                      </td>
+                      <td>
+                        {property.get('status') === 'production' ?
+                          <a href="#">
+                            purge
+                          </a>
+                        : ''} <a href="#">
+                          edit
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </Table>
           </div>
@@ -69,7 +82,19 @@ export class Configurations extends React.Component {
 
 Configurations.displayName = 'Configurations'
 Configurations.propTypes = {
-  fetching: React.PropTypes.bool
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  fetching: React.PropTypes.bool,
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  properties: React.PropTypes.instanceOf(Immutable.List)
 }
 
-export default Configurations
+function mapStateToProps(state) {
+  return {
+    accounts: state.content.get('accounts'),
+    fetching: state.content.get('fetching'),
+    groups: state.content.get('groups'),
+    properties: state.content.get('properties')
+  };
+}
+
+export default connect(mapStateToProps)(Configurations);
