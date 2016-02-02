@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Icon from './icon.jsx'
+import Icon from '../icon.jsx'
 
 class IconConfiguration extends React.Component {
   render() {

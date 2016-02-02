@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Icon from './icon.jsx'
+import Icon from '../icon.jsx'
 
 class IconChart extends React.Component {
   render() {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Icon from './icon.jsx'
+import Icon from '../icon.jsx'
 
 class IconH1Caret extends React.Component {
   render() {
