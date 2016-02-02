@@ -12,6 +12,8 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Configuration from './containers/configuration'
 
+import Property from './components/property'
+
 import ContentTransition from './transitions/content'
 
 module.exports = (
@@ -27,5 +29,6 @@ module.exports = (
       <Route path="hosts/:brand/:account/:group" component={Hosts}/>
     </Route>
     <Route path="configuration/:brand/:account/:group/:host" component={Configuration}/>
+    <Route path="property/:brand/:account/:group/:host" component={Property}/>
   </Route>
 );
