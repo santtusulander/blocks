@@ -126,6 +126,12 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
           <PageHeader>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="primary">Publish</Button>
+              <Button bsStyle="primary">Copy</Button>
+              <Button bsStyle="primary">Retire</Button>
+            </ButtonToolbar>
+
             <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>
             <p className="text-sm">
               <span className="right-separator">
