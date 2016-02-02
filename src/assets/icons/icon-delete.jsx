@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Icon from './icon.jsx'
+import Icon from '../../components/icon.jsx'
 
 class IconDelete extends React.Component {
   render() {
