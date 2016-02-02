@@ -3,13 +3,15 @@ import Immutable from 'immutable'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Table} from 'react-bootstrap'
+import {Table, Input, Button} from 'react-bootstrap'
 import { Link } from 'react-router'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import PurgeModal from '../components/purge-modal'
+import IconAdd from '../assets/icons/icon-add.jsx'
+import Select from '../components/select'
 
 export class Configurations extends React.Component {
   constructor(props) {
@@ -37,11 +39,20 @@ export class Configurations extends React.Component {
       <PageContainer className="configurations-container">
         <Content>
           <PageHeader>
-            <h1>242 Properties</h1>
-
-            <div className="pull-right">
-              Search | Filter
+            <div className="pull-right actions">
+              <Input className="search" type="text" placeholder="Search" />
+              <Button bsStyle="primary" className="btn-icon add-btn">
+                <IconAdd width="30" height="30" />
+              </Button>
+              <Select className="input-select"
+                value="all"
+                addonAfter=' '
+                options={[
+                  ['all', 'Show all properties'],
+                  ['1', 'Filter 1'],
+                  ['2', 'Filter 2']]}/>
             </div>
+            <h1>{this.props.properties.size} Properties</h1>
           </PageHeader>
 
           <div className="container-fluid">

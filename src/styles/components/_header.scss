@@ -5,6 +5,23 @@
   height: $header-height + 10px;
   background-color: rgba($black, 0.5);
   border: 0;
+
+  .form-control {
+    width: 500px;
+    height: $header-btn-height;
+    padding-left: 50px;
+    margin-top: ($bar-height - $header-btn-height) / 2;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: $header-btn-height / 2;
+
+    .dark-theme & {
+      background-image: url('../assets/icons/dt-icon-search.svg');
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+    }
+  }
 }
 
 .header-gradient {
