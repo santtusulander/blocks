@@ -1,0 +1,65 @@
+import {createAction} from 'redux-actions'
+import axios from 'axios'
+import {handleActions} from 'redux-actions'
+import Immutable from 'immutable'
+
+import {defaultHeaders, urlBase} from '../util'
+
+const CONTENT_FETCHED = 'CONTENT_FETCHED'
+const CONTENT_START_FETCH = 'CONTENT_START_FETCH'
+
+const emptyContent = Immutable.Map({
+  accounts: Immutable.fromJS([
+    {"account_id": 1, "name": "Disney"},
+    {"account_id": 2, "name": "Some other company"}
+  ]),
+  fetching: false,
+  groups: Immutable.fromJS([
+    {"account_id": 1, "group_id": 1, "name": "Disney Interactive"},
+    {"account_id": 1, "group_id": 2, "name": "Disney Cruises"},
+    {"account_id": 1, "group_id": 3, "name": "Lucas Arts"},
+    {"account_id": 2, "group_id": 1, "name": "Some company"}
+  ]),
+  properties: Immutable.fromJS([
+    {"account_id": 1, "group_id": 1, "property": "www.foobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "production"},
+    {"account_id": 1, "group_id": 1, "property": "www.dobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "production"},
+    {"account_id": 1, "group_id": 2, "property": "www.gobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "in_process"},
+    {"account_id": 2, "group_id": 1, "property": "www.aabar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "staging"}
+  ])
+})
+
+// REDUCERS
+
+export default handleActions({
+  CONTENT_FETCHED: {
+    next(state, action) {
+      return state.merge({
+        accounts: Immutable.fromJS(action.payload.accounts),
+        fetching: false,
+        groups: Immutable.fromJS(action.payload.groups),
+        properties: Immutable.fromJS(action.payload.properties)
+      })
+    },
+    throw() {
+      return emptyContent
+    }
+  },
+  CONTENT_START_FETCH: (state) => {
+    return state.set('fetching', true)
+  }
+}, emptyContent)
+
+// ACTIONS
+
+export const fetchContent = createAction(CONTENT_FETCHED, (brand) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/content/`, {
+    headers: defaultHeaders
+  })
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const startFetching = createAction(CONTENT_START_FETCH)

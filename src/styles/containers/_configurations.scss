@@ -1,0 +1,40 @@
+.configurations-container {
+
+  td:last-child {
+    text-align: right;
+
+    a {
+      margin-left: 20px;
+      text-transform: uppercase;
+    }
+  }
+
+  .search {
+    padding-left: 50px;
+
+    .dark-theme & {
+      background-image: url('../assets/icons/dt-icon-search.svg');
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+    }
+  }
+
+  .actions {
+    .form-group,
+    button,
+    .dropdown {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .dropdown {
+      width: 200px;
+    }
+
+    .form-control,
+    .input-select .dropdown-toggle {
+      height: 60px;
+    }
+  }
+}

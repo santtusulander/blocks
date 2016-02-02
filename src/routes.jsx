@@ -11,6 +11,7 @@ import Accounts from './containers/accounts'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Configuration from './containers/configuration'
+import Configurations from './containers/configurations'
 
 import ContentTransition from './transitions/content'
 
@@ -21,6 +22,7 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
     <Route path="analysis" component={Analysis}/>
+    <Route path="configurations/:brand" component={Configurations}/>
     <Route path="content" component={ContentTransition}>
       <Route path="accounts/:brand" component={Accounts}/>
       <Route path="groups/:brand/:account" component={Groups}/>
