@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 120 120" style="enable-background:new 0 0 120 120;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0;}
+	.st1{opacity:0.1;}
+	.st2{fill:#00A9D4;}
+	.st3{opacity:0.1;fill:#00A9D4;}
+	.st4{opacity:0.3;fill:url(#SVGID_1_);}
+	.st5{fill:#792164;}
+	.st6{fill:#89BB40;}
+	.st7{fill:#E22526;}
+</style>
+<symbol  id="New_Symbol" viewBox="-220 -220 440 440">
+	<g id="Entity_3_1_">
+		<g>
+			<rect x="-220" y="-220" class="st0" width="440" height="440"/>
+			<g class="st1">
+				<circle class="st2" cx="0" cy="0" r="220"/>
+			</g>
+			<path class="st3" d="M167.8,50.4c0,59.8-20.3,78-68.4,93.5C62,156,46.7,165.7,4.3,165.7c-19.7,0-27.6-8.6-45.3-14.3
+				c-29.7-9.5-47.3-22-68.3-44c-16.5-17.3-54.5-17-63.4-39.7c-8.2-21-6.9-42.3-6.9-66.2c0-38.2-1.7-81.6,31.1-95.1
+				C-94-116-92.3-145-66.3-167.1c10.5-8.9,51.5-17.9,65.8-17.9c40.1,0,85.3-3.8,106.5,24c30.9,40.5,63.4,78.2,70,130.6
+				C176.9-22.8,167.8,42.5,167.8,50.4z"/>
+			<g>
+				<circle cx="0" cy="0" r="140"/>
+				
+					<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-6.283699e-09" y1="-139.9999" x2="6.287347e-09" y2="140.0001">
+					<stop  offset="0" style="stop-color:#00A9D4;stop-opacity:0.3"/>
+					<stop  offset="1" style="stop-color:#00A9D4"/>
+				</linearGradient>
+				<circle class="st4" cx="0" cy="0" r="140"/>
+				<g class="st1">
+					<path d="M0,130c34.7,0,67.4-13.5,91.9-38.1S130,34.7,130,0s-13.5-67.4-38.1-91.9S34.7-130,0-130s-67.4,13.5-91.9,38.1
+						S-130-34.7-130,0s13.5,67.4,38.1,91.9S-34.7,130,0,130 M0,140c-77.3,0-140-62.7-140-140S-77.3-140,0-140S140-77.3,140,0
+						S77.3,140,0,140L0,140z"/>
+				</g>
+			</g>
+			<path class="st5" d="M-91.9-91.9L-99-99c25.3-25.3,60.3-41,99-41v10C-34.7-130-67.4-116.5-91.9-91.9z"/>
+			<path class="st5" d="M0-130v-10c38.7,0,73.7,15.7,99,41l-7.1,7.1C67.4-116.5,34.7-130,0-130z"/>
+			<path class="st6" d="M130,0c0-34.7-13.5-67.4-38.1-91.9L99-99c25.3,25.3,41,60.3,41,99H130z"/>
+			<path class="st2" d="M91.9,91.9L99,99c-25.3,25.3-60.3,41-99,41v-10C34.7,130,67.4,116.5,91.9,91.9z"/>
+			<path class="st6" d="M91.9,91.9C116.5,67.4,130,34.7,130,0h10c0,38.7-15.7,73.7-41,99L91.9,91.9L91.9,91.9z"/>
+			<g class="st0">
+				<path class="st7" d="M-91.9,91.9L-91.9,91.9L-99,99c-25.3-25.3-41-60.3-41-99h10C-130,34.7-116.5,67.4-91.9,91.9z"/>
+				<path class="st7" d="M0,130v10c-38.7,0-73.7-15.7-99-41l7.1-7.1C-67.4,116.5-34.7,130,0,130z"/>
+				<path class="st7" d="M-130,0h-10c0-38.7,15.7-73.7,41-99l7.1,7.1C-116.5-67.4-130-34.7-130,0z"/>
+			</g>
+		</g>
+	</g>
+</symbol>
+<use xlink:href="#New_Symbol"  width="440" height="440" id="XMLID_247_" x="-220" y="-220" transform="matrix(0.2727 0 0 -0.2727 60 60)" style="overflow:visible;"/>
+</svg>
