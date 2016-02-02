@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-import IconAlerts from '../assets/icons/icon-alerts.jsx'
+import IconAlerts from '../components/icons/icon-alerts.jsx'
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap';
 

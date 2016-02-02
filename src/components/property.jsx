@@ -6,9 +6,9 @@ import { Button, ButtonToolbar, Col, Dropdown, MenuItem,
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import AnalysisByTime from '../components/analysis/by-time'
-import IconChart from '../assets/icons/icon-chart.jsx'
-import IconConfiguration from '../assets/icons/icon-configuration.jsx'
-import IconH1Caret from '../assets/icons/icon-h1-caret.jsx'
+import IconChart from '../components/icons/icon-chart.jsx'
+import IconConfiguration from '../components/icons/icon-configuration.jsx'
+import IconH1Caret from '../components/icons/icon-h1-caret.jsx'
 
 const fakeRecentData = [
   {epoch_start: 1451606400, bytes: 39405, requests: 943},
@@ -118,7 +118,7 @@ class Property extends React.Component {
             <Row className="no-end-gutters property-content">
               <Col xs={6} className="property-analytics-summary">
                 <h3 className="has-btn">
-                  Traffic Summary 
+                  Traffic Summary
                   <span className="heading-suffix"> (last 30 days)</span>
                   <Button bsStyle="primary" className="btn-icon pull-right">
                     <IconChart />
