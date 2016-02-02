@@ -22,6 +22,10 @@
     fill: inherit;
     stroke: inherit;
   }
+
+  &.no-fill {
+    fill: transparent;
+  }
 }
 
 .icon-chart {
