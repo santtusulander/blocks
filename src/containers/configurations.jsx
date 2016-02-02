@@ -4,12 +4,31 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {Table} from 'react-bootstrap'
+import { Link } from 'react-router'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
+import PurgeModal from '../components/purge-modal'
 
 export class Configurations extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activePurge: null
+    }
+
+    this.activatePurge = this.activatePurge.bind(this)
+  }
+  activatePurge(index) {
+    return e => {
+      if(e) {
+        e.preventDefault()
+      }
+      this.setState({activePurge: index})
+    }
+  }
   render() {
     if(this.props.fetching) {
       return <p>Loading...</p>
@@ -61,12 +80,13 @@ export class Configurations extends React.Component {
                       </td>
                       <td>
                         {property.get('status') === 'production' ?
-                          <a href="#">
+                          <a href="#" onClick={this.activatePurge(i)}>
                             purge
                           </a>
-                        : ''} <a href="#">
+                        : ''}
+                        <Link to={`/configuration/${this.props.params.brand}/${property.get('account_id')}/${property.get('group_id')}/${property.get('property')}`}>
                           edit
-                        </a>
+                        </Link>
                       </td>
                     </tr>
                   )
@@ -75,6 +95,8 @@ export class Configurations extends React.Component {
             </Table>
           </div>
         </Content>
+        {this.state.activePurge !== null ?
+          <PurgeModal hideAction={this.activatePurge(null)}/> : ''}
       </PageContainer>
     );
   }
@@ -85,6 +107,7 @@ Configurations.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List)
 }
 

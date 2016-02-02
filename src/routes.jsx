@@ -22,7 +22,7 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
     <Route path="analysis" component={Analysis}/>
-    <Route path="configurations" component={Configurations}/>
+    <Route path="configurations/:brand" component={Configurations}/>
     <Route path="content" component={ContentTransition}>
       <Route path="accounts/:brand" component={Accounts}/>
       <Route path="groups/:brand/:account" component={Groups}/>
