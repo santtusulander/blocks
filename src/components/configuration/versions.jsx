@@ -1,7 +1,9 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Button} from 'react-bootstrap'
+import { Button, ButtonToolbar } from 'react-bootstrap'
 
+import IconAdd from '../../assets/icons/icon-add.jsx'
+import IconDelete from '../../assets/icons/icon-delete.jsx'
 import Version from './version'
 
 function versionFactory(configuration, i) {
@@ -55,16 +57,18 @@ export class ConfigurationVersions extends React.Component {
           <h3>{this.props.propertyName}</h3>
           <p className="text-sm">{highestAttainment}</p>
           <div className="sidebar-actions">
-            <Button bsStyle="success" className="add-btn"
-              onClick={this.props.addVersion}>
-              +
-            </Button>
-            <Button bsStyle="primary" className="view-log-btn">
-              View Log
-            </Button>
-            <Button bsStyle="primary" className="delete-btn">
-              Delete
-            </Button>
+            <ButtonToolbar>
+              <Button bsStyle="success" className="btn-icon add-btn"
+                onClick={this.props.addVersion}>
+                <IconAdd width="30" height="30" />
+              </Button>
+              <Button bsStyle="primary" className="btn-icon delete-btn">
+                <IconDelete width="30" height="30" />
+              </Button>
+              <Button bsStyle="primary" className="view-log-btn">
+                View Log
+              </Button>
+            </ButtonToolbar>
           </div>
         </div>
         <a className="sidebar-section-header">

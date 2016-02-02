@@ -1,17 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-// React-Bootstrap
-// ===============
+import IconAlerts from '../assets/icons/icon-alerts.jsx'
 
-import {
-  Button,
-  Dropdown,
-  Input,
-  MenuItem,
-  Nav,
-  Navbar
-} from 'react-bootstrap';
+import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap';
 
 class Header extends React.Component {
   render() {
@@ -66,7 +58,7 @@ class Header extends React.Component {
             <Dropdown id="dropdown-content">
               <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
                 btn-alerts" noCaret={true}>
-                <span className="icon icon-alerts"></span>
+                <IconAlerts />
                 <span className="btn-alerts-count">9</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
