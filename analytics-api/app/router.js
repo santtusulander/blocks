@@ -1,11 +1,25 @@
 'use strict';
 
-let router = require('express').Router();
+let router               = require('express').Router();
+let routeTrafficTime     = require('./routes/traffic/time');
+let routeTrafficCountry  = require('./routes/traffic/country');
+let routeVisitorsTime    = require('./routes/visitors/time');
+let routeVisitorsCountry = require('./routes/visitors/country');
+let routeVisitorsOS      = require('./routes/visitors/os');
+let routeVisitorsBrowser = require('./routes/visitors/browser');
+let routeMetrics         = require('./routes/metrics');
 
 // This middleware should always come first. It will log all incoming requests.
 router.use(requestLogger);
 
-// TODO: Configure API end points
+// API routes
+router.get('/traffic/time',     routeTrafficTime);
+router.get('/traffic/country',  routeTrafficCountry);
+router.get('/visitors/time',    routeVisitorsTime);
+router.get('/visitors/country', routeVisitorsCountry);
+router.get('/visitors/os',      routeVisitorsOS);
+router.get('/visitors/browser', routeVisitorsBrowser);
+router.get('/metrics',          routeMetrics);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests
