@@ -1,7 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../cache-rule-edit.jsx')
+jest.autoMockOff()
 const ConfigurationCacheRuleEdit = require('../cache-rule-edit.jsx')
 
 describe('ConfigurationCacheRuleEdit', () => {

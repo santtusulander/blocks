@@ -1,5 +1,5 @@
 import React from 'react'
-import {Table, Button} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 class ConfigurationCacheRules extends React.Component {
