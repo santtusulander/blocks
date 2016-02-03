@@ -33,8 +33,9 @@ export class Configuration extends React.Component {
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
     this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
-    this.deleteVersion = this.deleteVersion.bind(this)
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
+    this.retireActiveVersion = this.retireActiveVersion.bind(this)
+    this.publishActiveVersion = this.publishActiveVersion.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -72,15 +73,6 @@ export class Configuration extends React.Component {
       .get('configurations').findIndex(config => config.get('config_id') === id)
     this.setState({activeConfig: index})
   }
-  deleteVersion(id) {
-    this.props.hostActions.deleteConfiguration(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      this.props.params.host,
-      id
-    )
-  }
   createNewVersion(id) {
     this.props.hostActions.createConfiguration(
       this.props.params.brand,
@@ -105,11 +97,34 @@ export class Configuration extends React.Component {
       newHost.toJS()
     )
   }
+  retireActiveVersion() {
+    let newHost = this.props.activeHost.setIn(
+      ['services',0,'configurations',this.state.activeConfig],
+      this.getActiveConfig().setIn(['configuration_status','environment'], 'in_process'))
+    this.props.hostActions.updateHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      newHost.toJS()
+    )
+  }
+  publishActiveVersion() {
+    let newHost = this.props.activeHost.setIn(
+      ['services',0,'configurations',this.state.activeConfig],
+      this.getActiveConfig().setIn(['configuration_status','environment'], 'production'))
+    this.props.hostActions.updateHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      newHost.toJS()
+    )
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div className="container">Loading...</div>
     }
     const activeConfig = this.getActiveConfig()
+    const activeEnvironment = activeConfig.get('configuration_status').get('environment')
 
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
@@ -127,9 +142,23 @@ export class Configuration extends React.Component {
 
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary">Publish</Button>
-              <Button bsStyle="primary">Copy</Button>
-              <Button bsStyle="primary">Retire</Button>
+              {activeEnvironment === "staging" ||
+                activeEnvironment === "in_process" ||
+                !activeEnvironment ?
+                <Button bsStyle="primary" onClick={this.publishActiveVersion}>
+                  Publish
+                </Button>
+                : ''
+              }
+              <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                Copy
+              </Button>
+              {activeEnvironment === "staging" || activeEnvironment === "production" ?
+                <Button bsStyle="primary" onClick={this.retireActiveVersion}>
+                  Retire
+                </Button>
+                : ''
+              }
             </ButtonToolbar>
 
             <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>

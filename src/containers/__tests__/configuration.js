@@ -140,7 +140,8 @@ const fakeHost = Immutable.fromJS({
           },
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
-            "last_edited": "10 Jan 2016 - 10:52"
+            "last_edited": "10 Jan 2016 - 10:52",
+            "environment": "staging"
           },
           "default_policies": [
             {
@@ -415,5 +416,20 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations.length).toBe(2)
+  })
+
+  it('should retire a verson', () => {
+    const hostActions = hostActionsMaker()
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActions}
+        activeHost={fakeHost}
+        params={urlParams}/>
+    );
+    config.retireActiveVersion()
+    expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
+    expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations[0]
+      .configuration_status.environment).toBe('in_process')
   })
 })
