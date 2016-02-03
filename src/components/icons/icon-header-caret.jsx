@@ -2,7 +2,7 @@ import React from 'react'
 
 import Icon from '../icon.jsx'
 
-class IconH1Caret extends React.Component {
+class IconHeaderCaret extends React.Component {
   render() {
     return (
       <Icon width="23" height="14" className="no-fill">
@@ -14,9 +14,9 @@ class IconH1Caret extends React.Component {
   }
 }
 
-IconH1Caret.displayName = 'IconH1Caret'
-IconH1Caret.propTypes = {
+IconHeaderCaret.displayName = 'IconHeaderCaret'
+IconHeaderCaret.propTypes = {
   className: React.PropTypes.string
 }
 
-module.exports = IconH1Caret
+module.exports = IconHeaderCaret
