@@ -1,0 +1,13 @@
+{
+  "extends": "../.eslintrc",
+  "ecmaFeatures": {
+    "jsx": false
+  },
+  "env": {
+    "browser": false,
+    "jest": false
+  },
+  "rules": {
+    "no-console": 0
+  }
+}
