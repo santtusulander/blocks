@@ -1,0 +1,19 @@
+{
+  "name": "ericsson-udn-portal-analytics-api",
+  "version": "1.0.0",
+  "description": "A Node Express API server used by the Ericsson UDN Portal. The API responds to various GET requests with data from a remote MySQL database.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Bryan Downing <bryan.downing@idean.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^3.16.1"
+  }
+}
