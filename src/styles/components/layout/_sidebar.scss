@@ -27,16 +27,21 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
 
-    h3 {
+    h3,
+    p {
       margin-bottom: 2px;
     }
+  }
+
+  .sidebar-content {
+    padding: 40px;
   }
 
   .sidebar-section-header {
     display: block;
     min-height: $btn-height;
     padding-left: 40px;
-    font-weight: bold;
+    font-weight: 500;
     line-height: $btn-height;
     text-decoration: none;
 
