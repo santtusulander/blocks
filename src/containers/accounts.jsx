@@ -200,7 +200,7 @@ export class Accounts extends React.Component {
               <IconChart />
             </Button>
 
-            <Button bsStyle="primary" className="btn-icon"
+            <Button bsStyle="primary" className="btn-icon btn-add-new"
               onClick={this.createNewAccount}>
               <IconAdd />
             </Button>
