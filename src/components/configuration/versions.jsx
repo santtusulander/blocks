@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
-import IconAdd from '../../assets/icons/icon-add.jsx'
-import IconDelete from '../../assets/icons/icon-delete.jsx'
+import IconAdd from '../../components/icons/icon-add.jsx'
+import IconDelete from '../../components/icons/icon-delete.jsx'
 import Version from './version'
 
 function versionFactory(configuration, i) {

@@ -35,7 +35,16 @@ body {
 }
 
 &.dark-theme {
+
   hr {
     border-top-color: rgba($pale-blue, 0.2);
   }
+}
+
+.text-green {
+  color: $green;
+}
+
+.text-orange {
+  color: $orange;
 }

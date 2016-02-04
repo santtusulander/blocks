@@ -1,7 +1,7 @@
 // Tables
 // ======
 
-// scss-lint:disable SelectorDepth
+// scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
 
@@ -16,7 +16,9 @@
   > thead,
   > tbody,
   > tfoot {
+
     > tr {
+
       > th,
       > td {
         padding: 0 30px;
@@ -41,6 +43,32 @@
 
     .dark-theme & {
       background-color: rgba($pale-blue, 0.2);
+    }
+  }
+
+  &.auto-width {
+    width: auto;
+  }
+
+  &.unstyled {
+    background-color: transparent;
+  }
+
+  &.no-padding {
+
+    > thead,
+    > tbody,
+    > tfoot {
+
+      > tr {
+
+        > th,
+        > td {
+          height: auto;
+          padding: 0 10px 0 0;
+          line-height: inherit;
+        }
+      }
     }
   }
 }
