@@ -418,14 +418,14 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations.length).toBe(2)
   })
 
-  it('should retire a verson', () => {
+  it("should change a verson's environment", () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
         params={urlParams}/>
     );
-    config.retireActiveVersion()
+    config.changeActiveVersionEnvironment('in_process')
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')

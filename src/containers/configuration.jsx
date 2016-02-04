@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 
 import * as hostActionCreators from '../redux/modules/host'
 
@@ -19,6 +19,7 @@ import ConfigurationSecurity from '../components/configuration/security'
 import ConfigurationCertificates from '../components/configuration/certificates'
 import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
+import ConfigurationPublishVersion from '../components/configuration/publish-version'
 
 export class Configuration extends React.Component {
   constructor(props) {
@@ -26,7 +27,8 @@ export class Configuration extends React.Component {
 
     this.state = {
       activeTab: 'details',
-      activeConfig: 0
+      activeConfig: 0,
+      showPublishModal: false
     }
 
     this.changeValue = this.changeValue.bind(this)
@@ -34,8 +36,8 @@ export class Configuration extends React.Component {
     this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
-    this.retireActiveVersion = this.retireActiveVersion.bind(this)
-    this.publishActiveVersion = this.publishActiveVersion.bind(this)
+    this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
+    this.togglePublishModal = this.togglePublishModal.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -97,10 +99,10 @@ export class Configuration extends React.Component {
       newHost.toJS()
     )
   }
-  retireActiveVersion() {
+  changeActiveVersionEnvironment(env) {
     let newHost = this.props.activeHost.setIn(
       ['services',0,'configurations',this.state.activeConfig],
-      this.getActiveConfig().setIn(['configuration_status','environment'], 'in_process'))
+      this.getActiveConfig().setIn(['configuration_status','environment'], env))
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
@@ -108,16 +110,8 @@ export class Configuration extends React.Component {
       newHost.toJS()
     )
   }
-  publishActiveVersion() {
-    let newHost = this.props.activeHost.setIn(
-      ['services',0,'configurations',this.state.activeConfig],
-      this.getActiveConfig().setIn(['configuration_status','environment'], 'production'))
-    this.props.hostActions.updateHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      newHost.toJS()
-    )
+  togglePublishModal() {
+    this.setState({showPublishModal: !this.state.showPublishModal})
   }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
@@ -145,7 +139,7 @@ export class Configuration extends React.Component {
               {activeEnvironment === "staging" ||
                 activeEnvironment === "in_process" ||
                 !activeEnvironment ?
-                <Button bsStyle="primary" onClick={this.publishActiveVersion}>
+                <Button bsStyle="primary" onClick={this.togglePublishModal}>
                   Publish
                 </Button>
                 : ''
@@ -154,7 +148,8 @@ export class Configuration extends React.Component {
                 Copy
               </Button>
               {activeEnvironment === "staging" || activeEnvironment === "production" ?
-                <Button bsStyle="primary" onClick={this.retireActiveVersion}>
+                <Button bsStyle="primary"
+                  onClick={() => this.changeActiveVersionEnvironment('in_process')}>
                   Retire
                 </Button>
                 : ''
@@ -241,6 +236,24 @@ export class Configuration extends React.Component {
           </Dialog>
 
         </Content>
+
+        {this.state.showPublishModal ?
+          <Modal show={true}
+            dialogClassName="configuration-sidebar"
+            backdrop={false}
+            onHide={this.togglePublishModal}>
+            <Modal.Header>
+              <h1>Publish Version</h1>
+              <p>Lorem ipsum dolor</p>
+            </Modal.Header>
+            <Modal.Body>
+              <ConfigurationPublishVersion
+                hideAction={this.togglePublishModal}
+                saveChanges={this.changeActiveVersionEnvironment}
+                versionName={activeConfig.get('label') || activeConfig.get('config_id')}/>
+            </Modal.Body>
+          </Modal>
+          : ''}
       </PageContainer>
     );
   }
