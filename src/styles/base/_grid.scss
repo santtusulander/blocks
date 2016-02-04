@@ -1,9 +1,16 @@
 // Grid
 // ====
 
+.row.no-gutters,
 .row.no-end-gutters {
   margin-right: 0;
   margin-left: 0;
+}
+
+.row.no-gutters > [class^="col-"],
+.row.no-gutters > [class*=" col-"] {
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .row.no-end-gutters > [class^="col-"],
