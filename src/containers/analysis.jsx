@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Row, Col, Nav, NavItem } from 'react-bootstrap'
+import { Nav, NavItem } from 'react-bootstrap'
 
 import * as trafficActionCreators from '../redux/modules/traffic'
 
@@ -90,6 +90,13 @@ export class Analysis extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeTab = this.changeTab.bind(this)
   }
+  componentWillMount() {
+    this.props.trafficActions.startFetching()
+    Promise.all([
+      this.props.trafficActions.fetchByTime(),
+      this.props.trafficActions.fetchByCountry()
+    ]).then(this.props.trafficActions.finishFetching)
+  }
   componentDidMount() {
     this.measureContainers()
     window.addEventListener('resize', this.measureContainers)
@@ -120,38 +127,21 @@ export class Analysis extends React.Component {
           </Nav>
 
           <div className="container-fluid analysis-container">
-            <Row>
-              <Col sm={3} xs={6}>
-                <h3>Out</h3>
-                <div className="summary-data">
-                  <h4>Transferred out to Internet</h4>
-                  <div className="stat">
-                    2,211
-                  </div>
-                </div>
-              </Col>
-              <Col sm={3} xs={6}>
-                <h3>In</h3>
-                <div className="summary-data">
-                  <h4>Transferred out to Internet</h4>
-                  <div className="stat">
-                    2,211
-                  </div>
-                </div>
-              </Col>
-            </Row>
             <h3>TRANSFER BY TIME</h3>
             <div ref="byTimeHolder">
-              <AnalysisByTime axes={true} padding={40}
-                data={fakeRecentData}
-                width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              {this.props.fetching ?
+                <div>Loading...</div> :
+                <AnalysisByTime axes={true} padding={40}
+                  data={this.props.byTime.toJS()}
+                  width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+                }
             </div>
             <h3>BY GEOGRAPHY</h3>
             <div ref="byLocationHolder">
               <AnalysisByLocation
                 width={this.state.byLocationWidth}
                 height={this.state.byLocationWidth / 2}
-                countryData={fakeCountryData}
+                countryData={this.props.byCountry}
                 stateData={fakeStateData}
                 cityData={fakeCityData}/>
             </div>
@@ -226,7 +216,12 @@ export class Analysis extends React.Component {
 }
 
 Analysis.displayName = 'Analysis'
-Analysis.propTypes = {}
+Analysis.propTypes = {
+  byCountry: React.PropTypes.instanceOf(Immutable.List),
+  byTime: React.PropTypes.instanceOf(Immutable.List),
+  fetching: React.PropTypes.bool,
+  trafficActions: React.PropTypes.object
+}
 
 function mapStateToProps(state) {
   return {

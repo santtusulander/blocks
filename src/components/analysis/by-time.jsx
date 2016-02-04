@@ -5,7 +5,7 @@ import numeral from 'numeral'
 
 import Tooltip from '../tooltip'
 
-const closestDate = d3.bisector(d => d.epoch_start).left
+const closestDate = d3.bisector(d => new Date(d.timestamp)).left
 
 class AnalysisByTime extends React.Component {
   constructor(props) {
@@ -24,14 +24,17 @@ class AnalysisByTime extends React.Component {
     return e => {
       const bounds = this.refs.chart.getBoundingClientRect()
       const xDate = xScale.invert(e.pageX - bounds.left)
-      const i = closestDate(data, xDate, 1)
+      const i = closestDate(data, (new Date(xDate)), 1)
       const d0 = data[i - 1]
       const d1 = data[i]
-      const d = xDate - d0.epoch_start > d1.epoch_start - xDate ? d1 : d0
+      let d = d0;
+      if(d1) {
+        d = xDate - (new Date(d0.timestamp).getTime()) > (new Date(d1.timestamp).getTime()) - xDate ? d1 : d0
+      }
       this.setState({
-        tooltipText: `${moment(d.epoch_start, 'X').format('MMM D')} ${numeral(d.bytes).format('0,0')}`,
-        tooltipX: xScale(d.epoch_start),
-        tooltipY: yScale(d.bytes)
+        tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d.bytes_out).format('0,0')}`,
+        tooltipX: xScale(new Date(d.timestamp)),
+        tooltipY: yScale(d.bytes_out)
       })
     }
   }
@@ -45,8 +48,8 @@ class AnalysisByTime extends React.Component {
       return <div>Loading...</div>
     }
 
-    const yExtent = d3.extent(this.props.data, d => d.bytes)
-    const xExtent = d3.extent(this.props.data, d => d.epoch_start)
+    const yExtent = d3.extent(this.props.data, d => d.bytes_out)
+    const xExtent = d3.extent(this.props.data, d => new Date(d.timestamp))
 
     const yScale = d3.scale.linear()
       .domain([0, yExtent[1]])
@@ -63,8 +66,8 @@ class AnalysisByTime extends React.Component {
       ]);
 
     const trafficLine = d3.svg.line()
-      .y(d => yScale(d.bytes))
-      .x(d => xScale(d.epoch_start))
+      .y(d => yScale(d.bytes_out))
+      .x(d => xScale(new Date(d.timestamp)))
       .interpolate('cardinal');
 
     return (

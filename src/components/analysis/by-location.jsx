@@ -1,5 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
+import numeral from 'numeral'
 import topojson from 'topojson'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
@@ -8,11 +9,11 @@ import { bindActionCreators } from 'redux'
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
 
-function getTrendClass(trendData) {
-  if(trendData.get('trending') < 0) {
+function getTrendClass(trending) {
+  if(trending < 0) {
     return 'below-avg'
   }
-  else if(trendData.get('trending') > 0) {
+  else if(trending > 0) {
     return 'above-avg'
   }
   else {
@@ -130,23 +131,23 @@ export class AnalysisByLocation extends React.Component {
       this.props.countries.toJS().objects.countries
     ).features
 
-    let states = null
-    if(this.props.states && this.props.states.size) {
-      states = topojson.feature(
-        this.props.states.toJS(),
-        this.props.states.toJS().objects.states
-      ).features
-    }
-
-    let cities = null
-    if(this.props.cities && this.props.cities.size) {
-      cities = topojson.feature(
-        this.props.cities.toJS(),
-        this.props.cities.toJS().objects.cities
-      ).features.filter(d => {
-        return this.props.activeState == d.properties.state
-      })
-    }
+    // let states = null
+    // if(this.props.states && this.props.states.size) {
+    //   states = topojson.feature(
+    //     this.props.states.toJS(),
+    //     this.props.states.toJS().objects.states
+    //   ).features
+    // }
+    //
+    // let cities = null
+    // if(this.props.cities && this.props.cities.size) {
+    //   cities = topojson.feature(
+    //     this.props.cities.toJS(),
+    //     this.props.cities.toJS().objects.cities
+    //   ).features.filter(d => {
+    //     return this.props.activeState == d.properties.state
+    //   })
+    // }
 
     let transform = ''
     let strokeWidth = 1
@@ -184,7 +185,7 @@ export class AnalysisByLocation extends React.Component {
                 hideCountry = true
               }
               const data = this.props.countryData.find(
-                data => data.get('id').toLowerCase() === id
+                data => data.get('country').toLowerCase() === id
               )
               let classes = 'country'
               if(hideCountry) {
@@ -192,18 +193,22 @@ export class AnalysisByLocation extends React.Component {
               }
               let trending = '0'
               if(data) {
-                classes += ' ' + getTrendClass(data)
-                trending = data.get('trending')
+                const startBytes = data.get('traffic').first().get('bytes')
+                const endBytes = data.get('traffic').last().get('bytes')
+                trending = startBytes / endBytes
+                if(trending > 1) {
+                  trending = (trending - 1) * -1
+                }
+                classes += ' ' + getTrendClass(trending)
               }
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, trending)}
+                  onMouseMove={this.moveMouse(country.id, numeral(trending).format('0%'))}
                   className={classes}
-                  style={pathStyle}
-                  onClick={this.selectCountry(country, path)}/>
+                  style={pathStyle}/>
               )
             })}
-            {states ? states.map((state, i) => {
+            {/*states ? states.map((state, i) => {
               const data = this.props.stateData.find(
                 data => data.get('id') === state.properties.name
               )
@@ -220,8 +225,8 @@ export class AnalysisByLocation extends React.Component {
                   style={pathStyle}
                   onClick={this.selectState(state, path)}/>
               )
-            }) : null}
-            {cities ? cities.map((city, i) => {
+            }) : null*/}
+            {/*cities ? cities.map((city, i) => {
               const data = this.props.cityData.find(
                 data => data.get('name') === city.properties.name && data.get('state') === city.properties.state
               )
@@ -238,7 +243,7 @@ export class AnalysisByLocation extends React.Component {
                   className={classes}
                   style={pathStyle}/>
               )
-            }) : null}
+            }) : null*/}
           </svg>
           <div className="zoom-out">
             <a href="#" onClick={this.zoomOut(path)}
@@ -250,7 +255,7 @@ export class AnalysisByLocation extends React.Component {
         </div>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
           hidden={!this.state.tooltipCountry}>
-          {this.state.tooltipCountry} {this.state.tooltipPercent}%
+          {this.state.tooltipCountry} {this.state.tooltipPercent}
         </Tooltip>
       </div>
     )

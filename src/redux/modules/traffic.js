@@ -22,7 +22,7 @@ export default handleActions({
   TRAFFIC_BY_TIME_FETCHED: {
     next(state, action) {
       return state.merge({
-        byTime: Immutable.fromJS(action.payload)
+        byTime: Immutable.fromJS(action.payload.data)
       })
     },
     throw(state) {
@@ -34,7 +34,7 @@ export default handleActions({
   TRAFFIC_BY_COUNTRY_FETCHED: {
     next(state, action) {
       return state.merge({
-        byCountry: Immutable.fromJS(action.payload)
+        byCountry: Immutable.fromJS(action.payload.data)
       })
     },
     throw(state) {
