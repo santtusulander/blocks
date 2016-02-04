@@ -1,6 +1,10 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Row, Col, Nav, NavItem } from 'react-bootstrap'
+
+import * as trafficActionCreators from '../redux/modules/traffic'
 
 import AnalysisByTime from '../components/analysis/by-time'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -70,7 +74,7 @@ const fakeCityData = Immutable.fromJS([
   {name: 'San Diego', state: 'California', trending: 0}
 ])
 
-class Analysis extends React.Component {
+export class Analysis extends React.Component {
   constructor(props) {
     super(props);
 
@@ -211,4 +215,18 @@ class Analysis extends React.Component {
 Analysis.displayName = 'Analysis'
 Analysis.propTypes = {}
 
-module.exports = Analysis
+function mapStateToProps(state) {
+  return {
+    byCountry: state.traffic.get('byCountry'),
+    byTime: state.traffic.get('byTime'),
+    fetching: state.traffic.get('fetching')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Analysis);
