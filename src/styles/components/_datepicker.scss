@@ -1,0 +1,282 @@
+// Datepicker
+// ==========
+
+// scss-lint:disable SelectorFormat SelectorDepth NestingDepth
+// Need to override default styles
+
+.datepicker__container {
+
+  &.tether-target-attached-bottom,
+  &.tether-target-attached-top {
+    margin-top: -10px;
+  }
+}
+
+.datepicker {
+  width: 400px;
+  padding: 15px 25px 25px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
+
+  .dark-theme & {
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
+      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-size: 100%;
+  }
+}
+
+.datepicker__triangle {
+  display: none;
+}
+
+.datepicker__header {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+
+  .dark-theme & {
+    border-bottom: 1px solid rgba($white, 0.1);
+  }
+}
+
+.datepicker__current-month {
+  padding-bottom: 15px;
+  font-size: inherit;
+  font-weight: normal;
+  color: inherit;
+  text-transform: uppercase;
+
+  .dark-theme & {
+    border-bottom: 1px solid rgba($white, 0.1);
+  }
+}
+
+.datepicker__navigation {
+  position: absolute;
+  top: -5px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -5px 0 0 -2.5px;
+    border: 5px solid transparent;
+    content: ' ';
+  }
+
+  &.datepicker__navigation--previous {
+    left: -5px;
+
+    .dark-theme & {
+
+      &::after {
+        border-left: 0;
+        border-right-color: $dt-text-color;
+      }
+    }
+  }
+
+  &.datepicker__navigation--next {
+    right: -5px;
+
+    .dark-theme & {
+
+      &::after {
+        border-right: 0;
+        border-left-color: $dt-text-color;
+      }
+    }
+  }
+}
+
+.datepicker__month {
+  margin: 5px 0 0;
+}
+
+.datepicker__day {
+  position: relative;
+  width: calc(100% / 7);
+  padding: 0;
+  margin: 5px 0;
+  line-height: 40px;
+  color: inherit;
+
+  &:hover {
+    background-color: inherit;
+    border-radius: 0;
+
+    .dark-theme &:not(.datepicker__day--disabled ) {
+      color: $white;
+    }
+  }
+
+  &:not(.datepicker__day--outside-month) {
+
+    .datepicker__header & {
+      margin: 2px 0;
+      background-color: transparent;
+    }
+  }
+
+  &.datepicker__day--outside-month {
+
+    .dark-theme & {
+      color: rgba($dt-text-color, 0.5);
+    }
+  }
+}
+
+.datepicker__day--today {
+  font-weight: normal;
+  border-radius: 0;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border-radius: 50%;
+    content: ' ';
+
+    .dark-theme & {
+      border: 1px solid $white;
+    }
+  }
+}
+
+.datepicker__day--in-range {
+
+  &,
+  &:hover {
+    background-color: rgba($pale-blue, 0.1);
+    border-radius: 0;
+  }
+}
+
+.datepicker__day--selected {
+  background: linear-gradient(to right,
+    transparent 0%,
+    transparent 50%,
+    rgba($pale-blue, 0.1) 51%);
+
+  &::before {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto -40px;
+    border-radius: 50%;
+    content: ' ';
+
+    .dark-theme & {
+      background-color: $pale-blue;
+    }
+  }
+}
+
+.tether-target-attached-right .datepicker__day--selected {
+  background: linear-gradient(to right,
+    rgba($pale-blue, 0.1) 0%,
+    rgba($pale-blue, 0.1) 50%,
+    transparent 51%);
+
+  &::before {
+
+    .dark-theme & {
+      background-color: $purple;
+    }
+  }
+}
+
+.datepicker-input-wrapper {
+  position: relative;
+
+  &.datepicker-open::after {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    content: ' ';
+
+    .dark-theme & {
+      background-color: $purple;
+    }
+  }
+
+  &.start-date {
+
+    &.datepicker-open::after {
+
+      .dark-theme & {
+        background-color: $pale-blue;
+      }
+    }
+
+    .datepicker__input {
+
+      &,
+      &:hover {
+        border-right: 1px solid rgba($black, 0.2);
+      }
+    }
+  }
+
+  &.end-date.datepicker-open::after {
+
+    .dark-theme & {
+      background-color: $purple;
+    }
+  }
+
+  &.datepicker-open .datepicker__input {
+
+    .dark-theme & {
+      background: $black;
+      background-image: linear-gradient(rgba($purple, 0.025), rgba($purple, 0.025)),
+        linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
+      background-size: 100%;
+
+      &.tether-enabled {
+        background: $black;
+        background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
+          linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        background-size: 100%;
+      }
+    }
+  }
+
+  .datepicker__input {
+
+    &,
+    &:hover,
+    &:focus {
+      width: 100%;
+      height: $btn-height;
+      padding: 0 20px;
+      font-size: inherit;
+      color: inherit;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      transition: background-color 250ms;
+    }
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background: url('../assets/icons/dt-icon-calendar.svg')
+        rgba($pale-blue, 0.1) right center no-repeat;
+      background-size: 60px 60px;
+    }
+  }
+}

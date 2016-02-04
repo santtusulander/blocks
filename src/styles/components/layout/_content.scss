@@ -2,5 +2,8 @@
 // ==============
 
 .content-layout {
-  padding: 60px 80px;
+
+  > .container-fluid {
+    padding: 60px 80px;
+  }
 }
