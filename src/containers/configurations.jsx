@@ -10,7 +10,7 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import PurgeModal from '../components/purge-modal'
-import IconAdd from '../assets/icons/icon-add.jsx'
+import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
 
 export class Configurations extends React.Component {
