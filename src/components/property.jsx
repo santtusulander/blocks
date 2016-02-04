@@ -8,7 +8,7 @@ import Content from '../components/layout/content'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
-import IconH1Caret from '../components/icons/icon-h1-caret.jsx'
+import IconHeaderCaret from '../components/icons/icon-header-caret.jsx'
 
 const fakeRecentData = [
   {epoch_start: 1451606400, bytes: 39405, requests: 943},
@@ -82,10 +82,10 @@ class Property extends React.Component {
 
               <p>PROPERTY SUMMARY</p>
               <Dropdown id="dropdown-content">
-                <Dropdown.Toggle bsStyle="link" className="h1-toggle"
+                <Dropdown.Toggle bsStyle="link" className="header-toggle"
                   noCaret={true}>
                   <h1>propertyname.com</h1>
-                  <span className="h1-caret"><IconH1Caret /></span>
+                  <IconHeaderCaret />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <MenuItem eventKey="1">propertyname2.com</MenuItem>

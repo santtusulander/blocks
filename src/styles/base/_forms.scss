@@ -82,6 +82,7 @@ label {
 }
 
 .checkbox {
+  margin: 0;
 
   label {
     padding-left: 0;
@@ -106,15 +107,15 @@ label {
     }
 
     .dark-theme &:checked + span::before {
-      background-image: url('../assets/icons/dt-icon-checkbox.svg');
-      background-position: center center;
-      background-repeat: no-repeat;
+      background: $pale-blue url('../assets/icons/dt-icon-checkbox.svg')
+        center center no-repeat;
       background-size: 17px 16px;
     }
   }
 }
 
 .radio {
+  margin: 0;
 
   label {
     padding-left: 0;
@@ -140,6 +141,10 @@ label {
 
     .dark-theme &:checked + span {
       position: relative;
+
+      &::before {
+        background-color: $pale-blue;
+      }
 
       &::after {
         position: absolute;

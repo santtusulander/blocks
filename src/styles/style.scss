@@ -5,6 +5,12 @@
 @import 'vendor/bootstrap/stylesheets/bootstrap';
 
 
+// Datepicker
+// ==========
+
+@import '../../node_modules/react-datepicker/dist/react-datepicker.css';
+
+
 // Base
 // ====
 
@@ -34,6 +40,7 @@
 
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
+@import 'components/datepicker';
 @import 'components/header';
 @import 'components/property';
 @import 'components/select';

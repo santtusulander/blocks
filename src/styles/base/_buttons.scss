@@ -79,25 +79,45 @@
   }
 }
 
-.h1-toggle {
+.header-toggle {
   height: auto;
   min-width: 0;
   padding: 0;
+  line-height: inherit;
+
+  .icon {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    border-width: 0;
+  }
+
+  &:hover .icon {
+
+    .dark-theme & {
+      stroke: $pale-blue;
+    }
+  }
 
   .dark-theme .open > & {
+  // scss-lint:disable SelectorDepth
 
     &,
     &:hover,
     &:active,
-    &:focus {
+    &:focus,
+    .icon {
       color: $pale-blue;
       background-color: transparent;
       box-shadow: none;
+      stroke: $pale-blue;
     }
   }
 
-  h1 {
+  h1,
+  h3 {
     display: inline-block;
+    vertical-align: middle;
   }
 }
 
@@ -182,7 +202,7 @@
     }
   }
 
-  .open:not(.dropdown-select) > .dropdown-toggle:not(.h1-toggle),
+  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle),
   .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
 
     &,
