@@ -1,6 +1,7 @@
 'use strict';
 
 let router               = require('express').Router();
+let log                  = require('./logger');
 let routeTrafficTime     = require('./routes/traffic/time');
 let routeTrafficCountry  = require('./routes/traffic/country');
 let routeVisitorsTime    = require('./routes/visitors/time');
@@ -9,8 +10,6 @@ let routeVisitorsOS      = require('./routes/visitors/os');
 let routeVisitorsBrowser = require('./routes/visitors/browser');
 let routeMetrics         = require('./routes/metrics');
 
-// This middleware should always come first. It will log all incoming requests.
-router.use(requestLogger);
 
 // API routes
 router.get('/traffic/time',     routeTrafficTime);
@@ -28,20 +27,12 @@ router.use(errorHandler);
 
 
 /**
- * Log all requests made to the API.
- */
-function requestLogger(req, res, next) {
-  console.log(`${req.method} request received: ${req.originalUrl}`);
-  next();
-}
-
-/**
  * Deny requests made to unconfigured routes.
  */
 function errorHandler(req, res) {
-  let message = `You must provide a proper end point to the API. Requested path: ${req.originalUrl}`;
-  console.log(`ERROR 403: ${message}`);
-  res.status(403).send(message);
+  let message = `You must request a correct API end point. Could not find requested path: ${req.originalUrl}`;
+  log.error(`404: ${message}`);
+  res.status(404).send(message);
 }
 
 module.exports = router;

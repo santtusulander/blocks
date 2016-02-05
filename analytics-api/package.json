@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint ."
   },
   "author": "Bryan Downing <bryan.downing@idean.com>",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "morgan": "^1.6.1",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
+    "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.16.1"
   }
 }
