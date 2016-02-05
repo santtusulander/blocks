@@ -1,6 +1,7 @@
 'use strict';
 
 let router               = require('express').Router();
+let log                  = require('./logger');
 let routeTrafficTime     = require('./routes/traffic/time');
 let routeTrafficCountry  = require('./routes/traffic/country');
 let routeVisitorsTime    = require('./routes/visitors/time');
@@ -29,9 +30,9 @@ router.use(errorHandler);
  * Deny requests made to unconfigured routes.
  */
 function errorHandler(req, res) {
-  let message = `You must provide a proper end point to the API. Requested path: ${req.originalUrl}`;
-  console.log(`ERROR 403: ${message}`);
-  res.status(403).send(message);
+  let message = `You must request a correct API end point. Could not find requested path: ${req.originalUrl}`;
+  log.error(`404: ${message}`);
+  res.status(404).send(message);
 }
 
 module.exports = router;
