@@ -1,7 +1,8 @@
 'use strict';
 
 let app = require('./app/server');
+let log = require('./app/logger');
 
 app.listen(3030, function () {
-    console.log("UDN Portal Analytics API server listening on http://localhost:3030");
+  log.info('UDN Portal Analytics API server listening on http://localhost:3030');
 });
