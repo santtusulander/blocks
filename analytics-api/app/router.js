@@ -9,8 +9,6 @@ let routeVisitorsOS      = require('./routes/visitors/os');
 let routeVisitorsBrowser = require('./routes/visitors/browser');
 let routeMetrics         = require('./routes/metrics');
 
-// This middleware should always come first. It will log all incoming requests.
-router.use(requestLogger);
 
 // API routes
 router.get('/traffic/time',     routeTrafficTime);
@@ -26,14 +24,6 @@ router.get('/metrics',          routeMetrics);
 // are made to unconfigured routes, Express will land here and send a 403.
 router.use(errorHandler);
 
-
-/**
- * Log all requests made to the API.
- */
-function requestLogger(req, res, next) {
-  console.log(`${req.method} request received: ${req.originalUrl}`);
-  next();
-}
 
 /**
  * Deny requests made to unconfigured routes.
