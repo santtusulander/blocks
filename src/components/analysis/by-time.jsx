@@ -65,10 +65,14 @@ class AnalysisByTime extends React.Component {
     const trafficLine = d3.svg.line()
       .y(d => yScale(d.bytes))
       .x(d => xScale(d.epoch_start))
-      .interpolate('cardinal');
+      .interpolate('cardinal-closed');
 
+    let className = 'analysis-by-time'
+    if(this.props.className) {
+      className = className + ' ' + this.props.className
+    }
     return (
-      <div className='analysis-by-time'>
+      <div className={className}>
         <svg
           width={this.props.width}
           height={this.props.height}
@@ -106,6 +110,12 @@ class AnalysisByTime extends React.Component {
             }, [])
             : null
           }
+          <defs>
+            <linearGradient id="dt-svg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#00a9d4" stopOpacity="0" />
+            </linearGradient>
+          </defs>
         </svg>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
           hidden={!this.state.tooltipText}>
@@ -119,6 +129,7 @@ class AnalysisByTime extends React.Component {
 AnalysisByTime.displayName = 'AnalysisByTime'
 AnalysisByTime.propTypes = {
   axes: React.PropTypes.bool,
+  className: React.PropTypes.string,
   data: React.PropTypes.array,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
