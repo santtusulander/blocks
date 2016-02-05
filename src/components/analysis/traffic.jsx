@@ -37,6 +37,7 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
+              dataKey="bytes_out"
               data={this.props.byTime.toJS()}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
             }
@@ -44,6 +45,8 @@ class AnalysisTraffic extends React.Component {
         <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
           <AnalysisByLocation
+            dataKey="bytes"
+            timelineKey="traffic"
             width={this.state.byLocationWidth}
             height={this.state.byLocationWidth / 2}
             countryData={this.props.byCountry}/>

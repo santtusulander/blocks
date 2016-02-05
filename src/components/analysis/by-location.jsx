@@ -193,8 +193,10 @@ export class AnalysisByLocation extends React.Component {
               }
               let trending = '0'
               if(data) {
-                const startBytes = data.get('traffic').first().get('bytes')
-                const endBytes = data.get('traffic').last().get('bytes')
+                const startBytes = data.get(this.props.timelineKey).first()
+                  .get(this.props.dataKey)
+                const endBytes = data.get(this.props.timelineKey).last()
+                  .get(this.props.dataKey)
                 trending = startBytes / endBytes
                 if(trending > 1) {
                   trending = (trending - 1) * -1
@@ -270,10 +272,12 @@ AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
   stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
+  timelineKey: React.PropTypes.string,
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
 }

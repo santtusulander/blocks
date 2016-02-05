@@ -32,9 +32,9 @@ class AnalysisByTime extends React.Component {
         d = xDate - (new Date(d0.timestamp).getTime()) > (new Date(d1.timestamp).getTime()) - xDate ? d1 : d0
       }
       this.setState({
-        tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d.bytes_out).format('0,0')}`,
+        tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
         tooltipX: xScale(new Date(d.timestamp)),
-        tooltipY: yScale(d.bytes_out)
+        tooltipY: yScale(d[this.props.dataKey])
       })
     }
   }
@@ -48,7 +48,7 @@ class AnalysisByTime extends React.Component {
       return <div>Loading...</div>
     }
 
-    const yExtent = d3.extent(this.props.data, d => d.bytes_out)
+    const yExtent = d3.extent(this.props.data, d => d[this.props.dataKey])
     const xExtent = d3.extent(this.props.data, d => new Date(d.timestamp))
 
     const yScale = d3.scale.linear()
@@ -66,7 +66,7 @@ class AnalysisByTime extends React.Component {
       ]);
 
     const trafficLine = d3.svg.line()
-      .y(d => yScale(d.bytes_out))
+      .y(d => yScale(d[this.props.dataKey]))
       .x(d => xScale(new Date(d.timestamp)))
       .interpolate('cardinal');
 
@@ -123,6 +123,7 @@ AnalysisByTime.displayName = 'AnalysisByTime'
 AnalysisByTime.propTypes = {
   axes: React.PropTypes.bool,
   data: React.PropTypes.array,
+  dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   width: React.PropTypes.number

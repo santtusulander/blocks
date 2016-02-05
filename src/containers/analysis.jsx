@@ -63,7 +63,9 @@ export class Analysis extends React.Component {
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
                 byTime={this.props.visitorsByTime}
-                byCountry={this.props.visitorsByCountry}/>
+                byCountry={this.props.visitorsByCountry}
+                byBrowser={this.props.visitorsByBrowser}
+                byOS={this.props.visitorsByOS}/>
               : ''}
           </div>
         </Content>
@@ -79,7 +81,9 @@ Analysis.propTypes = {
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   visitorsActions: React.PropTypes.object,
+  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.List),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByOS: React.PropTypes.instanceOf(Immutable.List),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
   visitorsFetching: React.PropTypes.bool
 }
@@ -89,10 +93,10 @@ function mapStateToProps(state) {
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
-    visitorsByCountry: state.visitors.get('byCountry'),
-    visitorsByTime: state.visitors.get('byTime'),
     visitorsByBrowser: state.visitors.get('byBrowser'),
+    visitorsByCountry: state.visitors.get('byCountry'),
     visitorsByOS: state.visitors.get('byOS'),
+    visitorsByTime: state.visitors.get('byTime'),
     visitorsFetching: state.visitors.get('fetching')
   };
 }

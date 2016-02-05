@@ -50,24 +50,24 @@ export default handleActions({
   VISITORS_BY_BROWSER_FETCHED: {
     next(state, action) {
       return state.merge({
-        byCountry: Immutable.fromJS(action.payload.data)
+        byBrowser: Immutable.fromJS(action.payload.data)
       })
     },
     throw(state) {
       return state.merge({
-        byCountry: Immutable.List()
+        byBrowser: Immutable.List()
       })
     }
   },
   VISITORS_BY_OS_FETCHED: {
     next(state, action) {
       return state.merge({
-        byCountry: Immutable.fromJS(action.payload.data)
+        byOS: Immutable.fromJS(action.payload.data)
       })
     },
     throw(state) {
       return state.merge({
-        byCountry: Immutable.List()
+        byOS: Immutable.List()
       })
     }
   },
