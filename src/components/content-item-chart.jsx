@@ -2,6 +2,9 @@ import React from 'react'
 import d3 from 'd3'
 import { ButtonToolbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
+import IconChart from '../components/icons/icon-chart.jsx'
+import IconConfiguration from '../components/icons/icon-configuration.jsx'
+
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
@@ -139,33 +142,26 @@ class ContentItemChart extends React.Component {
           <div className="text-content"
             style={{width: innerRadius * 2, height: innerRadius * 2}}>
             <div className="content-item-traffic">
-              <div className="content-item-text-sm">Avg. TTFB</div>
-              <span className="content-item-text-bold">42</span>
-              <span className="content-item-text-sm"> ms</span>
+              <div className="content-item-text-bold">37.0</div>
+              <div className="content-item-text-sm">Gbps</div>
             </div>
             <div className="content-item-text-centered">
               <div className="content-item-chart-name">{this.props.name}</div>
-              <div className="content-item-hits">
-                <div className="content-item-text-sm">Avg. Cache Hitrate</div>
-                <div className="content-item-text-bold">96
-                  <span className="content-item-text-sm"> %</span>
-                </div>
+              <div className="content-item-text-sm">
+                <p>95% Avg. Cache Hitrate</p>
+                <p>42 ms TTFB</p>
               </div>
             </div>
             <div className="content-item-toolbar">
               <ButtonToolbar>
                 <Button bsSize="small"
                    className="btn-tertiary btn-icon btn-round invisible">
-                  <span className="icon icon-chart"></span>
-                </Button>
-                <Button bsSize="small"
-                   className="btn-tertiary btn-icon btn-round">
-                  9
+                  <IconChart/>
                 </Button>
                 <Button bsSize="small"
                    className="edit-content-item btn-tertiary btn-icon
                    btn-round invisible" onClick={this.props.toggleActive}>
-                  <span className="icon icon-edit"></span>
+                  <IconConfiguration/>
                 </Button>
               </ButtonToolbar>
             </div>
