@@ -203,7 +203,7 @@ export class AnalysisByLocation extends React.Component {
               }
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, numeral(trending).format('0%'))}
+                  onMouseMove={this.moveMouse(country.id, numeral(trending).format('+0%'))}
                   className={classes}
                   style={pathStyle}/>
               )

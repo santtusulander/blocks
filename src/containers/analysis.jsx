@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import numeral from 'numeral'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
@@ -12,71 +13,6 @@ import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
 import AnalysisByTime from '../components/analysis/by-time'
 import AnalysisByLocation from '../components/analysis/by-location'
-
-const fakeRecentData = [
-  {epoch_start: 1451606400, bytes: 39405, requests: 943},
-  {epoch_start: 1451606500, bytes: 54766, requests: 546},
-  {epoch_start: 1451606600, bytes: 54675, requests: 435},
-  {epoch_start: 1451606700, bytes: 34336, requests: 345},
-  {epoch_start: 1451606800, bytes: 23456, requests: 567},
-  {epoch_start: 1451606900, bytes: 56756, requests: 244},
-  {epoch_start: 1451607000, bytes: 65466, requests: 455},
-  {epoch_start: 1451607100, bytes: 23456, requests: 233},
-  {epoch_start: 1451607200, bytes: 67454, requests: 544},
-  {epoch_start: 1451607300, bytes: 54766, requests: 546},
-  {epoch_start: 1451607400, bytes: 54675, requests: 435},
-  {epoch_start: 1451607500, bytes: 34336, requests: 456},
-  {epoch_start: 1451607600, bytes: 23456, requests: 567},
-  {epoch_start: 1451607700, bytes: 56756, requests: 244},
-  {epoch_start: 1451607800, bytes: 65466, requests: 455},
-  {epoch_start: 1451607900, bytes: 23456, requests: 456},
-  {epoch_start: 1451608000, bytes: 67454, requests: 544},
-  {epoch_start: 1451608100, bytes: 23456, requests: 233},
-  {epoch_start: 1451608200, bytes: 67454, requests: 544},
-  {epoch_start: 1451608300, bytes: 54766, requests: 546},
-  {epoch_start: 1451608400, bytes: 54675, requests: 435},
-  {epoch_start: 1451608500, bytes: 34336, requests: 456},
-  {epoch_start: 1451608600, bytes: 23456, requests: 567},
-  {epoch_start: 1451608700, bytes: 56756, requests: 244},
-  {epoch_start: 1451608800, bytes: 65466, requests: 455},
-  {epoch_start: 1451608900, bytes: 23456, requests: 456},
-  {epoch_start: 1451609000, bytes: 67454, requests: 544}
-]
-
-const fakeCountryData = Immutable.fromJS([
-  {id: 'usa', trending: -1},
-  {id: 'can', trending: 1},
-  {id: 'mex', trending: 0},
-  {id: 'aus', trending: 0},
-  {id: 'bra', trending: -1},
-  {id: 'rus', trending: 1}
-])
-
-const fakeStateData = Immutable.fromJS([
-  {id: 'Alabama', trending: -1},
-  {id: 'Alaska', trending: 1},
-  {id: 'Arkansas', trending: 0},
-  {id: 'Arizona', trending: -1},
-  {id: 'California', trending: -1},
-  {id: 'Connecticut', trending: 0},
-  {id: 'Delaware', trending: -1},
-  {id: 'Florida', trending: 1},
-  {id: 'Georgia', trending: 1},
-  {id: 'Oregon', trending: -1},
-  {id: 'Michigan', trending: -1},
-  {id: 'Nevada', trending: 0},
-  {id: 'Utah', trending: 1}
-])
-
-const fakeCityData = Immutable.fromJS([
-  {name: 'Atlanta', state: 'Georgia', trending: 1},
-  {name: 'Savannah', state: 'Georgia', trending: 0},
-  {name: 'San Francisco', state: 'California', trending: 1},
-  {name: 'Sacramento', state: 'California', trending: -1},
-  {name: 'San Bernardino', state: 'California', trending: 0},
-  {name: 'Los Angeles', state: 'California', trending: 1},
-  {name: 'San Diego', state: 'California', trending: 0}
-])
 
 export class Analysis extends React.Component {
   constructor(props) {
@@ -141,9 +77,7 @@ export class Analysis extends React.Component {
               <AnalysisByLocation
                 width={this.state.byLocationWidth}
                 height={this.state.byLocationWidth / 2}
-                countryData={this.props.byCountry}
-                stateData={fakeStateData}
-                cityData={fakeCityData}/>
+                countryData={this.props.byCountry}/>
             </div>
             <h3>BY COUNTRY</h3>
             <table className="table by-country-table">
@@ -157,55 +91,29 @@ export class Analysis extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>United States</td>
-                  <td>1,235,789</td>
-                  <td>44%</td>
-                  <td>Chart</td>
-                  <td>+64%</td>
-                </tr>
-                <tr>
-                  <td>Germany</td>
-                  <td>424,242</td>
-                  <td>22%</td>
-                  <td>Chart</td>
-                  <td>+1%</td>
-                </tr>
-                <tr>
-                  <td>United Kingdom</td>
-                  <td>321,214</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+65%</td>
-                </tr>
-                <tr>
-                  <td>France</td>
-                  <td>10,000</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>-7%</td>
-                </tr>
-                <tr>
-                  <td>Australia</td>
-                  <td>424</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+7%</td>
-                </tr>
-                <tr>
-                  <td>Finland</td>
-                  <td>100</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+3%</td>
-                </tr>
-                <tr>
-                  <td>Rest</td>
-                  <td>1,221,122</td>
-                  <td>20%</td>
-                  <td>Chart</td>
-                  <td>+10%</td>
-                </tr>
+                {this.props.byCountry.map((country, i) => {
+                  const totalBytes = country.get('traffic').reduce((total, traffic) => {
+                    return total + traffic.get('bytes')
+                  }, 0)
+                  const startBytes = country.get('traffic').first().get('bytes')
+                  const endBytes = country.get('traffic').last().get('bytes')
+                  let trending = startBytes / endBytes
+                  if(trending > 1) {
+                    trending = numeral((trending - 1) * -1).format('0%')
+                  }
+                  else {
+                    trending = numeral(trending).format('+0%');
+                  }
+                  return (
+                    <tr key={i}>
+                      <td>{country.get('country')}</td>
+                      <td>{numeral(totalBytes).format('0,0')}</td>
+                      <td>{country.get('percent_total')}%</td>
+                      <td>Chart</td>
+                      <td>{trending}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
