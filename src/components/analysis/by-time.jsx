@@ -85,7 +85,7 @@ class AnalysisByTime extends React.Component {
                 axes.push(
                   <g key={i}>
                     <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                      {moment(tick, 'X').format('MMM D')}
+                      {moment(tick).format('MMM D')}
                     </text>
                   </g>
                 );
