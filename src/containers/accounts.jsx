@@ -2,12 +2,18 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Modal, Button, ButtonToolbar, BreadcrumbItem,
+  Breadcrumb } from 'react-bootstrap';
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
 import ContentItemList from '../components/content-item-list'
 import ContentItemChart from '../components/content-item-chart'
+import Select from '../components/select'
+import IconAdd from '../components/icons/icon-add.jsx'
+import IconChart from '../components/icons/icon-chart.jsx'
+import IconItemList from '../components/icons/icon-item-list.jsx'
+import IconItemChart from '../components/icons/icon-item-chart.jsx'
 
 const fakeRecentData = [
   {bytes: 25287},
@@ -136,8 +142,10 @@ export class Accounts extends React.Component {
     this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
     this.createNewAccount = this.createNewAccount.bind(this)
     this.changeActiveView = this.changeActiveView.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
     this.state = {
-      activeView: 'chart'
+      activeView: 'chart',
+      activeFilter: 'traffic_high_to_low'
     }
   }
   componentWillMount() {
@@ -175,27 +183,54 @@ export class Accounts extends React.Component {
       })
     }
   }
+  handleSelectChange() {
+    return value => {
+      this.setState({
+        activeFilter: value
+      })
+    }
+  }
   render() {
     const activeAccount = this.props.activeAccount
     return (
-      <div className="container-fluid">
+      <div>
         <header className="content-header clearfix">
+          <ButtonToolbar className="pull-right">
+            <Button bsStyle="success" className="btn-icon">
+              <IconChart />
+            </Button>
+
+            <Button bsStyle="primary" className="btn-icon btn-add-new"
+              onClick={this.createNewAccount}>
+              <IconAdd />
+            </Button>
+
+            <Select
+              onSelect={this.handleSelectChange()}
+              value={this.state.activeFilter}
+              options={[
+                ['traffic_high_to_low', 'Traffic High to Low'],
+                ['traffic_low_to_high', 'Traffic Low to High']]}/>
+
+            <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
+              (this.state.activeView === 'chart' ? ' hidden' : '')}
+              onClick={this.changeActiveView('chart')}>
+              <IconItemChart/>
+            </Button>
+            <Button bsStyle="primary" className={'btn-icon toggle-view' +
+              (this.state.activeView === 'list' ? ' hidden' : '')}
+              onClick={this.changeActiveView('list')}>
+              <IconItemList/>
+            </Button>
+          </ButtonToolbar>
+
+          <p>ACCOUNT CONTENT SUMMARY</p>
           <h1>Accounts</h1>
-          <Breadcrumb>
-            <BreadcrumbItem>Content</BreadcrumbItem>
-          </Breadcrumb>
-
-          <div className="pull-right">
-            <Button onClick={this.createNewAccount}>Add New</Button>
-
-            <Button className={this.state.activeView === 'chart' ?
-              'btn-icon toggle-view hidden' : 'btn-icon toggle-view'}
-              onClick={this.changeActiveView('chart')}>Chart</Button>
-            <Button className={this.state.activeView === 'list' ?
-              'btn-icon toggle-view hidden' : 'btn-icon toggle-view'}
-              onClick={this.changeActiveView('list')}>List</Button>
-          </div>
         </header>
+
+        <Breadcrumb>
+          <BreadcrumbItem active={true}>Accounts</BreadcrumbItem>
+        </Breadcrumb>
 
         {this.state.activeView === 'chart' ?
           (this.props.fetching ?

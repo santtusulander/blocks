@@ -47,7 +47,7 @@ describe('Accounts', () => {
         params={urlParams}/>
     )
     let p = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'p')
-    expect(ReactDOM.findDOMNode(p[0]).textContent).toContain('Loading...')
+    expect(ReactDOM.findDOMNode(p[1]).textContent).toContain('Loading...')
   });
 
   it('should show existing accounts as charts', () => {
@@ -136,7 +136,7 @@ describe('Accounts', () => {
         accounts={Immutable.List()}
         params={urlParams}/>
     )
-    let add = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'button')
+    let add = TestUtils.scryRenderedDOMComponentsWithClass(accounts, 'btn-add-new')
     TestUtils.Simulate.click(add[0])
     expect(accountActions.createAccount.mock.calls.length).toBe(1)
   })
