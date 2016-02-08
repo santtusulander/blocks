@@ -68,7 +68,13 @@ class AnalysisByTime extends React.Component {
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
       .x(d => xScale(new Date(d.timestamp)))
-      .interpolate('cardinal-closed');
+      .interpolate('cardinal');
+
+    const trafficArea = d3.svg.area()
+      .y(d => yScale(d[this.props.dataKey]))
+      .y0(yScale(0))
+      .x(d => xScale(new Date(d.timestamp)))
+      .interpolate('cardinal');
 
     let className = 'analysis-by-time'
     if(this.props.className) {
@@ -82,7 +88,8 @@ class AnalysisByTime extends React.Component {
           ref='chart'
           onMouseMove={this.moveMouse(xScale, yScale, this.props.data)}
           onMouseOut={this.deactivateTooltip}>
-          <path d={trafficLine(this.props.data)}/>
+          <path d={trafficLine(this.props.data)} className="line"/>
+          <path d={trafficArea(this.props.data)} className="area"/>
           {this.props.axes ?
             xScale.ticks(4).reduce((axes, tick, i) => {
               if(axes.length < xScale.ticks(4).length-1) {
