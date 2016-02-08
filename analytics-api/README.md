@@ -25,6 +25,9 @@ API is served on [http://localhost:3030](http://localhost:3030).
 └── index.js        // `npm start` runs `node index.js` to start the server.
 ```
 
+## Linting
+Execute `npm run lint` to lint the JavaScript with ESLint. The `.eslintrc` file in this directory extends the one in the root of this repository.
+
 ## Logging
 Logging in the API is done with [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston). Morgan is an HTTP request logger. It is configured to use Winston to log all HTTP requests made to the API. Winston is a library used by the API (and Morgan) to log messages.
 
