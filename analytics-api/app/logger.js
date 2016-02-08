@@ -20,18 +20,18 @@ let defaultFileTransportOptions = {
 let logger = new winston.Logger({
   transports: [
     // Includes error, warn, and info logs
-    new winston.transports.File(Object.assign({
+    new winston.transports.File(Object.assign({}, defaultFileTransportOptions, {
       name: 'info',
-      filename: path.join(__dirname, '/logs/level-3-info.log'),
+      filename: path.join(__dirname, '/logs/level-2-info.log'),
       level: 'info'
-    }, defaultFileTransportOptions)),
+    })),
 
     // Includes error and warn logs
-    new winston.transports.File(Object.assign({
+    new winston.transports.File(Object.assign({}, defaultFileTransportOptions, {
       name: 'warn',
-      filename: path.join(__dirname, '/logs/level-2-warn.log'),
+      filename: path.join(__dirname, '/logs/level-1-warn.log'),
       level: 'warn'
-    }, defaultFileTransportOptions)),
+    })),
 
     // Send error, warn, info, and debug logs to the console
     new winston.transports.Console({
