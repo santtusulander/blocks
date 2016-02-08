@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Button, Input} from 'react-bootstrap'
+import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
 class EditAccount extends React.Component {
   constructor(props) {
@@ -8,6 +8,7 @@ class EditAccount extends React.Component {
 
     this.changeValue = this.changeValue.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
+    this.cancelChanges = this.cancelChanges.bind(this)
   }
   changeValue(valPath) {
     return (e) => {
@@ -17,6 +18,10 @@ class EditAccount extends React.Component {
   saveChanges(e) {
     e.preventDefault()
     this.props.saveChanges()
+  }
+  cancelChanges(e) {
+    e.preventDefault()
+    this.props.cancelChanges()
   }
   render() {
     return (
@@ -39,7 +44,10 @@ class EditAccount extends React.Component {
         <Input type="text" label="Postal Code" id="edit_account__postal_code"
           value={this.props.account.getIn(['postal_code'])}
           onChange={this.changeValue(['postal_code'])}/>
-        <Button type="submit" bsStyle="primary">Save</Button>
+        <ButtonToolbar>
+          <Button bsStyle="primary" onClick={this.cancelChanges}>Cancel</Button>
+          <Button type="submit" bsStyle="primary">Save</Button>
+        </ButtonToolbar>
       </form>
     )
   }
@@ -48,6 +56,7 @@ class EditAccount extends React.Component {
 EditAccount.displayName = 'EditAccount'
 EditAccount.propTypes = {
   account: React.PropTypes.instanceOf(Immutable.Map),
+  cancelChanges: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   saveChanges: React.PropTypes.func
 }

@@ -2,13 +2,14 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar, BreadcrumbItem,
-  Breadcrumb } from 'react-bootstrap';
+import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Link } from 'react-router'
 
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
 import ContentItemList from '../components/content-item-list'
 import ContentItemChart from '../components/content-item-chart'
 import Select from '../components/select'
@@ -129,10 +130,12 @@ export class Groups extends React.Component {
     return (
       <PageContainer>
         <Content>
-          <header className="content-header clearfix">
+          <PageHeader>
             <ButtonToolbar className="pull-right">
               <Button bsStyle="success" className="btn-icon">
-                <IconChart />
+                <Link to={`/analysis/`}>
+                  <IconChart/>
+                </Link>
               </Button>
 
               <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -161,7 +164,7 @@ export class Groups extends React.Component {
 
             <p>ACCOUNT CONTENT SUMMARY</p>
             <h1>Account Name</h1>
-          </header>
+          </PageHeader>
 
           <div className="container-fluid">
             <Breadcrumb>
@@ -174,8 +177,8 @@ export class Groups extends React.Component {
                 <div className="content-item-grid">
                   {this.props.groups.map((group, i) =>
                     <ContentItemChart key={i} id={group}
+                      linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
                       name="Name" description="Desc"
-                      toggleActive={this.toggleActiveGroup(group)}
                       delete={this.deleteGroup}
                       primaryData={fakeRecentData}
                       secondaryData={fakeAverageData}
@@ -189,8 +192,8 @@ export class Groups extends React.Component {
                 <p>Loading...</p> :
                 this.props.groups.map((group, i) =>
                   <ContentItemList key={i} id={group}
+                    linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
                     name="Name" description="Desc"
-                    toggleActive={this.toggleActiveGroup(group)}
                     delete={this.deleteGroup}
                     primaryData={fakeRecentData}
                     secondaryData={fakeAverageData}/>

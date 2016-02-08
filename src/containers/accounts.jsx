@@ -3,15 +3,16 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
+import { Link } from 'react-router'
 
 import * as accountActionCreators from '../redux/modules/account'
 import EditAccount from '../components/edit-account'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
 import ContentItemList from '../components/content-item-list'
 import ContentItemChart from '../components/content-item-chart'
 import Select from '../components/select'
-import IconAdd from '../components/icons/icon-add.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
@@ -106,15 +107,12 @@ export class Accounts extends React.Component {
     return (
       <PageContainer>
         <Content>
-          <header className="content-header clearfix">
+          <PageHeader>
             <ButtonToolbar className="pull-right">
               <Button bsStyle="success" className="btn-icon">
-                <IconChart />
-              </Button>
-
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.createNewAccount}>
-                <IconAdd />
+                <Link to={`/analysis/`}>
+                  <IconChart/>
+                </Link>
               </Button>
 
               <Select
@@ -136,9 +134,9 @@ export class Accounts extends React.Component {
               </Button>
             </ButtonToolbar>
 
-            <p>CLIENT CONTENT SUMMARY</p>
+            <p>BRAND CONTENT SUMMARY</p>
             <h1>Accounts</h1>
-          </header>
+          </PageHeader>
 
           <div className="container-fluid">
 
@@ -148,8 +146,8 @@ export class Accounts extends React.Component {
                 <div className="content-item-grid">
                   {this.props.accounts.map((account, i) =>
                     <ContentItemChart key={i} id={account}
+                      linkTo={`/content/groups/${this.props.params.brand}/${account}`}
                       name="Name" description="Desc"
-                      toggleActive={this.toggleActiveAccount(account)}
                       delete={this.deleteAccount}
                       primaryData={fakeRecentData}
                       secondaryData={fakeAverageData}
@@ -163,6 +161,7 @@ export class Accounts extends React.Component {
                 <p>Loading...</p> :
                 this.props.accounts.map((account, i) =>
                   <ContentItemList key={i} id={account}
+                    linkTo={`/content/groups/${this.props.params.brand}/${account}`}
                     name="Name" description="Desc"
                     toggleActive={this.toggleActiveAccount(account)}
                     delete={this.deleteAccount}
@@ -173,15 +172,18 @@ export class Accounts extends React.Component {
             }
 
             {activeAccount ?
-              <Modal show={true}
+              <Modal show={true} dialogClassName="configuration-sidebar"
+                backdrop={false}
                 onHide={this.toggleActiveAccount(activeAccount.get('account_id'))}>
-                <Modal.Header closeButton={true}>
-                  <Modal.Title>Edit Account</Modal.Title>
+                <Modal.Header>
+                  <h1>Edit Account</h1>
+                  <p>Lorem ipsum dolor</p>
                 </Modal.Header>
                 <Modal.Body>
                   <EditAccount account={activeAccount}
                     changeValue={this.changeActiveAccountValue}
-                    saveChanges={this.saveActiveAccountChanges}/>
+                    saveChanges={this.saveActiveAccountChanges}
+                    cancelChanges={this.toggleActiveAccount(activeAccount.get('account_id'))}/>
                 </Modal.Body>
               </Modal> : null
             }

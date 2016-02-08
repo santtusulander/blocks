@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+jest.autoMockOff()
 jest.dontMock('../groups.jsx')
-jest.dontMock('../../components/group.jsx')
 const Groups = require('../groups.jsx').Groups
+const ContentItemChart = require('../../components/content-item-chart.jsx')
+const ContentItemList = require('../../components/content-item-list.jsx')
 
 function groupActionsMaker() {
   return {
@@ -45,21 +47,34 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()} fetching={true}
         params={urlParams}/>
     )
-    let tbody = TestUtils.findRenderedDOMComponentWithTag(groups, 'tbody')
-    expect(ReactDOM.findDOMNode(tbody).textContent).toContain('Loading...')
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
   });
 
-  it('should show existing groups', () => {
+  it('should show existing groups as charts', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         groups={Immutable.List([1,2])}
         params={urlParams}/>
     )
-    let tbody = TestUtils.findRenderedDOMComponentWithTag(groups, 'tbody')
-    expect(ReactDOM.findDOMNode(tbody).textContent).not.toContain('Loading...')
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'tr')
-    expect(trs.length).toBe(3)
-    expect(ReactDOM.findDOMNode(trs[1]).textContent).toContain('1')
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
+    let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemChart)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
+  });
+
+  it('should show existing groups as lists', () => {
+    let groups = TestUtils.renderIntoDocument(
+      <Groups groupActions={groupActionsMaker()}
+        groups={Immutable.List([1,2])}
+        params={urlParams}/>
+    )
+    let btn = TestUtils.scryRenderedDOMComponentsWithClass(groups, 'toggle-view')
+    TestUtils.Simulate.click(btn[1])
+    let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemList)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
   });
 
   it('should activate a group for edit when clicked', () => {
@@ -69,8 +84,7 @@ describe('Groups', () => {
         groups={Immutable.List([1])}
         params={urlParams}/>
     )
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'tr')
-    TestUtils.Simulate.click(trs[1])
+    groups.toggleActiveGroup(1)()
     expect(groupActions.fetchGroup.mock.calls[0]).toEqual(['udn',1,1])
   });
 
@@ -82,8 +96,7 @@ describe('Groups', () => {
         activeGroup={Immutable.Map({group_id:1})}
         params={urlParams}/>
     )
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'tr')
-    TestUtils.Simulate.click(trs[1])
+    groups.toggleActiveGroup(1)()
     expect(groupActions.changeActiveGroup.mock.calls[0][0]).toBe(null)
   });
 
@@ -115,18 +128,6 @@ describe('Groups', () => {
       group_id: 1,
       name: 'aaa'
     })
-  })
-
-  it('should add a new group when button is clicked', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        groups={Immutable.List()}
-        params={urlParams}/>
-    )
-    let add = TestUtils.findRenderedDOMComponentWithTag(groups, 'button')
-    TestUtils.Simulate.click(add)
-    expect(groupActions.createGroup.mock.calls.length).toBe(1)
   })
 
   it('should delete a group when clicked', () => {
