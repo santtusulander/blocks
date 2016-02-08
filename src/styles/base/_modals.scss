@@ -3,6 +3,15 @@
 
 .modal-dialog {
 
+  .modal-content {
+    background: linear-gradient(rgba($pale-blue, 0.7),
+      rgba($ericsson-dark-blue, 0.7));
+    background-size: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   // Configuration Sidebar
   // =====================
 
