@@ -171,7 +171,9 @@ class Property extends React.Component {
                 <h3 className="has-btn">
                   Edge Configuration
                   <Button bsStyle="primary" className="btn-icon pull-right">
-                    <IconConfiguration />
+                    <Link to={`/configuration/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
+                      <IconConfiguration />
+                    </Link>
                   </Button>
                 </h3>
 
