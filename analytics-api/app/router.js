@@ -36,7 +36,3 @@ function errorHandler(req, res) {
 }
 
 module.exports = router;
-
-
-// TODO: Implement more intelligent logging (log to file, show timestamps,
-// log level configs, etc)? Possibly use winston or morgan (or both).
