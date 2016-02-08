@@ -1,23 +1,17 @@
 // Content transitions
 // ===================
 
-.content-transition-enter,
 .content-transition-leave {
   position: absolute;
   right: 0;
   left: 0;
   opacity: 0;
-  transform: scale(0);
-  transition: transform 500ms, opacity 500ms;
 }
 
 .content-transition-enter-active {
   opacity: 1;
-  transform: scale(1);
-  transition-delay: 500ms;
 }
 
 .content-transition-leave-active {
   opacity: 0;
-  transform: scale(0);
 }

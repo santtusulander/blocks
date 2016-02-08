@@ -23,18 +23,24 @@
 
   .btn,
   .btn-group,
-  .input-group {
+  .input-group,
+  .form-group {
+    display: inline-block;
     float: none;
+    padding-bottom: 0;
+    vertical-align: top;
   }
 
   > .btn,
   > .btn-group,
-  > .input-group {
+  > .input-group,
+  > .form-group {
     margin-left: 0;
 
     + .btn,
     + .btn-group,
-    + .input-group {
+    + .input-group,
+    + .form-group {
       margin-left: 20px;
     }
   }
