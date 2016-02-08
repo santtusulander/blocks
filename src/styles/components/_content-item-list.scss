@@ -4,10 +4,17 @@
 .content-item-list {
   height: $content-item-list-height;
   margin-top: 20px;
-  cursor: pointer;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
+  }
+
+  .content-item-list-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: inherit;
   }
 
   .content-item-list-section {
@@ -15,6 +22,13 @@
     float: left;
     height: $content-item-list-height;
     padding: 30px;
+
+    > .content-item-list-link {
+      width: calc(100% + 60px);
+      height: calc(100% + 60px);
+      padding: 30px;
+      margin: -30px;
+    }
 
     .dark-theme & {
       background-color: rgba($black, 0.2);

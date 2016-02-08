@@ -1,6 +1,7 @@
 import React from 'react'
 import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap';
 
+import { Link } from 'react-router'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
@@ -112,21 +113,27 @@ class ContentItemList extends React.Component {
       <div className="content-item-list">
 
         <div className="content-item-list-section section-lg">
-          <div className="content-item-details">
-            <div className="content-item-list-name">{this.props.name}</div>
-            <div className="content-item-list-details text-sm">
-              <p>Last Edited</p>
-              <p>Yesterday 12:30 pm</p>
-              <p>By John McKinley</p>
+          <Link className="content-item-list-link" to={this.props.linkTo}>
+            <div className="content-item-details">
+              <div className="content-item-list-name">{this.props.name}</div>
+              <div className="content-item-list-details text-sm">
+                <p>Last Edited</p>
+                <p>Yesterday 12:30 pm</p>
+                <p>By John McKinley</p>
+              </div>
             </div>
-          </div>
-
+          </Link>
+          
           <ButtonToolbar className="pull-right">
-            <Button bsSize="small"
-               className="edit-content-item btn-primary btn-icon
-               btn-round" onClick={this.props.toggleActive}>
-              <IconConfiguration/>
-            </Button>
+            {this.props.configurationLink ?
+              <Button bsSize="small"
+                className="edit-content-item btn-primary btn-icon
+                btn-round">
+                <Link to={this.props.configurationLink}>
+                  <IconConfiguration/>
+                </Link>
+              </Button> : ''
+            }
             <Button bsSize="small"
                className="btn-primary btn-icon btn-round">
               <IconChart/>
@@ -134,36 +141,38 @@ class ContentItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <div className="pull-right">
-          <div className="content-item-list-section section-sm">
-            <p>Peak <b className="pull-right">10.8 Gbps</b></p>
-            <p>Lowest <b className="pull-right">5.2 Gbps</b></p>
-            <p>Average <b className="pull-right">8.0 Gbps</b></p>
+        <Link className="content-item-list-link" to={this.props.linkTo}>
+          <div className="pull-right">
+            <div className="content-item-list-section section-sm">
+              <p>Peak <b className="pull-right">10.8 Gbps</b></p>
+              <p>Lowest <b className="pull-right">5.2 Gbps</b></p>
+              <p>Average <b className="pull-right">8.0 Gbps</b></p>
+            </div>
+
+            <div className="content-item-list-section section-lg">
+              <Row>
+                <Col xs={6}>
+                  <h1>95<span className="heading-suffix"> %</span></h1>
+                  <p>Avg. Cache Hit Rate</p>
+                </Col>
+                <Col xs={6}>
+                  <h1>36<span className="heading-suffix"> ms</span></h1>
+                  <p>Avg. TTFB</p>
+                </Col>
+              </Row>
+            </div>
           </div>
 
-          <div className="content-item-list-section section-lg">
-            <Row>
-              <Col xs={6}>
-                <h1>95<span className="heading-suffix"> %</span></h1>
-                <p>Avg. Cache Hit Rate</p>
-              </Col>
-              <Col xs={6}>
-                <h1>36<span className="heading-suffix"> ms</span></h1>
-                <p>Avg. TTFB</p>
-              </Col>
-            </Row>
+          <div className="content-item-list-chart">
+            <div ref="byTimeHolder">
+              <AnalysisByTime axes={false} padding={0}
+                className="bg-transparent"
+                data={fakeRecentData}
+                width={this.state.byTimeWidth}
+                height={200} />
+            </div>
           </div>
-        </div>
-
-        <div className="content-item-list-chart">
-          <div ref="byTimeHolder">
-            <AnalysisByTime axes={false} padding={0}
-              className="bg-transparent"
-              data={fakeRecentData}
-              width={this.state.byTimeWidth}
-              height="200" />
-          </div>
-        </div>
+        </Link>
 
       </div>
     )
@@ -172,9 +181,11 @@ class ContentItemList extends React.Component {
 
 ContentItemList.displayName = 'ContentItemList'
 ContentItemList.propTypes = {
+  configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   id: React.PropTypes.string,
+  linkTo: React.PropTypes.string,
   name: React.PropTypes.string,
   toggleActive: React.PropTypes.func
 }

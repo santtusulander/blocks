@@ -2,6 +2,7 @@ import React from 'react'
 import d3 from 'd3'
 import { ButtonToolbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
+import { Link } from 'react-router'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 
@@ -32,6 +33,9 @@ class ContentItemChart extends React.Component {
     const radians = Math.PI / 180;
     let primaryAngle = -90;
     let secondaryAngle = -90;
+    const differenceArcStyle = {
+      transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
+    }
     const primaryLine = d3.svg.line()
       .x(function(d) {
         /* If the value is 'center', set the X point to the center of the chart,
@@ -101,70 +105,79 @@ class ContentItemChart extends React.Component {
           </span>
         </div>
       </Tooltip>
-    );
+    )
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
           style={{width: outerRadius * 2, height: outerRadius * 2}}
-           id={'content-item-chart-' + (this.props.id)}>
-          <div className="glow"></div>
-          <svg className="content-item-chart-svg secondary-data">
-            {/* Add center point as last coordinate to close the path */}
-            <path className="content-item-chart-line"
-              d={secondaryLine(this.props.secondaryData)
-                + 'L' + outerRadius + ' ' + outerRadius} />
-          </svg>
-          <svg className="content-item-chart-svg primary-data">
-            {/* For performance reasons we draw the primary bar chart as a path. We need
-            to add extra points to the array so that the path draws the lines outwards
-            from the center of the graph. Every other value on the array is set to
-            'center', which is translated in the d3 function in to coordinates */}
-            <path className="content-item-chart-line"
-              d={primaryLine(this.props.primaryData.reduce(
-                (points, data) => {
-                  points.push(normalize(data.bytes))
-                  points.push('center')
-                  return points;
-                }, [])
-            )} />
-          </svg>
-          <div className="circle-base"
-            style={{width: innerRadius * 2, height: innerRadius * 2,
-            marginTop: -innerRadius, marginLeft: -innerRadius}}>
-            <div className="circle-gradient"></div>
-          </div>
-          <svg className="content-item-chart-svg difference-arc">
-            <g>
+          id={'content-item-chart-' + (this.props.id)}>
+          <Link className="content-item-chart-link" to={this.props.linkTo}>
+            <div className="glow"></div>
+            <svg className="content-item-chart-svg secondary-data">
+              {/* Add center point as last coordinate to close the path */}
               <path className="content-item-chart-line"
-                d={differenceArc()} />
-            </g>
-          </svg>
-          <div className="text-content"
-            style={{width: innerRadius * 2, height: innerRadius * 2}}>
-            <div className="content-item-traffic">
-              <div className="content-item-text-bold">37.0</div>
-              <div className="content-item-text-sm">Gbps</div>
+                d={secondaryLine(this.props.secondaryData)
+                  + 'L' + outerRadius + ' ' + outerRadius} />
+            </svg>
+            <svg className="content-item-chart-svg primary-data">
+              {/* For performance reasons we draw the primary bar chart as a path. We need
+              to add extra points to the array so that the path draws the lines outwards
+              from the center of the graph. Every other value on the array is set to
+              'center', which is translated in the d3 function in to coordinates */}
+              <path className="content-item-chart-line"
+                d={primaryLine(this.props.primaryData.reduce(
+                  (points, data) => {
+                    points.push(normalize(data.bytes))
+                    points.push('center')
+                    return points;
+                  }, [])
+              )} />
+            </svg>
+            <div className="circle-base"
+              style={{width: innerRadius * 2, height: innerRadius * 2,
+              marginTop: -innerRadius, marginLeft: -innerRadius}}>
+              <div className="circle-gradient"></div>
             </div>
-            <div className="content-item-text-centered">
-              <div className="content-item-chart-name">{this.props.name}</div>
-              <div className="content-item-text-sm">
-                <p>95% Avg. Cache Hitrate</p>
-                <p>42 ms TTFB</p>
+            <svg className="content-item-chart-svg difference-arc">
+              <g style={differenceArcStyle}>
+                <path className="content-item-chart-line"
+                  d={differenceArc()} />
+              </g>
+            </svg>
+            <div className="text-content"
+              style={{width: innerRadius * 2, height: innerRadius * 2}}>
+              <div className="content-item-traffic">
+                <div className="content-item-text-bold">37.0</div>
+                <div className="content-item-text-sm">Gbps</div>
+              </div>
+              <div className="content-item-text-centered">
+                <div className="content-item-chart-name">{this.props.name}</div>
+                <div className="content-item-text-sm">
+                  <p>95% Avg. Cache Hitrate</p>
+                  <p>42 ms TTFB</p>
+                </div>
               </div>
             </div>
-            <div className="content-item-toolbar">
-              <ButtonToolbar>
-                <Button bsSize="small"
-                   className="btn-tertiary btn-icon btn-round invisible">
+          </Link>
+          <div className="content-item-toolbar"
+            style={{bottom: this.props.barMaxHeight}}>
+            <ButtonToolbar>
+              <Button bsSize="small"
+                 className="btn-primary btn-icon btn-round invisible">
+                <Link to={`/analysis`}>
                   <IconChart/>
-                </Button>
+                </Link>
+              </Button>
+              {this.props.configurationLink ?
                 <Button bsSize="small"
-                   className="edit-content-item btn-tertiary btn-icon
-                   btn-round invisible" onClick={this.props.toggleActive}>
-                  <IconConfiguration/>
-                </Button>
-              </ButtonToolbar>
-            </div>
+                  className="edit-content-item btn-primary btn-icon
+                  btn-round invisible">
+                  <Link to={this.props.configurationLink}>
+                    <IconConfiguration/>
+                  </Link>
+                </Button> : ''
+              }
+            </ButtonToolbar>
           </div>
         </div>
       </OverlayTrigger>
@@ -177,13 +190,14 @@ ContentItemChart.propTypes = {
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
   chartWidth: React.PropTypes.string,
+  configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   id: React.PropTypes.string,
+  linkTo: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
-  secondaryData: React.PropTypes.array,
-  toggleActive: React.PropTypes.func
+  secondaryData: React.PropTypes.array
 }
 
 module.exports = ContentItemChart
