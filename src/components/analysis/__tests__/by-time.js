@@ -15,9 +15,31 @@ moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeData = [
-  {epoch_start: 1451606400, bytes: 3, requests: 1},
-  {epoch_start: 1451606500, bytes: 2, requests: 2},
-  {epoch_start: 1451606600, bytes: 1, requests: 3}
+  {
+    "bytes_out": 3265,
+    "bytes_in": 34857,
+    "timestamp": "2016-01-01 01:00:00"
+  },
+  {
+    "bytes_out": 4564,
+    "bytes_in": 68745,
+    "timestamp": "2016-01-01 02:00:00"
+  },
+  {
+    "bytes_out": 4566,
+    "bytes_in": 67865,
+    "timestamp": "2016-01-01 03:00:00"
+  },
+  {
+    "bytes_out": 3455,
+    "bytes_in": 67422,
+    "timestamp": "2016-01-01 04:00:00"
+  },
+  {
+    "bytes_out": 2345,
+    "bytes_in": 67854,
+    "timestamp": "2016-01-01 05:00:00"
+  }
 ]
 
 describe('AnalysisByTime', () => {
@@ -39,7 +61,8 @@ describe('AnalysisByTime', () => {
   it('should have a data path', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10}
-        data={fakeData}/>
+        data={fakeData}
+        dataKey="bytes_out"/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'path')
     expect(paths.length).toBe(1);
@@ -50,13 +73,14 @@ describe('AnalysisByTime', () => {
     momentFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}/>
+        data={fakeData}
+        dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[0].getAttribute('x')).toBe('20')
+    expect(texts[0].getAttribute('x')).toBe('50.83333333333333')
     expect(texts[0].getAttribute('y')).toBe('190')
-    expect(moment.mock.calls.length).toEqual(4)
-    expect(moment.mock.calls[0]).toEqual([1451606400, 'X'])
+    expect(moment.mock.calls.length).toEqual(2)
+    expect(moment.mock.calls[0]).toEqual([1451640000000])
     expect(momentFormatMock.mock.calls[0][0]).toBe('MMM D')
   });
 
@@ -65,13 +89,14 @@ describe('AnalysisByTime', () => {
     numeralFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}/>
+        data={fakeData}
+        dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[4].getAttribute('x')).toBe('10')
-    expect(texts[4].getAttribute('y')).toBe('123.33333333333334')
-    expect(numeral.mock.calls.length).toBe(3)
-    expect(numeral.mock.calls[0]).toEqual([1])
+    expect(texts[2].getAttribute('x')).toBe('10')
+    expect(texts[2].getAttribute('y')).toBe('142.7682873412177')
+    expect(numeral.mock.calls.length).toBe(4)
+    expect(numeral.mock.calls[0]).toEqual([1000])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0a')
   });
 
@@ -80,7 +105,8 @@ describe('AnalysisByTime', () => {
     numeral.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
-        data={fakeData}/>
+        data={fakeData}
+        dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts.length).toBe(0)

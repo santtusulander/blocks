@@ -1,106 +1,45 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Row, Col, Nav, NavItem } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Nav, NavItem } from 'react-bootstrap'
+
+import * as trafficActionCreators from '../redux/modules/traffic'
+import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
-import AnalysisByTime from '../components/analysis/by-time'
-import AnalysisByLocation from '../components/analysis/by-location'
+import AnalysisTraffic from '../components/analysis/traffic'
+import AnalysisVisitors from '../components/analysis/visitors'
 
-const fakeRecentData = [
-  {epoch_start: 1451606400, bytes: 39405, requests: 943},
-  {epoch_start: 1451606500, bytes: 54766, requests: 546},
-  {epoch_start: 1451606600, bytes: 54675, requests: 435},
-  {epoch_start: 1451606700, bytes: 34336, requests: 345},
-  {epoch_start: 1451606800, bytes: 23456, requests: 567},
-  {epoch_start: 1451606900, bytes: 56756, requests: 244},
-  {epoch_start: 1451607000, bytes: 65466, requests: 455},
-  {epoch_start: 1451607100, bytes: 23456, requests: 233},
-  {epoch_start: 1451607200, bytes: 67454, requests: 544},
-  {epoch_start: 1451607300, bytes: 54766, requests: 546},
-  {epoch_start: 1451607400, bytes: 54675, requests: 435},
-  {epoch_start: 1451607500, bytes: 34336, requests: 456},
-  {epoch_start: 1451607600, bytes: 23456, requests: 567},
-  {epoch_start: 1451607700, bytes: 56756, requests: 244},
-  {epoch_start: 1451607800, bytes: 65466, requests: 455},
-  {epoch_start: 1451607900, bytes: 23456, requests: 456},
-  {epoch_start: 1451608000, bytes: 67454, requests: 544},
-  {epoch_start: 1451608100, bytes: 23456, requests: 233},
-  {epoch_start: 1451608200, bytes: 67454, requests: 544},
-  {epoch_start: 1451608300, bytes: 54766, requests: 546},
-  {epoch_start: 1451608400, bytes: 54675, requests: 435},
-  {epoch_start: 1451608500, bytes: 34336, requests: 456},
-  {epoch_start: 1451608600, bytes: 23456, requests: 567},
-  {epoch_start: 1451608700, bytes: 56756, requests: 244},
-  {epoch_start: 1451608800, bytes: 65466, requests: 455},
-  {epoch_start: 1451608900, bytes: 23456, requests: 456},
-  {epoch_start: 1451609000, bytes: 67454, requests: 544}
-]
-
-const fakeCountryData = Immutable.fromJS([
-  {id: 'usa', trending: -1},
-  {id: 'can', trending: 1},
-  {id: 'mex', trending: 0},
-  {id: 'aus', trending: 0},
-  {id: 'bra', trending: -1},
-  {id: 'rus', trending: 1}
-])
-
-const fakeStateData = Immutable.fromJS([
-  {id: 'Alabama', trending: -1},
-  {id: 'Alaska', trending: 1},
-  {id: 'Arkansas', trending: 0},
-  {id: 'Arizona', trending: -1},
-  {id: 'California', trending: -1},
-  {id: 'Connecticut', trending: 0},
-  {id: 'Delaware', trending: -1},
-  {id: 'Florida', trending: 1},
-  {id: 'Georgia', trending: 1},
-  {id: 'Oregon', trending: -1},
-  {id: 'Michigan', trending: -1},
-  {id: 'Nevada', trending: 0},
-  {id: 'Utah', trending: 1}
-])
-
-const fakeCityData = Immutable.fromJS([
-  {name: 'Atlanta', state: 'Georgia', trending: 1},
-  {name: 'Savannah', state: 'Georgia', trending: 0},
-  {name: 'San Francisco', state: 'California', trending: 1},
-  {name: 'Sacramento', state: 'California', trending: -1},
-  {name: 'San Bernardino', state: 'California', trending: 0},
-  {name: 'Los Angeles', state: 'California', trending: 1},
-  {name: 'San Diego', state: 'California', trending: 0}
-])
-
-class Analysis extends React.Component {
+export class Analysis extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      byLocationWidth: 0,
-      byTimeWidth: 0
+      activeTab: 'traffic'
     }
 
-    this.measureContainers = this.measureContainers.bind(this)
     this.changeTab = this.changeTab.bind(this)
   }
-  componentDidMount() {
-    this.measureContainers()
-    window.addEventListener('resize', this.measureContainers)
+  componentWillMount() {
+    this.props.trafficActions.startFetching()
+    this.props.visitorsActions.startFetching()
+    Promise.all([
+      this.props.trafficActions.fetchByTime(),
+      this.props.trafficActions.fetchByCountry()
+    ]).then(this.props.trafficActions.finishFetching)
+    Promise.all([
+      this.props.visitorsActions.fetchByTime(),
+      this.props.visitorsActions.fetchByCountry(),
+      this.props.visitorsActions.fetchByBrowser(),
+      this.props.visitorsActions.fetchByOS()
+    ]).then(this.props.visitorsActions.finishFetching)
   }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
-  }
-  measureContainers() {
-    this.setState({
-      byLocationWidth: this.refs.byLocationHolder.clientWidth,
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
-    })
-  }
-  changeTab() {
-    console.log('change tab')
+  changeTab(newTab) {
+    this.setState({activeTab: newTab})
   }
   render() {
     return (
@@ -110,110 +49,24 @@ class Analysis extends React.Component {
         </Sidebar>
 
         <Content>
-          <Nav bsStyle="tabs" activeKey={1} onSelect={this.changeTab}>
-            <NavItem eventKey={1}>Traffic</NavItem>
-            <NavItem eventKey={2}>Visitors</NavItem>
+          <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
+            <NavItem eventKey="traffic">Traffic</NavItem>
+            <NavItem eventKey="visitors">Visitors</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
-            <Row>
-              <Col sm={3} xs={6}>
-                <h3>Out</h3>
-                <div className="summary-data">
-                  <h4>Transferred out to Internet</h4>
-                  <div className="stat">
-                    2,211
-                  </div>
-                </div>
-              </Col>
-              <Col sm={3} xs={6}>
-                <h3>In</h3>
-                <div className="summary-data">
-                  <h4>Transferred out to Internet</h4>
-                  <div className="stat">
-                    2,211
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <h3>TRANSFER BY TIME</h3>
-            <div ref="byTimeHolder">
-              <AnalysisByTime axes={true} padding={40}
-                data={fakeRecentData}
-                width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
-            </div>
-            <h3>BY GEOGRAPHY</h3>
-            <div ref="byLocationHolder">
-              <AnalysisByLocation
-                width={this.state.byLocationWidth}
-                height={this.state.byLocationWidth / 2}
-                countryData={fakeCountryData}
-                stateData={fakeStateData}
-                cityData={fakeCityData}/>
-            </div>
-            <h3>BY COUNTRY</h3>
-            <table className="table by-country-table">
-              <thead>
-                <tr>
-                  <th>Country</th>
-                  <th>Traffic GB</th>
-                  <th>% of Traffic</th>
-                  <th>Period Trend</th>
-                  <th>Change</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>United States</td>
-                  <td>1,235,789</td>
-                  <td>44%</td>
-                  <td>Chart</td>
-                  <td>+64%</td>
-                </tr>
-                <tr>
-                  <td>Germany</td>
-                  <td>424,242</td>
-                  <td>22%</td>
-                  <td>Chart</td>
-                  <td>+1%</td>
-                </tr>
-                <tr>
-                  <td>United Kingdom</td>
-                  <td>321,214</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+65%</td>
-                </tr>
-                <tr>
-                  <td>France</td>
-                  <td>10,000</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>-7%</td>
-                </tr>
-                <tr>
-                  <td>Australia</td>
-                  <td>424</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+7%</td>
-                </tr>
-                <tr>
-                  <td>Finland</td>
-                  <td>100</td>
-                  <td>7%</td>
-                  <td>Chart</td>
-                  <td>+3%</td>
-                </tr>
-                <tr>
-                  <td>Rest</td>
-                  <td>1,221,122</td>
-                  <td>20%</td>
-                  <td>Chart</td>
-                  <td>+10%</td>
-                </tr>
-              </tbody>
-            </table>
+            {this.state.activeTab === 'traffic' ?
+              <AnalysisTraffic fetching={this.props.trafficFetching}
+                byTime={this.props.trafficByTime}
+                byCountry={this.props.trafficByCountry}/>
+              : ''}
+            {this.state.activeTab === 'visitors' ?
+              <AnalysisVisitors fetching={this.props.visitorsFetching}
+                byTime={this.props.visitorsByTime}
+                byCountry={this.props.visitorsByCountry}
+                byBrowser={this.props.visitorsByBrowser}
+                byOS={this.props.visitorsByOS}/>
+              : ''}
           </div>
         </Content>
       </PageContainer>
@@ -222,6 +75,37 @@ class Analysis extends React.Component {
 }
 
 Analysis.displayName = 'Analysis'
-Analysis.propTypes = {}
+Analysis.propTypes = {
+  trafficActions: React.PropTypes.object,
+  trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
+  trafficFetching: React.PropTypes.bool,
+  visitorsActions: React.PropTypes.object,
+  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByOS: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
+  visitorsFetching: React.PropTypes.bool
+}
 
-module.exports = Analysis
+function mapStateToProps(state) {
+  return {
+    trafficByCountry: state.traffic.get('byCountry'),
+    trafficByTime: state.traffic.get('byTime'),
+    trafficFetching: state.traffic.get('fetching'),
+    visitorsByBrowser: state.visitors.get('byBrowser'),
+    visitorsByCountry: state.visitors.get('byCountry'),
+    visitorsByOS: state.visitors.get('byOS'),
+    visitorsByTime: state.visitors.get('byTime'),
+    visitorsFetching: state.visitors.get('fetching')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Analysis);
