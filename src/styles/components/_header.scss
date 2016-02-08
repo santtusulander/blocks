@@ -40,7 +40,8 @@
     text-indent: -9999em;
 
     &,
-    &:hover {
+    &:hover,
+    &:focus {
       background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
       background-size: 30px 40px;
     }

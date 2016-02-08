@@ -7,16 +7,23 @@
   text-transform: uppercase;
   background-color: transparent;
 
-  .content-header + & {
-    padding: 20px 40px 0;
+  .container-fluid > & {
+    position: absolute;
+    top: 20px;
+    left: 40px;
   }
 
   > li {
     display: inline-block;
 
-    + li::before {
+    &::after {
       padding: 0 10px;
       content: '\203A';
+    }
+
+    + li::before,
+    + li:last-child::after {
+      display: none;
     }
   }
 

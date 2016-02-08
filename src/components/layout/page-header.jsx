@@ -2,7 +2,7 @@ import React from 'react'
 
 class PageHeader extends React.Component {
   render() {
-    let className = 'page-header-layout';
+    let className = 'page-header-layout clearfix';
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }

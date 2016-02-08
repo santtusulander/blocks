@@ -2,7 +2,7 @@ import React from 'react';
 
 class Tooltip extends React.Component {
   render() {
-    let className = 'tooltip';
+    let className = 'chart-tooltip';
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }

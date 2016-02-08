@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+jest.autoMockOff()
 jest.dontMock('../hosts.jsx')
-jest.dontMock('../../components/host.jsx')
 const Hosts = require('../hosts.jsx').Hosts
-const Host = require('../../components/host.jsx')
+const ContentItemChart = require('../../components/content-item-chart.jsx')
+const ContentItemList = require('../../components/content-item-list.jsx')
 
 function hostActionsMaker() {
   return {
@@ -45,19 +46,34 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} fetching={true}
         params={urlParams}/>
     )
-    let tbody = TestUtils.findRenderedDOMComponentWithTag(hosts, 'tbody')
-    expect(ReactDOM.findDOMNode(tbody).textContent).toContain('Loading...')
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
   });
 
-  it('should show existing hosts', () => {
+  it('should show existing hosts as charts', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()}
-        hosts={Immutable.List(['aaa'])}
+        hosts={Immutable.List([1,2])}
         params={urlParams}/>
     )
-    let child = TestUtils.findRenderedComponentWithType(hosts, Host);
-		expect(child.props.id).toEqual("aaa");
-		expect(child.props.name).toEqual("Name");
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
+    let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemChart)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
+  });
+
+  it('should show existing hosts as lists', () => {
+    let hosts = TestUtils.renderIntoDocument(
+      <Hosts hostActions={hostActionsMaker()}
+        hosts={Immutable.List([1,2])}
+        params={urlParams}/>
+    )
+    let btn = TestUtils.scryRenderedDOMComponentsWithClass(hosts, 'toggle-view')
+    TestUtils.Simulate.click(btn[1])
+    let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemList)
+    expect(child.length).toBe(2)
+    expect(child[0].props.id).toBe(1)
   });
 
   it('should add a new host when called', () => {

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
 const ContentItemChart = require('../../components/content-item-chart.jsx')
@@ -46,8 +47,8 @@ describe('Accounts', () => {
       <Accounts accountActions={accountActionsMaker()} fetching={true}
         params={urlParams}/>
     )
-    let p = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'p')
-    expect(ReactDOM.findDOMNode(p[1]).textContent).toContain('Loading...')
+    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
+    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
   });
 
   it('should show existing accounts as charts', () => {
@@ -127,18 +128,6 @@ describe('Accounts', () => {
       account_id: 1,
       name: 'aaa'
     })
-  })
-
-  it('should add a new account when button is clicked', () => {
-    const accountActions = accountActionsMaker()
-    let accounts = TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActions}
-        accounts={Immutable.List()}
-        params={urlParams}/>
-    )
-    let add = TestUtils.scryRenderedDOMComponentsWithClass(accounts, 'btn-add-new')
-    TestUtils.Simulate.click(add[0])
-    expect(accountActions.createAccount.mock.calls.length).toBe(1)
   })
 
   it('should delete an account when clicked', () => {

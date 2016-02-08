@@ -2,11 +2,49 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Table, Modal, Button } from 'react-bootstrap';
+import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Link } from 'react-router'
 
 import * as groupActionCreators from '../redux/modules/group'
 import EditGroup from '../components/edit-group'
-import Group from '../components/group'
+import PageContainer from '../components/layout/page-container'
+import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
+import ContentItemList from '../components/content-item-list'
+import ContentItemChart from '../components/content-item-chart'
+import Select from '../components/select'
+import IconAdd from '../components/icons/icon-add.jsx'
+import IconChart from '../components/icons/icon-chart.jsx'
+import IconItemList from '../components/icons/icon-item-list.jsx'
+import IconItemChart from '../components/icons/icon-item-chart.jsx'
+
+const fakeRecentData = [
+  {bytes: 25287}, {bytes: 75693}, {bytes: 56217}, {bytes: 37567}, {bytes: 68967},
+  {bytes: 59482}, {bytes: 39528}, {bytes: 44277}, {bytes: 23870}, {bytes: 38097},
+  {bytes: 34104}, {bytes: 34667}, {bytes: 45348}, {bytes: 75675}, {bytes: 31596},
+  {bytes: 72447}, {bytes: 40786}, {bytes: 48403}, {bytes: 37584}, {bytes: 20450},
+  {bytes: 29754}, {bytes: 25254}, {bytes: 76117}, {bytes: 62423}, {bytes: 21843},
+  {bytes: 36684}, {bytes: 63311}, {bytes: 62746}, {bytes: 25277}, {bytes: 77866},
+  {bytes: 63733}, {bytes: 63783}, {bytes: 67777}, {bytes: 27648}, {bytes: 52272},
+  {bytes: 55867}, {bytes: 25465}, {bytes: 39901}, {bytes: 76743}, {bytes: 33717},
+  {bytes: 39363}, {bytes: 49430}, {bytes: 44985}, {bytes: 22980}, {bytes: 57023},
+  {bytes: 29188}, {bytes: 77510}, {bytes: 47095}, {bytes: 22737}, {bytes: 46752},
+  {bytes: 74066}, {bytes: 69258}, {bytes: 22229}, {bytes: 71488}, {bytes: 78918}
+]
+
+const fakeAverageData = [
+  {bytes: 34667}, {bytes: 45348}, {bytes: 75675}, {bytes: 31596}, {bytes: 72447},
+  {bytes: 40786}, {bytes: 48403}, {bytes: 52272}, {bytes: 55867}, {bytes: 25465},
+  {bytes: 39901}, {bytes: 77866}, {bytes: 59482}, {bytes: 39528}, {bytes: 44277},
+  {bytes: 37584}, {bytes: 20450}, {bytes: 22980}, {bytes: 57023}, {bytes: 29188},
+  {bytes: 67777}, {bytes: 27648}, {bytes: 76743}, {bytes: 33717}, {bytes: 39363},
+  {bytes: 78918}, {bytes: 66433}, {bytes: 77510}, {bytes: 47095}, {bytes: 22737},
+  {bytes: 29754}, {bytes: 25254}, {bytes: 76117}, {bytes: 46752}, {bytes: 74066},
+  {bytes: 69258}, {bytes: 22229}, {bytes: 62423}, {bytes: 21843}, {bytes: 36684},
+  {bytes: 63311}, {bytes: 62746}, {bytes: 25277}, {bytes: 23870}, {bytes: 38097},
+  {bytes: 63733}, {bytes: 63783}, {bytes: 25287}, {bytes: 49430}, {bytes: 44985},
+  {bytes: 71488}, {bytes: 75693}, {bytes: 56217}, {bytes: 37567},{bytes: 68967}
+]
 
 export class Groups extends React.Component {
   constructor(props) {
@@ -17,6 +55,12 @@ export class Groups extends React.Component {
     this.cancelActiveGroupChanges = this.cancelActiveGroupChanges.bind(this)
     this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
     this.createNewGroup = this.createNewGroup.bind(this)
+    this.changeActiveView = this.changeActiveView.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.state = {
+      activeView: 'chart',
+      activeFilter: 'traffic_high_to_low'
+    }
   }
   componentWillMount() {
     this.props.groupActions.startFetching()
@@ -67,49 +111,115 @@ export class Groups extends React.Component {
       id
     )
   }
+  changeActiveView(type) {
+    return () => {
+      this.setState({
+        activeView: type
+      })
+    }
+  }
+  handleSelectChange() {
+    return value => {
+      this.setState({
+        activeFilter: value
+      })
+    }
+  }
   render() {
     const activeGroup = this.props.activeGroup
     return (
-      <div className="container">
-        <h1 className="page-header">Groups</h1>
-        <Button onClick={this.createNewGroup}>Add New</Button>
-        <Table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.fetching ?
-              <tr><td colSpan="4">Loading...</td></tr> :
-              this.props.groups.map((group, i) =>
-                <Group key={i} id={group}
-                  name="Name" description="Desc"
-                  toggleActive={this.toggleActiveGroup(group)}
-                  delete={this.deleteGroup}/>
-              )}
-          </tbody>
-        </Table>
-        {activeGroup ?
-          <Modal show={true} dialogClassName="configuration-sidebar"
-            backdrop={false}
-            onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
-            <Modal.Header>
-              <h1>Edit Group</h1>
-              <p>Lorem ipsum dolor</p>
-            </Modal.Header>
-            <Modal.Body>
-              <EditGroup group={activeGroup}
-                changeValue={this.changeActiveGroupValue}
-                saveChanges={this.saveActiveGroupChanges}
-                cancelChanges={this.toggleActiveGroup(activeGroup.get('group_id'))}/>
-            </Modal.Body>
-          </Modal> : null
-        }
-      </div>
+      <PageContainer>
+        <Content>
+          <PageHeader>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="success" className="btn-icon">
+                <Link to={`/analysis/`}>
+                  <IconChart/>
+                </Link>
+              </Button>
+
+              <Button bsStyle="primary" className="btn-icon btn-add-new"
+                onClick={this.createNewGroup}>
+                <IconAdd />
+              </Button>
+
+              <Select
+                onSelect={this.handleSelectChange()}
+                value={this.state.activeFilter}
+                options={[
+                  ['traffic_high_to_low', 'Traffic High to Low'],
+                  ['traffic_low_to_high', 'Traffic Low to High']]}/>
+
+              <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
+                (this.state.activeView === 'chart' ? ' hidden' : '')}
+                onClick={this.changeActiveView('chart')}>
+                <IconItemChart/>
+              </Button>
+              <Button bsStyle="primary" className={'btn-icon toggle-view' +
+                (this.state.activeView === 'list' ? ' hidden' : '')}
+                onClick={this.changeActiveView('list')}>
+                <IconItemList/>
+              </Button>
+            </ButtonToolbar>
+
+            <p>ACCOUNT CONTENT SUMMARY</p>
+            <h1>Account Name</h1>
+          </PageHeader>
+
+          <div className="container-fluid">
+            <Breadcrumb>
+              <BreadcrumbItem active={true}>Account Name</BreadcrumbItem>
+            </Breadcrumb>
+
+            {this.state.activeView === 'chart' ?
+              (this.props.fetching ?
+                <p>Loading...</p> :
+                <div className="content-item-grid">
+                  {this.props.groups.map((group, i) =>
+                    <ContentItemChart key={i} id={group}
+                      linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
+                      name="Name" description="Desc"
+                      delete={this.deleteGroup}
+                      primaryData={fakeRecentData}
+                      secondaryData={fakeAverageData}
+                      barWidth="1"
+                      chartWidth="560"
+                      barMaxHeight="80" />
+                  )}
+                </div>
+              ) : this.state.activeView === 'list' &&
+                (this.props.fetching ?
+                <p>Loading...</p> :
+                this.props.groups.map((group, i) =>
+                  <ContentItemList key={i} id={group}
+                    linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
+                    name="Name" description="Desc"
+                    delete={this.deleteGroup}
+                    primaryData={fakeRecentData}
+                    secondaryData={fakeAverageData}/>
+                )
+              )
+            }
+
+            {activeGroup ?
+              <Modal show={true} dialogClassName="configuration-sidebar"
+                backdrop={false}
+                onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
+                <Modal.Header>
+                  <h1>Edit Group</h1>
+                  <p>Lorem ipsum dolor</p>
+                </Modal.Header>
+                <Modal.Body>
+                  <EditGroup group={activeGroup}
+                    changeValue={this.changeActiveGroupValue}
+                    saveChanges={this.saveActiveGroupChanges}
+                    cancelChanges={this.toggleActiveGroup(activeGroup.get('group_id'))}/>
+                </Modal.Body>
+              </Modal> : null
+            }
+          </div>
+        </Content>
+      </PageContainer>
     );
   }
 }

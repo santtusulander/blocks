@@ -16,6 +16,27 @@
   cursor: pointer;
   border-radius: 50%;
 
+  &:hover {
+
+    .glow {
+      opacity: 0.2;
+    }
+
+    .content-item-toolbar .invisible {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 250ms;
+    }
+  }
+
+  .content-item-chart-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    border-radius: 50%;
+  }
+
   .circle-base {
     position: absolute;
     top: 50%;
@@ -38,7 +59,7 @@
       background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center -10px;
       background-size: calc(100% + 20px);
-      border: 10px solid rgba($black, 0.2);
+      border: 10px solid $black;
     }
   }
 
@@ -65,10 +86,6 @@
 
     &.difference-arc {
       fill: $pale-blue;
-
-      g {
-        transform: translate(280px, 280px);
-      }
     }
   }
 
@@ -101,43 +118,29 @@
 
   .content-item-traffic {
     position: absolute;
-    top: 15%;
+    top: 13%;
     width: 100%;
+    font-size: 24px;
   }
 
   .content-item-text-centered {
     position: absolute;
-    top: 50%;
+    top: 53%;
     width: 100%;
     transform: translateY(-50%);
   }
 
   .content-item-chart-name {
     margin-bottom: 10px;
-    font-size: 30px;
+    font-size: 36px;
+    font-weight: 500;
     line-height: 1em;
   }
 
   .content-item-toolbar {
     position: absolute;
-    bottom: 15%;
-    width: 100%;
-  }
-
-  &:hover {
-
-    .circle-gradient {
-      opacity: 0.5;
-    }
-
-    .glow {
-      opacity: 0.2;
-    }
-
-    .content-item-toolbar .invisible {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 250ms;
-    }
+    left: 50%;
+    margin-bottom: 10%;
+    transform: translateX(-50%);
   }
 }

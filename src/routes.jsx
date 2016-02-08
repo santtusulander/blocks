@@ -29,8 +29,8 @@ module.exports = (
       <Route path="accounts/:brand" component={Accounts}/>
       <Route path="groups/:brand/:account" component={Groups}/>
       <Route path="hosts/:brand/:account/:group" component={Hosts}/>
+      <Route path="property/:brand/:account/:group/:host" component={Property}/>
     </Route>
     <Route path="configuration/:brand/:account/:group/:host" component={Configuration}/>
-    <Route path="property/:brand/:account/:group/:host" component={Property}/>
   </Route>
 );
