@@ -35,78 +35,78 @@ export class AnalysisByLocation extends React.Component {
       tooltipY: 0
     }
 
-    this.selectCountry = this.selectCountry.bind(this)
-    this.selectState = this.selectState.bind(this)
-    this.zoomOut = this.zoomOut.bind(this)
+    // this.selectCountry = this.selectCountry.bind(this)
+    // this.selectState = this.selectState.bind(this)
+    // this.zoomOut = this.zoomOut.bind(this)
   }
   componentWillMount() {
     this.props.topoActions.startFetching()
     this.props.topoActions.fetchCountries()
   }
-  selectCountry(country, path) {
-    const id = country.id.toLowerCase()
-    return () => {
-      this.setState({
-        statesHidden: true,
-        citiesHidden: true
-      })
-      this.props.topoActions.changeActiveCountry(id)
-      this.props.topoActions.fetchStates(id).then((action) => {
-        this.setState({zoom: this.getZoomBounds(country, path)})
-        if(action.error) {
-          return false;
-        }
-        setTimeout(() => {
-          this.setState({statesHidden: false})
-        }, 500)
-      })
-    }
-  }
-  selectState(state, path) {
-    const name = state.properties.name
-    return () => {
-      this.setState({citiesHidden: true})
-      this.props.topoActions.changeActiveState(name)
-      this.props.topoActions.fetchCities(this.props.activeCountry).then((action) => {
-        this.setState({zoom: this.getZoomBounds(state, path)})
-        if(action.error) {
-          return false;
-        }
-        setTimeout(() => {
-          this.setState({citiesHidden: false})
-        }, 500)
-      })
-    }
-  }
-  getZoomBounds(d, path) {
-    const bounds = path.bounds(d)
-    const w_scale = (bounds[1][0] - bounds[0][0]) / this.props.width
-    const h_scale = (bounds[1][1] - bounds[0][1]) / this.props.height
-    const z = 0.96 / Math.max(w_scale, h_scale)
-    const x = (bounds[1][0] + bounds[0][0]) / 2
-    const y = (bounds[1][1] + bounds[0][1]) / 2 + (this.props.height / z / 6)
-    return [x, y, z]
-  }
-  zoomOut(path) {
-    return (e) => {
-      e.preventDefault()
-      if(this.props.activeState) {
-        this.props.topoActions.changeActiveState(null)
-        const countries = topojson.feature(
-          this.props.countries.toJS(),
-          this.props.countries.toJS().objects.countries
-        ).features
-        const country = countries.find(
-          data => data.id.toLowerCase() === this.props.activeCountry
-        )
-        this.setState({zoom: this.getZoomBounds(country, path)})
-      }
-      else if(this.props.activeCountry) {
-        this.props.topoActions.changeActiveCountry(null)
-        this.setState({zoom: null})
-      }
-    }
-  }
+  // selectCountry(country, path) {
+  //   const id = country.id.toLowerCase()
+  //   return () => {
+  //     this.setState({
+  //       statesHidden: true,
+  //       citiesHidden: true
+  //     })
+  //     this.props.topoActions.changeActiveCountry(id)
+  //     this.props.topoActions.fetchStates(id).then((action) => {
+  //       this.setState({zoom: this.getZoomBounds(country, path)})
+  //       if(action.error) {
+  //         return false;
+  //       }
+  //       setTimeout(() => {
+  //         this.setState({statesHidden: false})
+  //       }, 500)
+  //     })
+  //   }
+  // }
+  // selectState(state, path) {
+  //   const name = state.properties.name
+  //   return () => {
+  //     this.setState({citiesHidden: true})
+  //     this.props.topoActions.changeActiveState(name)
+  //     this.props.topoActions.fetchCities(this.props.activeCountry).then((action) => {
+  //       this.setState({zoom: this.getZoomBounds(state, path)})
+  //       if(action.error) {
+  //         return false;
+  //       }
+  //       setTimeout(() => {
+  //         this.setState({citiesHidden: false})
+  //       }, 500)
+  //     })
+  //   }
+  // }
+  // getZoomBounds(d, path) {
+  //   const bounds = path.bounds(d)
+  //   const w_scale = (bounds[1][0] - bounds[0][0]) / this.props.width
+  //   const h_scale = (bounds[1][1] - bounds[0][1]) / this.props.height
+  //   const z = 0.96 / Math.max(w_scale, h_scale)
+  //   const x = (bounds[1][0] + bounds[0][0]) / 2
+  //   const y = (bounds[1][1] + bounds[0][1]) / 2 + (this.props.height / z / 6)
+  //   return [x, y, z]
+  // }
+  // zoomOut(path) {
+  //   return (e) => {
+  //     e.preventDefault()
+  //     if(this.props.activeState) {
+  //       this.props.topoActions.changeActiveState(null)
+  //       const countries = topojson.feature(
+  //         this.props.countries.toJS(),
+  //         this.props.countries.toJS().objects.countries
+  //       ).features
+  //       const country = countries.find(
+  //         data => data.id.toLowerCase() === this.props.activeCountry
+  //       )
+  //       this.setState({zoom: this.getZoomBounds(country, path)})
+  //     }
+  //     else if(this.props.activeCountry) {
+  //       this.props.topoActions.changeActiveCountry(null)
+  //       this.setState({zoom: null})
+  //     }
+  //   }
+  // }
   moveMouse(country, percent) {
     return e => {
       e.stopPropagation()
@@ -151,20 +151,20 @@ export class AnalysisByLocation extends React.Component {
 
     let transform = ''
     let strokeWidth = 1
-    if(this.state.zoom) {
-      let projTranslate = projection.translate()
-      transform = "translate(" +
-      projTranslate[0] + 'px,' +
-      projTranslate[1] +
-      "px) scale(" +
-      this.state.zoom[2] +
-      ") translate(-" +
-      this.state.zoom[0] +
-      "px,-" +
-      this.state.zoom[1] +
-      "px)"
-      strokeWidth = 1.0 / this.state.zoom[2] + "px"
-    }
+    // if(this.state.zoom) {
+    //   let projTranslate = projection.translate()
+    //   transform = "translate(" +
+    //   projTranslate[0] + 'px,' +
+    //   projTranslate[1] +
+    //   "px) scale(" +
+    //   this.state.zoom[2] +
+    //   ") translate(-" +
+    //   this.state.zoom[0] +
+    //   "px,-" +
+    //   this.state.zoom[1] +
+    //   "px)"
+    //   strokeWidth = 1.0 / this.state.zoom[2] + "px"
+    // }
     const pathStyle = {
       transform: transform,
       strokeWidth: strokeWidth
@@ -178,19 +178,19 @@ export class AnalysisByLocation extends React.Component {
             height={this.props.height}
             onMouseMove={this.moveMouse(null, null)}>
             {countries.map((country, i) => {
-              let hideCountry = false
+              // let hideCountry = false
               const id = country.id.toLowerCase()
-              if(!this.state.statesHidden &&
-                this.props.activeCountry === id) {
-                hideCountry = true
-              }
+              // if(!this.state.statesHidden &&
+              //   this.props.activeCountry === id) {
+              //   hideCountry = true
+              // }
               const data = this.props.countryData.find(
                 data => data.get('country').toLowerCase() === id
               )
               let classes = 'country'
-              if(hideCountry) {
-                classes += ' hiddenpath'
-              }
+              // if(hideCountry) {
+              //   classes += ' hiddenpath'
+              // }
               let trending = '0'
               if(data) {
                 const startBytes = data.get(this.props.timelineKey).first()
@@ -247,13 +247,13 @@ export class AnalysisByLocation extends React.Component {
               )
             }) : null*/}
           </svg>
-          <div className="zoom-out">
+          {/*<div className="zoom-out">
             <a href="#" onClick={this.zoomOut(path)}
               title="Zoom Out"
               className={this.props.activeCountry || this.props.activeState ? '' : 'hidden'}>
               -
             </a>
-          </div>
+          </div>*/}
         </div>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
           hidden={!this.state.tooltipCountry}>

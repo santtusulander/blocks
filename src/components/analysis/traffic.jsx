@@ -10,8 +10,8 @@ class AnalysisTraffic extends React.Component {
     super(props);
 
     this.state = {
-      byLocationWidth: 0,
-      byTimeWidth: 0
+      byLocationWidth: 100,
+      byTimeWidth: 100
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -44,12 +44,15 @@ class AnalysisTraffic extends React.Component {
         </div>
         <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
-          <AnalysisByLocation
-            dataKey="bytes"
-            timelineKey="traffic"
-            width={this.state.byLocationWidth}
-            height={this.state.byLocationWidth / 2}
-            countryData={this.props.byCountry}/>
+          {this.props.fetching ?
+            <div>Loading...</div> :
+            <AnalysisByLocation
+              dataKey="bytes"
+              timelineKey="traffic"
+              width={this.state.byLocationWidth}
+              height={this.state.byLocationWidth / 2}
+              countryData={this.props.byCountry}/>
+          }
         </div>
         <h3>BY COUNTRY</h3>
         <table className="table by-country-table">
