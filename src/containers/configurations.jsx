@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Table, Input, Button} from 'react-bootstrap'
+import { Table, Input, Button, ButtonToolbar} from 'react-bootstrap'
 import { Link } from 'react-router'
 
 import PageContainer from '../components/layout/page-container'
@@ -39,19 +39,18 @@ export class Configurations extends React.Component {
       <PageContainer className="configurations-container">
         <Content>
           <PageHeader>
-            <div className="pull-right actions">
+            <ButtonToolbar className="pull-right">
               <Input className="search" type="text" placeholder="Search" />
               <Button bsStyle="primary" className="btn-icon add-btn">
                 <IconAdd width="30" height="30" />
               </Button>
-              <Select className="input-select"
-                value="all"
-                addonAfter=' '
+              <Select value="all"
                 options={[
                   ['all', 'Show all properties'],
                   ['1', 'Filter 1'],
                   ['2', 'Filter 2']]}/>
-            </div>
+            </ButtonToolbar>
+
             <h1>{this.props.properties.size} Properties</h1>
           </PageHeader>
 

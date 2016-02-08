@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Button, ButtonToolbar, Col, Dropdown, MenuItem,
   Row, Table } from 'react-bootstrap';
+import { Link } from 'react-router'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -121,7 +122,9 @@ class Property extends React.Component {
                   Traffic Summary
                   <span className="heading-suffix"> (last 30 days)</span>
                   <Button bsStyle="primary" className="btn-icon pull-right">
-                    <IconChart />
+                    <Link to={`/analysis/`}>
+                      <IconChart/>
+                    </Link>
                   </Button>
                 </h3>
 
