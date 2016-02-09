@@ -58,14 +58,14 @@ describe('AnalysisByTime', () => {
     expect(div.textContent).toContain('Loading');
   });
 
-  it('should have a data path', () => {
+  it('should have a data line and area', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10}
         data={fakeData}
         dataKey="bytes_out"/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'path')
-    expect(paths.length).toBe(1);
+    expect(paths.length).toBe(2);
   });
 
   it('should have an x axis', () => {
