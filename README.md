@@ -11,6 +11,7 @@ This project requires the use of Node, Ruby, Gulp, and Sass.
 ## Installation
 
 ### NodeJS
+This project requires Node version 4.2.1 and npm version 2.14.7.
 
 Download at https://nodejs.org/en/download/
 
