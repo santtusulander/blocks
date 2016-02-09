@@ -1,0 +1,97 @@
+// Header
+// ======
+
+.header {
+  height: $header-height + 10px;
+  background-color: rgba($black, 0.5);
+  border: 0;
+
+  .form-control {
+    width: 500px;
+    height: $header-btn-height;
+    padding-left: 50px;
+    margin-top: ($bar-height - $header-btn-height) / 2;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: $header-btn-height / 2;
+
+    .dark-theme & {
+      background-image: url('../assets/icons/dt-icon-search.svg');
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+    }
+  }
+}
+
+.header-gradient {
+  height: $header-gradient-height;
+  margin: 0 -15px;
+  background: $gradient-full;
+}
+
+.navbar-default {
+  // scss-lint:disable SelectorDepth NestingDepth
+  // Need to override Bootstrap
+
+  .navbar-brand {
+    width: $bar-height;
+    height: $bar-height;
+    text-indent: -9999em;
+
+    &,
+    &:hover,
+    &:focus {
+      background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
+      background-size: 30px 40px;
+    }
+  }
+
+  .navbar-nav > .main-nav-item {
+
+    .dropdown .main-nav-link {
+      padding: 0 80px;
+    }
+
+    .dropdown-toggle {
+
+      &,
+      &:focus {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: block;
+        float: none;
+        width: $bar-height;
+        height: $bar-height;
+        background-color: transparent;
+        border: 0;
+      }
+
+      &:hover .caret {
+        color: $white;
+      }
+    }
+
+    .open > .btn-default.dropdown-toggle,
+    .open > .btn-default.dropdown-toggle {
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: inherit;
+      }
+    }
+  }
+
+  // Open dropdowns
+  .open > a {
+
+    &,
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+}

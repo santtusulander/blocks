@@ -1,0 +1,85 @@
+// Content Item List
+// =================
+
+.content-item-list {
+  height: $content-item-list-height;
+  margin-top: 20px;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .content-item-list-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  .content-item-list-section {
+    position: relative;
+    float: left;
+    height: $content-item-list-height;
+    padding: 30px;
+
+    > .content-item-list-link {
+      width: calc(100% + 60px);
+      height: calc(100% + 60px);
+      padding: 30px;
+      margin: -30px;
+    }
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+
+    &.section-lg {
+      width: 450px;
+    }
+
+    &.section-sm {
+      width: 250px;
+      padding-top: 48px;
+
+      .dark-theme & {
+        border-right: 1px solid rgba($black, 0.2);
+      }
+    }
+  }
+
+  .content-item-list-name {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1;
+    word-break: break-all;
+  }
+
+  .content-item-list-details {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  h1 {
+    margin: 22px 0 0;
+  }
+
+  .btn-toolbar {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+  }
+
+  .content-item-list-chart {
+    margin: 0 700px 0 450px;
+
+    svg {
+      display: block;
+    }
+  }
+}

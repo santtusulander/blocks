@@ -1,0 +1,56 @@
+// Sidebar
+// =======
+
+.sidebar-layout {
+  position: fixed;
+  top: $header-total-height;
+  bottom: 0;
+  left: 0;
+  width: $sidebar-width;
+  overflow: auto;
+
+  .dark-theme & {
+    background-color: $black;
+    background-image: linear-gradient(rgba($pale-blue, 0.7),
+      rgba($ericsson-dark-blue, 0.7));
+    background-size: 100%;
+
+    a {
+      color: $dt-text-color;
+    }
+  }
+
+  .sidebar-header {
+    min-height: $page-header-height + $bar-height - 5px;
+    padding: 50px 40px 20px;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    h3,
+    p {
+      margin-bottom: 2px;
+    }
+  }
+
+  .sidebar-content {
+    padding: 40px;
+  }
+
+  .sidebar-section-header {
+    display: block;
+    min-height: $btn-height;
+    padding-left: 40px;
+    font-weight: 500;
+    line-height: $btn-height;
+    text-decoration: none;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+  }
+
+  .sidebar-actions {
+    margin-top: 30px;
+  }
+}

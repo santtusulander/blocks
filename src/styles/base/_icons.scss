@@ -1,0 +1,38 @@
+// Icons
+// =====
+
+.icon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  line-height: 1;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  .dark-theme & {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
+  }
+
+  .btn-icon & {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    fill: inherit;
+    stroke: inherit;
+  }
+
+  &.no-fill {
+    fill: transparent;
+  }
+}
+
+.icon-chart {
+  width: 22px;
+  height: 20px;
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-chart.svg');
+  }
+}

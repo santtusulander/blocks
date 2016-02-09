@@ -1,0 +1,20 @@
+// Page Header Layout
+// ==================
+
+.page-header-layout {
+  min-height: $page-header-height;
+  padding: 35px 40px 0;
+  background-color: rgba($black, 0.2);
+
+  p {
+    margin: 0;
+  }
+
+  .btn-toolbar {
+    margin-top: 15px;
+  }
+
+  .form-control {
+    height: $btn-height;
+  }
+}

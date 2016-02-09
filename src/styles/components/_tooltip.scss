@@ -1,0 +1,15 @@
+.chart-tooltip {
+  position: absolute;
+  z-index: 3;
+  max-width: 300px;
+  padding: 10px;
+  color: $white;
+  background-color: rgba($black, 0.2);
+  opacity: 0.95;
+  transition: opacity 500ms;
+
+  &.hidden {
+    left: -1000px;
+    opacity: 0;
+  }
+}

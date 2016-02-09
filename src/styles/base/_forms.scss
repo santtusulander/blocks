@@ -1,0 +1,162 @@
+// Forms
+// =====
+
+label {
+  margin-bottom: 15px;
+  font-weight: normal;
+}
+
+.form-control {
+  height: $bar-height;
+  max-width: 900px;
+  padding: 25px 30px;
+  font-size: inherit;
+  color: inherit;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: none;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+
+    &:focus,
+    &:active {
+      box-shadow: inset 0 0 0 1px $pale-blue;
+    }
+
+    &::placeholder {
+      color: rgba($dt-text-color, 0.5);
+    }
+  }
+}
+
+.form-groups {
+  position: relative;
+
+  .input-connector {
+    $input-connector-width: 20px;
+
+    position: absolute;
+    top: $bar-height / 2;
+    bottom: ($bar-height / 2) + $form-group-padding;
+    left: ($grid-gutter-width / 4) - $input-connector-width;
+    width: $input-connector-width;
+    opacity: 0;
+    transition: opacity 250ms ease;
+
+    &.show {
+      opacity: 1;
+    }
+
+    .dark-theme & {
+      border: 1px solid rgba($black, 0.2);
+      border-right: 0;
+    }
+  }
+}
+
+.form-group {
+  padding-bottom: $form-group-padding;
+  margin-bottom: 0;
+
+  .header & {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+.form-horizontal {
+
+  .control-label {
+    padding-top: 26px;
+    text-align: inherit;
+  }
+
+  .form-groups .control-label {
+    position: absolute;
+    top: 50%;
+    padding-top: 0;
+    padding-bottom: $form-group-padding;
+    transform: translateY(-50%);
+  }
+}
+
+.checkbox {
+  margin: 0;
+
+  label {
+    padding-left: 0;
+  }
+
+  input {
+    display: none;
+
+    + span::before {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: -2px 20px 2px 0;
+      vertical-align: middle;
+      cursor: pointer;
+      border-radius: 2px;
+      content: '';
+
+      .dark-theme & {
+        background: rgba($black, 0.2);
+      }
+    }
+
+    .dark-theme &:checked + span::before {
+      background: $pale-blue url('../assets/icons/dt-icon-checkbox.svg')
+        center center no-repeat;
+      background-size: 17px 16px;
+    }
+  }
+}
+
+.radio {
+  margin: 0;
+
+  label {
+    padding-left: 0;
+  }
+
+  input {
+    display: none;
+
+    + span::before {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: -2px 20px 2px 0;
+      vertical-align: middle;
+      cursor: pointer;
+      border-radius: 50%;
+      content: '';
+
+      .dark-theme & {
+        background-color: rgba($black, 0.2);
+      }
+    }
+
+    .dark-theme &:checked + span {
+      position: relative;
+
+      &::before {
+        background-color: $pale-blue;
+      }
+
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        background-color: $dt-text-color;
+        border-radius: 50%;
+        content: '';
+      }
+    }
+  }
+}

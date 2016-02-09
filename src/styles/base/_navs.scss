@@ -1,0 +1,73 @@
+// Navs
+// ====
+
+.main-nav,
+.nav-tabs {
+  // scss-lint:disable SelectorDepth NestingDepth
+  // Need to override Bootstrap
+
+  > li {
+    height: $bar-height;
+    min-width: 250px;
+
+    > a,
+    .main-nav-link,
+    .dropdown {
+      display: block;
+      width: 100%;
+      height: $bar-height;
+      padding: 0;
+      line-height: $bar-height;
+      text-align: center;
+      text-transform: uppercase;
+      border: 0;
+
+      .dark-theme & {
+        color: $dt-text-color;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+        background-color: transparent;
+
+        .dark-theme & {
+          color: $white;
+        }
+      }
+    }
+
+    &.active {
+      > a,
+      .main-nav-link {
+
+        &,
+        &:hover,
+        &:focus {
+          color: $pale-blue;
+          text-decoration: none;
+          background-color: inherit;
+          border: 0;
+          border-bottom: 5px solid $pale-blue;
+        }
+      }
+    }
+  }
+}
+
+.nav-tabs {
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+    border-bottom: 5px solid rgba($black, 0.4);
+  }
+
+  > li {
+    height: calc(100% + 5px);
+    margin-bottom: -5px;
+
+    &:first-of-type {
+      margin-left: 20px;
+    }
+  }
+}

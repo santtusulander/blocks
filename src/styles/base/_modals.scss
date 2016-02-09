@@ -1,0 +1,53 @@
+// Modals
+// ======
+
+.modal-dialog {
+
+  .modal-content {
+    background: linear-gradient(rgba($pale-blue, 0.7),
+      rgba($ericsson-dark-blue, 0.7));
+    background-size: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // Configuration Sidebar
+  // =====================
+
+  &.configuration-sidebar {
+    float: right;
+    width: $configuration-sidebar-width;
+    margin: 0;
+
+    .fade & {
+      transform: translate(100%, 0);
+      transition: transform 0.3s ease-out;
+    }
+
+    .in & {
+      transform: translate(0, 0);
+    }
+
+    .modal-content {
+      min-height: 100vh;
+      background-color: $black;
+      background-image: linear-gradient(rgba($pale-blue, 0.7),
+        rgba($ericsson-dark-blue, 0.7));
+      background-size: 100%;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .modal-header {
+      height: 250px;
+      padding: 70px 80px 0;
+      background: rgba($pale-blue, 0.2);
+      border: 0;
+    }
+
+    .modal-body {
+      padding: 70px 80px;
+    }
+  }
+}

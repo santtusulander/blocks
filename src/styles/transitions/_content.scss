@@ -1,0 +1,17 @@
+// Content transitions
+// ===================
+
+.content-transition-leave {
+  position: absolute;
+  right: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.content-transition-enter-active {
+  opacity: 1;
+}
+
+.content-transition-leave-active {
+  opacity: 0;
+}

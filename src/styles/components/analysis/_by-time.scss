@@ -1,0 +1,36 @@
+.analysis-by-time {
+  position: relative;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  &.bg-transparent {
+    background-color: transparent;
+  }
+
+  .line {
+    stroke-width: 2px;
+
+    .dark-theme & {
+      stroke: $pale-blue;
+      fill: transparent;
+    }
+  }
+
+  .area {
+
+    .dark-theme & {
+      fill: url('#dt-svg-gradient');
+    }
+  }
+
+  .axis-tick {
+    stroke: $silver;
+  }
+
+  text {
+    font-size: 12px;
+    fill: $white;
+  }
+}

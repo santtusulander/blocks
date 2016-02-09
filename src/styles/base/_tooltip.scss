@@ -1,0 +1,64 @@
+// Tooltip
+// =======
+
+.tooltip {
+  z-index: 1020;
+  min-width: 280px;
+  font-size: inherit;
+
+  &.in {
+    opacity: 1;
+  }
+
+  .tooltip-inner {
+    max-width: 100%;
+    padding: 25px 30px;
+    color: inherit;
+    text-align: left;
+    border-radius: 0;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.8);
+    }
+  }
+
+  .tooltip-header {
+    padding: 0 30px 10px;
+    margin: 0 -30px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    .dark-theme & {
+      border-bottom: 1px solid rgba($pale-blue, 0.2);
+    }
+  }
+
+  &.top {
+    padding: 0 0 10px;
+
+    .tooltip-arrow {
+      margin-left: -10px;
+      border-width: 10px 10px 0;
+
+      .dark-theme & {
+        border-top-color: rgba($black, 0.8);
+      }
+    }
+  }
+}
+
+.content-item-chart-tooltip {
+
+  &.top {
+    padding: 0;
+    margin: 0;
+  }
+
+  .data-suffix {
+    font-size: 15px;
+  }
+
+  .tooltip-arrow {
+    display: none;
+  }
+}

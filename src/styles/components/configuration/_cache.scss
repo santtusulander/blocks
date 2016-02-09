@@ -1,0 +1,32 @@
+.configuration-cache {
+  padding: 0 20px;
+
+  h2 {
+    padding-top: 70px;
+    padding-bottom: 30px;
+    margin: 0;
+  }
+
+  h3 {
+    padding: 40px 0 20px;
+    margin: 0;
+  }
+
+  .toggle-label {
+    padding: 15px 0 35px 35px;
+  }
+
+  td:last-child {
+    text-align: right;
+
+    a {
+      margin-left: 20px;
+      text-transform: uppercase;
+    }
+  }
+
+  .add-rule {
+    display: inline-block;
+    margin-top: 45px;
+  }
+}

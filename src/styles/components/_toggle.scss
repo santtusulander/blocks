@@ -1,0 +1,46 @@
+.toggle {
+  position: relative;
+  display: inline-block;
+  padding: 15px 25px;
+  cursor: pointer;
+  background-color: rgba($black, 0.2);
+  border-radius: 30px;
+
+  .off-text,
+  .on-text {
+    display: inline-block;
+    opacity: 1;
+    transition: opacity 200ms;
+  }
+
+  .on-text {
+    margin-left: 10px;
+    opacity: 0;
+  }
+
+  .indicator {
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba($black, 0.2);
+    border-radius: 50%;
+    transition: background-color 200ms, right 200ms;
+  }
+
+  &.on {
+    .indicator {
+      right: calc(100% - 50px);
+      background-color: $green;
+    }
+
+    .off-text {
+      opacity: 0;
+    }
+
+    .on-text {
+      opacity: 1;
+    }
+  }
+}

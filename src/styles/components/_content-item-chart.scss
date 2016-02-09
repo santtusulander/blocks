@@ -1,0 +1,146 @@
+// Content Item Chart
+// ==================
+
+.content-item-grid {
+  text-align: center;
+
+  .grid-item {
+    display: inline-block;
+    margin: 15px;
+    vertical-align: middle;
+  }
+}
+
+.content-item-chart {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+
+  &:hover {
+
+    .glow {
+      opacity: 0.2;
+    }
+
+    .content-item-toolbar .invisible {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 250ms;
+    }
+  }
+
+  .content-item-chart-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    border-radius: 50%;
+  }
+
+  .circle-base {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+
+    .dark-theme & {
+      background-color: $black;
+    }
+  }
+
+  .circle-gradient {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 250ms;
+
+    .dark-theme & {
+      background: linear-gradient($pale-blue, rgba($white, 0.3));
+      background-position: center -10px;
+      background-size: calc(100% + 20px);
+      border: 10px solid $black;
+    }
+  }
+
+  .glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.1;
+    transition: opacity 250ms;
+
+    .dark-theme & {
+      background-color: $pale-blue;
+    }
+  }
+
+  .content-item-chart-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    &.difference-arc {
+      fill: $pale-blue;
+    }
+  }
+
+  .primary-data .content-item-chart-line {
+    stroke: $pale-blue;
+    stroke-width: 1.5;
+    fill: $pale-blue;
+  }
+
+  .secondary-data .content-item-chart-line {
+    stroke: transparent;
+    fill: rgba($pale-blue, 0.2);
+  }
+
+  .text-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+
+    .content-item-text-bold {
+      font-weight: bold;
+    }
+
+    .content-item-text-sm {
+      font-size: 16px;
+    }
+  }
+
+  .content-item-traffic {
+    position: absolute;
+    top: 13%;
+    width: 100%;
+    font-size: 24px;
+  }
+
+  .content-item-text-centered {
+    position: absolute;
+    top: 53%;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+
+  .content-item-chart-name {
+    margin-bottom: 10px;
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1em;
+  }
+
+  .content-item-toolbar {
+    position: absolute;
+    left: 50%;
+    margin-bottom: 10%;
+    transform: translateX(-50%);
+  }
+}

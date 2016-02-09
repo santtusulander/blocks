@@ -1,0 +1,51 @@
+.analysis-by-location {
+
+  .chart {
+    position: relative;
+  }
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .country {
+    opacity: 1;
+    transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;
+    fill: rgba($pale-blue, 0.2);
+    stroke-width: 1;
+    stroke: rgba($pale-blue, 0.4);
+  }
+
+
+
+  .hiddenpath {
+    opacity: 0;
+  }
+
+  .above-avg {
+    fill: rgba($purple, 0.8);
+  }
+
+  .below-avg {
+    fill: rgba($green, 0.8);
+  }
+
+  .avg {
+    fill: rgba($pale-blue, 0.8);
+  }
+
+  .zoom-out {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    border-radius: 3px;
+
+    a {
+      padding: 5px 10px;
+      color: $grey;
+      text-decoration: none;
+      background-color: $silver;
+    }
+  }
+}

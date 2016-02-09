@@ -1,0 +1,15 @@
+{
+  "extends": "../.eslintrc",
+  "ecmaFeatures": {
+    "jsx": false
+  },
+  "env": {
+    "browser": false,
+    "jest": false
+  },
+  "rules": {
+    "no-console": 0,
+    "indent": [2, 2, {"SwitchCase": 1}],
+    "no-path-concat": 2
+  }
+}

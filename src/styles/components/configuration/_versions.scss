@@ -1,0 +1,81 @@
+// Versions Sidebar
+// ================
+
+.configuration-versions {
+
+  .version-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    min-height: $bar-height;
+
+    + li {
+      border-top: 1px solid rgba($pale-blue, 0.2);
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .version-title {
+      position: absolute;
+      top: 50%;
+      font-weight: bold;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.empty-msg {
+  padding: 25px 40px;
+}
+
+.version-link {
+  position: relative;
+  display: block;
+  height: 100%;
+  min-height: $bar-height;
+  padding: 11px 10px 11px 80px;
+  text-decoration: none;
+
+  &.active {
+
+    .dark-theme & {
+      background-color: $pale-blue;
+    }
+  }
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    border-radius: 50%;
+    content: '';
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+  }
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    margin: -5px 0 0 13px;
+    vertical-align: middle;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px dashed;
+    content: '';
+
+    .dark-theme & {
+      border-left-color: $dt-text-color;
+    }
+  }
+}

@@ -1,0 +1,131 @@
+// Dropdowns
+// =========
+
+.caret {
+  border-width: 5px;
+}
+
+// scss-lint:disable SelectorDepth NestingDepth
+// Need to override bootstrap styles
+.dropdown-menu {
+  width: 100%;
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  text-transform: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  .navbar-right &:not(.dropdown-menu-right) {
+    right: auto;
+    left: 0;
+  }
+
+  .open & {
+    animation: showDropdown 250ms ease-out;
+  }
+
+  .dropup.open & {
+    animation: showDropup 250ms ease-out;
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
+      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-size: 100%;
+
+    .active > a {
+
+      &,
+      &:hover,
+      &:focus {
+        color: $pale-blue;
+        background-color: rgba($pale-blue, 0.1);
+      }
+    }
+  }
+
+  &.dropdown-user-menu {
+    width: 600px;
+    min-height: calc(100vh - #{$header-total-height});
+    font-size: 30px;
+  }
+
+  > li {
+    display: table;
+    width: 100%;
+    min-height: 80px;
+
+    > a,
+    > .dropdown-main-header {
+      display: table-cell;
+      padding: 15px 30px;
+      line-height: 1.1em;
+      color: inherit;
+      white-space: normal;
+      vertical-align: middle;
+
+      .dark-theme & {
+
+        &:hover,
+        &:focus {
+          color: $white;
+          background-color: transparent;
+        }
+      }
+    }
+
+    &.dropdown-header {
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+
+      .dark-theme & {
+        background: rgba($black, 0.2);
+      }
+    }
+
+    &.active::after {
+
+      .dark-theme & {
+        background-color: rgba($pale-blue, 0.1);
+      }
+    }
+  }
+}
+
+.dropup,
+.navbar-fixed-bottom .dropdown {
+
+  .dropdown-menu {
+    margin-bottom: 0;
+  }
+}
+
+@keyframes showDropdown {
+  0% {
+    margin-top: -10px;
+    opacity: 0;
+  }
+
+  100% {
+    margin-top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes showDropup {
+  0% {
+    margin-bottom: -10px;
+    opacity: 0;
+  }
+
+  100% {
+    margin-bottom: 0;
+    opacity: 1;
+  }
+}

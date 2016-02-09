@@ -1,0 +1,48 @@
+// Breadcrumbs
+// ===========
+
+.breadcrumb {
+  padding: 0;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  background-color: transparent;
+
+  .container-fluid > & {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+  }
+
+  > li {
+    display: inline-block;
+
+    &::after {
+      padding: 0 10px;
+      content: '\203A';
+    }
+
+    + li::before,
+    + li:last-child::after {
+      display: none;
+    }
+  }
+
+  a {
+    text-decoration: none;
+
+    .dark-theme & {
+      color: $dt-text-color;
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+
+  > .active {
+
+    .dark-theme & {
+      color: rgba($white, 0.5);
+    }
+  }
+}

@@ -1,0 +1,10 @@
+// Page Container Layout
+// =====================
+
+.page-container-layout {
+  position: relative;
+
+  &.has-sidebar {
+    padding-left: $sidebar-width;
+  }
+}
