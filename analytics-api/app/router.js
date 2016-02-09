@@ -9,6 +9,7 @@ let routeVisitorsCountry = require('./routes/visitors/country');
 let routeVisitorsOS      = require('./routes/visitors/os');
 let routeVisitorsBrowser = require('./routes/visitors/browser');
 let routeMetrics         = require('./routes/metrics');
+let routeVersion         = require('./routes/version');
 
 
 // API routes
@@ -19,6 +20,7 @@ router.get('/visitors/country', routeVisitorsCountry);
 router.get('/visitors/os',      routeVisitorsOS);
 router.get('/visitors/browser', routeVisitorsBrowser);
 router.get('/metrics',          routeMetrics);
+router.get('/version',          routeVersion);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests
