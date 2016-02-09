@@ -91,18 +91,15 @@ class AnalysisByTime extends React.Component {
           <path d={trafficLine(this.props.data)} className="line"/>
           <path d={trafficArea(this.props.data)} className="area"/>
           {this.props.axes ?
-            xScale.ticks(4).reduce((axes, tick, i) => {
-              if(axes.length < xScale.ticks(4).length-1) {
-                axes.push(
-                  <g key={i}>
-                    <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                      {moment(tick).format('MMM D')}
-                    </text>
-                  </g>
-                );
-              }
-              return axes;
-            }, [])
+            xScale.ticks(this.props.data.length).map((tick, i) => {
+              return (
+                <g key={i}>
+                  <text x={xScale(tick)} y={this.props.height - this.props.padding}>
+                    {moment(tick).format('D')}
+                  </text>
+                </g>
+              )
+            })
             : null
           }
           {this.props.axes ?
