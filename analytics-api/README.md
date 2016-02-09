@@ -6,9 +6,10 @@ This is a Node Express API that returns analytics data from a remote MySQL datab
 
 | #  | Command       | Description                       |
 |----|---------------|-----------------------------------|
-| 1. | `node -v`     | Ensure node >= 5.5.0 is installed |
-| 2. | `npm install` | Install dependencies              |
-| 3. | `npm start`   | Start API server                  |
+| 1. | `node -v`     | Ensure node 4.2.1 is installed    |
+| 2. | `npm -v`      | Ensure npm 2.14.7 is installed    |
+| 3. | `npm install` | Install dependencies              |
+| 4. | `npm start`   | Start API server                  |
 
 API is served on [http://localhost:3030](http://localhost:3030).
 
