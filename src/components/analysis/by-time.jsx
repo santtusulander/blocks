@@ -5,7 +5,7 @@ import numeral from 'numeral'
 
 import Tooltip from '../tooltip'
 
-const closestDate = d3.bisector(d => d.epoch_start).left
+const closestDate = d3.bisector(d => new Date(d.timestamp)).left
 
 class AnalysisByTime extends React.Component {
   constructor(props) {
@@ -24,14 +24,17 @@ class AnalysisByTime extends React.Component {
     return e => {
       const bounds = this.refs.chart.getBoundingClientRect()
       const xDate = xScale.invert(e.pageX - bounds.left)
-      const i = closestDate(data, xDate, 1)
+      const i = closestDate(data, (new Date(xDate)), 1)
       const d0 = data[i - 1]
       const d1 = data[i]
-      const d = xDate - d0.epoch_start > d1.epoch_start - xDate ? d1 : d0
+      let d = d0;
+      if(d1) {
+        d = xDate - (new Date(d0.timestamp).getTime()) > (new Date(d1.timestamp).getTime()) - xDate ? d1 : d0
+      }
       this.setState({
-        tooltipText: `${moment(d.epoch_start, 'X').format('MMM D')} ${numeral(d.bytes).format('0,0')}`,
-        tooltipX: xScale(d.epoch_start),
-        tooltipY: yScale(d.bytes)
+        tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
+        tooltipX: xScale(new Date(d.timestamp)),
+        tooltipY: yScale(d[this.props.dataKey])
       })
     }
   }
@@ -45,8 +48,8 @@ class AnalysisByTime extends React.Component {
       return <div>Loading...</div>
     }
 
-    const yExtent = d3.extent(this.props.data, d => d.bytes)
-    const xExtent = d3.extent(this.props.data, d => d.epoch_start)
+    const yExtent = d3.extent(this.props.data, d => d[this.props.dataKey])
+    const xExtent = d3.extent(this.props.data, d => new Date(d.timestamp))
 
     const yScale = d3.scale.linear()
       .domain([0, yExtent[1]])
@@ -63,9 +66,15 @@ class AnalysisByTime extends React.Component {
       ]);
 
     const trafficLine = d3.svg.line()
-      .y(d => yScale(d.bytes))
-      .x(d => xScale(d.epoch_start))
-      .interpolate('cardinal-closed');
+      .y(d => yScale(d[this.props.dataKey]))
+      .x(d => xScale(new Date(d.timestamp)))
+      .interpolate('cardinal');
+
+    const trafficArea = d3.svg.area()
+      .y(d => yScale(d[this.props.dataKey]))
+      .y0(yScale(0))
+      .x(d => xScale(new Date(d.timestamp)))
+      .interpolate('cardinal');
 
     let className = 'analysis-by-time'
     if(this.props.className) {
@@ -79,14 +88,15 @@ class AnalysisByTime extends React.Component {
           ref='chart'
           onMouseMove={this.moveMouse(xScale, yScale, this.props.data)}
           onMouseOut={this.deactivateTooltip}>
-          <path d={trafficLine(this.props.data)}/>
+          <path d={trafficLine(this.props.data)} className="line"/>
+          <path d={trafficArea(this.props.data)} className="area"/>
           {this.props.axes ?
             xScale.ticks(4).reduce((axes, tick, i) => {
               if(axes.length < xScale.ticks(4).length-1) {
                 axes.push(
                   <g key={i}>
                     <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                      {moment(tick, 'X').format('MMM D')}
+                      {moment(tick).format('MMM D')}
                     </text>
                   </g>
                 );
@@ -131,6 +141,7 @@ AnalysisByTime.propTypes = {
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
   data: React.PropTypes.array,
+  dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   width: React.PropTypes.number

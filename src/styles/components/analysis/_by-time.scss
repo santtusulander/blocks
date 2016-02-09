@@ -9,12 +9,19 @@
     background-color: transparent;
   }
 
-  path {
+  .line {
     stroke-width: 2px;
 
     .dark-theme & {
-      fill: url('#dt-svg-gradient');
       stroke: $pale-blue;
+      fill: transparent;
+    }
+  }
+
+  .area {
+
+    .dark-theme & {
+      fill: url('#dt-svg-gradient');
     }
   }
 
