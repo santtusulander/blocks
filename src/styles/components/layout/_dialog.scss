@@ -7,10 +7,23 @@
   bottom: 0;
   left: 0;
   z-index: 1080;
-  height: 130px;
+  height: $configuration-dialog-height;
+
+  @include md {
+    height: $md-configuration-dialog-height;
+  }
 
   .has-sidebar & {
     left: $sidebar-width;
+
+    @include md {
+      left: $md-sidebar-width;
+    }
+
+    @include sm {
+      left: $sm-sidebar-width;
+      min-width: 1024px - $sm-sidebar-width;
+    }
   }
 
   .dark-theme & {
@@ -28,7 +41,11 @@
 }
 
 .configuration-dialog-body {
-  padding: 30px 40px 0;
+  padding: ($btn-height / 2) ($bar-height / 2) 0;
+
+  @include md {
+    padding: ($md-btn-height / 2) ($md-bar-height / 2) 0;
+  }
 
   .configuration-dialog-title {
     margin-bottom: 0;

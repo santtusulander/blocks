@@ -6,8 +6,12 @@
 
   .grid-item {
     display: inline-block;
-    margin: 15px;
+    margin: 2%;
     vertical-align: middle;
+
+    @include md {
+      margin: -40px;
+    }
   }
 }
 
@@ -15,6 +19,10 @@
   position: relative;
   cursor: pointer;
   border-radius: 50%;
+
+  @include md {
+    transform: scale(0.75);
+  }
 
   &:hover {
 

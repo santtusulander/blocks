@@ -13,13 +13,22 @@
 }
 
 .datepicker {
-  width: 400px;
+  width: $sidebar-width - $bar-height;
   padding: 15px 25px 25px;
   font-family: inherit;
   font-size: inherit;
   color: inherit;
   border: 0;
   border-radius: 0;
+
+  @include md {
+    width: $md-sidebar-width - $md-bar-height;
+  }
+
+  @include sm {
+    width: $sm-sidebar-width - ($md-bar-height / 3 * 2);
+    padding: 10px 15px;
+  }
 
   .dark-theme & {
     background-color: $black;
@@ -50,6 +59,10 @@
   color: inherit;
   text-transform: uppercase;
 
+  @include md {
+    padding-bottom: 10px;
+  }
+
   .dark-theme & {
     border-bottom: 1px solid rgba($white, 0.1);
   }
@@ -61,6 +74,10 @@
   width: 40px;
   height: 40px;
   border: 0;
+
+  @include md {
+    top: -10px;
+  }
 
   &::after {
     position: absolute;
@@ -105,8 +122,16 @@
   width: calc(100% / 7);
   padding: 0;
   margin: 5px 0;
-  line-height: 40px;
+  line-height: $bar-height / 2;
   color: inherit;
+
+  @include md {
+    line-height: $md-bar-height / 2;
+  }
+
+  @include md {
+    margin: 2px 0;
+  }
 
   &:hover {
     background-color: inherit;
@@ -141,11 +166,17 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
+    width: $bar-height / 2;
+    height: $bar-height / 2;
+    margin: (-$bar-height / 4) 0 0 (-$bar-height / 4);
     border-radius: 50%;
     content: ' ';
+
+    @include md {
+      width: $md-bar-height / 2;
+      height: $md-bar-height / 2;
+      margin: (-$md-bar-height / 4) 0 0 (-$md-bar-height / 4);
+    }
 
     .dark-theme & {
       border: 1px solid $white;
@@ -170,11 +201,17 @@
 
   &::before {
     display: block;
-    width: 40px;
-    height: 40px;
-    margin: 0 auto -40px;
+    width: $bar-height / 2;
+    height: $bar-height / 2;
+    margin: 0 auto (-$bar-height / 2);
     border-radius: 50%;
     content: ' ';
+
+    @include md {
+      width: $md-bar-height / 2;
+      height: $md-bar-height / 2;
+      margin: 0 auto (-$md-bar-height / 2);
+    }
 
     .dark-theme & {
       background-color: $pale-blue;
@@ -208,6 +245,10 @@
     margin-top: -5px;
     border-radius: 50%;
     content: ' ';
+
+    @include sm {
+      right: 10px;
+    }
 
     .dark-theme & {
       background-color: $purple;
@@ -270,6 +311,10 @@
       border-radius: 0;
       box-shadow: none;
       transition: background-color 250ms;
+
+      @include md {
+        height: $md-btn-height;
+      }
     }
 
     .dark-theme & {
@@ -277,6 +322,10 @@
       background: url('../assets/icons/dt-icon-calendar.svg')
         rgba($pale-blue, 0.1) right center no-repeat;
       background-size: 60px 60px;
+
+      @include md {
+        background-image: none;
+      }
     }
   }
 }

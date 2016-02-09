@@ -2,8 +2,13 @@
 // ========
 
 .property-header {
-  min-height: 160px;
+  min-height: $page-header-height;
   padding: 15px 0 30px 170px;
+
+  @include md {
+    min-height: $md-page-header-height;
+    padding: 20px 0 30px 140px;
+  }
 
   p {
     margin-bottom: -5px;
@@ -21,6 +26,10 @@
     background: url('../assets/img/content-chart.svg') 0 0 no-repeat;
     background-size: 120px;
     border-bottom: 2px solid rgba($white, 0.2);
+
+    @include md {
+      background-size: 100px;
+    }
   }
 }
 
@@ -51,17 +60,45 @@
 
 .property-analytics-summary,
 .property-configuration-summary {
-  padding-top: 50px;
+  padding-top: $btn-sm-height;
+
+  @include md {
+    padding-top: ($btn-sm-height / 2);
+  }
 }
 
 .property-analytics-summary {
-  padding-right: 80px;
+  padding-right: $bar-height;
+
+  @include md {
+    padding-right: $md-bar-height;
+  }
+
+  @include sm {
+    padding-right: ($md-bar-height / 2);
+  }
 
   h1 {
-    margin: 80px 0 0;
+    margin: $bar-height 0 0;
+
+    @include md {
+      margin-top: $md-bar-height;
+    }
+
+    @include sm {
+      margin-top: ($md-bar-height / 2);
+    }
   }
 }
 
 .property-configuration-summary {
   padding-left: 80px;
+
+  @include md {
+    padding-left: $md-bar-height;
+  }
+
+  @include sm {
+    padding-left: ($md-bar-height / 2);
+  }
 }

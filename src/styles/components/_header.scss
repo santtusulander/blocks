@@ -2,18 +2,55 @@
 // ======
 
 .header {
-  height: $header-height + 10px;
-  background-color: rgba($black, 0.5);
+  height: $header-total-height;
+  min-width: 1024px;
   border: 0;
 
+  @include md {
+    height: $md-header-total-height;
+  }
+
+  .dark-theme & {
+    background-color: $black;
+    background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)),
+     linear-gradient(rgba($pale-blue, 0.25), rgba($pale-blue, 0.25));
+    background-size: 100%;
+  }
+
   .form-control {
-    width: 500px;
     height: $header-btn-height;
     padding-left: 50px;
     margin-top: ($bar-height - $header-btn-height) / 2;
     margin-right: 10px;
     margin-left: 10px;
     border-radius: $header-btn-height / 2;
+
+    @include lg {
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+
+    @include md {
+      height: $md-header-btn-height;
+      margin-top: ($md-bar-height - $md-header-btn-height) / 2;
+      border-radius: $md-header-btn-height / 2;
+    }
+
+    &.header-search-input {
+      width: 400px;
+
+      @include lg {
+        width: 300px;
+      }
+
+      @include md {
+        width: 200px;
+      }
+
+      @include sm {
+        width: 150px;
+      }
+    }
 
     .dark-theme & {
       background-image: url('../assets/icons/dt-icon-search.svg');
@@ -39,6 +76,11 @@
     height: $bar-height;
     text-indent: -9999em;
 
+    @include md {
+      width: $md-bar-height;
+      height: $md-bar-height;
+    }
+
     &,
     &:hover,
     &:focus {
@@ -50,7 +92,20 @@
   .navbar-nav > .main-nav-item {
 
     .dropdown .main-nav-link {
-      padding: 0 80px;
+      padding: 0 $bar-height;
+
+      @include lg {
+        padding-left: $md-bar-height / 2;
+      }
+
+      @include md {
+        padding: 0 $md-bar-height;
+        padding-left: $md-bar-height / 2;
+      }
+
+      @include sm {
+        padding-left: $md-bar-height / 3;
+      }
     }
 
     .dropdown-toggle {
@@ -66,6 +121,11 @@
         height: $bar-height;
         background-color: transparent;
         border: 0;
+
+        @include md {
+          width: $md-bar-height;
+          height: $md-bar-height;
+        }
       }
 
       &:hover .caret {

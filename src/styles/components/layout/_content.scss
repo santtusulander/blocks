@@ -5,6 +5,14 @@
 
   > .container-fluid {
     position: relative;
-    padding: 60px 80px;
+    padding: $btn-height $bar-height;
+
+    @include md {
+      padding: $md-btn-height $md-bar-height;
+    }
+
+    @include sm {
+      padding: $md-btn-height ($md-bar-height / 2);
+    }
   }
 }
