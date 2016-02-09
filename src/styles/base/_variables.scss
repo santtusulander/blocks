@@ -2,39 +2,106 @@
 // =========
 
 
+// Breakpoints
+// ===========
+
+$screen-md-min: 1200px;
+$screen-lg-min: 1600px;
+$screen-xl-min: 2000px;
+
+@mixin sm {
+  @media (max-width: #{$screen-md-min - 1}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (max-width: #{$screen-lg-min - 1}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (max-width: #{$screen-xl-min - 1}) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+
 // Base
 // ====
 
 $font-size: 20px;
+$md-font-size: 16px;
+$sm-font-size: 15px;
+
 $font-size-sm: 16px;
+$md-font-size-sm: 13px;
+$sm-font-size-sm: 12px;
 
 $bar-height: 80px;
+$md-bar-height: 60px;
+$sm-bar-height: 50px;
 
 $btn-height: 60px;
+$md-btn-height: 40px;
+
+$btn-min-width: 180px;
+$md-btn-min-width: 120px;
+$sm-btn-min-width: 100px;
+
 $btn-sm-height: 50px;
+$md-btn-sm-height: 40px;
+
 $header-btn-height: 50px;
+$md-header-btn-height: 40px;
 
 $form-group-padding: 25px;
+$md-form-group-padding: 15px;
 
 
 // Layout
 // ======
 
 $sidebar-width: 480px;
+$md-sidebar-width: 360px;
+$sm-sidebar-width: 300px;
+
 $page-header-height: 160px;
+$md-page-header-height: 120px;
 
 
 // Containers
 // ==========
 
 $content-item-list-height: 200px;
+$md-content-item-list-height: 140px;
 
 
 // Components
 // ==========
 
 $header-height: 80px;
+$md-header-height: 60px;
+
 $header-gradient-height: 10px;
+
 $header-total-height: $header-height + $header-gradient-height;
+$md-header-total-height: $md-header-height + $header-gradient-height;
 
 $configuration-sidebar-width: 1060px;
+$md-configuration-sidebar-width: 800px;
+$sm-configuration-sidebar-width: 640px;
+
+$modal-header-height: 250px;
+$md-modal-header-height: 200px;
+$sm-modal-header-height: 150px;
+
+$configuration-dialog-height: 130px;
+$md-configuration-dialog-height: 90px;
