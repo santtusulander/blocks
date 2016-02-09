@@ -9,6 +9,10 @@
   background-position: center center;
   background-repeat: no-repeat;
 
+  @include md {
+    transform: scale(0.75, 0.75);
+  }
+
   .dark-theme & {
     fill: $dt-text-color;
     stroke: $dt-text-color;
@@ -21,6 +25,10 @@
     transform: translate(-50%, -50%);
     fill: inherit;
     stroke: inherit;
+
+    @include md {
+      transform: translate(-50%, -50%) scale(0.75, 0.75);
+    }
   }
 
   &.no-fill {

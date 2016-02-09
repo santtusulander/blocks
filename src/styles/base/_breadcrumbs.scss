@@ -11,6 +11,11 @@
     position: absolute;
     top: 20px;
     left: 40px;
+
+    @include md {
+      top: 15px;
+      left: ($md-bar-height / 2);
+    }
   }
 
   > li {

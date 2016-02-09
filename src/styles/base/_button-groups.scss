@@ -6,6 +6,10 @@
   padding-right: 0;
   padding-left: 0;
 
+  @include md {
+    width: $md-btn-height;
+  }
+
   .btn + .btn,
   .btn + .btn-group,
   .btn-group + .btn,
@@ -42,6 +46,10 @@
     + .input-group,
     + .form-group {
       margin-left: 20px;
+
+      @include md {
+        margin-left: 15px;
+      }
     }
   }
 }

@@ -53,21 +53,35 @@
     width: 600px;
     min-height: calc(100vh - #{$header-total-height});
     font-size: 30px;
+
+    @include md {
+      width: 400px;
+      min-height: calc(100vh - #{$md-header-total-height});
+      font-size: 20px;
+    }
   }
 
   > li {
     display: table;
     width: 100%;
-    min-height: 80px;
+    min-height: $bar-height;
+
+    @include md {
+      min-height: $md-bar-height;
+    }
 
     > a,
     > .dropdown-main-header {
       display: table-cell;
-      padding: 15px 30px;
+      padding: 15px ($btn-height / 2);
       line-height: 1.1em;
       color: inherit;
       white-space: normal;
       vertical-align: middle;
+
+      @include md {
+        padding: 15px ($md-btn-height / 2);
+      }
 
       .dark-theme & {
 

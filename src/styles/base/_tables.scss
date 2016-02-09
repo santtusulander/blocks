@@ -21,18 +21,29 @@
 
       > th,
       > td {
-        padding: 0 30px;
+        padding: 0 ($btn-height / 2);
+        vertical-align: middle;
         border: 0;
+
+        @include md {
+          padding: 0 ($md-btn-height / 2);
+        }
       }
 
       > td {
         height: $bar-height;
-        line-height: $bar-height;
+
+        @include md {
+          height: $md-bar-height;
+        }
       }
 
       > th {
         height: $btn-height;
-        line-height: $btn-height;
+
+        @include md {
+          height: $md-btn-height;
+        }
       }
     }
   }
