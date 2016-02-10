@@ -20,6 +20,15 @@
     width: $configuration-sidebar-width;
     margin: 0;
 
+    @include md {
+      width: $md-configuration-sidebar-width;
+    }
+
+    @include sm {
+      width: 90%;
+      max-width: $sm-configuration-sidebar-width;
+    }
+
     .fade & {
       transform: translate(100%, 0);
       transition: transform 0.3s ease-out;
@@ -40,14 +49,32 @@
     }
 
     .modal-header {
-      height: 250px;
-      padding: 70px 80px 0;
+      height: $modal-header-height;
+      padding: 70px $bar-height 0;
       background: rgba($pale-blue, 0.2);
       border: 0;
+
+      @include md {
+        height: $md-modal-header-height;
+        padding: 60px $md-bar-height 0;
+      }
+
+      @include sm {
+        height: $sm-modal-header-height;
+        padding: 40px $md-bar-height 0;
+      }
     }
 
     .modal-body {
-      padding: 70px 80px;
+      padding: 70px $bar-height;
+
+      @include md {
+        padding: 60px $md-bar-height;
+      }
+
+      @include sm {
+        padding: 40px $md-bar-height;
+      }
     }
   }
 }

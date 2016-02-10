@@ -3,8 +3,13 @@
 
 .page-header-layout {
   min-height: $page-header-height;
-  padding: 35px 40px 0;
+  padding: 35px 40px 10px;
   background-color: rgba($black, 0.2);
+
+  @include md {
+    min-height: $md-page-header-height;
+    padding: 25px 30px 10px;
+  }
 
   p {
     margin: 0;
@@ -16,5 +21,9 @@
 
   .form-control {
     height: $btn-height;
+
+    @include md {
+      height: $md-btn-height;
+    }
   }
 }

@@ -4,13 +4,24 @@
 
 .btn {
   height: $btn-height;
-  min-width: 180px;
-  padding: 0 30px;
+  min-width: $btn-min-width;
+  padding: 0 ($btn-height / 2);
   font-size: inherit;
   font-weight: normal;
   line-height: $btn-height;
   border: 0;
   border-radius: 2px;
+
+  @include md {
+    height: $md-btn-height;
+    min-width: $md-btn-min-width;
+    padding: 0 ($md-btn-height / 2);
+    line-height: $md-btn-height;
+  }
+
+  @include sm {
+    min-width: $sm-btn-min-width;
+  }
 
   &.dropdown-toggle,
   &.btn-icon,
@@ -38,17 +49,35 @@
     line-height: $btn-height;
     vertical-align: middle;
 
+    @include md {
+      width: $md-btn-height;
+      line-height: $md-btn-height;
+    }
+
     &.btn-header {
       width: $header-btn-height;
+
+      @include md {
+        width: $md-header-btn-height;
+      }
     }
   }
 
   &.btn-sm {
     height: $btn-sm-height;
 
+    @include md {
+      height: $md-btn-sm-height;
+    }
+
     &.btn-icon {
       width: $btn-sm-height;
       line-height: $btn-sm-height;
+
+      @include md {
+        width: $md-btn-sm-height;
+        line-height: $md-btn-sm-height;
+      }
     }
   }
 
@@ -63,15 +92,33 @@
     margin-bottom: ($bar-height - $header-btn-height) / 2;
     margin-left: 10px;
     line-height: $header-btn-height;
+
+    @include lg {
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+
+    @include md {
+      height: $md-btn-height;
+      margin-top: ($md-bar-height - $md-header-btn-height) / 2;
+      margin-bottom: ($md-bar-height - $md-header-btn-height) / 2;
+      line-height: $md-header-btn-height;
+    }
   }
 
   &.btn-user-menu,
   .btn-group > &.btn.btn-user-menu:first-child {
     margin-top: ($bar-height - $btn-height) / 2;
-    margin-right: 40px;
+    margin-right: ($bar-height / 2);
     margin-bottom: ($bar-height - $btn-height) / 2;
     margin-left: 10px;
     overflow: hidden;
+
+    @include md {
+      margin-top: ($md-bar-height - $md-btn-height) / 2;
+      margin-right: ($md-bar-height / 3);
+      margin-bottom: ($md-bar-height - $md-btn-height) / 2;
+    }
 
     img {
       display: block;
@@ -181,6 +228,10 @@
 
     &.input-select .dropdown-toggle {
       height: $bar-height;
+
+      @include md {
+        height: $md-bar-height;
+      }
     }
   }
 

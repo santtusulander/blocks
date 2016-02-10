@@ -79,10 +79,10 @@ class ConfigurationCache extends React.Component {
 
         { /* Honor Origin Cache Control */}
         <Row>
-          <Col xs={4} className="toggle-label">
+          <Col lg={4} xs={6} className="toggle-label">
             Honor Origin Cache Control
           </Col>
-          <Col xs={8}>
+          <Col lg={8} xs={6}>
             <Toggle
               value={config.getIn(policyPaths.honor_origin_cache_policies)}
               changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
@@ -91,10 +91,10 @@ class ConfigurationCache extends React.Component {
 
         { /* Ignore case from origin */}
         <Row>
-          <Col xs={4} className="toggle-label">
+          <Col lg={4} xs={6} className="toggle-label">
             Ignore case from origin
           </Col>
-          <Col xs={8}>
+          <Col lg={8} xs={6}>
             <Toggle value={config.getIn(policyPaths.ignore_case)}
               changeValue={this.handleChange(policyPaths.ignore_case)}/>
           </Col>
@@ -102,10 +102,10 @@ class ConfigurationCache extends React.Component {
 
         { /* Enable e-Tag support */}
         <Row>
-          <Col xs={4} className="toggle-label">
+          <Col lg={4} xs={6} className="toggle-label">
             Enable e-Tag support
           </Col>
-          <Col xs={8}>
+          <Col lg={8} xs={6}>
             <Toggle value={config.getIn(policyPaths.honor_etags)}
               changeValue={this.handleChange(policyPaths.honor_etags)}/>
           </Col>

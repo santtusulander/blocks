@@ -6,8 +6,18 @@
   top: $header-total-height;
   bottom: 0;
   left: 0;
+  z-index: 1000;
   width: $sidebar-width;
   overflow: auto;
+
+  @include md {
+    top: $md-header-total-height;
+    width: $md-sidebar-width;
+  }
+
+  @include sm {
+    width: $sm-sidebar-width;
+  }
 
   .dark-theme & {
     background-color: $black;
@@ -22,10 +32,19 @@
 
   .sidebar-header {
     min-height: $page-header-height + $bar-height - 5px;
-    padding: 50px 40px 20px;
+    padding: $btn-sm-height ($bar-height / 2) ($bar-height / 4);
     word-break: break-word;
     word-wrap: break-word;
     overflow-wrap: break-word;
+
+    @include md {
+      min-height: $md-page-header-height + $md-bar-height - 5px;
+      padding: $md-btn-sm-height ($md-bar-height / 2) ($md-bar-height / 4);
+    }
+
+    @include sm {
+      padding: $md-btn-sm-height ($md-bar-height / 3) ($md-bar-height / 4);
+    }
 
     h3,
     p {
@@ -34,16 +53,30 @@
   }
 
   .sidebar-content {
-    padding: 40px;
+    padding: $bar-height / 2;
+
+    @include md {
+      padding: $md-bar-height / 2;
+    }
+
+    @include sm {
+      padding: $md-bar-height / 3;
+    }
   }
 
   .sidebar-section-header {
     display: block;
     min-height: $btn-height;
-    padding-left: 40px;
+    padding-left: $bar-height / 2;
     font-weight: 500;
     line-height: $btn-height;
     text-decoration: none;
+
+    @include md {
+      min-height: $md-btn-height;
+      padding-left: $md-bar-height / 2;
+      line-height: $md-btn-height;
+    }
 
     .dark-theme & {
       background-color: rgba($black, 0.2);

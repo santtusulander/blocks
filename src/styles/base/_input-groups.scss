@@ -13,6 +13,11 @@
   color: inherit;
   background-color: transparent;
   border: 0;
+
+  @include md {
+    height: $md-bar-height;
+    min-width: $md-bar-height;
+  }
 }
 
 .input-addon-before .input-group-addon:first-child {
@@ -41,6 +46,11 @@
   height: $bar-height;
   min-width: $bar-height;
   cursor: pointer;
+
+  @include md {
+    height: $md-bar-height;
+    min-width: $md-bar-height;
+  }
 
   .dark-theme & {
     color: $dt-text-color;

@@ -1,10 +1,19 @@
 .toggle {
   position: relative;
   display: inline-block;
-  padding: 15px 25px;
+  height: $btn-height;
+  padding: 0 ($btn-sm-height / 2);
+  line-height: $btn-height;
   cursor: pointer;
   background-color: rgba($black, 0.2);
-  border-radius: 30px;
+  border-radius: $btn-height / 2;
+
+  @include md {
+    height: $md-btn-height;
+    padding: 0 ($md-btn-sm-height / 2);
+    line-height: $md-btn-height;
+    border-radius: $md-btn-height / 2;
+  }
 
   .off-text,
   .on-text {
@@ -20,19 +29,30 @@
 
   .indicator {
     position: absolute;
-    top: 9px;
+    top: 50%;
     right: 10px;
-    width: 40px;
-    height: 40px;
+    width: ($bar-height / 2);
+    height: ($bar-height / 2);
     background-color: rgba($black, 0.2);
     border-radius: 50%;
+    transform: translateY(-50%);
     transition: background-color 200ms, right 200ms;
+
+    @include md {
+      right: 5px;
+      width: ($md-bar-height / 2);
+      height: ($md-bar-height / 2);
+    }
   }
 
   &.on {
     .indicator {
       right: calc(100% - 50px);
       background-color: $green;
+
+      @include md {
+        right: calc(100% - 35px);
+      }
     }
 
     .off-text {

@@ -3,12 +3,21 @@
 
 html,
 body {
+  min-width: 1024px;
   min-height: 100%;
 }
 
 body {
   font-family: 'Roboto', Helvetica, Arial;
   font-size: $font-size;
+
+  @include md {
+    font-size: $md-font-size;
+  }
+
+  @include sm {
+    font-size: $sm-font-size;
+  }
 
   &.dark-theme {
     color: $dt-text-color;
@@ -26,6 +35,10 @@ body {
 
 .main-content {
   padding-top: $header-total-height;
+
+  @include md {
+    padding-top: $md-header-total-height;
+  }
 
   .modal-open & {
     filter: blur(15px);

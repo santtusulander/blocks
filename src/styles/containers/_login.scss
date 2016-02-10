@@ -7,19 +7,31 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 1100px;
+    width: $configuration-sidebar-width;
     transform: translate(-50%, -50%);
+
+    @include md {
+      width: $md-configuration-sidebar-width;
+    }
   }
 
   .modal-body {
     padding: 110px 120px 90px;
+
+    @include md {
+      padding: 90px 100px 70px;
+    }
   }
 }
 
 .login-header {
   position: relative;
-  padding: 60px 80px;
+  padding: $btn-height $bar-height;
   border: 0;
+
+  @include md {
+    padding: $md-btn-height $md-bar-height;
+  }
 
   .login-header-gradient {
     position: absolute;
@@ -38,6 +50,11 @@
     text-indent: -9999em;
     background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
     background-size: 30px 40px;
+
+    @include md {
+      width: $md-bar-height;
+      height: $md-bar-height;
+    }
   }
 
   h1 {
@@ -55,6 +72,10 @@
     margin-left: 30px;
     transform: translate(0, -50%);
     transition: left 250ms, margin 250ms, transform 250ms;
+
+    @include md {
+      left: $md-bar-height;
+    }
   }
 
   &.active::after {

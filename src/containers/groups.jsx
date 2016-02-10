@@ -138,11 +138,6 @@ export class Groups extends React.Component {
                 </Link>
               </Button>
 
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.createNewGroup}>
-                <IconAdd />
-              </Button>
-
               <Select
                 onSelect={this.handleSelectChange()}
                 value={this.state.activeFilter}

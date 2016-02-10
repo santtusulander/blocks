@@ -5,6 +5,10 @@
   height: $content-item-list-height;
   margin-top: 20px;
 
+  @include md {
+    height: $md-content-item-list-height;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.2);
   }
@@ -23,11 +27,23 @@
     height: $content-item-list-height;
     padding: 30px;
 
+    @include md {
+      height: $md-content-item-list-height;
+      padding: 15px;
+    }
+
     > .content-item-list-link {
       width: calc(100% + 60px);
       height: calc(100% + 60px);
       padding: 30px;
       margin: -30px;
+
+      @include md {
+        width: calc(100% + 30px);
+        height: calc(100% + 30px);
+        padding: 15px;
+        margin: -15px;
+      }
     }
 
     .dark-theme & {
@@ -36,11 +52,28 @@
 
     &.section-lg {
       width: 450px;
+
+      @include md {
+        width: 340px;
+      }
+
+      @include sm {
+        width: 280px;
+      }
     }
 
     &.section-sm {
       width: 250px;
       padding-top: 48px;
+
+      @include md {
+        width: 200px;
+        padding-top: 26px;
+      }
+
+      @include sm {
+        width: 180px;
+      }
 
       .dark-theme & {
         border-right: 1px solid rgba($black, 0.2);
@@ -53,12 +86,21 @@
     font-weight: 500;
     line-height: 1;
     word-break: break-all;
+
+    @include md {
+      font-size: 24px;
+    }
   }
 
   .content-item-list-details {
     position: absolute;
     bottom: 30px;
     left: 30px;
+
+    @include md {
+      bottom: 15px;
+      left: 15px;
+    }
 
     p {
       margin: 0;
@@ -73,10 +115,23 @@
     position: absolute;
     right: 30px;
     bottom: 30px;
+
+    @include md {
+      right: 15px;
+      bottom: 15px;
+    }
   }
 
   .content-item-list-chart {
     margin: 0 700px 0 450px;
+
+    @include md {
+      margin: 0 540px 0 340px;
+    }
+
+    @include sm {
+      margin: 0 460px 0 280px;
+    }
 
     svg {
       display: block;

@@ -12,6 +12,10 @@
   li {
     min-height: $bar-height;
 
+    @include md {
+      min-height: $md-bar-height;
+    }
+
     + li {
       border-top: 1px solid rgba($pale-blue, 0.2);
     }
@@ -38,8 +42,13 @@
   display: block;
   height: 100%;
   min-height: $bar-height;
-  padding: 11px 10px 11px 80px;
+  padding: 11px 10px 11px $bar-height;
   text-decoration: none;
+
+  @include md {
+    min-height: $md-bar-height;
+    padding-left: $md-bar-height;
+  }
 
   &.active {
 
@@ -51,12 +60,19 @@
   &::before {
     position: absolute;
     top: 50%;
-    left: 25px;
-    width: 30px;
-    height: 30px;
-    margin-top: -15px;
+    left: ($btn-sm-height / 2);
+    width: ($btn-height / 2);
+    height: ($btn-height / 2);
+    margin-top: -($btn-height / 4);
     border-radius: 50%;
     content: '';
+
+    @include md {
+      left: ($md-btn-sm-height / 2);
+      width: ($md-btn-height / 2);
+      height: ($md-btn-height / 2);
+      margin-top: -($md-btn-height / 4);
+    }
 
     .dark-theme & {
       background-color: rgba($black, 0.2);
@@ -66,13 +82,18 @@
   &::after {
     position: absolute;
     top: 50%;
-    left: 25px;
+    left: ($btn-sm-height / 2);
     margin: -5px 0 0 13px;
     vertical-align: middle;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     border-left: 5px dashed;
     content: '';
+
+    @include md {
+      left: ($md-btn-sm-height / 2);
+      margin-left: 8px;
+    }
 
     .dark-theme & {
       border-left-color: $dt-text-color;

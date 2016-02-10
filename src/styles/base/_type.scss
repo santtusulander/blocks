@@ -14,8 +14,20 @@ h1 {
   font-size: 60px;
   font-weight: 500;
 
+  @include md {
+    font-size: 40px;
+  }
+
+  @include sm {
+    font-size: 36px;
+  }
+
   .heading-suffix {
     font-size: 30px;
+
+    @include md {
+      font-size: 20px;
+    }
   }
 
   .right-separator {
@@ -35,10 +47,18 @@ h1 {
 
 h2 {
   font-size: 40px;
+
+  @include md {
+    font-size: 24px;
+  }
 }
 
 h3 {
   font-size: 30px;
+
+  @include md {
+    font-size: 20px;
+  }
 
   &.has-btn {
     line-height: $btn-height;
@@ -46,6 +66,10 @@ h3 {
 
   &.extra-margin-top {
     margin-top: 60px;
+
+    @include md {
+      margin-top: 40px;
+    }
   }
 
   .heading-suffix {
@@ -73,4 +97,12 @@ p {
 
 .text-sm {
   font-size: $font-size-sm;
+
+  @include md {
+    font-size: $md-font-size-sm;
+  }
+
+  @include sm {
+    font-size: $sm-font-size-sm;
+  }
 }

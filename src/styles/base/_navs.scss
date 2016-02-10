@@ -1,14 +1,50 @@
 // Navs
 // ====
 
+.navbar-nav,
+.navbar-header {
+
+  &,
+  .container-fluid > & {
+    float: left;
+    margin: 0;
+  }
+
+  .navbar-brand {
+    margin-right: 0;
+    margin-left: -15px;
+  }
+
+  > li {
+    float: left;
+  }
+}
+
+.navbar-right {
+  float: right;
+}
+
 .main-nav,
 .nav-tabs {
   // scss-lint:disable SelectorDepth NestingDepth
   // Need to override Bootstrap
 
   > li {
+    float: left;
     height: $bar-height;
     min-width: 250px;
+
+    @include lg {
+      min-width: 180px;
+    }
+
+    @include md {
+      min-width: 120px;
+    }
+
+    @include sm {
+      min-width: 0;
+    }
 
     > a,
     .main-nav-link,
@@ -22,6 +58,11 @@
       text-transform: uppercase;
       border: 0;
 
+      @include md {
+        height: $md-bar-height;
+        line-height: $md-bar-height;
+      }
+
       .dark-theme & {
         color: $dt-text-color;
       }
@@ -34,6 +75,15 @@
         .dark-theme & {
           color: $white;
         }
+      }
+    }
+
+    > a,
+    .main-nav-link {
+      padding: 0 20px;
+
+      @include sm {
+        padding: 0 10px;
       }
     }
 
@@ -58,7 +108,7 @@
 .nav-tabs {
 
   .dark-theme & {
-    background-color: rgba($black, 0.2);
+    background-color: rgba($black, 0.1);
     border-bottom: 5px solid rgba($black, 0.4);
   }
 
