@@ -8,7 +8,7 @@ class Footer extends React.Component {
     }
     return (
       <footer className={className}>
-        Footer
+        <!-- @echo PACKAGE_VERSION -->
       </footer>
     );
   }

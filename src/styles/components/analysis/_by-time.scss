@@ -46,4 +46,21 @@
       fill: $lt-text-color;
     }
   }
+
+  circle {
+    stroke-width: 2px;
+
+    .dark-theme & {
+      stroke: rgba($pale-blue, 0.5);
+      fill: transparent;
+    }
+  }
+
+  .crosshair {
+    stroke-width: 1px;
+
+    .dark-theme & {
+      stroke: rgba($black, 0.2);
+    }
+  }
 }
