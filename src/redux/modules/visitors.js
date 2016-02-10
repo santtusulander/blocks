@@ -26,7 +26,10 @@ export default handleActions({
   VISITORS_BY_TIME_FETCHED: {
     next(state, action) {
       return state.merge({
-        byTime: Immutable.fromJS(action.payload.data)
+        byTime: Immutable.fromJS(action.payload.data.map(datapoint => {
+          datapoint.timestamp = new Date(datapoint.timestamp)
+          return datapoint
+        }))
       })
     },
     throw(state) {
