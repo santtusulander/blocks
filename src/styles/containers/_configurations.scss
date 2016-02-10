@@ -1,3 +1,6 @@
+// Configurations
+// ==============
+
 .configurations-container {
 
   td:last-child {
@@ -18,23 +21,12 @@
       background-repeat: no-repeat;
       background-size: 20px 20px;
     }
-  }
 
-  .actions {
-    .form-group,
-    button,
-    .dropdown {
-      display: inline-block;
-      margin-left: 10px;
-    }
-
-    .dropdown {
-      width: 200px;
-    }
-
-    .form-control,
-    .input-select .dropdown-toggle {
-      height: 60px;
+    .light-theme & {
+      background-image: url('../assets/icons/lt-icon-search.svg');
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
     }
   }
 }
