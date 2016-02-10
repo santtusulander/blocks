@@ -7,75 +7,37 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 
 const fakeRecentData = [
-  {epoch_start: 1451606300, bytes: 0, requests: 0},
-  {epoch_start: 1451606400, bytes: 49405, requests: 943},
-  {epoch_start: 1451606500, bytes: 44766, requests: 546},
-  {epoch_start: 1451606600, bytes: 44675, requests: 435},
-  {epoch_start: 1451606700, bytes: 44336, requests: 345},
-  {epoch_start: 1451606800, bytes: 43456, requests: 567},
-  {epoch_start: 1451606900, bytes: 46756, requests: 244},
-  {epoch_start: 1451607000, bytes: 45466, requests: 455},
-  {epoch_start: 1451607100, bytes: 43456, requests: 233},
-  {epoch_start: 1451607200, bytes: 47454, requests: 544},
-  {epoch_start: 1451607300, bytes: 54766, requests: 546},
-  {epoch_start: 1451607400, bytes: 54675, requests: 435},
-  {epoch_start: 1451607500, bytes: 54336, requests: 456},
-  {epoch_start: 1451607600, bytes: 53456, requests: 567},
-  {epoch_start: 1451607700, bytes: 56756, requests: 244},
-  {epoch_start: 1451607800, bytes: 55466, requests: 455},
-  {epoch_start: 1451607900, bytes: 43456, requests: 456},
-  {epoch_start: 1451608000, bytes: 57454, requests: 544},
-  {epoch_start: 1451608100, bytes: 53456, requests: 233},
-  {epoch_start: 1451608200, bytes: 57454, requests: 544},
-  {epoch_start: 1451608300, bytes: 54766, requests: 546},
-  {epoch_start: 1451608400, bytes: 44675, requests: 435},
-  {epoch_start: 1451608500, bytes: 44336, requests: 456},
-  {epoch_start: 1451608600, bytes: 23456, requests: 567},
-  {epoch_start: 1451608700, bytes: 26756, requests: 244},
-  {epoch_start: 1451608800, bytes: 25466, requests: 455},
-  {epoch_start: 1451608900, bytes: 23456, requests: 456},
-  {epoch_start: 1451609000, bytes: 27454, requests: 544},
-  {epoch_start: 1451609100, bytes: 23456, requests: 456},
-  {epoch_start: 1451609200, bytes: 27454, requests: 544},
-  {epoch_start: 1451609300, bytes: 23456, requests: 233},
-  {epoch_start: 1451609400, bytes: 24675, requests: 435},
-  {epoch_start: 1451609500, bytes: 24336, requests: 456},
-  {epoch_start: 1451609600, bytes: 23456, requests: 567},
-  {epoch_start: 1451609700, bytes: 26756, requests: 244},
-  {epoch_start: 1451609800, bytes: 25466, requests: 455},
-  {epoch_start: 1451609900, bytes: 23456, requests: 456},
-  {epoch_start: 1451610000, bytes: 37454, requests: 544},
-  {epoch_start: 1451610100, bytes: 33456, requests: 456},
-  {epoch_start: 1451610200, bytes: 37454, requests: 544},
-  {epoch_start: 1451610300, bytes: 33456, requests: 233},
-  {epoch_start: 1451610400, bytes: 34675, requests: 435},
-  {epoch_start: 1451610500, bytes: 44336, requests: 456},
-  {epoch_start: 1451610600, bytes: 53456, requests: 567},
-  {epoch_start: 1451610700, bytes: 56756, requests: 244},
-  {epoch_start: 1451610800, bytes: 55466, requests: 455},
-  {epoch_start: 1451610900, bytes: 53456, requests: 456},
-  {epoch_start: 1451611000, bytes: 57454, requests: 544},
-  {epoch_start: 1451611100, bytes: 53456, requests: 233},
-  {epoch_start: 1451611200, bytes: 67454, requests: 544},
-  {epoch_start: 1451611300, bytes: 64766, requests: 546},
-  {epoch_start: 1451611400, bytes: 64675, requests: 435},
-  {epoch_start: 1451611500, bytes: 64336, requests: 456},
-  {epoch_start: 1451611600, bytes: 63456, requests: 567},
-  {epoch_start: 1451611700, bytes: 66756, requests: 244},
-  {epoch_start: 1451611800, bytes: 65466, requests: 455},
-  {epoch_start: 1451611900, bytes: 63456, requests: 456},
-  {epoch_start: 1451612000, bytes: 67454, requests: 544},
-  {epoch_start: 1451612100, bytes: 63456, requests: 456},
-  {epoch_start: 1451612200, bytes: 57454, requests: 544},
-  {epoch_start: 1451612300, bytes: 53456, requests: 233},
-  {epoch_start: 1451612400, bytes: 44675, requests: 435},
-  {epoch_start: 1451612500, bytes: 44336, requests: 456},
-  {epoch_start: 1451612600, bytes: 33456, requests: 567},
-  {epoch_start: 1451612700, bytes: 46756, requests: 244},
-  {epoch_start: 1451612800, bytes: 35466, requests: 455},
-  {epoch_start: 1451612900, bytes: 43456, requests: 456},
-  {epoch_start: 1451613000, bytes: 47454, requests: 544},
-  {epoch_start: 1451613100, bytes: 0, requests: 0}
+  {timestamp: "2016-01-01 01:00:00", bytes: 49405, requests: 943},
+  {timestamp: "2016-01-02 01:00:00", bytes: 44766, requests: 546},
+  {timestamp: "2016-01-03 01:00:00", bytes: 44675, requests: 435},
+  {timestamp: "2016-01-04 01:00:00", bytes: 44336, requests: 345},
+  {timestamp: "2016-01-05 01:00:00", bytes: 43456, requests: 567},
+  {timestamp: "2016-01-06 01:00:00", bytes: 46756, requests: 244},
+  {timestamp: "2016-01-07 01:00:00", bytes: 45466, requests: 455},
+  {timestamp: "2016-01-08 01:00:00", bytes: 43456, requests: 233},
+  {timestamp: "2016-01-09 01:00:00", bytes: 47454, requests: 544},
+  {timestamp: "2016-01-10 01:00:00", bytes: 54766, requests: 546},
+  {timestamp: "2016-01-11 01:00:00", bytes: 54675, requests: 435},
+  {timestamp: "2016-01-12 01:00:00", bytes: 54336, requests: 456},
+  {timestamp: "2016-01-13 01:00:00", bytes: 53456, requests: 567},
+  {timestamp: "2016-01-14 01:00:00", bytes: 56756, requests: 244},
+  {timestamp: "2016-01-15 01:00:00", bytes: 55466, requests: 455},
+  {timestamp: "2016-01-16 01:00:00", bytes: 43456, requests: 456},
+  {timestamp: "2016-01-17 01:00:00", bytes: 57454, requests: 544},
+  {timestamp: "2016-01-18 01:00:00", bytes: 53456, requests: 233},
+  {timestamp: "2016-01-19 01:00:00", bytes: 57454, requests: 544},
+  {timestamp: "2016-01-20 01:00:00", bytes: 54766, requests: 546},
+  {timestamp: "2016-01-21 01:00:00", bytes: 44675, requests: 435},
+  {timestamp: "2016-01-22 01:00:00", bytes: 44336, requests: 456},
+  {timestamp: "2016-01-23 01:00:00", bytes: 23456, requests: 567},
+  {timestamp: "2016-01-24 01:00:00", bytes: 26756, requests: 244},
+  {timestamp: "2016-01-25 01:00:00", bytes: 25466, requests: 455},
+  {timestamp: "2016-01-26 01:00:00", bytes: 23456, requests: 456},
+  {timestamp: "2016-01-27 01:00:00", bytes: 27454, requests: 544},
+  {timestamp: "2016-01-28 01:00:00", bytes: 23456, requests: 456},
+  {timestamp: "2016-01-29 01:00:00", bytes: 27454, requests: 544},
+  {timestamp: "2016-01-30 01:00:00", bytes: 23456, requests: 233},
+  {timestamp: "2016-01-31 01:00:00", bytes: 24675, requests: 435}
 ]
 
 class ContentItemList extends React.Component {
@@ -123,7 +85,7 @@ class ContentItemList extends React.Component {
               </div>
             </div>
           </Link>
-          
+
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
               <Button bsSize="small"
@@ -165,8 +127,8 @@ class ContentItemList extends React.Component {
 
           <div className="content-item-list-chart">
             <div ref="byTimeHolder">
-              <AnalysisByTime axes={false} padding={0}
-                className="bg-transparent"
+              <AnalysisByTime axes={false} padding={0} className="bg-transparent"
+                dataKey="bytes"
                 data={fakeRecentData}
                 width={this.state.byTimeWidth}
                 height={200} />

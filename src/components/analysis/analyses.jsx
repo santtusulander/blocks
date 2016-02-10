@@ -13,6 +13,7 @@ export class Analyses extends React.Component {
     super(props)
 
     this.state = {
+      activeFilter: 'custom_timerange',
       datepickerStatus: 0,
       startDate: moment(),
       endDate: moment()
@@ -71,7 +72,9 @@ export class Analyses extends React.Component {
   }
   handleSelectChange() {
     return value => {
-      console.log(value)
+      this.setState({
+        activeFilter: value
+      })
     }
   }
   render() {
@@ -107,7 +110,7 @@ export class Analyses extends React.Component {
           <div className="form-group">
             <Select className="btn-block"
               onSelect={this.handleSelectChange()}
-              value="custom_timerange"
+              value={this.state.activeFilter}
               options={[
                 ['custom_timerange', 'Custom Timerange'],
                 ['last_7_days', 'Last 7 Days'],
