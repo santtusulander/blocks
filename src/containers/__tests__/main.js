@@ -9,7 +9,7 @@ const Main = require('../main.jsx')
 describe('Main', () => {
   it('should exist', () => {
     let main = TestUtils.renderIntoDocument(
-      <Main />
+      <Main routes={['foo']} />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
   });
