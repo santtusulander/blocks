@@ -5,11 +5,12 @@ import Footer from '../components/footer'
 
 class Main extends React.Component {
   render() {
+    const currentRoute = this.props.routes[this.props.routes.length-1].path
     return (
       <div>
-        <Header/>
+        <Header className={currentRoute === 'login' ? 'hidden' : ''}/>
         {this.props.children}
-        <Footer/>
+        <Footer className={currentRoute === 'login' ? 'hidden' : ''}/>
       </div>
     );
   }
@@ -17,7 +18,8 @@ class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
-  children: React.PropTypes.node
+  children: React.PropTypes.node,
+  routes: React.PropTypes.array
 }
 
 module.exports = Main

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Dropdown, MenuItem } from 'react-bootstrap'
+import IconSelectCaret from '../components/icons/icon-select-caret.jsx'
 
 class Select extends React.Component {
   constructor(props) {
@@ -20,9 +21,10 @@ class Select extends React.Component {
     return (
       <Dropdown id="" className={className}
         onSelect={this.selectOption}>
-        <Dropdown.Toggle>
+        <Dropdown.Toggle noCaret={true}>
           {this.props.options.find(option =>
             option[0] === this.props.value)[1]}
+          <IconSelectCaret/>
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {this.props.options.map((options, i) =>

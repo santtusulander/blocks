@@ -7,8 +7,12 @@ import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   render() {
+    let className = 'header';
+    if(this.props.className) {
+      className = className + ' ' + this.props.className;
+    }
     return (
-      <Navbar className="header" fixedTop={true} fluid={true}>
+      <Navbar className={className} fixedTop={true} fluid={true}>
         <div className="header-gradient"></div>
         <Navbar.Header>
           <Navbar.Brand>
@@ -59,7 +63,7 @@ class Header extends React.Component {
               <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
                 btn-alerts" noCaret={true}>
                 <IconAlerts />
-                <span className="btn-alerts-count">9</span>
+                <span className="btn-alerts-indicator" />
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <MenuItem eventKey="1">Alert 1</MenuItem>
@@ -105,6 +109,8 @@ class Header extends React.Component {
 }
 
 Header.displayName = 'Header'
-Header.propTypes = {}
+Header.propTypes = {
+  className: React.PropTypes.string
+}
 
 module.exports = Header

@@ -71,27 +71,27 @@ export class ConfigurationVersions extends React.Component {
             </ButtonToolbar>
           </div>
         </div>
-        <a className="sidebar-section-header">
+        <div className="sidebar-section-header">
           PRODUCTION
-        </a>
+        </div>
         <ul className="version-list">
           {configs.production.length ?
             configs.production.map(versionFactory.bind(this)) :
             <li className="empty-msg">None in production</li>
           }
         </ul>
-        <a className="sidebar-section-header">
+        <div className="sidebar-section-header">
           STAGING
-        </a>
+        </div>
         <ul className="version-list">
           {configs.staging.length ?
             configs.staging.map(versionFactory.bind(this)) :
             <li className="empty-msg">None in staging</li>
           }
         </ul>
-        <a className="sidebar-section-header">
+        <div className="sidebar-section-header">
           IN PROCESS
-        </a>
+        </div>
         <ul className="version-list">
           {configs.inprocess.length ?
             configs.inprocess.map(versionFactory.bind(this)) :

@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { Table, Input, Button, ButtonToolbar} from 'react-bootstrap'
 import { Link } from 'react-router'
 
@@ -18,10 +17,12 @@ export class Configurations extends React.Component {
     super(props);
 
     this.state = {
-      activePurge: null
+      activePurge: null,
+      activeFilter: 'all'
     }
 
     this.activatePurge = this.activatePurge.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
   }
   activatePurge(index) {
     return e => {
@@ -29,6 +30,13 @@ export class Configurations extends React.Component {
         e.preventDefault()
       }
       this.setState({activePurge: index})
+    }
+  }
+  handleSelectChange() {
+    return value => {
+      this.setState({
+        activeFilter: value
+      })
     }
   }
   render() {
@@ -44,13 +52,15 @@ export class Configurations extends React.Component {
               <Button bsStyle="primary" className="btn-icon add-btn">
                 <IconAdd width="30" height="30" />
               </Button>
-              <Select value="all"
+              <Select onSelect={this.handleSelectChange()}
+                value={this.state.activeFilter}
                 options={[
                   ['all', 'Show all properties'],
                   ['1', 'Filter 1'],
                   ['2', 'Filter 2']]}/>
             </ButtonToolbar>
 
+            <p>CONFIGURE</p>
             <h1>{this.props.properties.size} Properties</h1>
           </PageHeader>
 
