@@ -64,6 +64,14 @@ export class Accounts extends React.Component {
     this.props.accountActions.startFetching()
     this.props.accountActions.fetchAccounts(this.props.params.brand)
   }
+  componentDidMount() {
+    if(this.state.activeView === 'chart') {
+      document.body.className += ' chart-view'
+    }
+  }
+  componentWillUnmount() {
+    document.body.className = document.body.className.replace(/ ? chart-view/, '')
+  }
   toggleActiveAccount(id) {
     return () => {
       if(this.props.activeAccount && this.props.activeAccount.get('account_id') === id){
@@ -93,6 +101,12 @@ export class Accounts extends React.Component {
       this.setState({
         activeView: type
       })
+      let bodyClass = document.body.className
+      if (document.body.className.indexOf('chart-view') > -1) {
+        document.body.className = bodyClass.replace(/ ? chart-view/, '')
+      } else {
+        document.body.className = bodyClass + ' chart-view'
+      }
     }
   }
   handleSelectChange() {
@@ -139,7 +153,6 @@ export class Accounts extends React.Component {
           </PageHeader>
 
           <div className="container-fluid">
-
             {this.state.activeView === 'chart' ?
               (this.props.fetching ?
                 <p>Loading...</p> :

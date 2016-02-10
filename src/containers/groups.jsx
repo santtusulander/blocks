@@ -13,7 +13,6 @@ import PageHeader from '../components/layout/page-header'
 import ContentItemList from '../components/content-item-list'
 import ContentItemChart from '../components/content-item-chart'
 import Select from '../components/select'
-import IconAdd from '../components/icons/icon-add.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
@@ -69,6 +68,14 @@ export class Groups extends React.Component {
       this.props.params.account
     )
   }
+  componentDidMount() {
+    if(this.state.activeView === 'chart') {
+      document.body.className += ' chart-view'
+    }
+  }
+  componentWillUnmount() {
+    document.body.className = document.body.className.replace(/ ? chart-view/, '')
+  }
   toggleActiveGroup(id) {
     return () => {
       if(this.props.activeGroup && this.props.activeGroup.get('group_id') === id){
@@ -116,6 +123,12 @@ export class Groups extends React.Component {
       this.setState({
         activeView: type
       })
+      let bodyClass = document.body.className
+      if (document.body.className.indexOf('chart-view') > -1) {
+        document.body.className = bodyClass.replace(/ ? chart-view/, '')
+      } else {
+        document.body.className = bodyClass + ' chart-view'
+      }
     }
   }
   handleSelectChange() {

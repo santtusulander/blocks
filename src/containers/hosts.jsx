@@ -69,6 +69,14 @@ export class Hosts extends React.Component {
       this.props.params.group
     )
   }
+  componentDidMount() {
+    if(this.state.activeView === 'chart') {
+      document.body.className += ' chart-view'
+    }
+  }
+  componentWillUnmount() {
+    document.body.className = document.body.className.replace(/ ? chart-view/, '')
+  }
   createNewHost(id) {
     this.props.hostActions.createHost(
       this.props.params.brand,
@@ -96,6 +104,12 @@ export class Hosts extends React.Component {
       this.setState({
         activeView: type
       })
+      let bodyClass = document.body.className
+      if (document.body.className.indexOf('chart-view') > -1) {
+        document.body.className = bodyClass.replace(/ ? chart-view/, '')
+      } else {
+        document.body.className = bodyClass + ' chart-view'
+      }
     }
   }
   handleSelectChange() {
