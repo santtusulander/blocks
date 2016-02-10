@@ -31,7 +31,8 @@
     animation: showDropup 250ms ease-out;
   }
 
-  .dark-theme & {
+  .dark-theme &,
+  .light-theme .header & {
     color: $dt-text-color;
     background-color: $black;
     background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
@@ -45,6 +46,21 @@
       &:focus {
         color: $pale-blue;
         background-color: rgba($pale-blue, 0.1);
+      }
+    }
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $silver-40;
+
+    .active > a {
+
+      &,
+      &:hover,
+      &:focus {
+        color: $black;
+        background-color: rgba($black, 0.1);
       }
     }
   }
@@ -83,11 +99,22 @@
         padding: 15px ($md-btn-height / 2);
       }
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme .header & {
 
         &:hover,
         &:focus {
           color: $white;
+          background-color: transparent;
+        }
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+
+        &:hover,
+        &:focus {
+          color: $black;
           background-color: transparent;
         }
       }
@@ -98,15 +125,21 @@
       font-size: inherit;
       color: inherit;
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme .header & {
         background: rgba($black, 0.2);
       }
     }
 
     &.active::after {
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme .header & {
         background-color: rgba($pale-blue, 0.1);
+      }
+
+      .light-theme & {
+        background-color: rgba($white, 0.2);
       }
     }
   }

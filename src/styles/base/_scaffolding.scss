@@ -27,6 +27,18 @@ body {
       linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
     background-size: 100%;
   }
+
+  &.light-theme {
+    color: $lt-text-color;
+    background-color: $silver-20;
+
+    &.chart-view {
+      background-attachment: fixed;
+      background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
+        linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
+      background-size: 100%;
+    }
+  }
 }
 
 .invisible {
@@ -52,6 +64,13 @@ body {
   hr {
     border-top-color: rgba($pale-blue, 0.2);
   }
+
+  a {
+    color: $pale-blue;
+  }
+}
+
+&.light-theme {
 
   a {
     color: $pale-blue;

@@ -1,6 +1,8 @@
 // Navs
 // ====
 
+// scss-lint:disable SelectorDepth NestingDepth
+// Need to override Bootstrap
 .navbar-nav,
 .navbar-header {
 
@@ -20,14 +22,14 @@
   }
 }
 
-.navbar-right {
+.navbar-right,
+.container-fluid > .navbar-right {
   float: right;
+  margin-right: -15px;
 }
 
 .main-nav,
 .nav-tabs {
-  // scss-lint:disable SelectorDepth NestingDepth
-  // Need to override Bootstrap
 
   > li {
     float: left;
@@ -63,7 +65,8 @@
         line-height: $md-bar-height;
       }
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme & {
         color: $dt-text-color;
       }
 
@@ -72,7 +75,8 @@
         text-decoration: none;
         background-color: transparent;
 
-        .dark-theme & {
+        .dark-theme &,
+        .light-theme & {
           color: $white;
         }
       }
@@ -88,6 +92,7 @@
     }
 
     &.active {
+
       > a,
       .main-nav-link {
 
@@ -106,18 +111,40 @@
 }
 
 .nav-tabs {
+  border-bottom: 5px solid;
 
   .dark-theme & {
     background-color: rgba($black, 0.1);
-    border-bottom: 5px solid rgba($black, 0.4);
+    border-color: rgba($black, 0.4);
+  }
+
+  .light-theme & {
+    background-color: rgba($white, 0.5);
+    border-color: rgba($black, 0.2);
   }
 
   > li {
     height: calc(100% + 5px);
     margin-bottom: -5px;
+    color: $lt-text-color;
 
     &:first-of-type {
       margin-left: 20px;
+    }
+
+    &:not(.active) {
+
+      > a {
+
+        .light-theme & {
+          color: $lt-text-color;
+
+          &:hover,
+          &:focus {
+            color: $black;
+          }
+        }
+      }
     }
   }
 }

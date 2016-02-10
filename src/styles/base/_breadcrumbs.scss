@@ -24,6 +24,10 @@
     &::after {
       padding: 0 10px;
       content: '\203A';
+
+      .light-theme & {
+        color: rgba($pale-blue, 0.5);
+      }
     }
 
     + li::before,
@@ -42,12 +46,24 @@
         color: $white;
       }
     }
+
+    .light-theme & {
+      color: rgba($pale-blue, 0.5);
+
+      &:hover {
+        color: $pale-blue;
+      }
+    }
   }
 
   > .active {
 
     .dark-theme & {
       color: rgba($white, 0.5);
+    }
+
+    .light-theme & {
+      color: $pale-blue;
     }
   }
 }

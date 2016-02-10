@@ -18,6 +18,11 @@
     stroke: $dt-text-color;
   }
 
+  .light-theme & {
+    fill: $lt-text-color;
+    stroke: $lt-text-color;
+  }
+
   .btn-icon & {
     position: absolute;
     top: 50%;
@@ -31,16 +36,9 @@
     }
   }
 
-  &.no-fill {
+  &.no-fill,
+  .dark-theme &.no-fill,
+  .light-theme &.no-fill {
     fill: transparent;
-  }
-}
-
-.icon-chart {
-  width: 22px;
-  height: 20px;
-
-  .dark-theme & {
-    background-image: url('../assets/icons/dt-icon-chart.svg');
   }
 }

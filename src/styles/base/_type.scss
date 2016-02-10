@@ -22,6 +22,10 @@ h1 {
     font-size: 36px;
   }
 
+  .light-theme .page-header-layout & {
+    color: $pale-blue;
+  }
+
   .heading-suffix {
     font-size: 30px;
 
@@ -40,6 +44,10 @@ h1 {
 
       .dark-theme & {
         border-right: 4px solid $dt-text-color;
+      }
+
+      .light-theme & {
+        border-right: 4px solid $lt-text-color;
       }
     }
   }
