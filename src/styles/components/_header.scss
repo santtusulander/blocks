@@ -10,7 +10,8 @@
     height: $md-header-total-height;
   }
 
-  .dark-theme & {
+  .dark-theme &,
+  .light-theme & {
     background-color: $black;
     background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)),
      linear-gradient(rgba($pale-blue, 0.25), rgba($pale-blue, 0.25));
@@ -38,6 +39,8 @@
 
     &.header-search-input {
       width: 400px;
+      color: $dt-text-color;
+      background-color: rgba($black, 0.2);
 
       @include lg {
         width: 300px;
@@ -50,9 +53,14 @@
       @include sm {
         width: 150px;
       }
+
+      &::placeholder {
+        color: rgba($dt-text-color, 0.5);
+      }
     }
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       background-image: url('../assets/icons/dt-icon-search.svg');
       background-position: 15px center;
       background-repeat: no-repeat;

@@ -23,9 +23,19 @@
   }
 
   .dark-theme & {
-    background: url('../assets/img/content-chart.svg') 0 0 no-repeat;
+    background: url('../assets/img/dt-content-chart.svg') 0 0 no-repeat;
     background-size: 120px;
     border-bottom: 2px solid rgba($white, 0.2);
+
+    @include md {
+      background-size: 100px;
+    }
+  }
+
+  .light-theme & {
+    background: url('../assets/img/lt-content-chart.svg') 0 0 no-repeat;
+    background-size: 120px;
+    border-bottom: 2px solid rgba($black, 0.2);
 
     @include md {
       background-size: 100px;
@@ -43,6 +53,10 @@
   .dark-theme & {
     border-bottom: 2px solid rgba($white, 0.2);
   }
+
+  .light-theme & {
+    border-bottom: 2px solid rgba($black, 0.2);
+  }
 }
 
 .property-content {
@@ -54,7 +68,14 @@
     left: calc(50% - 1px);
     width: 2px;
     height: 100%;
-    background-color: rgba($white, 0.2);
+
+    .dark-theme & {
+      background-color: rgba($white, 0.2);
+    }
+
+    .light-theme & {
+      background-color: rgba($black, 0.2);
+    }
   }
 }
 

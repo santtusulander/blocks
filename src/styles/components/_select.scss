@@ -21,20 +21,38 @@
     }
   }
 
-  .caret {
+  .dropdown-toggle {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      width: 100%;
+      text-align: left;
+      box-shadow: none;
+    }
+  }
+
+  &.open .dropdown-toggle {
+
+    &,
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  .icon {
     float: right;
     width: 10px;
     height: 15px;
     margin-top: ($btn-height / 2) - 7.5px;
     margin-left: 30px;
     border: 0;
+    fill: inherit;
+    stroke: inherit;
 
     @include md {
       margin-top: ($md-btn-height / 2) - 7.5px;
-    }
-
-    .dark-theme & {
-      background: url('../assets/icons/dt-icon-caret-select.svg') center center no-repeat;
     }
   }
 }

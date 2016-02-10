@@ -17,7 +17,15 @@
     }
 
     + li {
-      border-top: 1px solid rgba($pale-blue, 0.2);
+      border-top: 1px solid;
+
+      .dark-theme & {
+        border-color: rgba($pale-blue, 0.2);
+      }
+
+      .light-theme & {
+        border-color: rgba($white, 0.2);
+      }
     }
 
     p {
@@ -55,6 +63,15 @@
     .dark-theme & {
       background-color: $pale-blue;
     }
+
+    .light-theme & {
+
+      &,
+      &:hover {
+        color: $pale-blue;
+        background-color: $white;
+      }
+    }
   }
 
   &::before {
@@ -74,7 +91,8 @@
       margin-top: -($md-btn-height / 4);
     }
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       background-color: rgba($black, 0.2);
     }
   }
@@ -97,6 +115,10 @@
 
     .dark-theme & {
       border-left-color: $dt-text-color;
+    }
+
+    .light-theme & {
+      border-left-color: $white;
     }
   }
 }
