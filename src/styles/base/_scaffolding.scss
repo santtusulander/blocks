@@ -3,8 +3,8 @@
 
 html,
 body {
+  height: 100%;
   min-width: 1024px;
-  min-height: 100%;
 }
 
 body {
@@ -43,20 +43,6 @@ body {
 
 .invisible {
   opacity: 0;
-}
-
-.main-content {
-  padding-top: $header-total-height;
-
-  @include md {
-    padding-top: $md-header-total-height;
-  }
-
-  .modal-open & {
-    filter: blur(15px);
-    // Enable hardware acceleration
-    transform: translate3d(0, 0, 0);
-  }
 }
 
 &.dark-theme {
