@@ -1,0 +1,34 @@
+.main-container {
+  &.dark-theme {
+    color: $dt-text-color;
+    background-attachment: fixed;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
+      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
+    background-size: 100%;
+
+    hr {
+      border-top-color: rgba($pale-blue, 0.2);
+    }
+
+    a {
+      color: $pale-blue;
+    }
+  }
+
+  &.light-theme {
+    color: $lt-text-color;
+    background-color: $silver-20;
+
+    a {
+      color: $pale-blue;
+    }
+
+    &.chart-view {
+      background-attachment: fixed;
+      background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
+        linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
+      background-size: 100%;
+    }
+  }
+}
