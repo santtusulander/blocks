@@ -7,9 +7,9 @@ class Main extends React.Component {
   render() {
     const currentRoute = this.props.routes[this.props.routes.length-1].path
     return (
-      <div>
+      <div className="main-content-wrapper">
         <Header className={currentRoute === 'login' ? 'hidden' : ''}/>
-        {this.props.children}
+        <div className="content-container">{this.props.children}</div>
         <Footer className={currentRoute === 'login' ? 'hidden' : ''}/>
       </div>
     );
