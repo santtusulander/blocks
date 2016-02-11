@@ -18,27 +18,27 @@ const fakeData = [
   {
     "bytes_out": 3265,
     "bytes_in": 34857,
-    "timestamp": "2016-01-01 01:00:00"
+    "timestamp": new Date("2016-01-01 00:00:00")
   },
   {
     "bytes_out": 4564,
     "bytes_in": 68745,
-    "timestamp": "2016-01-01 02:00:00"
+    "timestamp": new Date("2016-01-02 00:00:00")
   },
   {
     "bytes_out": 4566,
     "bytes_in": 67865,
-    "timestamp": "2016-01-01 03:00:00"
+    "timestamp": new Date("2016-01-03 00:00:00")
   },
   {
     "bytes_out": 3455,
     "bytes_in": 67422,
-    "timestamp": "2016-01-01 04:00:00"
+    "timestamp": new Date("2016-01-04 00:00:00")
   },
   {
     "bytes_out": 2345,
     "bytes_in": 67854,
-    "timestamp": "2016-01-01 05:00:00"
+    "timestamp": new Date("2016-01-05 00:00:00")
   }
 ]
 
@@ -77,11 +77,10 @@ describe('AnalysisByTime', () => {
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[0].getAttribute('x')).toBe('50.83333333333333')
+    expect(texts[0].getAttribute('x')).toBe('20')
     expect(texts[0].getAttribute('y')).toBe('190')
-    expect(moment.mock.calls.length).toEqual(2)
-    expect(moment.mock.calls[0]).toEqual([1451640000000])
-    expect(momentFormatMock.mock.calls[0][0]).toBe('MMM D')
+    expect(moment.mock.calls.length).toEqual(5)
+    expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
 
   it('should have a y axis', () => {
@@ -93,8 +92,8 @@ describe('AnalysisByTime', () => {
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[2].getAttribute('x')).toBe('10')
-    expect(texts[2].getAttribute('y')).toBe('142.7682873412177')
+    expect(texts[2].getAttribute('x')).toBe('205')
+    expect(texts[2].getAttribute('y')).toBe('190')
     expect(numeral.mock.calls.length).toBe(4)
     expect(numeral.mock.calls[0]).toEqual([1000])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0a')
