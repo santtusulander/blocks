@@ -96,10 +96,11 @@ export class Groups extends React.Component {
   cancelActiveGroupChanges() {
     this.props.groupActions.changeActiveGroup(null)
   }
-  createNewGroup() {
+  createNewGroup(name) {
     this.props.groupActions.createGroup(
       this.props.params.brand,
-      this.props.params.account
+      this.props.params.account,
+      name
     )
   }
   deleteGroup(id) {
