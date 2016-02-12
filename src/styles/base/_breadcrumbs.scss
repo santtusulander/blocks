@@ -1,13 +1,14 @@
 // Breadcrumbs
 // ===========
 
+// scss-lint:disable SelectorDepth NestingDepth
 .breadcrumb {
   padding: 0;
   margin-bottom: 0;
   text-transform: uppercase;
   background-color: transparent;
 
-  .container-fluid > & {
+  :not(.header) > .container-fluid > & {
     position: absolute;
     top: 20px;
     left: 40px;
@@ -20,10 +21,79 @@
 
   > li {
     display: inline-block;
+    vertical-align: middle;
 
-    &::after {
+    .header & {
+      height: $bar-height;
+      line-height: $bar-height;
+
+      @include md {
+        height: $md-bar-height;
+        line-height: $md-bar-height;
+      }
+    }
+
+    &.breadcrumb-back {
+      width: $btn-height / 2;
+      height: $btn-height / 2;
+      margin-right: 20px;
+      margin-left: $btn-sm-height / 2 - 15;
+      border-radius: 50%;
+      content: '';
+
+      @include md {
+        width: $btn-sm-height / 2;
+        height: $btn-sm-height / 2;
+        margin-right: 15px;
+        margin-left: $md-btn-sm-height / 2 - 15;
+      }
+
+      .dark-theme &,
+      .light-theme & {
+        background-color: rgba($black, 0.2);
+      }
+
+      a {
+        position: relative;
+        display: block;
+        height: 100%;
+
+        &::after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: -5px 0 0 -3px;
+          vertical-align: middle;
+          border: 0;
+          border-top: 5px solid transparent;
+          border-right: 5px dashed;
+          border-bottom: 5px solid transparent;
+          content: '';
+
+          .dark-theme &,
+          .light-theme & {
+            border-right-color: $dt-text-color;
+          }
+        }
+
+        &:hover::after {
+
+          .dark-theme &,
+          .light-theme & {
+            border-right-color: $white;
+          }
+        }
+      }
+    }
+
+    &:not(.breadcrumb-back)::after {
       padding: 0 10px;
       content: '\203A';
+
+      .dark-theme &,
+      .light-theme .header & {
+        color: $dt-text-color;
+      }
 
       .light-theme & {
         color: rgba($pale-blue, 0.5);
@@ -39,7 +109,8 @@
   a {
     text-decoration: none;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme .header & {
       color: $dt-text-color;
 
       &:hover {
@@ -58,7 +129,8 @@
 
   > .active {
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme .header & {
       color: rgba($white, 0.5);
     }
 

@@ -77,17 +77,17 @@
   &::before {
     position: absolute;
     top: 50%;
-    left: ($btn-sm-height / 2);
-    width: ($btn-height / 2);
-    height: ($btn-height / 2);
+    left: $btn-sm-height / 2;
+    width: $btn-height / 2;
+    height: $btn-height / 2;
     margin-top: -($btn-height / 4);
     border-radius: 50%;
     content: '';
 
     @include md {
-      left: ($md-btn-sm-height / 2);
-      width: ($md-btn-height / 2);
-      height: ($md-btn-height / 2);
+      left: $md-btn-sm-height / 2;
+      width: $btn-sm-height / 2;
+      height: $btn-sm-height / 2;
       margin-top: -($md-btn-height / 4);
     }
 
@@ -100,7 +100,7 @@
   &::after {
     position: absolute;
     top: 50%;
-    left: ($btn-sm-height / 2);
+    left: $btn-sm-height / 2;
     margin: -5px 0 0 13px;
     vertical-align: middle;
     border-top: 5px solid transparent;
@@ -109,7 +109,7 @@
     content: '';
 
     @include md {
-      left: ($md-btn-sm-height / 2);
+      left: $md-btn-sm-height / 2;
       margin-left: 8px;
     }
 
