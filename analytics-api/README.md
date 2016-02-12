@@ -31,9 +31,23 @@ The API uses the `NODE_ENV` environment variable to determine which configs to u
 │   ├── configs.js  // Config file for the app which includes environment specific configs.
 │   ├── router.js   // Express router - all the API routes are mapped to handlers here.
 │   └── server.js   // Express server - the server is created and configured here.
+├── e2e             // Directory containing end-to-end Postman tests
 ├── .eslintrc       // JavaScript linting rules with ESLint - extends ../.eslintrc
-└── index.js        // `npm start` runs `node index.js` to start the server.
+├── index.js        // `npm start` runs `node index.js` to start the server.
+└── test.js         // `npm start` runs `node test.js` to run the tests.
 ```
+## Testing
+See [Using Postman + Newman for E2E API Testing](https://vidscale.atlassian.net/wiki/pages/viewpage.action?pageId=29950052) for more information about how the API uses Postman and Newman for end-to-end testing.
+
+Make sure the server is running (`npm start`). Execute `npm test` to run the tests.
+
+### Modifying the Tests
+1. Install [Postman](https://getpostman.com)
+2. Import the collection and enviroment files located in `./e2e`
+3. Make changes in Postman
+4. Download the collection/environment files to `./e2e` (overwrite the old ones)
+
+
 
 ## Linting
 Execute `npm run lint` to lint the JavaScript with ESLint. The `.eslintrc` file in this directory extends the one in the root of this repository.
