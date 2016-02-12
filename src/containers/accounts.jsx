@@ -135,9 +135,9 @@ export class Accounts extends React.Component {
               this.props.viewingChart ?
                 <div className="content-item-grid">
                   {this.props.accounts.map((account, i) =>
-                    <ContentItemChart key={i} id={account}
-                      linkTo={`/content/groups/${this.props.params.brand}/${account}`}
-                      name="Name" description="Desc"
+                    <ContentItemChart key={i} id={account.get('id')}
+                      linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
+                      name={account.get('name')} description="Desc"
                       delete={this.deleteAccount}
                       primaryData={fakeRecentData}
                       secondaryData={fakeAverageData}
@@ -147,9 +147,9 @@ export class Accounts extends React.Component {
                   )}
                 </div> :
                 this.props.accounts.map((account, i) =>
-                  <ContentItemList key={i} id={account}
-                    linkTo={`/content/groups/${this.props.params.brand}/${account}`}
-                    name="Name" description="Desc"
+                  <ContentItemList key={i} id={account.get('id')}
+                    linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
+                    name={account.get('name')} description="Desc"
                     toggleActive={this.toggleActiveAccount(account)}
                     delete={this.deleteAccount}
                     primaryData={fakeRecentData}

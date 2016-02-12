@@ -65,7 +65,7 @@ export default handleActions({
   GROUP_FETCHED_ALL: {
     next(state, action) {
       return state.merge({
-        allGroups: Immutable.fromJS(action.payload),
+        allGroups: Immutable.fromJS(action.payload.data),
         fetching: false
       })
     },
