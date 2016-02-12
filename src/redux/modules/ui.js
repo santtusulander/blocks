@@ -4,8 +4,11 @@ import Immutable from 'immutable'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 
+const theme = localStorage.EricssonUDNUiTheme ?
+  localStorage.EricssonUDNUiTheme : 'dark'
+
 const defaultUI = Immutable.Map({
-  theme: 'dark',
+  theme: theme,
   viewingChart: false
 })
 
