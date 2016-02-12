@@ -11,7 +11,15 @@ This is a Node Express API that returns analytics data from a remote MySQL datab
 | 3. | `npm install` | Install dependencies              |
 | 4. | `npm start`   | Start API server                  |
 
-API is served on [http://localhost:3030](http://localhost:3030).
+The API is served on port 3030 by default (i.e. http://localhost:3030).
+
+### Running in Production
+The API uses the `NODE_ENV` environment variable to determine which configs to use from `./app/configs.js`. When running the API in production or staging, the following commands should be used instead of `npm start`:
+
+- **Staging:** `npm run staging`
+- **Production:** `npm run production`
+
+**NOTE:** `npm start` runs the server in development mode by default.
 
 
 ## Key Files and Folders
