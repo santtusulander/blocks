@@ -9,7 +9,7 @@ const theme = localStorage.EricssonUDNUiTheme ?
 
 const defaultUI = Immutable.Map({
   theme: theme,
-  viewingChart: false
+  viewingChart: true
 })
 
 // REDUCERS

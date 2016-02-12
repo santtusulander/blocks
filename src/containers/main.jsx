@@ -11,6 +11,9 @@ export class Main extends React.Component {
     if(this.props.theme) {
       classNames = `${classNames} ${this.props.theme}-theme`
     }
+    if(this.props.viewingChart) {
+      classNames = `${classNames} chart-view`
+    }
     return (
       <div className={classNames}>
         <Header className={currentRoute === 'login' ? 'hidden' : ''}

@@ -6,6 +6,7 @@ import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-
 import { Link } from 'react-router'
 
 import * as groupActionCreators from '../redux/modules/group'
+import * as uiActionCreators from '../redux/modules/ui'
 import EditGroup from '../components/edit-group'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -54,10 +55,8 @@ export class Groups extends React.Component {
     this.cancelActiveGroupChanges = this.cancelActiveGroupChanges.bind(this)
     this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
     this.createNewGroup = this.createNewGroup.bind(this)
-    this.changeActiveView = this.changeActiveView.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.state = {
-      activeView: 'chart',
       activeFilter: 'traffic_high_to_low'
     }
   }
@@ -67,14 +66,6 @@ export class Groups extends React.Component {
       this.props.params.brand,
       this.props.params.account
     )
-  }
-  componentDidMount() {
-    if(this.state.activeView === 'chart') {
-      document.body.className += ' chart-view'
-    }
-  }
-  componentWillUnmount() {
-    document.body.className = document.body.className.replace(/ ? chart-view/, '')
   }
   toggleActiveGroup(id) {
     return () => {
@@ -118,19 +109,6 @@ export class Groups extends React.Component {
       id
     )
   }
-  changeActiveView(type) {
-    return () => {
-      this.setState({
-        activeView: type
-      })
-      let bodyClass = document.body.className
-      if (document.body.className.indexOf('chart-view') > -1) {
-        document.body.className = bodyClass.replace(/ ? chart-view/, '')
-      } else {
-        document.body.className = bodyClass + ' chart-view'
-      }
-    }
-  }
   handleSelectChange() {
     return value => {
       this.setState({
@@ -141,7 +119,7 @@ export class Groups extends React.Component {
   render() {
     const activeGroup = this.props.activeGroup
     return (
-      <PageContainer>
+      <PageContainer className='groups-container content-subcontainer'>
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
@@ -159,13 +137,13 @@ export class Groups extends React.Component {
                   ['traffic_low_to_high', 'Traffic Low to High']]}/>
 
               <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
-                (this.state.activeView === 'chart' ? ' hidden' : '')}
-                onClick={this.changeActiveView('chart')}>
+                (this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemChart/>
               </Button>
               <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (this.state.activeView === 'list' ? ' hidden' : '')}
-                onClick={this.changeActiveView('list')}>
+                (!this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
@@ -174,14 +152,12 @@ export class Groups extends React.Component {
             <h1>Account Name</h1>
           </PageHeader>
 
-          <div className="container-fluid">
+          <div className="container-fluid body-content">
             <Breadcrumb>
               <BreadcrumbItem active={true}>Account Name</BreadcrumbItem>
             </Breadcrumb>
-
-            {this.state.activeView === 'chart' ?
-              (this.props.fetching ?
-                <p>Loading...</p> :
+            {this.props.fetching ? <p>Loading...</p> : (
+              this.props.viewingChart ?
                 <div className="content-item-grid">
                   {this.props.groups.map((group, i) =>
                     <ContentItemChart key={i} id={group}
@@ -194,10 +170,7 @@ export class Groups extends React.Component {
                       chartWidth="560"
                       barMaxHeight="80" />
                   )}
-                </div>
-              ) : this.state.activeView === 'list' &&
-                (this.props.fetching ?
-                <p>Loading...</p> :
+                </div> :
                 this.props.groups.map((group, i) =>
                   <ContentItemList key={i} id={group}
                     linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
@@ -206,8 +179,7 @@ export class Groups extends React.Component {
                     primaryData={fakeRecentData}
                     secondaryData={fakeAverageData}/>
                 )
-              )
-            }
+            )}
 
             {activeGroup ?
               <Modal show={true} dialogClassName="configuration-sidebar"
@@ -238,20 +210,24 @@ Groups.propTypes = {
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
+  viewingChart: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
   return {
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
-    fetching: state.group.get('fetching')
+    fetching: state.group.get('fetching'),
+    viewingChart: state.ui.get('viewingChart')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    groupActions: bindActionCreators(groupActionCreators, dispatch)
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

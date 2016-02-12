@@ -20,13 +20,19 @@ function accountActionsMaker() {
     deleteAccount: jest.genMockFunction()
   }
 }
+function uiActionsMaker() {
+  return {
+    toggleChartView: jest.genMockFunction()
+  }
+}
 
 const urlParams = {brand: 'udn'}
 
 describe('Accounts', () => {
   it('should exist', () => {
     let accounts = TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActionsMaker()} fetching={true}
+      <Accounts accountActions={accountActionsMaker()}
+        uiActions={uiActionsMaker()} fetching={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(accounts)).toBeTruthy()
@@ -35,7 +41,8 @@ describe('Accounts', () => {
   it('should request data on mount', () => {
     const accountActions = accountActionsMaker()
     TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActions} fetching={true}
+      <Accounts accountActions={accountActions} uiActions={uiActionsMaker()}
+        fetching={true}
         params={urlParams}/>
     )
     expect(accountActions.startFetching.mock.calls.length).toBe(1)
@@ -44,7 +51,8 @@ describe('Accounts', () => {
 
   it('should show a loading message', () => {
     let accounts = TestUtils.renderIntoDocument(
-      <Accounts accountActions={accountActionsMaker()} fetching={true}
+      <Accounts accountActions={accountActionsMaker()}
+        uiActions={uiActionsMaker()} fetching={true}
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
@@ -54,11 +62,11 @@ describe('Accounts', () => {
   it('should show existing accounts as charts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1,2])}
-        params={urlParams}/>
+        params={urlParams}
+        viewingChart={true}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
     expect(child.length).toBe(2)
     expect(child[0].props.id).toBe(1)
@@ -67,11 +75,11 @@ describe('Accounts', () => {
   it('should show existing accounts as lists', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1,2])}
-        params={urlParams}/>
+        params={urlParams}
+        viewingChart={false}/>
     )
-    let btn = TestUtils.scryRenderedDOMComponentsWithClass(accounts, 'toggle-view')
-    TestUtils.Simulate.click(btn[1])
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
     expect(child.length).toBe(2)
     expect(child[0].props.id).toBe(1)
@@ -81,6 +89,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1])}
         params={urlParams}/>
     )
@@ -92,6 +101,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1])}
         activeAccount={Immutable.Map({account_id:1})}
         params={urlParams}/>
@@ -104,6 +114,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1])}
         activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
         params={urlParams}/>
@@ -119,6 +130,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1])}
         activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
         params={urlParams}/>
@@ -134,6 +146,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
+        uiActions={uiActionsMaker()}
         accounts={Immutable.List([1])}
         params={urlParams}/>
     )

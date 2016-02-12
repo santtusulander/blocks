@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
@@ -12,5 +13,13 @@ describe('Header', () => {
       <Header />
     );
     expect(TestUtils.isCompositeComponent(header)).toBeTruthy();
+  });
+
+  it('can be passed a custom css class', () => {
+    let header = TestUtils.renderIntoDocument(
+      <Header className="foo" />
+    );
+    let container = TestUtils.findRenderedDOMComponentWithTag(header, 'nav');
+    expect(ReactDOM.findDOMNode(container).className).toContain('foo');
   });
 })
