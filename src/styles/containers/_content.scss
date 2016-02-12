@@ -5,7 +5,7 @@
   height: 100%;
 }
 
-.main-content-wrapper {
+.main-container {
   height: 100%;
   padding-top: $header-total-height;
 
@@ -36,5 +36,14 @@
     @include md {
       height: -$md-footer-height;
     }
+  }
+}
+
+.content-subcontainer .body-content {
+  .chart-view & {
+    background-attachment: fixed;
+    background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
+      linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
+    background-size: 100%;
   }
 }
