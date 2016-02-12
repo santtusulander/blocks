@@ -3,6 +3,8 @@
 let packageJSON = require('../../package.json');
 let log         = require('../logger');
 
+routeVersion.get = () => packageJSON.version;
+
 /**
  * Responds with the version from analytics-api/package.json as text.
  */
