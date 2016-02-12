@@ -13,6 +13,14 @@
     }
   }
 
+  .light-theme & {
+    background-color: rgba($white, 0.5);
+
+    &.table-striped > tbody > tr:nth-of-type(odd) {
+      background-color: $white;
+    }
+  }
+
   > thead,
   > tbody,
   > tfoot {
@@ -54,6 +62,10 @@
 
     .dark-theme & {
       background-color: rgba($pale-blue, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $silver-80;
     }
   }
 

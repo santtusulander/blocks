@@ -4,12 +4,20 @@
 .modal-dialog {
 
   .modal-content {
-    background: linear-gradient(rgba($pale-blue, 0.7),
-      rgba($ericsson-dark-blue, 0.7));
-    background-size: 100%;
     border: 0;
     border-radius: 0;
     box-shadow: none;
+
+    .dark-theme & {
+      background: linear-gradient(rgba($pale-blue, 0.7),
+        rgba($ericsson-dark-blue, 0.7));
+      background-size: 100%;
+    }
+
+    .light-theme & {
+      color: $white;
+      background-color: $pale-blue;
+    }
   }
 
   // Configuration Sidebar
@@ -40,18 +48,20 @@
 
     .modal-content {
       min-height: 100vh;
-      background-color: $black;
-      background-image: linear-gradient(rgba($pale-blue, 0.7),
-        rgba($ericsson-dark-blue, 0.7));
-      background-size: 100%;
       border: 0;
       box-shadow: none;
+
+      .dark-theme & {
+        background-color: $black;
+        background-image: linear-gradient(rgba($pale-blue, 0.7),
+          rgba($ericsson-dark-blue, 0.7));
+        background-size: 100%;
+      }
     }
 
     .modal-header {
       height: $modal-header-height;
       padding: 70px $bar-height 0;
-      background: rgba($pale-blue, 0.2);
       border: 0;
 
       @include md {
@@ -62,6 +72,14 @@
       @include sm {
         height: $sm-modal-header-height;
         padding: 40px $md-bar-height 0;
+      }
+
+      .dark-theme & {
+        background: rgba($pale-blue, 0.2);
+      }
+
+      .light-theme & {
+        background: rgba($black, 0.1);
       }
     }
 

@@ -33,6 +33,10 @@
       linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
     background-size: 100%;
   }
+
+  .light-theme & {
+    background-color: $white;
+  }
 }
 
 .configuration-dialog-gradient {

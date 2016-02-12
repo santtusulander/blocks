@@ -13,6 +13,10 @@
     background-color: rgba($black, 0.2);
   }
 
+  .light-theme & {
+    background-color: $white;
+  }
+
   .content-item-list-link {
     display: block;
     width: 100%;
@@ -77,6 +81,10 @@
 
       .dark-theme & {
         border-right: 1px solid rgba($black, 0.2);
+      }
+
+      .light-theme & {
+        border-right: 1px solid $silver-20;
       }
     }
   }

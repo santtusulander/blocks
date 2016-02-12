@@ -16,11 +16,17 @@
       stroke: $pale-blue;
       fill: transparent;
     }
+
+    .light-theme & {
+      stroke: $pale-blue;
+      fill: transparent;
+    }
   }
 
   .area {
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       fill: url('#dt-svg-gradient');
     }
   }
@@ -31,7 +37,14 @@
 
   text {
     font-size: 12px;
-    fill: $white;
+
+    .dark-theme & {
+      fill: $dt-text-color;
+    }
+
+    .light-theme & {
+      fill: $lt-text-color;
+    }
   }
 
   circle {
