@@ -43,8 +43,7 @@ class Header extends React.Component {
   }
   handleThemeChange() {
     return value => {
-      this.props.uiActions.changeTheme(value),
-      localStorage.EricssonUDNUiTheme = value
+      this.props.uiActions.changeTheme(value)
     }
   }
   render() {
