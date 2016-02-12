@@ -1,0 +1,46 @@
+// Footer
+// ======
+
+.footer {
+  height: $footer-height;
+  padding: 0 ($bar-height / 2);
+
+  @include md {
+    height: $md-footer-height;
+    padding: 0 ($md-bar-height / 2);
+  }
+
+  &.has-layout-sidebar {
+    margin-left: $sidebar-width;
+
+    @include md {
+      margin-left: $md-sidebar-width;
+    }
+
+    @include sm {
+      margin-left: $sm-sidebar-width;
+    }
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
+      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-size: 100%;
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
+  .footer-content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    p {
+      margin: 0;
+    }
+  }
+}
