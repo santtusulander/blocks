@@ -2,6 +2,7 @@
 // =======
 
 
+// scss-lint:disable SelectorDepth
 .btn {
   height: $btn-height;
   min-width: $btn-min-width;
@@ -92,6 +93,10 @@
     margin-bottom: ($bar-height - $header-btn-height) / 2;
     margin-left: 10px;
     line-height: $header-btn-height;
+    color: $dt-text-color;
+    background-color: rgba($pale-blue, 0.1);
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
 
     @include lg {
       margin-right: 5px;
@@ -139,18 +144,29 @@
     margin-left: 10px;
     vertical-align: middle;
     border-width: 0;
+
+    .light-theme .sidebar-layout &,
+    .light-theme .modal & {
+      stroke: rgba($white, 0.7);
+    }
   }
 
   &:hover .icon,
   &:focus .icon {
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       stroke: $pale-blue;
+    }
+
+    .light-theme .sidebar-layout &,
+    .light-theme .modal & {
+      stroke: $white;
     }
   }
 
-  .dark-theme .open > & {
-  // scss-lint:disable SelectorDepth
+  .dark-theme .open > &,
+  .light-theme .open > & {
 
     &,
     &:hover,
@@ -164,6 +180,21 @@
     }
   }
 
+  .light-theme .sidebar-layout .open > &,
+  .light-theme .modal .open > & {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus,
+    .icon {
+      color: $white;
+      background-color: transparent;
+      box-shadow: none;
+      stroke: $white;
+    }
+  }
+
   h1,
   h3 {
     display: inline-block;
@@ -174,16 +205,16 @@
 .btn-alerts {
   position: relative;
 
-  .btn-alerts-count {
+  .btn-alerts-indicator {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
+    top: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       color: $dt-text-color;
       background: $purple;
     }
@@ -200,15 +231,16 @@
       &:hover,
       &:active,
       &.active {
-        width: 100%;
         color: $dt-text-color;
-        text-align: left;
         background-color: rgba($black, 0.2);
-        box-shadow: none;
+        fill: $dt-text-color;
+        stroke: $dt-text-color;
       }
 
       &:hover:enabled {
         color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
       }
 
       &.active {
@@ -217,20 +249,16 @@
     }
 
     &.open .dropdown-toggle {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
 
       &,
       &:hover {
         color: $pale-blue;
         background-color: rgba($black, 0.2);
         box-shadow: none;
-      }
-    }
-
-    &.input-select .dropdown-toggle {
-      height: $bar-height;
-
-      @include md {
-        height: $md-bar-height;
+        fill: $pale-blue;
+        stroke: $pale-blue;
       }
     }
   }
@@ -278,7 +306,9 @@
     }
 
     &:hover:enabled {
-      color: $pale-blue;
+      color: $white;
+      fill: $white;
+      stroke: $white;
     }
 
     &.active {
@@ -314,9 +344,9 @@
     }
 
     &:hover:enabled {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
+      color: $white;
+      fill: $white;
+      stroke: $white;
     }
   }
 
@@ -329,7 +359,7 @@
     }
 
     &:hover:enabled {
-      color: rgba($black, 0.6);
+      color: $white;
     }
   }
 
@@ -346,6 +376,223 @@
 
     &:hover:enabled {
       color: $pale-blue;
+    }
+  }
+}
+
+.light-theme {
+
+  .dropdown-select {
+
+    .dropdown-toggle {
+
+      &,
+      &:hover,
+      &:active,
+      &.active {
+        color: $lt-text-color;
+        background-color: $white;
+      }
+
+      .icon {
+        fill: $lt-text-color;
+        stroke: $lt-text-color;
+      }
+
+      &:hover:enabled,
+      &:hover:enabled .icon {
+        color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      &.active {
+        background-color: $white;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+
+      &,
+      &:hover {
+        color: $pale-blue;
+        background-color: $white;
+        box-shadow: none;
+      }
+
+      .icon {
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+    }
+  }
+
+  .page-header-layout .dropdown-select {
+
+    .dropdown-toggle {
+
+      &,
+      &:hover,
+      &:active,
+      &.active {
+        background-color: rgba($black, 0.1);
+      }
+    }
+  }
+
+  .btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: $pale-blue;
+      background-color: rgba($pale-blue, 0.1);
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+
+    &:hover:enabled,
+    &:active:enabled,
+    &.active:enabled {
+      color: $lt-text-color;
+      fill: $lt-text-color;
+      stroke: $lt-text-color;
+    }
+  }
+
+  .sidebar-layout .btn-primary,
+  .modal .btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: $dt-text-color;
+      background-color: rgba($white, 0.2);
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:enabled,
+    &:active:enabled,
+    &.active:enabled {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+  }
+
+  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle .btn-link),
+  .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+      color: $pale-blue;
+      background-color: rgba($pale-blue, 0.1);
+      box-shadow: none;
+    }
+  }
+
+  .btn-secondary {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: $purple;
+    }
+
+    &:hover:enabled {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+
+    &.active {
+      background-color: $pale-blue;
+    }
+  }
+
+  .btn-tertiary {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: rgba($black, 0.2);
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:enabled {
+      color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .btn-success {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: $btn-success-bg;
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:enabled {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+  }
+
+  .btn-save {
+
+    &,
+    &:hover {
+      color: $dt-text-color;
+      background-color: $pale-blue;
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:enabled {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+  }
+
+  .btn-link {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: inherit;
+      text-decoration: none;
+      background-color: transparent;
+      fill: inherit;
+      stroke: inherit;
+    }
+
+    &:hover:enabled {
+      color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .sidebar-layout .btn-link,
+  .modal .btn-link {
+
+    &:hover:enabled {
+      color: $white;
     }
   }
 }

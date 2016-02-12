@@ -1,6 +1,7 @@
 // Sidebar
 // =======
 
+// scss-lint:disable SelectorDepth
 .sidebar-layout {
   position: fixed;
   top: $header-total-height;
@@ -27,6 +28,26 @@
 
     a {
       color: $dt-text-color;
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+
+  .light-theme & {
+    color: $white;
+    background-color: $pale-blue;
+
+    a,
+    .btn-link {
+      color: rgba($white, 0.7);
+      fill: rgba($white, 0.7);
+      stroke: rgba($white, 0.7);
+
+      &:hover {
+        color: $white;
+      }
     }
   }
 
@@ -44,6 +65,10 @@
 
     @include sm {
       padding: $md-btn-sm-height ($md-bar-height / 3) ($md-bar-height / 4);
+    }
+
+    .light-theme & {
+      color: $white;
     }
 
     h3,
@@ -80,6 +105,11 @@
 
     .dark-theme & {
       background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      color: $white;
+      background-color: rgba($black, 0.1);
     }
   }
 

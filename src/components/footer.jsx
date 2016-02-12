@@ -2,8 +2,12 @@ import React from 'react'
 
 class Footer extends React.Component {
   render() {
+    let className = '';
+    if(this.props.className) {
+      className = className + ' ' + this.props.className;
+    }
     return (
-      <footer>
+      <footer className={className}>
         <!-- @echo PACKAGE_VERSION -->
       </footer>
     );
@@ -11,6 +15,8 @@ class Footer extends React.Component {
 }
 
 Footer.displayName = 'Footer'
-Footer.propTypes = {}
+Footer.propTypes = {
+  className: React.PropTypes.string
+}
 
 module.exports = Footer

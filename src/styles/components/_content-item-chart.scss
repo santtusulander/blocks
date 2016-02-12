@@ -15,6 +15,7 @@
   }
 }
 
+// scss-lint:disable SelectorDepth
 .content-item-chart {
   position: relative;
   cursor: pointer;
@@ -54,11 +55,16 @@
     .dark-theme & {
       background-color: $black;
     }
+
+    .light-theme & {
+      background-color: $pale-blue;
+    }
   }
 
   .circle-gradient {
     width: 100%;
     height: 100%;
+    border: 10px solid;
     border-radius: 50%;
     opacity: 0.3;
     transition: opacity 250ms;
@@ -67,7 +73,11 @@
       background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center -10px;
       background-size: calc(100% + 20px);
-      border: 10px solid $black;
+      border-color: $black;
+    }
+
+    .light-theme & {
+      border-color: rgba($white, 0.75);
     }
   }
 
@@ -82,6 +92,10 @@
     .dark-theme & {
       background-color: $pale-blue;
     }
+
+    .light-theme & {
+      background-color: $white;
+    }
   }
 
   .content-item-chart-svg {
@@ -93,19 +107,38 @@
     border-radius: 50%;
 
     &.difference-arc {
-      fill: $pale-blue;
+
+      .dark-theme  & {
+        fill: $pale-blue;
+      }
+
+      .light-theme  & {
+        fill: $pale-blue;
+      }
     }
   }
 
   .primary-data .content-item-chart-line {
-    stroke: $pale-blue;
     stroke-width: 1.5;
-    fill: $pale-blue;
+
+    .dark-theme  & {
+      stroke: $pale-blue;
+      fill: $pale-blue;
+    }
+
+    .light-theme  & {
+      stroke: $white;
+      fill: $white;
+    }
   }
 
   .secondary-data .content-item-chart-line {
     stroke: transparent;
-    fill: rgba($pale-blue, 0.2);
+
+    .dark-theme &,
+    .light-theme & {
+      fill: rgba($pale-blue, 0.2);
+    }
   }
 
   .text-content {
@@ -114,6 +147,10 @@
     left: 50%;
     text-align: center;
     transform: translate(-50%, -50%);
+
+    .light-theme & {
+      color: $white;
+    }
 
     .content-item-text-bold {
       font-weight: bold;
