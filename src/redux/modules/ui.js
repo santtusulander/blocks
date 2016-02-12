@@ -5,8 +5,8 @@ const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 
 const defaultUI = Immutable.Map({
-  theme: 'dark',
-  viewingChart: false
+  theme: 'light',
+  viewingChart: true
 })
 
 // REDUCERS

@@ -23,12 +23,5 @@
     a {
       color: $pale-blue;
     }
-
-    &.chart-view {
-      background-attachment: fixed;
-      background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
-        linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
-      background-size: 100%;
-    }
   }
 }

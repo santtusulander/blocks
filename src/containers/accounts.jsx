@@ -6,6 +6,7 @@ import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 
 import * as accountActionCreators from '../redux/modules/account'
+import * as uiActionCreators from '../redux/modules/ui'
 import EditAccount from '../components/edit-account'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -53,24 +54,14 @@ export class Accounts extends React.Component {
     this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
     this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
     this.createNewAccount = this.createNewAccount.bind(this)
-    this.changeActiveView = this.changeActiveView.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.state = {
-      activeView: 'chart',
       activeFilter: 'traffic_high_to_low'
     }
   }
   componentWillMount() {
     this.props.accountActions.startFetching()
     this.props.accountActions.fetchAccounts(this.props.params.brand)
-  }
-  componentDidMount() {
-    if(this.state.activeView === 'chart') {
-      document.body.className += ' chart-view'
-    }
-  }
-  componentWillUnmount() {
-    document.body.className = document.body.className.replace(/ ? chart-view/, '')
   }
   toggleActiveAccount(id) {
     return () => {
@@ -96,19 +87,6 @@ export class Accounts extends React.Component {
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
   }
-  changeActiveView(type) {
-    return () => {
-      this.setState({
-        activeView: type
-      })
-      let bodyClass = document.body.className
-      if (document.body.className.indexOf('chart-view') > -1) {
-        document.body.className = bodyClass.replace(/ ? chart-view/, '')
-      } else {
-        document.body.className = bodyClass + ' chart-view'
-      }
-    }
-  }
   handleSelectChange() {
     return value => {
       this.setState({
@@ -119,7 +97,7 @@ export class Accounts extends React.Component {
   render() {
     const activeAccount = this.props.activeAccount
     return (
-      <PageContainer>
+      <PageContainer className='accounts-container content-subcontainer'>
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
@@ -137,13 +115,13 @@ export class Accounts extends React.Component {
                   ['traffic_low_to_high', 'Traffic Low to High']]}/>
 
               <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
-                (this.state.activeView === 'chart' ? ' hidden' : '')}
-                onClick={this.changeActiveView('chart')}>
+                (this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemChart/>
               </Button>
               <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (this.state.activeView === 'list' ? ' hidden' : '')}
-                onClick={this.changeActiveView('list')}>
+                (!this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
@@ -152,10 +130,9 @@ export class Accounts extends React.Component {
             <h1>Accounts</h1>
           </PageHeader>
 
-          <div className="container-fluid">
-            {this.state.activeView === 'chart' ?
-              (this.props.fetching ?
-                <p>Loading...</p> :
+          <div className="container-fluid body-content">
+            {this.props.fetching ? <p>Loading...</p> : (
+              this.props.viewingChart ?
                 <div className="content-item-grid">
                   {this.props.accounts.map((account, i) =>
                     <ContentItemChart key={i} id={account}
@@ -168,10 +145,7 @@ export class Accounts extends React.Component {
                       chartWidth="560"
                       barMaxHeight="80" />
                   )}
-                </div>
-              ) : this.state.activeView === 'list' &&
-                (this.props.fetching ?
-                <p>Loading...</p> :
+                </div> :
                 this.props.accounts.map((account, i) =>
                   <ContentItemList key={i} id={account}
                     linkTo={`/content/groups/${this.props.params.brand}/${account}`}
@@ -213,20 +187,24 @@ Accounts.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
+  viewingChart: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     accounts: state.account.get('allAccounts'),
-    fetching: state.account.get('fetching')
+    fetching: state.account.get('fetching'),
+    viewingChart: state.ui.get('viewingChart')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch)
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 
