@@ -6,6 +6,34 @@ import IconAlerts from '../components/icons/icon-alerts.jsx'
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap';
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
+
+    this.state = {
+      animatingGradient: false
+    }
+  }
+  componentDidMount() {
+    this.refs.gradient.addEventListener('webkitAnimationEnd', this.resetGradientAnimation)
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fetching) {
+      this.setState({animatingGradient: true})
+    }
+  }
+  resetGradientAnimation() {
+    const gradient = this.refs.gradient
+    gradient.classList.remove('animated')
+    if(this.props.fetching) {
+      gradient.offsetWidth // trigger reflow to restart animation
+      gradient.classList.add('animated')
+    }
+    else {
+      this.setState({animatingGradient: false})
+    }
+  }
   render() {
     let className = 'header';
     if(this.props.className) {
@@ -13,7 +41,10 @@ class Header extends React.Component {
     }
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
-        <div className="header-gradient"></div>
+        <div ref="gradient"
+          className={this.state.animatingGradient ?
+            'header-gradient animated' :
+            'header-gradient'}></div>
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">Ericsson</a>
@@ -110,7 +141,8 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  fetching: React.PropTypes.bool
 }
 
 module.exports = Header

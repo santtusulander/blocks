@@ -20,13 +20,19 @@ function groupActionsMaker() {
     deleteGroup: jest.genMockFunction()
   }
 }
+function uiActionsMaker() {
+  return {
+    toggleChartView: jest.genMockFunction()
+  }
+}
 
 const urlParams = {brand: 'udn', account: 1}
 
 describe('Groups', () => {
   it('should exist', () => {
     let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()} fetching={true}
+      <Groups groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()} fetching={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
@@ -35,7 +41,8 @@ describe('Groups', () => {
   it('should request data on mount', () => {
     const groupActions = groupActionsMaker()
     TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions} fetching={true}
+      <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()} fetching={true}
         params={urlParams}/>
     )
     expect(groupActions.startFetching.mock.calls.length).toBe(1)
@@ -44,7 +51,8 @@ describe('Groups', () => {
 
   it('should show a loading message', () => {
     let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()} fetching={true}
+      <Groups groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()} fetching={true}
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
@@ -54,11 +62,11 @@ describe('Groups', () => {
   it('should show existing groups as charts', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1,2])}
-        params={urlParams}/>
+        params={urlParams}
+        viewingChart={true}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).not.toContain('Loading...')
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemChart)
     expect(child.length).toBe(2)
     expect(child[0].props.id).toBe(1)
@@ -67,11 +75,11 @@ describe('Groups', () => {
   it('should show existing groups as lists', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1,2])}
-        params={urlParams}/>
+        params={urlParams}
+        viewingChart={false}/>
     )
-    let btn = TestUtils.scryRenderedDOMComponentsWithClass(groups, 'toggle-view')
-    TestUtils.Simulate.click(btn[1])
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemList)
     expect(child.length).toBe(2)
     expect(child[0].props.id).toBe(1)
@@ -81,6 +89,7 @@ describe('Groups', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1])}
         params={urlParams}/>
     )
@@ -92,6 +101,7 @@ describe('Groups', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1])}
         activeGroup={Immutable.Map({group_id:1})}
         params={urlParams}/>
@@ -104,6 +114,7 @@ describe('Groups', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1])}
         activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
         params={urlParams}/>
@@ -119,6 +130,7 @@ describe('Groups', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1])}
         activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
         params={urlParams}/>
@@ -134,6 +146,7 @@ describe('Groups', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
+        uiActions={uiActionsMaker()}
         groups={Immutable.List([1])}
         params={urlParams}/>
     )

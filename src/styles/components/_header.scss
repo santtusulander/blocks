@@ -72,7 +72,37 @@
 .header-gradient {
   height: $header-gradient-height;
   margin: 0 -15px;
-  background: $gradient-full;
+  background: linear-gradient(
+    to right,
+    $gradient-lime,
+    $gradient-green-haze,
+    $gradient-bondi-blue,
+    $gradient-navy,
+    $gradient-magenta,
+    $gradient-navy,
+    $gradient-bondi-blue,
+    $gradient-green-haze,
+    $gradient-lime
+  );
+  background-size: 200% 200%;
+
+  &.animated {
+    animation: HeaderAnimation 1s linear 1;
+  }
+}
+
+@keyframes HeaderAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .navbar-default {

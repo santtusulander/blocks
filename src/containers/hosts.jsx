@@ -6,6 +6,7 @@ import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-
 import { Link } from 'react-router'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -52,11 +53,9 @@ export class Hosts extends React.Component {
 
     this.createNewHost = this.createNewHost.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
-    this.changeActiveView = this.changeActiveView.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.toggleAddHost = this.toggleAddHost.bind(this)
     this.state = {
-      activeView: 'chart',
       activeFilter: 'traffic_high_to_low',
       addHost: false
     }
@@ -68,14 +67,6 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
-  }
-  componentDidMount() {
-    if(this.state.activeView === 'chart') {
-      document.body.className += ' chart-view'
-    }
-  }
-  componentWillUnmount() {
-    document.body.className = document.body.className.replace(/ ? chart-view/, '')
   }
   createNewHost(id) {
     this.props.hostActions.createHost(
@@ -99,19 +90,6 @@ export class Hosts extends React.Component {
       addHost: !this.state.addHost
     })
   }
-  changeActiveView(type) {
-    return () => {
-      this.setState({
-        activeView: type
-      })
-      let bodyClass = document.body.className
-      if (document.body.className.indexOf('chart-view') > -1) {
-        document.body.className = bodyClass.replace(/ ? chart-view/, '')
-      } else {
-        document.body.className = bodyClass + ' chart-view'
-      }
-    }
-  }
   handleSelectChange() {
     return value => {
       this.setState({
@@ -121,7 +99,7 @@ export class Hosts extends React.Component {
   }
   render() {
     return (
-      <PageContainer>
+      <PageContainer className='hosts-container content-subcontainer'>
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
@@ -142,13 +120,13 @@ export class Hosts extends React.Component {
                   ['traffic_low_to_high', 'Traffic Low to High']]}/>
 
               <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
-                (this.state.activeView === 'chart' ? ' hidden' : '')}
-                onClick={this.changeActiveView('chart')}>
+                (this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemChart/>
               </Button>
               <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (this.state.activeView === 'list' ? ' hidden' : '')}
-                onClick={this.changeActiveView('list')}>
+                (!this.props.viewingChart ? ' hidden' : '')}
+                onClick={this.props.uiActions.toggleChartView}>
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
@@ -157,15 +135,14 @@ export class Hosts extends React.Component {
             <h1>Group Name</h1>
           </PageHeader>
 
-          <div className="container-fluid">
+          <div className="container-fluid body-content">
             <Breadcrumb>
               <BreadcrumbItem>Account Name</BreadcrumbItem>
               <BreadcrumbItem active={true}>Group Name</BreadcrumbItem>
             </Breadcrumb>
 
-            {this.state.activeView === 'chart' ?
-              (this.props.fetching ?
-                <p className="loading-text">Loading...</p> :
+            {this.props.fetching ? <p>Loading...</p> : (
+              this.props.viewingChart ?
                 <div className="content-item-grid">
                   {this.props.hosts.map((host, i) =>
                     <ContentItemChart key={i} id={host}
@@ -179,10 +156,7 @@ export class Hosts extends React.Component {
                       chartWidth="480"
                       barMaxHeight="80" />
                   )}
-                </div>
-              ) : this.state.activeView === 'list' &&
-                (this.props.fetching ?
-                <p className="loading-text">Loading...</p> :
+                </div> :
                 this.props.hosts.map((host, i) =>
                   <ContentItemList key={i} id={host}
                     linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${host}`}
@@ -220,19 +194,23 @@ Hosts.propTypes = {
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
+  viewingChart: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
   return {
     hosts: state.host.get('allHosts'),
-    fetching: state.host.get('fetching')
+    fetching: state.host.get('fetching'),
+    viewingChart: state.ui.get('viewingChart')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    hostActions: bindActionCreators(hostActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

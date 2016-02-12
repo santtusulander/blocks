@@ -3,8 +3,8 @@
 
 html,
 body {
-  height: 100%;
   min-width: 1024px;
+  min-height: 100%;
 }
 
 body {
@@ -18,48 +18,23 @@ body {
   @include sm {
     font-size: $sm-font-size;
   }
-
-  &.dark-theme {
-    color: $dt-text-color;
-    background-attachment: fixed;
-    background-color: $black;
-    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
-      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
-    background-size: 100%;
-  }
-
-  &.light-theme {
-    color: $lt-text-color;
-    background-color: $silver-20;
-
-    &.chart-view {
-      background-attachment: fixed;
-      background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
-        linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
-      background-size: 100%;
-    }
-  }
 }
 
 .invisible {
   opacity: 0;
 }
 
-&.dark-theme {
+.main-content {
+  padding-top: $header-total-height;
 
-  hr {
-    border-top-color: rgba($pale-blue, 0.2);
+  @include md {
+    padding-top: $md-header-total-height;
   }
 
-  a {
-    color: $pale-blue;
-  }
-}
-
-&.light-theme {
-
-  a {
-    color: $pale-blue;
+  .modal-open & {
+    filter: blur(15px);
+    // Enable hardware acceleration
+    transform: translate3d(0, 0, 0);
   }
 }
 
