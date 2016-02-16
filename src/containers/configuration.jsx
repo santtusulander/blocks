@@ -154,7 +154,7 @@ export class Configuration extends React.Component {
               </Button>
               {activeEnvironment === 2 || activeEnvironment === 3 ?
                 <Button bsStyle="primary"
-                  onClick={() => this.changeActiveVersionEnvironment('in_process')}>
+                  onClick={() => this.changeActiveVersionEnvironment(1)}>
                   Retire
                 </Button>
                 : ''
