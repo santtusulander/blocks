@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import Header from '../components/header'
-import Footer from '../components/footer'
 
 export class Main extends React.Component {
   render() {
@@ -18,8 +17,7 @@ export class Main extends React.Component {
       <div className={classNames}>
         <Header className={currentRoute === 'login' ? 'hidden' : ''}
           fetching={this.props.fetching}/>
-        {this.props.children}
-        <Footer className={currentRoute === 'login' ? 'hidden' : ''}/>
+        <div className="content-container">{this.props.children}</div>
       </div>
     );
   }
