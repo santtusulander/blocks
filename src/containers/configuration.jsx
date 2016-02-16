@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
+import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
 
@@ -45,7 +46,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.params.host
+      this.props.location.query.name
     )
   }
   getActiveConfig() {
@@ -80,22 +81,23 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.params.host,
+      this.props.location.query.name,
       id
     )
   }
   cloneActiveVersion() {
     let newVersion = this.getActiveConfig()
     newVersion = newVersion
-      .set('label', `Copy of ${newVersion.get('label') || newVersion.get('config_id')}`)
-      .set('config_id', this.props.activeHost.getIn(['services',0,'configurations']).size)
-      .setIn(['configuration_status','environment'], 'in_process')
+      .set('config_name', `Copy of ${newVersion.get('config_name') || newVersion.get('config_id')}`)
+      .delete('config_id')
+      .setIn(['configuration_status','environment'], 1)
     const newHost = this.props.activeHost.setIn(['services',0,'configurations'],
       this.props.activeHost.getIn(['services',0,'configurations']).push(newVersion))
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.location.query.name,
       newHost.toJS()
     )
   }
@@ -107,6 +109,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.location.query.name,
       newHost.toJS()
     )
   }
@@ -119,6 +122,7 @@ export class Configuration extends React.Component {
     }
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('environment')
+    const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
@@ -127,17 +131,18 @@ export class Configuration extends React.Component {
             fetching={this.props.fetching}
             configurations={this.props.activeHost.get('services').get(0).get('configurations')}
             activate={this.activateVersion}
-            propertyName={this.props.params.host}
+            propertyName={this.props.location.query.name}
             activeIndex={this.state.activeConfig}
-            addVersion={this.cloneActiveVersion}/>
+            addVersion={this.cloneActiveVersion}
+            status={this.props.activeHost.get('status')}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
 
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              {activeEnvironment === "staging" ||
-                activeEnvironment === "in_process" ||
+              {activeEnvironment === 2 ||
+                activeEnvironment === 1 ||
                 !activeEnvironment ?
                 <Button bsStyle="primary" onClick={this.togglePublishModal}>
                   Publish
@@ -147,7 +152,7 @@ export class Configuration extends React.Component {
               <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
                 Copy
               </Button>
-              {activeEnvironment === "staging" || activeEnvironment === "production" ?
+              {activeEnvironment === 2 || activeEnvironment === 3 ?
                 <Button bsStyle="primary"
                   onClick={() => this.changeActiveVersionEnvironment('in_process')}>
                   Retire
@@ -156,16 +161,16 @@ export class Configuration extends React.Component {
               }
             </ButtonToolbar>
 
-            <h1>{activeConfig.get('label') || activeConfig.get('config_id')}</h1>
+            <h1>{activeConfig.get('config_name') || activeConfig.get('config_id')}</h1>
             <p className="text-sm">
               <span className="right-separator">
                 {activeConfig.get('edge_configuration').get('origin_host_name')}
               </span>
               <span className="right-separator">
-                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[0]}
+                {deployMoment.format('MMM, D YYYY')}
               </span>
               <span className="right-separator">
-                {activeConfig.get('configuration_status').get('last_edited').split(' - ')[1]} am
+                {deployMoment.format('H:MMa')}
               </span>
               {activeConfig.get('configuration_status').get('last_edited_by')}
             </p>
@@ -250,7 +255,7 @@ export class Configuration extends React.Component {
               <ConfigurationPublishVersion
                 hideAction={this.togglePublishModal}
                 saveChanges={this.changeActiveVersionEnvironment}
-                versionName={activeConfig.get('label') || activeConfig.get('config_id')}/>
+                versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}/>
             </Modal.Body>
           </Modal>
           : ''}
@@ -264,6 +269,7 @@ Configuration.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
+  location: React.PropTypes.object,
   params: React.PropTypes.object
 }
 
