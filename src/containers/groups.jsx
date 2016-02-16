@@ -96,10 +96,11 @@ export class Groups extends React.Component {
   cancelActiveGroupChanges() {
     this.props.groupActions.changeActiveGroup(null)
   }
-  createNewGroup() {
+  createNewGroup(name) {
     this.props.groupActions.createGroup(
       this.props.params.brand,
-      this.props.params.account
+      this.props.params.account,
+      name
     )
   }
   deleteGroup(id) {
@@ -160,9 +161,9 @@ export class Groups extends React.Component {
               this.props.viewingChart ?
                 <div className="content-item-grid">
                   {this.props.groups.map((group, i) =>
-                    <ContentItemChart key={i} id={group}
-                      linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
-                      name="Name" description="Desc"
+                    <ContentItemChart key={i} id={group.get('id')}
+                      linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                      name={group.get('name')} description="Desc"
                       delete={this.deleteGroup}
                       primaryData={fakeRecentData}
                       secondaryData={fakeAverageData}
@@ -172,9 +173,9 @@ export class Groups extends React.Component {
                   )}
                 </div> :
                 this.props.groups.map((group, i) =>
-                  <ContentItemList key={i} id={group}
-                    linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group}`}
-                    name="Name" description="Desc"
+                  <ContentItemList key={i} id={group.get('id')}
+                    linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                    name={group.get('name')} description="Desc"
                     delete={this.deleteGroup}
                     primaryData={fakeRecentData}
                     secondaryData={fakeAverageData}/>
