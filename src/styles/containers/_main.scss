@@ -1,11 +1,19 @@
 .main-container {
-  &.dark-theme {
+  height: 100%;
+  padding-top: $header-total-height;
+
+  @include md {
+    padding-top: $md-header-total-height;
+  }
+
+  .modal-open & {
+    filter: blur(15px);
+    // Enable hardware acceleration
+    transform: translate3d(0, 0, 0);
+  }
+
+  &.dark-theme .content-container {
     color: $dt-text-color;
-    background-attachment: fixed;
-    background-color: $black;
-    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
-      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
-    background-size: 100%;
 
     hr {
       border-top-color: rgba($pale-blue, 0.2);
@@ -16,9 +24,8 @@
     }
   }
 
-  &.light-theme {
+  &.light-theme .content-container {
     color: $lt-text-color;
-    background-color: $silver-20;
 
     a {
       color: $pale-blue;
