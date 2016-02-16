@@ -99,8 +99,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createGroup = createAction(GROUP_CREATED, (brand, account) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {}, {
+export const createGroup = createAction(GROUP_CREATED, (brand, account, name) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {name: name}, {
     headers: defaultHeaders
   })
   .then((res) => {
