@@ -141,8 +141,8 @@ export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group)
   });
 })
 
-export const updateHost = createAction(HOST_UPDATED, (brand, account, group, host) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${host.published_host_id}`, host, {
+export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host, {
     headers: defaultHeaders
   })
   .then(() => {

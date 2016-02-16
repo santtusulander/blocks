@@ -24,6 +24,8 @@ function hostActionsMaker() {
 
 const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
 
+const fakeLocation = {query: {name: 'www.abc.com'}}
+
 const fakeHost = Immutable.fromJS({
   "status": 1,
   "updated": 1453422142.746901,
@@ -218,7 +220,7 @@ describe('Configuration', () => {
   it('should exist', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     expect(TestUtils.isCompositeComponent(config)).toBeTruthy();
   });
@@ -227,7 +229,7 @@ describe('Configuration', () => {
     const hostActions = hostActionsMaker()
     TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions} fetching={true}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
@@ -239,7 +241,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
     let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
@@ -259,7 +261,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
@@ -283,7 +285,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
@@ -307,7 +309,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
@@ -331,7 +333,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
@@ -355,7 +357,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
@@ -380,7 +382,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     config.changeValue(['edge_configuration', 'origin_host_name'], 'new value')
     expect(hostActions.changeActiveHost.mock.calls[0][0].toJS()).toEqual(
@@ -395,7 +397,7 @@ describe('Configuration', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     config.saveActiveHostChanges()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
@@ -404,32 +406,34 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
   })
 
-  it('should add a verson', () => {
+  it('should add a version', () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
     config.cloneActiveVersion()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
-    expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations.length).toBe(2)
+    expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations.length).toBe(2)
   })
 
-  it("should change a verson's environment", () => {
+  it("should change a version's environment", () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams}/>
+        params={urlParams} location={fakeLocation}/>
     );
-    config.changeActiveVersionEnvironment('in_process')
+    config.changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
-    expect(hostActions.updateHost.mock.calls[0][3].services[0].configurations[0]
-      .configuration_status.environment).toBe('in_process')
+    expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
+      .configuration_status.environment).toBe(1)
   })
 })

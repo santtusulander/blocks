@@ -146,9 +146,9 @@ export class Hosts extends React.Component {
                 <div className="content-item-grid">
                   {this.props.hosts.map((host, i) =>
                     <ContentItemChart key={i} id={host}
-                      linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${host}`}
-                      configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${host}`}
-                      name="Name" description="Desc"
+                      linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                      configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                      name={host} description="Desc"
                       delete={this.deleteHost}
                       primaryData={fakeRecentData}
                       secondaryData={fakeAverageData}
@@ -159,9 +159,9 @@ export class Hosts extends React.Component {
                 </div> :
                 this.props.hosts.map((host, i) =>
                   <ContentItemList key={i} id={host}
-                    linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${host}`}
-                    configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${host}`}
-                    name="Name" description="Desc"
+                    linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                    configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                    name={host} description="Desc"
                     primaryData={fakeRecentData}
                     secondaryData={fakeAverageData}/>
                 )
