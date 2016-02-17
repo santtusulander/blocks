@@ -31,6 +31,14 @@ const fakeProperties = Immutable.fromJS([
   }
 ])
 
+function purgeActionsMaker() {
+  return {
+    createPurge: jest.genMockFunction(),
+    resetActivePurge: jest.genMockFunction(),
+    updateActivePurge: jest.genMockFunction()
+  }
+}
+
 describe('Configurations', () => {
   it('should exist', () => {
     let configurations = TestUtils.renderIntoDocument(
@@ -47,7 +55,8 @@ describe('Configurations', () => {
   });
   it('should activate a property to purge', () => {
     let configurations = TestUtils.renderIntoDocument(
-      <Configurations properties={Immutable.List()} />
+      <Configurations properties={Immutable.List()}
+        purgeActions={purgeActionsMaker()}/>
     );
     expect(configurations.state.activePurge).toBe(null);
     configurations.activatePurge('aaa')()
@@ -64,5 +73,25 @@ describe('Configurations', () => {
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(configurations, 'td');
     expect(tds[0].textContent).toContain('www.foobar.com');
+  });
+  it('should create a new purge', () => {
+    const purgeActions = purgeActionsMaker()
+    let configurations = TestUtils.renderIntoDocument(
+      <Configurations
+        params={{brand:'abc'}}
+        accounts={fakeAccounts}
+        groups={fakeGroups}
+        properties={fakeProperties}
+        fetching={false}
+        activePurge={fakeProperties.get(0)}
+        purgeActions={purgeActions}/>
+    );
+    configurations.activatePurge(0)()
+    configurations.saveActivePurge()
+    expect(purgeActions.createPurge.mock.calls[0][0]).toBe('abc')
+    expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
+    expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
+    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('www.foobar.com')
+    expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakeProperties.get(0).toJS())
   });
 })
