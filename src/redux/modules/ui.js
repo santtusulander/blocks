@@ -4,8 +4,8 @@ import Immutable from 'immutable'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 
-const theme = window.localStorage.getItem('EricssonUDNUiTheme') ?
-  window.localStorage.getItem('EricssonUDNUiTheme') : 'dark'
+const theme = localStorage.getItem('EricssonUDNUiTheme') ?
+  localStorage.getItem('EricssonUDNUiTheme') : 'dark'
 
 const defaultUI = Immutable.Map({
   theme: theme,
@@ -16,7 +16,7 @@ const defaultUI = Immutable.Map({
 
 export default handleActions({
   UI_THEME_CHANGED: (state, action) => {
-    window.localStorage.setItem('EricssonUDNUiTheme', action.payload)
+    localStorage.setItem('EricssonUDNUiTheme', action.payload)
     return state.set('theme', action.payload)
   },
   UI_CHART_VIEW_TOGGLED: (state) => {

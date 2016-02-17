@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import * as uiActionCreators from '../redux/modules/ui'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 
@@ -41,10 +38,8 @@ class Header extends React.Component {
       this.setState({animatingGradient: false})
     }
   }
-  handleThemeChange() {
-    return value => {
-      this.props.uiActions.changeTheme(value)
-    }
+  handleThemeChange(value) {
+    this.props.handleThemeChange(value)
   }
   render() {
     let className = 'header';
@@ -159,7 +154,7 @@ class Header extends React.Component {
                       <div className="user-menu-item">
                         <div className="helper-header helper-ui-theme">UI Theme</div>
                         <Select className="btn-block"
-                          onSelect={this.handleThemeChange()}
+                          onSelect={this.handleThemeChange}
                           value={this.props.theme}
                           options={[
                             ['dark', 'Ericsson Dark Theme'],
@@ -187,20 +182,8 @@ Header.displayName = 'Header'
 Header.propTypes = {
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
-  theme: React.PropTypes.string,
-  uiActions: React.PropTypes.object
+  handleThemeChange: React.PropTypes.func,
+  theme: React.PropTypes.string
 }
 
-function mapStateToProps(state) {
-  return {
-    theme: state.ui.get('theme')
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
+module.exports = Header;
