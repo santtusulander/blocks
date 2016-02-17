@@ -9,11 +9,22 @@ const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'
 const PURGE_FETCHED_ALL = 'PURGE_FETCHED_ALL'
 const PURGE_START_FETCH = 'PURGE_START_FETCH'
+const PURGE_RESET_ACTIVE = 'PURGE_RESET_ACTIVE'
+const PURGE_UPDATE_ACTIVE = 'PURGE_UPDATE_ACTIVE'
 
 const emptyPurges = Immutable.Map({
   activePurge: null,
   fetching: false,
   allPurges: Immutable.List()
+})
+
+const emptyPurge = Immutable.fromJS({
+  action: 'remove',
+  objects: ['sss', 'ggg'],
+  note: 'aaa',
+  feedback: {
+    email: 'bbb'
+  }
 })
 
 // REDUCERS
@@ -63,6 +74,12 @@ export default handleActions({
   },
   PURGE_START_FETCH: (state) => {
     return state.set('fetching', true)
+  },
+  PURGE_RESET_ACTIVE: (state) => {
+    return state.set('activePurge', emptyPurge)
+  },
+  PURGE_UPDATE_ACTIVE: (state, action) => {
+    return state.set('activePurge', action.payload)
   }
 }, emptyPurges)
 
@@ -98,3 +115,7 @@ export const fetchAllPurges = createAction(PURGE_FETCHED_ALL, (brand, account, g
 })
 
 export const startFetching = createAction(PURGE_START_FETCH)
+
+export const resetActivePurge = createAction(PURGE_RESET_ACTIVE)
+
+export const updateActivePurge = createAction(PURGE_UPDATE_ACTIVE)
