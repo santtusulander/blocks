@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import * as uiActionCreators from '../redux/modules/ui'
 
 import Header from '../components/header'
 
@@ -16,7 +19,9 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
         <Header className={currentRoute === 'login' ? 'hidden' : ''}
-          fetching={this.props.fetching}/>
+          fetching={this.props.fetching}
+          theme={this.props.theme}
+          handleThemeChange={this.props.uiActions.changeTheme}/>
         <div className="content-container">{this.props.children}</div>
       </div>
     );
@@ -29,6 +34,7 @@ Main.propTypes = {
   fetching: React.PropTypes.bool,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
+  uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
 
@@ -46,4 +52,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Main);
+function mapDispatchToProps(dispatch) {
+  return {
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

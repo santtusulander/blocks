@@ -68,6 +68,7 @@
       "src"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor",
+    "setupEnvScriptFile": "<rootDir>/jest-env-setup",
     "moduleFileExtensions": [
       "js",
       "jsx"

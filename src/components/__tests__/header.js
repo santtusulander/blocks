@@ -10,14 +10,14 @@ const Header = require('../header.jsx')
 describe('Header', () => {
   it('should exist', () => {
     let header = TestUtils.renderIntoDocument(
-      <Header />
+      <Header theme="dark" />
     );
     expect(TestUtils.isCompositeComponent(header)).toBeTruthy();
   });
 
   it('can be passed a custom css class', () => {
     let header = TestUtils.renderIntoDocument(
-      <Header className="foo" />
+      <Header className="foo" theme="dark" />
     );
     let container = TestUtils.findRenderedDOMComponentWithTag(header, 'nav');
     expect(ReactDOM.findDOMNode(container).className).toContain('foo');
