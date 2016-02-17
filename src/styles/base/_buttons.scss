@@ -12,6 +12,7 @@
   line-height: $btn-height;
   border: 0;
   border-radius: 2px;
+  box-shadow: none;
 
   @include md {
     height: $md-btn-height;
@@ -221,7 +222,8 @@
   }
 }
 
-.dark-theme {
+.dark-theme,
+.light-theme .header {
 
   .dropdown-select {
 
@@ -237,7 +239,8 @@
         stroke: $dt-text-color;
       }
 
-      &:hover:enabled {
+      &:hover:enabled,
+      &:hover:enabled .icon {
         color: $pale-blue;
         fill: $pale-blue;
         stroke: $pale-blue;
@@ -245,6 +248,11 @@
 
       &.active {
         background-color: rgba($black, 0.2);
+      }
+
+      .icon {
+        fill: $dt-text-color;
+        stroke: $dt-text-color;
       }
     }
 
@@ -257,6 +265,11 @@
         color: $pale-blue;
         background-color: rgba($black, 0.2);
         box-shadow: none;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      .icon {
         fill: $pale-blue;
         stroke: $pale-blue;
       }
