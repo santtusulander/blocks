@@ -3,9 +3,9 @@ import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
 jest.dontMock('../analyses.jsx')
-const Analyses = require('../analyses.jsx')
+const Analyses = require('../analyses.jsx').Analyses
 
-describe('ConfigurationVersions', () => {
+describe('Analyses', () => {
   it('should exist', () => {
     let analyses = TestUtils.renderIntoDocument(
       <Analyses />

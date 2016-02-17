@@ -4,11 +4,19 @@
 // scss-lint:disable SelectorFormat SelectorDepth NestingDepth
 // Need to override default styles
 
-.datepicker__container {
+.datepicker__tether-element {
+  z-index: 1010;
+  opacity: 0;
+  transition: opacity 150ms;
 
-  &.tether-target-attached-bottom,
-  &.tether-target-attached-top {
+  &.datepicker__tether-element-attached-bottom,
+  &.datepicker__tether-element-attached-top {
     margin-top: -10px;
+  }
+
+  &.dark-datepicker,
+  &.light-datepicker {
+    opacity: 1;
   }
 }
 
@@ -17,7 +25,6 @@
   padding: 15px 25px 25px;
   font-family: inherit;
   font-size: inherit;
-  color: inherit;
   border: 0;
   border-radius: 0;
 
@@ -30,11 +37,17 @@
     padding: 10px 15px;
   }
 
-  .dark-theme & {
+  .dark-datepicker & {
+    color: $dt-text-color;
     background-color: $black;
     background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
       linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
     background-size: 100%;
+  }
+
+  .light-datepicker & {
+    color: $lt-text-color;
+    background-color: $white;
   }
 }
 
@@ -48,11 +61,11 @@
   border-bottom: 1px solid;
   border-radius: 0;
 
-  .dark-theme & {
+  .dark-datepicker & {
     border-color: rgba($white, 0.1);
   }
 
-  .light-theme & {
+  .light-datepicker & {
     border-color: rgba($black, 0.1);
   }
 }
@@ -69,11 +82,11 @@
     padding-bottom: 10px;
   }
 
-  .dark-theme & {
+  .dark-datepicker & {
     border-color: rgba($white, 0.1);
   }
 
-  .light-theme & {
+  .light-datepicker & {
     border-color: rgba($black, 0.1);
   }
 }
@@ -101,7 +114,7 @@
   &.datepicker__navigation--previous {
     left: -5px;
 
-    .dark-theme & {
+    .dark-datepicker & {
 
       &::after {
         border-left: 0;
@@ -113,7 +126,7 @@
   &.datepicker__navigation--next {
     right: -5px;
 
-    .dark-theme & {
+    .dark-datepicker & {
 
       &::after {
         border-right: 0;
@@ -147,7 +160,7 @@
     background-color: inherit;
     border-radius: 0;
 
-    .dark-theme &:not(.datepicker__day--disabled ) {
+    .dark-datepicker &:not(.datepicker__day--disabled ) {
       color: $white;
     }
   }
@@ -162,11 +175,11 @@
 
   &.datepicker__day--outside-month {
 
-    .dark-theme & {
+    .dark-datepicker & {
       color: rgba($dt-text-color, 0.5);
     }
 
-    .light-theme & {
+    .light-datepicker & {
       color: rgba($lt-text-color, 0.5);
     }
   }
@@ -193,11 +206,11 @@
       margin: (-$md-bar-height / 4) 0 0 (-$md-bar-height / 4);
     }
 
-    .dark-theme & {
+    .dark-datepicker & {
       border-color: $white;
     }
 
-    .light-theme & {
+    .light-datepicker & {
       border-color: $lt-text-color;
     }
   }
@@ -233,25 +246,25 @@
       margin: 0 auto (-$md-bar-height / 2);
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-datepicker &,
+    .light-datepicker & {
       background-color: $pale-blue;
     }
   }
 }
 
-.tether-target-attached-right .datepicker__day--selected {
-  background: linear-gradient(to right,
-    rgba($pale-blue, 0.1) 0%,
-    rgba($pale-blue, 0.1) 50%,
-    transparent 51%);
+.datepicker__tether-element-attached-right {
 
-  &::before {
+  .datepicker__day--selected {
+    background: linear-gradient(to right,
+      rgba($pale-blue, 0.1) 0%,
+      rgba($pale-blue, 0.1) 50%,
+      transparent 51%);
+  }
 
-    .dark-theme &,
-    .light-theme & {
-      background-color: $purple;
-    }
+  &.dark-datepicker .datepicker__day--selected::before,
+  &.light-datepicker .datepicker__day--selected::before {
+    background-color: $purple;
   }
 }
 
@@ -314,7 +327,7 @@
         linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
       background-size: 100%;
 
-      &.tether-enabled {
+      &.datepicker__tether-enabled {
         background: $black;
         background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
           linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
@@ -325,7 +338,7 @@
     .light-theme & {
       background: $silver-20;
 
-      &.tether-enabled {
+      &.datepicker__tether-enabled {
         background: $white;
       }
     }
@@ -344,7 +357,6 @@
       border: 0;
       border-radius: 0;
       box-shadow: none;
-      transition: background-color 250ms;
 
       @include md {
         height: $md-btn-height;
