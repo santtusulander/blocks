@@ -26,6 +26,11 @@ function uiActionsMaker() {
   }
 }
 
+const fakeAccounts = Immutable.fromJS([
+  {id: 1, name: 'aaa'},
+  {id: 2, name: 'bbb'}
+])
+
 const urlParams = {brand: 'udn'}
 
 describe('Accounts', () => {
@@ -63,7 +68,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1,2])}
+        accounts={fakeAccounts}
         params={urlParams}
         viewingChart={true}/>
     )
@@ -76,7 +81,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1,2])}
+        accounts={fakeAccounts}
         params={urlParams}
         viewingChart={false}/>
     )
@@ -90,7 +95,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1])}
+        accounts={fakeAccounts}
         params={urlParams}/>
     )
     accounts.toggleActiveAccount(1)()
@@ -102,7 +107,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1])}
+        accounts={fakeAccounts}
         activeAccount={Immutable.Map({account_id:1})}
         params={urlParams}/>
     )
@@ -115,7 +120,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1])}
+        accounts={fakeAccounts}
         activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
         params={urlParams}/>
     )
@@ -131,7 +136,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1])}
+        accounts={fakeAccounts}
         activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
         params={urlParams}/>
     )
@@ -147,7 +152,7 @@ describe('Accounts', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
-        accounts={Immutable.List([1])}
+        accounts={fakeAccounts}
         params={urlParams}/>
     )
     accounts.deleteAccount(1)

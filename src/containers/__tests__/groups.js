@@ -26,6 +26,11 @@ function uiActionsMaker() {
   }
 }
 
+const fakeGroups = Immutable.fromJS([
+  {id: 1, name: 'aaa'},
+  {id: 2, name: 'bbb'}
+])
+
 const urlParams = {brand: 'udn', account: 1}
 
 describe('Groups', () => {
@@ -63,7 +68,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1,2])}
+        groups={fakeGroups}
         params={urlParams}
         viewingChart={true}/>
     )
@@ -76,7 +81,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1,2])}
+        groups={fakeGroups}
         params={urlParams}
         viewingChart={false}/>
     )
@@ -90,7 +95,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1])}
+        groups={fakeGroups}
         params={urlParams}/>
     )
     groups.toggleActiveGroup(1)()
@@ -102,7 +107,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1])}
+        groups={fakeGroups}
         activeGroup={Immutable.Map({group_id:1})}
         params={urlParams}/>
     )
@@ -115,7 +120,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1])}
+        groups={fakeGroups}
         activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
         params={urlParams}/>
     )
@@ -131,7 +136,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1])}
+        groups={fakeGroups}
         activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
         params={urlParams}/>
     )
@@ -147,7 +152,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        groups={Immutable.List([1])}
+        groups={fakeGroups}
         params={urlParams}/>
     )
     groups.deleteGroup(1)

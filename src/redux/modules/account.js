@@ -65,7 +65,7 @@ export default handleActions({
   ACCOUNT_FETCHED_ALL: {
     next(state, action) {
       return state.merge({
-        allAccounts: Immutable.fromJS(action.payload),
+        allAccounts: Immutable.fromJS(action.payload.data),
         fetching: false
       })
     },
@@ -100,7 +100,7 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/`, {}, {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
     headers: defaultHeaders
   })
   .then((res) => {
@@ -131,7 +131,7 @@ export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/`, {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts`, {
     headers: defaultHeaders
   })
   .then((res) => {

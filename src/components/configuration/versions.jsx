@@ -12,7 +12,7 @@ function versionFactory(configuration, i) {
     <Version key={i}
       activate={this.activate(id)}
       active={configuration.get('active')}
-      label={configuration.get('label') || id}/>
+      label={configuration.get('config_name') || id}/>
   )
 }
 
@@ -31,19 +31,12 @@ export class ConfigurationVersions extends React.Component {
     if(this.props.fetching) {
       return <div>Loading...</div>
     }
-    let highestAttainment = 'In Process'
     const configs = this.props.configurations.reduce((built, config, i) => {
       config = config.set('active', i === this.props.activeIndex)
-      if(config.get('configuration_status').get('environment') == 'production'){
-        if(highestAttainment == 'In Process' || highestAttainment == 'In Staging') {
-          highestAttainment = 'In Production'
-        }
+      if(config.get('configuration_status').get('environment') == 3){
         built.production.push(config)
       }
-      else if(config.get('configuration_status').get('environment') == 'staging'){
-        if(highestAttainment == 'In Process') {
-          highestAttainment = 'In Staging'
-        }
+      else if(config.get('configuration_status').get('environment') == 2){
         built.staging.push(config)
       }
       else {
@@ -51,6 +44,13 @@ export class ConfigurationVersions extends React.Component {
       }
       return built
     }, {production: [], staging: [], inprocess: []})
+    let highestAttainment = 'In Process'
+    if(this.props.status === 2) {
+      highestAttainment = 'In Staging'
+    }
+    else if(this.props.status === 3) {
+      highestAttainment = 'In Production'
+    }
     return (
       <div className="configuration-versions">
         <div className="sidebar-header">
@@ -110,7 +110,8 @@ ConfigurationVersions.propTypes = {
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  propertyName: React.PropTypes.string
+  propertyName: React.PropTypes.string,
+  status: React.PropTypes.number
 }
 
 module.exports = ConfigurationVersions
