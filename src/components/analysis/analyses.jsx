@@ -4,6 +4,7 @@ import { Button, ButtonToolbar, Col, Dropdown, Input,
   MenuItem, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
+import { connect } from 'react-redux'
 
 import Select from '../../components/select'
 import IconHeaderCaret from '../../components/icons/icon-header-caret.jsx'
@@ -57,16 +58,20 @@ export class Analyses extends React.Component {
     }, 200)
   }
   handleOnFocus() {
-    if(this.state.datepickerStatus <= 1) {
+    setTimeout(() => {
       this.setState({
-        datepickerStatus: this.state.datepickerStatus + 1
+        datepickerStatus: 1
       })
-    }
+      const datepicker = document.getElementsByClassName('datepicker__tether-element')[0]
+      if(datepicker && this.props.theme) {
+        datepicker.className += ` ${this.props.theme}-datepicker`
+      }
+    }, 50)
   }
   handleOnBlur() {
     if(this.state.datepickerStatus > 0) {
       this.setState({
-        datepickerStatus: this.state.datepickerStatus - 1
+        datepickerStatus: 0
       })
     }
   }
@@ -172,7 +177,14 @@ Analyses.propTypes = {
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  propertyName: React.PropTypes.string
+  propertyName: React.PropTypes.string,
+  theme: React.PropTypes.string
 }
 
-module.exports = Analyses
+function mapStateToProps(state) {
+  return {
+    theme: state.ui.get('theme')
+  };
+}
+
+export default connect(mapStateToProps)(Analyses);

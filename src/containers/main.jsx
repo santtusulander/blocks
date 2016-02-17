@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import Header from '../components/header'
-import Footer from '../components/footer'
 
 export class Main extends React.Component {
   render() {
@@ -23,8 +22,7 @@ export class Main extends React.Component {
           fetching={this.props.fetching}
           theme={this.props.theme}
           handleThemeChange={this.props.uiActions.changeTheme}/>
-        {this.props.children}
-        <Footer className={currentRoute === 'login' ? 'hidden' : ''}/>
+        <div className="content-container">{this.props.children}</div>
       </div>
     );
   }

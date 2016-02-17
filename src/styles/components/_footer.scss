@@ -10,18 +10,6 @@
     padding: 0 ($md-bar-height / 2);
   }
 
-  &.has-layout-sidebar {
-    margin-left: $sidebar-width;
-
-    @include md {
-      margin-left: $md-sidebar-width;
-    }
-
-    @include sm {
-      margin-left: $sm-sidebar-width;
-    }
-  }
-
   .dark-theme & {
     color: $dt-text-color;
     background-color: $black;

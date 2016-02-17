@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Footer from '../footer'
+
 class PageContainer extends React.Component {
   render() {
     let className = 'page-container-layout';
@@ -12,6 +14,7 @@ class PageContainer extends React.Component {
     return (
       <div className={className}>
         {this.props.children}
+        <Footer/>
       </div>
     )
   }
