@@ -8,6 +8,7 @@ class PurgeModal extends React.Component {
 
     this.change = this.change.bind(this)
     this.parsePurgeObjects = this.parsePurgeObjects.bind(this)
+    this.submitForm = this.submitForm.bind(this)
     this.toggleNotification = this.toggleNotification.bind(this)
   }
   change(path) {
@@ -20,6 +21,10 @@ class PurgeModal extends React.Component {
     this.props.changePurge(
       this.props.activePurge.set('objects', Immutable.List(parsedObjs))
     )
+  }
+  submitForm(e) {
+    e.preventDefault()
+    this.props.savePurge()
   }
   toggleNotification() {
     let feedback = null

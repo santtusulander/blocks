@@ -25,7 +25,6 @@ export class Configurations extends React.Component {
     }
 
     this.activatePurge = this.activatePurge.bind(this)
-    this.changeActivePurge = this.changeActivePurge.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
   }
@@ -45,11 +44,15 @@ export class Configurations extends React.Component {
       })
     }
   }
-  changeActivePurge(purge) {
-    this.props.purgeActions.updateActivePurge(purge)
-  }
   saveActivePurge() {
-    console.log('save')
+    const purgeProperty = this.props.properties.get(this.state.activePurge)
+    this.props.purgeActions.createPurge(
+      this.props.params.brand,
+      purgeProperty.get('account_id'),
+      purgeProperty.get('group_id'),
+      purgeProperty.get('property'),
+      this.props.activePurge.toJS()
+    )
   }
   render() {
     if(this.props.fetching) {
@@ -130,7 +133,7 @@ export class Configurations extends React.Component {
         {this.state.activePurge !== null ?
           <PurgeModal
             activePurge={this.props.activePurge}
-            changePurge={this.changeActivePurge}
+            changePurge={this.props.purgeActions.updateActivePurge}
             hideAction={this.activatePurge(null)}
             savePurge={this.saveActivePurge}/> : ''}
       </PageContainer>
