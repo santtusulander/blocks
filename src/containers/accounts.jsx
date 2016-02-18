@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -132,31 +133,40 @@ export class Accounts extends React.Component {
 
           <div className="container-fluid body-content">
             {this.props.fetching ? <p>Loading...</p> : (
-              this.props.viewingChart ?
-                <div className="content-item-grid">
-                  {this.props.accounts.map((account, i) =>
-                    <ContentItemChart key={i} id={account.get('id')}
-                      linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
-                      name={account.get('name')} description="Desc"
-                      delete={this.deleteAccount}
-                      primaryData={fakeRecentData}
-                      secondaryData={fakeAverageData}
-                      barWidth="1"
-                      chartWidth="560"
-                      barMaxHeight="80" />
-                  )}
-                </div> :
-                this.props.accounts.map((account, i) =>
-                  <ContentItemList key={i} id={account.get('id')}
-                    linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
-                    name={account.get('name')} description="Desc"
-                    toggleActive={this.toggleActiveAccount(account)}
-                    delete={this.deleteAccount}
-                    primaryData={fakeRecentData}
-                    secondaryData={fakeAverageData}/>
-                )
-              )
-            }
+              <ReactCSSTransitionGroup
+                component="div"
+                className="content-transition"
+                transitionName="content-transition"
+                transitionEnterTimeout={400}
+                transitionLeaveTimeout={500}>
+                {this.props.viewingChart ?
+                  <div className="content-item-grid" key="grid">
+                    {this.props.accounts.map((account, i) =>
+                      <ContentItemChart key={i} id={account.get('id')}
+                        linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
+                        name={account.get('name')} description="Desc"
+                        delete={this.deleteAccount}
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}
+                        barWidth="1"
+                        chartWidth="560"
+                        barMaxHeight="80" />
+                    )}
+                  </div> :
+                  <div className="content-item-lists" key="lists">
+                    {this.props.accounts.map((account, i) =>
+                      <ContentItemList key={i} id={account.get('id')}
+                        linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
+                        name={account.get('name')} description="Desc"
+                        toggleActive={this.toggleActiveAccount(account)}
+                        delete={this.deleteAccount}
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}/>
+                    )}
+                  </div>
+                }
+              </ReactCSSTransitionGroup>
+            )}
 
             {activeAccount ?
               <Modal show={true} dialogClassName="configuration-sidebar"
