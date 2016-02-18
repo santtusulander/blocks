@@ -2,8 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import moment from 'moment'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Table, Input, Button, ButtonToolbar} from 'react-bootstrap'
 import { Link } from 'react-router'
+
+import * as purgeActionCreators from '../redux/modules/purge'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -23,6 +26,7 @@ export class Configurations extends React.Component {
 
     this.activatePurge = this.activatePurge.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.saveActivePurge = this.saveActivePurge.bind(this)
   }
   activatePurge(index) {
     return e => {
@@ -30,6 +34,7 @@ export class Configurations extends React.Component {
         e.preventDefault()
       }
       this.setState({activePurge: index})
+      this.props.purgeActions.resetActivePurge()
     }
   }
   handleSelectChange() {
@@ -38,6 +43,16 @@ export class Configurations extends React.Component {
         activeFilter: value
       })
     }
+  }
+  saveActivePurge() {
+    const purgeProperty = this.props.properties.get(this.state.activePurge)
+    this.props.purgeActions.createPurge(
+      this.props.params.brand,
+      purgeProperty.get('account_id'),
+      purgeProperty.get('group_id'),
+      purgeProperty.get('property'),
+      this.props.activePurge.toJS()
+    ).then(() => this.setState({activePurge: null}))
   }
   render() {
     if(this.props.fetching) {
@@ -116,7 +131,11 @@ export class Configurations extends React.Component {
           </div>
         </Content>
         {this.state.activePurge !== null ?
-          <PurgeModal hideAction={this.activatePurge(null)}/> : ''}
+          <PurgeModal
+            activePurge={this.props.activePurge}
+            changePurge={this.props.purgeActions.updateActivePurge}
+            hideAction={this.activatePurge(null)}
+            savePurge={this.saveActivePurge}/> : ''}
       </PageContainer>
     );
   }
@@ -125,19 +144,28 @@ export class Configurations extends React.Component {
 Configurations.displayName = 'Configurations'
 Configurations.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activePurge: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List)
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  purgeActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
     accounts: state.content.get('accounts'),
+    activePurge: state.purge.get('activePurge'),
     fetching: state.content.get('fetching'),
     groups: state.content.get('groups'),
     properties: state.content.get('properties')
   };
 }
 
-export default connect(mapStateToProps)(Configurations);
+function mapDispatchToProps(dispatch) {
+  return {
+    purgeActions: bindActionCreators(purgeActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Configurations);

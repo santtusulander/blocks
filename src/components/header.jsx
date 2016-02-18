@@ -11,6 +11,7 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
 
+    this.activatePurge = this.activatePurge.bind(this)
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
 
@@ -40,6 +41,10 @@ class Header extends React.Component {
   }
   handleThemeChange(value) {
     this.props.handleThemeChange(value)
+  }
+  activatePurge(e) {
+    e.preventDefault()
+    this.props.activatePurge()
   }
   render() {
     let className = 'header';
@@ -98,9 +103,10 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/purge`}>
+              <a href="#" className="main-nav-link"
+                onClick={this.activatePurge}>
                 Purge
-              </Link>
+              </a>
             </li>
           </Nav>
           <Nav pullRight={true}>
@@ -180,6 +186,7 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
+  activatePurge: React.PropTypes.func,
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
