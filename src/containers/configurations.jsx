@@ -87,6 +87,7 @@ export class Configurations extends React.Component {
                   <th>Last Edited</th>
                   <th>By</th>
                   <th>Status</th>
+                  <th>Active Version</th>
                   <th>Belongs To</th>
                   <th></th>
                 </tr>
@@ -108,6 +109,7 @@ export class Configurations extends React.Component {
                       </td>
                       <td>{property.get('last_editor')}</td>
                       <td>{property.get('status')}</td>
+                      <td>{property.get('active_version')}</td>
                       <td>
                         {propertyAccount ? propertyAccount.get('name') : ''}
                         &nbsp;/&nbsp;
