@@ -21,10 +21,26 @@ const emptyContent = Immutable.Map({
     {"account_id": 2, "group_id": 1, "name": "Some company"}
   ]),
   properties: Immutable.fromJS([
-    {"account_id": 1, "group_id": 1, "property": "www.foobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "production"},
-    {"account_id": 1, "group_id": 1, "property": "www.dobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "production"},
-    {"account_id": 1, "group_id": 2, "property": "www.gobar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "in_process"},
-    {"account_id": 2, "group_id": 1, "property": "www.aabar.com", "last_edited": 1451607200, "last_editor": "Jenny Steele", "status": "staging"}
+    {
+      "account_id": 1, "group_id": 1, "property": "www.foobar.com",
+      "last_edited": 1451606200, "last_editor": "Jenny Steele",
+      "status": "production", "active_version": "Version Name"
+    },
+    {
+      "account_id": 1, "group_id": 1, "property": "www.dobar.com",
+      "last_edited": 1451607200, "last_editor": "Jenny Steele",
+      "status": "production", "active_version": "Name of Version"
+    },
+    {
+      "account_id": 1, "group_id": 2, "property": "www.gobar.com",
+      "last_edited": 1451608200, "last_editor": "Jenny Steele",
+      "status": "in_process", "active_version": "The Version"
+    },
+    {
+      "account_id": 2, "group_id": 1, "property": "www.aabar.com",
+      "last_edited": 1451609200, "last_editor": "Jenny Steele",
+      "status": "staging", "active_version": "Version 1"
+    }
   ])
 })
 
