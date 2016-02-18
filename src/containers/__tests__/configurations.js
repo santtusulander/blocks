@@ -33,7 +33,9 @@ const fakeProperties = Immutable.fromJS([
 
 function purgeActionsMaker() {
   return {
-    createPurge: jest.genMockFunction(),
+    createPurge: jest.genMockFunction().mockReturnValue({
+      then: (cb => cb())
+    }),
     resetActivePurge: jest.genMockFunction(),
     updateActivePurge: jest.genMockFunction()
   }
