@@ -14,6 +14,7 @@ import PageHeader from '../components/layout/page-header'
 import PurgeModal from '../components/purge-modal'
 import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
+import TableSorter from '../components/table-sorter'
 
 export class Configurations extends React.Component {
   constructor(props) {
@@ -21,10 +22,13 @@ export class Configurations extends React.Component {
 
     this.state = {
       activePurge: null,
-      activeFilter: 'all'
+      activeFilter: 'all',
+      sortBy: 'last_edited',
+      sortDir: -1
     }
 
     this.activatePurge = this.activatePurge.bind(this)
+    this.changeSort = this.changeSort.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
   }
@@ -36,6 +40,12 @@ export class Configurations extends React.Component {
       this.setState({activePurge: index})
       this.props.purgeActions.resetActivePurge()
     }
+  }
+  changeSort(column, direction) {
+    this.setState({
+      sortBy: column,
+      sortDir: direction
+    })
   }
   handleSelectChange() {
     return value => {
@@ -58,6 +68,23 @@ export class Configurations extends React.Component {
     if(this.props.fetching) {
       return <p>Loading...</p>
     }
+    const ConfigSorter = ({column, children, reversed}) => <TableSorter
+        column={column}
+        reversed={reversed}
+        activateSort={this.changeSort}
+        activeColumn={this.state.sortBy}
+        activeDirection={this.state.sortDir}>
+        {children}
+      </TableSorter>
+    const sortedProperties = this.props.properties.sort((a, b) => {
+      if(a.get(this.state.sortBy) < b.get(this.state.sortBy)) {
+        return -1 * this.state.sortDir
+      }
+      else if(a.get(this.state.sortBy) > b.get(this.state.sortBy)) {
+        return 1 * this.state.sortDir
+      }
+      return 0
+    })
     return (
       <PageContainer className="configurations-container">
         <Content>
@@ -83,17 +110,29 @@ export class Configurations extends React.Component {
             <Table striped={true}>
               <thead>
                 <tr>
-                  <th>Hostname</th>
-                  <th>Last Edited</th>
-                  <th>By</th>
-                  <th>Status</th>
-                  <th>Active Version</th>
-                  <th>Belongs To</th>
+                  <ConfigSorter column="property">
+                    Hostname
+                  </ConfigSorter>
+                  <ConfigSorter column="last_edited" reversed={true}>
+                    Last Edited
+                  </ConfigSorter>
+                  <th>
+                    By
+                  </th>
+                  <ConfigSorter column="status">
+                    Status
+                  </ConfigSorter>
+                  <th>
+                    Active Version
+                  </th>
+                  <th>
+                    Belongs To
+                  </th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {this.props.properties.map((property, i) => {
+                {sortedProperties.map((property, i) => {
                   const propertyAccount = this.props.accounts.find(account => {
                     return account.get('account_id') == property.get('account_id')
                   })
