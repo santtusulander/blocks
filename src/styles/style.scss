@@ -5,8 +5,8 @@
 @import 'vendor/bootstrap/stylesheets/bootstrap';
 
 
-// Datepicker
-// ==========
+// Vendor / Datepicker
+// ===================
 
 @import '../../node_modules/react-datepicker/dist/react-datepicker.css';
 
@@ -19,7 +19,7 @@
 @import 'base/fonts';
 @import 'base/scaffolding';
 @import 'base/type';
-
+// Components
 @import 'base/breadcrumbs';
 @import 'base/button-groups';
 @import 'base/buttons';
@@ -35,6 +35,15 @@
 @import 'base/tooltip';
 
 
+// Containers
+// ==========
+
+@import 'containers/analysis';
+@import 'containers/configurations';
+@import 'containers/login';
+@import 'containers/main';
+
+
 // Components
 // ==========
 
@@ -47,15 +56,12 @@
 @import 'components/select';
 @import 'components/toggle';
 @import 'components/tooltip';
-
 // Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
-
 // Configuration
 @import 'components/configuration/cache';
 @import 'components/configuration/versions';
-
 // Layouts
 @import 'components/layout/content';
 @import 'components/layout/dialog';
@@ -74,12 +80,3 @@
 // ==========
 
 @import 'containers/styleguide';
-
-// Containers
-// ==========
-
-@import 'containers/analysis';
-@import 'containers/content';
-@import 'containers/configurations';
-@import 'containers/login';
-@import 'containers/main';
