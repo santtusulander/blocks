@@ -2,6 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Row, Col } from 'react-bootstrap';
 
+import Select from './select'
+
 class PurgeModal extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,7 @@ class PurgeModal extends React.Component {
     this.props.changePurge(this.props.activePurge.set('feedback', feedback))
   }
   render() {
+    const showPropertySelect = this.props.availableProperties && this.props.changeProperty
     return (
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
         backdrop={false}
@@ -44,6 +47,24 @@ class PurgeModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={this.submitForm}>
+
+            {/* SECTION - Property */}
+            {showPropertySelect ?
+              <div>
+                <h3>Property</h3>
+
+                {/* If it's possible to change the property, show a list */}
+                <Select className="input-select"
+                  value={''+this.props.activeProperty}
+                  options={this.props.availableProperties.map(
+                    (property, i) => [''+i, property.get('property')]
+                  ).toJS()}
+                  onSelect={this.props.changeProperty}/>
+
+                <hr/>
+              </div>
+              : ''
+            }
 
             {/* SECTION - What do you want to purge? */}
             <Row>
@@ -76,8 +97,8 @@ class PurgeModal extends React.Component {
 
             <Input type="radio" name="purge__content-removal-method-delete"
               label="Delete content"
-              value="remove"
-              checked={this.props.activePurge.get('action') === 'remove'}
+              value="purge"
+              checked={this.props.activePurge.get('action') === 'purge'}
               onChange={this.change(['action'])}/>
 
             <hr/>
@@ -128,7 +149,10 @@ class PurgeModal extends React.Component {
 
 PurgeModal.displayName = 'PurgeModal'
 PurgeModal.propTypes = {
+  activeProperty: React.PropTypes.number,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  availableProperties: React.PropTypes.instanceOf(Immutable.List),
+  changeProperty: React.PropTypes.func,
   changePurge: React.PropTypes.func,
   hideAction: React.PropTypes.func,
   savePurge: React.PropTypes.func

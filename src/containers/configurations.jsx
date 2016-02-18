@@ -52,7 +52,7 @@ export class Configurations extends React.Component {
       purgeProperty.get('group_id'),
       purgeProperty.get('property'),
       this.props.activePurge.toJS()
-    )
+    ).then(() => this.setState({activePurge: null}))
   }
   render() {
     if(this.props.fetching) {

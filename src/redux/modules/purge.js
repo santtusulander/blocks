@@ -19,12 +19,10 @@ const emptyPurges = Immutable.Map({
 })
 
 const emptyPurge = Immutable.fromJS({
-  action: 'remove',
-  objects: ['sss', 'ggg'],
-  note: 'aaa',
-  feedback: {
-    email: 'bbb'
-  }
+  action: 'purge',
+  objects: [],
+  note: '',
+  feedback: null
 })
 
 // REDUCERS
