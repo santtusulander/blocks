@@ -15,7 +15,7 @@ require('./styles/style.scss')
 window.React = React
 
 // Set up axios defaultHeaders
-axios.defaults.headers.common['Authorization'] = 'Basic ' + btoa('test:test') // TODO: awaiting login docs
+// axios.defaults.headers.common['Authorization'] = 'Basic ' + btoa('test:test') // TODO: awaiting login docs
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
