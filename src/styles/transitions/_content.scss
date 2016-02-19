@@ -1,17 +1,127 @@
 // Content transitions
 // ===================
 
+// scss-lint:disable NestingDepth
+
+.content-transition {
+  position: relative;
+}
+
+.content-item-chart {
+  top: 0;
+  opacity: 1;
+  transition: top 500ms ease-out, opacity 400ms ease-in;
+
+  .primary-data {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    transition: all 1000ms cubic-bezier(0, 0, 0.25, 1);
+  }
+
+  .secondary-data {
+    transform: scale(1);
+    transition: transform 500ms cubic-bezier(0, 0, 0.25, 1);
+  }
+
+  .text-content {
+    margin-top: 0;
+    transition: all 800ms ease;
+  }
+}
+
+.content-item-list {
+  opacity: 1;
+  transition: margin 500ms ease-out, opacity 400ms ease-in;
+
+  .analysis-by-time {
+    transform: scale(1, 1);
+    transition: transform 1000ms cubic-bezier(0, 0, 0.25, 1);
+    transform-origin: center bottom;
+  }
+}
+
+.content-transition-enter,
+.content-transition-appear {
+
+  .content-item-chart {
+    opacity: 0;
+
+    &:nth-child(odd) {
+      top: 20px;
+
+      .text-content {
+        margin-top: 30px;
+      }
+    }
+
+    &:nth-child(even) {
+      top: 40px;
+
+      .text-content {
+        margin-top: 40px;
+      }
+    }
+
+    .primary-data {
+      opacity: 0;
+      transform: scale(0.5) rotate(-30deg);
+    }
+
+    .secondary-data {
+      transform: scale(0.7);
+    }
+  }
+
+  .content-item-list {
+    margin-top: 30px;
+    opacity: 0;
+    transition: all 0ms;
+
+    .analysis-by-time {
+      transform: scale(1, 0);
+    }
+  }
+}
+
 .content-transition-leave {
   position: absolute;
+  top: 0;
   right: 0;
   left: 0;
-  opacity: 0;
-}
 
-.content-transition-enter-active {
-  opacity: 1;
-}
+  .page-header-layout,
+  .footer,
+  .breadcrumb {
+    opacity: 0;
+  }
 
-.content-transition-leave-active {
-  opacity: 0;
+  .content-item-chart {
+    top: 0;
+    opacity: 1;
+  }
+
+  .content-item-list {
+    opacity: 1;
+  }
+
+  &.content-transition-leave-active {
+
+    .content-item-chart {
+      opacity: 0;
+      transition: all 500ms ease-out;
+
+      &:nth-child(odd) {
+        top: 40px;
+      }
+
+      &:nth-child(even) {
+        top: 20px;
+      }
+    }
+
+    .content-item-list {
+      margin-top: 30px;
+      opacity: 0;
+    }
+  }
 }
