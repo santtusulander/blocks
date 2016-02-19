@@ -1,8 +1,7 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Route, IndexRedirect } from 'react-router';
 
 import Main from './containers/main'
-import Home from './containers/home'
 import Styleguide from './containers/styleguide'
 import Purge from './containers/configure/purge'
 import Login from './containers/login'
@@ -19,7 +18,7 @@ import ContentTransition from './transitions/content'
 
 module.exports = (
   <Route path="/" component={Main}>
-    <IndexRoute component={Home}/>
+    <IndexRedirect to="/content/accounts/udn" />
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="login" component={Login}/>
