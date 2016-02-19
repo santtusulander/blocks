@@ -27,35 +27,35 @@
       border-left: 1px solid rgba($black, 0.2);
     }
   }
+}
 
-  .btn-toolbar {
+.btn-toolbar {
+  margin-left: 0;
+
+  .btn,
+  .btn-group,
+  .input-group,
+  .form-group {
+    display: inline-block;
+    float: none;
+    padding-bottom: 0;
+    vertical-align: top;
+  }
+
+  > .btn,
+  > .btn-group,
+  > .input-group,
+  > .form-group {
     margin-left: 0;
 
-    .btn,
-    .btn-group,
-    .input-group,
-    .form-group {
-      display: inline-block;
-      float: none;
-      padding-bottom: 0;
-      vertical-align: top;
-    }
+    + .btn,
+    + .btn-group,
+    + .input-group,
+    + .form-group {
+      margin-left: 20px;
 
-    > .btn,
-    > .btn-group,
-    > .input-group,
-    > .form-group {
-      margin-left: 0;
-
-      + .btn,
-      + .btn-group,
-      + .input-group,
-      + .form-group {
-        margin-left: 20px;
-
-        @include md {
-          margin-left: 15px;
-        }
+      @include md {
+        margin-left: 15px;
       }
     }
   }

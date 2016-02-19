@@ -47,9 +47,6 @@ export class Main extends React.Component {
   render() {
     const currentRoute = this.props.routes[this.props.routes.length-1].path
     let classNames = 'main-container';
-    if(this.props.theme) {
-      classNames = `${classNames} ${this.props.theme}-theme`
-    }
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }

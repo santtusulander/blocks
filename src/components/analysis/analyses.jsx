@@ -15,7 +15,7 @@ export class Analyses extends React.Component {
 
     this.state = {
       activeFilter: 'custom_timerange',
-      datepickerStatus: 0,
+      datepickerOpen: false,
       startDate: moment(),
       endDate: moment()
     }
@@ -24,7 +24,6 @@ export class Analyses extends React.Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleOnFocus = this.handleOnFocus.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
-    this.datepickerOpen = false;
     this.handleSelectChange = this.handleSelectChange.bind(this)
   }
   handleStartDateChange(date) {
@@ -48,9 +47,9 @@ export class Analyses extends React.Component {
         endDate: date
       })
     }
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: 0
+        datepickerOpen: false
       })
     }
     setTimeout(() => {
@@ -58,20 +57,14 @@ export class Analyses extends React.Component {
     }, 200)
   }
   handleOnFocus() {
-    setTimeout(() => {
-      this.setState({
-        datepickerStatus: 1
-      })
-      const datepicker = document.getElementsByClassName('datepicker__tether-element')[0]
-      if(datepicker && this.props.theme) {
-        datepicker.className += ` ${this.props.theme}-datepicker`
-      }
-    }, 50)
+    this.setState({
+      datepickerOpen: true
+    })
   }
   handleOnBlur() {
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: 0
+        datepickerOpen: false
       })
     }
   }
@@ -126,7 +119,7 @@ export class Analyses extends React.Component {
               <p className="text-sm">FROM</p>
               <div ref="startDateHolder"
                 className={'datepicker-input-wrapper start-date' +
-                (this.state.datepickerStatus > 0 ?
+                (this.state.datepickerOpen ?
                 ' datepicker-open' : '')}>
                 <DatePicker
                   dateFormat="MM/DD/YYYY"
@@ -142,7 +135,7 @@ export class Analyses extends React.Component {
               <p className="text-sm">TO</p>
               <div ref="endDateHolder"
                 className={'datepicker-input-wrapper end-date' +
-                (this.state.datepickerStatus > 0 ?
+                (this.state.datepickerOpen ?
                 ' datepicker-open' : '')}>
                 <DatePicker
                   popoverAttachment='top right'
