@@ -24,12 +24,29 @@ const fakeGroups = Immutable.fromJS([
 const fakeProperties = Immutable.fromJS([
   {
     "account_id": 1, "group_id": 1,
-    "property": "www.foobar.com",
+    "property": "www.bbb.com",
     "last_edited": 1451607200,
     "last_editor": "Jenny Steele",
     "status": "production"
+  },
+  {
+    "account_id": 1, "group_id": 2,
+    "property": "www.aaa.com",
+    "last_edited": 1451607200,
+    "last_editor": "Jenny Steele",
+    "status": "staging"
   }
 ])
+
+function purgeActionsMaker() {
+  return {
+    createPurge: jest.genMockFunction().mockReturnValue({
+      then: (cb => cb())
+    }),
+    resetActivePurge: jest.genMockFunction(),
+    updateActivePurge: jest.genMockFunction()
+  }
+}
 
 describe('Configurations', () => {
   it('should exist', () => {
@@ -47,7 +64,8 @@ describe('Configurations', () => {
   });
   it('should activate a property to purge', () => {
     let configurations = TestUtils.renderIntoDocument(
-      <Configurations properties={Immutable.List()} />
+      <Configurations properties={Immutable.List()}
+        purgeActions={purgeActionsMaker()}/>
     );
     expect(configurations.state.activePurge).toBe(null);
     configurations.activatePurge('aaa')()
@@ -63,6 +81,41 @@ describe('Configurations', () => {
         fetching={false} />
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(configurations, 'td');
-    expect(tds[0].textContent).toContain('www.foobar.com');
+    expect(tds[0].textContent).toContain('www.bbb.com');
+  });
+  it('should create a new purge', () => {
+    const purgeActions = purgeActionsMaker()
+    let configurations = TestUtils.renderIntoDocument(
+      <Configurations
+        params={{brand:'abc'}}
+        accounts={fakeAccounts}
+        groups={fakeGroups}
+        properties={fakeProperties}
+        fetching={false}
+        activePurge={fakeProperties.get(0)}
+        purgeActions={purgeActions}/>
+    );
+    configurations.activatePurge(0)()
+    configurations.saveActivePurge()
+    expect(purgeActions.createPurge.mock.calls[0][0]).toBe('abc')
+    expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
+    expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
+    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('www.bbb.com')
+    expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakeProperties.get(0).toJS())
+  });
+  it('can sort properties', () => {
+    let configurations = TestUtils.renderIntoDocument(
+      <Configurations
+        params={{brand:'abc'}}
+        accounts={fakeAccounts}
+        groups={fakeGroups}
+        properties={fakeProperties}
+        fetching={false} />
+    );
+    let tds = TestUtils.scryRenderedDOMComponentsWithTag(configurations, 'td');
+    expect(tds[0].textContent).toContain('www.bbb.com');
+    configurations.changeSort('property', 1)
+    tds = TestUtils.scryRenderedDOMComponentsWithTag(configurations, 'td');
+    expect(tds[0].textContent).toContain('www.aaa.com');
   });
 })

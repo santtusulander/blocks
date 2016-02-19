@@ -1,6 +1,7 @@
 import React from 'react'
-import {  Link } from 'react-router'
+import { Link } from 'react-router'
 
+import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 
 import { Button, Breadcrumb, BreadcrumbItem,Dropdown, Input, MenuItem, Nav,
@@ -10,7 +11,9 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
 
+    this.activatePurge = this.activatePurge.bind(this)
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
+    this.handleThemeChange = this.handleThemeChange.bind(this)
 
     this.state = {
       showBreadcrumbs: false,
@@ -35,6 +38,13 @@ class Header extends React.Component {
     else {
       this.setState({animatingGradient: false})
     }
+  }
+  handleThemeChange(value) {
+    this.props.handleThemeChange(value)
+  }
+  activatePurge(e) {
+    e.preventDefault()
+    this.props.activatePurge()
   }
   render() {
     let className = 'header';
@@ -93,9 +103,10 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/purge`}>
+              <a href="#" className="main-nav-link"
+                onClick={this.activatePurge}>
                 Purge
-              </Link>
+              </a>
             </li>
           </Nav>
           <Nav pullRight={true}>
@@ -129,17 +140,40 @@ class Header extends React.Component {
                   <img src="/src/assets/img/img-user.jpg"></img>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-user-menu">
-                  <MenuItem header={true}>
-                    <span className="dropdown-main-header">Username</span>
+                  <MenuItem header={true} className="dropdown-main-header">
+                    <div className="user-menu-item">Username</div>
                   </MenuItem>
                   <MenuItem eventKey="1">
-                    <span className="helper-header">Company</span>
-                    Disney Studios
+                    <div className="user-menu-item">
+                      <div className="helper-header">Company</div>
+                      Disney Studios
+                    </div>
                   </MenuItem>
-                  <MenuItem eventKey="2">UDN Admin</MenuItem>
-                  <MenuItem eventKey="3">Account Management</MenuItem>
-                  <MenuItem eventKey="4">Lights On</MenuItem>
-                  <MenuItem eventKey="5">Log Out</MenuItem>
+                  <MenuItem eventKey="2">
+                    <div className="user-menu-item">
+                      <div className="helper-header">Role</div>
+                      Admin
+                    </div>
+                  </MenuItem>
+                  <li className="menu-item-theme">
+                    <div className="menuitem">
+                      <div className="user-menu-item">
+                        <div className="helper-header helper-ui-theme">UI Theme</div>
+                        <Select className="btn-block"
+                          onSelect={this.handleThemeChange}
+                          value={this.props.theme}
+                          options={[
+                            ['dark', 'Ericsson Dark Theme'],
+                            ['light', 'Ericsson Light Theme']]}/>
+                      </div>
+                    </div>
+                  </li>
+                  <MenuItem eventKey="4">
+                    <div className="user-menu-item">Account Management</div>
+                    </MenuItem>
+                  <MenuItem className="bottom-item" eventKey="5">
+                    <div className="user-menu-item">Log Out</div>
+                  </MenuItem>
                 </Dropdown.Menu>
               </Dropdown>
             </li>
@@ -152,8 +186,11 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
+  activatePurge: React.PropTypes.func,
   className: React.PropTypes.string,
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  handleThemeChange: React.PropTypes.func,
+  theme: React.PropTypes.string
 }
 
-module.exports = Header
+module.exports = Header;

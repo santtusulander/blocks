@@ -2,8 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import moment from 'moment'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Table, Input, Button, ButtonToolbar} from 'react-bootstrap'
 import { Link } from 'react-router'
+
+import * as purgeActionCreators from '../redux/modules/purge'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -11,6 +14,7 @@ import PageHeader from '../components/layout/page-header'
 import PurgeModal from '../components/purge-modal'
 import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
+import TableSorter from '../components/table-sorter'
 
 export class Configurations extends React.Component {
   constructor(props) {
@@ -18,11 +22,15 @@ export class Configurations extends React.Component {
 
     this.state = {
       activePurge: null,
-      activeFilter: 'all'
+      activeFilter: 'all',
+      sortBy: 'last_edited',
+      sortDir: -1
     }
 
     this.activatePurge = this.activatePurge.bind(this)
+    this.changeSort = this.changeSort.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.saveActivePurge = this.saveActivePurge.bind(this)
   }
   activatePurge(index) {
     return e => {
@@ -30,7 +38,14 @@ export class Configurations extends React.Component {
         e.preventDefault()
       }
       this.setState({activePurge: index})
+      this.props.purgeActions.resetActivePurge()
     }
+  }
+  changeSort(column, direction) {
+    this.setState({
+      sortBy: column,
+      sortDir: direction
+    })
   }
   handleSelectChange() {
     return value => {
@@ -39,10 +54,37 @@ export class Configurations extends React.Component {
       })
     }
   }
+  saveActivePurge() {
+    const purgeProperty = this.props.properties.get(this.state.activePurge)
+    this.props.purgeActions.createPurge(
+      this.props.params.brand,
+      purgeProperty.get('account_id'),
+      purgeProperty.get('group_id'),
+      purgeProperty.get('property'),
+      this.props.activePurge.toJS()
+    ).then(() => this.setState({activePurge: null}))
+  }
   render() {
     if(this.props.fetching) {
       return <p>Loading...</p>
     }
+    const ConfigSorter = ({column, children, reversed}) => <TableSorter
+        column={column}
+        reversed={reversed}
+        activateSort={this.changeSort}
+        activeColumn={this.state.sortBy}
+        activeDirection={this.state.sortDir}>
+        {children}
+      </TableSorter>
+    const sortedProperties = this.props.properties.sort((a, b) => {
+      if(a.get(this.state.sortBy) < b.get(this.state.sortBy)) {
+        return -1 * this.state.sortDir
+      }
+      else if(a.get(this.state.sortBy) > b.get(this.state.sortBy)) {
+        return 1 * this.state.sortDir
+      }
+      return 0
+    })
     return (
       <PageContainer className="configurations-container">
         <Content>
@@ -68,16 +110,29 @@ export class Configurations extends React.Component {
             <Table striped={true}>
               <thead>
                 <tr>
-                  <th>Hostname</th>
-                  <th>Last Edited</th>
-                  <th>By</th>
-                  <th>Status</th>
-                  <th>Belongs To</th>
+                  <ConfigSorter column="property">
+                    Hostname
+                  </ConfigSorter>
+                  <ConfigSorter column="last_edited" reversed={true}>
+                    Last Edited
+                  </ConfigSorter>
+                  <th>
+                    By
+                  </th>
+                  <ConfigSorter column="status">
+                    Status
+                  </ConfigSorter>
+                  <th>
+                    Active Version
+                  </th>
+                  <th>
+                    Belongs To
+                  </th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {this.props.properties.map((property, i) => {
+                {sortedProperties.map((property, i) => {
                   const propertyAccount = this.props.accounts.find(account => {
                     return account.get('account_id') == property.get('account_id')
                   })
@@ -93,6 +148,7 @@ export class Configurations extends React.Component {
                       </td>
                       <td>{property.get('last_editor')}</td>
                       <td>{property.get('status')}</td>
+                      <td>{property.get('active_version')}</td>
                       <td>
                         {propertyAccount ? propertyAccount.get('name') : ''}
                         &nbsp;/&nbsp;
@@ -116,7 +172,11 @@ export class Configurations extends React.Component {
           </div>
         </Content>
         {this.state.activePurge !== null ?
-          <PurgeModal hideAction={this.activatePurge(null)}/> : ''}
+          <PurgeModal
+            activePurge={this.props.activePurge}
+            changePurge={this.props.purgeActions.updateActivePurge}
+            hideAction={this.activatePurge(null)}
+            savePurge={this.saveActivePurge}/> : ''}
       </PageContainer>
     );
   }
@@ -125,19 +185,28 @@ export class Configurations extends React.Component {
 Configurations.displayName = 'Configurations'
 Configurations.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activePurge: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List)
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  purgeActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
     accounts: state.content.get('accounts'),
+    activePurge: state.purge.get('activePurge'),
     fetching: state.content.get('fetching'),
     groups: state.content.get('groups'),
     properties: state.content.get('properties')
   };
 }
 
-export default connect(mapStateToProps)(Configurations);
+function mapDispatchToProps(dispatch) {
+  return {
+    purgeActions: bindActionCreators(purgeActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Configurations);

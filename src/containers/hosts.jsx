@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
 import { Link } from 'react-router'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -142,31 +143,40 @@ export class Hosts extends React.Component {
             </Breadcrumb>
 
             {this.props.fetching ? <p>Loading...</p> : (
-              this.props.viewingChart ?
-                <div className="content-item-grid">
-                  {this.props.hosts.map((host, i) =>
-                    <ContentItemChart key={i} id={host}
-                      linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                      configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                      name={host} description="Desc"
-                      delete={this.deleteHost}
-                      primaryData={fakeRecentData}
-                      secondaryData={fakeAverageData}
-                      barWidth="1"
-                      chartWidth="480"
-                      barMaxHeight="80" />
-                  )}
-                </div> :
-                this.props.hosts.map((host, i) =>
-                  <ContentItemList key={i} id={host}
-                    linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                    configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                    name={host} description="Desc"
-                    primaryData={fakeRecentData}
-                    secondaryData={fakeAverageData}/>
-                )
-              )
-            }
+              <ReactCSSTransitionGroup
+                component="div"
+                className="content-transition"
+                transitionName="content-transition"
+                transitionEnterTimeout={400}
+                transitionLeaveTimeout={500}>
+                {this.props.viewingChart ?
+                  <div className="content-item-grid">
+                    {this.props.hosts.map((host, i) =>
+                      <ContentItemChart key={i} id={host}
+                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        name={host} description="Desc"
+                        delete={this.deleteHost}
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}
+                        barWidth="1"
+                        chartWidth="480"
+                        barMaxHeight="80" />
+                    )}
+                  </div> :
+                  <div className="content-item-lists" key="lists">
+                    {this.props.hosts.map((host, i) =>
+                      <ContentItemList key={i} id={host}
+                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        name={host} description="Desc"
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}/>
+                    )}
+                  </div>
+                }
+              </ReactCSSTransitionGroup>
+            )}
 
             {this.state.addHost ?
               <Modal show={true} dialogClassName="configuration-sidebar"

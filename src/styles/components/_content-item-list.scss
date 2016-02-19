@@ -1,9 +1,15 @@
 // Content Item List
 // =================
 
+.content-item-lists {
+  padding-top: 1px;
+}
+
 .content-item-list {
+  position: relative;
   height: $content-item-list-height;
   margin-top: 20px;
+  overflow: hidden;
 
   @include md {
     height: $md-content-item-list-height;

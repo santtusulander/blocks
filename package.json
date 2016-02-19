@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -68,6 +68,7 @@
       "src"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor",
+    "setupEnvScriptFile": "<rootDir>/jest-env-setup",
     "moduleFileExtensions": [
       "js",
       "jsx"

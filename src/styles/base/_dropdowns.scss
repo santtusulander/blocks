@@ -7,7 +7,8 @@
 
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override bootstrap styles
-.dropdown-menu {
+.dropdown-menu,
+.navbar-nav .open .dropdown-menu {
   width: 100%;
   min-width: 250px;
   padding: 0;
@@ -66,14 +67,182 @@
   }
 
   &.dropdown-user-menu {
-    width: 600px;
+    width: 500px;
     min-height: calc(100vh - #{$header-total-height});
+    padding-bottom: $bar-height + $btn-height;
     font-size: 30px;
 
     @include md {
-      width: 400px;
+      width: 380px;
       min-height: calc(100vh - #{$md-header-total-height});
+      padding-bottom: $md-bar-height + $md-btn-height;
       font-size: 20px;
+    }
+
+    .menu-item-theme {
+      z-index: 1;
+    }
+
+    .helper-header {
+      position: relative;
+      display: block;
+      font-size: $font-size-sm;
+
+      @include md {
+        font-size: $sm-font-size-sm;
+      }
+
+      &.helper-ui-theme::after {
+        position: absolute;
+        top: 50%;
+        left: 70%;
+        width: 50px;
+        height: 10px;
+        background: linear-gradient(to right,
+          $pale-blue 20%, $green 21%, $green 40%, $purple 41%, $purple 60%,
+          $red 61%, $red 80%, $yellow 81%);
+        content: '';
+        transform: translateY(-50%);
+
+        @include md {
+          width: 40px;
+          height: 8px;
+        }
+      }
+    }
+
+    > li {
+      position: relative;
+      display: block;
+
+      &.dropdown-header {
+        padding: 0 ($btn-height / 6);
+
+        @include md {
+          padding: 0 ($md-btn-height / 6);
+        }
+      }
+
+      &.bottom-item {
+        position: absolute;
+        bottom: 0;
+      }
+
+      > a,
+      > .menuitem {
+        position: relative;
+        display: block;
+        min-height: $bar-height + $btn-height;
+        padding: 0;
+        margin: 0 ($btn-height / 2);
+
+        @include md {
+          min-height: $md-bar-height + $md-btn-height;
+          margin: 0 ($md-btn-height / 2);
+        }
+      }
+
+      > a {
+
+        &::before {
+          position: absolute;
+          top: 50%;
+          right: $btn-sm-height / 2;
+          width: $btn-height / 2;
+          height: $btn-height / 2;
+          margin-top: -($btn-height / 4);
+          border-radius: 50%;
+          content: '';
+
+          @include md {
+            right: $md-btn-sm-height / 2;
+            width: $btn-sm-height / 2;
+            height: $btn-sm-height / 2;
+            margin-top: -($btn-sm-height / 4);
+          }
+
+          .dark-theme &,
+          .light-theme & {
+            background-color: rgba($black, 0.2);
+          }
+        }
+
+        &::after {
+          position: absolute;
+          top: 50%;
+          right: $btn-sm-height / 2;
+          margin: -5px 12px 0 0;
+          vertical-align: middle;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 5px dashed;
+          content: '';
+
+          @include md {
+            right: $md-btn-sm-height / 2;
+            margin-right: 8px;
+          }
+
+          .dark-theme & {
+            border-left-color: $dt-text-color;
+          }
+
+          .light-theme & {
+            border-left-color: $white;
+          }
+        }
+      }
+
+      &:not(.dropdown-header) + li a {
+
+        .dark-theme &,
+        .light-theme & {
+          border-top: 1px solid rgba($pale-blue, 0.1);
+        }
+      }
+
+      .user-menu-item {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        padding: 0 ($btn-height / 3);
+        transform: translateY(-50%);
+
+        @include md {
+          padding: 0 ($md-btn-height / 3);
+        }
+      }
+
+      .dropdown-select {
+        width: calc(100% + #{$btn-height});
+        margin: 0 (-$btn-height / 2);
+
+        @include md {
+          width: calc(100% + #{$md-btn-height});
+          margin: 0 (-$md-btn-height / 2);
+        }
+
+        > .dropdown-toggle {
+          background-color: transparent;
+        }
+
+        .dropdown-menu {
+          color: $lt-text-color;
+          background-color: $silver-40;
+
+          li > a {
+            color: $lt-text-color;
+
+            &:hover {
+              color: $black;
+            }
+          }
+        }
+
+        .icon {
+          width: 40px;
+        }
+      }
     }
   }
 
@@ -86,8 +255,7 @@
       min-height: $md-bar-height;
     }
 
-    > a,
-    > .dropdown-main-header {
+    > a {
       display: table-cell;
       padding: 15px ($btn-height / 2);
       line-height: 1.1em;
@@ -102,6 +270,7 @@
       .dark-theme &,
       .light-theme .header & {
 
+        &,
         &:hover,
         &:focus {
           color: $white;

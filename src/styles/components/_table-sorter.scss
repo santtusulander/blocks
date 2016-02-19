@@ -1,0 +1,13 @@
+// scss-lint:disable SelectorDepth NestingDepth
+// Need to override BootStrap
+.table-sorter {
+  a {
+    .main-container.dark-theme .content-container & {
+      color: $dt-text-color;
+    }
+
+    .main-container.light-theme .content-container & {
+      color: $lt-text-color;
+    }
+  }
+}

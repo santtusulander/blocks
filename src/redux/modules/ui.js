@@ -4,8 +4,19 @@ import Immutable from 'immutable'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 
+const theme = localStorage.getItem('EricssonUDNUiTheme') ?
+  localStorage.getItem('EricssonUDNUiTheme') : 'dark'
+
+const docBody = document.body
+
+/* We are manipulating body class with JS, which is not exactly how React
+   is usually handling things, but in this case it seems to be the most
+   clean and usable way to handle theme changing for this app */
+
+docBody.className += theme + '-theme'
+
 const defaultUI = Immutable.Map({
-  theme: 'dark',
+  theme: theme,
   viewingChart: true
 })
 
@@ -13,6 +24,10 @@ const defaultUI = Immutable.Map({
 
 export default handleActions({
   UI_THEME_CHANGED: (state, action) => {
+    docBody.className = docBody.className.replace(
+      /dark-theme|light-theme/gi, action.payload + '-theme'
+    )
+    localStorage.setItem('EricssonUDNUiTheme', action.payload)
     return state.set('theme', action.payload)
   },
   UI_CHART_VIEW_TOGGLED: (state) => {

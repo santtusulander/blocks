@@ -4,6 +4,7 @@ import { Button, ButtonToolbar, Col, Dropdown, Input,
   MenuItem, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
+import { connect } from 'react-redux'
 
 import Select from '../../components/select'
 import IconHeaderCaret from '../../components/icons/icon-header-caret.jsx'
@@ -14,7 +15,7 @@ export class Analyses extends React.Component {
 
     this.state = {
       activeFilter: 'custom_timerange',
-      datepickerStatus: 0,
+      datepickerOpen: false,
       startDate: moment(),
       endDate: moment()
     }
@@ -23,7 +24,6 @@ export class Analyses extends React.Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleOnFocus = this.handleOnFocus.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
-    this.datepickerOpen = false;
     this.handleSelectChange = this.handleSelectChange.bind(this)
   }
   handleStartDateChange(date) {
@@ -47,9 +47,9 @@ export class Analyses extends React.Component {
         endDate: date
       })
     }
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: 0
+        datepickerOpen: false
       })
     }
     setTimeout(() => {
@@ -57,16 +57,14 @@ export class Analyses extends React.Component {
     }, 200)
   }
   handleOnFocus() {
-    if(this.state.datepickerStatus <= 1) {
-      this.setState({
-        datepickerStatus: this.state.datepickerStatus + 1
-      })
-    }
+    this.setState({
+      datepickerOpen: true
+    })
   }
   handleOnBlur() {
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: this.state.datepickerStatus - 1
+        datepickerOpen: false
       })
     }
   }
@@ -121,7 +119,7 @@ export class Analyses extends React.Component {
               <p className="text-sm">FROM</p>
               <div ref="startDateHolder"
                 className={'datepicker-input-wrapper start-date' +
-                (this.state.datepickerStatus > 0 ?
+                (this.state.datepickerOpen ?
                 ' datepicker-open' : '')}>
                 <DatePicker
                   dateFormat="MM/DD/YYYY"
@@ -137,7 +135,7 @@ export class Analyses extends React.Component {
               <p className="text-sm">TO</p>
               <div ref="endDateHolder"
                 className={'datepicker-input-wrapper end-date' +
-                (this.state.datepickerStatus > 0 ?
+                (this.state.datepickerOpen ?
                 ' datepicker-open' : '')}>
                 <DatePicker
                   popoverAttachment='top right'
@@ -172,7 +170,14 @@ Analyses.propTypes = {
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  propertyName: React.PropTypes.string
+  propertyName: React.PropTypes.string,
+  theme: React.PropTypes.string
 }
 
-module.exports = Analyses
+function mapStateToProps(state) {
+  return {
+    theme: state.ui.get('theme')
+  };
+}
+
+export default connect(mapStateToProps)(Analyses);

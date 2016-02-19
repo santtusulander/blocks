@@ -2,6 +2,23 @@
 // ==============
 
 .content-layout {
+  min-height: calc(100vh - #{$header-total-height});
+  margin-bottom: -$footer-height;
+
+  @include md {
+    min-height: calc(100vh - #{$md-header-total-height});
+    margin-bottom: -$md-footer-height;
+  }
+
+  &::after {
+    display: block;
+    height: $footer-height;
+    content: '';
+
+    @include md {
+      height: -$md-footer-height;
+    }
+  }
 
   > .container-fluid {
     position: relative;
