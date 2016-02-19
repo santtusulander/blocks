@@ -2,7 +2,7 @@
 // =======
 
 
-// scss-lint:disable SelectorDepth
+// scss-lint:disable SelectorDepth NestingDepth
 .btn {
   height: $btn-height;
   min-width: $btn-min-width;
@@ -276,6 +276,16 @@
     }
   }
 
+  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
+
+    &:hover:enabled,
+    &:hover:enabled .icon {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+  }
+
   .btn-primary {
 
     &,
@@ -297,7 +307,7 @@
     }
   }
 
-  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle .btn-link),
+  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle, .btn-link),
   .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
 
     &,
@@ -308,6 +318,10 @@
       background-color: rgba($pale-blue, 0.1);
       box-shadow: none;
     }
+  }
+
+  .open > .dropdown-toggle .caret {
+    border-top-color: $pale-blue;
   }
 
   .btn-secondary {
@@ -498,7 +512,7 @@
     }
   }
 
-  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle .btn-link),
+  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle, .btn-link),
   .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
 
     &,
@@ -509,6 +523,10 @@
       background-color: rgba($pale-blue, 0.1);
       box-shadow: none;
     }
+  }
+
+  .open > .dropdown-toggle .caret {
+    border-top-color: $pale-blue;
   }
 
   .btn-secondary {

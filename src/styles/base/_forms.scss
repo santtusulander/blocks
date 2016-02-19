@@ -10,7 +10,7 @@ label {
 .form-control {
   height: $bar-height;
   max-width: 900px;
-  padding: ($btn-sm-height / 2) ($btn-height / 2);
+  padding: ($btn-sm-height / 3) ($btn-height / 2);
   font-size: inherit;
   color: inherit;
   border: 0;
@@ -20,7 +20,7 @@ label {
 
   @include md {
     height: $md-bar-height;
-    padding: ($md-btn-sm-height / 2) ($md-btn-height / 2);
+    padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
   }
 
   .dark-theme & {

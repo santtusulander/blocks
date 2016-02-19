@@ -5,6 +5,10 @@
   border-width: 5px;
 }
 
+.dropdown {
+  outline: none;
+}
+
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override bootstrap styles
 .dropdown-menu,
@@ -114,6 +118,12 @@
     > li {
       position: relative;
       display: block;
+      height: auto;
+      min-height: $bar-height;
+
+      @include md {
+        min-height: $md-bar-height;
+      }
 
       &.dropdown-header {
         padding: 0 ($btn-height / 6);
@@ -183,11 +193,20 @@
             margin-right: 8px;
           }
 
-          .dark-theme & {
+          .dark-theme &,
+          .light-theme .header & {
             border-left-color: $dt-text-color;
           }
 
           .light-theme & {
+            border-left-color: $white;
+          }
+        }
+
+        &:hover::after {
+
+          .dark-theme &,
+          .light-theme .header & {
             border-left-color: $white;
           }
         }
@@ -249,10 +268,10 @@
   > li {
     display: table;
     width: 100%;
-    min-height: $bar-height;
+    height: $bar-height;
 
     @include md {
-      min-height: $md-bar-height;
+      height: $md-bar-height;
     }
 
     > a {
@@ -269,8 +288,8 @@
 
       .dark-theme &,
       .light-theme .header & {
+        color: $dt-text-color;
 
-        &,
         &:hover,
         &:focus {
           color: $white;
