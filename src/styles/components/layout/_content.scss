@@ -16,7 +16,7 @@
     content: '';
 
     @include md {
-      height: -$md-footer-height;
+      height: $md-footer-height;
     }
   }
 
