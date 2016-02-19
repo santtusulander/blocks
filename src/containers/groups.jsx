@@ -2,13 +2,14 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as groupActionCreators from '../redux/modules/group'
+import * as accountActionCreators from '../redux/modules/account'
 import * as uiActionCreators from '../redux/modules/ui'
-import EditGroup from '../components/edit-group'
+// Not in 0.5 import EditGroup from '../components/edit-group'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
@@ -111,59 +112,60 @@ export class Groups extends React.Component {
   constructor(props) {
     super(props);
 
-    this.changeActiveGroupValue = this.changeActiveGroupValue.bind(this)
-    this.saveActiveGroupChanges = this.saveActiveGroupChanges.bind(this)
-    this.cancelActiveGroupChanges = this.cancelActiveGroupChanges.bind(this)
-    this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
-    this.createNewGroup = this.createNewGroup.bind(this)
+    // this.changeActiveGroupValue = this.changeActiveGroupValue.bind(this)
+    // this.saveActiveGroupChanges = this.saveActiveGroupChanges.bind(this)
+    // this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
+    // this.createNewGroup = this.createNewGroup.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.state = {
       activeFilter: 'traffic_high_to_low'
     }
   }
   componentWillMount() {
+    this.props.groupActions.changeActiveGroup(null)
     this.props.groupActions.startFetching()
     this.props.groupActions.fetchGroups(
       this.props.params.brand,
       this.props.params.account
     )
-  }
-  toggleActiveGroup(id) {
-    return () => {
-      if(this.props.activeGroup && this.props.activeGroup.get('group_id') === id){
-        this.props.groupActions.changeActiveGroup(null)
-      }
-      else {
-        this.props.groupActions.fetchGroup(
-          this.props.params.brand,
-          this.props.params.account,
-          id
-        )
-      }
-    }
-  }
-  changeActiveGroupValue(valPath, value) {
-    this.props.groupActions.changeActiveGroup(
-      this.props.activeGroup.setIn(valPath, value)
-    )
-  }
-  saveActiveGroupChanges() {
-    this.props.groupActions.updateGroup(
+    this.props.accountActions.fetchAccount(
       this.props.params.brand,
-      this.props.params.account,
-      this.props.activeGroup.toJS()
+      this.props.params.account
     )
   }
-  cancelActiveGroupChanges() {
-    this.props.groupActions.changeActiveGroup(null)
-  }
-  createNewGroup(name) {
-    this.props.groupActions.createGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      name
-    )
-  }
+  // toggleActiveGroup(id) {
+  //   return () => {
+  //     if(this.props.activeGroup && this.props.activeGroup.get('group_id') === id){
+  //       this.props.groupActions.changeActiveGroup(null)
+  //     }
+  //     else {
+  //       this.props.groupActions.fetchGroup(
+  //         this.props.params.brand,
+  //         this.props.params.account,
+  //         id
+  //       )
+  //     }
+  //   }
+  // }
+  // changeActiveGroupValue(valPath, value) {
+  //   this.props.groupActions.changeActiveGroup(
+  //     this.props.activeGroup.setIn(valPath, value)
+  //   )
+  // }
+  // saveActiveGroupChanges() {
+  //   this.props.groupActions.updateGroup(
+  //     this.props.params.brand,
+  //     this.props.params.account,
+  //     this.props.activeGroup.toJS()
+  //   )
+  // }
+  // createNewGroup(name) {
+  //   this.props.groupActions.createGroup(
+  //     this.props.params.brand,
+  //     this.props.params.account,
+  //     name
+  //   )
+  // }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
       this.props.params.brand,
@@ -179,7 +181,6 @@ export class Groups extends React.Component {
     }
   }
   render() {
-    const activeGroup = this.props.activeGroup
     return (
       <PageContainer className='groups-container content-subcontainer'>
         <Content>
@@ -211,12 +212,20 @@ export class Groups extends React.Component {
             </ButtonToolbar>
 
             <p>ACCOUNT CONTENT SUMMARY</p>
-            <h1>Account Name</h1>
+            <h1>
+              {this.props.activeAccount ?
+                this.props.activeAccount.get('name')
+                : 'Loading...'}
+            </h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
             <Breadcrumb>
-              <BreadcrumbItem active={true}>Account Name</BreadcrumbItem>
+              <BreadcrumbItem active={true}>
+                {this.props.activeAccount ?
+                  this.props.activeAccount.get('name')
+                  : 'Loading...'}
+              </BreadcrumbItem>
             </Breadcrumb>
 
             {this.props.fetching ? <p>Loading...</p> : (
@@ -254,22 +263,23 @@ export class Groups extends React.Component {
               </ReactCSSTransitionGroup>
             )}
 
-            {activeGroup ?
+            {/* Not in 0.5
+            activeGroup ?
               <Modal show={true} dialogClassName="configuration-sidebar"
                 backdrop={false}
-                onHide={this.toggleActiveGroup(activeGroup.get('group_id'))}>
+                onHide={this.toggleActiveGroup(this.props.activeGroup.get('group_id'))}>
                 <Modal.Header>
                   <h1>Edit Group</h1>
                   <p>Lorem ipsum dolor</p>
                 </Modal.Header>
                 <Modal.Body>
-                  <EditGroup group={activeGroup}
+                  <EditGroup group={this.props.activeGroup}
                     changeValue={this.changeActiveGroupValue}
                     saveChanges={this.saveActiveGroupChanges}
-                    cancelChanges={this.toggleActiveGroup(activeGroup.get('group_id'))}/>
+                    cancelChanges={this.toggleActiveGroup(this.props.activeGroup.get('group_id'))}/>
                 </Modal.Body>
               </Modal> : null
-            }
+            */}
           </div>
         </Content>
       </PageContainer>
@@ -279,6 +289,8 @@ export class Groups extends React.Component {
 
 Groups.displayName = 'Groups'
 Groups.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
@@ -290,6 +302,7 @@ Groups.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
     fetching: state.group.get('fetching'),
@@ -299,6 +312,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };

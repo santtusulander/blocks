@@ -25,6 +25,11 @@ function uiActionsMaker() {
     toggleChartView: jest.genMockFunction()
   }
 }
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.genMockFunction()
+  }
+}
 
 const fakeGroups = Immutable.fromJS([
   {id: 1, name: 'aaa'},
@@ -37,7 +42,9 @@ describe('Groups', () => {
   it('should exist', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()} fetching={true}
+        uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        fetching={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
@@ -45,19 +52,25 @@ describe('Groups', () => {
 
   it('should request data on mount', () => {
     const groupActions = groupActionsMaker()
+    const accountActions = accountActionsMaker()
     TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()} fetching={true}
+        uiActions={uiActionsMaker()}
+        accountActions={accountActions}
+        fetching={true}
         params={urlParams}/>
     )
     expect(groupActions.startFetching.mock.calls.length).toBe(1)
     expect(groupActions.fetchGroups.mock.calls[0][0]).toBe('udn')
+    expect(accountActions.fetchAccount.mock.calls[0][0]).toBe('udn')
   });
 
   it('should show a loading message', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()} fetching={true}
+        uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        fetching={true}
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
@@ -68,6 +81,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
         groups={fakeGroups}
         params={urlParams}
         viewingChart={true}/>
@@ -81,6 +95,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
         groups={fakeGroups}
         params={urlParams}
         viewingChart={false}/>
@@ -89,69 +104,74 @@ describe('Groups', () => {
     expect(child.length).toBe(2)
     expect(child[0].props.id).toBe(1)
   });
-
-  it('should activate a group for edit when clicked', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()}
-        groups={fakeGroups}
-        params={urlParams}/>
-    )
-    groups.toggleActiveGroup(1)()
-    expect(groupActions.fetchGroup.mock.calls[0]).toEqual(['udn',1,1])
-  });
-
-  it('should deactivate a group when clicked if already active', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()}
-        groups={fakeGroups}
-        activeGroup={Immutable.Map({group_id:1})}
-        params={urlParams}/>
-    )
-    groups.toggleActiveGroup(1)()
-    expect(groupActions.changeActiveGroup.mock.calls[0][0]).toBe(null)
-  });
-
-  it('should be able to change the active group', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()}
-        groups={fakeGroups}
-        activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
-        params={urlParams}/>
-    )
-    groups.changeActiveGroupValue(['name'], 'bbb')
-    expect(groupActions.changeActiveGroup.mock.calls[0][0].toJS()).toEqual({
-      group_id: 1,
-      name: 'bbb'
-    })
-  })
-
-  it('should be able save updates to the active group', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()}
-        groups={fakeGroups}
-        activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
-        params={urlParams}/>
-    )
-    groups.saveActiveGroupChanges()
-    expect(groupActions.updateGroup.mock.calls[0][2]).toEqual({
-      group_id: 1,
-      name: 'aaa'
-    })
-  })
+  // Not in 0.5
+  // it('should activate a group for edit when clicked', () => {
+  //   const groupActions = groupActionsMaker()
+  //   let groups = TestUtils.renderIntoDocument(
+  //     <Groups groupActions={groupActions}
+  //       uiActions={uiActionsMaker()}
+  //       accountActions={accountActionsMaker()}
+  //       groups={fakeGroups}
+  //       params={urlParams}/>
+  //   )
+  //   groups.toggleActiveGroup(1)()
+  //   expect(groupActions.fetchGroup.mock.calls[0]).toEqual(['udn',1,1])
+  // });
+  //
+  // it('should deactivate a group when clicked if already active', () => {
+  //   const groupActions = groupActionsMaker()
+  //   let groups = TestUtils.renderIntoDocument(
+  //     <Groups groupActions={groupActions}
+  //       uiActions={uiActionsMaker()}
+  //       accountActions={accountActionsMaker()}
+  //       groups={fakeGroups}
+  //       activeGroup={Immutable.Map({group_id:1})}
+  //       params={urlParams}/>
+  //   )
+  //   groups.toggleActiveGroup(1)()
+  //   expect(groupActions.changeActiveGroup.mock.calls[0][0]).toBe(null)
+  // });
+  //
+  // it('should be able to change the active group', () => {
+  //   const groupActions = groupActionsMaker()
+  //   let groups = TestUtils.renderIntoDocument(
+  //     <Groups groupActions={groupActions}
+  //       uiActions={uiActionsMaker()}
+  //       accountActions={accountActionsMaker()}
+  //       groups={fakeGroups}
+  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       params={urlParams}/>
+  //   )
+  //   groups.changeActiveGroupValue(['name'], 'bbb')
+  //   expect(groupActions.changeActiveGroup.mock.calls[0][0].toJS()).toEqual({
+  //     group_id: 1,
+  //     name: 'bbb'
+  //   })
+  // })
+  //
+  // it('should be able save updates to the active group', () => {
+  //   const groupActions = groupActionsMaker()
+  //   let groups = TestUtils.renderIntoDocument(
+  //     <Groups groupActions={groupActions}
+  //       uiActions={uiActionsMaker()}
+  //       accountActions={accountActionsMaker()}
+  //       groups={fakeGroups}
+  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       params={urlParams}/>
+  //   )
+  //   groups.saveActiveGroupChanges()
+  //   expect(groupActions.updateGroup.mock.calls[0][2]).toEqual({
+  //     group_id: 1,
+  //     name: 'aaa'
+  //   })
+  // })
 
   it('should delete a group when clicked', () => {
     const groupActions = groupActionsMaker()
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
         groups={fakeGroups}
         params={urlParams}/>
     )
