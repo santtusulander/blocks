@@ -23,8 +23,9 @@ label {
     padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
   }
 
-  // Hide clear button for IE because it's not working with the designed UI
-  &::-ms-clear {
+  // Hide IE clear and reveal buttons for design purposes
+  &::-ms-clear,
+  &::-ms-reveal {
     display: none;
   }
 
