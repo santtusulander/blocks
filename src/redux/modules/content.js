@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {defaultHeaders, urlBase} from '../util'
+import {urlBase} from '../util'
 
 const CONTENT_FETCHED = 'CONTENT_FETCHED'
 const CONTENT_START_FETCH = 'CONTENT_START_FETCH'
@@ -68,9 +68,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchContent = createAction(CONTENT_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/content`, {
-    headers: defaultHeaders
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/content`)
   .then((res) => {
     if(res) {
       return res.data;

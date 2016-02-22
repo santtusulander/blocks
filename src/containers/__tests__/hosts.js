@@ -22,6 +22,16 @@ function uiActionsMaker() {
     toggleChartView: jest.genMockFunction()
   }
 }
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.genMockFunction()
+  }
+}
+function groupActionsMaker() {
+  return {
+    fetchGroup: jest.genMockFunction()
+  }
+}
 
 const urlParams = {brand: 'udn', account: '1', group: '1'}
 
@@ -29,6 +39,8 @@ describe('Hosts', () => {
   it('should exist', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -37,19 +49,28 @@ describe('Hosts', () => {
 
   it('should request data on mount', () => {
     const hostActions = hostActionsMaker()
+    const accountActions = accountActionsMaker()
+    const groupActions = groupActionsMaker()
     TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
+        accountActions={accountActions}
+        groupActions={groupActions}
         fetching={true} params={urlParams}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHosts.mock.calls[0][0]).toBe('udn')
     expect(hostActions.fetchHosts.mock.calls[0][1]).toBe('1')
     expect(hostActions.fetchHosts.mock.calls[0][2]).toBe('1')
+    expect(accountActions.fetchAccount.mock.calls[0][0]).toBe('udn')
+    expect(groupActions.fetchGroup.mock.calls[0][0]).toBe('udn')
+    expect(groupActions.fetchGroup.mock.calls[0][1]).toBe('1')
   });
 
   it('should show a loading message', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         fetching={true} params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
@@ -60,6 +81,8 @@ describe('Hosts', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()}
         uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hosts={Immutable.List([1,2])}
         params={urlParams}
         viewingChart={true}/>
@@ -72,6 +95,8 @@ describe('Hosts', () => {
   it('should show existing hosts as lists', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hosts={Immutable.List([1,2])}
         params={urlParams}
         viewingChart={false}/>
@@ -85,6 +110,8 @@ describe('Hosts', () => {
     const hostActions = hostActionsMaker()
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )
@@ -96,6 +123,8 @@ describe('Hosts', () => {
     const hostActions = hostActionsMaker()
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )
