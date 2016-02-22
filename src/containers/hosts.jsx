@@ -7,6 +7,8 @@ import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as groupActionCreators from '../redux/modules/group'
+import * as accountActionCreators from '../redux/modules/account'
 import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
@@ -64,6 +66,15 @@ export class Hosts extends React.Component {
   componentWillMount() {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHosts(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
+    this.props.accountActions.fetchAccount(
+      this.props.params.brand,
+      this.props.params.account
+    )
+    this.props.groupActions.fetchGroup(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group
@@ -133,13 +144,27 @@ export class Hosts extends React.Component {
             </ButtonToolbar>
 
             <p>GROUP CONTENT SUMMARY</p>
-            <h1>Group Name</h1>
+            <h1>
+              {this.props.activeGroup ?
+                this.props.activeGroup.get('name')
+                : 'Loading...'}
+            </h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
             <Breadcrumb>
-              <BreadcrumbItem>Account Name</BreadcrumbItem>
-              <BreadcrumbItem active={true}>Group Name</BreadcrumbItem>
+              <BreadcrumbItem>
+                <Link to={`/content/groups/udn/${this.props.params.account}`}>
+                  {this.props.activeAccount ?
+                    this.props.activeAccount.get('name')
+                    : 'Loading...'}
+                </Link>
+              </BreadcrumbItem>
+              <BreadcrumbItem active={true}>
+                {this.props.activeGroup ?
+                  this.props.activeGroup.get('name')
+                  : 'Loading...'}
+              </BreadcrumbItem>
             </Breadcrumb>
 
             {this.props.fetching ? <p>Loading...</p> : (
@@ -201,7 +226,11 @@ export class Hosts extends React.Component {
 
 Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
@@ -211,6 +240,8 @@ Hosts.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
     fetching: state.host.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
@@ -219,6 +250,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };

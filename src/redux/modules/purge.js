@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {defaultHeaders, urlBase} from '../util'
+import {urlBase} from '../util'
 
 const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'
@@ -84,16 +84,12 @@ export default handleActions({
 // ACTIONS
 
 export const createPurge = createAction(PURGE_CREATED, (brand, account, group, property, newPurge) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge, {
-    headers: defaultHeaders
-  })
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge)
   .then(() => newPurge);
 })
 
 export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, property, id) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge/${id}`, {
-    headers: defaultHeaders
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge/${id}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -102,9 +98,7 @@ export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, pr
 })
 
 export const fetchAllPurges = createAction(PURGE_FETCHED_ALL, (brand, account, group, property) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, {
-    headers: defaultHeaders
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`)
   .then((res) => {
     if(res) {
       return res.data;
