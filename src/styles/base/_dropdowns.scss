@@ -3,6 +3,11 @@
 
 .caret {
   border-width: 5px;
+
+  &.up {
+    border-top-style: none;
+    border-bottom-style: solid;
+  }
 }
 
 .dropdown {
