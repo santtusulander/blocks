@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, Col, Input, Modal, Row, Alert } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import History from 'history'
 
 import * as userActionCreators from '../redux/modules/user'
 
@@ -52,7 +51,7 @@ export class Login extends React.Component {
     })
   }
   checkUsername() {
-    if(!this.refs.username.refs.input.value) {
+    if(!this.state.username) {
       let status = !this.state.usernameStatus ? 'active' : ''
       this.setState({
         usernameStatus: status
@@ -60,7 +59,7 @@ export class Login extends React.Component {
     }
   }
   checkPassword() {
-    if(!this.refs.password.refs.input.value) {
+    if(!this.state.password) {
       let status = !this.state.passwordStatus ? 'active' : ''
       this.setState({
         passwordStatus: status
@@ -92,7 +91,7 @@ export class Login extends React.Component {
               </Alert>
               : ''
             }
-            <Input type="text" ref="username" id="username"
+            <Input type="text" id="username"
               wrapperClassName={'input-addon-before has-login-label '
                 + 'login-label-username ' + this.state.usernameStatus}
               addonBefore={<IconEmail/>}
@@ -100,7 +99,7 @@ export class Login extends React.Component {
               onFocus={this.checkUsername}
               onBlur={this.checkUsername}
               onChange={this.changeField('username')}/>
-            <Input ref="password" id="password"
+            <Input id="password"
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password '
