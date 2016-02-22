@@ -172,7 +172,8 @@ class Header extends React.Component {
                     <div className="user-menu-item">Account Management</div>
                     </MenuItem>
                   <MenuItem className="bottom-item" eventKey="5">
-                    <div className="user-menu-item">Log Out</div>
+                    <div className="user-menu-item"
+                      onClick={this.props.logOut}>Log Out</div>
                   </MenuItem>
                 </Dropdown.Menu>
               </Dropdown>
@@ -190,6 +191,7 @@ Header.propTypes = {
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
+  logOut: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 
