@@ -31,6 +31,11 @@ gulp.task("webpack", function(callback) {
     new WebpackDevServer(webpack(webpackConfig), {
       hot: true,
       historyApiFallback: true,
+      proxy: {
+        '/VCDN*': {
+          target: config.apiUrl
+        }
+      },
       stats: {
         colors: true
       }
