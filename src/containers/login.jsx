@@ -1,26 +1,50 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Input, Modal, Row, Alert } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import History from 'history'
+
+import * as userActionCreators from '../redux/modules/user'
+
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
 
-class Login extends React.Component {
+export class Login extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      loginError: null,
+      password: '',
+      passwordStatus: '',
       passwordVisible: false,
-      usernameStatus: '',
-      passwordStatus: ''
+      username: '',
+      usernameStatus: ''
     }
 
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.checkUsername = this.checkUsername.bind(this)
     this.checkPassword = this.checkPassword.bind(this)
+    this.changeField = this.changeField.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
-  onSubmit() {
-    console.log('form submitted')
+  onSubmit(e) {
+    e.preventDefault()
+    this.setState({loginError: null})
+    this.props.userActions.startFetching()
+    this.props.userActions.logIn(
+      this.state.username,
+      this.state.password
+    ).then((action) => {
+      if(!action.error) {
+        this.props.history.pushState(null, '/')
+      }
+      else {
+        this.setState({loginError: action.payload.message})
+      }
+    })
   }
   togglePasswordVisibility() {
     this.setState({
@@ -43,9 +67,15 @@ class Login extends React.Component {
       })
     }
   }
+  changeField(key) {
+    return e => {
+      const newState = {}
+      newState[key] = e.target.value
+      this.setState(newState)
+    }
+  }
   render() {
     return (
-
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
@@ -56,12 +86,20 @@ class Login extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
+            {this.state.loginError ?
+              <Alert bsStyle="danger">
+                {this.state.loginError}
+              </Alert>
+              : ''
+            }
             <Input type="text" ref="username" id="username"
               wrapperClassName={'input-addon-before has-login-label '
                 + 'login-label-username ' + this.state.usernameStatus}
               addonBefore={<IconEmail/>}
+              value={this.state.username}
               onFocus={this.checkUsername}
-              onBlur={this.checkUsername}/>
+              onBlur={this.checkUsername}
+              onChange={this.changeField('username')}/>
             <Input ref="password" id="password"
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
@@ -73,15 +111,18 @@ class Login extends React.Component {
                   onClick={this.togglePasswordVisibility}>
                     <IconEye/>
                 </a>}
+              value={this.state.password}
               onFocus={this.checkPassword}
-              onBlur={this.checkPassword}/>
+              onBlur={this.checkPassword}
+              onChange={this.changeField('password')}/>
             <Row>
               <Col xs={6}>
                 <Input type="checkbox" label="Remember me" />
               </Col>
               <Col xs={6}>
-                <Button type="submit" bsStyle="primary" className="pull-right">
-                  Login
+                <Button type="submit" bsStyle="primary" className="pull-right"
+                  disabled={this.props.fetching}>
+                  {this.props.fetching ? 'Logging in...' : 'Login'}
                 </Button>
               </Col>
             </Row>
@@ -94,6 +135,22 @@ class Login extends React.Component {
 }
 
 Login.displayName = 'Login'
-Login.propTypes = {}
+Login.propTypes = {
+  fetching: React.PropTypes.bool,
+  history: React.PropTypes.object,
+  userActions: React.PropTypes.object
+}
 
-module.exports = Login
+function mapStateToProps(state) {
+  return {
+    fetching: state.user.get('fetching')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

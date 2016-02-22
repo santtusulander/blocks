@@ -9,6 +9,9 @@ const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 
+// Create an axios instance that doesn't use defaults to test credentials
+const loginAxios = axios.create()
+
 // TODO: This is all fake and insecure until Keystone sign on is ready
 
 const emptyUser = Immutable.Map({
@@ -31,7 +34,7 @@ export default handleActions({
     }
   },
   USER_LOGGED_OUT: (state) => {
-    axios.defaults.headers.common['Authorization'] = ''
+    axios.defaults.headers.common['Authorization'] = 'Basic 000'
     return state.set('loggedIn', false)
   },
   USER_START_FETCH: (state) => {
@@ -43,11 +46,17 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return axios.get(`${urlBase}/VCDN/v2/udn/accounts`)
+  return loginAxios.get(`${urlBase}/VCDN/v2/udn/accounts`, {
+    headers: {
+      'Authorization': 'Basic ' + btoa(`${username}:${password}`)
+    }
+  })
   .then((res) => {
     if(res) {
       return {username: username, password: password}
     }
+  }, (res) => {
+    throw new Error(res.data.message)
   });
 })
 

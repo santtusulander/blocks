@@ -2,7 +2,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../login.jsx')
-const Login = require('../login.jsx')
+const Login = require('../login.jsx').Login
 
 describe('Login', () => {
   it('should exist', () => {

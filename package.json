@@ -42,7 +42,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "axios": "^0.7.0",
+    "axios": "^0.8.0",
     "d3": "^3.5.14",
     "immutable": "^3.7.6",
     "moment": "^2.11.2",
