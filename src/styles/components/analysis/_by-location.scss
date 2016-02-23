@@ -1,4 +1,9 @@
 .analysis-by-location {
+  overflow: hidden;
+
+  svg {
+    max-width: 100%;
+  }
 
   .chart {
     position: relative;
@@ -15,8 +20,6 @@
     stroke-width: 1;
     stroke: rgba($pale-blue, 0.4);
   }
-
-
 
   .hiddenpath {
     opacity: 0;
