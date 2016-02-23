@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -152,20 +152,20 @@ export class Hosts extends React.Component {
           </PageHeader>
 
           <div className="container-fluid body-content">
-            <Breadcrumb>
-              <BreadcrumbItem>
+            <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+              <li>
                 <Link to={`/content/groups/udn/${this.props.params.account}`}>
                   {this.props.activeAccount ?
                     this.props.activeAccount.get('name')
                     : 'Loading...'}
                 </Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem active={true}>
+              </li>
+                <li className="active">
                 {this.props.activeGroup ?
                   this.props.activeGroup.get('name')
                   : 'Loading...'}
-              </BreadcrumbItem>
-            </Breadcrumb>
+              </li>
+            </ol>
 
             {this.props.fetching ? <p>Loading...</p> : (
               <ReactCSSTransitionGroup
