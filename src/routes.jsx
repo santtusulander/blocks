@@ -11,8 +11,7 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
-
-import Property from './components/property'
+import Property from './containers/property'
 
 import ContentTransition from './transitions/content'
 
