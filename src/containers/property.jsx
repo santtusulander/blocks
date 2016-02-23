@@ -1,8 +1,13 @@
 import React from 'react'
-
+import Immutable from 'immutable'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Dropdown, MenuItem,
   Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router'
+import moment from 'moment'
+
+import * as hostActionCreators from '../redux/modules/host'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -45,11 +50,9 @@ const fakeRecentData = [
   {timestamp: new Date("2016-01-31 01:00:00"), bytes: 24675, requests: 435}
 ]
 
-class Property extends React.Component {
+export class Property extends React.Component {
   constructor(props) {
-    super(props);
-
-    this.deleteHost = this.deleteHost.bind(this)
+    super(props)
 
     this.state = {
       byLocationWidth: 0,
@@ -57,6 +60,15 @@ class Property extends React.Component {
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+  }
+  componentWillMount() {
+    this.props.hostActions.startFetching()
+    this.props.hostActions.fetchHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.location.query.name
+    )
   }
   componentDidMount() {
     this.measureContainers()
@@ -66,16 +78,18 @@ class Property extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   measureContainers() {
-    this.setState({
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
-    })
-  }
-  deleteHost(e) {
-    e.stopPropagation()
-    e.preventDefault()
-    this.props.delete(this.props.id)
+    if(this.refs.byTimeHolder) {
+      this.setState({
+        byTimeWidth: this.refs.byTimeHolder.clientWidth
+      })
+    }
   }
   render() {
+    if(this.props.fetching) {
+      return <div>Loading...</div>
+    }
+    const activeHost = this.props.activeHost
+    const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     return (
       <PageContainer>
         <Content>
@@ -89,7 +103,7 @@ class Property extends React.Component {
               <Dropdown id="dropdown-content">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle"
                   noCaret={true}>
-                  <h1>propertyname.com</h1>
+                  <h1>{this.props.location.query.name}</h1>
                   <IconHeaderCaret />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -104,19 +118,27 @@ class Property extends React.Component {
             <Row className="property-info-row no-end-gutters">
               <Col xs={3}>
                 Origin Hostname
-                <h3>origin.propertyname.com</h3>
+                <h3>
+                  {activeConfig.get('edge_configuration').get('origin_host_name')}
+                </h3>
               </Col>
               <Col xs={3}>
                 Published Hostname
-                <h3>propertyname.com</h3>
+                <h3>
+                  {activeConfig.get('edge_configuration').get('published_name')}
+                </h3>
               </Col>
               <Col xs={3}>
                 Configuration Version
-                <h3>Prod_version 1</h3>
+                <h3>{activeConfig.get('config_name')}</h3>
               </Col>
               <Col xs={3}>
                 Published
-                <h3>11/11/2016, 12:10pm</h3>
+                <h3>
+                  {moment(
+                    activeConfig.get('configuration_status').get('deployment_date'), 'X'
+                  ).format('M/D/YYYY, h:mma')}
+                </h3>
               </Col>
             </Row>
 
@@ -186,15 +208,21 @@ class Property extends React.Component {
                   <tbody>
                     <tr>
                       <td>Honor Origin Cache Control</td>
-                      <td><b className="text-green">On</b></td>
+                      <td>
+                        <b className="text-green">On</b>
+                      </td>
                     </tr>
                     <tr>
                       <td>Ignore case from origin</td>
-                      <td><b className="text-orange">Off</b></td>
+                      <td>
+                        <b className="text-orange">Off</b>
+                      </td>
                     </tr>
                     <tr>
                       <td>Enable e-Tag support</td>
-                      <td><b className="text-green">On</b></td>
+                      <td>
+                        <b className="text-green">On</b>
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -249,12 +277,30 @@ class Property extends React.Component {
 Property.displayName = 'Property'
 Property.propTypes = {
   account: React.PropTypes.string,
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  fetching: React.PropTypes.bool,
   group: React.PropTypes.string,
+  hostActions: React.PropTypes.object,
   id: React.PropTypes.string,
-  name: React.PropTypes.string
+  location: React.PropTypes.object,
+  name: React.PropTypes.string,
+  params: React.PropTypes.object
 }
 
-module.exports = Property
+function mapStateToProps(state) {
+  return {
+    activeHost: state.host.get('activeHost'),
+    fetching: state.host.get('fetching')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    hostActions: bindActionCreators(hostActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Property);
