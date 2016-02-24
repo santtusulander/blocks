@@ -90,7 +90,8 @@ class AnalysisByTime extends React.Component {
           onMouseMove={this.moveMouse(xScale, yScale, this.props.data)}
           onMouseOut={this.deactivateTooltip}>
           <path d={trafficLine(this.props.data)} className="line"/>
-          <path d={trafficArea(this.props.data)} className="area"/>
+          <path d={trafficArea(this.props.data)} className="area"
+            fill="url(#dt-svg-gradient)" />
           {this.state.tooltipText ?
             <g>
               <circle r="5"

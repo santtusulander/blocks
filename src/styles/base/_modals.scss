@@ -71,7 +71,7 @@
 
       @include sm {
         height: $sm-modal-header-height;
-        padding: 40px $md-bar-height 0;
+        padding: 40px ($md-bar-height / 2) 0;
       }
 
       .dark-theme & {
@@ -91,7 +91,7 @@
       }
 
       @include sm {
-        padding: 40px $md-bar-height;
+        padding: 40px ($md-bar-height / 2);
       }
     }
   }

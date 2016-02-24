@@ -29,8 +29,8 @@ class Select extends React.Component {
       <Dropdown id="" className={className}
         onSelect={this.selectOption}>
         <Dropdown.Toggle noCaret={true}>
-          {label}
           <IconSelectCaret/>
+          {label}
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {this.props.options.map((options, i) =>

@@ -23,14 +23,6 @@
     }
   }
 
-  .area {
-
-    .dark-theme &,
-    .light-theme & {
-      fill: url('#dt-svg-gradient');
-    }
-  }
-
   .axis-tick {
     stroke: $silver;
   }
