@@ -1,6 +1,7 @@
 'use strict';
 
 let mysql   = require('mysql');
+let Promise = require('bluebird');
 let configs = require('./configs');
 let log     = require('./logger');
 let db      = {
