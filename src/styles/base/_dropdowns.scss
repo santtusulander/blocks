@@ -75,6 +75,10 @@
     }
   }
 
+  .header-toggle + & {
+    top: 110%;
+  }
+
   &.dropdown-user-menu {
     width: 500px;
     min-height: calc(100vh - #{$header-total-height});
