@@ -93,7 +93,7 @@ export class Login extends React.Component {
               </div>
               : ''
             }
-            <Input type="text" id="username" ref="username-input"
+            <Input type="text" id="username"
               wrapperClassName={'input-addon-before has-login-label '
                 + 'login-label-username'
                 + (this.state.usernameActive ? ' active' : '')}
@@ -102,7 +102,7 @@ export class Login extends React.Component {
               onBlur={this.checkUsernameActive(false)}
               value={this.state.username}
               onChange={this.changeField('username')}/>
-            <Input id="password" ref="password-input"
+            <Input id="password"
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
