@@ -1,4 +1,5 @@
 .analysis-by-location {
+  overflow: hidden;
 
   .chart {
     position: relative;
@@ -15,8 +16,6 @@
     stroke-width: 1;
     stroke: rgba($pale-blue, 0.4);
   }
-
-
 
   .hiddenpath {
     opacity: 0;

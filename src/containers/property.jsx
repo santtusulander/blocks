@@ -72,6 +72,7 @@ export class Property extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
+    setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {

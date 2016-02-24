@@ -1,5 +1,6 @@
 .analysis-by-time {
   position: relative;
+  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
