@@ -84,6 +84,14 @@ h3 {
     font-size: $font-size-base;
     font-weight: normal;
   }
+
+  .analysis-traffic &:not(:first-child) {
+    margin-top: $btn-height;
+
+    @include md {
+      margin-top: $md-btn-height;
+    }
+  }
 }
 
 p {

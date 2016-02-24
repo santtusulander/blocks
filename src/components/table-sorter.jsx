@@ -21,10 +21,10 @@ class TableSorter extends React.Component {
     let caret = ''
     if(this.props.column === this.props.activeColumn) {
       if(this.props.activeDirection < 0) {
-        caret = <DescCaret/>
+        caret = <span className="caret up" />
       }
       else {
-        caret = <AscCaret/>
+        caret = <span className="caret" />
       }
     }
     return (

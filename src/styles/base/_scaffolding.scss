@@ -10,6 +10,8 @@ body {
 body {
   font-family: 'Roboto', Helvetica, Arial;
   font-size: $font-size;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 
   @include md {
     font-size: $md-font-size;
