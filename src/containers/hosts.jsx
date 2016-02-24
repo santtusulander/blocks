@@ -276,6 +276,7 @@ export class Hosts extends React.Component {
                       <ContentItemChart key={i} id={host}
                         linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        analyticsLink={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         name={host} description="Desc"
                         delete={this.deleteHost}
                         primaryData={fakeRecentData}
