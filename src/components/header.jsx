@@ -4,8 +4,7 @@ import { Link } from 'react-router'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 
-import { Button, Breadcrumb, BreadcrumbItem,Dropdown, Input, MenuItem, Nav,
-  Navbar } from 'react-bootstrap';
+import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   constructor(props) {
@@ -58,12 +57,12 @@ class Header extends React.Component {
             'header-gradient animated' :
             'header-gradient'}></div>
         {this.state.showBreadcrumbs ?
-          <Breadcrumb>
-            <BreadcrumbItem className="breadcrumb-back" />
-            <BreadcrumbItem>Content</BreadcrumbItem>
-            <BreadcrumbItem>Group Name</BreadcrumbItem>
-            <BreadcrumbItem active={true}>Property Name</BreadcrumbItem>
-          </Breadcrumb> :
+          <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+            <li className="breadcrumb-back" />
+            <li>Content</li>
+            <li>Group Name</li>
+            <li className="active">Property Name</li>
+          </ol> :
         <div>
           <Navbar.Header>
             <Navbar.Brand>

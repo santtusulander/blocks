@@ -71,8 +71,8 @@
 
     .dark-theme & {
       background: linear-gradient($pale-blue, rgba($white, 0.3));
-      background-position: center -10px;
-      background-size: calc(100% + 20px);
+      background-position: center center;
+      background-size: 100%;
       border-color: $black;
     }
 

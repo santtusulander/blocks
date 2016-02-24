@@ -10,7 +10,7 @@ label {
 .form-control {
   height: $bar-height;
   max-width: 900px;
-  padding: ($btn-sm-height / 2) ($btn-height / 2);
+  padding: ($btn-sm-height / 3) ($btn-height / 2);
   font-size: inherit;
   color: inherit;
   border: 0;
@@ -20,7 +20,13 @@ label {
 
   @include md {
     height: $md-bar-height;
-    padding: ($md-btn-sm-height / 2) ($md-btn-height / 2);
+    padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
+  }
+
+  // Hide IE clear and reveal buttons for design purposes
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
   }
 
   .dark-theme & {
@@ -123,6 +129,7 @@ label {
   .form-groups .control-label {
     position: absolute;
     top: 50%;
+    left: -15px;
     padding-top: 0;
     padding-bottom: $form-group-padding;
     transform: translateY(-50%);

@@ -7,7 +7,6 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 
 import Select from '../../components/select'
-import IconHeaderCaret from '../../components/icons/icon-header-caret.jsx'
 
 export class Analyses extends React.Component {
   constructor(props) {
@@ -91,10 +90,8 @@ export class Analyses extends React.Component {
         <div className="sidebar-header">
           <p className="text-sm">ACCOUNT TRAFFIC OVERVIEW</p>
           <Dropdown id="dropdown-content">
-            <Dropdown.Toggle bsStyle="link" className="header-toggle"
-              noCaret={true}>
+            <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">
               <h3>Disney Interactive</h3>
-              <IconHeaderCaret />
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <MenuItem eventKey="1">propertyname2.com</MenuItem>
