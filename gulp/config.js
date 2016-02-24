@@ -5,6 +5,7 @@ var dist = path.join(__dirname, '../dist/');
 
 module.exports = {
   webpackPort: '3000',
+  apiUrl: 'http://api.cdx-dev.unifieddeliverynetwork.net',
   html: {
     src: src + '/index.html',
     dest: dist

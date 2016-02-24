@@ -6,17 +6,10 @@
 
 .datepicker__tether-element {
   z-index: 1010;
-  opacity: 0;
-  transition: opacity 150ms;
 
   &.datepicker__tether-element-attached-bottom,
   &.datepicker__tether-element-attached-top {
     margin-top: -10px;
-  }
-
-  &.dark-datepicker,
-  &.light-datepicker {
-    opacity: 1;
   }
 }
 
@@ -37,7 +30,7 @@
     padding: 10px 15px;
   }
 
-  .dark-datepicker & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
     background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
@@ -45,7 +38,7 @@
     background-size: 100%;
   }
 
-  .light-datepicker & {
+  .light-theme & {
     color: $lt-text-color;
     background-color: $white;
   }
@@ -61,11 +54,11 @@
   border-bottom: 1px solid;
   border-radius: 0;
 
-  .dark-datepicker & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
   }
 
-  .light-datepicker & {
+  .light-theme & {
     border-color: rgba($black, 0.1);
   }
 }
@@ -82,11 +75,11 @@
     padding-bottom: 10px;
   }
 
-  .dark-datepicker & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
   }
 
-  .light-datepicker & {
+  .light-theme & {
     border-color: rgba($black, 0.1);
   }
 }
@@ -114,11 +107,26 @@
   &.datepicker__navigation--previous {
     left: -5px;
 
-    .dark-datepicker & {
+    &::after {
+      border-left: 0;
 
-      &::after {
-        border-left: 0;
+      .dark-theme & {
         border-right-color: $dt-text-color;
+      }
+
+      .light-theme & {
+        border-right-color: $lt-text-color;
+      }
+    }
+
+    &:hover::after {
+
+      .dark-theme & {
+        border-right-color: $white;
+      }
+
+      .light-theme & {
+        border-right-color: $black;
       }
     }
   }
@@ -126,11 +134,26 @@
   &.datepicker__navigation--next {
     right: -5px;
 
-    .dark-datepicker & {
+    &::after {
+      border-right: 0;
 
-      &::after {
-        border-right: 0;
+      .dark-theme & {
         border-left-color: $dt-text-color;
+      }
+
+      .light-theme & {
+        border-left-color: $lt-text-color;
+      }
+    }
+
+    &:hover::after {
+
+      .dark-theme & {
+        border-left-color: $white;
+      }
+
+      .light-theme & {
+        border-left-color: $black;
       }
     }
   }
@@ -156,12 +179,19 @@
     margin: 2px 0;
   }
 
-  &:hover {
-    background-color: inherit;
+  &:not(.datepicker__day--selected):hover {
     border-radius: 0;
 
-    .dark-datepicker &:not(.datepicker__day--disabled ) {
+    &:not(.datepicker__day--in-range) {
+      background-color: inherit;
+    }
+
+    .dark-theme &:not(.datepicker__day--disabled) {
       color: $white;
+    }
+
+    .light-theme &:not(.datepicker__day--disabled) {
+      color: $black;
     }
   }
 
@@ -175,11 +205,11 @@
 
   &.datepicker__day--outside-month {
 
-    .dark-datepicker & {
+    .dark-theme & {
       color: rgba($dt-text-color, 0.5);
     }
 
-    .light-datepicker & {
+    .light-theme & {
       color: rgba($lt-text-color, 0.5);
     }
   }
@@ -206,11 +236,11 @@
       margin: (-$md-bar-height / 4) 0 0 (-$md-bar-height / 4);
     }
 
-    .dark-datepicker & {
+    .dark-theme & {
       border-color: $white;
     }
 
-    .light-datepicker & {
+    .light-theme & {
       border-color: $lt-text-color;
     }
   }
@@ -226,11 +256,15 @@
 }
 
 .datepicker__day--selected {
-  color: $white;
-  background: linear-gradient(to right,
-    transparent 0%,
-    transparent 50%,
-    rgba($pale-blue, 0.1) 51%);
+
+  &,
+  &:hover {
+    color: $white;
+    background: linear-gradient(to right,
+      transparent 0%,
+      transparent 50%,
+      rgba($pale-blue, 0.1) 51%);
+  }
 
   &::before {
     display: block;
@@ -246,8 +280,8 @@
       margin: 0 auto (-$md-bar-height / 2);
     }
 
-    .dark-datepicker &,
-    .light-datepicker & {
+    .dark-theme &,
+    .light-theme & {
       background-color: $pale-blue;
     }
   }
@@ -256,15 +290,19 @@
 .datepicker__tether-element-attached-right {
 
   .datepicker__day--selected {
-    background: linear-gradient(to right,
-      rgba($pale-blue, 0.1) 0%,
-      rgba($pale-blue, 0.1) 50%,
-      transparent 51%);
-  }
 
-  &.dark-datepicker .datepicker__day--selected::before,
-  &.light-datepicker .datepicker__day--selected::before {
-    background-color: $purple;
+    &,
+    &:hover {
+      background: linear-gradient(to right,
+        rgba($pale-blue, 0.1) 0%,
+        rgba($pale-blue, 0.1) 50%,
+        transparent 51%);
+    }
+
+    .dark-theme &::before,
+    .light-theme &::before {
+      background-color: $purple;
+    }
   }
 }
 
@@ -360,6 +398,11 @@
 
       @include md {
         height: $md-btn-height;
+      }
+
+      // Hide clear button for IE because it's not working with the designed UI
+      &::-ms-clear {
+        display: none;
       }
     }
 

@@ -2,10 +2,13 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar, BreadcrumbItem, Breadcrumb } from 'react-bootstrap';
+import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as groupActionCreators from '../redux/modules/group'
+import * as accountActionCreators from '../redux/modules/account'
 import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
@@ -20,31 +23,127 @@ import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
 
 const fakeRecentData = [
-  {bytes: 25287}, {bytes: 75693}, {bytes: 56217}, {bytes: 37567}, {bytes: 68967},
-  {bytes: 59482}, {bytes: 39528}, {bytes: 44277}, {bytes: 23870}, {bytes: 38097},
-  {bytes: 34104}, {bytes: 34667}, {bytes: 45348}, {bytes: 75675}, {bytes: 31596},
-  {bytes: 72447}, {bytes: 40786}, {bytes: 48403}, {bytes: 37584}, {bytes: 20450},
-  {bytes: 29754}, {bytes: 25254}, {bytes: 76117}, {bytes: 62423}, {bytes: 21843},
-  {bytes: 36684}, {bytes: 63311}, {bytes: 62746}, {bytes: 25277}, {bytes: 77866},
-  {bytes: 63733}, {bytes: 63783}, {bytes: 67777}, {bytes: 27648}, {bytes: 52272},
-  {bytes: 55867}, {bytes: 25465}, {bytes: 39901}, {bytes: 76743}, {bytes: 33717},
-  {bytes: 39363}, {bytes: 49430}, {bytes: 44985}, {bytes: 22980}, {bytes: 57023},
-  {bytes: 29188}, {bytes: 77510}, {bytes: 47095}, {bytes: 22737}, {bytes: 46752},
-  {bytes: 74066}, {bytes: 69258}, {bytes: 22229}, {bytes: 71488}, {bytes: 78918}
+  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 49405, requests: 943},
+  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 44336, requests: 345},
+  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 43456, requests: 567},
+  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 46756, requests: 244},
+  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 45466, requests: 455},
+  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 43456, requests: 233},
+  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 47454, requests: 544},
+  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 54766, requests: 546},
+  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 54675, requests: 435},
+  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 54336, requests: 456},
+  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
+  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
+  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
+  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 43456, requests: 456},
+  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
+  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 54766, requests: 546},
+  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 23456, requests: 567},
+  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 26756, requests: 244},
+  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 25466, requests: 455},
+  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 23456, requests: 456},
+  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 27454, requests: 544},
+  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 23456, requests: 456},
+  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 27454, requests: 544},
+  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 23456, requests: 233},
+  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 24675, requests: 435},
+  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 34766, requests: 546},
+  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 34766, requests: 546},
+  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 34675, requests: 435},
+  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 34336, requests: 345},
+  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 33456, requests: 567},
+  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 36756, requests: 244},
+  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 35466, requests: 455},
+  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 33456, requests: 233},
+  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 37454, requests: 544},
+  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
+  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
+  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
+  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 53456, requests: 456},
+  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
+  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 43456, requests: 567},
+  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 46756, requests: 244},
+  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 45466, requests: 455},
+  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 43456, requests: 456},
+  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 37454, requests: 544},
+  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 33456, requests: 456}
 ]
 
 const fakeAverageData = [
-  {bytes: 34667}, {bytes: 45348}, {bytes: 75675}, {bytes: 31596}, {bytes: 72447},
-  {bytes: 40786}, {bytes: 48403}, {bytes: 52272}, {bytes: 55867}, {bytes: 25465},
-  {bytes: 39901}, {bytes: 77866}, {bytes: 59482}, {bytes: 39528}, {bytes: 44277},
-  {bytes: 37584}, {bytes: 20450}, {bytes: 22980}, {bytes: 57023}, {bytes: 29188},
-  {bytes: 67777}, {bytes: 27648}, {bytes: 76743}, {bytes: 33717}, {bytes: 39363},
-  {bytes: 78918}, {bytes: 66433}, {bytes: 77510}, {bytes: 47095}, {bytes: 22737},
-  {bytes: 29754}, {bytes: 25254}, {bytes: 76117}, {bytes: 46752}, {bytes: 74066},
-  {bytes: 69258}, {bytes: 22229}, {bytes: 62423}, {bytes: 21843}, {bytes: 36684},
-  {bytes: 63311}, {bytes: 62746}, {bytes: 25277}, {bytes: 23870}, {bytes: 38097},
-  {bytes: 63733}, {bytes: 63783}, {bytes: 25287}, {bytes: 49430}, {bytes: 44985},
-  {bytes: 71488}, {bytes: 75693}, {bytes: 56217}, {bytes: 37567},{bytes: 68967}
+  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 39405, requests: 943},
+  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 34766, requests: 546},
+  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 34675, requests: 435},
+  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 34336, requests: 345},
+  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 33456, requests: 567},
+  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 36756, requests: 244},
+  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 35466, requests: 455},
+  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 33456, requests: 233},
+  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 37454, requests: 544},
+  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
+  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
+  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
+  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 53456, requests: 456},
+  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
+  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 43456, requests: 567},
+  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 46756, requests: 244},
+  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 45466, requests: 455},
+  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 43456, requests: 456},
+  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 37454, requests: 544},
+  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 33456, requests: 456},
+  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 37454, requests: 544},
+  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 33456, requests: 233},
+  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 34675, requests: 435},
+  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 44766, requests: 546},
+  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 44336, requests: 345},
+  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 43456, requests: 567},
+  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 46756, requests: 244},
+  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 45466, requests: 455},
+  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 43456, requests: 233},
+  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 47454, requests: 544},
+  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 54766, requests: 546},
+  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 54675, requests: 435},
+  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 54336, requests: 456},
+  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
+  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
+  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
+  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 43456, requests: 456},
+  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
+  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
+  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 54766, requests: 546},
+  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
+  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
+  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 23456, requests: 567},
+  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 26756, requests: 244},
+  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 25466, requests: 455},
+  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 23456, requests: 456},
+  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 27454, requests: 544},
+  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
 ]
 
 export class Hosts extends React.Component {
@@ -63,6 +162,15 @@ export class Hosts extends React.Component {
   componentWillMount() {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHosts(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
+    this.props.accountActions.fetchAccount(
+      this.props.params.brand,
+      this.props.params.account
+    )
+    this.props.groupActions.fetchGroup(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group
@@ -132,41 +240,64 @@ export class Hosts extends React.Component {
             </ButtonToolbar>
 
             <p>GROUP CONTENT SUMMARY</p>
-            <h1>Group Name</h1>
+            <h1>
+              {this.props.activeGroup ?
+                this.props.activeGroup.get('name')
+                : 'Loading...'}
+            </h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
-            <Breadcrumb>
-              <BreadcrumbItem>Account Name</BreadcrumbItem>
-              <BreadcrumbItem active={true}>Group Name</BreadcrumbItem>
-            </Breadcrumb>
+            <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+              <li>
+                <Link to={`/content/groups/udn/${this.props.params.account}`}>
+                  {this.props.activeAccount ?
+                    this.props.activeAccount.get('name')
+                    : 'Loading...'}
+                </Link>
+              </li>
+                <li className="active">
+                {this.props.activeGroup ?
+                  this.props.activeGroup.get('name')
+                  : 'Loading...'}
+              </li>
+            </ol>
 
             {this.props.fetching ? <p>Loading...</p> : (
-              this.props.viewingChart ?
-                <div className="content-item-grid">
-                  {this.props.hosts.map((host, i) =>
-                    <ContentItemChart key={i} id={host}
-                      linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                      configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                      name={host} description="Desc"
-                      delete={this.deleteHost}
-                      primaryData={fakeRecentData}
-                      secondaryData={fakeAverageData}
-                      barWidth="1"
-                      chartWidth="480"
-                      barMaxHeight="80" />
-                  )}
-                </div> :
-                this.props.hosts.map((host, i) =>
-                  <ContentItemList key={i} id={host}
-                    linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                    configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                    name={host} description="Desc"
-                    primaryData={fakeRecentData}
-                    secondaryData={fakeAverageData}/>
-                )
-              )
-            }
+              <ReactCSSTransitionGroup
+                component="div"
+                className="content-transition"
+                transitionName="content-transition"
+                transitionEnterTimeout={400}
+                transitionLeaveTimeout={500}>
+                {this.props.viewingChart ?
+                  <div className="content-item-grid">
+                    {this.props.hosts.map((host, i) =>
+                      <ContentItemChart key={i} id={host}
+                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        name={host} description="Desc"
+                        delete={this.deleteHost}
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}
+                        barWidth="1"
+                        chartWidth="480"
+                        barMaxHeight="80" />
+                    )}
+                  </div> :
+                  <div className="content-item-lists" key="lists">
+                    {this.props.hosts.map((host, i) =>
+                      <ContentItemList key={i} id={host}
+                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        name={host} description="Desc"
+                        primaryData={fakeRecentData}
+                        secondaryData={fakeAverageData}/>
+                    )}
+                  </div>
+                }
+              </ReactCSSTransitionGroup>
+            )}
 
             {this.state.addHost ?
               <Modal show={true} dialogClassName="configuration-sidebar"
@@ -191,7 +322,11 @@ export class Hosts extends React.Component {
 
 Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
@@ -201,6 +336,8 @@ Hosts.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
     fetching: state.host.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
@@ -209,6 +346,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };

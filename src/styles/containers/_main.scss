@@ -11,24 +11,4 @@
     // Enable hardware acceleration
     transform: translate3d(0, 0, 0);
   }
-
-  &.dark-theme .content-container {
-    color: $dt-text-color;
-
-    hr {
-      border-top-color: rgba($pale-blue, 0.2);
-    }
-
-    a {
-      color: $pale-blue;
-    }
-  }
-
-  &.light-theme .content-container {
-    color: $lt-text-color;
-
-    a {
-      color: $pale-blue;
-    }
-  }
 }

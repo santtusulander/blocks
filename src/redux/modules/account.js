@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {defaultHeaders, urlBase} from '../util'
+import {urlBase} from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
 const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
@@ -100,9 +100,7 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
-    headers: defaultHeaders
-  })
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {})
   .then((res) => {
     if(res) {
       return res.data;
@@ -111,18 +109,14 @@ export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
 })
 
 export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
-  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
-    headers: defaultHeaders
-  })
+  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
   .then(() => {
     return {id: id}
   });
 })
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, {
-    headers: defaultHeaders
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -131,9 +125,7 @@ export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts`, {
-    headers: defaultHeaders
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -142,9 +134,7 @@ export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
 })
 
 export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, account) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account, {
-    headers: defaultHeaders
-  })
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account)
   .then((res) => {
     if(res) {
       return account;

@@ -4,13 +4,13 @@ import { Link } from 'react-router'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 
-import { Button, Breadcrumb, BreadcrumbItem,Dropdown, Input, MenuItem, Nav,
-  Navbar } from 'react-bootstrap';
+import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
 
+    this.activatePurge = this.activatePurge.bind(this)
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
 
@@ -41,6 +41,10 @@ class Header extends React.Component {
   handleThemeChange(value) {
     this.props.handleThemeChange(value)
   }
+  activatePurge(e) {
+    e.preventDefault()
+    this.props.activatePurge()
+  }
   render() {
     let className = 'header';
     if(this.props.className) {
@@ -53,12 +57,12 @@ class Header extends React.Component {
             'header-gradient animated' :
             'header-gradient'}></div>
         {this.state.showBreadcrumbs ?
-          <Breadcrumb>
-            <BreadcrumbItem className="breadcrumb-back" />
-            <BreadcrumbItem>Content</BreadcrumbItem>
-            <BreadcrumbItem>Group Name</BreadcrumbItem>
-            <BreadcrumbItem active={true}>Property Name</BreadcrumbItem>
-          </Breadcrumb> :
+          <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+            <li className="breadcrumb-back" />
+            <li>Content</li>
+            <li>Group Name</li>
+            <li className="active">Property Name</li>
+          </ol> :
         <div>
           <Navbar.Header>
             <Navbar.Brand>
@@ -98,9 +102,10 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/purge`}>
+              <a href="#" className="main-nav-link"
+                onClick={this.activatePurge}>
                 Purge
-              </Link>
+              </a>
             </li>
           </Nav>
           <Nav pullRight={true}>
@@ -166,7 +171,8 @@ class Header extends React.Component {
                     <div className="user-menu-item">Account Management</div>
                     </MenuItem>
                   <MenuItem className="bottom-item" eventKey="5">
-                    <div className="user-menu-item">Log Out</div>
+                    <div className="user-menu-item"
+                      onClick={this.props.logOut}>Log Out</div>
                   </MenuItem>
                 </Dropdown.Menu>
               </Dropdown>
@@ -180,9 +186,11 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
+  activatePurge: React.PropTypes.func,
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
+  logOut: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 

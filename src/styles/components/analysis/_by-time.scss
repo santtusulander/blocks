@@ -1,5 +1,6 @@
 .analysis-by-time {
   position: relative;
+  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
@@ -20,14 +21,6 @@
     .light-theme & {
       stroke: $pale-blue;
       fill: transparent;
-    }
-  }
-
-  .area {
-
-    .dark-theme &,
-    .light-theme & {
-      fill: url('#dt-svg-gradient');
     }
   }
 

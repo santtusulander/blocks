@@ -6,3 +6,5 @@ export const content = require('./content').default;
 export const traffic = require('./traffic').default;
 export const ui = require('./ui').default;
 export const visitors = require('./visitors').default;
+export const purge = require('./purge').default;
+export const user = require('./user').default;

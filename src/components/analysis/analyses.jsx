@@ -7,16 +7,15 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 
 import Select from '../../components/select'
-import IconHeaderCaret from '../../components/icons/icon-header-caret.jsx'
 
 export class Analyses extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeFilter: 'custom_timerange',
-      datepickerStatus: 0,
-      startDate: moment(),
+      activeFilter: 'month_to_date',
+      datepickerOpen: false,
+      startDate: moment().startOf('month'),
       endDate: moment()
     }
 
@@ -24,8 +23,7 @@ export class Analyses extends React.Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleOnFocus = this.handleOnFocus.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
-    this.datepickerOpen = false;
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleTimespanChange = this.handleTimespanChange.bind(this)
   }
   handleStartDateChange(date) {
     this.setState({
@@ -48,9 +46,9 @@ export class Analyses extends React.Component {
         endDate: date
       })
     }
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: 0
+        datepickerOpen: false
       })
     }
     setTimeout(() => {
@@ -58,29 +56,33 @@ export class Analyses extends React.Component {
     }, 200)
   }
   handleOnFocus() {
-    setTimeout(() => {
-      this.setState({
-        datepickerStatus: 1
-      })
-      const datepicker = document.getElementsByClassName('datepicker__tether-element')[0]
-      if(datepicker && this.props.theme) {
-        datepicker.className += ` ${this.props.theme}-datepicker`
-      }
-    }, 50)
+    this.setState({
+      datepickerOpen: true
+    })
   }
   handleOnBlur() {
-    if(this.state.datepickerStatus > 0) {
+    if(this.state.datepickerOpen) {
       this.setState({
-        datepickerStatus: 0
+        datepickerOpen: false
       })
     }
   }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
+  handleTimespanChange(value) {
+    let startDate = this.state.startDate
+    if(value === 'month_to_date') {
+      startDate = moment().startOf('month')
     }
+    else if(value === 'week_to_date') {
+      startDate = moment().startOf('week')
+    }
+    else if(value === 'today') {
+      startDate = moment().startOf('day')
+    }
+    this.setState({
+      activeFilter: value,
+      endDate: moment(),
+      startDate: startDate
+    })
   }
   render() {
     return (
@@ -88,10 +90,8 @@ export class Analyses extends React.Component {
         <div className="sidebar-header">
           <p className="text-sm">ACCOUNT TRAFFIC OVERVIEW</p>
           <Dropdown id="dropdown-content">
-            <Dropdown.Toggle bsStyle="link" className="header-toggle"
-              noCaret={true}>
+            <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">
               <h3>Disney Interactive</h3>
-              <IconHeaderCaret />
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <MenuItem eventKey="1">propertyname2.com</MenuItem>
@@ -114,49 +114,53 @@ export class Analyses extends React.Component {
         <div className="sidebar-content">
           <div className="form-group">
             <Select className="btn-block"
-              onSelect={this.handleSelectChange()}
+              onSelect={this.handleTimespanChange}
               value={this.state.activeFilter}
               options={[
-                ['custom_timerange', 'Custom Timerange'],
-                ['last_7_days', 'Last 7 Days'],
-                ['last_30_days', 'Last 30 Days']]}/>
+                ['month_to_date', 'Month to Date'],
+                ['week_to_date', 'Week to Date'],
+                ['today', 'Today'],
+                ['custom_timerange', 'Custom Time Range']]}/>
           </div>
-          <Row className="no-gutters">
-            <Col xs={6}>
-              <p className="text-sm">FROM</p>
-              <div ref="startDateHolder"
-                className={'datepicker-input-wrapper start-date' +
-                (this.state.datepickerStatus > 0 ?
-                ' datepicker-open' : '')}>
-                <DatePicker
-                  dateFormat="MM/DD/YYYY"
-                  selected={this.state.startDate}
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
-                  onChange={this.handleStartDateChange}
-                  onFocus={this.handleOnFocus}
-                  onBlur={this.handleOnBlur} />
-              </div>
-            </Col>
-            <Col xs={6}>
-              <p className="text-sm">TO</p>
-              <div ref="endDateHolder"
-                className={'datepicker-input-wrapper end-date' +
-                (this.state.datepickerStatus > 0 ?
-                ' datepicker-open' : '')}>
-                <DatePicker
-                  popoverAttachment='top right'
-                  popoverTargetAttachment='bottom right'
-                  dateFormat="MM/DD/YYYY"
-                  selected={this.state.endDate}
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
-                  onChange={this.handleEndDateChange}
-                  onFocus={this.handleOnFocus}
-                  onBlur={this.handleOnBlur} />
-              </div>
-            </Col>
-          </Row>
+          {this.state.activeFilter === 'custom_timerange' ?
+            <Row className="no-gutters">
+              <Col xs={6}>
+                <p className="text-sm">FROM</p>
+                <div ref="startDateHolder"
+                  className={'datepicker-input-wrapper start-date' +
+                  (this.state.datepickerOpen ?
+                  ' datepicker-open' : '')}>
+                  <DatePicker
+                    dateFormat="MM/DD/YYYY"
+                    selected={this.state.startDate}
+                    startDate={this.state.startDate}
+                    endDate={this.state.endDate}
+                    onChange={this.handleStartDateChange}
+                    onFocus={this.handleOnFocus}
+                    onBlur={this.handleOnBlur} />
+                </div>
+              </Col>
+              <Col xs={6}>
+                <p className="text-sm">TO</p>
+                <div ref="endDateHolder"
+                  className={'datepicker-input-wrapper end-date' +
+                  (this.state.datepickerOpen ?
+                  ' datepicker-open' : '')}>
+                  <DatePicker
+                    popoverAttachment='top right'
+                    popoverTargetAttachment='bottom right'
+                    dateFormat="MM/DD/YYYY"
+                    selected={this.state.endDate}
+                    startDate={this.state.startDate}
+                    endDate={this.state.endDate}
+                    onChange={this.handleEndDateChange}
+                    onFocus={this.handleOnFocus}
+                    onBlur={this.handleOnBlur} />
+                </div>
+              </Col>
+            </Row>
+            : ''
+          }
         </div>
         <div className="sidebar-section-header">
           SERVICE: MEDIA DELIVERY

@@ -10,6 +10,8 @@ body {
 body {
   font-family: 'Roboto', Helvetica, Arial;
   font-size: $font-size;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 
   @include md {
     font-size: $md-font-size;
@@ -18,6 +20,32 @@ body {
   @include sm {
     font-size: $sm-font-size;
   }
+
+  &.dark-theme {
+    color: $dt-text-color;
+    background-attachment: fixed;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
+      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
+    background-size: 100%;
+
+    a {
+      color: $pale-blue;
+    }
+  }
+
+  &.light-theme {
+    color: $lt-text-color;
+    background-color: $silver-20;
+
+    a {
+      color: $pale-blue;
+    }
+  }
+}
+
+hr {
+  border-top-color: rgba($pale-blue, 0.2);
 }
 
 .invisible {

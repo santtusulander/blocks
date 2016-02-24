@@ -18,13 +18,19 @@ class Select extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
+    let label = "Please Select"
+    const currentSelection = this.props.options.find(
+      option => option[0] === this.props.value
+    )
+    if(currentSelection) {
+      label = currentSelection[1]
+    }
     return (
       <Dropdown id="" className={className}
         onSelect={this.selectOption}>
         <Dropdown.Toggle noCaret={true}>
-          {this.props.options.find(option =>
-            option[0] === this.props.value)[1]}
           <IconSelectCaret/>
+          {label}
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {this.props.options.map((options, i) =>

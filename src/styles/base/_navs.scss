@@ -74,6 +74,7 @@
       &:focus {
         text-decoration: none;
         background-color: transparent;
+        outline: none;
 
         .dark-theme &,
         .light-theme & {
