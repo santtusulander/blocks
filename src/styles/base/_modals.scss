@@ -3,6 +3,10 @@
 
 .modal-dialog {
 
+  .login-modal > & {
+    margin-top: 0;
+  }
+
   .modal-content {
     border: 0;
     border-radius: 0;
