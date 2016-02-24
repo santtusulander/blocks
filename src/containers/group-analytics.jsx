@@ -14,7 +14,7 @@ import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 
-export class Analysis extends React.Component {
+export class GroupAnalytics extends React.Component {
   constructor(props) {
     super(props);
 
@@ -74,8 +74,8 @@ export class Analysis extends React.Component {
   }
 }
 
-Analysis.displayName = 'Analysis'
-Analysis.propTypes = {
+GroupAnalytics.displayName = 'GroupAnalytics'
+GroupAnalytics.propTypes = {
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
@@ -108,4 +108,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Analysis);
+export default connect(mapStateToProps, mapDispatchToProps)(GroupAnalytics);
