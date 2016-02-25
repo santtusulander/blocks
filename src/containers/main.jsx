@@ -9,19 +9,22 @@ import * as userActionCreators from '../redux/modules/user'
 
 import Header from '../components/header'
 import PurgeModal from '../components/purge-modal'
+import Notification from '../components/notification'
 
 export class Main extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activePurge: null
+      activePurge: null,
+      notificationOpen: false
     }
 
     this.activatePurge = this.activatePurge.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
     this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.closeNotification = this.closeNotification.bind(this)
   }
   activatePurge(index) {
     return e => {
@@ -50,6 +53,11 @@ export class Main extends React.Component {
     this.props.userActions.logOut()
     this.props.history.pushState(null, '/login')
   }
+  closeNotification() {
+    this.setState({
+      notificationOpen: false
+    })
+  }
   render() {
     const currentRoute = this.props.routes[this.props.routes.length-1].path
     let classNames = 'main-container';
@@ -74,6 +82,12 @@ export class Main extends React.Component {
             changePurge={this.props.purgeActions.updateActivePurge}
             hideAction={this.activatePurge(null)}
             savePurge={this.saveActivePurge}/>
+          : ''
+        }
+        {this.state.notificationOpen ?
+          <Notification handleClose={this.closeNotification}>
+            Notification content
+          </Notification>
           : ''
         }
       </div>

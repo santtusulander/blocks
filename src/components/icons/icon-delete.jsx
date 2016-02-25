@@ -15,7 +15,7 @@ class IconDelete extends React.Component {
   }
 }
 
-IconDelete.displayName = 'IconAdd'
+IconDelete.displayName = 'IconDelete'
 IconDelete.propTypes = {
   className: React.PropTypes.string
 }
