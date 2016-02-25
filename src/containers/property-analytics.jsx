@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
+import moment from 'moment'
 
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -19,33 +20,52 @@ export class PropertyAnalytics extends React.Component {
     super(props);
 
     this.state = {
-      activeTab: 'traffic'
+      activeTab: 'traffic',
+      endDate: moment(),
+      startDate: moment().startOf('month')
     }
 
     this.changeTab = this.changeTab.bind(this)
+    this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
+    this.fetchData()
+  }
+  fetchData() {
+    const fetchOpts = {
+      account: this.props.params.account,
+      group: this.props.params.group,
+      property: this.props.location.query.name,
+      startDate: this.state.startDate.format('YYYY-MM-DDTHH:MM:SS'),
+      endDate: this.state.endDate.format('YYYY-MM-DDTHH:MM:SS')
+    }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     Promise.all([
-      this.props.trafficActions.fetchByTime(),
-      this.props.trafficActions.fetchByCountry()
+      this.props.trafficActions.fetchByTime(fetchOpts),
+      this.props.trafficActions.fetchByCountry(fetchOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
-      this.props.visitorsActions.fetchByTime(),
-      this.props.visitorsActions.fetchByCountry(),
-      this.props.visitorsActions.fetchByBrowser(),
-      this.props.visitorsActions.fetchByOS()
+      this.props.visitorsActions.fetchByTime(fetchOpts),
+      this.props.visitorsActions.fetchByCountry(fetchOpts),
+      this.props.visitorsActions.fetchByBrowser(fetchOpts),
+      this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
   }
   changeTab(newTab) {
     this.setState({activeTab: newTab})
   }
+  changeDateRange(startDate, endDate) {
+    this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
+  }
   render() {
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
-          <Analyses/>
+          <Analyses
+            endDate={this.state.endDate}
+            startDate={this.state.startDate}
+            changeDateRange={this.changeDateRange}/>
         </Sidebar>
 
         <Content>
@@ -76,6 +96,8 @@ export class PropertyAnalytics extends React.Component {
 
 PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),

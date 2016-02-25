@@ -16,6 +16,29 @@ const emptyTraffic = Immutable.Map({
   fetching: false
 })
 
+const qsBuilder = ({
+  account,
+  group,
+  property,
+  startDate,
+  endDate
+}) => {
+  let qs = `?account=${account}`
+  if(group) {
+    qs += `&group=${group}`
+  }
+  if(property) {
+    qs += `&property=${property}`
+  }
+  if(startDate) {
+    qs += `&startDate=${startDate}`
+  }
+  if(endDate) {
+    qs += `&endDate=${endDate}`
+  }
+  return qs
+}
+
 // REDUCERS
 
 export default handleActions({
@@ -56,8 +79,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, () => {
-  return axios.get(`${analyticsBase}/traffic/time`)
+export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/traffic/time${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -65,8 +88,8 @@ export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, () => {
   });
 })
 
-export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, () => {
-  return axios.get(`${analyticsBase}/traffic/country`)
+export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/traffic/country${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;

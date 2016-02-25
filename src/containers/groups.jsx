@@ -278,6 +278,7 @@ export class Groups extends React.Component {
                     {this.props.groups.map((group, i) =>
                       <ContentItemChart key={i} id={group.get('id')}
                         linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                        analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                         name={group.get('name')} description="Desc"
                         delete={this.deleteGroup}
                         primaryData={fakeRecentData}
