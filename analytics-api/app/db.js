@@ -11,7 +11,8 @@ let db      = {
     user            : configs.dbUser,
     password        : configs.dbPassword,
     database        : configs.dbName
-  })
+  }),
+  getPropertyMetrics: getPropertyMetrics
 };
 
 const bytesPerGigabit = 125000000;
@@ -145,4 +146,23 @@ function getPropertyTransferRates(options) {
     optionsFinal.account,
     optionsFinal.group
   ]);
+}
+
+/**
+ * Get traffic data, cache hit rate, and transfer rates for all properties in a
+ * group within a given time range.
+ *
+ * @param  {object}  options Options that get piped into SQL queries
+ * @return {Promise}         A promise that is fulfilled with the query results
+ */
+function getPropertyMetrics(options) {
+  let queries = [
+    getPropertyTraffic(options),
+    getPropertyCacheHitRate(options),
+    getPropertyTransferRates(options)
+  ];
+
+  return Promise.all(queries)
+    .then((queryData) => log.debug(queryData))
+    .catch((err) => log.error(err));
 }
