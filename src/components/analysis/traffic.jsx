@@ -33,6 +33,10 @@ class AnalysisTraffic extends React.Component {
   render() {
     return (
       <div className="analysis-traffic">
+        <div className="total-egress">
+          <h4>Total Egress Yesterday</h4>
+          <p>43,200 GB</p>
+        </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
           {this.props.fetching ?

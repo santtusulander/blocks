@@ -146,6 +146,8 @@ const fakeAverageData = [
   {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
 ]
 
+const fakeDifferenceData = [0, 0, 1, -1, 0, 0, 1, -1, -1, 1]
+
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -276,10 +278,12 @@ export class Hosts extends React.Component {
                       <ContentItemChart key={i} id={host}
                         linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        analyticsLink={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         name={host} description="Desc"
                         delete={this.deleteHost}
                         primaryData={fakeRecentData}
                         secondaryData={fakeAverageData}
+                        differenceData={fakeDifferenceData}
                         barWidth="1"
                         chartWidth="480"
                         barMaxHeight="80" />
