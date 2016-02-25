@@ -52,3 +52,31 @@ function getQueryOptions(options) {
 
   return Object.assign({}, optionDefaults, options || {});
 }
+
+/**
+ * Get hourly traffic data (bytes out) for all properties in a group within a
+ * given time range. NOTE: The data returned is grouped by hour.
+ *
+ * @param  {object}  options Options that get piped into an SQL query
+ * @return {Promise}         A promise that is fulfilled with the query results
+ */
+function getPropertyTraffic(options) {
+  let optionsFinal = getQueryOptions(options);
+
+  let queryParameterized = `
+    SELECT epoch_start, sum(bytes) AS bytes, property
+    FROM property_global_hour
+    WHERE epoch_start BETWEEN ? and ?
+      AND account_id = ?
+      AND group_id = ?
+      AND flow_dir = 'out'
+    GROUP BY epoch_start;
+  `;
+
+  return executeQuery(queryParameterized, [
+    optionsFinal.start,
+    optionsFinal.end,
+    optionsFinal.account,
+    optionsFinal.group
+  ]);
+}
