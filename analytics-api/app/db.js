@@ -80,3 +80,34 @@ function getPropertyTraffic(options) {
     optionsFinal.group
   ]);
 }
+
+/**
+ * Get the average cache hit rate for each property in a group.
+ * NOTE: The data returned is grouped by property.
+ *
+ * @param  {object}  options Options that get piped into an SQL query
+ * @return {Promise}         A promise that is fulfilled with the query results
+ */
+function getPropertyCacheHitRate(options) {
+  let optionsFinal = getQueryOptions(options);
+
+  let queryParameterized = `
+    SELECT
+      epoch_start,
+      property,
+      round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio
+    FROM property_global_day
+    WHERE epoch_start between ? and ?
+      AND account_id = ?
+      AND group_id = ?
+      AND flow_dir = 'out'
+    GROUP BY property;
+  `;
+
+  return executeQuery(queryParameterized, [
+    optionsFinal.start,
+    optionsFinal.end,
+    optionsFinal.account,
+    optionsFinal.group
+  ]);
+}
