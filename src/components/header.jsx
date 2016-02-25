@@ -72,7 +72,7 @@ class Header extends React.Component {
           <Nav className="main-nav">
             <li className="main-nav-item active">
               <Dropdown id="dropdown-content">
-                <Link className="main-nav-link" to={`/content/accounts/udn`}>
+                <Link className="main-nav-link" to={`/content/groups/udn/7`}>
                   Content
                 </Link>
                 <Dropdown.Toggle bsStyle='link'/>
