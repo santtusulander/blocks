@@ -35,3 +35,20 @@ function executeQuery(query, data) {
   // Grab a connection from the pool and run the query
   return db.pool.query(queryFinal);
 }
+
+/**
+ * Get an object of options that gets piped into a parameterized query.
+ *
+ * @param  {object} options The custom options to merge with the defaults
+ * @return {object}         An object literal with default options
+ */
+function getQueryOptions(options) {
+  let optionDefaults = {
+    start   : null,
+    end     : Math.round(Date.now() / 1000),
+    account : null,
+    group   : null
+  }
+
+  return Object.assign({}, optionDefaults, options || {});
+}
