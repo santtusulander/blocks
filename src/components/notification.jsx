@@ -1,0 +1,29 @@
+import React from 'react'
+import IconClose from '../components/icons/icon-close.jsx'
+
+class Notification extends React.Component {
+  render() {
+    let className = 'notification-panel'
+    if(this.props.className) {
+      className += ' ' + this.props.className
+    }
+    return (
+      <div className={className}>
+        {this.props.children}
+        <a className="notification-close btn-icon"
+          onClick={this.props.handleClose}>
+          <IconClose/>
+        </a>
+      </div>
+    );
+  }
+}
+
+Notification.displayName = 'Notification'
+Notification.propTypes = {
+  children: React.PropTypes.node,
+  className: React.PropTypes.string,
+  handleClose: React.PropTypes.func
+}
+
+module.exports = Notification

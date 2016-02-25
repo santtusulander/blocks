@@ -1,0 +1,77 @@
+// Notification
+// ============
+
+.notification-panel {
+  position: fixed;
+  right: $bar-height / 2;
+  bottom: $bar-height / 2;
+  z-index: 990;
+  max-width: 800px;
+  padding: ($bar-height / 3) ($bar-height * 1.5) ($bar-height / 3) ($bar-height / 2);
+  font-weight: bold;
+
+  @include md {
+    right: $md-bar-height / 2;
+    bottom: $md-bar-height / 2;
+    max-width: 600px;
+    padding: ($md-bar-height / 3) ($md-bar-height * 1.5) ($md-bar-height / 3) ($md-bar-height / 2);
+  }
+
+  @include sm {
+    right: $md-bar-height / 3;
+    bottom: $md-bar-height / 3;
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
+      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-size: 100%;
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $silver-40;
+    fill: $lt-text-color;
+    stroke: $lt-text-color;
+  }
+}
+
+.notification-close {
+  position: absolute;
+  top: $bar-height / 2;
+  right: $bar-height / 2;
+  width: 30px;
+  height: 30px;
+  margin: -15px -15px 0 0;
+  cursor: pointer;
+  border-radius: 50%;
+
+  @include md {
+    top: $md-bar-height / 2;
+    right: $md-bar-height / 2;
+  }
+
+  .dark-theme &,
+  .light-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  &:hover {
+
+    .dark-theme & {
+      color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+
+    .light-theme & {
+      color: $black;
+      fill: $black;
+      stroke: $black;
+    }
+  }
+}

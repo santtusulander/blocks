@@ -77,7 +77,7 @@ describe('Login', () => {
     TestUtils.Simulate.submit(form)
     expect(userActions.logIn.mock.calls[0][0]).toBe('aaa')
     expect(userActions.logIn.mock.calls[0][1]).toBe('bbb')
-    const errorMsg = TestUtils.findRenderedDOMComponentWithClass(login, 'alert')
+    const errorMsg = TestUtils.findRenderedDOMComponentWithClass(login, 'login-error')
     expect(errorMsg.textContent).toContain('Test fail')
   })
 

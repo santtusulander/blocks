@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row, Alert } from 'react-bootstrap'
+import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -17,15 +17,15 @@ export class Login extends React.Component {
     this.state = {
       loginError: null,
       password: '',
-      passwordStatus: '',
+      passwordActive: false,
       passwordVisible: false,
       username: '',
-      usernameStatus: ''
+      usernameActive: false
     }
 
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
-    this.checkUsername = this.checkUsername.bind(this)
-    this.checkPassword = this.checkPassword.bind(this)
+    this.checkUsernameActive = this.checkUsernameActive.bind(this)
+    this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
@@ -50,20 +50,22 @@ export class Login extends React.Component {
       passwordVisible: !this.state.passwordVisible
     })
   }
-  checkUsername() {
-    if(!this.state.username) {
-      let status = !this.state.usernameStatus ? 'active' : ''
-      this.setState({
-        usernameStatus: status
-      })
+  checkUsernameActive(hasFocus) {
+    return () => {
+      if(hasFocus || !this.state.username) {
+        this.setState({
+          usernameActive: hasFocus
+        })
+      }
     }
   }
-  checkPassword() {
-    if(!this.state.password) {
-      let status = !this.state.passwordStatus ? 'active' : ''
-      this.setState({
-        passwordStatus: status
-      })
+  checkPasswordActive(hasFocus) {
+    return () => {
+      if(hasFocus || !this.state.password) {
+        this.setState({
+          passwordActive: hasFocus
+        })
+      }
     }
   }
   changeField(key) {
@@ -86,33 +88,34 @@ export class Login extends React.Component {
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
             {this.state.loginError ?
-              <Alert bsStyle="danger">
-                {this.state.loginError}
-              </Alert>
+              <div className="login-error">
+                <p>{this.state.loginError}</p>
+              </div>
               : ''
             }
             <Input type="text" id="username"
               wrapperClassName={'input-addon-before has-login-label '
-                + 'login-label-username ' + this.state.usernameStatus}
+                + 'login-label-username'
+                + (this.state.usernameActive ? ' active' : '')}
               addonBefore={<IconEmail/>}
+              onFocus={this.checkUsernameActive(true)}
+              onBlur={this.checkUsernameActive(false)}
               value={this.state.username}
-              onFocus={this.checkUsername}
-              onBlur={this.checkUsername}
               onChange={this.changeField('username')}/>
             <Input id="password"
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
-                + 'has-login-label login-label-password '
-                + this.state.passwordStatus}
-              addonBefore={<IconPassword/>} addonAfter={
-                <a className={'input-addon-link' +
+                + 'has-login-label login-label-password'
+                + (this.state.passwordActive ? ' active' : '')}
+              addonBefore={<IconPassword/>}
+              addonAfter={<a className={'input-addon-link' +
                   (this.state.passwordVisible ? ' active' : '')}
                   onClick={this.togglePasswordVisibility}>
                     <IconEye/>
                 </a>}
+              onFocus={this.checkPasswordActive(true)}
+              onBlur={this.checkPasswordActive(false)}
               value={this.state.password}
-              onFocus={this.checkPassword}
-              onBlur={this.checkPassword}
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={6}>
