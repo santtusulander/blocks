@@ -162,12 +162,14 @@ class ContentItemChart extends React.Component {
           <div className="content-item-toolbar"
             style={{bottom: this.props.barMaxHeight}}>
             <ButtonToolbar>
-              <Button bsSize="small"
-                 className="btn-primary btn-icon btn-round invisible">
-                <Link to={`/analysis`}>
-                  <IconChart/>
-                </Link>
-              </Button>
+              {this.props.analyticsLink ?
+                <Button bsSize="small"
+                   className="btn-primary btn-icon btn-round invisible">
+                  <Link to={this.props.analyticsLink}>
+                    <IconChart/>
+                  </Link>
+                </Button> : ''
+              }
               {this.props.configurationLink ?
                 <Button bsSize="small"
                   className="edit-content-item btn-primary btn-icon
@@ -187,6 +189,7 @@ class ContentItemChart extends React.Component {
 
 ContentItemChart.displayName = 'ContentItemChart'
 ContentItemChart.propTypes = {
+  analyticsLink: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
   chartWidth: React.PropTypes.string,
