@@ -1,7 +1,7 @@
 'use strict';
 
 let exec       = require('child_process').exec;
-let configs    = require('./app/configs');
+let configs    = require('../app/configs');
 
 // Command to run the end-to-end tests
 let commandE2E = `./node_modules/.bin/newman -c ${configs.postmanCollection} -e ${configs.postmanEnvironment}`;
