@@ -107,21 +107,34 @@
     border-radius: 50%;
 
     &.difference-arc {
+      fill: transparent;
+    }
 
-      .dark-theme  & {
-        fill: $pale-blue;
+    .dark-theme &,
+    .light-theme & {
+
+      .below-avg {
+        fill: $green;
       }
 
-      .light-theme  & {
-        fill: $pale-blue;
+      .above-avg {
+        fill: $purple;
       }
+    }
+
+    .dark-theme & .avg {
+      fill: $pale-blue;
+    }
+
+    .light-theme & .avg {
+      fill: rgba($white, 0.5);
     }
   }
 
   .primary-data .content-item-chart-line {
     stroke-width: 1.5;
 
-    .dark-theme  & {
+    .dark-theme & {
       stroke: $pale-blue;
       fill: $pale-blue;
     }
