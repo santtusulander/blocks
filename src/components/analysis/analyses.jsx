@@ -14,9 +14,7 @@ export class Analyses extends React.Component {
 
     this.state = {
       activeFilter: 'month_to_date',
-      datepickerOpen: false,
-      startDate: moment().startOf('month'),
-      endDate: moment()
+      datepickerOpen: false
     }
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this)
@@ -26,26 +24,20 @@ export class Analyses extends React.Component {
     this.handleTimespanChange = this.handleTimespanChange.bind(this)
   }
   handleStartDateChange(date) {
-    this.setState({
-      startDate: date
-    })
-    if(date > this.state.endDate) {
-      this.setState({
-        endDate: date
-      })
+    let endDate = this.props.endDate
+    if(date > this.props.endDate) {
+      endDate = date
     }
+    this.props.changeDateRange(date, endDate)
     this.refs.endDateHolder.getElementsByTagName('input')[0].focus()
     this.refs.endDateHolder.getElementsByTagName('input')[0].click()
   }
   handleEndDateChange(date) {
-    this.setState({
-      endDate: date
-    })
-    if(date < this.state.startDate) {
-      this.setState({
-        endDate: date
-      })
+    let startDate = this.props.startDate
+    if(date < this.props.startDate) {
+      startDate = date
     }
+    this.props.changeDateRange(startDate, date)
     if(this.state.datepickerOpen) {
       this.setState({
         datepickerOpen: false
@@ -68,7 +60,7 @@ export class Analyses extends React.Component {
     }
   }
   handleTimespanChange(value) {
-    let startDate = this.state.startDate
+    let startDate = this.props.startDate
     if(value === 'month_to_date') {
       startDate = moment().startOf('month')
     }
@@ -78,10 +70,9 @@ export class Analyses extends React.Component {
     else if(value === 'today') {
       startDate = moment().startOf('day')
     }
+    this.props.changeDateRange(startDate, moment())
     this.setState({
-      activeFilter: value,
-      endDate: moment(),
-      startDate: startDate
+      activeFilter: value
     })
   }
   render() {
@@ -132,9 +123,9 @@ export class Analyses extends React.Component {
                   ' datepicker-open' : '')}>
                   <DatePicker
                     dateFormat="MM/DD/YYYY"
-                    selected={this.state.startDate}
-                    startDate={this.state.startDate}
-                    endDate={this.state.endDate}
+                    selected={this.props.startDate}
+                    startDate={this.props.startDate}
+                    endDate={this.props.endDate}
                     onChange={this.handleStartDateChange}
                     onFocus={this.handleOnFocus}
                     onBlur={this.handleOnBlur} />
@@ -150,9 +141,9 @@ export class Analyses extends React.Component {
                     popoverAttachment='top right'
                     popoverTargetAttachment='bottom right'
                     dateFormat="MM/DD/YYYY"
-                    selected={this.state.endDate}
-                    startDate={this.state.startDate}
-                    endDate={this.state.endDate}
+                    selected={this.props.endDate}
+                    startDate={this.props.startDate}
+                    endDate={this.props.endDate}
                     onChange={this.handleEndDateChange}
                     onFocus={this.handleOnFocus}
                     onBlur={this.handleOnBlur} />
@@ -179,9 +170,12 @@ Analyses.propTypes = {
   activate: React.PropTypes.func,
   activeIndex: React.PropTypes.number,
   addVersion: React.PropTypes.func,
+  changeDateRange: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
+  endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
   propertyName: React.PropTypes.string,
+  startDate: React.PropTypes.instanceOf(moment),
   theme: React.PropTypes.string
 }
 
