@@ -146,6 +146,8 @@ const fakeAverageData = [
   {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
 ]
 
+const fakeDifferenceData = [0, 0, 1, -1, 0, 0, 1, -1, -1, 1]
+
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -280,6 +282,7 @@ export class Hosts extends React.Component {
                         delete={this.deleteHost}
                         primaryData={fakeRecentData}
                         secondaryData={fakeAverageData}
+                        differenceData={fakeDifferenceData}
                         barWidth="1"
                         chartWidth="480"
                         barMaxHeight="80" />
