@@ -30,11 +30,13 @@ export default handleActions({
   METRICS_FETCHED: {
     next(state, action) {
       return state.merge({
+        fetching: false,
         metrics: Immutable.fromJS(action.payload.data)
       })
     },
     throw(state) {
       return state.merge({
+        fetching: false,
         metrics: Immutable.List()
       })
     }
