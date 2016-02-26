@@ -413,6 +413,19 @@
     }
   }
 
+  .open:not(.dropdown-select) > .dropdown-toggle.btn-tertiary {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+      color: $pale-blue;
+      background-color: rgba($black, 0.2);
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
   .btn-success {
 
     &,

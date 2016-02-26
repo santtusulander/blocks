@@ -85,7 +85,7 @@ export class Property extends React.Component {
     }
   }
   render() {
-    if(this.props.fetching) {
+    if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
     const activeHost = this.props.activeHost
@@ -146,7 +146,7 @@ export class Property extends React.Component {
                   Traffic Summary
                   <span className="heading-suffix"> (last 30 days)</span>
                   <Button bsStyle="primary" className="btn-icon pull-right">
-                    <Link to={`/analysis/`}>
+                    <Link to={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
                       <IconChart/>
                     </Link>
                   </Button>
@@ -196,7 +196,7 @@ export class Property extends React.Component {
                 <h3 className="has-btn">
                   Edge Configuration
                   <Button bsStyle="primary" className="btn-icon pull-right">
-                    <Link to={`/configuration/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
+                    <Link to={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
                       <IconConfiguration />
                     </Link>
                   </Button>
