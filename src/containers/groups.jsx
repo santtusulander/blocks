@@ -8,6 +8,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 // Not in 0.5 import EditGroup from '../components/edit-group'
 import PageContainer from '../components/layout/page-container'
@@ -170,6 +171,11 @@ export class Groups extends React.Component {
       this.props.params.brand,
       this.props.params.account
     )
+    this.props.metricsActions.startFetching()
+    this.props.metricsActions.fetchMetrics({
+      account: this.props.params.account,
+      group: this.props.params.group
+    })
   }
   // toggleActiveGroup(id) {
   //   return () => {
@@ -335,6 +341,8 @@ Groups.propTypes = {
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
@@ -346,6 +354,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
     fetching: state.group.get('fetching'),
+    metrics: state.metrics.get('metrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
@@ -354,6 +363,7 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
