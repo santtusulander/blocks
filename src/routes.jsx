@@ -12,6 +12,8 @@ import Login from './containers/login'
 import Main from './containers/main'
 import PropertyAnalytics from './containers/property-analytics'
 import Purge from './containers/configure/purge'
+import Security from './containers/security'
+import Services from './containers/services'
 import Styleguide from './containers/styleguide'
 
 import ContentTransition from './transitions/content'
@@ -32,5 +34,7 @@ module.exports = (
     <Route path="configuration/:brand/:account/:group/property" component={Configuration}/>
     <Route path="/analytics/group/:brand/:account/:group" component={GroupAnalytics}/>
     <Route path="/analytics/property/:brand/:account/:group/property" component={PropertyAnalytics}/>
+    <Route path="/security" component={Security}/>
+    <Route path="/services" component={Services}/>
   </Route>
 );
