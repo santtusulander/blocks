@@ -30,6 +30,12 @@ function accountActionsMaker() {
     fetchAccount: jest.genMockFunction()
   }
 }
+function metricsActionsMaker() {
+  return {
+    fetchMetrics: jest.genMockFunction(),
+    startFetching: jest.genMockFunction()
+  }
+}
 
 const fakeGroups = Immutable.fromJS([
   {id: 1, name: 'aaa'},
@@ -44,6 +50,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -57,6 +64,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActions}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -70,6 +78,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -82,6 +91,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
         params={urlParams}
         viewingChart={true}/>
@@ -96,6 +106,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
         params={urlParams}
         viewingChart={false}/>
@@ -111,6 +122,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       params={urlParams}/>
   //   )
@@ -124,6 +136,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id:1})}
   //       params={urlParams}/>
@@ -138,6 +151,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -155,6 +169,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -172,6 +187,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
         params={urlParams}/>
     )

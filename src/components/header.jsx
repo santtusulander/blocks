@@ -72,7 +72,7 @@ class Header extends React.Component {
           <Nav className="main-nav">
             <li className="main-nav-item active">
               <Dropdown id="dropdown-content">
-                <Link className="main-nav-link" to={`/content/accounts/udn`}>
+                <Link className="main-nav-link" to={`/content/groups/udn/7`}>
                   Content
                 </Link>
                 <Dropdown.Toggle bsStyle='link'/>
@@ -92,12 +92,12 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/`}>
+              <Link className="main-nav-link" to={`/security`}>
                 Security
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/`}>
+              <Link className="main-nav-link" to={`/services`}>
                 Services
               </Link>
             </li>

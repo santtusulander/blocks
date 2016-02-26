@@ -6,9 +6,10 @@ import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import * as hostActionCreators from '../redux/modules/host'
-import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
+import * as hostActionCreators from '../redux/modules/host'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
@@ -146,6 +147,8 @@ const fakeAverageData = [
   {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
 ]
 
+const fakeDifferenceData = [0, 0, 1, -1, 0, 0, 1, -1, -1, 1]
+
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -175,6 +178,11 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
+    this.props.metricsActions.startFetching()
+    this.props.metricsActions.fetchMetrics({
+      account: this.props.params.account,
+      group: this.props.params.group
+    })
   }
   createNewHost(id) {
     this.props.hostActions.createHost(
@@ -276,10 +284,12 @@ export class Hosts extends React.Component {
                       <ContentItemChart key={i} id={host}
                         linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                        analyticsLink={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         name={host} description="Desc"
                         delete={this.deleteHost}
                         primaryData={fakeRecentData}
                         secondaryData={fakeAverageData}
+                        differenceData={fakeDifferenceData}
                         barWidth="1"
                         chartWidth="480"
                         barMaxHeight="80" />
@@ -329,6 +339,8 @@ Hosts.propTypes = {
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
@@ -339,6 +351,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
+    metrics: state.metrics.get('metrics'),
     fetching: state.host.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
   };
@@ -349,6 +362,7 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
