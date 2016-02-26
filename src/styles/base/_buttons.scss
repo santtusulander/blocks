@@ -201,7 +201,7 @@
 
     .light-theme .sidebar-layout &,
     .light-theme .modal & {
-      stroke: rgba($white, 0.7);
+      stroke: $lt-button-color;
     }
   }
 
@@ -550,16 +550,28 @@
     &:hover,
     &:active,
     &.active {
-      color: $dt-text-color;
+      color: $lt-button-color;
       background-color: rgba($white, 0.2);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
 
     &:hover:enabled,
     &:active:enabled,
     &.active:enabled {
       color: $white;
+      fill: $white;
+      stroke: $white;
+    }
+  }
+
+  .content-item-chart .btn-primary {
+
+    &,
+    &:active,
+    &.active {
+      color: $white;
+      background-color: rgba($white, 0.4);
       fill: $white;
       stroke: $white;
     }
@@ -605,10 +617,10 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $lt-button-color;
       background-color: rgba($black, 0.2);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
 
     &:hover:enabled {
@@ -622,10 +634,10 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $lt-button-color;
       background-color: $btn-success-bg;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
 
     &:hover:enabled {
@@ -639,10 +651,10 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $lt-button-color;
       background-color: $pale-blue;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
 
     &:hover:enabled {
