@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
@@ -174,7 +175,9 @@ export class Groups extends React.Component {
     this.props.metricsActions.startFetching()
     this.props.metricsActions.fetchMetrics({
       account: this.props.params.account,
-      group: this.props.params.group
+      group: this.props.params.group,
+      startDate: moment().subtract(30, 'days').format('X'),
+      endDate: moment().format('X')
     })
   }
   // toggleActiveGroup(id) {
@@ -287,9 +290,9 @@ export class Groups extends React.Component {
                         analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                         name={group.get('name')} description="Desc"
                         delete={this.deleteGroup}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}
-                        differenceData={fakeDifferenceData}
+                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
+                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}
+                        differenceData={this.props.metrics.get(i).get('historical_variance').toJS()}
                         barWidth="1"
                         chartWidth="560"
                         barMaxHeight="80" />
@@ -301,8 +304,8 @@ export class Groups extends React.Component {
                         linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                         name={group.get('name')} description="Desc"
                         delete={this.deleteGroup}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}/>
+                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
+                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}/>
                     )}
                   </div>
                 }
@@ -353,7 +356,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
-    fetching: state.group.get('fetching'),
+    fetching: state.group.get('fetching') || state.metrics.get('fetching'),
     metrics: state.metrics.get('metrics'),
     viewingChart: state.ui.get('viewingChart')
   };

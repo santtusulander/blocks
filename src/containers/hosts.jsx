@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -181,7 +182,9 @@ export class Hosts extends React.Component {
     this.props.metricsActions.startFetching()
     this.props.metricsActions.fetchMetrics({
       account: this.props.params.account,
-      group: this.props.params.group
+      group: this.props.params.group,
+      startDate: moment().subtract(30, 'days').format('X'),
+      endDate: moment().format('X')
     })
   }
   createNewHost(id) {
@@ -287,9 +290,9 @@ export class Hosts extends React.Component {
                         analyticsLink={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         name={host} description="Desc"
                         delete={this.deleteHost}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}
-                        differenceData={fakeDifferenceData}
+                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
+                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}
+                        differenceData={this.props.metrics.get(i).get('historical_variance').toJS()}
                         barWidth="1"
                         chartWidth="480"
                         barMaxHeight="80" />
@@ -301,8 +304,8 @@ export class Hosts extends React.Component {
                         linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                         name={host} description="Desc"
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}/>
+                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
+                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}/>
                     )}
                   </div>
                 }
@@ -352,7 +355,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
     metrics: state.metrics.get('metrics'),
-    fetching: state.host.get('fetching'),
+    fetching: state.host.get('fetching') || state.metrics.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
