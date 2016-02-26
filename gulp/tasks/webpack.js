@@ -13,7 +13,7 @@ var assetCopy = new CopyWebpackPlugin([
   {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'}
 ]);
 
-gulp.task("webpack", function(callback) {
+gulp.task("webpack", ['preprocess'], function(callback) {
   var dev = process.env.NODE_ENV === 'development';
   var webpackConfig = config.webpack;
   webpackConfig.debug = dev;
