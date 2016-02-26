@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {defaultHeaders, urlBase} from '../util'
+import {urlBase} from '../util'
 
 const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'

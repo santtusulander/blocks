@@ -74,11 +74,8 @@ class ContentItemChart extends React.Component {
         return y
       })
       .interpolate('basis')
-    const differenceArc = d3.svg.arc()
-      .innerRadius(innerRadius - 10)
-      .outerRadius(innerRadius)
-      .startAngle(0)
-      .endAngle(45 * radians)
+    const pie = d3.layout.pie().sort(null)
+    const arc = d3.svg.arc().innerRadius(innerRadius - 10).outerRadius(innerRadius);
     const tooltip = (
       <Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
@@ -138,12 +135,23 @@ class ContentItemChart extends React.Component {
               marginTop: -innerRadius, marginLeft: -innerRadius}}>
               <div className="circle-gradient"></div>
             </div>
-            <svg className="content-item-chart-svg difference-arc">
-              <g style={differenceArcStyle}>
-                <path className="content-item-chart-line"
-                  d={differenceArc()} />
-              </g>
-            </svg>
+            {this.props.differenceData ?
+              <svg className="content-item-chart-svg difference-arc">
+                <g style={differenceArcStyle}>
+                  {
+                    pie(Array(this.props.differenceData.length).fill(1)).map((arcs, i) => {
+                      let data = this.props.differenceData[i]
+                      let style = data < 0 ? 'below-avg' :
+                        data === 0 ? 'avg' :
+                        data > 0 ? 'above-avg' : ''
+                      return (
+                        <path key={i} d={arc(arcs)} className={style} />
+                      )
+                    })
+                  }
+                </g>
+              </svg> : ''
+            }
             <div className="text-content"
               style={{width: innerRadius * 2, height: innerRadius * 2}}>
               <div className="content-item-traffic">
@@ -162,12 +170,14 @@ class ContentItemChart extends React.Component {
           <div className="content-item-toolbar"
             style={{bottom: this.props.barMaxHeight}}>
             <ButtonToolbar>
-              <Button bsSize="small"
-                 className="btn-primary btn-icon btn-round invisible">
-                <Link to={`/analysis`}>
-                  <IconChart/>
-                </Link>
-              </Button>
+              {this.props.analyticsLink ?
+                <Button bsSize="small"
+                   className="btn-primary btn-icon btn-round invisible">
+                  <Link to={this.props.analyticsLink}>
+                    <IconChart/>
+                  </Link>
+                </Button> : ''
+              }
               {this.props.configurationLink ?
                 <Button bsSize="small"
                   className="edit-content-item btn-primary btn-icon
@@ -187,12 +197,14 @@ class ContentItemChart extends React.Component {
 
 ContentItemChart.displayName = 'ContentItemChart'
 ContentItemChart.propTypes = {
+  analyticsLink: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  differenceData: React.PropTypes.array,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   name: React.PropTypes.string,
