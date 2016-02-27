@@ -92,12 +92,12 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/`}>
+              <Link className="main-nav-link" to={`/security`}>
                 Security
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/`}>
+              <Link className="main-nav-link" to={`/services`}>
                 Services
               </Link>
             </li>

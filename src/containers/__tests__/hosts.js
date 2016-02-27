@@ -32,6 +32,12 @@ function groupActionsMaker() {
     fetchGroup: jest.genMockFunction()
   }
 }
+function metricsActionsMaker() {
+  return {
+    fetchMetrics: jest.genMockFunction(),
+    startFetching: jest.genMockFunction()
+  }
+}
 
 const urlParams = {brand: 'udn', account: '1', group: '1'}
 
@@ -41,6 +47,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -55,6 +62,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActions}
         groupActions={groupActions}
+        metricsActions={metricsActionsMaker()}
         fetching={true} params={urlParams}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
@@ -71,6 +79,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true} params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
@@ -83,6 +92,7 @@ describe('Hosts', () => {
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List([1,2])}
         params={urlParams}
         viewingChart={true}/>
@@ -97,6 +107,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List([1,2])}
         params={urlParams}
         viewingChart={false}/>
@@ -112,6 +123,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )
@@ -125,6 +137,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )

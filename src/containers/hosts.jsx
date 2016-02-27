@@ -6,9 +6,10 @@ import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import * as hostActionCreators from '../redux/modules/host'
-import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
+import * as hostActionCreators from '../redux/modules/host'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
@@ -177,6 +178,11 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
+    this.props.metricsActions.startFetching()
+    this.props.metricsActions.fetchMetrics({
+      account: this.props.params.account,
+      group: this.props.params.group
+    })
   }
   createNewHost(id) {
     this.props.hostActions.createHost(
@@ -333,6 +339,8 @@ Hosts.propTypes = {
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
@@ -343,6 +351,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
+    metrics: state.metrics.get('metrics'),
     fetching: state.host.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
   };
@@ -353,6 +362,7 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
