@@ -116,17 +116,16 @@ describe("_getPropertyTransferRates", function() {
 
 describe("getPropertyMetrics", function() {
   let options = {start: 0, end: 1, account: 2, group: 3};
-  let returnValue;
   beforeEach(function() {
     spyOn(db, '_getPropertyTraffic').and.returnValue(Promise.resolve(0));
     spyOn(db, '_getPropertyCacheHitRate').and.returnValue(Promise.resolve(1));
     spyOn(db, '_getPropertyTransferRates').and.returnValue(Promise.resolve(2));
-    spyOn(log, 'debug').and.stub();
+    spyOn(log, 'info').and.stub();
     spyOn(log, 'error').and.stub();
   });
 
   it("should call _getPropertyTraffic, _getPropertyCacheHitRate, and _getPropertyTransferRates with the options object passed to getPropertyMetrics", function() {
-    returnValue = db.getPropertyMetrics(options);
+    db.getPropertyMetrics(options);
     expect(db._getPropertyTraffic.calls.any()).toBe(true);
     expect(db._getPropertyTraffic.calls.argsFor(0)[0]).toEqual(options);
     expect(db._getPropertyCacheHitRate.calls.any()).toBe(true);
@@ -136,18 +135,14 @@ describe("getPropertyMetrics", function() {
   });
 
   it("should return a promise", function() {
-    returnValue = db.getPropertyMetrics(options);
-    expect(returnValue instanceof Promise).toBe(true);
+    let getPropertyMetricsPromise = db.getPropertyMetrics(options);
+    expect(getPropertyMetricsPromise instanceof Promise).toBe(true);
   });
 
-  it("should log the result of the queries", function(done) {
-    // db._getPropertyTransferRates.and.returnValue(Promise.reject(new Error()));
-    returnValue = db.getPropertyMetrics(options);
-    returnValue.then(function() {
-      expect(log.debug.calls.any()).toBe(true);
-      expect(log.debug.calls.argsFor(0)[0][0]).toEqual(0);
-      expect(log.debug.calls.argsFor(0)[0][1]).toEqual(1);
-      expect(log.debug.calls.argsFor(0)[0][2]).toEqual(2);
+  it("should log the number of result sets received from the queries", function(done) {
+    db.getPropertyMetrics(options).then(function(data) {
+      expect(log.info.calls.any()).toBe(true);
+      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
       done();
     });
   });
@@ -155,8 +150,7 @@ describe("getPropertyMetrics", function() {
   it("should log an error if one of the queries failed", function(done) {
     let error = new Error('error');
     db._getPropertyTransferRates.and.returnValue(Promise.reject(error));
-    returnValue = db.getPropertyMetrics(options);
-    returnValue.finally(function() {
+    db.getPropertyMetrics(options).finally(function() {
       expect(log.error.calls.any()).toBe(true);
       expect(log.error.calls.argsFor(0)[0]).toEqual(error);
       done();
