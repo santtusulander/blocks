@@ -180,7 +180,10 @@ class AnalyticsDB {
     ];
 
     return Promise.all(queries)
-      .then((queryData) => log.debug(queryData))
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
       .catch((err) => log.error(err));
   }
 }
