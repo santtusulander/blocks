@@ -24,10 +24,9 @@ const emptyHosts = Immutable.Map({
 export default handleActions({
   HOST_CREATED: {
     next(state, action) {
-      const newHost = Immutable.fromJS(action.payload)
       return state.merge({
-        activeHost: newHost,
-        allHosts: state.get('allHosts').push(newHost.get('published_host_id'))
+        activeHost: null,
+        allHosts: state.get('allHosts').push(action.payload)
       })
     }
   },
@@ -100,10 +99,14 @@ export default handleActions({
 // ACTIONS
 
 export const createHost = createAction(HOST_CREATED, (brand, account, group, id) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {})
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {}, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then((res) => {
     if(res) {
-      return res.data;
+      return id;
     }
   })
 })
@@ -134,7 +137,11 @@ export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group)
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host)
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then(() => {
     return host;
   })
