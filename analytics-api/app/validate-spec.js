@@ -80,3 +80,47 @@ describe('validate._validateTimestamp', function() {
     expect(result.indexOf('Error')).toBe(0);
   });
 });
+
+
+describe('validate._validateID', function() {
+  it('should return null for a valid ID', function() {
+    let data = {
+      key: 'account',
+      value: 3,
+      required: true
+    };
+    let result = validate._validateID(data);
+    expect(result).toBe(null);
+  });
+
+  it('should return null for a parameter that was not provided and is not required', function() {
+    let data = {
+      key: 'group',
+      required: false
+    };
+    let result = validate._validateID(data);
+    expect(result).toBe(null);
+  });
+
+  it('should return an error message for an invalid ID', function() {
+    let data = {
+      key: 'account',
+      value: '1a',
+      required: true
+    };
+    let result = validate._validateID(data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+
+  it('should return an error message for an invalid ID, even if the parameter is not required', function() {
+    let data = {
+      key: 'group',
+      value: '1a',
+      required: false
+    };
+    let result = validate._validateID(data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+});
