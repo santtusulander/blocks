@@ -2,8 +2,8 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-jest.dontMock('../cache.jsx')
-const ConfigurationCache = require('../cache.jsx')
+jest.dontMock('../defaults.jsx')
+const ConfigurationDefaults = require('../defaults.jsx')
 
 const fakeConfig = Immutable.fromJS({"default_policies": [
   {
@@ -23,32 +23,32 @@ const fakeConfig = Immutable.fromJS({"default_policies": [
   }
 ]})
 
-describe('ConfigurationCache', () => {
+describe('ConfigurationDefaults', () => {
   it('should exist', () => {
-    let cache = TestUtils.renderIntoDocument(
-      <ConfigurationCache />
+    let defaults = TestUtils.renderIntoDocument(
+      <ConfigurationDefaults />
     );
-    expect(TestUtils.isCompositeComponent(cache)).toBeTruthy();
+    expect(TestUtils.isCompositeComponent(defaults)).toBeTruthy();
   });
 
   it('should change values', () => {
     const changeValue = jest.genMockFunction()
-    let cache = TestUtils.renderIntoDocument(
-      <ConfigurationCache changeValue={changeValue}
+    let defaults = TestUtils.renderIntoDocument(
+      <ConfigurationDefaults changeValue={changeValue}
         config={fakeConfig}/>
     );
-    cache.handleChange('some path')(true)
+    defaults.handleChange('some path')(true)
     expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
 
   it('should save changes', () => {
     const saveChanges = jest.genMockFunction()
-    let cache = TestUtils.renderIntoDocument(
-      <ConfigurationCache saveChanges={saveChanges}
+    let defaults = TestUtils.renderIntoDocument(
+      <ConfigurationDefaults saveChanges={saveChanges}
         config={fakeConfig}/>
     );
-    let form = TestUtils.findRenderedDOMComponentWithTag(cache, 'form');
+    let form = TestUtils.findRenderedDOMComponentWithTag(defaults, 'form');
     TestUtils.Simulate.submit(form)
     expect(saveChanges.mock.calls.length).toBe(1)
   });

@@ -2,12 +2,10 @@ import React from 'react'
 import {Modal, Row, Col} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ConfigurationDefaultPolicies from './default-policies'
 import ConfigurationCacheRules from './cache-rules'
 import ConfigurationCacheRuleEdit from './cache-rule-edit'
-import Toggle from '../toggle'
 
-class ConfigurationCache extends React.Component {
+class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
 
@@ -50,71 +48,8 @@ class ConfigurationCache extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let policyPath = Immutable.List([
-      'default_policies']);
-    let policyPaths = {
-      honor_origin_cache_policies: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'honor_origin'),
-      honor_etags: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'check_etag'),
-      ignore_case: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_name')),
-            'ignore_case')
-    };
     return (
-      <form className="configuration-cache" onSubmit={this.handleSave}>
-
-        {/* Origin Cache Control */}
-
-        <h2>Origin Cache Control</h2>
-
-
-        { /* Honor Origin Cache Control */}
-        <Row>
-          <Col lg={4} xs={6} className="toggle-label">
-            Honor Origin Cache Control
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle
-              value={config.getIn(policyPaths.honor_origin_cache_policies)}
-              changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
-          </Col>
-        </Row>
-
-        { /* Ignore case from origin */}
-        <Row>
-          <Col lg={4} xs={6} className="toggle-label">
-            Ignore case from origin
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle value={config.getIn(policyPaths.ignore_case)}
-              changeValue={this.handleChange(policyPaths.ignore_case)}/>
-          </Col>
-        </Row>
-
-        { /* Enable e-Tag support */}
-        <Row>
-          <Col lg={4} xs={6} className="toggle-label">
-            Enable e-Tag support
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle value={config.getIn(policyPaths.honor_etags)}
-              changeValue={this.handleChange(policyPaths.honor_etags)}/>
-          </Col>
-        </Row>
-
-        <hr/>
-
-        <h3>Edge Cache Control</h3>
-        <ConfigurationDefaultPolicies/>
+      <div className="configuration-policies">
 
         <Row>
           <Col sm={8}>
@@ -147,16 +82,16 @@ class ConfigurationCache extends React.Component {
             </Modal.Body>
           </Modal>
           : ''}
-      </form>
+      </div>
     )
   }
 }
 
-ConfigurationCache.displayName = 'ConfigurationCache'
-ConfigurationCache.propTypes = {
+ConfigurationPolicies.displayName = 'ConfigurationPolicies'
+ConfigurationPolicies.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationCache
+module.exports = ConfigurationPolicies
