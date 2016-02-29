@@ -234,7 +234,7 @@ export class Groups extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               <Button bsStyle="success" className="btn-icon">
-                <Link to={`/analysis/`}>
+                <Link to={`/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
                   <IconChart/>
                 </Link>
               </Button>
