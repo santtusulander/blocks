@@ -1,5 +1,6 @@
 'use strict';
 
+let _       = require('lodash');
 let mysql   = require('promise-mysql');
 let Promise = require('bluebird');
 let configs = require('./configs');
@@ -268,9 +269,17 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getMetrics(options) {
-    let accountLevel = (options.group == null) ? 'Group' : 'Property';
+    let accountLevel      = (options.group == null) ? 'Group' : 'Property';
+    let start             = parseInt(options.start);
+    let end               = parseInt(options.end);
+    let duration          = end - start + 1;
+    let optionsHistoric   = Object.assign({}, options, {
+      start: start - duration,
+      end: start - 1
+    });
     let queries = [
       this[`_get${accountLevel}Traffic`](options),
+      this[`_get${accountLevel}Traffic`](optionsHistoric),
       this[`_get${accountLevel}CacheHitRate`](options),
       this[`_get${accountLevel}TransferRates`](options)
     ];

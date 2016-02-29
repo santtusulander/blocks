@@ -10,7 +10,7 @@ let testData = require('./metrics-data');
 function routeMetrics(req, res) {
   log.info('Getting metrics');
   log.debug('query params:', req.query);
-  
+
   let params = req.query;
   let errors = validate.params(params, {
     start   : {required: true, type: 'Timestamp'},
@@ -28,8 +28,8 @@ function routeMetrics(req, res) {
     end     : params.end,
     account : params.account,
     group   : params.group
-  }).spread((trafficData, cacheHitRatioData, transferRateData) => {
-    if (trafficData && cacheHitRatioData && transferRateData) {
+  }).spread((trafficData, historicalTrafficData, cacheHitRatioData, transferRateData) => {
+    if (trafficData && historicalTrafficData && cacheHitRatioData && transferRateData) {
       let responseData = [];
 
       // Set the selected level
@@ -42,9 +42,10 @@ function routeMetrics(req, res) {
       // data, average cache hit ratio, and transfer rates.
       levels.forEach((level) => {
         // Get the raw data for a single level
-        let levelTrafficData       = trafficData.filter((item) => item[selectedLevel] === level);
-        let levelCacheHitRatioData = cacheHitRatioData.filter((item) => item[selectedLevel] === level)[0];
-        let levelTransferRateData  = transferRateData.filter((item) => item[selectedLevel] === level)[0];
+        let levelTrafficData           = trafficData.filter((item) => item[selectedLevel] === level);
+        let levelHistoricalTrafficData = historicalTrafficData.filter((item) => item[selectedLevel] === level);
+        let levelCacheHitRatioData     = cacheHitRatioData.filter((item) => item[selectedLevel] === level)[0];
+        let levelTransferRateData      = transferRateData.filter((item) => item[selectedLevel] === level)[0];
 
         // Build the data object for a single level
         let levelData = {
@@ -55,6 +56,12 @@ function routeMetrics(req, res) {
             average: `${levelTransferRateData.transfer_rate_average.toFixed(1)} Gbps`
           },
           traffic: levelTrafficData.map((item) => {
+            return {
+              bytes: item.bytes,
+              timestamp: item.epoch_start
+            }
+          }),
+          historical_traffic: levelHistoricalTrafficData.map((item) => {
             return {
               bytes: item.bytes,
               timestamp: item.epoch_start
