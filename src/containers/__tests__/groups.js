@@ -30,10 +30,41 @@ function accountActionsMaker() {
     fetchAccount: jest.genMockFunction()
   }
 }
+function metricsActionsMaker() {
+  return {
+    fetchMetrics: jest.genMockFunction(),
+    startFetching: jest.genMockFunction()
+  }
+}
 
 const fakeGroups = Immutable.fromJS([
   {id: 1, name: 'aaa'},
   {id: 2, name: 'bbb'}
+])
+
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
 ])
 
 const urlParams = {brand: 'udn', account: 1}
@@ -44,6 +75,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -57,6 +89,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActions}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -70,6 +103,7 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
         params={urlParams}/>
     )
@@ -82,7 +116,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
@@ -96,7 +132,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )
@@ -111,6 +149,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       params={urlParams}/>
   //   )
@@ -124,6 +163,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id:1})}
   //       params={urlParams}/>
@@ -138,6 +178,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -155,6 +196,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -172,7 +214,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}/>
     )
     groups.deleteGroup(1)

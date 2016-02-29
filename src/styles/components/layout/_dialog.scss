@@ -51,6 +51,18 @@
     padding: ($md-btn-height / 2) ($md-bar-height / 2) 0;
   }
 
+  p:not(.configuration-dialog-title) {
+    font-size: $font-size-sm;
+
+    @include sm {
+      font-size: $sm-font-size-sm;
+    }
+
+    @include md {
+      font-size: $md-font-size-sm;
+    }
+  }
+
   .configuration-dialog-title {
     margin-bottom: 0;
     font-weight: bold;

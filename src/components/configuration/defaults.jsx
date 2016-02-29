@@ -8,7 +8,7 @@ import ConfigurationCacheRuleEdit from './cache-rule-edit'
 import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 
-class ConfigurationCache extends React.Component {
+class ConfigurationDefaults extends React.Component {
   constructor(props) {
     super(props);
 
@@ -91,7 +91,7 @@ class ConfigurationCache extends React.Component {
       </div>
     )
     return (
-      <form className="configuration-cache" onSubmit={this.handleSave}>
+      <form className="configuration-defaults" onSubmit={this.handleSave}>
 
         {/* Origin Cache Control */}
 
@@ -134,22 +134,9 @@ class ConfigurationCache extends React.Component {
 
         <hr/>
 
-        <h3>Edge Cache Control</h3>
+        <h3>Edge Cache Default Rules</h3>
         <ConfigurationDefaultPolicies/>
 
-        <Row>
-          <Col sm={8}>
-            <h3>CDN Cache Rules</h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <a href="#" className="add-rule" onClick={this.addRule}>
-              Add Cache Rule
-            </a>
-          </Col>
-        </Row>
-        <ConfigurationCacheRules
-          requestPolicies={config.get('request_policies')}
-          responsePolicies={config.get('response_policies')}/>
         {this.state.activeRulePath ?
           <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
             rightColContent={modalRightColContent}
@@ -167,11 +154,11 @@ class ConfigurationCache extends React.Component {
   }
 }
 
-ConfigurationCache.displayName = 'ConfigurationCache'
-ConfigurationCache.propTypes = {
+ConfigurationDefaults.displayName = 'ConfigurationDefaults'
+ConfigurationDefaults.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationCache
+module.exports = ConfigurationDefaults
