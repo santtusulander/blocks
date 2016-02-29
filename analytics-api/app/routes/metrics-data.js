@@ -32,7 +32,7 @@ module.exports = function testData(options) {
   let numDays             = Math.ceil((options.end - options.start) / secondsPerDay);
   let numRecords          = numDays * (24/numHoursPerRecord);
   let historicStart       = options.start - (numDays * 86400);
-  let responseData        = {data: []};
+  let responseData        = [];
 
   while (entityCount--) {
     let trafficData            = generateTrafficData(options.start, numRecords, timeInterval);
@@ -62,7 +62,7 @@ module.exports = function testData(options) {
       historical_traffic: historicalData
     }
 
-    responseData.data.push(entityData);
+    responseData.push(entityData);
   }
 
   return responseData;

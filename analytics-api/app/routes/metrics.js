@@ -1,5 +1,6 @@
 'use strict';
 
+require('express-jsend');
 let _        = require('lodash');
 let log      = require('../logger');
 let db       = require('../db');
@@ -7,6 +8,7 @@ let validate = require('../validate');
 let testData = require('./metrics-data');
 
 function routeMetrics(req, res) {
+  log.info('Getting metrics');
   log.debug('query params:', req.query);
   
   let params = _.mapValues(req.query, value => parseInt(value));
@@ -18,41 +20,41 @@ function routeMetrics(req, res) {
   });
 
   if (errors) {
-    return res.status(400).send(errors);
+    return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getPropertyMetrics({
+  db.getMetrics({
     start   : params.start,
     end     : params.end,
     account : params.account,
     group   : params.group
   }).spread((trafficData, cacheHitRatioData, transferRateData) => {
     if (trafficData && cacheHitRatioData && transferRateData) {
-      let responseData = {
-        data: []
-      };
+      let responseData = [];
 
-      // Build a list of unique property names
-      let properties = _.uniq(cacheHitRatioData.map((row) => row.property));
+      // Set the selected level
+      let selectedLevel = (params.group == null) ? 'group' : 'property';
 
-      // Loop each property and build an object of data that includes traffic
+      // Build a list of unique level identifiers
+      let levels = _.uniq(cacheHitRatioData.map((row) => row[selectedLevel]));
+
+      // Loop each level and build an object of data that includes traffic
       // data, average cache hit ratio, and transfer rates.
-      properties.forEach((property) => {
-        // Get the raw data for a single property
-        let propertyTrafficData       = trafficData.filter((item) => item.property === property);
-        let propertyCacheHitRatioData = cacheHitRatioData.filter((item) => item.property === property)[0];
-        let propertyTransferRateData  = transferRateData.filter((item) => item.property === property)[0];
+      levels.forEach((level) => {
+        // Get the raw data for a single level
+        let levelTrafficData       = trafficData.filter((item) => item[selectedLevel] === level);
+        let levelCacheHitRatioData = cacheHitRatioData.filter((item) => item[selectedLevel] === level)[0];
+        let levelTransferRateData  = transferRateData.filter((item) => item[selectedLevel] === level)[0];
 
-        // Build the data object for a single property
-        let propertyData = {
-          property: property,
-          avg_cache_hit_rate: propertyCacheHitRatioData.chit_ratio,
+        // Build the data object for a single level
+        let levelData = {
+          avg_cache_hit_rate: levelCacheHitRatioData.chit_ratio,
           transfer_rates: {
-            peak:    `${propertyTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
-            lowest:  `${propertyTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
-            average: `${propertyTransferRateData.transfer_rate_average.toFixed(1)} Gbps`
+            peak:    `${levelTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
+            lowest:  `${levelTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
+            average: `${levelTransferRateData.transfer_rate_average.toFixed(1)} Gbps`
           },
-          traffic: propertyTrafficData.map((item) => {
+          traffic: levelTrafficData.map((item) => {
             return {
               bytes: item.bytes,
               timestamp: item.epoch_start
@@ -60,20 +62,27 @@ function routeMetrics(req, res) {
           })
         };
 
+        // Dynamically set a "selectedLevel" property on the level data
+        // e.g. levelData = {group: 3}, levelData = {property: 'idean.com'}
+        levelData[selectedLevel] = level;
+
         // Push the object to the response data
-        responseData.data.push(propertyData);
+        responseData.push(levelData);
+
       });
+
+      // res.jsend(responseData);
 
     }
 
-    res.json(testData({
+    res.jsend(testData({
       entityCount: 10,
       start: params.start,
       end: params.end
     }));
 
-  }).catch((err) => {
-    res.status(500).send('There was a database error. Check the logs for more information.');
+  }).catch(() => {
+    res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 
 }

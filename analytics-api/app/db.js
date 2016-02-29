@@ -82,7 +82,10 @@ class AnalyticsDB {
     let optionsFinal = this._getQueryOptions(options);
 
     let queryParameterized = `
-      SELECT epoch_start, sum(bytes) AS bytes, property
+      SELECT
+        epoch_start,
+        sum(bytes) AS bytes,
+        property
       FROM property_global_hour
       WHERE epoch_start BETWEEN ? and ?
         AND account_id = ?
@@ -96,6 +99,36 @@ class AnalyticsDB {
       optionsFinal.end,
       optionsFinal.account,
       optionsFinal.group
+    ]);
+  }
+
+  /**
+   * Get hourly traffic data (bytes out) for all groups in an account within a
+   * given time range. NOTE: The data returned is grouped by hour.
+   *
+   * @private
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  _getGroupTraffic(options) {
+    let optionsFinal = this._getQueryOptions(options);
+
+    let queryParameterized = `
+      SELECT
+        epoch_start,
+        sum(bytes) AS bytes,
+        group_id AS \`group\`
+      FROM group_global_hour
+      WHERE epoch_start BETWEEN ? and ?
+        AND account_id = ?
+        AND flow_dir = 'out'
+      GROUP BY epoch_start;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account
     ]);
   }
 
@@ -128,6 +161,36 @@ class AnalyticsDB {
       optionsFinal.end,
       optionsFinal.account,
       optionsFinal.group
+    ]);
+  }
+
+  /**
+   * Get the average cache hit rate for each group in an account.
+   * NOTE: The data returned is grouped by group.
+   *
+   * @private
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  _getGroupCacheHitRate(options) {
+    let optionsFinal = this._getQueryOptions(options);
+
+    let queryParameterized = `
+      SELECT
+        epoch_start,
+        group_id AS \`group\`,
+        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio
+      FROM group_global_day
+      WHERE epoch_start between ? and ?
+        AND account_id = ?
+        AND flow_dir = 'out'
+      GROUP BY group_id;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account
     ]);
   }
 
@@ -166,17 +229,50 @@ class AnalyticsDB {
   }
 
   /**
-   * Get traffic data, cache hit rate, and transfer rates for all properties in a
-   * group within a given time range.
+   * Get the peak, lowest, and average transfer rates for each group in an account.
+   * NOTE: The data returned is grouped by group.
+   *
+   * @private
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  _getGroupTransferRates(options) {
+    let optionsFinal = this._getQueryOptions(options);
+
+    let queryParameterized = `
+      SELECT
+        epoch_start,
+        group_id AS \`group\`,
+        round(max(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_peak,
+        round(min(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_lowest,
+        round(avg(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_average
+      FROM group_global_hour
+      WHERE epoch_start between ? and ?
+        AND account_id = ?
+        AND flow_dir = 'out'
+      GROUP BY group_id;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account
+    ]);
+  }
+
+  /**
+   * Get traffic data, cache hit rate, and transfer rates for all properties/groups
+   * in a group/account within a given time range.
    *
    * @param  {object}  options Options that get piped into SQL queries
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  getPropertyMetrics(options) {
+  getMetrics(options) {
+    let accountLevel = (options.group == null) ? 'Group' : 'Property';
     let queries = [
-      this._getPropertyTraffic(options),
-      this._getPropertyCacheHitRate(options),
-      this._getPropertyTransferRates(options)
+      this[`_get${accountLevel}Traffic`](options),
+      this[`_get${accountLevel}CacheHitRate`](options),
+      this[`_get${accountLevel}TransferRates`](options)
     ];
 
     return Promise.all(queries)
