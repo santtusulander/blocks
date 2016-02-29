@@ -14,7 +14,8 @@ import PageHeader from '../components/layout/page-header'
 import Dialog from '../components/layout/dialog'
 
 import ConfigurationDetails from '../components/configuration/details'
-import ConfigurationCache from '../components/configuration/cache'
+import ConfigurationDefaults from '../components/configuration/defaults'
+import ConfigurationPolicies from '../components/configuration/policies'
 import ConfigurationPerformance from '../components/configuration/performance'
 import ConfigurationSecurity from '../components/configuration/security'
 import ConfigurationCertificates from '../components/configuration/certificates'
@@ -181,8 +182,11 @@ export class Configuration extends React.Component {
             <NavItem eventKey={'details'}>
               Hostname
             </NavItem>
-            <NavItem eventKey={'cache'}>
-              Cache
+            <NavItem eventKey={'defaults'}>
+              Defaults
+            </NavItem>
+            <NavItem eventKey={'policies'}>
+              Policies
             </NavItem>
             <NavItem eventKey={'performance'}>
               Performance
@@ -206,8 +210,15 @@ export class Configuration extends React.Component {
                 saveChanges={this.saveActiveHostChanges}/>
               : null}
 
-            {this.state.activeTab === 'cache' ?
-              <ConfigurationCache
+            {this.state.activeTab === 'defaults' ?
+              <ConfigurationDefaults
+                config={activeConfig}
+                changeValue={this.changeValue}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
+
+            {this.state.activeTab === 'policies' ?
+              <ConfigurationPolicies
                 config={activeConfig}
                 changeValue={this.changeValue}
                 saveChanges={this.saveActiveHostChanges}/>
