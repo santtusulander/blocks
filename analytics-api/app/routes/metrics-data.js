@@ -28,14 +28,16 @@ module.exports = function testData(options) {
   const secondsPerDay     = 86400;
   const timeInterval      = 3600 * numHoursPerRecord; // 3 hours in seconds
   const varianceSmoothing = 3;
+  let start               = parseInt(options.start);
+  let end                 = parseInt(options.end);
   let entityCount         = options.entityCount;
-  let numDays             = Math.ceil((options.end - options.start) / secondsPerDay);
+  let numDays             = Math.ceil((end - start) / secondsPerDay);
   let numRecords          = numDays * (24/numHoursPerRecord);
-  let historicStart       = options.start - (numDays * 86400);
+  let historicStart       = start - (numDays * 86400);
   let responseData        = [];
 
   while (entityCount--) {
-    let trafficData            = generateTrafficData(options.start, numRecords, timeInterval);
+    let trafficData            = generateTrafficData(start, numRecords, timeInterval);
     let historicalData         = generateTrafficData(historicStart, numRecords, timeInterval);
     let historicalVarianceData = [];
 

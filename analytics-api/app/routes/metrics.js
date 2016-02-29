@@ -11,7 +11,7 @@ function routeMetrics(req, res) {
   log.info('Getting metrics');
   log.debug('query params:', req.query);
   
-  let params = _.mapValues(req.query, value => parseInt(value));
+  let params = req.query;
   let errors = validate.params(params, {
     start   : {required: true, type: 'Timestamp'},
     end     : {required: false, type: 'Timestamp'},

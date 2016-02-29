@@ -11,7 +11,7 @@ let log = require('./logger');
 class Validate {
 
   /**
-   * Ensure the value is a 10 digit integer (seconds elapsed since UNIX epoch).
+   * Ensure the value is a 10 digit number (seconds elapsed since UNIX epoch).
    *
    * @private
    * @param  {object}      data The data to validate in the format:
@@ -19,18 +19,18 @@ class Validate {
    * @return {string|null}      If valid, return null. If invalid, return error string.
    */
   _validateTimestamp(data) {
-    let message = `Error with ${data.key} parameter: You must provide a valid date (seconds elapsed since UNIX epoch). Value received <${typeof data.value}>: ${data.value}`;
+    let message = `Error with ${data.key} parameter: You must provide a valid date (seconds elapsed since UNIX epoch). Value received: ${data.value}`;
                   // If the value is defined...
     let isValid = !_.isUndefined(data.value)
-                  // ...then it must be an integer with 10 digits...
-                  ? _.isInteger(data.value) && /^\d{10}$/.test(data.value)
+                  // ...then it must be a number with 10 digits...
+                  ? /^\d{10}$/.test(data.value)
                   // ...otherwise it's valid, unless it's required
                   : !data.required;
     return isValid ? null : message;
   }
 
   /**
-   * Ensure the value is an integer.
+   * Ensure the value is a number.
    *
    * @private
    * @param  {object}      data The data to validate in the format:
@@ -38,11 +38,11 @@ class Validate {
    * @return {string|null}      If valid, return null. If invalid, return error string.
    */
   _validateID(data) {
-    let message = `Error with ${data.key} parameter: You must provide a valid ID (integer). Value received <${typeof data.value}>: ${data.value}`;
+    let message = `Error with ${data.key} parameter: You must provide a valid ID (number). Value received: ${data.value}`;
                   // If the value is defined...
     let isValid = !_.isUndefined(data.value)
-                  // ...then it must be an integer...
-                  ? _.isInteger(data.value)
+                  // ...then it must be a number...
+                  ? /^\d+$/.test(data.value)
                   // ...otherwise it's valid, unless it's required
                   : !data.required;
     return isValid ? null : message;
