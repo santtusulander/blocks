@@ -96,7 +96,7 @@ export class Hosts extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="success" className="btn-icon">
+              <Button bsStyle="primary" className="btn-icon">
                 <Link to={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
                   <IconChart />
                 </Link>
