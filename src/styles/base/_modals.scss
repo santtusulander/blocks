@@ -1,6 +1,8 @@
 // Modals
 // ======
 
+// scss-lint:disable SelectorDepth NestingDepth
+// Need to override BootStrap
 .modal-dialog {
 
   .login-modal > & {
@@ -13,8 +15,9 @@
     box-shadow: none;
 
     .dark-theme & {
-      background: linear-gradient(rgba($pale-blue, 0.7),
-        rgba($ericsson-dark-blue, 0.7));
+      background-color: $black;
+      background-image: linear-gradient(rgba($pale-blue, 0.9),
+        rgba($ericsson-dark-blue, 0.9));
       background-size: 100%;
     }
 
@@ -29,25 +32,39 @@
 
   &.configuration-sidebar {
     float: right;
-    width: $configuration-sidebar-width;
+    width: calc(96% - #{$sidebar-right-col-width});
+    max-width: $configuration-sidebar-width;
     margin: 0;
 
     @include md {
-      width: $md-configuration-sidebar-width;
+      width: calc(96% - #{$md-sidebar-right-col-width});
+      max-width: $md-configuration-sidebar-width;
     }
 
     @include sm {
-      width: 90%;
+      width: calc(96% - #{$sm-sidebar-right-col-width});
       max-width: $sm-configuration-sidebar-width;
     }
 
     .fade & {
       transform: translate(100%, 0);
-      transition: transform 0.3s ease-out;
+      transition: transform 0.3s ease-out, margin 0.3s ease-out;
     }
 
     .in & {
       transform: translate(0, 0);
+    }
+
+    &.right-col-visible {
+      margin-right: $sidebar-right-col-width;
+
+      @include md {
+        margin-right: $md-sidebar-right-col-width;
+      }
+
+      @include sm {
+        margin-right: $sm-sidebar-right-col-width;
+      }
     }
 
     .modal-content {
@@ -96,6 +113,83 @@
 
       @include sm {
         padding: 40px ($md-bar-height / 2);
+      }
+    }
+
+    .sidebar-right-col {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      width: $sidebar-right-col-width;
+
+      @include md {
+        width: $md-sidebar-right-col-width;
+      }
+
+      @include sm {
+        width: $sm-sidebar-right-col-width;
+      }
+
+      .dark-theme & {
+        background-color: $black;
+        background-image: linear-gradient(rgba($pale-blue, 0.9),
+          rgba($ericsson-dark-blue, 0.9));
+        background-size: 100%;
+      }
+
+      .light-theme & {
+        color: $white;
+        background-color: $pale-blue;
+      }
+
+      .modal-header {
+
+        .dark-theme &,
+        .light-theme & {
+          background: transparent;
+          border-bottom: 1px solid rgba($pale-blue, 0.2);
+        }
+      }
+    }
+
+    .sidebar-right-col-close {
+      position: absolute;
+      top: $bar-height / 2;
+      right: $bar-height / 2;
+      width: 20px;
+      height: 20px;
+      margin: -10px -10px 0 0;
+      cursor: pointer;
+
+      @include md {
+        top: $md-bar-height / 2;
+        right: $md-bar-height / 2;
+      }
+
+      .dark-theme & {
+        fill: $dt-text-color;
+        stroke: $dt-text-color;
+      }
+
+      .light-theme & {
+        fill: $lt-text-color;
+        stroke: $lt-text-color;
+      }
+
+      &:hover {
+
+        .dark-theme & {
+          color: $white;
+          fill: $white;
+          stroke: $white;
+        }
+
+        .light-theme & {
+          color: $black;
+          fill: $black;
+          stroke: $black;
+        }
       }
     }
   }
