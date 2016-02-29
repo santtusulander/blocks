@@ -141,6 +141,7 @@
       .light-theme & {
         color: $white;
         background-color: $pale-blue;
+        background-image: linear-gradient(rgba($white, 0.1), rgba($white, 0.1));
       }
 
       .modal-header {
@@ -191,6 +192,25 @@
           stroke: $black;
         }
       }
+    }
+  }
+}
+
+.modal-backdrop {
+
+  .dark-theme & {
+    background-color: $black;
+
+    &.in {
+      opacity: 0.3;
+    }
+  }
+
+  .light-theme & {
+    background-color: $white;
+
+    &.in {
+      opacity: 0.4;
     }
   }
 }
