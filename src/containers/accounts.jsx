@@ -266,7 +266,6 @@ export class Accounts extends React.Component {
 
             {activeAccount ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                backdrop={false}
                 onHide={this.toggleActiveAccount(activeAccount.get('account_id'))}>
                 <Modal.Header>
                   <h1>Edit Account</h1>

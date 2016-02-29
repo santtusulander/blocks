@@ -14,7 +14,6 @@ class ConfigurationSidebar extends React.Component {
     return (
       <Modal show={true}
         dialogClassName={className}
-        backdrop={false}
         onHide={this.props.onHide}>
         {this.props.children}
         {this.props.rightColVisible ?

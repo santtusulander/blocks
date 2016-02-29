@@ -305,7 +305,6 @@ export class Hosts extends React.Component {
 
             {this.state.addHost ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                backdrop={false}
                 onHide={this.toggleAddHost}>
                 <Modal.Header>
                   <h1>Add Property</h1>

@@ -245,7 +245,6 @@ export class Configuration extends React.Component {
         {this.state.showPublishModal ?
           <Modal show={true}
             dialogClassName="configuration-sidebar"
-            backdrop={false}
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1>Publish Version</h1>
