@@ -233,7 +233,7 @@ export class Groups extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="success" className="btn-icon">
+              <Button bsStyle="primary" className="btn-icon">
                 <Link to={`/analysis/`}>
                   <IconChart/>
                 </Link>
