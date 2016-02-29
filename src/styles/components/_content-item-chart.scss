@@ -108,6 +108,7 @@
 
     &.difference-arc {
       fill: transparent;
+      stroke-width: 1;
     }
 
     .dark-theme &,
@@ -115,19 +116,23 @@
 
       .below-avg {
         fill: $green;
+        stroke: $green;
       }
 
       .above-avg {
         fill: $purple;
+        stroke: $purple;
       }
     }
 
     .dark-theme & .avg {
       fill: $pale-blue;
+      stroke: $pale-blue;
     }
 
     .light-theme & .avg {
       fill: rgba($white, 0.5);
+      stroke: rgba($white, 0.5);
     }
   }
 
