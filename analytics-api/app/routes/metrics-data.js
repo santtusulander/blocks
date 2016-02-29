@@ -1,26 +1,69 @@
-module.exports = {
-  data: [
-    {group_id: 1,
-    avg_fbl: 42,
-    avg_cache_hit_rate: 85,
-    traffic: [
-      {bytes: 45767, timestamp: '2016-01-01T00:00:00'},
-      {bytes: 34556, timestamp: '2016-01-02T00:00:00'},
-      {bytes: 32456, timestamp: '2016-01-03T00:00:00'},
-      {bytes: 65786, timestamp: '2016-01-04T00:00:00'},
-      {bytes: 34556, timestamp: '2016-01-05T00:00:00'}
-    ]
-    },
-    {group_id: 2,
-    avg_fbl: 54,
-    avg_cache_hit_rate: 98,
-    traffic: [
-      {bytes: 36866, timestamp: '2016-01-01T00:00:00'},
-      {bytes: 34657, timestamp: '2016-01-02T00:00:00'},
-      {bytes: 65868, timestamp: '2016-01-03T00:00:00'},
-      {bytes: 23455, timestamp: '2016-01-04T00:00:00'},
-      {bytes: 34667, timestamp: '2016-01-05T00:00:00'}
-    ]
+'use strict';
+
+let _ = require('lodash');
+const minBytes = 108000000000000;
+const maxBytes = 270000000000000;
+const minCacheHitRate = 50;
+const maxCacheHitRate = 90;
+const minTransferRate = 5;
+const maxTransferRate = 20;
+
+
+function generateTrafficData(start, numRecords, timeInterval) {
+  let data = [];
+
+  while (numRecords--) {
+    data.push({
+      bytes: _.random(minBytes, maxBytes),
+      timestamp: start
+    });
+    start += timeInterval;
+  }
+
+  return data;
+}
+
+module.exports = function testData(options) {
+  const numHoursPerRecord = 3;
+  const secondsPerDay     = 86400;
+  const timeInterval      = 3600 * numHoursPerRecord; // 3 hours in seconds
+  const varianceSmoothing = 3;
+  let entityCount         = options.entityCount;
+  let numDays             = Math.ceil((options.end - options.start) / secondsPerDay);
+  let numRecords          = numDays * (24/numHoursPerRecord);
+  let historicStart       = options.start - (numDays * 86400);
+  let responseData        = {data: []};
+
+  while (entityCount--) {
+    let trafficData            = generateTrafficData(options.start, numRecords, timeInterval);
+    let historicalData         = generateTrafficData(historicStart, numRecords, timeInterval);
+    let historicalVarianceData = [];
+
+    // Calculate historical variance
+    let numItems      = numDays;
+    let counter       = 0;
+    let varianceValue = _.random(-1, 1);
+    while (numItems--) {
+      varianceValue = (counter % varianceSmoothing) === 0 ? _.random(-1, 1) : varianceValue;
+      historicalVarianceData.push(varianceValue);
+      counter++;
     }
-  ]
+
+    let entityData = {
+      group_id: entityCount + 1,
+      avg_cache_hit_rate: _.random(minCacheHitRate, maxCacheHitRate),
+      transfer_rates: {
+        peak:    `${_.random(minTransferRate, maxTransferRate, true).toFixed(1)} Gbps`,
+        lowest:  `${_.random(minTransferRate, maxTransferRate, true).toFixed(1)} Gbps`,
+        average: `${_.random(minTransferRate, maxTransferRate, true).toFixed(1)} Gbps`
+      },
+      historical_variance: historicalVarianceData,
+      traffic: trafficData,
+      historical_traffic: historicalData
+    }
+
+    responseData.data.push(entityData);
+  }
+
+  return responseData;
 }

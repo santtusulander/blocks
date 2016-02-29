@@ -42,6 +42,31 @@ const fakeGroups = Immutable.fromJS([
   {id: 2, name: 'bbb'}
 ])
 
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
+
 const urlParams = {brand: 'udn', account: 1}
 
 describe('Groups', () => {
@@ -93,6 +118,7 @@ describe('Groups', () => {
         accountActions={accountActionsMaker()}
         metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
@@ -108,6 +134,7 @@ describe('Groups', () => {
         accountActions={accountActionsMaker()}
         metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )
@@ -189,6 +216,7 @@ describe('Groups', () => {
         accountActions={accountActionsMaker()}
         metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}/>
     )
     groups.deleteGroup(1)

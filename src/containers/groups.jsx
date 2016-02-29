@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
@@ -174,7 +175,9 @@ export class Groups extends React.Component {
     this.props.metricsActions.startFetching()
     this.props.metricsActions.fetchMetrics({
       account: this.props.params.account,
-      group: this.props.params.group
+      group: this.props.params.group,
+      startDate: moment().subtract(30, 'days').format('X'),
+      endDate: moment().format('X')
     })
   }
   // toggleActiveGroup(id) {
@@ -281,29 +284,43 @@ export class Groups extends React.Component {
                 transitionLeaveTimeout={500}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
-                    {this.props.groups.map((group, i) =>
-                      <ContentItemChart key={i} id={group.get('id')}
-                        linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        name={group.get('name')} description="Desc"
-                        delete={this.deleteGroup}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}
-                        differenceData={fakeDifferenceData}
-                        barWidth="1"
-                        chartWidth="560"
-                        barMaxHeight="80" />
-                    )}
+                    {this.props.groups.map((group, i) => {
+                      const metrics = this.props.metrics.get(i)
+                      return (
+                        <ContentItemChart key={i} id={group.get('id')}
+                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          name={group.get('name')} description="Desc"
+                          delete={this.deleteGroup}
+                          primaryData={metrics.get('traffic').toJS()}
+                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          differenceData={metrics.get('historical_variance').toJS()}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          maxTransfer={metrics.get('transfer_rates').get('peak')}
+                          minTransfer={metrics.get('transfer_rates').get('lowest')}
+                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          barWidth="1"
+                          chartWidth="560"
+                          barMaxHeight="80" />
+                      )
+                    })}
                   </div> :
                   <div className="content-item-lists" key="lists">
-                    {this.props.groups.map((group, i) =>
-                      <ContentItemList key={i} id={group.get('id')}
-                        linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        name={group.get('name')} description="Desc"
-                        delete={this.deleteGroup}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}/>
-                    )}
+                    {this.props.groups.map((group, i) => {
+                      const metrics = this.props.metrics.get(i)
+                      return (
+                        <ContentItemList key={i} id={group.get('id')}
+                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          name={group.get('name')} description="Desc"
+                          delete={this.deleteGroup}
+                          primaryData={metrics.get('traffic').toJS()}
+                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          maxTransfer={metrics.get('transfer_rates').get('peak')}
+                          minTransfer={metrics.get('transfer_rates').get('lowest')}
+                          avgTransfer={metrics.get('transfer_rates').get('average')}/>
+                      )
+                    })}
                   </div>
                 }
               </ReactCSSTransitionGroup>
@@ -353,7 +370,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
-    fetching: state.group.get('fetching'),
+    fetching: state.group.get('fetching') || state.metrics.get('fetching'),
     metrics: state.metrics.get('metrics'),
     viewingChart: state.ui.get('viewingChart')
   };

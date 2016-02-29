@@ -41,6 +41,31 @@ function metricsActionsMaker() {
 
 const urlParams = {brand: 'udn', account: '1', group: '1'}
 
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
+
 describe('Hosts', () => {
   it('should exist', () => {
     let hosts = TestUtils.renderIntoDocument(
@@ -94,6 +119,7 @@ describe('Hosts', () => {
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
         hosts={Immutable.List([1,2])}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
@@ -109,6 +135,7 @@ describe('Hosts', () => {
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
         hosts={Immutable.List([1,2])}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )

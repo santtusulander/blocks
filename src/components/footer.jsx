@@ -9,7 +9,7 @@ class Footer extends React.Component {
     return (
       <footer className={className}>
         <div className="footer-content">
-          <p>v <!-- @echo PACKAGE_VERSION --></p>
+          <p>v /* @echo PACKAGE_VERSION */</p>
         </div>
       </footer>
     );
