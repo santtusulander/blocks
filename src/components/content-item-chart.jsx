@@ -85,20 +85,20 @@ class ContentItemChart extends React.Component {
         <div>
           High
           <span className="pull-right">
-            12.34
-            <span className="data-suffix"> Gb/d</span>
+            {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
+            <span className="data-suffix"> {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[1] : ''}</span>
           </span>
         </div>
         <div>
           Average <span className="pull-right">
-            10.34
-            <span className="data-suffix"> Gb/d</span>
+            {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
+            <span className="data-suffix"> {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[1] : ''}</span>
           </span>
         </div>
         <div>
           Low <span className="pull-right">
-            8.34
-            <span className="data-suffix"> Gb/d</span>
+            {this.props.minTransfer ? this.props.minTransfer.split(' ')[0] : ''}
+            <span className="data-suffix"> {this.props.minTransfer ? this.props.minTransfer.split(' ')[1] : ''}</span>
           </span>
         </div>
       </Tooltip>
@@ -155,13 +155,17 @@ class ContentItemChart extends React.Component {
             <div className="text-content"
               style={{width: innerRadius * 2, height: innerRadius * 2}}>
               <div className="content-item-traffic">
-                <div className="content-item-text-bold">37.0</div>
-                <div className="content-item-text-sm">Gbps</div>
+                <div className="content-item-text-bold">
+                  {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
+                </div>
+                <div className="content-item-text-sm">
+                  {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[1] : ''}
+                </div>
               </div>
               <div className="content-item-text-centered">
                 <div className="content-item-chart-name">{this.props.name}</div>
                 <div className="content-item-text-sm">
-                  <p>95% Avg. Cache Hitrate</p>
+                  <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
                   <p>42 ms TTFB</p>
                 </div>
               </div>
@@ -198,8 +202,10 @@ class ContentItemChart extends React.Component {
 ContentItemChart.displayName = 'ContentItemChart'
 ContentItemChart.propTypes = {
   analyticsLink: React.PropTypes.string,
+  avgTransfer: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
+  cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
@@ -207,6 +213,8 @@ ContentItemChart.propTypes = {
   differenceData: React.PropTypes.array,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
+  maxTransfer: React.PropTypes.string,
+  minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
   secondaryData: React.PropTypes.array

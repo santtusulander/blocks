@@ -284,29 +284,43 @@ export class Groups extends React.Component {
                 transitionLeaveTimeout={500}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
-                    {this.props.groups.map((group, i) =>
-                      <ContentItemChart key={i} id={group.get('id')}
-                        linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        name={group.get('name')} description="Desc"
-                        delete={this.deleteGroup}
-                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
-                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}
-                        differenceData={this.props.metrics.get(i).get('historical_variance').toJS()}
-                        barWidth="1"
-                        chartWidth="560"
-                        barMaxHeight="80" />
-                    )}
+                    {this.props.groups.map((group, i) => {
+                      const metrics = this.props.metrics.get(i)
+                      return (
+                        <ContentItemChart key={i} id={group.get('id')}
+                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          name={group.get('name')} description="Desc"
+                          delete={this.deleteGroup}
+                          primaryData={metrics.get('traffic').toJS()}
+                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          differenceData={metrics.get('historical_variance').toJS()}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          maxTransfer={metrics.get('transfer_rates').get('peak')}
+                          minTransfer={metrics.get('transfer_rates').get('lowest')}
+                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          barWidth="1"
+                          chartWidth="560"
+                          barMaxHeight="80" />
+                      )
+                    })}
                   </div> :
                   <div className="content-item-lists" key="lists">
-                    {this.props.groups.map((group, i) =>
-                      <ContentItemList key={i} id={group.get('id')}
-                        linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                        name={group.get('name')} description="Desc"
-                        delete={this.deleteGroup}
-                        primaryData={this.props.metrics.get(i).get('traffic').toJS()}
-                        secondaryData={this.props.metrics.get(i).get('historical_traffic').toJS()}/>
-                    )}
+                    {this.props.groups.map((group, i) => {
+                      const metrics = this.props.metrics.get(i)
+                      return (
+                        <ContentItemList key={i} id={group.get('id')}
+                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          name={group.get('name')} description="Desc"
+                          delete={this.deleteGroup}
+                          primaryData={metrics.get('traffic').toJS()}
+                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          maxTransfer={metrics.get('transfer_rates').get('peak')}
+                          minTransfer={metrics.get('transfer_rates').get('lowest')}
+                          avgTransfer={metrics.get('transfer_rates').get('average')}/>
+                      )
+                    })}
                   </div>
                 }
               </ReactCSSTransitionGroup>
