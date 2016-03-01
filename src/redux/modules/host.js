@@ -99,11 +99,48 @@ export default handleActions({
 // ACTIONS
 
 export const createHost = createAction(HOST_CREATED, (brand, account, group, id) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {}, {
-    headers: {
-      'Content-Type': 'application/json'
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
+    {
+      services:[
+        {
+          service_type: "large",
+          deployment_mode: "trial",
+          configurations: [
+            {
+              edge_configuration: {
+                published_name: id
+              },
+              configuration_status: {
+                last_edited_by: "Test User"
+              },
+              default_policies: [
+                {
+                  set: {
+                    cache_control: {
+                      honor_origin: true,
+                      check_etag: false
+                    }
+                  }
+                },
+                {
+                  set: {
+                    cache_name: {
+                      ignore_case: false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }
-  })
+  )
   .then((res) => {
     if(res) {
       return id;
