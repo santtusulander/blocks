@@ -2,7 +2,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
-const ConfigurationPolicyRuleEdit = require('../cache-rule-edit.jsx')
+const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
 
 describe('ConfigurationPolicyRuleEdit', () => {
   it('should exist', () => {
