@@ -4,7 +4,51 @@ import Immutable from 'immutable'
 
 import Select from '../select'
 
-class ConfigurationCacheRuleEdit extends React.Component {
+const fakePolicy = Immutable.fromJS({
+  "match": {
+    "field": "response_code",
+    "cases": [
+      [
+        "307",
+        [
+          {
+            "match": {
+              "field": "response_header",
+              "cases": [
+                [
+                  "origin1.example.com/(.*)",
+                  [
+                    {
+                      "set": {
+                        "header": {
+                          "action": "set",
+                          "header": "Location",
+                          "value": [
+                            {
+                              "field": "text",
+                              "field_detail": "origin2.example.com/"
+                            },
+                            {
+                              "field": "group",
+                              "field_detail": "1"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                ]
+              ],
+              "field_detail": "Location"
+            }
+          }
+        ]
+      ]
+    ]
+  }
+})
+
+class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
     super(props);
 
@@ -110,8 +154,8 @@ class ConfigurationCacheRuleEdit extends React.Component {
   }
 }
 
-ConfigurationCacheRuleEdit.displayName = 'ConfigurationCacheRuleEdit'
-ConfigurationCacheRuleEdit.propTypes = {
+ConfigurationPolicyRuleEdit.displayName = 'ConfigurationPolicyRuleEdit'
+ConfigurationPolicyRuleEdit.propTypes = {
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   hideAction: React.PropTypes.func,
@@ -120,4 +164,4 @@ ConfigurationCacheRuleEdit.propTypes = {
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationCacheRuleEdit
+module.exports = ConfigurationPolicyRuleEdit

@@ -3,7 +3,7 @@ import {Modal, Row, Col} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
-import ConfigurationCacheRuleEdit from './cache-rule-edit'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import Toggle from '../toggle'
 
 class ConfigurationDefaults extends React.Component {
@@ -117,7 +117,7 @@ class ConfigurationDefaults extends React.Component {
               <p>Lorem ipsum dolor</p>
             </Modal.Header>
             <Modal.Body>
-              <ConfigurationCacheRuleEdit
+              <ConfigurationPolicyRuleEdit
                 rule={config.getIn(this.state.activeRulePath)}
                 rulePath={this.state.activeRulePath}
                 changeActiveRuleType={this.changeActiveRuleType}

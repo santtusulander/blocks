@@ -1,9 +1,10 @@
 import React from 'react'
-import {Modal, Row, Col} from 'react-bootstrap'
+import {Modal, Row, Col, Button} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ConfigurationCacheRules from './cache-rules'
-import ConfigurationCacheRuleEdit from './cache-rule-edit'
+import ConfigurationPolicyRules from './policy-rules'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
+import IconAdd from '../icons/icon-add.jsx'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -53,15 +54,16 @@ class ConfigurationPolicies extends React.Component {
 
         <Row>
           <Col sm={8}>
-            <h3>CDN Cache Rules</h3>
+            <h3>Policy Rules</h3>
           </Col>
           <Col sm={4} className="text-right">
-            <a href="#" className="add-rule" onClick={this.addRule}>
-              Add Cache Rule
-            </a>
+            <Button bsStyle="primary" className="btn-icon btn-add-new"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
           </Col>
         </Row>
-        <ConfigurationCacheRules
+        <ConfigurationPolicyRules
           requestPolicies={config.get('request_policies')}
           responsePolicies={config.get('response_policies')}/>
         {this.state.activeRulePath ?
@@ -74,7 +76,7 @@ class ConfigurationPolicies extends React.Component {
               <p>Lorem ipsum dolor</p>
             </Modal.Header>
             <Modal.Body>
-              <ConfigurationCacheRuleEdit
+              <ConfigurationPolicyRuleEdit
                 rule={config.getIn(this.state.activeRulePath)}
                 rulePath={this.state.activeRulePath}
                 changeActiveRuleType={this.changeActiveRuleType}
