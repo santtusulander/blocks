@@ -2,7 +2,7 @@ import React from 'react'
 import {Table} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-class ConfigurationCacheRules extends React.Component {
+class ConfigurationPolicyRules extends React.Component {
   render() {
     if(!this.props.requestPolicies) {
       return <div>Loading...</div>
@@ -46,10 +46,10 @@ class ConfigurationCacheRules extends React.Component {
   }
 }
 
-ConfigurationCacheRules.displayName = 'ConfigurationCacheRules'
-ConfigurationCacheRules.propTypes = {
+ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
+ConfigurationPolicyRules.propTypes = {
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }
 
-module.exports = ConfigurationCacheRules
+module.exports = ConfigurationPolicyRules

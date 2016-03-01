@@ -2,8 +2,8 @@ import React from 'react'
 import {Modal, Row, Col} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ConfigurationCacheRules from './cache-rules'
-import ConfigurationCacheRuleEdit from './cache-rule-edit'
+import ConfigurationPolicyRules from './policy-rules'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ class ConfigurationPolicies extends React.Component {
             </a>
           </Col>
         </Row>
-        <ConfigurationCacheRules
+        <ConfigurationPolicyRules
           requestPolicies={config.get('request_policies')}
           responsePolicies={config.get('response_policies')}/>
         {this.state.activeRulePath ?
@@ -74,7 +74,7 @@ class ConfigurationPolicies extends React.Component {
               <p>Lorem ipsum dolor</p>
             </Modal.Header>
             <Modal.Body>
-              <ConfigurationCacheRuleEdit
+              <ConfigurationPolicyRuleEdit
                 rule={config.getIn(this.state.activeRulePath)}
                 rulePath={this.state.activeRulePath}
                 changeActiveRuleType={this.changeActiveRuleType}
