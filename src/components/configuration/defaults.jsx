@@ -3,7 +3,6 @@ import {Modal, Row, Col} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
-import ConfigurationCacheRules from './cache-rules'
 import ConfigurationCacheRuleEdit from './cache-rule-edit'
 import Toggle from '../toggle'
 
@@ -50,24 +49,16 @@ class ConfigurationDefaults extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let policyPath = Immutable.List([
+    const policyPath = Immutable.List([
       'default_policies']);
-    let policyPaths = {
-      honor_origin_cache_policies: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'honor_origin'),
-      honor_etags: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'check_etag'),
-      ignore_case: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_name')),
-            'ignore_case')
+    let controlIndex = config.getIn(policyPath)
+      .findIndex(policy => policy.get('set').has('cache_control'))
+    let nameIndex = config.getIn(policyPath)
+      .findIndex(policy => policy.get('set').has('cache_name'))
+    const policyPaths = {
+      honor_origin_cache_policies: policyPath.push(controlIndex, 'honor_origin'),
+      honor_etags: policyPath.push(controlIndex, 'check_etag'),
+      ignore_case: policyPath.push(nameIndex, 'ignore_case')
     };
     return (
       <form className="configuration-defaults" onSubmit={this.handleSave}>
