@@ -35,6 +35,42 @@ const fakePolicy = Immutable.fromJS({
                           ]
                         }
                       }
+                    },
+                    {
+                      "set": {
+                        "header 2": {
+                          "action": "set",
+                          "header": "Location",
+                          "value": [
+                            {
+                              "field": "text",
+                              "field_detail": "origin2.example.com/"
+                            },
+                            {
+                              "field": "group",
+                              "field_detail": "1"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "set": {
+                        "header 3": {
+                          "action": "set",
+                          "header": "Location",
+                          "value": [
+                            {
+                              "field": "text",
+                              "field_detail": "origin2.example.com/"
+                            },
+                            {
+                              "field": "group",
+                              "field_detail": "1"
+                            }
+                          ]
+                        }
+                      }
                     }
                   ]
                 ]
@@ -50,19 +86,24 @@ const fakePolicy = Immutable.fromJS({
 
 function parsePolicy(policy) {
   if(policy.has('match')) {
-    let {combinedMatches, combinedSets} = policy.get('match').get('cases').reduce((fields, policyCase) => {
-      const {matches, sets} = parsePolicy(policyCase.get(1).get(0))
-      fields.combinedMatches = fields.combinedMatches.concat(matches)
-      fields.combinedSets = fields.combinedSets.concat(sets)
+    let {matches, sets} = policy.get('match').get('cases').reduce((fields, policyCase) => {
+      const {matches, sets} = policyCase.get(1).reduce((combinations, subcase) => {
+        const {matches, sets} = parsePolicy(subcase)
+        combinations.matches = combinations.matches.concat(matches)
+        combinations.sets = combinations.sets.concat(sets)
+        return combinations
+      }, {matches: [], sets: []})
+      fields.matches = fields.matches.concat(matches)
+      fields.sets = fields.sets.concat(sets)
       return fields
-    }, {combinedMatches: [], combinedSets: []})
-    combinedMatches.push({
+    }, {matches: [], sets: []})
+    matches.push({
       field: policy.get('match').get('field'),
       values: policy.get('match').get('cases').map(matchCase => matchCase.get(0)).toJS()
     })
     return {
-      matches: combinedMatches,
-      sets: combinedSets
+      matches: matches,
+      sets: sets
     }
   }
   else if(policy.has('set')) {
@@ -83,6 +124,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.addAction = this.addAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
+    this.moveSet = this.moveSet.bind(this)
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
@@ -109,9 +151,16 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       console.log('delete the setting at '+index)
     }
   }
+  moveSet(index, newIndex) {
+    return e => {
+      e.preventDefault()
+      console.log('move setting '+index+' to '+newIndex)
+    }
+  }
   render() {
     const rule = fakePolicy
     const flattenedPolicy = parsePolicy(rule)
+    console.log(flattenedPolicy)
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.handleSave}>
 
@@ -178,10 +227,16 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         {flattenedPolicy.sets.map((set, i) => {
           return (
             <Row key={i} className="condition">
-              <Col xs={11}>
-                {set}
+              <Col xs={9}>
+                {i + 1} {set}
               </Col>
-              <Col xs={1} className="text-right">
+              <Col xs={3} className="text-right">
+                {i > 0 ?
+                  <a href="#" onClick={this.moveSet(i, i-1)}>Up</a>
+                  : ''}
+                {i < flattenedPolicy.sets.length - 1 ?
+                  <a href="#" onClick={this.moveSet(i, i+1)}>Down</a>
+                  : ''}
                 <a href="#" onClick={this.deleteSet(i)}>Del</a>
               </Col>
             </Row>
