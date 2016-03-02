@@ -4,7 +4,6 @@ import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
-import ConfigurationCacheRules from './cache-rules'
 import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 
