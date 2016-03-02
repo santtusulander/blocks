@@ -25,6 +25,17 @@ function parsePolicy(policy) {
 }
 
 class ConfigurationPolicyRules extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.activateRule = this.activateRule.bind(this)
+  }
+  activateRule(rulePath) {
+    return e => {
+      e.preventDefault()
+      this.props.activateRule(rulePath)
+    }
+  }
   render() {
     if(!this.props.requestPolicies) {
       return <div>Loading...</div>
@@ -50,7 +61,12 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.join(', ')}</td>
                   <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
-                  <td><a href="#">edit</a> <a href="#">delete</a></td>
+                  <td>
+                    <a href="#"
+                      onClick={this.activateRule(['request_policies', i])}>
+                      edit
+                    </a> <a href="#">delete</a>
+                  </td>
                 </tr>
               )
             })}
@@ -62,7 +78,12 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.join(', ')}</td>
                   <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
-                  <td><a href="#">edit</a> <a href="#">delete</a></td>
+                  <td>
+                    <a href="#"
+                      onClick={this.activateRule(['response_policies', i])}>
+                      edit
+                    </a> <a href="#">delete</a>
+                  </td>
                 </tr>
               )
             })}
@@ -75,6 +96,7 @@ class ConfigurationPolicyRules extends React.Component {
 
 ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
+  activateRule: React.PropTypes.func,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }

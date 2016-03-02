@@ -17,6 +17,7 @@ class ConfigurationPolicies extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
+    this.activateRule = this.activateRule.bind(this)
   }
   addRule(e) {
     e.preventDefault()
@@ -42,6 +43,9 @@ class ConfigurationPolicies extends React.Component {
     }
     this.setState({activeRulePath: rulePath})
   }
+  activateRule(path) {
+    this.setState({activeRulePath: path})
+  }
   render() {
     let config = this.props.config;
     if(!config || !config.size) {
@@ -65,7 +69,8 @@ class ConfigurationPolicies extends React.Component {
         </Row>
         <ConfigurationPolicyRules
           requestPolicies={config.get('request_policies')}
-          responsePolicies={config.get('response_policies')}/>
+          responsePolicies={config.get('response_policies')}
+          activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
           <Modal show={true}
             dialogClassName="configuration-sidebar"

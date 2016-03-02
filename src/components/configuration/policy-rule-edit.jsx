@@ -158,8 +158,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   render() {
-    const rule = fakePolicy
-    const flattenedPolicy = parsePolicy(rule)
+    const flattenedPolicy = parsePolicy(this.props.rule)
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.handleSave}>
 
