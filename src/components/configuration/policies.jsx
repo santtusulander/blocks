@@ -72,11 +72,12 @@ class ConfigurationPolicies extends React.Component {
             backdrop={false}
             onHide={this.clearActiveRule}>
             <Modal.Header>
-              <h1>Add Cache Rule</h1>
+              <h1>Policy Rule</h1>
               <p>Lorem ipsum dolor</p>
             </Modal.Header>
             <Modal.Body>
               <ConfigurationPolicyRuleEdit
+                changeValue={this.props.changeValue}
                 rule={config.getIn(this.state.activeRulePath)}
                 rulePath={this.state.activeRulePath}
                 changeActiveRuleType={this.changeActiveRuleType}

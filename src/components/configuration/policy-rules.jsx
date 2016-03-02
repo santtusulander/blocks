@@ -46,9 +46,9 @@ class ConfigurationPolicyRules extends React.Component {
               const {matches, sets} = parsePolicy(policy)
               return (
                 <tr key={i}>
-                  <td>PLACEHOLDER</td>
+                  <td>NEEDS_API</td>
                   <td>{matches.join(', ')}</td>
-                  <td>PLACEHOLDER</td>
+                  <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
                   <td><a href="#">edit</a> <a href="#">delete</a></td>
                 </tr>
@@ -58,9 +58,9 @@ class ConfigurationPolicyRules extends React.Component {
               const {matches, sets} = parsePolicy(policy)
               return (
                 <tr key={i}>
-                  <td>PLACEHOLDER</td>
+                  <td>NEEDS_API</td>
                   <td>{matches.join(', ')}</td>
-                  <td>PLACEHOLDER</td>
+                  <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
                   <td><a href="#">edit</a> <a href="#">delete</a></td>
                 </tr>
