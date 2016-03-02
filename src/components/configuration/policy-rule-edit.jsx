@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Input, Row, Col, ButtonToolbar} from 'react-bootstrap'
+import {Button, Input, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import IconAdd from '../icons/icon-add.jsx'
@@ -175,80 +175,85 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_code', 'Response Code'],
           ['response_header', 'Response Header']
         ] */}
+        <Modal.Header>
+          <h1>Add Policy</h1>
+          <p>Lorem ipsum dolor</p>
+        </Modal.Header>
+        <Modal.Body>
+          <Input type="text" label="Rule Name" id="configure__edge__add-cache-rule__rule-name"
+            onChange={this.handleChange(['path'])}/>
 
-        <Input type="text" label="Rule Name" id="configure__edge__add-cache-rule__rule-name"
-          onChange={this.handleChange(['path'])}/>
+          <Row className="condition-header">
+            <Col sm={8}>
+              <h3>Match Conditions</h3>
+            </Col>
+            <Col sm={4} className="text-right">
+              <Button bsStyle="primary" className="btn-icon btn-add-new"
+                onClick={this.addMatch}>
+                <IconAdd />
+              </Button>
+            </Col>
+          </Row>
+          {flattenedPolicy.matches.map((match, i) => {
+            let values = match.values[0]
+            if(match.values.length > 1) {
+              values = `${values} and ${match.values.length - 1} others`
+            }
+            return (
+              <Row key={i} className="condition">
+                <Col xs={8}>
+                  {match.field}: {match.values.join(', ')}
+                </Col>
+                <Col xs={3}>
+                  NEEDS_API
+                </Col>
+                <Col xs={1} className="text-right">
+                  <a href="#" onClick={this.deleteMatch(i)}>Del</a>
+                </Col>
+              </Row>
+            )
+          })}
 
-        <Row className="condition-header">
-          <Col sm={8}>
-            <h3>Match Conditions</h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <Button bsStyle="primary" className="btn-icon btn-add-new"
-              onClick={this.addMatch}>
-              <IconAdd />
+
+          <Row className="condition-header">
+            <Col sm={8}>
+              <h3>Actions</h3>
+            </Col>
+            <Col sm={4} className="text-right">
+              <Button bsStyle="primary" className="btn-icon btn-add-new"
+                onClick={this.addAction}>
+                <IconAdd />
+              </Button>
+            </Col>
+          </Row>
+          {flattenedPolicy.sets.map((set, i) => {
+            return (
+              <Row key={i} className="condition">
+                <Col xs={9}>
+                  {i + 1} {set}
+                </Col>
+                <Col xs={3} className="text-right">
+                  {i > 0 ?
+                    <a href="#" onClick={this.moveSet(i, i-1)}>Up</a>
+                    : ''}
+                  {i < flattenedPolicy.sets.length - 1 ?
+                    <a href="#" onClick={this.moveSet(i, i+1)}>Down</a>
+                    : ''}
+                  <a href="#" onClick={this.deleteSet(i)}>Del</a>
+                </Col>
+              </Row>
+            )
+          })}
+
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="primary" onClick={this.props.hideAction}>
+              Cancel
             </Button>
-          </Col>
-        </Row>
-        {flattenedPolicy.matches.map((match, i) => {
-          let values = match.values[0]
-          if(match.values.length > 1) {
-            values = `${values} and ${match.values.length - 1} others`
-          }
-          return (
-            <Row key={i} className="condition">
-              <Col xs={8}>
-                {match.field}: {match.values.join(', ')}
-              </Col>
-              <Col xs={3}>
-                NEEDS_API
-              </Col>
-              <Col xs={1} className="text-right">
-                <a href="#" onClick={this.deleteMatch(i)}>Del</a>
-              </Col>
-            </Row>
-          )
-        })}
-
-
-        <Row className="condition-header">
-          <Col sm={8}>
-            <h3>Actions</h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <Button bsStyle="primary" className="btn-icon btn-add-new"
-              onClick={this.addAction}>
-              <IconAdd />
+            <Button type="submit" bsStyle="primary">
+              Add
             </Button>
-          </Col>
-        </Row>
-        {flattenedPolicy.sets.map((set, i) => {
-          return (
-            <Row key={i} className="condition">
-              <Col xs={9}>
-                {i + 1} {set}
-              </Col>
-              <Col xs={3} className="text-right">
-                {i > 0 ?
-                  <a href="#" onClick={this.moveSet(i, i-1)}>Up</a>
-                  : ''}
-                {i < flattenedPolicy.sets.length - 1 ?
-                  <a href="#" onClick={this.moveSet(i, i+1)}>Down</a>
-                  : ''}
-                <a href="#" onClick={this.deleteSet(i)}>Del</a>
-              </Col>
-            </Row>
-          )
-        })}
-
-        <ButtonToolbar className="text-right">
-          <Button bsStyle="primary" onClick={this.props.hideAction}>
-            Cancel
-          </Button>
-          <Button type="submit" bsStyle="primary">
-            Add
-          </Button>
-        </ButtonToolbar>
+          </ButtonToolbar>
+        </Modal.Body>
       </form>
     )
   }

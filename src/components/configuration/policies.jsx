@@ -5,16 +5,21 @@ import Immutable from 'immutable'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
+import ConfigurationSidebar from './sidebar'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {activeRulePath: null}
+    this.state = {
+      activeRulePath: null,
+      rightColVisible: true
+    }
 
     this.addRule = this.addRule.bind(this)
     this.clearActiveRule = this.clearActiveRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
     this.activateRule = this.activateRule.bind(this)
@@ -28,6 +33,11 @@ class ConfigurationPolicies extends React.Component {
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
+  }
+  handleRightColClose() {
+    this.setState({
+      rightColVisible: false
+    })
   }
   handleSave(e) {
     e.preventDefault()
@@ -53,6 +63,17 @@ class ConfigurationPolicies extends React.Component {
         <div className="container">Loading...</div>
       )
     }
+    let modalRightColContent = (
+      <div>
+        <Modal.Header>
+          <h1>Choose Condition</h1>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Body>
+      </div>
+    )
     return (
       <div className="configuration-policies">
 
@@ -72,24 +93,18 @@ class ConfigurationPolicies extends React.Component {
           responsePolicies={config.get('response_policies')}
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
-          <Modal show={true}
-            dialogClassName="configuration-sidebar"
-            backdrop={false}
+          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
+            rightColContent={modalRightColContent}
+            handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}>
-            <Modal.Header>
-              <h1>Policy Rule</h1>
-              <p>Lorem ipsum dolor</p>
-            </Modal.Header>
-            <Modal.Body>
-              <ConfigurationPolicyRuleEdit
-                changeValue={this.props.changeValue}
-                rule={config.getIn(this.state.activeRulePath)}
-                rulePath={this.state.activeRulePath}
-                changeActiveRuleType={this.changeActiveRuleType}
-                hideAction={this.clearActiveRule}/>
-            </Modal.Body>
-          </Modal>
-          : ''}
+            <ConfigurationPolicyRuleEdit
+              changeValue={this.props.changeValue}
+              rule={config.getIn(this.state.activeRulePath)}
+              rulePath={this.state.activeRulePath}
+              changeActiveRuleType={this.changeActiveRuleType}
+              hideAction={this.clearActiveRule}/>
+          </ConfigurationSidebar>
+        : ''}
       </div>
     )
   }

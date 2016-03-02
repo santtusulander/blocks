@@ -329,7 +329,6 @@ export class Groups extends React.Component {
             {/* Not in 0.5
             activeGroup ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                backdrop={false}
                 onHide={this.toggleActiveGroup(this.props.activeGroup.get('group_id'))}>
                 <Modal.Header>
                   <h1>Edit Group</h1>

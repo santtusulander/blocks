@@ -10,7 +10,7 @@
   }
 
   .modal-open & {
-    filter: blur(15px);
+    filter: blur(20px);
     // Enable hardware acceleration
     transform: translate3d(0, 0, 0);
   }

@@ -4,17 +4,23 @@ import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
+import ConfigurationCacheRules from './cache-rules'
+import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 
 class ConfigurationDefaults extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {activeRulePath: null}
+    this.state = {
+      activeRulePath: null,
+      rightColVisible: true
+    }
 
     this.addRule = this.addRule.bind(this)
     this.clearActiveRule = this.clearActiveRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
@@ -27,6 +33,11 @@ class ConfigurationDefaults extends React.Component {
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
+  }
+  handleRightColClose() {
+    this.setState({
+      rightColVisible: false
+    })
   }
   handleSave(e) {
     e.preventDefault()
@@ -60,6 +71,17 @@ class ConfigurationDefaults extends React.Component {
       honor_etags: policyPath.push(controlIndex, 'check_etag'),
       ignore_case: policyPath.push(nameIndex, 'ignore_case')
     };
+    let modalRightColContent = (
+      <div>
+        <Modal.Header>
+          <h1>Choose Condition</h1>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Body>
+      </div>
+    )
     return (
       <form className="configuration-defaults" onSubmit={this.handleSave}>
 
@@ -108,23 +130,17 @@ class ConfigurationDefaults extends React.Component {
         <ConfigurationDefaultPolicies/>
 
         {this.state.activeRulePath ?
-          <Modal show={true}
-            dialogClassName="configuration-sidebar"
-            backdrop={false}
+          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
+            rightColContent={modalRightColContent}
+            handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}>
-            <Modal.Header>
-              <h1>Add Cache Rule</h1>
-              <p>Lorem ipsum dolor</p>
-            </Modal.Header>
-            <Modal.Body>
-              <ConfigurationPolicyRuleEdit
-                rule={config.getIn(this.state.activeRulePath)}
-                rulePath={this.state.activeRulePath}
-                changeActiveRuleType={this.changeActiveRuleType}
-                hideAction={this.clearActiveRule}/>
-            </Modal.Body>
-          </Modal>
-          : ''}
+            <ConfigurationPolicyRuleEdit
+              rule={config.getIn(this.state.activeRulePath)}
+              rulePath={this.state.activeRulePath}
+              changeActiveRuleType={this.changeActiveRuleType}
+              hideAction={this.clearActiveRule}/>
+          </ConfigurationSidebar>
+        : ''}
       </form>
     )
   }
