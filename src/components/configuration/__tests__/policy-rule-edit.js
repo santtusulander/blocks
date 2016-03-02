@@ -18,8 +18,8 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit changeValue={changeValue} />
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'input');
-    inputs[1].value = "new"
-    TestUtils.Simulate.change(inputs[1])
+    inputs[0].value = "new"
+    TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['path'])
     expect(changeValue.mock.calls[0][1]).toBe('new')
   });
