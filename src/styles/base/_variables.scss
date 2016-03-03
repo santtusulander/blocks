@@ -6,7 +6,7 @@
 // ===========
 
 $screen-md-min: 1200px;
-$screen-lg-min: 1680px;
+$screen-lg-min: 1690px;
 $screen-xl-min: 2000px;
 
 @mixin sm {
@@ -64,6 +64,7 @@ $md-header-btn-height: 40px;
 
 $form-group-padding: 25px;
 $md-form-group-padding: 15px;
+$form-label-margin: 15px;
 
 
 // Layout

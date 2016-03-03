@@ -1,4 +1,18 @@
 .configuration-policy-rule-edit {
+  width: 100%;
+
+  .right-col-visible & {
+    width: calc(100% - #{$sidebar-right-col-width});
+
+    @include md {
+      width: calc(100% - #{$md-sidebar-right-col-width});
+    }
+
+    @include sm {
+      width: calc(100% - #{$sm-sidebar-right-col-width});
+    }
+  }
+
   .condition {
     padding: 10px;
     margin-bottom: 5px;
