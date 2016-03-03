@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
@@ -229,7 +230,9 @@ class Cors extends React.Component {
 
 Cors.displayName = 'Cors'
 Cors.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  path: React.PropTypes.array,
+  set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Cors

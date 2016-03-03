@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Input, Modal, Row } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
@@ -32,8 +33,9 @@ class FileExtension extends React.Component {
           <Input type="text" label="File extension"
             placeholder="png, gif, jpg"
             id="matches_file-extension"
+            value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'file_extension_value']
+              this.props.path.concat(['cases', 0, 0])
             )}/>
 
           <Input type="checkbox" label="Ignore case"
@@ -63,7 +65,9 @@ class FileExtension extends React.Component {
 
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = FileExtension

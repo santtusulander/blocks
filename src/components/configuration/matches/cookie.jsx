@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Modal, Panel } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -42,8 +43,9 @@ class Cookie extends React.Component {
           <Input type="text" label="Name"
             placeholder="tracking"
             id="matches_cookie"
+            value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'cookie_value']
+              this.props.path.concat(['cases', 0, 0])
             )}/>
 
           <hr />
@@ -80,7 +82,9 @@ class Cookie extends React.Component {
 
 Cookie.displayName = 'Cookie'
 Cookie.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = Cookie

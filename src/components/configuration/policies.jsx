@@ -118,6 +118,103 @@ class ConfigurationPolicies extends React.Component {
         <div className="container">Loading...</div>
       )
     }
+    let activeEditForm = null
+    if(this.state.activeMatchPath) {
+      const activeMatch = this.props.config.getIn(this.state.activeMatchPath)
+      switch(activeMatch.get('field')) {
+        case 'response_header':
+          activeEditForm = (
+            <ConfigurationMatchHeader
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_path':
+          activeEditForm = (
+            <ConfigurationMatchDirectoryPath
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_host':
+          activeEditForm = (
+            <ConfigurationMatchHostname
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_cookie':
+          activeEditForm = (
+            <ConfigurationMatchCookie
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+
+
+            // <ConfigurationMatchMimeType
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchFileExtension
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchFileName
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchQueryString
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchIpAddress
+            //   changeValue={this.props.changeValue}/>
+      }
+    }
+    if(this.state.activeSetPath) {
+      const activeSet = this.props.config.getIn(this.state.activeSetPath)
+      switch(this.state.activeSetPath.slice(-1)[0]) {
+        case 'cache_name':
+          activeEditForm = (
+            <ConfigurationActionCacheKeyQueryString
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'cache_control':
+          activeEditForm = (
+            <ConfigurationActionCache
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'header':
+          activeEditForm = (
+            <ConfigurationActionHeader
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+            // <ConfigurationActionRedirection
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionOriginHostname
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionCompression
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionPath
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionQueryString
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionRemoveVary
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionAllowBlock
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionPostSupport
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionCors
+            //   changeValue={this.props.changeValue}/>
+      }
+    }
     return (
       <div className="configuration-policies">
 
@@ -138,54 +235,10 @@ class ConfigurationPolicies extends React.Component {
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
           <ConfigurationSidebar
-            rightColVisible={this.state.activeMatchPath || this.state.activeSetPath}
+            rightColVisible={activeEditForm}
             handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}
-            rightColContent={
-              // <ConfigurationMatchHostname
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchDirectoryPath
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchMimeType
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchFileExtension
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchFileName
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchQueryString
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchHeader
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchCookie
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationMatchIpAddress
-              //   changeValue={this.props.changeValue}/>
-
-              // <ConfigurationActionCache
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionCacheKeyQueryString
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionRedirection
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionOriginHostname
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionCompression
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionPath
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionQueryString
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionHeader
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionRemoveVary
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionAllowBlock
-              //   changeValue={this.props.changeValue}/>
-              // <ConfigurationActionPostSupport
-              //   changeValue={this.props.changeValue}/>
-              <ConfigurationActionCors
-                changeValue={this.props.changeValue}/>
-            }>
+            rightColContent={activeEditForm}>
             <ConfigurationPolicyRuleEdit
               activateMatch={this.activateMatch}
               activateSet={this.activateSet}

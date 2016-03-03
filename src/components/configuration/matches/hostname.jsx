@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Input, Modal, Row } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
@@ -32,8 +33,9 @@ class Hostname extends React.Component {
           <Input type="text" label="Hostname"
             placeholder="www.foobar.com"
             id="matches_hostname"
+            value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'hostname_value']
+              this.props.path.concat(['cases', 0, 0])
             )}/>
 
           <hr />
@@ -58,7 +60,9 @@ class Hostname extends React.Component {
 
 Hostname.displayName = 'Hostname'
 Hostname.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = Hostname
