@@ -1,0 +1,16 @@
+.configuration-policy-rule-edit {
+  .condition {
+    padding: 10px;
+    margin-bottom: 5px;
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background-color: rgba($white, 0.1);
+    }
+  }
+
+  .condition-header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+}

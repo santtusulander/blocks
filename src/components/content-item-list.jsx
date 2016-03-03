@@ -72,15 +72,15 @@ class ContentItemList extends React.Component {
         <Link className="content-item-list-link" to={this.props.linkTo}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm">
-              <p>Peak <b className="pull-right">10.8 Gbps</b></p>
-              <p>Lowest <b className="pull-right">5.2 Gbps</b></p>
-              <p>Average <b className="pull-right">8.0 Gbps</b></p>
+              <p>Peak <b className="pull-right">{this.props.maxTransfer}</b></p>
+              <p>Lowest <b className="pull-right">{this.props.minTransfer}</b></p>
+              <p>Average <b className="pull-right">{this.props.avgTransfer}</b></p>
             </div>
 
             <div className="content-item-list-section section-lg">
               <Row>
                 <Col xs={6}>
-                  <h1>95<span className="heading-suffix"> %</span></h1>
+                  <h1>{this.props.cacheHitRate}<span className="heading-suffix"> %</span></h1>
                   <p>Avg. Cache Hit Rate</p>
                 </Col>
                 <Col xs={6}>
@@ -109,11 +109,15 @@ class ContentItemList extends React.Component {
 
 ContentItemList.displayName = 'ContentItemList'
 ContentItemList.propTypes = {
+  avgTransfer: React.PropTypes.string,
+  cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
+  maxTransfer: React.PropTypes.string,
+  minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
   toggleActive: React.PropTypes.func

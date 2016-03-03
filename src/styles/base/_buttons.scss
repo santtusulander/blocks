@@ -447,12 +447,16 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $white;
       background-color: $pale-blue;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -563,18 +567,18 @@
     &:hover,
     &:active,
     &.active {
-      color: $lt-button-color;
+      color: $white;
       background-color: rgba($white, 0.2);
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled,
     &:active:enabled,
     &.active:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -647,16 +651,16 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $white;
       background-color: $btn-success-bg;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -664,16 +668,16 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $white;
       background-color: $pale-blue;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 

@@ -198,7 +198,7 @@ export class Accounts extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="success" className="btn-icon">
+              <Button bsStyle="primary" className="btn-icon">
                 <Link to={`/analysis/`}>
                   <IconChart/>
                 </Link>
@@ -266,7 +266,6 @@ export class Accounts extends React.Component {
 
             {activeAccount ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                backdrop={false}
                 onHide={this.toggleActiveAccount(activeAccount.get('account_id'))}>
                 <Modal.Header>
                   <h1>Edit Account</h1>

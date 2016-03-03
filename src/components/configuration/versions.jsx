@@ -58,7 +58,7 @@ export class ConfigurationVersions extends React.Component {
           <p className="text-sm">{highestAttainment}</p>
           <div className="sidebar-actions">
             <ButtonToolbar>
-              <Button bsStyle="success" className="btn-icon add-btn"
+              <Button bsStyle="primary" className="btn-icon add-btn"
                 onClick={this.props.addVersion}>
                 <IconAdd width="30" height="30" />
               </Button>
