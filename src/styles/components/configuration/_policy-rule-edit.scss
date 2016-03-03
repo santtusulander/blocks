@@ -1,16 +1,33 @@
 .configuration-policy-rule-edit {
+
+  .conditions {
+    margin-bottom: $bar-height;
+
+    @include md {
+      margin-bottom: $md-bar-height;
+    }
+  }
+
   .condition {
-    padding: 10px;
-    margin-bottom: 5px;
+    min-height: $bar-height;
+    padding: 10px 0 0 15px;
+    margin-bottom: 10px;
+
+    @include md {
+      min-height: $md-bar-height;
+    }
 
     .dark-theme & {
       color: $dt-text-color;
       background-color: rgba($white, 0.1);
     }
-  }
 
-  .condition-header {
-    margin-top: 20px;
-    margin-bottom: 10px;
+    p {
+      margin-top: $btn-height / 4;
+
+      @include md {
+        margin-top: $md-btn-height / 4;
+      }
+    }
   }
 }
