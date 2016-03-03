@@ -47,6 +47,12 @@ function parsePolicy(policy, path) {
       })
     }
   }
+  else {
+    return {
+      matches: [],
+      sets: []
+    }
+  }
 }
 
 class ConfigurationPolicyRuleEdit extends React.Component {

@@ -1,5 +1,6 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import Immutable from 'immutable'
 
 jest.autoMockOff()
 const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
@@ -7,7 +8,7 @@ const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
 describe('ConfigurationPolicyRuleEdit', () => {
   it('should exist', () => {
     let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit />
+      <ConfigurationPolicyRuleEdit rule={Immutable.Map()} />
     );
     expect(TestUtils.isCompositeComponent(policyRule)).toBeTruthy();
   });
@@ -15,7 +16,8 @@ describe('ConfigurationPolicyRuleEdit', () => {
   it('should change values', () => {
     const changeValue = jest.genMockFunction()
     let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit changeValue={changeValue} />
+      <ConfigurationPolicyRuleEdit changeValue={changeValue}
+        rule={Immutable.Map()} />
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'input');
     inputs[0].value = "new"
@@ -27,7 +29,8 @@ describe('ConfigurationPolicyRuleEdit', () => {
   it('should save changes', () => {
     const saveChanges = jest.genMockFunction()
     let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit saveChanges={saveChanges}/>
+      <ConfigurationPolicyRuleEdit saveChanges={saveChanges}
+        rule={Immutable.Map()}/>
     );
     let form = TestUtils.findRenderedDOMComponentWithTag(policyRule, 'form');
     TestUtils.Simulate.submit(form)
