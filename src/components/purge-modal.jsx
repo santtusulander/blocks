@@ -39,7 +39,6 @@ class PurgeModal extends React.Component {
     const showPropertySelect = this.props.availableProperties && this.props.changeProperty
     return (
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
-        backdrop={false}
         onHide={this.props.hideAction}>
         <Modal.Header>
           <h1>Purge Content</h1>

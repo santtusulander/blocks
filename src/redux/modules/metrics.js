@@ -1,6 +1,5 @@
-import {createAction} from 'redux-actions'
+import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
 import {analyticsBase} from '../util'
@@ -15,11 +14,19 @@ const emptyMetrics = Immutable.Map({
 
 const qsBuilder = ({
   account,
-  group
+  group,
+  startDate,
+  endDate
 }) => {
   let qs = `?account=${account}`
   if(group) {
     qs += `&group=${group}`
+  }
+  if(startDate) {
+    qs += `&start=${startDate}`
+  }
+  if(endDate) {
+    qs += `&end=${endDate}`
   }
   return qs
 }
@@ -29,9 +36,20 @@ const qsBuilder = ({
 export default handleActions({
   METRICS_FETCHED: {
     next(state, action) {
+      const data = action.payload.data.map(datapoint => {
+        datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
+          traffic.timestamp = new Date(traffic.timestamp * 1000)
+          return traffic;
+        })
+        datapoint.traffic = datapoint.traffic.map(traffic => {
+          traffic.timestamp = new Date(traffic.timestamp * 1000)
+          return traffic;
+        })
+        return datapoint;
+      })
       return state.merge({
         fetching: false,
-        metrics: Immutable.fromJS(action.payload.data)
+        metrics: Immutable.fromJS(data)
       })
     },
     throw(state) {

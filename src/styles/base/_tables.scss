@@ -29,12 +29,12 @@
 
       > th,
       > td {
-        padding: 0 ($btn-height / 2);
+        padding: 5px ($btn-height / 2);
         vertical-align: middle;
         border: 0;
 
         @include md {
-          padding: 0 ($md-btn-height / 2);
+          padding: 5px ($md-btn-height / 2);
         }
       }
 
