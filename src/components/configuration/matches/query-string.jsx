@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Modal, Panel } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Select from '../../select'
 
@@ -46,8 +47,9 @@ class QueryString extends React.Component {
           <Input type="text" label="Name"
             placeholder="sessionID"
             id="matches_query-string"
+            value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'query_string_value']
+              this.props.path.concat(['cases', 0, 0])
             )}/>
 
           <hr />
@@ -86,7 +88,9 @@ class QueryString extends React.Component {
 
 QueryString.displayName = 'QueryString'
 QueryString.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = QueryString
