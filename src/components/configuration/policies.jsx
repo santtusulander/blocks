@@ -77,7 +77,7 @@ class ConfigurationPolicies extends React.Component {
     return (
       <div className="configuration-policies">
 
-        <Row>
+        <Row className="header-btn-row">
           <Col sm={8}>
             <h3>Policy Rules</h3>
           </Col>
