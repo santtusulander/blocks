@@ -1,11 +1,34 @@
 import React from 'react'
-import {Modal, Row, Col, Button} from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
+
+import ConfigurationMatchHostname from './matches/hostname'
+import ConfigurationMatchDirectoryPath from './matches/directory-path'
+import ConfigurationMatchMimeType from './matches/mime-type'
+import ConfigurationMatchFileExtension from './matches/file-extension'
+import ConfigurationMatchFileName from './matches/file-name'
+import ConfigurationMatchQueryString from './matches/query-string'
+import ConfigurationMatchHeader from './matches/header'
+import ConfigurationMatchCookie from './matches/cookie'
+import ConfigurationMatchIpAddress from './matches/ip-address'
+
+import ConfigurationActionCache from './actions/cache'
+import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationActionRedirection from './actions/redirection'
+import ConfigurationActionOriginHostname from './actions/origin-hostname'
+import ConfigurationActionCompression from './actions/compression'
+import ConfigurationActionPath from './actions/path'
+import ConfigurationActionQueryString from './actions/query-string'
+import ConfigurationActionHeader from './actions/header'
+import ConfigurationActionRemoveVary from './actions/remove-vary'
+import ConfigurationActionAllowBlock from './actions/allow-block'
+import ConfigurationActionPostSupport from './actions/post-support'
+import ConfigurationActionCors from './actions/cors'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -63,17 +86,6 @@ class ConfigurationPolicies extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let modalRightColContent = (
-      <div>
-        <Modal.Header>
-          <h1>Choose Condition</h1>
-          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
-        </Modal.Body>
-      </div>
-    )
     return (
       <div className="configuration-policies">
 
@@ -93,10 +105,55 @@ class ConfigurationPolicies extends React.Component {
           responsePolicies={config.get('response_policies')}
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
-          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
-            rightColContent={modalRightColContent}
+          <ConfigurationSidebar
+            rightColVisible={this.state.rightColVisible}
             handleRightColClose={this.handleRightColClose}
-            onHide={this.clearActiveRule}>
+            onHide={this.clearActiveRule}
+            rightColContent={
+              // <ConfigurationMatchHostname
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchDirectoryPath
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchMimeType
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchFileExtension
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchFileName
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchQueryString
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchHeader
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchCookie
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationMatchIpAddress
+              //   changeValue={this.props.changeValue}/>
+
+              // <ConfigurationActionCache
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionCacheKeyQueryString
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionRedirection
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionOriginHostname
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionCompression
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionPath
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionQueryString
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionHeader
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionRemoveVary
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionAllowBlock
+              //   changeValue={this.props.changeValue}/>
+              // <ConfigurationActionPostSupport
+              //   changeValue={this.props.changeValue}/>
+              <ConfigurationActionCors
+                changeValue={this.props.changeValue}/>
+            }>
             <ConfigurationPolicyRuleEdit
               changeValue={this.props.changeValue}
               rule={config.getIn(this.state.activeRulePath)}
@@ -105,6 +162,7 @@ class ConfigurationPolicies extends React.Component {
               hideAction={this.clearActiveRule}/>
           </ConfigurationSidebar>
         : ''}
+
       </div>
     )
   }
