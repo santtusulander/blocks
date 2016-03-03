@@ -90,7 +90,7 @@ class ConfigurationDefaults extends React.Component {
 
 
         { /* Honor Origin Cache Control */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Honor Origin Cache Control
           </Col>
@@ -102,7 +102,7 @@ class ConfigurationDefaults extends React.Component {
         </Row>
 
         { /* Ignore case from origin */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Ignore case from origin
           </Col>
@@ -113,7 +113,7 @@ class ConfigurationDefaults extends React.Component {
         </Row>
 
         { /* Enable e-Tag support */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Enable e-Tag support
           </Col>

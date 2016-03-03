@@ -4,8 +4,8 @@
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
 label {
-  margin-bottom: 15px;
-  font-weight: normal;
+  margin-bottom: $form-label-margin;
+  font-weight: bold;
 }
 
 .form-control {
@@ -73,37 +73,6 @@ label {
 
 .form-groups {
   position: relative;
-
-  .input-connector {
-    $input-connector-width: 20px;
-    $md-input-connector-width: 15px;
-
-    position: absolute;
-    top: $bar-height / 2;
-    bottom: ($bar-height / 2) + $form-group-padding;
-    left: ($grid-gutter-width / 4) - $input-connector-width;
-    width: $input-connector-width;
-    border: 1px solid;
-    border-right: 0;
-    opacity: 0;
-    transition: opacity 250ms ease;
-
-    @include md {
-      top: $md-bar-height / 2;
-      bottom: ($md-bar-height / 2) + $md-form-group-padding;
-      left: ($grid-gutter-width / 4) - $md-input-connector-width;
-      width: $md-input-connector-width;
-    }
-
-    &.show {
-      opacity: 1;
-    }
-
-    .dark-theme &,
-    .light-theme & {
-      border-color: rgba($black, 0.2);
-    }
-  }
 }
 
 .form-group {
@@ -117,6 +86,10 @@ label {
   .header & {
     padding-bottom: 0;
     margin-bottom: 0;
+  }
+
+  .form-group {
+    padding-bottom: 0;
   }
 }
 

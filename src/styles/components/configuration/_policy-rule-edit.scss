@@ -1,10 +1,23 @@
 .configuration-policy-rule-edit {
 
   .conditions {
+    width: 100%;
     margin-bottom: $bar-height;
 
     @include md {
       margin-bottom: $md-bar-height;
+    }
+  }
+
+  .right-col-visible & {
+    width: calc(100% - #{$sidebar-right-col-width});
+
+    @include md {
+      width: calc(100% - #{$md-sidebar-right-col-width});
+    }
+
+    @include sm {
+      width: calc(100% - #{$sm-sidebar-right-col-width});
     }
   }
 
