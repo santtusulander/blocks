@@ -44,6 +44,12 @@
         @include md {
           height: $md-bar-height;
         }
+
+        &.right-btns {
+          padding-right: 10px;
+          text-align: right;
+          white-space: nowrap;
+        }
       }
 
       > th {

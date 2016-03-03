@@ -1,6 +1,8 @@
 import React from 'react'
-import {Table} from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import Immutable from 'immutable'
+
+import IconTrash from '../icons/icon-trash.jsx'
 
 function parsePolicy(policy) {
   if(policy.has('match')) {
@@ -61,11 +63,15 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.join(', ')}</td>
                   <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
-                  <td>
-                    <a href="#"
+                  <td className="right-btns">
+                    <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['request_policies', i])}>
-                      edit
-                    </a> <a href="#">delete</a>
+                      EDIT
+                    </Button>
+                    <Button bsStyle="primary"
+                      className="btn-link btn-icon">
+                      <IconTrash/>
+                    </Button>
                   </td>
                 </tr>
               )
@@ -78,11 +84,15 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.join(', ')}</td>
                   <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
-                  <td>
-                    <a href="#"
+                  <td className="right-btns">
+                    <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['response_policies', i])}>
-                      edit
-                    </a> <a href="#">delete</a>
+                      EDIT
+                    </Button>
+                    <Button bsStyle="primary"
+                      className="btn-link btn-icon">
+                      <IconTrash/>
+                    </Button>
                   </td>
                 </tr>
               )
