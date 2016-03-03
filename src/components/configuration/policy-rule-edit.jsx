@@ -142,8 +142,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             if(match.values.length > 1) {
               values = `${values} and ${match.values.length - 1} others`
             }
+            let active = false
+            if(Immutable.fromJS(match.path).equals(Immutable.fromJS(this.props.activeMatchPath))) {
+              active = true
+            }
             return (
-              <Row key={i} className="condition"
+              <Row key={i}
+                className={active ? 'condition active' : 'condition'}
                 onClick={this.activateMatch(match.path)}>
                 <Col xs={8}>
                   {match.field}: {match.values.join(', ')}
@@ -171,8 +176,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
           </Row>
           {flattenedPolicy.sets.map((set, i) => {
+            let active = false
+            if(Immutable.fromJS(set.path).equals(Immutable.fromJS(this.props.activeSetPath))) {
+              active = true
+            }
             return (
-              <Row key={i} className="condition"
+              <Row key={i}
+                className={active ? 'condition active' : 'condition'}
                 onClick={this.activateSet(set.path)}>
                 <Col xs={9}>
                   {i + 1} {set.setkey}
@@ -208,8 +218,8 @@ ConfigurationPolicyRuleEdit.displayName = 'ConfigurationPolicyRuleEdit'
 ConfigurationPolicyRuleEdit.propTypes = {
   activateMatch: React.PropTypes.func,
   activateSet: React.PropTypes.func,
-  activeMatch: React.PropTypes.array,
-  activeSet: React.PropTypes.array,
+  activeMatchPath: React.PropTypes.array,
+  activeSetPath: React.PropTypes.array,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   hideAction: React.PropTypes.func,

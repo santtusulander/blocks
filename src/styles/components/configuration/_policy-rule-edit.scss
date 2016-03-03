@@ -2,10 +2,17 @@
   .condition {
     padding: 10px;
     margin-bottom: 5px;
+    cursor: pointer;
 
     .dark-theme & {
       color: $dt-text-color;
       background-color: rgba($white, 0.1);
+    }
+
+    &.active {
+      .dark-theme & {
+        background-color: rgba($white, 0.4);
+      }
     }
   }
 

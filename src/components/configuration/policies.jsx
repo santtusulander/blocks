@@ -47,7 +47,8 @@ class ConfigurationPolicies extends React.Component {
   }
   handleRightColClose() {
     this.setState({
-      rightColVisible: false
+      activeMatchPath: null,
+      activeSetPath: null
     })
   }
   handleSave(e) {
@@ -132,6 +133,8 @@ class ConfigurationPolicies extends React.Component {
             <ConfigurationPolicyRuleEdit
               activateMatch={this.activateMatch}
               activateSet={this.activateSet}
+              activeMatchPath={this.state.activeMatchPath}
+              activeSetPath={this.state.activeSetPath}
               changeValue={this.props.changeValue}
               rule={config.getIn(this.state.activeRulePath)}
               rulePath={this.state.activeRulePath}
