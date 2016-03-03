@@ -167,11 +167,34 @@ class ConfigurationPolicies extends React.Component {
             // <ConfigurationMatchIpAddress
             //   changeValue={this.props.changeValue}/>
       }
-
-            // <ConfigurationActionCache
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionCacheKeyQueryString
-            //   changeValue={this.props.changeValue}/>
+    }
+    if(this.state.activeSetPath) {
+      const activeSet = this.props.config.getIn(this.state.activeSetPath)
+      switch(this.state.activeSetPath.slice(-1)[0]) {
+        case 'cache_name':
+          activeEditForm = (
+            <ConfigurationActionCacheKeyQueryString
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'cache_control':
+          activeEditForm = (
+            <ConfigurationActionCache
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'header':
+          activeEditForm = (
+            <ConfigurationActionHeader
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
             // <ConfigurationActionRedirection
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionOriginHostname
@@ -182,8 +205,6 @@ class ConfigurationPolicies extends React.Component {
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionQueryString
             //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionHeader
-            //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionRemoveVary
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionAllowBlock
@@ -192,8 +213,7 @@ class ConfigurationPolicies extends React.Component {
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionCors
             //   changeValue={this.props.changeValue}/>
-
-
+      }
     }
     return (
       <div className="configuration-policies">

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Modal } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -89,7 +90,9 @@ class Path extends React.Component {
 
 Path.displayName = 'Path'
 Path.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  path: React.PropTypes.array,
+  set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Path
