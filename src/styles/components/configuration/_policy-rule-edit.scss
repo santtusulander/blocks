@@ -12,6 +12,7 @@
     min-height: $bar-height;
     padding: 10px 0 0 15px;
     margin-bottom: 10px;
+    cursor: pointer;
 
     @include md {
       min-height: $md-bar-height;
@@ -20,6 +21,12 @@
     .dark-theme & {
       color: $dt-text-color;
       background-color: rgba($white, 0.1);
+    }
+
+    &.active {
+      .dark-theme & {
+        background-color: rgba($white, 0.4);
+      }
     }
 
     p {

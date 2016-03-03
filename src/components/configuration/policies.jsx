@@ -12,8 +12,9 @@ class ConfigurationPolicies extends React.Component {
     super(props);
 
     this.state = {
+      activeMatchPath: null,
       activeRulePath: null,
-      rightColVisible: true
+      activeSetPath: null
     }
 
     this.addRule = this.addRule.bind(this)
@@ -22,21 +23,32 @@ class ConfigurationPolicies extends React.Component {
     this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
+    this.activateMatch = this.activateMatch.bind(this)
     this.activateRule = this.activateRule.bind(this)
+    this.activateSet = this.activateSet.bind(this)
   }
   addRule(e) {
     e.preventDefault()
-    this.setState({activeRulePath: []})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: [],
+      activeSetPath: null
+    })
   }
   clearActiveRule() {
-    this.setState({activeRulePath: null})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: null,
+      activeSetPath: null
+    })
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
   }
   handleRightColClose() {
     this.setState({
-      rightColVisible: false
+      activeMatchPath: null,
+      activeSetPath: null
     })
   }
   handleSave(e) {
@@ -51,10 +63,30 @@ class ConfigurationPolicies extends React.Component {
     else if(type === 'response') {
       rulePath[0] = 'response_policies'
     }
-    this.setState({activeRulePath: rulePath})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: rulePath,
+      activeSetPath: null
+    })
   }
   activateRule(path) {
-    this.setState({activeRulePath: path})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: path,
+      activeSetPath: null
+    })
+  }
+  activateMatch(path) {
+    this.setState({
+      activeMatchPath: path,
+      activeSetPath: null
+    })
+  }
+  activateSet(path) {
+    this.setState({
+      activeMatchPath: null,
+      activeSetPath: path
+    })
   }
   render() {
     let config = this.props.config;
@@ -93,11 +125,16 @@ class ConfigurationPolicies extends React.Component {
           responsePolicies={config.get('response_policies')}
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
-          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
+          <ConfigurationSidebar
+            rightColVisible={this.state.activeMatchPath || this.state.activeSetPath}
             rightColContent={modalRightColContent}
             handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}>
             <ConfigurationPolicyRuleEdit
+              activateMatch={this.activateMatch}
+              activateSet={this.activateSet}
+              activeMatchPath={this.state.activeMatchPath}
+              activeSetPath={this.state.activeSetPath}
               changeValue={this.props.changeValue}
               rule={config.getIn(this.state.activeRulePath)}
               rulePath={this.state.activeRulePath}
