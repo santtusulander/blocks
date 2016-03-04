@@ -31,11 +31,14 @@
     &.right-col-visible {
       width: 96%;
       margin-right: 0;
+
+      .modal-content {
+        display: flex;
+      }
     }
   }
 
   .modal-content {
-    display: flex;
     min-height: 100vh;
     border: 0;
     box-shadow: none;
