@@ -6,9 +6,9 @@ const ConditionSelection = require('../condition-selection.jsx')
 
 describe('ConditionSelection', () => {
   it('should exist', () => {
-    let cnditionSelection = TestUtils.renderIntoDocument(
+    let conditionSelection = TestUtils.renderIntoDocument(
       <ConditionSelection />
     );
-    expect(TestUtils.isCompositeComponent(cnditionSelection)).toBeTruthy();
+    expect(TestUtils.isCompositeComponent(conditionSelection)).toBeTruthy();
   });
 });
