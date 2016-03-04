@@ -25,6 +25,14 @@
     min-width: $sm-btn-min-width;
   }
 
+  // scss-lint:disable QualifyingElement
+  // Need to override Bootstrap
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    opacity: 0.2;
+  }
+
   &.dropdown-toggle,
   &.btn-icon,
   &.btn-link {
@@ -80,6 +88,14 @@
         width: $md-btn-sm-height;
         line-height: $md-btn-sm-height;
       }
+    }
+  }
+
+  &.sm-padding {
+    padding: 0 ($btn-height / 4);
+
+    @include md {
+      padding: 0 ($md-btn-height / 4);
     }
   }
 

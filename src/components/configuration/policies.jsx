@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, Row, Col, Button} from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationPolicyRules from './policy-rules'
@@ -7,13 +7,37 @@ import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
 
+import ConfigurationMatchHostname from './matches/hostname'
+import ConfigurationMatchDirectoryPath from './matches/directory-path'
+import ConfigurationMatchMimeType from './matches/mime-type'
+import ConfigurationMatchFileExtension from './matches/file-extension'
+import ConfigurationMatchFileName from './matches/file-name'
+import ConfigurationMatchQueryString from './matches/query-string'
+import ConfigurationMatchHeader from './matches/header'
+import ConfigurationMatchCookie from './matches/cookie'
+import ConfigurationMatchIpAddress from './matches/ip-address'
+
+import ConfigurationActionCache from './actions/cache'
+import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationActionRedirection from './actions/redirection'
+import ConfigurationActionOriginHostname from './actions/origin-hostname'
+import ConfigurationActionCompression from './actions/compression'
+import ConfigurationActionPath from './actions/path'
+import ConfigurationActionQueryString from './actions/query-string'
+import ConfigurationActionHeader from './actions/header'
+import ConfigurationActionRemoveVary from './actions/remove-vary'
+import ConfigurationActionAllowBlock from './actions/allow-block'
+import ConfigurationActionPostSupport from './actions/post-support'
+import ConfigurationActionCors from './actions/cors'
+
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      activeMatchPath: null,
       activeRulePath: null,
-      rightColVisible: true
+      activeSetPath: null
     }
 
     this.addRule = this.addRule.bind(this)
@@ -22,21 +46,32 @@ class ConfigurationPolicies extends React.Component {
     this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
+    this.activateMatch = this.activateMatch.bind(this)
     this.activateRule = this.activateRule.bind(this)
+    this.activateSet = this.activateSet.bind(this)
   }
   addRule(e) {
     e.preventDefault()
-    this.setState({activeRulePath: []})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: [],
+      activeSetPath: null
+    })
   }
   clearActiveRule() {
-    this.setState({activeRulePath: null})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: null,
+      activeSetPath: null
+    })
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
   }
   handleRightColClose() {
     this.setState({
-      rightColVisible: false
+      activeMatchPath: null,
+      activeSetPath: null
     })
   }
   handleSave(e) {
@@ -51,10 +86,30 @@ class ConfigurationPolicies extends React.Component {
     else if(type === 'response') {
       rulePath[0] = 'response_policies'
     }
-    this.setState({activeRulePath: rulePath})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: rulePath,
+      activeSetPath: null
+    })
   }
   activateRule(path) {
-    this.setState({activeRulePath: path})
+    this.setState({
+      activeMatchPath: null,
+      activeRulePath: path,
+      activeSetPath: null
+    })
+  }
+  activateMatch(path) {
+    this.setState({
+      activeMatchPath: path,
+      activeSetPath: null
+    })
+  }
+  activateSet(path) {
+    this.setState({
+      activeMatchPath: null,
+      activeSetPath: path
+    })
   }
   render() {
     let config = this.props.config;
@@ -63,21 +118,107 @@ class ConfigurationPolicies extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let modalRightColContent = (
-      <div>
-        <Modal.Header>
-          <h1>Choose Condition</h1>
-          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
-        </Modal.Body>
-      </div>
-    )
+    let activeEditForm = null
+    if(this.state.activeMatchPath) {
+      const activeMatch = this.props.config.getIn(this.state.activeMatchPath)
+      switch(activeMatch.get('field')) {
+        case 'response_header':
+          activeEditForm = (
+            <ConfigurationMatchHeader
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_path':
+          activeEditForm = (
+            <ConfigurationMatchDirectoryPath
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_host':
+          activeEditForm = (
+            <ConfigurationMatchHostname
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+        case 'request_cookie':
+          activeEditForm = (
+            <ConfigurationMatchCookie
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
+
+
+            // <ConfigurationMatchMimeType
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchFileExtension
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchFileName
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchQueryString
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationMatchIpAddress
+            //   changeValue={this.props.changeValue}/>
+      }
+    }
+    if(this.state.activeSetPath) {
+      const activeSet = this.props.config.getIn(this.state.activeSetPath)
+      switch(this.state.activeSetPath.slice(-1)[0]) {
+        case 'cache_name':
+          activeEditForm = (
+            <ConfigurationActionCacheKeyQueryString
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'cache_control':
+          activeEditForm = (
+            <ConfigurationActionCache
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+        case 'header':
+          activeEditForm = (
+            <ConfigurationActionHeader
+              changeValue={this.props.changeValue}
+              path={this.state.activeSetPath}
+              set={activeSet}/>
+          )
+        break
+            // <ConfigurationActionRedirection
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionOriginHostname
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionCompression
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionPath
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionQueryString
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionRemoveVary
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionAllowBlock
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionPostSupport
+            //   changeValue={this.props.changeValue}/>
+            // <ConfigurationActionCors
+            //   changeValue={this.props.changeValue}/>
+      }
+    }
     return (
       <div className="configuration-policies">
 
-        <Row>
+        <Row className="header-btn-row">
           <Col sm={8}>
             <h3>Policy Rules</h3>
           </Col>
@@ -93,11 +234,16 @@ class ConfigurationPolicies extends React.Component {
           responsePolicies={config.get('response_policies')}
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
-          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
-            rightColContent={modalRightColContent}
+          <ConfigurationSidebar
+            rightColVisible={activeEditForm}
             handleRightColClose={this.handleRightColClose}
-            onHide={this.clearActiveRule}>
+            onHide={this.clearActiveRule}
+            rightColContent={activeEditForm}>
             <ConfigurationPolicyRuleEdit
+              activateMatch={this.activateMatch}
+              activateSet={this.activateSet}
+              activeMatchPath={this.state.activeMatchPath}
+              activeSetPath={this.state.activeSetPath}
               changeValue={this.props.changeValue}
               rule={config.getIn(this.state.activeRulePath)}
               rulePath={this.state.activeRulePath}
@@ -105,6 +251,7 @@ class ConfigurationPolicies extends React.Component {
               hideAction={this.clearActiveRule}/>
           </ConfigurationSidebar>
         : ''}
+
       </div>
     )
   }
