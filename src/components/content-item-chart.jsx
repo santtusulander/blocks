@@ -75,7 +75,7 @@ class ContentItemChart extends React.Component {
       })
       .interpolate('basis')
     const pie = d3.layout.pie().sort(null)
-    const arc = d3.svg.arc().innerRadius(innerRadius - 10).outerRadius(innerRadius);
+    const arc = d3.svg.arc().innerRadius(innerRadius - 9).outerRadius(innerRadius);
     const tooltip = (
       <Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>

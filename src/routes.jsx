@@ -1,15 +1,16 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
+import AccountAnalytics from './containers/account-analytics'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
-import Property from './containers/property'
 import GroupAnalytics from './containers/group-analytics'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
+import Property from './containers/property'
 import PropertyAnalytics from './containers/property-analytics'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
@@ -32,6 +33,7 @@ module.exports = (
     </Route>
     <Route path="property/:brand/:account/:group/property" component={Property}/>
     <Route path="configuration/:brand/:account/:group/property" component={Configuration}/>
+    <Route path="/analytics/account/:brand/:account" component={AccountAnalytics}/>
     <Route path="/analytics/group/:brand/:account/:group" component={GroupAnalytics}/>
     <Route path="/analytics/property/:brand/:account/:group/property" component={PropertyAnalytics}/>
     <Route path="/security" component={Security}/>

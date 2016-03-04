@@ -3,19 +3,23 @@ import {Modal, Row, Col} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
-import ConfigurationCacheRules from './cache-rules'
-import ConfigurationCacheRuleEdit from './cache-rule-edit'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
+import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 
-class ConfigurationCache extends React.Component {
+class ConfigurationDefaults extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {activeRulePath: null}
+    this.state = {
+      activeRulePath: null,
+      rightColVisible: true
+    }
 
     this.addRule = this.addRule.bind(this)
     this.clearActiveRule = this.clearActiveRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
@@ -28,6 +32,11 @@ class ConfigurationCache extends React.Component {
   }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
+  }
+  handleRightColClose() {
+    this.setState({
+      rightColVisible: false
+    })
   }
   handleSave(e) {
     e.preventDefault()
@@ -50,27 +59,30 @@ class ConfigurationCache extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let policyPath = Immutable.List([
+    const policyPath = Immutable.List([
       'default_policies']);
-    let policyPaths = {
-      honor_origin_cache_policies: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'honor_origin'),
-      honor_etags: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_control')),
-            'check_etag'),
-      ignore_case: policyPath
-        .push(
-          config.getIn(policyPath)
-            .findIndex(policy => policy.get('set').has('cache_name')),
-            'ignore_case')
+    let controlIndex = config.getIn(policyPath)
+      .findIndex(policy => policy.get('set').has('cache_control'))
+    let nameIndex = config.getIn(policyPath)
+      .findIndex(policy => policy.get('set').has('cache_name'))
+    const policyPaths = {
+      honor_origin_cache_policies: policyPath.push(controlIndex, 'honor_origin'),
+      honor_etags: policyPath.push(controlIndex, 'check_etag'),
+      ignore_case: policyPath.push(nameIndex, 'ignore_case')
     };
+    let modalRightColContent = (
+      <div>
+        <Modal.Header>
+          <h1>Choose Condition</h1>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+        </Modal.Body>
+      </div>
+    )
     return (
-      <form className="configuration-cache" onSubmit={this.handleSave}>
+      <form className="configuration-defaults" onSubmit={this.handleSave}>
 
         {/* Origin Cache Control */}
 
@@ -78,7 +90,7 @@ class ConfigurationCache extends React.Component {
 
 
         { /* Honor Origin Cache Control */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Honor Origin Cache Control
           </Col>
@@ -90,7 +102,7 @@ class ConfigurationCache extends React.Component {
         </Row>
 
         { /* Ignore case from origin */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Ignore case from origin
           </Col>
@@ -101,7 +113,7 @@ class ConfigurationCache extends React.Component {
         </Row>
 
         { /* Enable e-Tag support */}
-        <Row>
+        <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             Enable e-Tag support
           </Col>
@@ -113,50 +125,31 @@ class ConfigurationCache extends React.Component {
 
         <hr/>
 
-        <h3>Edge Cache Control</h3>
+        <h3>Edge Cache Default Rules</h3>
         <ConfigurationDefaultPolicies/>
 
-        <Row>
-          <Col sm={8}>
-            <h3>CDN Cache Rules</h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <a href="#" className="add-rule" onClick={this.addRule}>
-              Add Cache Rule
-            </a>
-          </Col>
-        </Row>
-        <ConfigurationCacheRules
-          requestPolicies={config.get('request_policies')}
-          responsePolicies={config.get('response_policies')}/>
         {this.state.activeRulePath ?
-          <Modal show={true}
-            dialogClassName="configuration-sidebar"
-            backdrop={false}
+          <ConfigurationSidebar rightColVisible={this.state.rightColVisible}
+            rightColContent={modalRightColContent}
+            handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}>
-            <Modal.Header>
-              <h1>Add Cache Rule</h1>
-              <p>Lorem ipsum dolor</p>
-            </Modal.Header>
-            <Modal.Body>
-              <ConfigurationCacheRuleEdit
-                rule={config.getIn(this.state.activeRulePath)}
-                rulePath={this.state.activeRulePath}
-                changeActiveRuleType={this.changeActiveRuleType}
-                hideAction={this.clearActiveRule}/>
-            </Modal.Body>
-          </Modal>
-          : ''}
+            <ConfigurationPolicyRuleEdit
+              rule={config.getIn(this.state.activeRulePath)}
+              rulePath={this.state.activeRulePath}
+              changeActiveRuleType={this.changeActiveRuleType}
+              hideAction={this.clearActiveRule}/>
+          </ConfigurationSidebar>
+        : ''}
       </form>
     )
   }
 }
 
-ConfigurationCache.displayName = 'ConfigurationCache'
-ConfigurationCache.propTypes = {
+ConfigurationDefaults.displayName = 'ConfigurationDefaults'
+ConfigurationDefaults.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationCache
+module.exports = ConfigurationDefaults

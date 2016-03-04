@@ -25,6 +25,14 @@
     min-width: $sm-btn-min-width;
   }
 
+  // scss-lint:disable QualifyingElement
+  // Need to override Bootstrap
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    opacity: 0.2;
+  }
+
   &.dropdown-toggle,
   &.btn-icon,
   &.btn-link {
@@ -80,6 +88,14 @@
         width: $md-btn-sm-height;
         line-height: $md-btn-sm-height;
       }
+    }
+  }
+
+  &.sm-padding {
+    padding: 0 ($btn-height / 4);
+
+    @include md {
+      padding: 0 ($md-btn-height / 4);
     }
   }
 
@@ -447,12 +463,16 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $white;
       background-color: $pale-blue;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -563,18 +583,18 @@
     &:hover,
     &:active,
     &.active {
-      color: $lt-button-color;
+      color: $white;
       background-color: rgba($white, 0.2);
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled,
     &:active:enabled,
     &.active:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -647,16 +667,16 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $white;
       background-color: $btn-success-bg;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -664,16 +684,16 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $white;
       background-color: $pale-blue;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $white;
+      stroke: $white;
     }
 
     &:hover:enabled {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 

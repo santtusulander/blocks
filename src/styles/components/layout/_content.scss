@@ -22,14 +22,14 @@
 
   > .container-fluid {
     position: relative;
-    padding: $btn-height $bar-height;
+    padding: $bar-height;
 
     @include md {
-      padding: $md-btn-height $md-bar-height;
+      padding: $md-bar-height;
     }
 
     @include sm {
-      padding: $md-btn-height ($md-bar-height / 2);
+      padding: ($md-bar-height / 2);
     }
   }
 }

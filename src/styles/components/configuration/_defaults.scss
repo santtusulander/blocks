@@ -1,7 +1,7 @@
 // Configuration Cache
 // ===================
 
-.configuration-cache {
+.configuration-defaults {
 
   h2 {
     padding-bottom: 30px;
@@ -11,10 +11,6 @@
   h3 {
     padding: 40px 0 20px;
     margin: 0;
-  }
-
-  .toggle-label {
-    padding: 15px 0 35px 35px;
   }
 
   td:last-child {
