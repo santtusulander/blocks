@@ -5,36 +5,32 @@
 // Need to override BootStrap
 .modal-dialog.configuration-sidebar {
   float: right;
-  width: 96%;
-  max-width: $configuration-sidebar-width;
+  width: 150%;
   margin: 0;
-
-  @include md {
-    max-width: $md-configuration-sidebar-width;
-  }
-
-  @include sm {
-    max-width: $sm-configuration-sidebar-width;
-  }
 
   .fade & {
     transform: translate(100%, 0);
-    transition: transform 0.3s ease-out, max-width 0.3s ease-out;
+    transition: transform 0.3s ease-out, margin 0.3s ease-out;
   }
 
   .in & {
-    transform: translate(0, 0);
-  }
-
-  &.right-col-visible {
     max-width: $configuration-sidebar-width + $sidebar-right-col-width;
+    margin: 0 (-$sidebar-right-col-width) 0 0;
+    transform: translate(0, 0);
 
     @include md {
       max-width: $md-configuration-sidebar-width + $md-sidebar-right-col-width;
+      margin: 0 (-$md-sidebar-right-col-width) 0 0;
     }
 
     @include sm {
       max-width: $sm-configuration-sidebar-width + $sm-sidebar-right-col-width;
+      margin: 0 (-$sm-sidebar-right-col-width) 0 0;
+    }
+
+    &.right-col-visible {
+      width: 96%;
+      margin-right: 0;
     }
   }
 
