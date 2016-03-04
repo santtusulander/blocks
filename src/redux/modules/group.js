@@ -100,7 +100,11 @@ export default handleActions({
 // ACTIONS
 
 export const createGroup = createAction(GROUP_CREATED, (brand, account, name) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {name: name})
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {name: name}, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then((res) => {
     if(res) {
       return res.data;
@@ -134,7 +138,11 @@ export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
 })
 
 export const updateGroup = createAction(GROUP_UPDATED, (brand, account, group) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.group_id}`, group)
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.group_id}`, group, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then((res) => {
     if(res) {
       return group;
