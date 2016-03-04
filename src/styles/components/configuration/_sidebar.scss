@@ -30,11 +30,11 @@
     max-width: $configuration-sidebar-width + $sidebar-right-col-width;
 
     @include md {
-      max-width: $md-configuration-sidebar-width + $md-configuration-sidebar-width;
+      max-width: $md-configuration-sidebar-width + $md-sidebar-right-col-width;
     }
 
     @include sm {
-      max-width: $sm-configuration-sidebar-width + $sm-configuration-sidebar-width;
+      max-width: $sm-configuration-sidebar-width + $sm-sidebar-right-col-width;
     }
   }
 
