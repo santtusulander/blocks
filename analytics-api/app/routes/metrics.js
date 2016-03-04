@@ -28,15 +28,15 @@ function routeMetrics(req, res) {
     end     : params.end,
     account : params.account,
     group   : params.group
-  }).spread((trafficData, historicalTrafficData, cacheHitRatioData, transferRateData) => {
-    if (trafficData && historicalTrafficData && cacheHitRatioData && transferRateData) {
+  }).spread((trafficData, historicalTrafficData, aggregateData, transferRateData) => {
+    if (trafficData && historicalTrafficData && aggregateData && transferRateData) {
       let responseData = [];
 
       // Set the selected level
       let selectedLevel = (params.group == null) ? 'group' : 'property';
 
       // Build a list of unique level identifiers
-      let levels = _.uniq(cacheHitRatioData.map((row) => row[selectedLevel]));
+      let levels = _.uniq(aggregateData.map((row) => row[selectedLevel]));
 
       // Loop each level and build an object of data that includes traffic
       // data, average cache hit ratio, and transfer rates.
@@ -44,7 +44,7 @@ function routeMetrics(req, res) {
         // Get the raw data for a single level
         let levelTrafficData           = trafficData.filter((item) => item[selectedLevel] === level);
         let levelHistoricalTrafficData = historicalTrafficData.filter((item) => item[selectedLevel] === level);
-        let levelCacheHitRatioData     = cacheHitRatioData.filter((item) => item[selectedLevel] === level)[0];
+        let levelAggregateData         = aggregateData.filter((item) => item[selectedLevel] === level)[0];
         let levelTransferRateData      = transferRateData.filter((item) => item[selectedLevel] === level)[0];
 
         // Reformat traffic data
@@ -125,7 +125,8 @@ function routeMetrics(req, res) {
 
         // Build the data object for a single level
         let levelData = {
-          avg_cache_hit_rate: levelCacheHitRatioData.chit_ratio,
+          avg_cache_hit_rate: levelAggregateData.chit_ratio,
+          avg_ttfb: levelAggregateData.avg_fbl,
           transfer_rates: {
             peak:    `${levelTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
             lowest:  `${levelTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
