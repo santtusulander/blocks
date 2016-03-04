@@ -168,7 +168,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
-                    <p>{match.field}: {match.values.join(', ')}</p>
+                    {match.field ?
+                      <p>{match.field}: {match.values.join(', ')}</p>
+                      : <p>Choose condition</p>
+                    }
                   </Col>
                   <Col xs={3}>
                     <p>NEEDS_API</p>
