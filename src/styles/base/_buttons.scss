@@ -30,7 +30,7 @@
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
-    opacity: 0.2;
+    opacity: 0.3;
   }
 
   &.dropdown-toggle,
@@ -719,9 +719,11 @@
 
   .sidebar-layout .btn-link,
   .modal .btn-link {
+    background-color: transparent;
 
     &:hover:enabled {
       color: $white;
+      background-color: transparent;
     }
   }
 }
