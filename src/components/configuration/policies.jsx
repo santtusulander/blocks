@@ -8,6 +8,7 @@ import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
 
 import MatchesSelection from './matches-selection'
+import ActionsSelection from './actions-selection'
 
 import ConfigurationMatchHostname from './matches/hostname'
 import ConfigurationMatchDirectoryPath from './matches/directory-path'
