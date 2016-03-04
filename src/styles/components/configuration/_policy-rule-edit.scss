@@ -1,4 +1,14 @@
 .configuration-policy-rule-edit {
+  width: 100%;
+  max-width: $configuration-sidebar-width;
+
+  @include md {
+    max-width: $md-configuration-sidebar-width;
+  }
+
+  @include sm {
+    max-width: $sm-configuration-sidebar-width;
+  }
 
   .conditions {
     width: 100%;
@@ -37,8 +47,13 @@
     }
 
     &.active {
+
       .dark-theme & {
-        background-color: rgba($white, 0.4);
+        background-color: $pale-blue;
+      }
+
+      .light-theme & {
+        background-color: rgba($black, 0.1);
       }
     }
 
