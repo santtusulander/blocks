@@ -1,3 +1,6 @@
+// Policy Rule Edit
+// ================
+
 .configuration-policy-rule-edit {
   width: 100%;
   max-width: $configuration-sidebar-width;
@@ -46,14 +49,28 @@
       background-color: rgba($white, 0.1);
     }
 
+    .light-theme & {
+      background-color: rgba($white, 0.1);
+    }
+
     &.active {
 
       .dark-theme & {
         background-color: $pale-blue;
+
+        // scss-lint:disable SelectorDepth NestingDepth
+        // Need to override default button styles
+        .btn-primary:hover:enabled,
+        .btn-primary:active:enabled,
+        .btn-primary.active:enabled {
+          color: rgba($black, 0.3);
+          fill: rgba($black, 0.3);
+          stroke: rgba($black, 0.3);
+        }
       }
 
       .light-theme & {
-        background-color: rgba($black, 0.1);
+        background-color: rgba($black, 0.2);
       }
     }
 
