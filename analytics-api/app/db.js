@@ -134,21 +134,22 @@ class AnalyticsDB {
   }
 
   /**
-   * Get the average cache hit rate for each property in a group.
+   * Get the average cache hit rate and time to first byte for each property in a group.
    * NOTE: The data returned is grouped by property.
    *
    * @private
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  _getPropertyCacheHitRate(options) {
+  _getPropertyAggregateNumbers(options) {
     let optionsFinal = this._getQueryOptions(options);
 
     let queryParameterized = `
       SELECT
         epoch_start,
         property,
-        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio
+        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio,
+        sum(connections * avg_fbl)/sum(connections) as avg_fbl
       FROM property_global_day
       WHERE epoch_start between ? and ?
         AND account_id = ?
@@ -166,21 +167,22 @@ class AnalyticsDB {
   }
 
   /**
-   * Get the average cache hit rate for each group in an account.
+   * Get the average cache hit rate and time to first byte for each group in an account.
    * NOTE: The data returned is grouped by group.
    *
    * @private
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  _getGroupCacheHitRate(options) {
+  _getGroupAggregateNumbers(options) {
     let optionsFinal = this._getQueryOptions(options);
 
     let queryParameterized = `
       SELECT
         epoch_start,
         group_id AS \`group\`,
-        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio
+        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio,
+        sum(connections * avg_fbl)/sum(connections) as avg_fbl
       FROM group_global_day
       WHERE epoch_start between ? and ?
         AND account_id = ?
@@ -280,7 +282,7 @@ class AnalyticsDB {
     let queries = [
       this[`_get${accountLevel}Traffic`](options),
       this[`_get${accountLevel}Traffic`](optionsHistoric),
-      this[`_get${accountLevel}CacheHitRate`](options),
+      this[`_get${accountLevel}AggregateNumbers`](options),
       this[`_get${accountLevel}TransferRates`](options)
     ];
 

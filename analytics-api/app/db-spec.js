@@ -89,15 +89,15 @@ describe('db._getGroupTraffic', function() {
 });
 
 
-describe('db._getPropertyCacheHitRate', function() {
+describe('db._getPropertyAggregateNumbers', function() {
   let options = {start: 0, end: 1, account: 2, group: 3};
   beforeEach(function() {
     spyOn(db, '_getQueryOptions').and.callThrough();
     spyOn(db, '_executeQuery').and.stub();
-    db._getPropertyCacheHitRate(options);
+    db._getPropertyAggregateNumbers(options);
   });
 
-  it('should call _getQueryOptions with the options object passed to _getPropertyCacheHitRate', function() {
+  it('should call _getQueryOptions with the options object passed to _getPropertyAggregateNumbers', function() {
     let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
     expect(db._getQueryOptions.calls.any()).toBe(true);
     expect(finalOptions).toEqual(options);
@@ -114,15 +114,15 @@ describe('db._getPropertyCacheHitRate', function() {
 });
 
 
-describe('db._getGroupCacheHitRate', function() {
+describe('db._getGroupAggregateNumbers', function() {
   let options = {start: 0, end: 1, account: 2};
   beforeEach(function() {
     spyOn(db, '_getQueryOptions').and.callThrough();
     spyOn(db, '_executeQuery').and.stub();
-    db._getGroupCacheHitRate(options);
+    db._getGroupAggregateNumbers(options);
   });
 
-  it('should call _getQueryOptions with the options object passed to _getGroupCacheHitRate', function() {
+  it('should call _getQueryOptions with the options object passed to _getGroupAggregateNumbers', function() {
     let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
     expect(db._getQueryOptions.calls.any()).toBe(true);
     expect(finalOptions).toEqual(options);
@@ -190,32 +190,32 @@ describe('db.getMetrics', function() {
   let options = {start: 0, end: 1, account: 2, group: 3};
   beforeEach(function() {
     spyOn(db, '_getPropertyTraffic').and.returnValue(Promise.resolve(0));
-    spyOn(db, '_getPropertyCacheHitRate').and.returnValue(Promise.resolve(1));
+    spyOn(db, '_getPropertyAggregateNumbers').and.returnValue(Promise.resolve(1));
     spyOn(db, '_getPropertyTransferRates').and.returnValue(Promise.resolve(2));
     spyOn(db, '_getGroupTraffic').and.returnValue(Promise.resolve(0));
-    spyOn(db, '_getGroupCacheHitRate').and.returnValue(Promise.resolve(1));
+    spyOn(db, '_getGroupAggregateNumbers').and.returnValue(Promise.resolve(1));
     spyOn(db, '_getGroupTransferRates').and.returnValue(Promise.resolve(2));
     spyOn(log, 'info').and.stub();
     spyOn(log, 'error').and.stub();
   });
 
-  it('should call _getPropertyTraffic, _getPropertyCacheHitRate, and _getPropertyTransferRates with the options object passed to getMetrics', function() {
+  it('should call _getPropertyTraffic, _getPropertyAggregateNumbers, and _getPropertyTransferRates with the options object passed to getMetrics', function() {
     db.getMetrics(options);
     expect(db._getPropertyTraffic.calls.any()).toBe(true);
     expect(db._getPropertyTraffic.calls.argsFor(0)[0]).toEqual(options);
-    expect(db._getPropertyCacheHitRate.calls.any()).toBe(true);
-    expect(db._getPropertyCacheHitRate.calls.argsFor(0)[0]).toEqual(options);
+    expect(db._getPropertyAggregateNumbers.calls.any()).toBe(true);
+    expect(db._getPropertyAggregateNumbers.calls.argsFor(0)[0]).toEqual(options);
     expect(db._getPropertyTransferRates.calls.any()).toBe(true);
     expect(db._getPropertyTransferRates.calls.argsFor(0)[0]).toEqual(options);
   });
 
-  it('should call _getGroupTraffic, _getGroupCacheHitRate, and _getGroupTransferRates with the options object passed to getMetrics', function() {
+  it('should call _getGroupTraffic, _getGroupAggregateNumbers, and _getGroupTransferRates with the options object passed to getMetrics', function() {
     let options = {start: 0, end: 1, account: 2};
     db.getMetrics(options);
     expect(db._getGroupTraffic.calls.any()).toBe(true);
     expect(db._getGroupTraffic.calls.argsFor(0)[0]).toEqual(options);
-    expect(db._getGroupCacheHitRate.calls.any()).toBe(true);
-    expect(db._getGroupCacheHitRate.calls.argsFor(0)[0]).toEqual(options);
+    expect(db._getGroupAggregateNumbers.calls.any()).toBe(true);
+    expect(db._getGroupAggregateNumbers.calls.argsFor(0)[0]).toEqual(options);
     expect(db._getGroupTransferRates.calls.any()).toBe(true);
     expect(db._getGroupTransferRates.calls.argsFor(0)[0]).toEqual(options);
   });
