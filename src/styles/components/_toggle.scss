@@ -57,6 +57,7 @@
   }
 
   &.on {
+
     .indicator {
       right: calc(100% - 50px);
       background-color: $green;
@@ -73,5 +74,13 @@
     .on-text {
       opacity: 1;
     }
+  }
+}
+
+.toggle-label {
+  padding-top: $btn-height / 4;
+
+  @include md {
+    padding-top: $md-btn-height / 4;
   }
 }
