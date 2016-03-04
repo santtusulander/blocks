@@ -7,7 +7,7 @@ import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
 
-import ChooseConditions from './condition-selection'
+import MatchesSelection from './matches-selection'
 
 import ConfigurationMatchHostname from './matches/hostname'
 import ConfigurationMatchDirectoryPath from './matches/directory-path'

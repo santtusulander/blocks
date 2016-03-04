@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 
-class ChooseConditions extends React.Component {
+class MatchesSelection extends React.Component {
   render() {
     return (
       <div>
@@ -48,8 +48,8 @@ class ChooseConditions extends React.Component {
   }
 }
 
-ChooseConditions.displayName = 'ChooseConditions'
-ChooseConditions.propTypes = {
+MatchesSelection.displayName = 'MatchesSelection'
+MatchesSelection.propTypes = {
 }
 
-module.exports = ChooseConditions
+module.exports = MatchesSelection
