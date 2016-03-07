@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Modal, Panel } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Select from '../../select'
 
@@ -41,8 +42,9 @@ class Header extends React.Component {
           <Input type="text" label="Name"
             placeholder="originvalue"
             id="matches_header"
+            value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'header_value']
+              this.props.path.concat(['cases', 0, 0])
             )}/>
 
           <hr />
@@ -80,7 +82,9 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = Header

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Input, Modal, Row } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
@@ -34,6 +35,7 @@ class Cache extends React.Component {
     }
   }
   render() {
+    console.log(this.props.set.toJS())
     return (
       <div>
         <Modal.Header>
@@ -47,9 +49,10 @@ class Cache extends React.Component {
               <label>No-Store</label>
             </Col>
             <Col xs={4}>
-              <Toggle className="pull-right" value={true}
+              <Toggle className="pull-right"
+                value={this.props.set.get('no_store')}
                 changeValue={this.handleToggleChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_no_store']
+                  this.props.path.concat(['no_store'])
                 )}/>
             </Col>
           </Row>
@@ -61,9 +64,10 @@ class Cache extends React.Component {
               <label>Honor Origin Cache Control</label>
             </Col>
             <Col xs={4}>
-              <Toggle className="pull-right" value={true}
+              <Toggle className="pull-right"
+                value={this.props.set.get('honor_origin')}
                 changeValue={this.handleToggleChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_honor_origin_cache']
+                  this.props.path.concat(['honor_origin'])
                 )}/>
             </Col>
           </Row>
@@ -75,9 +79,10 @@ class Cache extends React.Component {
               <label>Honor e-Tag Values</label>
             </Col>
             <Col xs={4}>
-              <Toggle className="pull-right" value={true}
+              <Toggle className="pull-right"
+                value={this.props.set.get('check_etag')}
                 changeValue={this.handleToggleChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_honor_e_tag']
+                  this.props.path.concat(['check_etag'])
                 )}/>
             </Col>
           </Row>
@@ -90,8 +95,9 @@ class Cache extends React.Component {
                 <Input type="number"
                   id="actions_ttl-value-number"
                   placeholder="number"
+                  value={this.props.set.get('max_age')}
                   onChange={this.handleChange(
-                    ['edge_configuration', 'cache_rule', 'actions', 'cache_ttl_value']
+                    this.props.path.concat(['max_age'])
                   )}/>
               </Col>
               <Col xs={6}>
@@ -117,7 +123,9 @@ class Cache extends React.Component {
 
 Cache.displayName = 'Cache'
 Cache.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  path: React.PropTypes.array,
+  set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Cache

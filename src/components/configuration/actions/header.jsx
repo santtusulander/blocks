@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Modal, Panel } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -97,7 +98,9 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
-  changeValue: React.PropTypes.func
+  changeValue: React.PropTypes.func,
+  path: React.PropTypes.array,
+  set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Header
