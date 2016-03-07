@@ -170,10 +170,11 @@ class Header extends React.Component {
                   <MenuItem eventKey="4">
                     <div className="user-menu-item">Account Management</div>
                     </MenuItem>
-                  <MenuItem className="bottom-item" eventKey="5">
-                    <div className="user-menu-item"
-                      onClick={this.props.logOut}>Log Out</div>
-                  </MenuItem>
+                  <li className="bottom-item" eventKey="5">
+                    <a href="#" onClick={this.props.logOut}>
+                      <div className="user-menu-item">Log Out</div>
+                    </a>
+                  </li>
                 </Dropdown.Menu>
               </Dropdown>
             </li>
