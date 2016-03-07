@@ -186,6 +186,7 @@ describe('db._getGroupTransferRates', function() {
   });
 });
 
+
 describe('db.getMetrics', function() {
   let options = {start: 0, end: 1, account: 2, group: 3};
   beforeEach(function() {
@@ -243,5 +244,108 @@ describe('db.getMetrics', function() {
     });
   });
 
+});
+
+
+describe('db.getEgressTotal', function() {
+  beforeEach(function() {
+    spyOn(db, '_getQueryOptions').and.callThrough();
+    spyOn(db, '_executeQuery').and.stub();
+  });
+
+  it('should return daily and monthly numbers for properties', function() {
+    // Get day egress
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com'
+    };
+    db.getEgressTotal(options);
+
+    // Get month egress
+    options.end = 1454284799;
+    db.getEgressTotal(options);
+
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+
+    // Check day
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    expect(queryParams[0]).toBe('property_global_day');
+
+    // Check month
+    let finalOptions = db._getQueryOptions.calls.argsFor(1)[0];
+    queryParams = db._executeQuery.calls.argsFor(1)[1];
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('property_global_month');
+  });
+
+  it('should return daily and monthly numbers for groups', function() {
+    // Get day egress
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3
+    };
+    db.getEgressTotal(options);
+
+    // Get month egress
+    options.end = 1454284799;
+    db.getEgressTotal(options);
+
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+
+    // Check day
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    expect(queryParams[0]).toBe('group_global_day');
+
+    // Check month
+    let finalOptions = db._getQueryOptions.calls.argsFor(1)[0];
+    queryParams = db._executeQuery.calls.argsFor(1)[1];
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('group_global_month');
+  });
+
+  it('should return daily and monthly numbers for groups', function() {
+    // Get day egress
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3
+    };
+    db.getEgressTotal(options);
+
+    // Get month egress
+    options.end = 1454284799;
+    db.getEgressTotal(options);
+
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+
+    // Check day
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    expect(queryParams[0]).toBe('account_global_day');
+
+    // Check month
+    let finalOptions = db._getQueryOptions.calls.argsFor(1)[0];
+    queryParams = db._executeQuery.calls.argsFor(1)[1];
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('account_global_month');
+  });
+
+  it('should return daily numbers for properties by default', function() {
+    // Get day egress
+    let options = {
+      start: 0,
+      end: 1
+    };
+    db.getEgressTotal(options);
+
+    // Check day
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    expect(queryParams[0]).toBe('property_global_day');
+
+  });
 
 });

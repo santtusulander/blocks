@@ -62,10 +62,11 @@ class AnalyticsDB {
    */
   _getQueryOptions(options) {
     let optionDefaults = {
-      start   : null,
-      end     : Math.round(Date.now() / 1000),
-      account : null,
-      group   : null
+      start    : null,
+      end      : Math.round(Date.now() / 1000),
+      account  : null,
+      group    : null,
+      property : null
     }
 
     return Object.assign({}, optionDefaults, options || {});
@@ -292,6 +293,71 @@ class AnalyticsDB {
         return queryData;
       })
       .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get total outbound traffic (egress) for a month or day, for a property,
+   * group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getEgressTotal(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let secondsPerMonth = 2678399;
+    let secondsPerDay   = 86399;
+    let duration        = optionsFinal.end - optionsFinal.start;
+    let conditions      = [];
+    let accountLevel;
+    let granularity;
+
+    // Account Level
+    if (optionsFinal.property && optionsFinal.group && optionsFinal.account) {
+      accountLevel = 'property';
+    } else if (optionsFinal.group && optionsFinal.account) {
+      accountLevel = 'group';
+    } else if (optionsFinal.account) {
+      accountLevel = 'account';
+    } else {
+      accountLevel = 'property';
+    }
+
+    // Granularity
+    if (duration === secondsPerMonth) {
+      granularity = 'month';
+    } else if (duration === secondsPerDay) {
+      granularity = 'day';
+    } else {
+      granularity = 'day';
+    }
+
+    // Build the table name
+    let table = `${accountLevel}_global_${granularity}`;
+
+    // Build the WHERE clause
+    optionsFinal.account  && conditions.push('AND account_id = ?');
+    optionsFinal.group    && conditions.push('AND group_id = ?');
+    optionsFinal.property && conditions.push('AND property = ?');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start,
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE epoch_start BETWEEN ? and ?
+        ${conditions.join('\n      ')}
+        AND flow_dir = 'out'
+      GROUP BY epoch_start;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      table,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account,
+      optionsFinal.group,
+      optionsFinal.property
+    ]);
   }
 }
 
