@@ -126,7 +126,7 @@ function routeMetrics(req, res) {
         // Build the data object for a single level
         let levelData = {
           avg_cache_hit_rate: levelAggregateData.chit_ratio,
-          avg_ttfb: levelAggregateData.avg_fbl,
+          avg_ttfb: `${Math.round(levelAggregateData.avg_fbl)} ms`,
           transfer_rates: {
             peak:    `${levelTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
             lowest:  `${levelTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
