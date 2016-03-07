@@ -100,7 +100,11 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {})
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then((res) => {
     if(res) {
       return res.data;
@@ -134,7 +138,11 @@ export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
 })
 
 export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, account) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account)
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then((res) => {
     if(res) {
       return account;

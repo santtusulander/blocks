@@ -88,18 +88,21 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   deleteMatch(index) {
     return e => {
       e.preventDefault()
+      e.stopPropagation()
       console.log('delete the rule at '+index)
     }
   }
   deleteSet(index) {
     return e => {
       e.preventDefault()
+      e.stopPropagation()
       console.log('delete the setting at '+index)
     }
   }
   moveSet(index, newIndex) {
     return e => {
       e.preventDefault()
+      e.stopPropagation()
       console.log('move setting '+index+' to '+newIndex)
     }
   }
