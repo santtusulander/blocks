@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../version.jsx')
@@ -11,6 +12,15 @@ describe('ConfigurationVersion', () => {
     );
     expect(TestUtils.isCompositeComponent(version)).toBeTruthy();
   });
+
+  it('has active class if active', () => {
+    let version = TestUtils.renderIntoDocument(
+      <ConfigurationVersion active={true}/>
+    )
+    let link = TestUtils.findRenderedDOMComponentWithClass(version,
+      'version-link')
+    expect(ReactDOM.findDOMNode(link).className).toContain('active');
+  })
 
   it('should activate a verson when clicked', () => {
     let activate = jest.genMockFunction()
