@@ -55,9 +55,13 @@ class ConfigurationPolicies extends React.Component {
   }
   addRule(e) {
     e.preventDefault()
+    const reqPolicies = this.props.config.get('request_policies').push(Immutable.fromJS(
+      {match: {field: null, cases: [['',[]]]}}
+    ))
+    this.props.changeValue(['request_policies'], reqPolicies)
     this.setState({
-      activeMatchPath: null,
-      activeRulePath: [],
+      activeMatchPath: ['request_policies', reqPolicies.size - 1, 'match'],
+      activeRulePath: ['request_policies', reqPolicies.size - 1],
       activeSetPath: null
     })
   }
@@ -157,6 +161,13 @@ class ConfigurationPolicies extends React.Component {
               path={this.state.activeMatchPath}/>
           )
         break
+        default:
+          activeEditForm = (
+            <MatchesSelection
+              path={this.state.activeMatchPath}
+              changeValue={this.props.changeValue}/>
+          )
+        break
 
 
             // <ConfigurationMatchMimeType
@@ -196,6 +207,13 @@ class ConfigurationPolicies extends React.Component {
               changeValue={this.props.changeValue}
               path={this.state.activeSetPath}
               set={activeSet}/>
+          )
+        break
+        default:
+          activeEditForm = (
+            <ActionsSelection
+              path={this.state.activeSetPath}
+              changeValue={this.props.changeValue}/>
           )
         break
             // <ConfigurationActionRedirection
@@ -238,7 +256,7 @@ class ConfigurationPolicies extends React.Component {
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
           <ConfigurationSidebar
-            rightColVisible={activeEditForm}
+            rightColVisible={!!activeEditForm}
             handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}
             rightColContent={activeEditForm}>
@@ -248,6 +266,7 @@ class ConfigurationPolicies extends React.Component {
               activeMatchPath={this.state.activeMatchPath}
               activeSetPath={this.state.activeSetPath}
               changeValue={this.props.changeValue}
+              config={this.props.config}
               rule={config.getIn(this.state.activeRulePath)}
               rulePath={this.state.activeRulePath}
               changeActiveRuleType={this.changeActiveRuleType}

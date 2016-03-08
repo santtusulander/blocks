@@ -79,8 +79,25 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     e.preventDefault()
     this.props.saveChanges()
   }
-  addMatch() {
-    // add match
+  addMatch(deepestMatch) {
+    return e => {
+      e.preventDefault()
+      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const currentSet = this.props.config.getIn(newPath)
+      let newMatch = Immutable.fromJS([
+        {match: {field: null, cases: [['',[]]]}}
+      ])
+      if(currentSet) {
+        newMatch = newMatch.setIn([0, 'match', 'cases', 0, 1], currentSet)
+      }
+      this.props.changeValue([],
+        this.props.config.setIn(
+          newPath,
+          newMatch
+        )
+      )
+      this.props.activateMatch(newPath.concat([0, 'match']))
+    }
   }
   addAction() {
     // add match
@@ -147,7 +164,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col sm={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addMatch}>
+                onClick={this.addMatch(flattenedPolicy.matches[0])}>
                 <IconAdd />
               </Button>
             </Col>
@@ -168,7 +185,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
-                    <p>{match.field}: {match.values.join(', ')}</p>
+                    {match.field ?
+                      <p>{match.field}: {match.values.join(', ')}</p>
+                      : <p>Choose condition</p>
+                    }
                   </Col>
                   <Col xs={3}>
                     <p>NEEDS_API</p>
@@ -258,6 +278,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activeSetPath: React.PropTypes.array,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
+  config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
   rule: React.PropTypes.instanceOf(Immutable.Map),
   rulePath: React.PropTypes.array,
