@@ -24,18 +24,71 @@ module.exports = (
     <IndexRedirect to="/content/groups/udn/7" />
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
-    <Route path="login" component={Login}/>
-    <Route path="configurations/:brand" component={Configurations}/>
-    <Route path="content" component={ContentTransition}>
-      <Route path="accounts/:brand" component={Accounts}/>
-      <Route path="groups/:brand/:account" component={Groups}/>
-      <Route path="hosts/:brand/:account/:group" component={Hosts}/>
+    <Route path="/login" component={Login}/>
+    <Route path="/content">
+      <IndexRedirect to="/content/groups/udn/7"/>
+      <Route component={ContentTransition}>
+        <Route path="accounts">
+          <Route path=":brand" component={Accounts}/>
+        </Route>
+        <Route path="groups">
+          <Route path=":brand">
+            <Route path=":account" component={Groups}/>
+          </Route>
+        </Route>
+        <Route path="hosts">
+          <Route path=":brand">
+            <Route path=":account">
+              <Route path=":group" component={Hosts}/>
+            </Route>
+          </Route>
+        </Route>
+      </Route>
+      <Route path="property">
+        <Route path=":brand">
+          <Route path=":account">
+            <Route path=":group">
+              <Route path="property" component={Property}/>
+            </Route>
+          </Route>
+        </Route>
+      </Route>
+      <Route path="configuration">
+        <Route path=":brand">
+          <Route path=":account">
+            <Route path=":group">
+              <Route path="property" component={Configuration}/>
+            </Route>
+          </Route>
+        </Route>
+      </Route>
+      <Route path="analytics">
+        <Route path="account">
+          <Route path=":brand">
+            <Route path=":account" component={AccountAnalytics}/>
+          </Route>
+        </Route>
+        <Route path="group">
+          <Route path=":brand">
+            <Route path=":account">
+              <Route path=":group" component={GroupAnalytics}/>
+            </Route>
+          </Route>
+        </Route>
+        <Route path="property">
+          <Route path=":brand">
+            <Route path=":account">
+              <Route path=":group">
+                <Route path="property" component={PropertyAnalytics}/>
+              </Route>
+            </Route>
+          </Route>
+        </Route>
+      </Route>
     </Route>
-    <Route path="property/:brand/:account/:group/property" component={Property}/>
-    <Route path="configuration/:brand/:account/:group/property" component={Configuration}/>
-    <Route path="/analytics/account/:brand/:account" component={AccountAnalytics}/>
-    <Route path="/analytics/group/:brand/:account/:group" component={GroupAnalytics}/>
-    <Route path="/analytics/property/:brand/:account/:group/property" component={PropertyAnalytics}/>
+    <Route path="/configurations">
+      <Route path=":brand" component={Configurations}/>
+    </Route>
     <Route path="/security" component={Security}/>
     <Route path="/services" component={Services}/>
   </Route>
