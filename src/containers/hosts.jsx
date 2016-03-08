@@ -97,7 +97,7 @@ export class Hosts extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
+                <Link to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
                   <IconChart />
                 </Link>
               </Button>
@@ -163,9 +163,9 @@ export class Hosts extends React.Component {
                       const metrics = this.props.metrics.get(i)
                       return (
                         <ContentItemChart key={i} id={host}
-                          linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          analyticsLink={`/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           name={host} description="Desc"
                           delete={this.deleteHost}
                           primaryData={metrics.get('traffic').toJS()}
@@ -186,8 +186,8 @@ export class Hosts extends React.Component {
                       const metrics = this.props.metrics.get(i)
                       return (
                         <ContentItemList key={i} id={host}
-                          linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           name={host} description="Desc"
                           primaryData={metrics.get('traffic').toJS()}
                           secondaryData={metrics.get('historical_traffic').toJS()}
