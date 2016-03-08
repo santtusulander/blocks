@@ -32,7 +32,7 @@ function routeTrafficTotal(req, res) {
     property : params.property
   }).then((trafficData) => {
     if (trafficData) {
-      res.jsend(trafficData[0]);
+      // res.jsend(trafficData[0]);
     }
 
     res.jsend(testData);
