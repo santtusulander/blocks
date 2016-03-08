@@ -30,4 +30,25 @@ describe('QueryString', () => {
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
+
+  it('should handle toggle changes', () => {
+    let changeValue = jest.genMockFunction()
+    let queryString = TestUtils.renderIntoDocument(
+      <QueryString changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    queryString.handleToggleChange('foo')('bar')
+    expect(changeValue.mock.calls[0][0]).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('bar')
+  })
+
+  it('should handle select changes', () => {
+    let changeValue = jest.genMockFunction()
+    let queryString = TestUtils.renderIntoDocument(
+      <QueryString changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(queryString.state.activeFilter).toBe('exists')
+    queryString.handleSelectChange('activeFilter')('foo')
+    expect(queryString.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
+  })
 })
