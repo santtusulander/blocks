@@ -38,8 +38,8 @@ function metricsActionsMaker() {
 }
 
 const fakeGroups = Immutable.fromJS([
-  {id: 1, name: 'aaa'},
-  {id: 2, name: 'bbb'}
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
 ])
 
 const fakeMetrics = Immutable.fromJS([
@@ -67,7 +67,7 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
-const urlParams = {brand: 'udn', account: 1}
+const urlParams = {brand: 'udn', account: '1'}
 
 describe('Groups', () => {
   it('should exist', () => {
@@ -124,7 +124,7 @@ describe('Groups', () => {
     )
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemChart)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should show existing groups as lists', () => {
@@ -140,7 +140,7 @@ describe('Groups', () => {
     )
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemList)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
   // Not in 0.5
   // it('should activate a group for edit when clicked', () => {
@@ -219,7 +219,7 @@ describe('Groups', () => {
         metrics={fakeMetrics}
         params={urlParams}/>
     )
-    groups.deleteGroup(1)
-    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn',1,1])
+    groups.deleteGroup('1')
+    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','1'])
   })
 })

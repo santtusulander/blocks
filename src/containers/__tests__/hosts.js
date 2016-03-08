@@ -118,14 +118,14 @@ describe('Hosts', () => {
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
-        hosts={Immutable.List([1,2])}
+        hosts={Immutable.List(['1','2'])}
         metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemChart)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should show existing hosts as lists', () => {
@@ -134,14 +134,14 @@ describe('Hosts', () => {
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
-        hosts={Immutable.List([1,2])}
+        hosts={Immutable.List(['1','2'])}
         metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemList)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should add a new host when called', () => {

@@ -1,13 +1,20 @@
 import React from 'react'
+import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../ip-address.jsx')
 const IpAddress = require('../ip-address.jsx')
 
+const fakeConfig = Immutable.fromJS({
+  "cases": [["foo"]]
+})
+
+const fakePath = ['foo', 'bar']
+
 describe('IpAddress', () => {
   it('should exist', () => {
     let ipAddress = TestUtils.renderIntoDocument(
-      <IpAddress />
+      <IpAddress match={fakeConfig} path={fakePath}/>
     );
     expect(TestUtils.isCompositeComponent(ipAddress)).toBeTruthy();
   })
@@ -15,7 +22,7 @@ describe('IpAddress', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let ipAddress = TestUtils.renderIntoDocument(
-      <IpAddress changeValue={changeValue}/>
+      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(ipAddress, 'input')
     inputs[0].value = 'new'
