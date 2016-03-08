@@ -23,4 +23,19 @@ describe('Header', () => {
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'header_name'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
+
+  it('should handle select changes', () => {
+    let changeValue = jest.genMockFunction()
+    let header = TestUtils.renderIntoDocument(
+      <Header changeValue={changeValue}/>
+    )
+    expect(header.state.activeActivity).toBe('add')
+    header.handleSelectChange('activeActivity')('foo')
+    expect(header.state.activeActivity).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
+    expect(header.state.activeDirection).toBe('to_origin')
+    header.handleSelectChange('activeDirection')('bar')
+    expect(header.state.activeDirection).toBe('bar')
+    expect(changeValue.mock.calls[1][1]).toBe('bar')
+  })
 })

@@ -1,45 +1,77 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
+import Immutable from 'immutable'
 
 class MatchesSelection extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.setMatchField = this.setMatchField.bind(this)
+  }
+  setMatchField(field) {
+    return e => {
+      e.preventDefault()
+      this.props.changeValue(this.props.path.concat(['field']), field)
+    }
+  }
   render() {
     return (
       <div>
         <Modal.Header>
-          <h1>Choose Conditions</h1>
+          <h1>Choose Condition</h1>
           <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
         </Modal.Header>
         <Modal.Body>
           <ul className="condition-selection list-unstyled">
             <li>
-              <a href="#">Hostname</a>
+              <a href="#" onClick={this.setMatchField('request_host')}>
+                Hostname
+              </a>
             </li>
             <li>
-              <a href="#">Directory Path</a>
+              <a href="#" onClick={this.setMatchField('request_path')}>
+                Directory Path
+              </a>
             </li>
             <li>
-              <a href="#">MIME Type</a>
+              <a href="#" onClick={this.setMatchField(null)}>
+                MIME Type NEEDS_API
+              </a>
             </li>
             <li>
-              <a href="#">File Extension</a>
+              <a href="#">
+                File Extension NEEDS_API
+              </a>
             </li>
             <li>
-              <a href="#">File Name</a>
+              <a href="#">
+                File Name NEEDS_API
+              </a>
             </li>
             <li>
-              <a href="#">File Type</a>
+              <a href="#">
+                File Type NEEDS_API
+              </a>
             </li>
             <li>
-              <a href="#">Query String</a>
+              <a href="#" onClick={this.setMatchField('request_query')}>
+                Query String
+              </a>
             </li>
             <li>
-              <a href="#">Header</a>
+              <a href="#" onClick={this.setMatchField('request_header')}>
+                Header
+              </a>
             </li>
             <li>
-              <a href="#">Cookie</a>
+              <a href="#" onClick={this.setMatchField('request_cookie')}>
+                Cookie
+              </a>
             </li>
             <li>
-              <a href="#">IP Address</a>
+              <a href="#">
+                IP Address NEEDS_API
+              </a>
             </li>
           </ul>
         </Modal.Body>
@@ -50,6 +82,9 @@ class MatchesSelection extends React.Component {
 
 MatchesSelection.displayName = 'MatchesSelection'
 MatchesSelection.propTypes = {
+  changeValue: React.PropTypes.func,
+  config: React.PropTypes.instanceOf(Immutable.Map),
+  path: React.PropTypes.array
 }
 
 module.exports = MatchesSelection

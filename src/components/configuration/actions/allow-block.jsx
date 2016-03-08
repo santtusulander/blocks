@@ -26,11 +26,11 @@ class AllowBlock extends React.Component {
     return key, value => {
       if (key === 'activeAccessControl') {
         this.setState({
-          activeActivity: value
+          activeAccessControl: value
         })
       } else if (key === 'activeErrorResponse') {
         this.setState({
-          activeDirection: value
+          activeErrorResponse: value
         })
       }
       this.props.changeValue(path, value)

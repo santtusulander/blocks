@@ -1,13 +1,20 @@
 import React from 'react'
+import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../file-extension.jsx')
 const FileExtension = require('../file-extension.jsx')
 
+const fakeConfig = Immutable.fromJS({
+  "cases": [["foo"]]
+})
+
+const fakePath = ['foo', 'bar']
+
 describe('DirectoryPath', () => {
   it('should exist', () => {
     let fileExtension = TestUtils.renderIntoDocument(
-      <FileExtension />
+      <FileExtension match={fakeConfig} path={fakePath}/>
     );
     expect(TestUtils.isCompositeComponent(fileExtension)).toBeTruthy();
   })
@@ -15,12 +22,12 @@ describe('DirectoryPath', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let fileExtension = TestUtils.renderIntoDocument(
-      <FileExtension changeValue={changeValue}/>
+      <FileExtension changeValue={changeValue} match={fakeConfig} path={fakePath}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileExtension, 'input')
     inputs[0].value = 'new'
     TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'matches', 'file_extension_value'])
+    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
 })
