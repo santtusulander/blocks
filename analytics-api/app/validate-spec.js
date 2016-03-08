@@ -124,3 +124,47 @@ describe('validate._validateID', function() {
     expect(result.indexOf('Error')).toBe(0);
   });
 });
+
+
+describe('validate._validateProperty', function() {
+  it('should return null for a valid property', function() {
+    let data = {
+      key: 'property',
+      value: 'idean.com',
+      required: true
+    };
+    let result = validate._validateProperty(data);
+    expect(result).toBe(null);
+  });
+
+  it('should return null for a parameter that was not provided and is not required', function() {
+    let data = {
+      key: 'property',
+      required: false
+    };
+    let result = validate._validateProperty(data);
+    expect(result).toBe(null);
+  });
+
+  it('should return an error message for an invalid property', function() {
+    let data = {
+      key: 'property',
+      value: '',
+      required: true
+    };
+    let result = validate._validateProperty(data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+
+  it('should return an error message for an invalid property, even if the parameter is not required', function() {
+    let data = {
+      key: 'property',
+      value: '',
+      required: false
+    };
+    let result = validate._validateProperty(data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+});

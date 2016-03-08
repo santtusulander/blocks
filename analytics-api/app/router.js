@@ -4,6 +4,7 @@ let router               = require('express').Router();
 let log                  = require('./logger');
 let routeTrafficTime     = require('./routes/traffic/time');
 let routeTrafficCountry  = require('./routes/traffic/country');
+let routeTrafficTotal    = require('./routes/traffic/total');
 let routeVisitorsTime    = require('./routes/visitors/time');
 let routeVisitorsCountry = require('./routes/visitors/country');
 let routeVisitorsOS      = require('./routes/visitors/os');
@@ -16,6 +17,7 @@ router.errorHandler = errorHandler;
 // API routes
 router.get('/traffic/time',     routeTrafficTime);
 router.get('/traffic/country',  routeTrafficCountry);
+router.get('/traffic/total',    routeTrafficTotal);
 router.get('/visitors/time',    routeVisitorsTime);
 router.get('/visitors/country', routeVisitorsCountry);
 router.get('/visitors/os',      routeVisitorsOS);

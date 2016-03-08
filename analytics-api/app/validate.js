@@ -49,6 +49,25 @@ class Validate {
   }
 
   /**
+   * Ensure the value is a property.
+   *
+   * @private
+   * @param  {object}      data The data to validate in the format:
+   *                            {key: <string>, value: <mixed>, required: <boolean>}
+   * @return {string|null}      If valid, return null. If invalid, return error string.
+   */
+  _validateProperty(data) {
+    let message = `Error with ${data.key} parameter: You must provide a valid string. Value received: ${data.value}`;
+                  // If the value is defined...
+    let isValid = !_.isUndefined(data.value)
+                  // ...then it must be at least one character long...
+                  ? /^.+$/.test(data.value)
+                  // ...otherwise it's valid, unless it's required
+                  : !data.required;
+    return isValid ? null : message;
+  }
+
+  /**
    * Validate the values of query string parameters.
    *
    * @param {object} params Parameter data to validate (e.g. {start: 1451606400})
