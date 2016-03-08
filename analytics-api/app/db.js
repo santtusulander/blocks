@@ -341,8 +341,8 @@ class AnalyticsDB {
 
     let queryParameterized = `
       SELECT
-        epoch_start,
-        sum(bytes) AS bytes
+        epoch_start AS timestamp,
+        sum(bytes) AS bytes_out
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n      ')}
