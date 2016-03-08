@@ -27,8 +27,8 @@ function uiActionsMaker() {
 }
 
 const fakeAccounts = Immutable.fromJS([
-  {id: 1, name: 'aaa'},
-  {id: 2, name: 'bbb'}
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
 ])
 
 const urlParams = {brand: 'udn'}
@@ -74,7 +74,7 @@ describe('Accounts', () => {
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should show existing accounts as lists', () => {
@@ -87,7 +87,7 @@ describe('Accounts', () => {
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should activate an account for edit when toggled', () => {
@@ -98,8 +98,8 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}/>
     )
-    accounts.toggleActiveAccount(1)()
-    expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn',1])
+    accounts.toggleActiveAccount('1')()
+    expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn','1'])
   });
 
   it('should deactivate an account when toggled if already active', () => {
@@ -108,10 +108,10 @@ describe('Accounts', () => {
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
         accounts={fakeAccounts}
-        activeAccount={Immutable.Map({account_id:1})}
+        activeAccount={Immutable.Map({account_id:'1'})}
         params={urlParams}/>
     )
-    accounts.toggleActiveAccount(1)()
+    accounts.toggleActiveAccount('1')()
     expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
   });
 
@@ -121,12 +121,12 @@ describe('Accounts', () => {
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
         accounts={fakeAccounts}
-        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
+        activeAccount={Immutable.Map({account_id: '1', name: 'aaa'})}
         params={urlParams}/>
     )
     accounts.changeActiveAccountValue(['name'], 'bbb')
     expect(accountActions.changeActiveAccount.mock.calls[0][0].toJS()).toEqual({
-      account_id: 1,
+      account_id: '1',
       name: 'bbb'
     })
   })
@@ -137,12 +137,12 @@ describe('Accounts', () => {
       <Accounts accountActions={accountActions}
         uiActions={uiActionsMaker()}
         accounts={fakeAccounts}
-        activeAccount={Immutable.Map({account_id: 1, name: 'aaa'})}
+        activeAccount={Immutable.Map({account_id: '1', name: 'aaa'})}
         params={urlParams}/>
     )
     accounts.saveActiveAccountChanges()
     expect(accountActions.updateAccount.mock.calls[0][1]).toEqual({
-      account_id: 1,
+      account_id: '1',
       name: 'aaa'
     })
   })
@@ -155,7 +155,7 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}/>
     )
-    accounts.deleteAccount(1)
-    expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn',1])
+    accounts.deleteAccount('1')
+    expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn','1'])
   })
 })

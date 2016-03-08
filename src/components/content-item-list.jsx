@@ -17,7 +17,6 @@ class ContentItemList extends React.Component {
     }
 
     this.measureContainers = this.measureContainers.bind(this)
-    this.deleteAccount = this.deleteAccount.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -30,11 +29,6 @@ class ContentItemList extends React.Component {
     this.setState({
       byTimeWidth: this.refs.byTimeHolder.clientWidth
     })
-  }
-  deleteAccount(e) {
-    e.stopPropagation()
-    e.preventDefault()
-    this.props.delete(this.props.id)
   }
   render() {
     return (
