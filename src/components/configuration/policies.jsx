@@ -212,6 +212,8 @@ class ConfigurationPolicies extends React.Component {
         default:
           activeEditForm = (
             <ActionsSelection
+              activateSet={this.activateSet}
+              config={this.props.config}
               path={this.state.activeSetPath}
               changeValue={this.props.changeValue}/>
           )
