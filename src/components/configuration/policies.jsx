@@ -256,7 +256,7 @@ class ConfigurationPolicies extends React.Component {
           activateRule={this.activateRule}/>
         {this.state.activeRulePath ?
           <ConfigurationSidebar
-            rightColVisible={activeEditForm}
+            rightColVisible={!!activeEditForm}
             handleRightColClose={this.handleRightColClose}
             onHide={this.clearActiveRule}
             rightColContent={activeEditForm}>
@@ -266,6 +266,7 @@ class ConfigurationPolicies extends React.Component {
               activeMatchPath={this.state.activeMatchPath}
               activeSetPath={this.state.activeSetPath}
               changeValue={this.props.changeValue}
+              config={this.props.config}
               rule={config.getIn(this.state.activeRulePath)}
               rulePath={this.state.activeRulePath}
               changeActiveRuleType={this.changeActiveRuleType}
