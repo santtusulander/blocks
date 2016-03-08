@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
@@ -20,6 +21,15 @@ function purgeActionsMaker() {
     }),
     resetActivePurge: jest.genMockFunction(),
     updateActivePurge: jest.genMockFunction()
+  }
+}
+
+function userActionsMaker(cbResponse) {
+  return {
+    startFetching: jest.genMockFunction(),
+    logOut: jest.genMockFunction().mockImplementation(() => {
+      return {then: cb => cb(cbResponse)}
+    })
   }
 }
 
@@ -47,6 +57,7 @@ describe('Main', () => {
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
   });
+
   it('should activate a property to purge', () => {
     let main = TestUtils.renderIntoDocument(
       <Main routes={['foo']}
@@ -56,9 +67,10 @@ describe('Main', () => {
         theme="dark" />
     );
     expect(main.state.activePurge).toBe(null);
-    main.activatePurge('aaa')()
-    expect(main.state.activePurge).toBe('aaa');
+    main.activatePurge(1)()
+    expect(main.state.activePurge).toBe(1);
   });
+
   it('should create a new purge', () => {
     const purgeActions = purgeActionsMaker()
     let main = TestUtils.renderIntoDocument(
@@ -75,5 +87,30 @@ describe('Main', () => {
     expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
     expect(purgeActions.createPurge.mock.calls[0][3]).toBe('www.foobar.com')
     expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakePurge.toJS())
+  });
+
+  it('should have .chart-view class when viewing charts', () => {
+    let main = TestUtils.renderIntoDocument(
+      <Main routes={['foo']} uiActions={uiActionsMaker()} theme="dark"
+        viewingChart={true} />
+    );
+    let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
+    expect(ReactDOM.findDOMNode(container).className).toContain('chart-view');
+  });
+
+  it('handles a successful log out attempt', () => {
+    const userActions = userActionsMaker({})
+    const fakeHistory = {
+      pushState: jest.genMockFunction()
+    }
+    const main = TestUtils.renderIntoDocument(
+      <Main routes={['foo']}
+        uiActions={uiActionsMaker()}
+        theme="dark"
+        userActions={userActions}
+        history={fakeHistory} />
+    )
+    main.logOut()
+    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/login')
   });
 })

@@ -9,13 +9,6 @@ import IconConfiguration from '../components/icons/icon-configuration.jsx'
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
-
-    this.deleteAccount = this.deleteAccount.bind(this)
-  }
-  deleteAccount(e) {
-    e.stopPropagation()
-    e.preventDefault()
-    this.props.delete(this.props.id)
   }
   render() {
     if (!this.props.primaryData) {

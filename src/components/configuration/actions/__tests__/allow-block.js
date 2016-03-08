@@ -23,4 +23,19 @@ describe('AllowBlock', () => {
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'allow_block_redirect_url'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
+
+  it('should handle select changes', () => {
+    let changeValue = jest.genMockFunction()
+    let allowBlock = TestUtils.renderIntoDocument(
+      <AllowBlock changeValue={changeValue}/>
+    )
+    expect(allowBlock.state.activeAccessControl).toBe('allow')
+    allowBlock.handleSelectChange('activeAccessControl')('foo')
+    expect(allowBlock.state.activeAccessControl).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
+    expect(allowBlock.state.activeErrorResponse).toBe('301')
+    allowBlock.handleSelectChange('activeErrorResponse')('bar')
+    expect(allowBlock.state.activeErrorResponse).toBe('bar')
+    expect(changeValue.mock.calls[1][1]).toBe('bar')
+  })
 })

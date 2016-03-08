@@ -5,6 +5,12 @@ import Immutable from 'immutable'
 import IconTrash from '../icons/icon-trash.jsx'
 
 function parsePolicy(policy) {
+  if(!policy) {
+    return {
+      matches: [],
+      sets: []
+    }
+  }
   if(policy.has('match')) {
     let {combinedMatches, combinedSets} = policy.get('match').get('cases').reduce((fields, policyCase) => {
       const {matches, sets} = parsePolicy(policyCase.get(1).get(0))
