@@ -73,6 +73,52 @@ class AnalyticsDB {
   }
 
   /**
+   * Based on an options object, return the appropriate account level.
+   *
+   * @private
+   * @param  {object} options            Options object that contains keys for
+   *                                     account, group, and/or property
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     For example, if the caller is trying to
+   *                                     list properties of a group, this function
+   *                                     needs to return 'property', but the caller
+   *                                     would only provide account and group values.
+   * @return {string}                    Will return 'account', 'group', or 'property'
+   *                                     Returns null if the level could not be determined
+   */
+  _getAccountLevel(options, isListingChildren) {
+    let accountLevel;
+    isListingChildren = !!isListingChildren || false;
+
+    if (isListingChildren) {
+
+      if (options.group && options.account) {
+        accountLevel = 'property';
+      } else if (options.account) {
+        accountLevel = 'group';
+      } else {
+        accountLevel = 'account';
+      }
+
+    } else {
+
+      if (options.property && options.group && options.account) {
+        accountLevel = 'property';
+      } else if (options.group && options.account) {
+        accountLevel = 'group';
+      } else if (options.account) {
+        accountLevel = 'account';
+      } else {
+        accountLevel = null;
+      }
+
+    }
+
+    return accountLevel;
+  }
+
+  /**
    * Get hourly traffic data (bytes out) for all properties in a group within a
    * given time range. NOTE: The data returned is grouped by hour.
    *
