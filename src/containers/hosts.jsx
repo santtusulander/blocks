@@ -176,8 +176,8 @@ export class Hosts extends React.Component {
                           minTransfer={metrics.get('transfer_rates').get('lowest')}
                           avgTransfer={metrics.get('transfer_rates').get('average')}
                           barWidth="1"
-                          chartWidth="480"
-                          barMaxHeight="80" />
+                          chartWidth="450"
+                          barMaxHeight="70" />
                       )
                     })}
                   </div> :
