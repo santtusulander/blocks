@@ -394,6 +394,51 @@ class AnalyticsDB {
       optionsFinal.property
     ]);
   }
+
+  /**
+   * Get hourly outbound traffic (egress) for a property, group, or account.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     See _getAccountLevel for more info.
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getEgressHourly(options, isListingChildren) {
+    isListingChildren = !!isListingChildren || false;
+    let optionsFinal  = this._getQueryOptions(options);
+    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
+    let conditions    = [];
+
+    // Build the table name
+    let table = `${accountLevel}_global_hour`;
+
+    // Build the WHERE clause
+    optionsFinal.account  && conditions.push('AND account_id = ?');
+    optionsFinal.group    && conditions.push('AND group_id = ?');
+    optionsFinal.property && !isListingChildren && conditions.push('AND property = ?');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+        AND flow_dir = 'out'
+      GROUP BY epoch_start;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      table,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account,
+      optionsFinal.group,
+      optionsFinal.property
+    ]);
+  }
 }
 
 module.exports = new AnalyticsDB(configs);
