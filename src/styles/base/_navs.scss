@@ -90,6 +90,19 @@
       @include sm {
         padding: 0 10px;
       }
+
+      &.active {
+
+        &,
+        &:hover,
+        &:focus {
+          color: $pale-blue;
+          text-decoration: none;
+          background-color: inherit;
+          border: 0;
+          border-bottom: 5px solid $pale-blue;
+        }
+      }
     }
 
     &.active {
