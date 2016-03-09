@@ -114,18 +114,23 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(newPath.concat([newSets.size - 1, 'set', '']))
     }
   }
-  deleteMatch(index) {
+  deleteMatch(path) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('delete the rule at '+index)
+      const children = this.props.config.getIn(path.concat(['cases', 0, 1]))
+      this.props.changeValue(
+        path.slice(0, -2),
+        children
+      )
+      this.props.activateMatch(null)
     }
   }
-  deleteSet(index) {
+  deleteSet(path) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('delete the setting at '+index)
+      console.log('delete the setting at '+path)
     }
   }
   moveSet(index, newIndex) {
@@ -206,7 +211,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <p>NEEDS_API</p>
                   </Col>
                   <Col xs={2} className="text-right">
-                    <Button onClick={this.deleteMatch(i)} bsStyle="primary"
+                    <Button onClick={this.deleteMatch(match.path)} bsStyle="primary"
+                      disabled={flattenedPolicy.matches.length < 2}
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>
@@ -257,7 +263,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                       className="btn-link btn-icon">
                       <IconArrowDown/>
                     </Button>
-                    <Button onClick={this.deleteSet(i)} bsStyle="primary"
+                    <Button onClick={this.deleteSet(set.path)} bsStyle="primary"
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>
