@@ -1,7 +1,6 @@
 'use strict';
 
 require('express-jsend');
-let _        = require('lodash');
 let log      = require('../../logger');
 let db       = require('../../db');
 let validate = require('../../validate');

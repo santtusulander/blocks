@@ -1,6 +1,5 @@
 'use strict';
 
-let _       = require('lodash');
 let mysql   = require('promise-mysql');
 let Promise = require('bluebird');
 let configs = require('./configs');
