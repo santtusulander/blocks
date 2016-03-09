@@ -352,7 +352,7 @@ class AnalyticsDB {
     let secondsPerMonth = 2678399;
     let secondsPerDay   = 86399;
     let duration        = optionsFinal.end - optionsFinal.start;
-    let accountLevel    = this._getAccountLevel(optionsFinal);
+    let accountLevel    = this._getAccountLevel(optionsFinal) || 'property';
     let conditions      = [];
     let granularity;
 
