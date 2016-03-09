@@ -160,7 +160,7 @@ export class Configurations extends React.Component {
                             purge
                           </a>
                         : ''}
-                        <Link to={`/configuration/${this.props.params.brand}/${property.get('account_id')}/${property.get('group_id')}/${property.get('property')}`}>
+                        <Link to={`/content/configuration/${this.props.params.brand}/${property.get('account_id')}/${property.get('group_id')}/${property.get('property')}`}>
                           edit
                         </Link>
                       </td>
