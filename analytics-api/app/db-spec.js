@@ -40,6 +40,48 @@ describe('db._getQueryOptions', function() {
 });
 
 
+describe('db._getAccountLevel', function() {
+  // isListingChildren is true
+  it('should return "property" if account and group were provided, and isListingChildren is true', function() {
+    let level = db._getAccountLevel({account: true, group: true}, true);
+    expect(level).toBe('property');
+  });
+
+  it('should return "group" if account was provided, and isListingChildren is true', function() {
+    let level = db._getAccountLevel({account: true}, true);
+    expect(level).toBe('group');
+  });
+
+  it('should return "account" if account, group, and property were NOT provided, and isListingChildren is true', function() {
+    let level = db._getAccountLevel({}, true);
+    expect(level).toBe('account');
+  });
+
+  // isListingChildren is false
+  it('should return "property" if account, group, and property were provided, and isListingChildren is false', function() {
+    let level = db._getAccountLevel({account: true, group: true, property: true});
+    expect(level).toBe('property');
+  });
+
+  it('should return "group" if account and group were provided, and isListingChildren is false', function() {
+    let level = db._getAccountLevel({account: true, group: true});
+    expect(level).toBe('group');
+  });
+
+  it('should return "account" if account was provided, and isListingChildren is false', function() {
+    let level = db._getAccountLevel({account: true});
+    expect(level).toBe('account');
+  });
+
+  it('should return null if the level could not be determined, and isListingChildren is false', function() {
+    let level = db._getAccountLevel({});
+    expect(level).toBe(null);
+  });
+
+
+});
+
+
 describe('db._getPropertyTraffic', function() {
   let options = {start: 0, end: 1, account: 2, group: 3};
   beforeEach(function() {

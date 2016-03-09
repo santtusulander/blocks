@@ -1,6 +1,5 @@
 'use strict';
 
-let _       = require('lodash');
 let mysql   = require('promise-mysql');
 let Promise = require('bluebird');
 let configs = require('./configs');
@@ -70,6 +69,52 @@ class AnalyticsDB {
     }
 
     return Object.assign({}, optionDefaults, options || {});
+  }
+
+  /**
+   * Based on an options object, return the appropriate account level.
+   *
+   * @private
+   * @param  {object} options            Options object that contains keys for
+   *                                     account, group, and/or property
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     For example, if the caller is trying to
+   *                                     list properties of a group, this function
+   *                                     needs to return 'property', but the caller
+   *                                     would only provide account and group values.
+   * @return {string}                    Will return 'account', 'group', or 'property'
+   *                                     Returns null if the level could not be determined
+   */
+  _getAccountLevel(options, isListingChildren) {
+    let accountLevel;
+    isListingChildren = !!isListingChildren || false;
+
+    if (isListingChildren) {
+
+      if (options.group && options.account) {
+        accountLevel = 'property';
+      } else if (options.account) {
+        accountLevel = 'group';
+      } else {
+        accountLevel = 'account';
+      }
+
+    } else {
+
+      if (options.property && options.group && options.account) {
+        accountLevel = 'property';
+      } else if (options.group && options.account) {
+        accountLevel = 'group';
+      } else if (options.account) {
+        accountLevel = 'account';
+      } else {
+        accountLevel = null;
+      }
+
+    }
+
+    return accountLevel;
   }
 
   /**
@@ -307,20 +352,9 @@ class AnalyticsDB {
     let secondsPerMonth = 2678399;
     let secondsPerDay   = 86399;
     let duration        = optionsFinal.end - optionsFinal.start;
+    let accountLevel    = this._getAccountLevel(optionsFinal) || 'property';
     let conditions      = [];
-    let accountLevel;
     let granularity;
-
-    // Account Level
-    if (optionsFinal.property && optionsFinal.group && optionsFinal.account) {
-      accountLevel = 'property';
-    } else if (optionsFinal.group && optionsFinal.account) {
-      accountLevel = 'group';
-    } else if (optionsFinal.account) {
-      accountLevel = 'account';
-    } else {
-      accountLevel = 'property';
-    }
 
     // Granularity
     if (duration === secondsPerMonth) {
@@ -340,6 +374,51 @@ class AnalyticsDB {
     optionsFinal.property && conditions.push('AND property = ?');
 
     // TODO: should this GROUP BY account_id, group_id, and property instead of epoch_start?
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+        AND flow_dir = 'out'
+      GROUP BY epoch_start;
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      table,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account,
+      optionsFinal.group,
+      optionsFinal.property
+    ]);
+  }
+
+  /**
+   * Get hourly outbound traffic (egress) for a property, group, or account.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     See _getAccountLevel for more info.
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getEgressHourly(options, isListingChildren) {
+    isListingChildren = !!isListingChildren || false;
+    let optionsFinal  = this._getQueryOptions(options);
+    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
+    let conditions    = [];
+
+    // Build the table name
+    let table = `${accountLevel}_global_hour`;
+
+    // Build the WHERE clause
+    optionsFinal.account  && conditions.push('AND account_id = ?');
+    optionsFinal.group    && conditions.push('AND group_id = ?');
+    optionsFinal.property && !isListingChildren && conditions.push('AND property = ?');
+
     let queryParameterized = `
       SELECT
         epoch_start AS timestamp,
