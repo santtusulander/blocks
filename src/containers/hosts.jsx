@@ -156,7 +156,7 @@ export class Hosts extends React.Component {
                 className="content-transition"
                 transitionName="content-transition"
                 transitionEnterTimeout={400}
-                transitionLeaveTimeout={500}>
+                transitionLeaveTimeout={250}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
                     {this.props.hosts.map((host, i) => {
