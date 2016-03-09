@@ -1,6 +1,5 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import Immutable from 'immutable'
 
 class MatchesSelection extends React.Component {
   constructor(props) {
@@ -39,17 +38,17 @@ class MatchesSelection extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onClick={this.setMatchField(null)}>
                 File Extension NEEDS_API
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onClick={this.setMatchField(null)}>
                 File Name NEEDS_API
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onClick={this.setMatchField(null)}>
                 File Type NEEDS_API
               </a>
             </li>
@@ -69,7 +68,7 @@ class MatchesSelection extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onClick={this.setMatchField(null)}>
                 IP Address NEEDS_API
               </a>
             </li>
@@ -83,7 +82,6 @@ class MatchesSelection extends React.Component {
 MatchesSelection.displayName = 'MatchesSelection'
 MatchesSelection.propTypes = {
   changeValue: React.PropTypes.func,
-  config: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }
 
