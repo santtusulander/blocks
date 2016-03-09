@@ -99,8 +99,20 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateMatch(newPath.concat([0, 'match']))
     }
   }
-  addAction() {
-    // add match
+  addAction(deepestMatch) {
+    return e => {
+      e.preventDefault()
+      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const currentSets = this.props.config.getIn(newPath)
+      const newSets = currentSets.push(Immutable.fromJS({set: {"": {}}}))
+      this.props.changeValue([],
+        this.props.config.setIn(
+          newPath,
+          newSets
+        )
+      )
+      this.props.activateSet(newPath.concat([newSets.size - 1, 'set', '']))
+    }
   }
   deleteMatch(index) {
     return e => {
@@ -210,7 +222,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col xs={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addAction}>
+                onClick={this.addAction(flattenedPolicy.matches[0])}>
                 <IconAdd />
               </Button>
             </Col>
