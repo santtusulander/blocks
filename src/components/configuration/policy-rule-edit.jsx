@@ -130,7 +130,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('delete the setting at '+path)
+      const setContainerPath = path.slice(0, -3)
+      const filtered = this.props.config.getIn(setContainerPath)
+        .filterNot((val, i) => i === path[path.length-3])
+      this.props.changeValue(setContainerPath, filtered)
+      this.props.activateSet(null)
     }
   }
   moveSet(index, newIndex) {
