@@ -99,7 +99,7 @@ class ContentItemChart extends React.Component {
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
-          style={{width: outerRadius * 2, height: outerRadius * 2}}
+          style={{width: this.props.chartWidth, height: this.props.chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
             <div className="glow"></div>
@@ -156,7 +156,10 @@ class ContentItemChart extends React.Component {
                 </div>
               </div>
               <div className="content-item-text-centered">
-                <div className="content-item-chart-name">{this.props.name}</div>
+                <div className="content-item-chart-name"
+                  style={{fontSize: this.props.chartWidth / 16}}>
+                  {this.props.name}
+                </div>
                 <div className="content-item-text-sm">
                   <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
                   <p>42 ms TTFB</p>
