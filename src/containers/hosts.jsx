@@ -150,7 +150,17 @@ export class Hosts extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p>Loading...</p> : (
+            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+              this.props.hosts.size === 0 ?
+                <p className="fetching-info text-center">
+                  {this.props.activeGroup ?
+                    this.props.activeGroup.get('name') +
+                    ' does not contain any properties'
+                    : 'Loading...'}
+                <br/>
+                You can create new properties by clicking the Add New (+) button
+                </p>
+              :
               <ReactCSSTransitionGroup
                 component="div"
                 className="content-transition"
