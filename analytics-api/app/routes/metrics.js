@@ -78,7 +78,7 @@ function routeMetrics(req, res) {
         _.forEach(levelTrafficDataFormatted, function(record){
           // Match historical records based on timestamp
           let matchingHistoricalRecord = levelHistoricalTrafficDataFormatted[matchIndex];
-          let isMatch = (parseInt(record.timestamp) - duration) === parseInt(matchingHistoricalRecord.timestamp);
+          let isMatch = matchingHistoricalRecord && (parseInt(record.timestamp) - duration) === parseInt(matchingHistoricalRecord.timestamp);
 
           trafficBytes.push(record.bytes);
 
