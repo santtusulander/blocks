@@ -12,9 +12,9 @@ export class ContentTransition extends React.Component {
         className="content-transition"
         transitionName="content-transition"
         transitionEnterTimeout={400}
-        transitionLeaveTimeout={500}
+        transitionLeaveTimeout={250}
         transitionAppear={true}
-        transitionAppearTimeout={500}
+        transitionAppearTimeout={400}
       >
         {React.cloneElement(this.props.children, {
           key: this.props.location.pathname

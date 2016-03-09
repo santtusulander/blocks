@@ -1,6 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
-import { ButtonToolbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { ButtonToolbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
 import IconChart from '../components/icons/icon-chart.jsx'
@@ -103,48 +104,73 @@ class ContentItemChart extends React.Component {
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
             <div className="glow"></div>
-            <svg className="content-item-chart-svg secondary-data">
-              {/* Add center point as last coordinate to close the path */}
-              <path className="content-item-chart-line"
-                d={secondaryLine(this.props.secondaryData)
-                  + 'L' + outerRadius + ' ' + outerRadius} />
-            </svg>
-            <svg className="content-item-chart-svg primary-data">
-              {/* For performance reasons we draw the primary bar chart as a path. We need
-              to add extra points to the array so that the path draws the lines outwards
-              from the center of the graph. Every other value on the array is set to
-              'center', which is translated in the d3 function in to coordinates */}
-              <path className="content-item-chart-line"
-                d={primaryLine(this.props.primaryData.reduce(
-                  (points, data) => {
-                    points.push(normalize(data.bytes))
-                    points.push('center')
-                    return points;
-                  }, [])
-              )} />
-            </svg>
+            <ReactCSSTransitionGroup
+              component="div"
+              className="content-transition"
+              transitionName="content-transition"
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}>
+              {!this.props.fetchingMetrics ?
+                <svg className="content-item-chart-svg secondary-data">
+                  {/* Add center point as last coordinate to close the path */}
+                  <path className="content-item-chart-line"
+                    d={secondaryLine(this.props.secondaryData)
+                      + 'L' + outerRadius + ' ' + outerRadius} />
+                </svg>
+              : ''}
+            </ReactCSSTransitionGroup>
+            <ReactCSSTransitionGroup
+              component="div"
+              className="content-transition"
+              transitionName="content-transition"
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}>
+              {!this.props.fetchingMetrics ?
+                <svg className="content-item-chart-svg primary-data">
+                  {/* For performance reasons we draw the primary bar chart as a path. We need
+                  to add extra points to the array so that the path draws the lines outwards
+                  from the center of the graph. Every other value on the array is set to
+                  'center', which is translated in the d3 function in to coordinates */}
+                  <path className="content-item-chart-line"
+                    d={primaryLine(this.props.primaryData.reduce(
+                      (points, data) => {
+                        points.push(normalize(data.bytes))
+                        points.push('center')
+                        return points;
+                      }, [])
+                  )} />
+                </svg>
+              : ''}
+            </ReactCSSTransitionGroup>
             <div className="circle-base"
               style={{width: innerRadius * 2, height: innerRadius * 2,
               marginTop: -innerRadius, marginLeft: -innerRadius}}>
               <div className="circle-gradient"></div>
             </div>
-            {this.props.differenceData ?
-              <svg className="content-item-chart-svg difference-arc">
-                <g style={differenceArcStyle}>
-                  {
-                    pie(Array(this.props.differenceData.length).fill(1)).map((arcs, i) => {
-                      let data = this.props.differenceData[i]
-                      let style = data < 0 ? 'below-avg' :
-                        data === 0 ? 'avg' :
-                        data > 0 ? 'above-avg' : ''
-                      return (
-                        <path key={i} d={arc(arcs)} className={style} />
-                      )
-                    })
-                  }
-                </g>
-              </svg> : ''
-            }
+            <ReactCSSTransitionGroup
+              component="div"
+              className="content-transition"
+              transitionName="content-transition"
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}>
+              {this.props.differenceData && !this.props.fetchingMetrics ?
+                <svg className="content-item-chart-svg difference-arc">
+                  <g style={differenceArcStyle}>
+                    {
+                      pie(Array(this.props.differenceData.length).fill(1)).map((arcs, i) => {
+                        let data = this.props.differenceData[i]
+                        let style = data < 0 ? 'below-avg' :
+                          data === 0 ? 'avg' :
+                          data > 0 ? 'above-avg' : ''
+                        return (
+                          <path key={i} d={arc(arcs)} className={style} />
+                        )
+                      })
+                    }
+                  </g>
+                </svg>
+              : ''}
+            </ReactCSSTransitionGroup>
             <div className="text-content"
               style={{width: innerRadius * 2, height: innerRadius * 2}}>
               <div className="content-item-traffic">
@@ -207,6 +233,7 @@ ContentItemChart.propTypes = {
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   differenceData: React.PropTypes.array,
+  fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
