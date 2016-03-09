@@ -37,11 +37,18 @@ class ConfigurationPolicyRules extends React.Component {
     super(props);
 
     this.activateRule = this.activateRule.bind(this)
+    this.deleteRule = this.deleteRule.bind(this)
   }
   activateRule(rulePath) {
     return e => {
       e.preventDefault()
       this.props.activateRule(rulePath)
+    }
+  }
+  deleteRule(policyType, index) {
+    return e => {
+      e.preventDefault()
+      this.props.deleteRule(policyType, index)
     }
   }
   render() {
@@ -75,7 +82,8 @@ class ConfigurationPolicyRules extends React.Component {
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
-                      className="btn-link btn-icon">
+                      className="btn-link btn-icon"
+                      onClick={this.deleteRule('request_policies', i)}>
                       <IconTrash/>
                     </Button>
                   </td>
@@ -96,7 +104,8 @@ class ConfigurationPolicyRules extends React.Component {
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
-                      className="btn-link btn-icon">
+                      className="btn-link btn-icon"
+                      onClick={this.deleteRule('response_policies', i)}>
                       <IconTrash/>
                     </Button>
                   </td>
@@ -113,6 +122,7 @@ class ConfigurationPolicyRules extends React.Component {
 ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
+  deleteRule: React.PropTypes.func,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }
