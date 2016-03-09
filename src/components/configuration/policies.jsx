@@ -44,6 +44,7 @@ class ConfigurationPolicies extends React.Component {
     }
 
     this.addRule = this.addRule.bind(this)
+    this.deleteRule = this.deleteRule.bind(this)
     this.clearActiveRule = this.clearActiveRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleRightColClose = this.handleRightColClose.bind(this)
@@ -64,6 +65,10 @@ class ConfigurationPolicies extends React.Component {
       activeRulePath: ['request_policies', reqPolicies.size - 1],
       activeSetPath: null
     })
+  }
+  deleteRule(policyType, index) {
+    const newPolicies = this.props.config.get(policyType).splice(index, 1)
+    this.props.changeValue([policyType], newPolicies)
   }
   clearActiveRule() {
     this.setState({
@@ -255,7 +260,8 @@ class ConfigurationPolicies extends React.Component {
         <ConfigurationPolicyRules
           requestPolicies={config.get('request_policies')}
           responsePolicies={config.get('response_policies')}
-          activateRule={this.activateRule}/>
+          activateRule={this.activateRule}
+          deleteRule={this.deleteRule}/>
         {this.state.activeRulePath ?
           <ConfigurationSidebar
             rightColVisible={!!activeEditForm}

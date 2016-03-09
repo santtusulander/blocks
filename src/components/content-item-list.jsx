@@ -1,5 +1,6 @@
 import React from 'react'
-import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap';
+import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
 import AnalysisByTime from '../components/analysis/by-time'
@@ -87,11 +88,20 @@ class ContentItemList extends React.Component {
 
           <div className="content-item-list-chart">
             <div ref="byTimeHolder">
-              <AnalysisByTime axes={false} padding={0} className="bg-transparent"
-                dataKey="bytes"
-                data={this.props.primaryData}
-                width={this.state.byTimeWidth}
-                height={200} />
+              <ReactCSSTransitionGroup
+                component="div"
+                className="content-transition"
+                transitionName="content-transition"
+                transitionEnterTimeout={250}
+                transitionLeaveTimeout={250}>
+                {!this.props.fetchingMetrics ?
+                  <AnalysisByTime axes={false} padding={0} className="bg-transparent"
+                    dataKey="bytes"
+                    data={this.props.primaryData}
+                    width={this.state.byTimeWidth}
+                    height={200} />
+                : ''}
+              </ReactCSSTransitionGroup>
             </div>
           </div>
         </Link>
@@ -108,6 +118,7 @@ ContentItemList.propTypes = {
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,

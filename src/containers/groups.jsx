@@ -22,132 +22,6 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
 
-const fakeRecentData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 39405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 33456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
-]
-
-const fakeAverageData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 49405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 23456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 24675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 33456, requests: 456}
-]
-
-const fakeDifferenceData = [0, 0, 1, -1, 0, 0, 1, -1, -1, -1]
-
 export class Groups extends React.Component {
   constructor(props) {
     super(props);
@@ -234,7 +108,7 @@ export class Groups extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
+                <Link to={`/content/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
                   <IconChart/>
                 </Link>
               </Button>
@@ -281,7 +155,7 @@ export class Groups extends React.Component {
                 className="content-transition"
                 transitionName="content-transition"
                 transitionEnterTimeout={400}
-                transitionLeaveTimeout={500}>
+                transitionLeaveTimeout={250}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
                     {this.props.groups.map((group, i) => {
@@ -289,7 +163,7 @@ export class Groups extends React.Component {
                       return (
                         <ContentItemChart key={i} id={group.get('id')}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                          analyticsLink={`/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
                           delete={this.deleteGroup}
                           primaryData={metrics.get('traffic').toJS()}
@@ -299,6 +173,7 @@ export class Groups extends React.Component {
                           maxTransfer={metrics.get('transfer_rates').get('peak')}
                           minTransfer={metrics.get('transfer_rates').get('lowest')}
                           avgTransfer={metrics.get('transfer_rates').get('average')}
+                          fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
                           chartWidth="560"
                           barMaxHeight="80" />
@@ -318,7 +193,8 @@ export class Groups extends React.Component {
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           maxTransfer={metrics.get('transfer_rates').get('peak')}
                           minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}/>
+                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}
                   </div>
@@ -355,6 +231,7 @@ Groups.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
@@ -368,8 +245,9 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    fetching: state.group.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetching'),
     groups: state.group.get('allGroups'),
-    fetching: state.group.get('fetching') || state.metrics.get('fetching'),
     metrics: state.metrics.get('metrics'),
     viewingChart: state.ui.get('viewingChart')
   };
