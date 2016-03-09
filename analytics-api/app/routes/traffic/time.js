@@ -14,7 +14,7 @@ function routeTrafficTime(req, res) {
   let errors = validate.params(params, {
     start    : {required: true, type: 'Timestamp'},
     end      : {required: false, type: 'Timestamp'},
-    account  : {required: false, type: 'ID'},
+    account  : {required: true, type: 'ID'},
     group    : {required: false, type: 'ID'},
     property : {required: false, type: 'Property'}
   });

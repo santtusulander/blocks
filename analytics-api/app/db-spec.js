@@ -389,5 +389,33 @@ describe('db.getEgressTotal', function() {
     expect(queryParams[0]).toBe('property_global_day');
 
   });
+});
+
+
+describe('db.getEgressHourly', function() {
+  beforeEach(function() {
+    spyOn(db, '_getQueryOptions').and.callThrough();
+    spyOn(db, '_getAccountLevel').and.callThrough();
+    spyOn(db, '_executeQuery').and.stub();
+  });
+
+  it('should return hourly data for a property', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com'
+    };
+
+    db.getEgressHourly(options);
+
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+    expect(db._getAccountLevel.calls.any()).toBe(true);
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('property_global_hour');
+  });
 
 });
