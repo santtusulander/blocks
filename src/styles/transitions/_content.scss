@@ -5,6 +5,12 @@
 
 .content-transition {
   position: relative;
+
+  .content-item-chart & {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .content-item-chart {
