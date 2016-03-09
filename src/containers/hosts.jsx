@@ -175,6 +175,7 @@ export class Hosts extends React.Component {
                           maxTransfer={metrics.get('transfer_rates').get('peak')}
                           minTransfer={metrics.get('transfer_rates').get('lowest')}
                           avgTransfer={metrics.get('transfer_rates').get('average')}
+                          fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
                           chartWidth="480"
                           barMaxHeight="80" />
@@ -194,7 +195,8 @@ export class Hosts extends React.Component {
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           maxTransfer={metrics.get('transfer_rates').get('peak')}
                           minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}/>
+                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}
                   </div>
@@ -228,6 +230,7 @@ Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
@@ -242,9 +245,10 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    fetching: state.host.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetching'),
     hosts: state.host.get('allHosts'),
     metrics: state.metrics.get('metrics'),
-    fetching: state.host.get('fetching') || state.metrics.get('fetching'),
     viewingChart: state.ui.get('viewingChart')
   };
 }

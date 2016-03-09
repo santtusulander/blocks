@@ -108,6 +108,7 @@ ContentItemList.propTypes = {
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
