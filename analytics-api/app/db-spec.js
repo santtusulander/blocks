@@ -399,7 +399,7 @@ describe('db.getEgressTotal', function() {
 });
 
 
-describe('db.getEgressHourly', function() {
+describe('db.getEgress', function() {
   beforeEach(function() {
     spyOn(db, '_getQueryOptions').and.callThrough();
     spyOn(db, '_getAccountLevel').and.callThrough();
@@ -415,7 +415,7 @@ describe('db.getEgressHourly', function() {
       property: 'idean.com'
     };
 
-    db.getEgressHourly(options);
+    db.getEgress(options);
 
     let queryParams = db._executeQuery.calls.argsFor(0)[1];
     let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
@@ -423,6 +423,44 @@ describe('db.getEgressHourly', function() {
     expect(db._getAccountLevel.calls.any()).toBe(true);
     expect(finalOptions).toEqual(options);
     expect(queryParams[0]).toBe('property_global_hour');
+  });
+
+  it('should select the country field if the geography options was passed as country', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      geography: 'country'
+    };
+
+    db.getEgress(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(/country,/.test(query)).toBe(true);
+  });
+
+  it('should include service_type in the WHERE clause if the service_type option was passed', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      service_type: 'http'
+    };
+
+    db.getEgress(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[queryParams.length - 1]).toBe('http');
+    expect(/service_type = \?/.test(query)).toBe(true);
   });
 
 });

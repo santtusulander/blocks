@@ -415,7 +415,7 @@ class AnalyticsDB {
   }
 
   /**
-   * Get hourly outbound traffic (egress) for a property, group, or account.
+   * Get outbound traffic (egress) for a property, group, or account.
    *
    * @param  {object}  options           Options that get piped into an SQL query
    * @param  {boolean} isListingChildren Determines whether or not the caller
@@ -424,29 +424,38 @@ class AnalyticsDB {
    * @return {Promise}                   A promise that is fulfilled with the
    *                                     query results
    */
-  getEgressHourly(options, isListingChildren) {
+  getEgress(options, isListingChildren) {
     isListingChildren = !!isListingChildren || false;
     let optionsFinal  = this._getQueryOptions(options);
     let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
     let conditions    = [];
+    let columns       = [];
+
+    // Build the SELECT clause
+    // Include the geography option as a column to be selected unless it's
+    // undefined or the default value of 'global'
+    optionsFinal.geography && optionsFinal.geography !== 'global' && columns.push(optionsFinal.geography);
+    let dynamicSelect = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
 
     // Build the table name
-    let table = `${accountLevel}_global_hour`;
+    let table = `${accountLevel}_${optionsFinal.geography}_${optionsFinal.granularity}`;
 
     // Build the WHERE clause
-    optionsFinal.account  && conditions.push('AND account_id = ?');
-    optionsFinal.group    && conditions.push('AND group_id = ?');
-    optionsFinal.property && !isListingChildren && conditions.push('AND property = ?');
+    optionsFinal.account      && conditions.push('AND account_id = ?');
+    optionsFinal.group        && conditions.push('AND group_id = ?');
+    optionsFinal.property     && !isListingChildren && conditions.push('AND property = ?');
+    optionsFinal.service_type && conditions.push('AND service_type = ?');
 
     let queryParameterized = `
-      SELECT
+      SELECT${dynamicSelect}
         epoch_start AS timestamp,
         sum(bytes) AS bytes
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY epoch_start;
+      GROUP BY epoch_start
+      ORDER BY epoch_start asc;
     `;
 
     return this._executeQuery(queryParameterized, [
@@ -455,7 +464,8 @@ class AnalyticsDB {
       optionsFinal.end,
       optionsFinal.account,
       optionsFinal.group,
-      optionsFinal.property
+      optionsFinal.property,
+      optionsFinal.service_type
     ]);
   }
 }

@@ -25,12 +25,15 @@ function routeTrafficTime(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getEgressHourly({
-    start    : params.start,
-    end      : params.end,
-    account  : params.account,
-    group    : params.group,
-    property : params.property
+  db.getEgress({
+    start        : params.start,
+    end          : params.end,
+    account      : params.account,
+    group        : params.group,
+    property     : params.property,
+    service_type : params.service_type,
+    granularity  : params.granularity,
+    geography    : 'global'
   }).then((trafficData) => {
     if (trafficData) {
       // res.jsend(trafficData);
