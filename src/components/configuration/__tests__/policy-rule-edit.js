@@ -27,13 +27,33 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should save changes', () => {
-    const saveChanges = jest.genMockFunction()
+    const hideAction = jest.genMockFunction()
     let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit saveChanges={saveChanges}
+      <ConfigurationPolicyRuleEdit hideAction={hideAction}
         rule={Immutable.Map()}/>
     );
     let form = TestUtils.findRenderedDOMComponentWithTag(policyRule, 'form');
     TestUtils.Simulate.submit(form)
-    expect(saveChanges.mock.calls.length).toBe(1)
+    expect(hideAction.mock.calls.length).toBe(1)
+  });
+
+  it('should activate a match', () => {
+    const activateMatch = jest.genMockFunction()
+    let policyRule = TestUtils.renderIntoDocument(
+      <ConfigurationPolicyRuleEdit activateMatch={activateMatch}
+        rule={Immutable.Map()}/>
+    );
+    policyRule.activateMatch('aaa')()
+    expect(activateMatch.mock.calls[0][0]).toBe('aaa')
+  });
+
+  it('should activate a set', () => {
+    const activateSet = jest.genMockFunction()
+    let policyRule = TestUtils.renderIntoDocument(
+      <ConfigurationPolicyRuleEdit activateSet={activateSet}
+        rule={Immutable.Map()}/>
+    );
+    policyRule.activateSet('aaa')()
+    expect(activateSet.mock.calls[0][0]).toBe('aaa')
   });
 })
