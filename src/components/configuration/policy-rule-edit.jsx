@@ -67,7 +67,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSave = this.handleSave.bind(this)
     this.addMatch = this.addMatch.bind(this)
     this.addAction = this.addAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
@@ -79,10 +78,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
-  }
-  handleSave(e) {
-    e.preventDefault()
-    this.props.saveChanges()
   }
   addMatch(deepestMatch) {
     return e => {
