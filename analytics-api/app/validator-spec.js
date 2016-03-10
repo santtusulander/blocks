@@ -1,7 +1,7 @@
 'use strict';
 let _         = require('lodash');
 let log       = require('./logger');
-let validator = require('./validate');
+let validator = require('./validator');
 
 
 describe('validator.validate', function() {
