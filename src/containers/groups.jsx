@@ -191,7 +191,7 @@ export class Groups extends React.Component {
                       const metrics = this.props.metrics.get(i)
                       const scaledWidth = trafficScale(metrics.get('totalTraffic'))
                       return (
-                        <ContentItemChart key={i} id={group.get('id')}
+                        <ContentItemChart key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
@@ -214,7 +214,7 @@ export class Groups extends React.Component {
                     {this.props.groups.map((group, i) => {
                       const metrics = this.props.metrics.get(i)
                       return (
-                        <ContentItemList key={i} id={group.get('id')}
+                        <ContentItemList key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
