@@ -1,7 +1,8 @@
 'use strict';
 
-let mysql   = require('promise-mysql');
 let Promise = require('bluebird');
+let _       = require('lodash');
+let mysql   = require('promise-mysql');
 let configs = require('./configs');
 let log     = require('./logger');
 
@@ -29,6 +30,16 @@ class AnalyticsDB {
       user            : cfg.dbUser,
       password        : cfg.dbPassword,
       database        : cfg.dbName
+    });
+
+    // Notify the log if a database connection couldn't be created
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        (err.code === 'ECONNREFUSED') && log.error('Could not connect to the database. Kill the Analytics API process, ensure the database is up and running, and restart the API.');
+        log.error(err);
+      } else {
+        connection.release();
+      }
     });
   }
 
@@ -61,12 +72,20 @@ class AnalyticsDB {
    */
   _getQueryOptions(options) {
     let optionDefaults = {
-      start    : null,
-      end      : Math.round(Date.now() / 1000),
-      account  : null,
-      group    : null,
-      property : null
+      start        : null,
+      end          : Math.round(Date.now() / 1000),
+      account      : null,
+      group        : null,
+      property     : null,
+      service_type : null,
+      geography    : 'global',
+      granularity  : 'hour'
     }
+
+    // Remove any properties that have undefined values
+    _.forOwn(options, (value, key) => {
+      _.isUndefined(value) && delete options[key]
+    });
 
     return Object.assign({}, optionDefaults, options || {});
   }
@@ -396,7 +415,7 @@ class AnalyticsDB {
   }
 
   /**
-   * Get hourly outbound traffic (egress) for a property, group, or account.
+   * Get outbound traffic (egress) for a property, group, or account.
    *
    * @param  {object}  options           Options that get piped into an SQL query
    * @param  {boolean} isListingChildren Determines whether or not the caller
@@ -405,29 +424,38 @@ class AnalyticsDB {
    * @return {Promise}                   A promise that is fulfilled with the
    *                                     query results
    */
-  getEgressHourly(options, isListingChildren) {
+  getEgress(options, isListingChildren) {
     isListingChildren = !!isListingChildren || false;
     let optionsFinal  = this._getQueryOptions(options);
     let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
     let conditions    = [];
+    let columns       = [];
+
+    // Build the SELECT clause
+    // Include the geography option as a column to be selected unless it's
+    // undefined or the default value of 'global'
+    optionsFinal.geography && optionsFinal.geography !== 'global' && columns.push(optionsFinal.geography);
+    let dynamicSelect = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
 
     // Build the table name
-    let table = `${accountLevel}_global_hour`;
+    let table = `${accountLevel}_${optionsFinal.geography}_${optionsFinal.granularity}`;
 
     // Build the WHERE clause
-    optionsFinal.account  && conditions.push('AND account_id = ?');
-    optionsFinal.group    && conditions.push('AND group_id = ?');
-    optionsFinal.property && !isListingChildren && conditions.push('AND property = ?');
+    optionsFinal.account      && conditions.push('AND account_id = ?');
+    optionsFinal.group        && conditions.push('AND group_id = ?');
+    optionsFinal.property     && !isListingChildren && conditions.push('AND property = ?');
+    optionsFinal.service_type && conditions.push('AND service_type = ?');
 
     let queryParameterized = `
-      SELECT
+      SELECT${dynamicSelect}
         epoch_start AS timestamp,
         sum(bytes) AS bytes
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY epoch_start;
+      GROUP BY epoch_start
+      ORDER BY epoch_start asc;
     `;
 
     return this._executeQuery(queryParameterized, [
@@ -436,7 +464,8 @@ class AnalyticsDB {
       optionsFinal.end,
       optionsFinal.account,
       optionsFinal.group,
-      optionsFinal.property
+      optionsFinal.property,
+      optionsFinal.service_type
     ]);
   }
 }
