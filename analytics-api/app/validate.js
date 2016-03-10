@@ -4,66 +4,60 @@ let log = require('./logger');
 
 
 /**
- * A collection of validation functions.
+ * A validation utility for custom types.
  * NOTE: This file exports an instance of this class, effectively making it a singleton.
  * @class
  */
-class Validate {
+class Validator {
 
   /**
-   * Ensure the value is a 10 digit number (seconds elapsed since UNIX epoch).
-   *
-   * @private
-   * @param  {object}      data The data to validate in the format:
-   *                            {key: <string>, value: <mixed>, required: <boolean>}
-   * @return {string|null}      If valid, return null. If invalid, return error string.
+   * Sets up custom validation types. Each type has an error message function
+   * and a validator regex used to determine if a value is valid.
+   * @constructor
    */
-  _validateTimestamp(data) {
-    let message = `Error with ${data.key} parameter: You must provide a valid date (seconds elapsed since UNIX epoch). Value received: ${data.value}`;
-                  // If the value is defined...
-    let isValid = !_.isUndefined(data.value)
-                  // ...then it must be a number with 10 digits...
-                  ? /^\d{10}$/.test(data.value)
-                  // ...otherwise it's valid, unless it's required
-                  : !data.required;
-    return isValid ? null : message;
+  constructor() {
+    this._types = {
+      timestamp: {
+        validator : /^\d{10}$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid date (seconds elapsed since UNIX epoch). Value received: ${value}`
+      },
+      id: {
+        validator : /^\d+$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid ID (number). Value received: ${value}`
+      },
+      property: {
+        validator : /^.+$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid string. Value received: ${value}`
+      },
+      service: {
+        validator : /^https?$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid service type ("http" or "https"). Value received: ${value}`
+      },
+      granularity: {
+        validator : /^(?:5min|hour|day|month)$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid time granularity ("5min", "hour", "day", or "month"). Value received: ${value}`
+      }
+    };
   }
 
   /**
-   * Ensure the value is a number.
+   * Ensure the value valid.
    *
    * @private
+   * @param  {string}      type The expected type of the value to validate against.
    * @param  {object}      data The data to validate in the format:
    *                            {key: <string>, value: <mixed>, required: <boolean>}
    * @return {string|null}      If valid, return null. If invalid, return error string.
    */
-  _validateID(data) {
-    let message = `Error with ${data.key} parameter: You must provide a valid ID (number). Value received: ${data.value}`;
-                  // If the value is defined...
-    let isValid = !_.isUndefined(data.value)
-                  // ...then it must be a number...
-                  ? /^\d+$/.test(data.value)
-                  // ...otherwise it's valid, unless it's required
-                  : !data.required;
-    return isValid ? null : message;
-  }
-
-  /**
-   * Ensure the value is a property.
-   *
-   * @private
-   * @param  {object}      data The data to validate in the format:
-   *                            {key: <string>, value: <mixed>, required: <boolean>}
-   * @return {string|null}      If valid, return null. If invalid, return error string.
-   */
-  _validateProperty(data) {
-    let message = `Error with ${data.key} parameter: You must provide a valid string. Value received: ${data.value}`;
-                  // If the value is defined...
-    let isValid = !_.isUndefined(data.value)
-                  // ...then it must be at least one character long...
-                  ? /^.+$/.test(data.value)
-                  // ...otherwise it's valid, unless it's required
-                  : !data.required;
+  _validateValue(type, data) {
+    let typeInfo = this._types[type.toLowerCase()];
+    let message  = typeInfo.message(data.key, data.value);
+                   // If the value is defined...
+    let isValid  = !_.isUndefined(data.value)
+                   // ...then it must be a number with 10 digits...
+                   ? typeInfo.validator.test(data.value)
+                   // ...otherwise it's valid, unless it's required
+                   : !data.required;
     return isValid ? null : message;
   }
 
@@ -76,7 +70,7 @@ class Validate {
    *
    * @return {string|null}  If valid, return null. If invalid, return error array.
    */
-  params(params, spec) {
+  validate(params, spec) {
     let errors = [];
 
     log.debug('validating params:', params);
@@ -84,7 +78,7 @@ class Validate {
     // Loop the properties in the spec and call the validate method that
     // corresponds to the type of the property.
     _.forOwn(spec, (value, key) => {
-      let errorMessage = this[`_validate${value.type}`]({
+      let errorMessage = this._validateValue(value.type, {
         key: key,
         value: params[key],
         required: value.required
@@ -98,4 +92,4 @@ class Validate {
 
 }
 
-module.exports = new Validate();
+module.exports = new Validator();
