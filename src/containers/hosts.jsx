@@ -150,7 +150,17 @@ export class Hosts extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p>Loading...</p> : (
+            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+              this.props.hosts.size === 0 ?
+                <p className="fetching-info text-center">
+                  {this.props.activeGroup ?
+                    this.props.activeGroup.get('name') +
+                    ' does not contain any properties'
+                    : 'Loading...'}
+                <br/>
+                You can create new properties by clicking the Add New (+) button
+                </p>
+              :
               <ReactCSSTransitionGroup
                 component="div"
                 className="content-transition"
@@ -189,6 +199,7 @@ export class Hosts extends React.Component {
                         <ContentItemList key={i} id={host}
                           linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           name={host} description="Desc"
                           primaryData={metrics.get('traffic').toJS()}
                           secondaryData={metrics.get('historical_traffic').toJS()}

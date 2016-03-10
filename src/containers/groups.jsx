@@ -149,7 +149,17 @@ export class Groups extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p>Loading...</p> : (
+            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+              this.props.groups.size === 0 ?
+                <p className="fetching-info text-center">
+                  {this.props.activeAccount ?
+                    this.props.activeAccount.get('name') +
+                    ' does not contain any groups'
+                    : 'Loading...'}
+                <br/>
+                You can create new groups by clicking the Add New (+) button
+                </p>
+              :
               <ReactCSSTransitionGroup
                 component="div"
                 className="content-transition"
@@ -186,6 +196,7 @@ export class Groups extends React.Component {
                       return (
                         <ContentItemList key={i} id={group.get('id')}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
                           delete={this.deleteGroup}
                           primaryData={metrics.get('traffic').toJS()}

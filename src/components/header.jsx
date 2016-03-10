@@ -136,7 +136,7 @@ class Header extends React.Component {
                 <Dropdown.Toggle bsStyle="primary"
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
-                  <img src="/src/assets/img/img-user.jpg"></img>
+                  <img src="/assets/img/img-user.jpg"></img>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-user-menu">
                   <MenuItem header={true} className="dropdown-main-header">

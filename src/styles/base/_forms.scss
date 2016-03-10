@@ -169,6 +169,7 @@ label {
   margin: 0;
 
   label {
+    position: relative;
     padding-left: 0;
   }
 
@@ -179,7 +180,7 @@ label {
       display: inline-block;
       width: 40px;
       height: 40px;
-      margin: -2px 20px 2px 0;
+      margin: 0 20px 0 0;
       vertical-align: middle;
       cursor: pointer;
       border-radius: 50%;
@@ -202,24 +203,23 @@ label {
 
     &:checked + span::after {
       position: absolute;
-      top: 50%;
+      top: 10px;
       left: 10px;
       width: 20px;
       height: 20px;
-      margin-top: -10px;
       border-radius: 50%;
       content: '';
 
       @include md {
-        left: 6px;
-        width: 18px;
-        height: 18px;
+        top: 7px;
+        left: 7px;
+        width: 16px;
+        height: 16px;
       }
     }
 
     .dark-theme &:checked + span,
     .light-theme &:checked + span {
-      position: relative;
 
       &::before {
         background-color: $pale-blue;

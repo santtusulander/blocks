@@ -4,16 +4,10 @@
 .footer {
   height: $footer-height;
   padding: 0 ($bar-height / 2);
-  font-size: $sm-font-size;
+  font-size: $md-font-size-sm;
 
   @include md {
-    height: $md-footer-height;
     padding: 0 ($md-bar-height / 2);
-    font-size: $md-font-size-sm;
-  }
-
-  @include sm {
-    font-size: $sm-font-size-sm;
   }
 
   .dark-theme & {
