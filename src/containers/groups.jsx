@@ -1,4 +1,5 @@
 import React from 'react'
+import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -102,6 +103,23 @@ export class Groups extends React.Component {
     }
   }
   render() {
+    let trafficMin = 0
+    let trafficMax = 0
+    if(!this.props.fetchingMetrics) {
+      const trafficTotals = this.props.groups.map((group, i) => {
+        return this.props.metrics.get(i).get('totalTraffic')
+      })
+      trafficMin = Math.min(...trafficTotals)
+      trafficMax = Math.max(...trafficTotals)
+    }
+    // If trafficMin === trafficMax, there's only one property or all properties
+    // have identical metrics. In that case the amoebas will all get the minimum
+    // size. Let's make trafficMin less than trafficMax and all amoebas will
+    // render with maximum size instead
+    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    const trafficScale = d3.scale.linear()
+      .domain([trafficMin, trafficMax])
+      .range([460, 560]);
     return (
       <PageContainer className='groups-container content-subcontainer'>
         <Content>
@@ -170,6 +188,7 @@ export class Groups extends React.Component {
                   <div className="content-item-grid">
                     {this.props.groups.map((group, i) => {
                       const metrics = this.props.metrics.get(i)
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic'))
                       return (
                         <ContentItemChart key={i} id={group.get('id')}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
@@ -185,8 +204,8 @@ export class Groups extends React.Component {
                           avgTransfer={metrics.get('transfer_rates').get('average')}
                           fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
-                          chartWidth="560"
-                          barMaxHeight="80" />
+                          chartWidth={scaledWidth.toString()}
+                          barMaxHeight={(scaledWidth / 7).toString()} />
                       )
                     })}
                   </div> :
