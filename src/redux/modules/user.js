@@ -27,7 +27,7 @@ export default handleActions({
       // TODO: Real auth will return a token or set a cookie
       const token = btoa(`${action.payload.username}:${action.payload.password}`)
       axios.defaults.headers.common['Authorization'] = 'Basic ' + token
-      return state.set('loggedIn', true)
+      return state.merge({loggedIn: true, fetching: false})
     },
     throw() {
       return emptyUser
