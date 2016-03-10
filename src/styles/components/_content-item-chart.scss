@@ -180,6 +180,7 @@
 
     p {
       margin-bottom: 8px;
+      line-height: 1em;
     }
   }
 
@@ -188,17 +189,22 @@
     top: 11%;
     width: 100%;
     font-size: 24px;
+    line-height: 1em;
+
+    .content-item-text-bold {
+      margin-bottom: 4px;
+    }
   }
 
   .content-item-text-centered {
     position: absolute;
-    top: 53%;
+    top: 51%;
     width: 100%;
     transform: translateY(-50%);
   }
 
   .content-item-chart-name {
-    margin: 0 5% 8px;
+    margin: 0 6% 8px;
     font-size: 36px;
     font-weight: 500;
     line-height: 1em;
