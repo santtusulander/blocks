@@ -46,8 +46,8 @@ export class Groups extends React.Component {
       this.props.params.brand,
       this.props.params.account
     )
-    this.props.metricsActions.startFetching()
-    this.props.metricsActions.fetchMetrics({
+    this.props.metricsActions.startGroupFetching()
+    this.props.metricsActions.fetchGroupMetrics({
       account: this.props.params.account,
       group: this.props.params.group,
       startDate: moment().subtract(30, 'days').format('X'),
@@ -257,9 +257,9 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.group.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
-    metrics: state.metrics.get('metrics'),
+    metrics: state.metrics.get('groupMetrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }

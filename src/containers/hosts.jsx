@@ -53,8 +53,8 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
-    this.props.metricsActions.startFetching()
-    this.props.metricsActions.fetchMetrics({
+    this.props.metricsActions.startHostFetching()
+    this.props.metricsActions.fetchHostMetrics({
       account: this.props.params.account,
       group: this.props.params.group,
       startDate: moment().subtract(30, 'days').format('X'),
@@ -257,9 +257,9 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
-    metrics: state.metrics.get('metrics'),
+    metrics: state.metrics.get('hostMetrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }

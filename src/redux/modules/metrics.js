@@ -4,12 +4,16 @@ import Immutable from 'immutable'
 
 import {analyticsBase} from '../util'
 
-const METRICS_START_FETCH = 'METRICS_START_FETCH'
-const METRICS_FETCHED = 'METRICS_FETCHED'
+const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
+const HOST_METRICS_START_FETCH = 'HOST_METRICS_START_FETCH'
+const GROUP_METRICS_FETCHED = 'GROUP_METRICS_FETCHED'
+const HOST_METRICS_FETCHED = 'HOST_METRICS_FETCHED'
 
 const emptyMetrics = Immutable.Map({
-  metrics: Immutable.List(),
-  fetching: false
+  groupMetrics: Immutable.List(),
+  hostMetrics: Immutable.List(),
+  fetchingGroupMetrics: false,
+  fetchingHostMetrics: false
 })
 
 const qsBuilder = ({
@@ -31,42 +35,65 @@ const qsBuilder = ({
   return qs
 }
 
+const getTraffic = (datapoint) => {
+  datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
+    traffic.timestamp = new Date(traffic.timestamp * 1000)
+    return traffic;
+  })
+  datapoint.traffic = datapoint.traffic.map(traffic => {
+    traffic.timestamp = new Date(traffic.timestamp * 1000)
+    return traffic;
+  })
+  datapoint.totalTraffic = datapoint.traffic.reduce((total, traffic) => {
+    return total + traffic.bytes
+  }, 0)
+  return datapoint;
+}
+
 // REDUCERS
 
 export default handleActions({
-  METRICS_FETCHED: {
+  GROUP_METRICS_FETCHED: {
     next(state, action) {
-      const data = action.payload.data.map(datapoint => {
-        datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
-          traffic.timestamp = new Date(traffic.timestamp * 1000)
-          return traffic;
-        })
-        datapoint.traffic = datapoint.traffic.map(traffic => {
-          traffic.timestamp = new Date(traffic.timestamp * 1000)
-          return traffic;
-        })
-        return datapoint;
-      })
+      const data = action.payload.data.map(datapoint => getTraffic(datapoint))
       return state.merge({
-        fetching: false,
-        metrics: Immutable.fromJS(data)
+        fetchingGroupMetrics: false,
+        groupMetrics: Immutable.fromJS(data)
       })
     },
     throw(state) {
       return state.merge({
-        fetching: false,
-        metrics: Immutable.List()
+        fetchingGroupMetrics: false,
+        groupMetrics: Immutable.List()
       })
     }
   },
-  METRICS_START_FETCH: (state) => {
-    return state.set('fetching', true)
+  HOST_METRICS_FETCHED: {
+    next(state, action) {
+      const data = action.payload.data.map(datapoint => getTraffic(datapoint))
+      return state.merge({
+        fetchingHostMetrics: false,
+        hostMetrics: Immutable.fromJS(data)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        fetchingHostMetrics: false,
+        hostMetrics: Immutable.List()
+      })
+    }
+  },
+  GROUP_METRICS_START_FETCH: (state) => {
+    return state.set('fetchingGroupMetrics', true)
+  },
+  HOST_METRICS_START_FETCH: (state) => {
+    return state.set('fetchingHostMetrics', true)
   }
 }, emptyMetrics)
 
 // ACTIONS
 
-export const fetchMetrics = createAction(METRICS_FETCHED, (opts) => {
+export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
@@ -75,4 +102,15 @@ export const fetchMetrics = createAction(METRICS_FETCHED, (opts) => {
   });
 })
 
-export const startFetching = createAction(METRICS_START_FETCH)
+export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const startGroupFetching = createAction(GROUP_METRICS_START_FETCH)
+
+export const startHostFetching = createAction(HOST_METRICS_START_FETCH)
