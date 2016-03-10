@@ -1,6 +1,7 @@
 'use strict';
 
 let Promise = require('bluebird');
+let _       = require('lodash');
 let db      = require('./db');
 let log     = require('./logger');
 
@@ -25,6 +26,12 @@ describe('db._getQueryOptions', function() {
   it('should return an object containing the start date that was provided', function() {
     let finalOptions = db._getQueryOptions({start: 123});
     expect(finalOptions.start).toEqual(123);
+  });
+
+  it('should favor default values over undefined values', function() {
+    let finalOptions = db._getQueryOptions({granularity: _.noop()});
+    expect(_.isUndefined(_.noop())).toEqual(true);
+    expect(finalOptions.granularity).toEqual('hour');
   });
 
   it('should return an object containing the default value for the start date', function() {
@@ -350,7 +357,7 @@ describe('db.getEgressTotal', function() {
     expect(queryParams[0]).toBe('group_global_month');
   });
 
-  it('should return daily and monthly numbers for groups', function() {
+  it('should return daily and monthly numbers for accounts', function() {
     // Get day egress
     let options = {
       start: 1451606400,

@@ -1,7 +1,8 @@
 'use strict';
 
-let mysql   = require('promise-mysql');
 let Promise = require('bluebird');
+let _       = require('lodash');
+let mysql   = require('promise-mysql');
 let configs = require('./configs');
 let log     = require('./logger');
 
@@ -61,12 +62,20 @@ class AnalyticsDB {
    */
   _getQueryOptions(options) {
     let optionDefaults = {
-      start    : null,
-      end      : Math.round(Date.now() / 1000),
-      account  : null,
-      group    : null,
-      property : null
+      start        : null,
+      end          : Math.round(Date.now() / 1000),
+      account      : null,
+      group        : null,
+      property     : null,
+      service_type : null,
+      geography    : 'global',
+      granularity  : 'hour'
     }
+
+    // Remove any properties that have undefined values
+    _.forOwn(options, (value, key) => {
+      _.isUndefined(value) && delete options[key]
+    });
 
     return Object.assign({}, optionDefaults, options || {});
   }
