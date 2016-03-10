@@ -168,7 +168,8 @@ export class Hosts extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+            {this.props.fetching || this.props.fetchingMetrics  ?
+              <p className="fetching-info">Loading...</p> : (
               this.props.hosts.size === 0 ?
                 <p className="fetching-info text-center">
                   {this.props.activeGroup ?
