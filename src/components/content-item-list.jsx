@@ -59,7 +59,9 @@ class ContentItemList extends React.Component {
             }
             <Button bsSize="small"
                className="btn-primary btn-icon btn-round">
-              <IconChart/>
+              <Link to={this.props.analyticsLink}>
+                <IconChart/>
+              </Link>
             </Button>
           </ButtonToolbar>
         </div>
@@ -113,6 +115,7 @@ class ContentItemList extends React.Component {
 
 ContentItemList.displayName = 'ContentItemList'
 ContentItemList.propTypes = {
+  analyticsLink: React.PropTypes.string,
   avgTransfer: React.PropTypes.string,
   cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,

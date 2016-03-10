@@ -196,6 +196,7 @@ export class Groups extends React.Component {
                       return (
                         <ContentItemList key={i} id={group.get('id')}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
+                          analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
                           delete={this.deleteGroup}
                           primaryData={metrics.get('traffic').toJS()}
