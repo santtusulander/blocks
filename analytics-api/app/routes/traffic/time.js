@@ -1,22 +1,24 @@
 'use strict';
 
 require('express-jsend');
-let log      = require('../../logger');
-let db       = require('../../db');
-let validate = require('../../validate');
-let testData = require('./time-data');
+let log       = require('../../logger');
+let db        = require('../../db');
+let validator = require('../../validator');
+let testData  = require('./time-data');
 
 function routeTrafficTime(req, res) {
   log.info('Getting hourly traffic');
   log.debug('query params:', req.query);
 
   let params = req.query;
-  let errors = validate.params(params, {
-    start    : {required: true, type: 'Timestamp'},
-    end      : {required: false, type: 'Timestamp'},
-    account  : {required: true, type: 'ID'},
-    group    : {required: false, type: 'ID'},
-    property : {required: false, type: 'Property'}
+  let errors = validator.validate(params, {
+    start        : {required: true, type: 'Timestamp'},
+    end          : {required: false, type: 'Timestamp'},
+    account      : {required: true, type: 'ID'},
+    group        : {required: false, type: 'ID'},
+    property     : {required: false, type: 'Property'},
+    service_type : {required: false, type: 'Service'},
+    granularity  : {required: false, type: 'Granularity'}
   });
 
   if (errors) {

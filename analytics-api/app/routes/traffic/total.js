@@ -1,17 +1,17 @@
 'use strict';
 
 require('express-jsend');
-let log      = require('../../logger');
-let db       = require('../../db');
-let validate = require('../../validate');
-let testData = require('./total-data');
+let log       = require('../../logger');
+let db        = require('../../db');
+let validator = require('../../validator');
+let testData  = require('./total-data');
 
 function routeTrafficTotal(req, res) {
   log.info('Getting total traffic');
   log.debug('query params:', req.query);
 
   let params = req.query;
-  let errors = validate.params(params, {
+  let errors = validator.validate(params, {
     start    : {required: true, type: 'Timestamp'},
     end      : {required: false, type: 'Timestamp'},
     account  : {required: true, type: 'ID'},
