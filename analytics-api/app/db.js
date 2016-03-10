@@ -31,6 +31,16 @@ class AnalyticsDB {
       password        : cfg.dbPassword,
       database        : cfg.dbName
     });
+
+    // Notify the log if a database connection couldn't be created
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        (err.code === 'ECONNREFUSED') && log.error('Could not connect to the database. Kill the Analytics API process, ensure the database is up and running, and restart the API.');
+        log.error(err);
+      } else {
+        connection.release();
+      }
+    });
   }
 
   /**
