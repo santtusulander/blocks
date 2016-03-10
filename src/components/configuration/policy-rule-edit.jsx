@@ -137,11 +137,17 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
-  moveSet(index, newIndex) {
+  moveSet(path, newIndex) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('move setting '+index+' to '+newIndex)
+      const set = this.props.config.getIn(path.slice(0, -2))
+      const updated = this.props.config
+        .getIn(path.slice(0, -3))
+        .filterNot((val, i) => i === path[path.length-3])
+        .insert(newIndex, set)
+      this.props.changeValue(path.slice(0, -3), updated)
+      this.props.activateSet(null)
     }
   }
   activateMatch(newPath) {
@@ -254,7 +260,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={4} className="text-right">
                     <Button
                       disabled={i <= 0}
-                      onClick={i > 0 ? this.moveSet(i, i-1) : ''}
+                      onClick={i > 0 ? this.moveSet(set.path, i-1) : ''}
                       bsStyle="primary"
                       className="btn-link btn-icon">
                       <IconArrowUp/>
@@ -262,7 +268,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <Button
                       disabled={i >= flattenedPolicy.sets.length - 1}
                       onClick={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(i, i+1) : ''}
+                        this.moveSet(set.path, i+1) : ''}
                       bsStyle="primary"
                       className="btn-link btn-icon">
                       <IconArrowDown/>
