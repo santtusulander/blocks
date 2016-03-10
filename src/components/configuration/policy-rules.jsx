@@ -55,6 +55,7 @@ class ConfigurationPolicyRules extends React.Component {
     if(!this.props.requestPolicies) {
       return <div>Loading...</div>
     }
+    const isEmpty = (this.props.responsePolicies.size + this.props.requestPolicies.size) < 1
     return (
       <div className="configuration-cache-rules">
         <Table striped={true}>
@@ -62,7 +63,6 @@ class ConfigurationPolicyRules extends React.Component {
             <tr>
               <th>Policy</th>
               <th>Match Conditions</th>
-              <th>Match</th>
               <th>Actions</th>
               <th></th>
             </tr>
@@ -74,7 +74,6 @@ class ConfigurationPolicyRules extends React.Component {
                 <tr key={i}>
                   <td>NEEDS_API</td>
                   <td>{matches.join(', ')}</td>
-                  <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
                   <td className="right-btns">
                     <Button bsStyle="primary" className="btn-link sm-padding"
@@ -96,7 +95,6 @@ class ConfigurationPolicyRules extends React.Component {
                 <tr key={i}>
                   <td>NEEDS_API</td>
                   <td>{matches.join(', ')}</td>
-                  <td>NEEDS_API</td>
                   <td>{sets.join(', ')}</td>
                   <td className="right-btns">
                     <Button bsStyle="primary" className="btn-link sm-padding"
@@ -112,6 +110,12 @@ class ConfigurationPolicyRules extends React.Component {
                 </tr>
               )
             })}
+            {isEmpty ? <tr>
+              <td colSpan={4}>
+                No policies rules have been added yet.
+              </td>
+            </tr>
+            : ''}
           </tbody>
         </Table>
       </div>
