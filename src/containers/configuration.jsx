@@ -255,8 +255,10 @@ export class Configuration extends React.Component {
           </div>
 
           <ConfigurationDiffBar
+            changeValue={this.changeValue}
             currentConfig={activeConfig}
-            originalConfig={this.state.activeConfigOriginal}/>
+            originalConfig={this.state.activeConfigOriginal}
+            />
 
         </Content>
 
