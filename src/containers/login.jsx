@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as userActionCreators from '../redux/modules/user'
+import * as accountActionCreators from '../redux/modules/account'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
@@ -36,9 +37,18 @@ export class Login extends React.Component {
     this.props.userActions.logIn(
       this.state.username,
       this.state.password
-    ).then((action) => {
+    ).then(action => {
       if(!action.error) {
-        this.props.history.pushState(null, '/')
+        this.props.accountActions.startFetching()
+        this.props.accountActions.fetchAccounts('udn').then(action => {
+          if(!action.error && action.payload.data.length) {
+            const firstId = action.payload.data[0].id
+            this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
+          }
+          else {
+            this.setState({loginError: action.payload.message})
+          }
+        })
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -138,6 +148,7 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
+  accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
   userActions: React.PropTypes.object
@@ -145,12 +156,13 @@ Login.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    fetching: state.user.get('fetching')
+    fetching: state.user.get('fetching') || state.account.get('fetching')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
