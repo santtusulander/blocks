@@ -35,7 +35,6 @@ class Cache extends React.Component {
     }
   }
   render() {
-    console.log(this.props.set.toJS())
     return (
       <div>
         <Modal.Header>

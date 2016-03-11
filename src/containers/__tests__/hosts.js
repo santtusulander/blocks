@@ -34,8 +34,8 @@ function groupActionsMaker() {
 }
 function metricsActionsMaker() {
   return {
-    fetchMetrics: jest.genMockFunction(),
-    startFetching: jest.genMockFunction()
+    fetchHostMetrics: jest.genMockFunction(),
+    startHostFetching: jest.genMockFunction()
   }
 }
 
@@ -74,6 +74,7 @@ describe('Hosts', () => {
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(hosts)).toBeTruthy()
@@ -88,7 +89,9 @@ describe('Hosts', () => {
         accountActions={accountActions}
         groupActions={groupActions}
         metricsActions={metricsActionsMaker()}
-        fetching={true} params={urlParams}/>
+        fetching={true}
+        fetchingMetrics={true}
+        params={urlParams}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHosts.mock.calls[0][0]).toBe('udn')
@@ -105,7 +108,9 @@ describe('Hosts', () => {
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         metricsActions={metricsActionsMaker()}
-        fetching={true} params={urlParams}/>
+        fetching={true}
+        fetchingMetrics={true}
+        params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
     expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')

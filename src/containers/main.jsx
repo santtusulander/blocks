@@ -66,7 +66,7 @@ export class Main extends React.Component {
     }
     return (
       <div className={classNames}>
-        <Header className={currentRoute === 'login' ? 'hidden' : ''}
+        <Header className={currentRoute === '/login' ? 'hidden' : ''}
           activatePurge={this.activatePurge(-1)}
           fetching={this.props.fetching}
           theme={this.props.theme}

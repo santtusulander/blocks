@@ -173,7 +173,8 @@ class ContentItemChart extends React.Component {
             </ReactCSSTransitionGroup>
             <div className="text-content"
               style={{width: innerRadius * 2, height: innerRadius * 2}}>
-              <div className="content-item-traffic">
+              <div className="content-item-traffic"
+                style={{fontSize: this.props.chartWidth / 23}}>
                 <div className="content-item-text-bold">
                   {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
                 </div>

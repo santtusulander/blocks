@@ -27,6 +27,34 @@ describe('Header', () => {
     expect(ReactDOM.findDOMNode(container).className).toContain('foo');
   });
 
+  it('should start gradient animation when receiving fetching props', () => {
+    // Using ReactDOM.render instead of TestUtils.renderIntoDocument since it
+    // will update the component instead of re-rendering if and thus can trigger
+    // componentWillReceiveProps event, which is what we are testing here
+    let node = document.createElement('div');
+    let header = ReactDOM.render(<Header theme="dark" fetching={false} />, node)
+    ReactDOM.render(<Header theme="dark" fetching={true} />, node)
+    expect(header.state.animatingGradient).toBe(true);
+  });
+
+  it('should show gradient animation when fetching', () => {
+    let header = TestUtils.renderIntoDocument(
+      <Header theme="dark" fetching={true} />
+    );
+    let gradient = TestUtils.findRenderedDOMComponentWithClass(header, 'header-gradient');
+    header.resetGradientAnimation()
+    expect(ReactDOM.findDOMNode(gradient).className).toContain('animated');
+  });
+
+  it('should not show gradient animation when not fetching', () => {
+    let header = TestUtils.renderIntoDocument(
+      <Header theme="dark" fetching={false} />
+    );
+    let gradient = TestUtils.findRenderedDOMComponentWithClass(header, 'header-gradient');
+    header.resetGradientAnimation()
+    expect(ReactDOM.findDOMNode(gradient).className).toNotContain('animated');
+  });
+
   it('should call purge function when link is clicked', () => {
     let header = TestUtils.renderIntoDocument(
       <Header theme="dark" activatePurge={activatePurge} />

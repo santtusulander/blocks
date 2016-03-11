@@ -62,8 +62,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      originalConfig: props.config
+    }
+
     this.handleChange = this.handleChange.bind(this)
-    this.handleSave = this.handleSave.bind(this)
     this.addMatch = this.addMatch.bind(this)
     this.addAction = this.addAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
@@ -71,13 +74,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.moveSet = this.moveSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
+    this.cancelChanges = this.cancelChanges.bind(this)
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
-  }
-  handleSave(e) {
-    e.preventDefault()
-    this.props.saveChanges()
   }
   addMatch(deepestMatch) {
     return e => {
@@ -137,11 +137,17 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
-  moveSet(index, newIndex) {
+  moveSet(path, newIndex) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('move setting '+index+' to '+newIndex)
+      const set = this.props.config.getIn(path.slice(0, -2))
+      const updated = this.props.config
+        .getIn(path.slice(0, -3))
+        .filterNot((val, i) => i === path[path.length-3])
+        .insert(newIndex, set)
+      this.props.changeValue(path.slice(0, -3), updated)
+      this.props.activateSet(null)
     }
   }
   activateMatch(newPath) {
@@ -150,10 +156,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   activateSet(newPath) {
     return () => this.props.activateSet(newPath)
   }
+  cancelChanges() {
+    this.props.changeValue([], this.state.originalConfig)
+    this.props.hideAction()
+  }
   render() {
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
     return (
-      <form className="configuration-policy-rule-edit" onSubmit={this.handleSave}>
+      <form className="configuration-policy-rule-edit" onSubmit={this.props.hideAction}>
 
         {/* [
           ['request_method', 'Request Method'],
@@ -254,7 +264,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={4} className="text-right">
                     <Button
                       disabled={i <= 0}
-                      onClick={i > 0 ? this.moveSet(i, i-1) : ''}
+                      onClick={i > 0 ? this.moveSet(set.path, i-1) : ''}
                       bsStyle="primary"
                       className="btn-link btn-icon">
                       <IconArrowUp/>
@@ -262,7 +272,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <Button
                       disabled={i >= flattenedPolicy.sets.length - 1}
                       onClick={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(i, i+1) : ''}
+                        this.moveSet(set.path, i+1) : ''}
                       bsStyle="primary"
                       className="btn-link btn-icon">
                       <IconArrowDown/>
@@ -278,10 +288,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           </div>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" onClick={this.props.hideAction}>
+            <Button bsStyle="primary" onClick={this.cancelChanges}>
               Cancel
             </Button>
-            <Button type="submit" bsStyle="primary">
+            <Button bsStyle="primary" onClick={this.props.hideAction}>
               Add
             </Button>
           </ButtonToolbar>
