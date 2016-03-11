@@ -56,7 +56,7 @@ class Header extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
-    const firstAccount = this.props.accounts.get(0) ?
+    const firstAccount = this.props.accounts && this.props.accounts.get(0) ?
       this.props.accounts.get(0).get('id')
       : 1
     const activeAccount = this.props.activeAccount ?
@@ -92,7 +92,7 @@ class Header extends React.Component {
                 </Link>
                 <Dropdown.Toggle bsStyle='link' onClick={this.toggleAccountMenu}/>
                 <Dropdown.Menu>
-                  {this.props.accounts.map((account, i) => {
+                  {this.props.accounts ? this.props.accounts.map((account, i) => {
                     return (
                       <li key={i}
                         active={activeAccount === account.get('id')}>
@@ -104,7 +104,7 @@ class Header extends React.Component {
                         </Link>
                       </li>
                     )
-                  })}
+                  }) : ''}
                 </Dropdown.Menu>
               </Dropdown>
             </li>
