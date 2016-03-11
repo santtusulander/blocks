@@ -67,6 +67,8 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
         <Header className={currentRoute === '/login' ? 'hidden' : ''}
+          accounts={this.props.accounts}
+          activeAccount={this.props.activeAccount}
           activatePurge={this.activatePurge(-1)}
           fetching={this.props.fetching}
           theme={this.props.theme}
@@ -97,6 +99,8 @@ export class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   fetching: React.PropTypes.bool,
@@ -112,6 +116,8 @@ Main.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    accounts: state.account.get('allAccounts'),
+    activeAccount: state.account.get('activeAccount'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.account.get('fetching') ||
       state.content.get('fetching') ||
