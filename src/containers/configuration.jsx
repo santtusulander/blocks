@@ -76,6 +76,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.location.query.name,
       this.props.activeHost.toJS()
     )
   }
@@ -258,6 +259,7 @@ export class Configuration extends React.Component {
             changeValue={this.changeValue}
             currentConfig={activeConfig}
             originalConfig={this.state.activeConfigOriginal}
+            saveConfig={this.saveActiveHostChanges}
             />
 
         </Content>

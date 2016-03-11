@@ -23,7 +23,10 @@ class ConfigurationDiffBar extends React.Component {
             onClick={this.resetConfig}>
             CANCEL
           </Button>
-          <Button className="btn btn-save">SAVE</Button>
+          <Button className="btn btn-save"
+            onClick={this.props.saveConfig}>
+            SAVE
+          </Button>
         </ButtonToolbar>
         <div>
           <p className="configuration-dialog-title">
@@ -48,7 +51,8 @@ ConfigurationDiffBar.displayName = 'ConfigurationDiffBar'
 ConfigurationDiffBar.propTypes = {
   changeValue: React.PropTypes.func,
   currentConfig: React.PropTypes.instanceOf(Immutable.Map),
-  originalConfig: React.PropTypes.instanceOf(Immutable.Map)
+  originalConfig: React.PropTypes.instanceOf(Immutable.Map),
+  saveConfig: React.PropTypes.func
 }
 
 module.exports = ConfigurationDiffBar
