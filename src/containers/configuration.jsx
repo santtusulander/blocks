@@ -11,7 +11,6 @@ import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
-import Dialog from '../components/layout/dialog'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -22,14 +21,18 @@ import ConfigurationCertificates from '../components/configuration/certificates'
 import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
+import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
 
+    const config = props.activeHost ? props.activeHost.getIn(['services',0,'configurations',0]) : null
+
     this.state = {
       activeTab: 'details',
       activeConfig: 0,
+      activeConfigOriginal: config,
       showPublishModal: false
     }
 
@@ -50,8 +53,15 @@ export class Configuration extends React.Component {
       this.props.location.query.name
     )
   }
+  componentWillReceiveProps(nextProps) {
+    if(!this.props.activeHost && nextProps.activeHost) {
+      this.setState({
+        activeConfigOriginal: nextProps.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
+      })
+    }
+  }
   getActiveConfig() {
-    return this.props.activeHost.get('services').get(0).get('configurations').get(this.state.activeConfig)
+    return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
   changeValue(path, value) {
     this.props.hostActions.changeActiveHost(
@@ -75,7 +85,10 @@ export class Configuration extends React.Component {
   activateVersion(id) {
     const index = this.props.activeHost.get('services').get(0)
       .get('configurations').findIndex(config => config.get('config_id') === id)
-    this.setState({activeConfig: index})
+    this.setState({
+      activeConfig: index,
+      activeConfigOriginal: this.props.activeHost.getIn(['services',0,'configurations',index])
+    })
   }
   createNewVersion(id) {
     this.props.hostActions.createConfiguration(
@@ -241,15 +254,11 @@ export class Configuration extends React.Component {
               : null}
           </div>
 
-          <Dialog>
-            <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary">CANCEL</Button>
-              <Button className="btn btn-save">SAVE</Button>
-            </ButtonToolbar>
-            <div>
-            <p className="configuration-dialog-title">5 Changes</p>
-            <p>[versionname], [versionname], [versionname], [versionname], [versionname]</p></div>
-          </Dialog>
+          <ConfigurationDiffBar
+            changeValue={this.changeValue}
+            currentConfig={activeConfig}
+            originalConfig={this.state.activeConfigOriginal}
+            />
 
         </Content>
 
