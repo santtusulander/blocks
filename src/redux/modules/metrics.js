@@ -35,7 +35,7 @@ const qsBuilder = ({
   return qs
 }
 
-const getTraffic = (datapoint) => {
+const parseDatapointTraffic = (datapoint) => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
     traffic.timestamp = new Date(traffic.timestamp * 1000)
     return traffic;
@@ -55,7 +55,7 @@ const getTraffic = (datapoint) => {
 export default handleActions({
   GROUP_METRICS_FETCHED: {
     next(state, action) {
-      const data = action.payload.data.map(datapoint => getTraffic(datapoint))
+      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
       return state.merge({
         fetchingGroupMetrics: false,
         groupMetrics: Immutable.fromJS(data)
@@ -70,7 +70,7 @@ export default handleActions({
   },
   HOST_METRICS_FETCHED: {
     next(state, action) {
-      const data = action.payload.data.map(datapoint => getTraffic(datapoint))
+      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
       return state.merge({
         fetchingHostMetrics: false,
         hostMetrics: Immutable.fromJS(data)
