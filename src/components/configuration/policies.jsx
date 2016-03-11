@@ -56,19 +56,19 @@ class ConfigurationPolicies extends React.Component {
   }
   addRule(e) {
     e.preventDefault()
-    const reqPolicies = this.props.config.get('request_policies').push(Immutable.fromJS(
+    const reqPolicies = this.props.config.get('request_policy').get('policy_rules').push(Immutable.fromJS(
       {match: {field: null, cases: [['',[]]]}}
     ))
-    this.props.changeValue(['request_policies'], reqPolicies)
+    this.props.changeValue(['request_policy', 'policy_rules'], reqPolicies)
     this.setState({
-      activeMatchPath: ['request_policies', reqPolicies.size - 1, 'match'],
-      activeRulePath: ['request_policies', reqPolicies.size - 1],
+      activeMatchPath: ['request_policy', 'policy_rules', reqPolicies.size - 1, 'match'],
+      activeRulePath: ['request_policy', 'policy_rules', reqPolicies.size - 1],
       activeSetPath: null
     })
   }
   deleteRule(policyType, index) {
-    const newPolicies = this.props.config.get(policyType).splice(index, 1)
-    this.props.changeValue([policyType], newPolicies)
+    const newPolicies = this.props.config.get(policyType).get('policy_rules').splice(index, 1)
+    this.props.changeValue([policyType, 'policy_rules'], newPolicies)
   }
   clearActiveRule() {
     this.setState({
@@ -93,10 +93,10 @@ class ConfigurationPolicies extends React.Component {
   changeActiveRuleType(type) {
     let rulePath = this.state.activeRulePath;
     if(type === 'request') {
-      rulePath[0] = 'request_policies'
+      rulePath[0] = 'request_policy'
     }
     else if(type === 'response') {
-      rulePath[0] = 'response_policies'
+      rulePath[0] = 'response_policy'
     }
     this.setState({
       activeMatchPath: null,
@@ -258,8 +258,8 @@ class ConfigurationPolicies extends React.Component {
           </Col>
         </Row>
         <ConfigurationPolicyRules
-          requestPolicies={config.get('request_policies')}
-          responsePolicies={config.get('response_policies')}
+          requestPolicies={config.getIn(['request_policy','policy_rules'])}
+          responsePolicies={config.getIn(['response_policy','policy_rules'])}
           activateRule={this.activateRule}
           deleteRule={this.deleteRule}/>
         {this.state.activeRulePath ?
