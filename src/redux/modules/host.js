@@ -19,6 +19,24 @@ const emptyHosts = Immutable.Map({
   fetching: false
 })
 
+const defaultPolicy = {policy_rules: [
+  {
+    set: {
+      cache_control: {
+        honor_origin: false,
+        check_etag: false
+      }
+    }
+  },
+  {
+    set: {
+      cache_name: {
+        ignore_case: false
+      }
+    }
+  }
+]}
+
 // REDUCERS
 
 export default handleActions({
@@ -49,8 +67,21 @@ export default handleActions({
   },
   HOST_FETCHED: {
     next(state, action) {
+      let host = action.payload
+      host.services[0].configurations = host.services[0].configurations.map(config => {
+        if(!config.default_policy || !config.default_policy.policy_rules) {
+          config.default_policy = {policy_rules:[]}
+        }
+        if(!config.request_policy || !config.request_policy.policy_rules) {
+          config.request_policy = {policy_rules:[]}
+        }
+        if(!config.response_policy || !config.response_policy.policy_rules) {
+          config.response_policy = {policy_rules:[]}
+        }
+        return config;
+      })
       return state.merge({
-        activeHost: Immutable.fromJS(action.payload),
+        activeHost: Immutable.fromJS(host),
         fetching: false
       })
     },
@@ -113,23 +144,7 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id)
               configuration_status: {
                 last_edited_by: "Test User"
               },
-              default_policies: [
-                {
-                  set: {
-                    cache_control: {
-                      honor_origin: true,
-                      check_etag: false
-                    }
-                  }
-                },
-                {
-                  set: {
-                    cache_name: {
-                      ignore_case: false
-                    }
-                  }
-                }
-              ]
+              default_policy: defaultPolicy
             }
           ]
         }
