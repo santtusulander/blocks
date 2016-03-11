@@ -59,19 +59,22 @@ export class Main extends React.Component {
     })
   }
   render() {
-    const currentRoute = this.props.routes[this.props.routes.length-1].path
     let classNames = 'main-container';
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
     return (
       <div className={classNames}>
-        <Header className={currentRoute === '/login' ? 'hidden' : ''}
-          activatePurge={this.activatePurge(-1)}
-          fetching={this.props.fetching}
-          theme={this.props.theme}
-          handleThemeChange={this.props.uiActions.changeTheme}
-          logOut={this.logOut}/>
+        {this.props.location.pathname !== '/login' ?
+          <Header
+            activatePurge={this.activatePurge(-1)}
+            fetching={this.props.fetching}
+            theme={this.props.theme}
+            handleThemeChange={this.props.uiActions.changeTheme}
+            logOut={this.logOut}
+            pathname={this.props.location.pathname}/>
+          : ''
+        }
         <div className="content-container">{this.props.children}</div>
         {this.state.activePurge !== null ?
           <PurgeModal
@@ -101,9 +104,9 @@ Main.propTypes = {
   children: React.PropTypes.node,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
+  location: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
-  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
