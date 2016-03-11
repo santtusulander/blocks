@@ -5,7 +5,7 @@ import Immutable from 'immutable'
 jest.dontMock('../defaults.jsx')
 const ConfigurationDefaults = require('../defaults.jsx')
 
-const fakeConfig = Immutable.fromJS({"default_policies": [
+const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
   {
     "set": {
       "cache_control": {
@@ -21,7 +21,7 @@ const fakeConfig = Immutable.fromJS({"default_policies": [
       }
     }
   }
-]})
+]}})
 
 describe('ConfigurationDefaults', () => {
   it('should exist', () => {

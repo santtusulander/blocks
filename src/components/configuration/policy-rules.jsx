@@ -77,12 +77,12 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{sets.join(', ')}</td>
                   <td className="right-btns">
                     <Button bsStyle="primary" className="btn-link sm-padding"
-                      onClick={this.activateRule(['request_policies', i])}>
+                      onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
-                      onClick={this.deleteRule('request_policies', i)}>
+                      onClick={this.deleteRule('request_policy', i)}>
                       <IconTrash/>
                     </Button>
                   </td>
@@ -98,12 +98,12 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{sets.join(', ')}</td>
                   <td className="right-btns">
                     <Button bsStyle="primary" className="btn-link sm-padding"
-                      onClick={this.activateRule(['response_policies', i])}>
+                      onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
-                      onClick={this.deleteRule('response_policies', i)}>
+                      onClick={this.deleteRule('response_policy', i)}>
                       <IconTrash/>
                     </Button>
                   </td>
