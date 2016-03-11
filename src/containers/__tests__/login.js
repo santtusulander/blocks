@@ -13,6 +13,15 @@ function userActionsMaker(cbResponse) {
   }
 }
 
+function accountActionsMaker(cbResponse) {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchAccounts: jest.genMockFunction().mockImplementation(() => {
+      return {then: cb => cb(cbResponse)}
+    })
+  }
+}
+
 describe('Login', () => {
   it('should exist', () => {
     const login = TestUtils.renderIntoDocument(
@@ -83,16 +92,24 @@ describe('Login', () => {
 
   it('handles a successful log in attempt', () => {
     const userActions = userActionsMaker({})
+    const accountActions = accountActionsMaker({
+      payload: {
+        data: [
+          {id: 1}
+        ]
+      }
+    })
     const fakeHistory = {
       pushState: jest.genMockFunction()
     }
     const login = TestUtils.renderIntoDocument(
       <Login userActions={userActions}
+        accountActions={accountActions}
         history={fakeHistory}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/')
+    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/groups/udn/1')
   })
 })

@@ -442,7 +442,8 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
-    expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
+    expect(hostActions.updateHost.mock.calls[0][3]).toEqual('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4]).toEqual(fakeHost.toJS())
   })
 
   it('should add a version', () => {

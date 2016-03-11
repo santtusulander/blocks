@@ -53,14 +53,14 @@ const fakePurge = Immutable.fromJS({
 describe('Main', () => {
   it('should exist', () => {
     let main = TestUtils.renderIntoDocument(
-      <Main routes={['foo']} uiActions={uiActionsMaker()} theme="dark" />
+      <Main location={'foo'} uiActions={uiActionsMaker()} theme="dark" />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
   });
 
   it('should activate a property to purge', () => {
     let main = TestUtils.renderIntoDocument(
-      <Main routes={['foo']}
+      <Main location={'foo'}
         uiActions={uiActionsMaker()}
         purgeActions = {purgeActionsMaker()}
         activePurge={fakePurge}
@@ -74,7 +74,7 @@ describe('Main', () => {
   it('should create a new purge', () => {
     const purgeActions = purgeActionsMaker()
     let main = TestUtils.renderIntoDocument(
-      <Main routes={['foo']}
+      <Main location={'foo'}
         uiActions={uiActionsMaker()}
         properties={fakeProperties}
         activePurge={fakePurge}
@@ -91,7 +91,7 @@ describe('Main', () => {
 
   it('should have .chart-view class when viewing charts', () => {
     let main = TestUtils.renderIntoDocument(
-      <Main routes={['foo']} uiActions={uiActionsMaker()} theme="dark"
+      <Main location={'foo'} uiActions={uiActionsMaker()} theme="dark"
         viewingChart={true} />
     );
     let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
@@ -104,7 +104,7 @@ describe('Main', () => {
       pushState: jest.genMockFunction()
     }
     const main = TestUtils.renderIntoDocument(
-      <Main routes={['foo']}
+      <Main location={'foo'}
         uiActions={uiActionsMaker()}
         theme="dark"
         userActions={userActions}
