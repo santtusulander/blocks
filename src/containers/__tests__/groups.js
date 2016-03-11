@@ -32,8 +32,8 @@ function accountActionsMaker() {
 }
 function metricsActionsMaker() {
   return {
-    fetchMetrics: jest.genMockFunction(),
-    startFetching: jest.genMockFunction()
+    fetchGroupMetrics: jest.genMockFunction(),
+    startGroupFetching: jest.genMockFunction()
   }
 }
 
@@ -77,6 +77,7 @@ describe('Groups', () => {
         accountActions={accountActionsMaker()}
         metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
@@ -91,6 +92,7 @@ describe('Groups', () => {
         accountActions={accountActions}
         metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(groupActions.startFetching.mock.calls.length).toBe(1)
@@ -105,6 +107,7 @@ describe('Groups', () => {
         accountActions={accountActionsMaker()}
         metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')

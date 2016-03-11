@@ -34,14 +34,24 @@
 
       .modal-content {
         display: flex;
+        max-width: 100%;
       }
     }
   }
 
   .modal-content {
+    max-width: $configuration-sidebar-width;
     min-height: 100vh;
     border: 0;
     box-shadow: none;
+
+    @include md {
+      max-width: $md-configuration-sidebar-width;
+    }
+
+    @include sm {
+      max-width: $sm-configuration-sidebar-width;
+    }
 
     .dark-theme & {
       background-color: $black;

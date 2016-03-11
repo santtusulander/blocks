@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -45,6 +45,7 @@
     "axios": "^0.9.1",
     "d3": "^3.5.14",
     "immutable": "^3.7.6",
+    "immutablediff": "^0.4.2",
     "moment": "^2.11.2",
     "numeral": "^1.5.3",
     "react": "^0.14.7",

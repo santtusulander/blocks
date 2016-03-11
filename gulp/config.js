@@ -55,7 +55,7 @@ module.exports = {
         {
           test: /\.(jpg|jpeg|gif|png)$/,
           exclude: /node_modules/,
-          loader:'file?name=/assets/img/[name].[ext]'
+          loader:'file?name=src/assets/img/[name].[ext]'
         },
         {
           test: /\.(woff|woff2|eot|ttf|svg)$/,

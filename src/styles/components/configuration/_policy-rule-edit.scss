@@ -3,15 +3,6 @@
 
 .configuration-policy-rule-edit {
   width: 100%;
-  max-width: $configuration-sidebar-width;
-
-  @include md {
-    max-width: $md-configuration-sidebar-width;
-  }
-
-  @include sm {
-    max-width: $sm-configuration-sidebar-width;
-  }
 
   .conditions {
     width: 100%;
