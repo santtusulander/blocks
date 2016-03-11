@@ -1,4 +1,5 @@
 import React from 'react'
+import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -46,8 +47,8 @@ export class Groups extends React.Component {
       this.props.params.brand,
       this.props.params.account
     )
-    this.props.metricsActions.startFetching()
-    this.props.metricsActions.fetchMetrics({
+    this.props.metricsActions.startGroupFetching()
+    this.props.metricsActions.fetchGroupMetrics({
       account: this.props.params.account,
       group: this.props.params.group,
       startDate: moment().subtract(30, 'days').format('X'),
@@ -102,6 +103,23 @@ export class Groups extends React.Component {
     }
   }
   render() {
+    let trafficMin = 0
+    let trafficMax = 0
+    if(!this.props.fetchingMetrics) {
+      const trafficTotals = this.props.groups.map((group, i) => {
+        return this.props.metrics.get(i).get('totalTraffic')
+      })
+      trafficMin = Math.min(...trafficTotals)
+      trafficMax = Math.max(...trafficTotals)
+    }
+    // If trafficMin === trafficMax, there's only one property or all properties
+    // have identical metrics. In that case the amoebas will all get the minimum
+    // size. Let's make trafficMin less than trafficMax and all amoebas will
+    // render with maximum size instead
+    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    const trafficScale = d3.scale.linear()
+      .domain([trafficMin, trafficMax])
+      .range([460, 560]);
     return (
       <PageContainer className='groups-container content-subcontainer'>
         <Content>
@@ -149,7 +167,8 @@ export class Groups extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+            {this.props.fetching || this.props.fetchingMetrics ?
+              <p className="fetching-info">Loading...</p> : (
               this.props.groups.size === 0 ?
                 <p className="fetching-info text-center">
                   {this.props.activeAccount ?
@@ -170,8 +189,9 @@ export class Groups extends React.Component {
                   <div className="content-item-grid">
                     {this.props.groups.map((group, i) => {
                       const metrics = this.props.metrics.get(i)
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic'))
                       return (
-                        <ContentItemChart key={i} id={group.get('id')}
+                        <ContentItemChart key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
@@ -185,8 +205,8 @@ export class Groups extends React.Component {
                           avgTransfer={metrics.get('transfer_rates').get('average')}
                           fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
-                          chartWidth="560"
-                          barMaxHeight="80" />
+                          chartWidth={scaledWidth.toString()}
+                          barMaxHeight={(scaledWidth / 7).toString()} />
                       )
                     })}
                   </div> :
@@ -194,7 +214,7 @@ export class Groups extends React.Component {
                     {this.props.groups.map((group, i) => {
                       const metrics = this.props.metrics.get(i)
                       return (
-                        <ContentItemList key={i} id={group.get('id')}
+                        <ContentItemList key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
@@ -257,9 +277,9 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.group.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
-    metrics: state.metrics.get('metrics'),
+    metrics: state.metrics.get('groupMetrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }

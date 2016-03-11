@@ -1,4 +1,5 @@
 import React from 'react'
+import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -53,8 +54,8 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
-    this.props.metricsActions.startFetching()
-    this.props.metricsActions.fetchMetrics({
+    this.props.metricsActions.startHostFetching()
+    this.props.metricsActions.fetchHostMetrics({
       account: this.props.params.account,
       group: this.props.params.group,
       startDate: moment().subtract(30, 'days').format('X'),
@@ -91,6 +92,23 @@ export class Hosts extends React.Component {
     }
   }
   render() {
+    let trafficMin = 0
+    let trafficMax = 0
+    if(!this.props.fetchingMetrics) {
+      const trafficTotals = this.props.hosts.map((host, i) => {
+        return this.props.metrics.get(i).get('totalTraffic')
+      })
+      trafficMin = Math.min(...trafficTotals)
+      trafficMax = Math.max(...trafficTotals)
+    }
+    // If trafficMin === trafficMax, there's only one property or all properties
+    // have identical metrics. In that case the amoebas will all get the minimum
+    // size. Let's make trafficMin less than trafficMax and all amoebas will
+    // render with maximum size instead
+    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    const trafficScale = d3.scale.linear()
+      .domain([trafficMin, trafficMax])
+      .range([400, 500]);
     return (
       <PageContainer className='hosts-container content-subcontainer'>
         <Content>
@@ -150,7 +168,8 @@ export class Hosts extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p className="fetching-info">Loading...</p> : (
+            {this.props.fetching || this.props.fetchingMetrics  ?
+              <p className="fetching-info">Loading...</p> : (
               this.props.hosts.size === 0 ?
                 <p className="fetching-info text-center">
                   {this.props.activeGroup ?
@@ -171,6 +190,7 @@ export class Hosts extends React.Component {
                   <div className="content-item-grid">
                     {this.props.hosts.map((host, i) => {
                       const metrics = this.props.metrics.get(i)
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic'))
                       return (
                         <ContentItemChart key={i} id={host}
                           linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
@@ -187,8 +207,8 @@ export class Hosts extends React.Component {
                           avgTransfer={metrics.get('transfer_rates').get('average')}
                           fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
-                          chartWidth="450"
-                          barMaxHeight="70" />
+                          chartWidth={scaledWidth.toString()}
+                          barMaxHeight={(scaledWidth / 7).toString()} />
                       )
                     })}
                   </div> :
@@ -257,9 +277,9 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
-    metrics: state.metrics.get('metrics'),
+    metrics: state.metrics.get('hostMetrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
