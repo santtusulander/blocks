@@ -52,7 +52,7 @@ class Header extends React.Component {
     this.setState({accountMenuOpen: !this.state.accountMenuOpen})
   }
   render() {
-    let className = 'header';
+    let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
@@ -62,6 +62,17 @@ class Header extends React.Component {
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
+    // Show Configurations only for property levels
+    let showConfigurations = /(\/content\/property\/)/.test(this.props.pathname) ||
+      /(\/content\/configuration\/)/.test(this.props.pathname) ||
+      /(\/configurations\/)/.test(this.props.pathname) ||
+      /(\/analytics\/property\/)/.test(this.props.pathname)
+    // Hide Purge for all levels higher than group summary / property levels
+    let hidePurge = /(\/content\/accounts\/)/.test(this.props.pathname) ||
+      /(\/content\/groups\/)/.test(this.props.pathname) ||
+      /(\/analytics\/account\/)/.test(this.props.pathname) ||
+      this.props.pathname === '/security' ||
+      this.props.pathname === '/services'
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -108,11 +119,14 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
-                Configurations
-              </Link>
-            </li>
+            {showConfigurations ?
+              <li className="main-nav-item">
+                <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
+                  Configurations
+                </Link>
+              </li>
+              : ''
+            }
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
                 Security
@@ -123,12 +137,14 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            <li className="main-nav-item">
-              <a href="#" className="main-nav-link"
-                onClick={this.activatePurge}>
-                Purge
-              </a>
-            </li>
+            {hidePurge ? '' :
+              <li className="main-nav-item">
+                <a href="#" className="main-nav-link"
+                  onClick={this.activatePurge}>
+                  Purge
+                </a>
+              </li>
+            }
           </Nav>
           <Nav pullRight={true}>
             <li>
@@ -216,6 +232,7 @@ Header.propTypes = {
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
   logOut: React.PropTypes.func,
+  pathname: React.PropTypes.string,
   theme: React.PropTypes.string
 }
 
