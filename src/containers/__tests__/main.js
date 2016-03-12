@@ -50,6 +50,14 @@ const fakePurge = Immutable.fromJS({
   feedback: null
 })
 
+const fakeActiveAccount = Immutable.fromJS(
+  {"id": 1}
+)
+
+const fakeActiveGroup = Immutable.fromJS(
+  {"id": 1}
+)
+
 describe('Main', () => {
   it('should exist', () => {
     let main = TestUtils.renderIntoDocument(
@@ -78,14 +86,16 @@ describe('Main', () => {
         uiActions={uiActionsMaker()}
         properties={fakeProperties}
         activePurge={fakePurge}
+        activeAccount={fakeActiveAccount}
+        activeGroup={fakeActiveGroup}
         purgeActions={purgeActions}/>
     );
-    main.activatePurge(0)()
+    main.activatePurge(fakeProperties.get(0))()
     main.saveActivePurge()
     expect(purgeActions.createPurge.mock.calls[0][0]).toBe('udn')
     expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
     expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
-    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('www.foobar.com')
+    expect(purgeActions.createPurge.mock.calls[0][3].get('property')).toBe('www.foobar.com')
     expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakePurge.toJS())
   });
 
