@@ -40,14 +40,16 @@ export class Main extends React.Component {
     this.props.purgeActions.resetActivePurge()
   }
   saveActivePurge() {
-    const purgeProperty = this.props.properties.get(this.state.activePurge)
-    this.props.purgeActions.createPurge(
-      'udn',
-      purgeProperty.get('account_id'),
-      purgeProperty.get('group_id'),
-      purgeProperty.get('property'),
-      this.props.activePurge.toJS()
-    ).then(() => this.setState({activePurge: null}))
+    const purgeProperty = this.props.properties.find(property => property === this.state.activePurge)
+    if(purgeProperty) {
+      this.props.purgeActions.createPurge(
+        'udn',
+        this.props.activeAccount.get('id'),
+        this.props.activeGroup.get('id'),
+        this.state.activePurge,
+        this.props.activePurge.toJS()
+      ).then(() => this.setState({activePurge: null}))
+    }
   }
   logOut() {
     this.props.userActions.logOut()
@@ -100,6 +102,8 @@ export class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   fetching: React.PropTypes.bool,
@@ -115,6 +119,8 @@ Main.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.account.get('fetching') ||
       state.content.get('fetching') ||
@@ -123,7 +129,7 @@ function mapStateToProps(state) {
       state.topo.get('fetching') ||
       state.traffic.get('fetching') ||
       state.visitors.get('fetching'),
-    properties: state.content.get('properties'),
+    properties: state.host.get('allHosts'),
     theme: state.ui.get('theme'),
     viewingChart: state.ui.get('viewingChart')
   };

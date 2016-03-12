@@ -55,14 +55,16 @@ export class Configurations extends React.Component {
     }
   }
   saveActivePurge() {
-    const purgeProperty = this.props.properties.get(this.state.activePurge)
-    this.props.purgeActions.createPurge(
-      this.props.params.brand,
-      purgeProperty.get('account_id'),
-      purgeProperty.get('group_id'),
-      purgeProperty.get('property'),
-      this.props.activePurge.toJS()
-    ).then(() => this.setState({activePurge: null}))
+    const purgeProperty = this.props.properties.find(property => property === this.state.activePurge)
+    if(purgeProperty) {
+      this.props.purgeActions.createPurge(
+        this.props.params.brand,
+        this.props.activeAccount.get('id'),
+        this.props.activeGroup.get('id'),
+        this.state.activePurge,
+        this.props.activePurge.toJS()
+      ).then(() => this.setState({activePurge: null}))
+    }
   }
   render() {
     if(this.props.fetching) {
@@ -185,6 +187,8 @@ export class Configurations extends React.Component {
 Configurations.displayName = 'Configurations'
 Configurations.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
@@ -195,6 +199,8 @@ Configurations.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     accounts: state.content.get('accounts'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.content.get('fetching'),
