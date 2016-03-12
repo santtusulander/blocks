@@ -26,17 +26,17 @@ export class Main extends React.Component {
     this.logOut = this.logOut.bind(this)
     this.closeNotification = this.closeNotification.bind(this)
   }
-  activatePurge(index) {
+  activatePurge(property) {
     return e => {
       if(e) {
         e.preventDefault()
       }
-      this.setState({activePurge: index})
+      this.setState({activePurge: property})
       this.props.purgeActions.resetActivePurge()
     }
   }
-  changePurge(index) {
-    this.setState({activePurge: parseInt(index)})
+  changePurge(property) {
+    this.setState({activePurge: property})
     this.props.purgeActions.resetActivePurge()
   }
   saveActivePurge() {
@@ -64,10 +64,13 @@ export class Main extends React.Component {
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
+    const firstProperty = this.props.properties && this.props.properties.size ?
+      this.props.properties.get(0)
+      : null
     return (
       <div className={classNames}>
         <Header className={currentRoute === '/login' ? 'hidden' : ''}
-          activatePurge={this.activatePurge(-1)}
+          activatePurge={this.activatePurge(firstProperty)}
           fetching={this.props.fetching}
           theme={this.props.theme}
           handleThemeChange={this.props.uiActions.changeTheme}

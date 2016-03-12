@@ -32,12 +32,12 @@ export class Configurations extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
   }
-  activatePurge(index) {
+  activatePurge(property) {
     return e => {
       if(e) {
         e.preventDefault()
       }
-      this.setState({activePurge: index})
+      this.setState({activePurge: property})
       this.props.purgeActions.resetActivePurge()
     }
   }
@@ -156,7 +156,7 @@ export class Configurations extends React.Component {
                       </td>
                       <td>
                         {property.get('status') === 'production' ?
-                          <a href="#" onClick={this.activatePurge(i)}>
+                          <a href="#" onClick={this.activatePurge(property.get('property'))}>
                             purge
                           </a>
                         : ''}
