@@ -60,7 +60,7 @@ describe('Header', () => {
       <Header theme="dark" activatePurge={activatePurge} />
     );
     let mainNavLinks = TestUtils.scryRenderedDOMComponentsWithClass(header, 'main-nav-link');
-    TestUtils.Simulate.click(mainNavLinks[4]);
+    TestUtils.Simulate.click(mainNavLinks[3]);
     expect(activatePurge.mock.calls.length).toEqual(1);
   });
 

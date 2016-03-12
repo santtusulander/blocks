@@ -61,7 +61,6 @@ export class Main extends React.Component {
     })
   }
   render() {
-    const currentRoute = this.props.routes[this.props.routes.length-1].path
     let classNames = 'main-container';
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
@@ -71,12 +70,18 @@ export class Main extends React.Component {
       : null
     return (
       <div className={classNames}>
-        <Header className={currentRoute === '/login' ? 'hidden' : ''}
-          activatePurge={this.activatePurge(firstProperty)}
-          fetching={this.props.fetching}
-          theme={this.props.theme}
-          handleThemeChange={this.props.uiActions.changeTheme}
-          logOut={this.logOut}/>
+        {this.props.location.pathname !== '/login' ?
+          <Header
+            accounts={this.props.accounts}
+            activeAccount={this.props.activeAccount}
+            activatePurge={this.activatePurge(firstProperty)}
+            fetching={this.props.fetching}
+            theme={this.props.theme}
+            handleThemeChange={this.props.uiActions.changeTheme}
+            logOut={this.logOut}
+            pathname={this.props.location.pathname}/>
+          : ''
+        }
         <div className="content-container">{this.props.children}</div>
         {this.state.activePurge !== null ?
           <PurgeModal
@@ -102,15 +107,16 @@ export class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
+  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
+  location: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
-  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
@@ -119,6 +125,7 @@ Main.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activePurge: state.purge.get('activePurge'),
