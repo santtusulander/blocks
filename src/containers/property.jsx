@@ -8,12 +8,14 @@ import { Link } from 'react-router'
 import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as purgeActionCreators from '../redux/modules/purge'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
+import PurgeModal from '../components/purge-modal'
 
 const fakeRecentData = [
   {timestamp: new Date("2016-01-01"), bytes: 49405, requests: 943},
@@ -55,10 +57,13 @@ export class Property extends React.Component {
 
     this.state = {
       byLocationWidth: 0,
-      byTimeWidth: 0
+      byTimeWidth: 0,
+      purgeActive: false
     }
 
+    this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
+    this.savePurge = this.savePurge.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -84,6 +89,21 @@ export class Property extends React.Component {
       })
     }
   }
+  togglePurge() {
+    this.setState({
+      purgeActive: !this.state.purgeActive
+    })
+    this.props.purgeActions.resetActivePurge()
+  }
+  savePurge() {
+    this.props.purgeActions.createPurge(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      this.props.location.query.name,
+      this.props.activePurge.toJS()
+    ).then(() => this.setState({purgeActive: false}))
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
@@ -96,7 +116,7 @@ export class Property extends React.Component {
           <div className="container-fluid">
             <Row className="property-header no-end-gutters">
               <ButtonToolbar className="pull-right">
-                <Button bsStyle="primary">Purge</Button>
+                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               </ButtonToolbar>
 
               <p>PROPERTY SUMMARY</p>
@@ -267,6 +287,11 @@ export class Property extends React.Component {
             </Row>
           </div>
         </Content>
+        {this.state.purgeActive ? <PurgeModal
+          activePurge={this.props.activePurge}
+          changePurge={this.props.purgeActions.updateActivePurge}
+          hideAction={this.togglePurge}
+          savePurge={this.savePurge}/> : ''}
       </PageContainer>
     )
   }
@@ -276,6 +301,7 @@ Property.displayName = 'Property'
 Property.propTypes = {
   account: React.PropTypes.string,
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
@@ -285,19 +311,22 @@ Property.propTypes = {
   id: React.PropTypes.string,
   location: React.PropTypes.object,
   name: React.PropTypes.string,
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  purgeActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
     activeHost: state.host.get('activeHost'),
+    activePurge: state.purge.get('activePurge'),
     fetching: state.host.get('fetching')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    hostActions: bindActionCreators(hostActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    purgeActions: bindActionCreators(purgeActionCreators, dispatch)
   };
 }
 
