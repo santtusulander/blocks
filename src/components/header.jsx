@@ -178,37 +178,41 @@ class Header extends React.Component {
                   <img src="/assets/img/img-user.jpg"></img>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-user-menu">
-                  <MenuItem header={true} className="dropdown-main-header">
-                    <div className="user-menu-item">Username</div>
-                  </MenuItem>
-                  <MenuItem eventKey="1">
-                    <div className="user-menu-item">
-                      <div className="helper-header">Company</div>
-                      Disney Studios
-                    </div>
-                  </MenuItem>
-                  <MenuItem eventKey="2">
-                    <div className="user-menu-item">
-                      <div className="helper-header">Role</div>
-                      Admin
-                    </div>
-                  </MenuItem>
-                  <li className="menu-item-theme">
-                    <div className="menuitem">
-                      <div className="user-menu-item">
-                        <div className="helper-header helper-ui-theme">UI Theme</div>
-                        <Select className="btn-block"
-                          onSelect={this.handleThemeChange}
-                          value={this.props.theme}
-                          options={[
-                            ['dark', 'Ericsson Dark Theme'],
-                            ['light', 'Ericsson Light Theme']]}/>
-                      </div>
-                    </div>
+                  <li className="dropdown-user-menu-container">
+                    <ul>
+                      <MenuItem header={true} className="dropdown-main-header">
+                        <div className="user-menu-item">Username</div>
+                      </MenuItem>
+                      <MenuItem eventKey="1">
+                        <div className="user-menu-item">
+                          <div className="helper-header">Company</div>
+                          Disney Studios
+                        </div>
+                      </MenuItem>
+                      <MenuItem eventKey="2">
+                        <div className="user-menu-item">
+                          <div className="helper-header">Role</div>
+                          Admin
+                        </div>
+                      </MenuItem>
+                      <li className="menu-item-theme">
+                        <div className="menuitem">
+                          <div className="user-menu-item">
+                            <div className="helper-header helper-ui-theme">UI Theme</div>
+                            <Select className="btn-block"
+                              onSelect={this.handleThemeChange}
+                              value={this.props.theme}
+                              options={[
+                                ['dark', 'Ericsson Dark Theme'],
+                                ['light', 'Ericsson Light Theme']]}/>
+                          </div>
+                        </div>
+                      </li>
+                      <MenuItem eventKey="4">
+                        <div className="user-menu-item">Account Management</div>
+                      </MenuItem>
+                    </ul>
                   </li>
-                  <MenuItem eventKey="4">
-                    <div className="user-menu-item">Account Management</div>
-                    </MenuItem>
                   <li className="bottom-item" eventKey="5">
                     <a href="#" onClick={this.props.logOut}>
                       <div className="user-menu-item">Log Out</div>
