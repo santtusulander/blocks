@@ -49,7 +49,8 @@
       linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
     background-size: 100%;
 
-    .active > a {
+    .active > a,
+    li > .active {
 
       &,
       &:hover,
@@ -81,14 +82,14 @@
 
   &.dropdown-user-menu {
     width: 500px;
+    height: 100%;
     min-height: calc(100vh - #{$header-total-height});
-    padding-bottom: $bar-height + $btn-height;
+    overflow: auto;
     font-size: 30px;
 
     @include md {
       width: 380px;
       min-height: calc(100vh - #{$md-header-total-height});
-      padding-bottom: $md-bar-height + $md-btn-height;
       font-size: 20px;
     }
 
@@ -125,150 +126,177 @@
     }
 
     > li {
-      position: relative;
-      display: block;
-      height: auto;
-      min-height: $bar-height;
 
-      @include md {
-        min-height: $md-bar-height;
-      }
-
-      &.dropdown-header {
-        padding: 0 ($btn-height / 6);
+      &.dropdown-user-menu-container {
+        height: 100%;
+        margin-bottom: -($bar-height + $btn-height);
 
         @include md {
-          padding: 0 ($md-btn-height / 6);
-        }
-      }
-
-      &.bottom-item {
-        position: absolute;
-        bottom: 0;
-      }
-
-      > a,
-      > .menuitem {
-        position: relative;
-        display: block;
-        min-height: $bar-height + $btn-height;
-        padding: 0;
-        margin: 0 ($btn-height / 2);
-
-        @include md {
-          min-height: $md-bar-height + $md-btn-height;
-          margin: 0 ($md-btn-height / 2);
-        }
-      }
-
-      > a {
-
-        &::before {
-          position: absolute;
-          top: 50%;
-          right: $btn-sm-height / 2;
-          width: $btn-height / 2;
-          height: $btn-height / 2;
-          margin-top: -($btn-height / 4);
-          border-radius: 50%;
-          content: '';
-
-          @include md {
-            right: $md-btn-sm-height / 2;
-            width: $btn-sm-height / 2;
-            height: $btn-sm-height / 2;
-            margin-top: -($btn-sm-height / 4);
-          }
-
-          .dark-theme &,
-          .light-theme & {
-            background-color: rgba($black, 0.2);
-          }
+          margin-bottom: -($md-bar-height + $md-btn-height);
         }
 
         &::after {
-          position: absolute;
-          top: 50%;
-          right: $btn-sm-height / 2;
-          margin: -5px 12px 0 0;
-          vertical-align: middle;
-          border-top: 5px solid transparent;
-          border-bottom: 5px solid transparent;
-          border-left: 5px dashed;
+          display: block;
+          height: $bar-height + $btn-height;
           content: '';
 
           @include md {
-            right: $md-btn-sm-height / 2;
-            margin-right: 8px;
-          }
-
-          .dark-theme &,
-          .light-theme .header & {
-            border-left-color: $dt-text-color;
-          }
-
-          .light-theme & {
-            border-left-color: $white;
-          }
-        }
-
-        &:hover::after {
-
-          .dark-theme &,
-          .light-theme .header & {
-            border-left-color: $white;
+            height: $md-bar-height + $md-btn-height;
           }
         }
       }
 
-      &:not(.dropdown-header) + li a {
+      > ul {
+        padding: 0;
+        list-style: none;
 
-        .dark-theme &,
-        .light-theme & {
-          border-top: 1px solid rgba($pale-blue, 0.1);
+        > li {
+          position: relative;
+          display: block;
+          height: auto;
+          min-height: $bar-height;
+
+          @include md {
+            min-height: $md-bar-height;
+          }
         }
       }
 
-      .user-menu-item {
-        position: absolute;
-        top: 50%;
-        width: 100%;
-        padding: 0 ($btn-height / 3);
-        transform: translateY(-50%);
+      > ul > li,
+      &.bottom-item {
+        > a,
+        > .menuitem {
+          position: relative;
+          display: block;
+          min-height: $bar-height + $btn-height;
+          padding: 0;
+          margin: 0 ($btn-height / 2);
 
-        @include md {
-          padding: 0 ($md-btn-height / 3);
-        }
-      }
-
-      .dropdown-select {
-        width: calc(100% + #{$btn-height});
-        margin: 0 (-$btn-height / 2);
-
-        @include md {
-          width: calc(100% + #{$md-btn-height});
-          margin: 0 (-$md-btn-height / 2);
+          @include md {
+            min-height: $md-bar-height + $md-btn-height;
+            margin: 0 ($md-btn-height / 2);
+          }
         }
 
-        > .dropdown-toggle {
-          background-color: transparent;
-        }
+        > a {
 
-        .dropdown-menu {
-          color: $lt-text-color;
-          background-color: $silver-40;
+          &::before {
+            position: absolute;
+            top: 50%;
+            right: $btn-sm-height / 2;
+            width: $btn-height / 2;
+            height: $btn-height / 2;
+            margin-top: -($btn-height / 4);
+            border-radius: 50%;
+            content: '';
 
-          li > a {
-            color: $lt-text-color;
+            @include md {
+              right: $md-btn-sm-height / 2;
+              width: $btn-sm-height / 2;
+              height: $btn-sm-height / 2;
+              margin-top: -($btn-sm-height / 4);
+            }
 
-            &:hover {
-              color: $black;
+            .dark-theme &,
+            .light-theme & {
+              background-color: rgba($black, 0.2);
+            }
+          }
+
+          &::after {
+            position: absolute;
+            top: 50%;
+            right: $btn-sm-height / 2;
+            margin: -5px 12px 0 0;
+            vertical-align: middle;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 5px dashed;
+            content: '';
+
+            @include md {
+              right: $md-btn-sm-height / 2;
+              margin-right: 8px;
+            }
+
+            .dark-theme &,
+            .light-theme .header & {
+              border-left-color: $dt-text-color;
+            }
+
+            .light-theme & {
+              border-left-color: $white;
+            }
+          }
+
+          &:hover::after {
+
+            .dark-theme &,
+            .light-theme .header & {
+              border-left-color: $white;
             }
           }
         }
 
-        .icon {
-          width: 40px;
+        &:not(.dropdown-header) + li a,
+        &:not(.dropdown-header) + li .menuitem,
+        &.bottom-item a {
+
+          .dark-theme &,
+          .light-theme & {
+            border-top: 1px solid rgba($pale-blue, 0.1);
+          }
+        }
+
+        .user-menu-item {
+          position: absolute;
+          top: 50%;
+          width: 100%;
+          padding: 0 ($btn-height / 3);
+          transform: translateY(-50%);
+
+          @include md {
+            padding: 0 ($md-btn-height / 3);
+          }
+        }
+
+        &.dropdown-header .user-menu-item {
+          padding: 0 ($btn-height / 2);
+
+          @include md {
+            padding: 0 ($md-btn-height / 2);
+          }
+        }
+
+        .dropdown-select {
+          width: calc(100% + #{$btn-height});
+          margin: 0 (-$btn-height / 2);
+
+          @include md {
+            width: calc(100% + #{$md-btn-height});
+            margin: 0 (-$md-btn-height / 2);
+          }
+
+          > .dropdown-toggle {
+            background-color: transparent;
+          }
+
+          .dropdown-menu {
+            color: $lt-text-color;
+            background-color: $silver-40;
+
+            li > a {
+              color: $lt-text-color;
+
+              &:hover {
+                color: $black;
+              }
+            }
+          }
+
+          .icon {
+            width: 40px;
+          }
         }
       }
     }
@@ -283,7 +311,8 @@
       height: $md-bar-height;
     }
 
-    > a {
+    > a,
+    > ul > li > a {
       display: table-cell;
       padding: 15px ($btn-height / 2);
       line-height: 1.1em;
@@ -317,7 +346,8 @@
       }
     }
 
-    &.dropdown-header {
+    &.dropdown-header,
+    > ul > .dropdown-header {
       padding: 0;
       font-size: inherit;
       color: inherit;
@@ -339,6 +369,15 @@
         background-color: rgba($white, 0.2);
       }
     }
+  }
+}
+
+.navbar-fixed-top .dropdown-menu:not(.dropdown-user-menu) {
+  max-height: calc(100vh - #{$header-total-height});
+  overflow: auto;
+
+  @include md {
+    max-height: calc(100vh - #{$md-header-total-height});
   }
 }
 
