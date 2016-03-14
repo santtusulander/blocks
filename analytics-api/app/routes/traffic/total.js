@@ -30,11 +30,8 @@ function routeTrafficTotal(req, res) {
     group    : params.group,
     property : params.property
   }).then((trafficData) => {
-    if (trafficData) {
-      // res.jsend(trafficData[0]);
-    }
 
-    res.jsend(testData);
+    res.jsend(trafficData[0] || {});
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');

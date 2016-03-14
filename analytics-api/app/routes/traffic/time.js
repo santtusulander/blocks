@@ -35,11 +35,8 @@ function routeTrafficTime(req, res) {
     granularity  : params.granularity,
     geography    : 'global'
   }).then((trafficData) => {
-    if (trafficData) {
-      // res.jsend(trafficData);
-    }
 
-    res.jsend(testData);
+    res.jsend(trafficData || []);
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');

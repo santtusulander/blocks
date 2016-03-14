@@ -29,9 +29,9 @@ function routeMetrics(req, res) {
     account : params.account,
     group   : params.group
   }).spread((trafficData, historicalTrafficData, aggregateData, transferRateData) => {
-    if (trafficData && historicalTrafficData && aggregateData && transferRateData) {
-      let responseData = [];
+    let responseData = [];
 
+    if (trafficData && historicalTrafficData && aggregateData && transferRateData) {
       // Set the selected level
       let selectedLevel = (params.group == null) ? 'group' : 'property';
 
@@ -146,15 +146,16 @@ function routeMetrics(req, res) {
 
       });
 
-      // res.jsend(responseData);
 
     }
 
-    res.jsend(testData({
-      entityCount: 10,
-      start: params.start,
-      end: params.end
-    }));
+    res.jsend(responseData);
+
+    // res.jsend(testData({
+    //   entityCount: 10,
+    //   start: params.start,
+    //   end: params.end
+    // }));
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
