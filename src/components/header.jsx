@@ -120,13 +120,12 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            {showConfigurations ?
+            {showConfigurations &&
               <li className="main-nav-item">
                 <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
               </li>
-              : ''
             }
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
@@ -138,7 +137,7 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            {hidePurge ? '' :
+            {!hidePurge &&
               <li className="main-nav-item">
                 <a href="#" className="main-nav-link"
                   onClick={this.activatePurge}>
