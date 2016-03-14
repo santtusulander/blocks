@@ -191,7 +191,9 @@ class ContentItemChart extends React.Component {
                 </div>
                 <div className="content-item-text-sm">
                   <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
-                  <p>42 ms TTFB</p>
+                  <p>
+                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'} TTFB
+                  </p>
                 </div>
               </div>
             </div>
@@ -243,7 +245,8 @@ ContentItemChart.propTypes = {
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
-  secondaryData: React.PropTypes.array
+  secondaryData: React.PropTypes.array,
+  timeToFirstByte: React.PropTypes.string
 }
 
 module.exports = ContentItemChart

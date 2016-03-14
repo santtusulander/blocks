@@ -201,6 +201,7 @@ export class Groups extends React.Component {
                           secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
                           differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
@@ -223,6 +224,7 @@ export class Groups extends React.Component {
                           primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
                           secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}

@@ -96,7 +96,8 @@ export class Hosts extends React.Component {
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
       const trafficTotals = this.props.hosts.map((host, i) => {
-        return this.props.metrics.get(i).get('totalTraffic')
+        return this.props.metrics.has(i) ?
+          this.props.metrics.get(i).get('totalTraffic') : 0
       })
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
@@ -189,8 +190,8 @@ export class Hosts extends React.Component {
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
                     {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.get(i)
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic'))
+                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemChart key={i} id={host}
                           linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
@@ -198,13 +199,14 @@ export class Hosts extends React.Component {
                           analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           name={host} description="Desc"
                           delete={this.deleteHost}
-                          primaryData={metrics.get('traffic').toJS()}
-                          secondaryData={metrics.get('historical_traffic').toJS()}
-                          differenceData={metrics.get('historical_variance').toJS()}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
+                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          maxTransfer={metrics.get('transfer_rates').get('peak')}
-                          minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
                           fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
                           chartWidth={scaledWidth.toString()}
@@ -214,19 +216,20 @@ export class Hosts extends React.Component {
                   </div> :
                   <div className="content-item-lists" key="lists">
                     {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.get(i)
+                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
                       return (
                         <ContentItemList key={i} id={host}
                           linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
                           name={host} description="Desc"
-                          primaryData={metrics.get('traffic').toJS()}
-                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          maxTransfer={metrics.get('transfer_rates').get('peak')}
-                          minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}
