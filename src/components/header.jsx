@@ -73,6 +73,7 @@ class Header extends React.Component {
       /(\/analytics\/account\/)/.test(this.props.pathname) ||
       this.props.pathname === '/security' ||
       this.props.pathname === '/services'
+    let contentActive = /(\/content\/)/.test(this.props.pathname) ? ' active' : ''
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -97,7 +98,7 @@ class Header extends React.Component {
               <Dropdown id="account-menu" ref="accountMenu"
                 open={this.state.accountMenuOpen}
                 onToggle={this.toggleAccountMenu}>
-                <Link className="main-nav-link"
+                <Link className={'main-nav-link' + contentActive}
                   to={`/content/groups/udn/${firstAccount}`}
                   activeClassName="active">
                   Content
@@ -109,6 +110,8 @@ class Header extends React.Component {
                       <li key={i}
                         active={activeAccount === account.get('id')}>
                         <Link
+                          className={activeAccount === account.get('id') &&
+                            contentActive ? 'active' : ''}
                           to={`/content/groups/udn/${account.get('id')}`}
                           activeClassName="active"
                           onClick={this.toggleAccountMenu}>
