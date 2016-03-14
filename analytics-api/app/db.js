@@ -213,8 +213,8 @@ class AnalyticsDB {
       SELECT
         epoch_start,
         property,
-        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio,
-        sum(connections * avg_fbl)/sum(connections) as avg_fbl
+        round(sum(connections * coalesce(0, chit_ratio))/sum(connections)*100) as chit_ratio,
+        sum(connections * coalesce(0, avg_fbl))/sum(connections) as avg_fbl
       FROM property_global_day
       WHERE epoch_start between ? and ?
         AND account_id = ?
@@ -246,8 +246,8 @@ class AnalyticsDB {
       SELECT
         epoch_start,
         group_id AS \`group\`,
-        round(sum(connections * chit_ratio)/sum(connections)*100) as chit_ratio,
-        sum(connections * avg_fbl)/sum(connections) as avg_fbl
+        round(sum(connections * coalesce(0, chit_ratio))/sum(connections)*100) as chit_ratio,
+        sum(connections * coalesce(0, avg_fbl))/sum(connections) as avg_fbl
       FROM group_global_day
       WHERE epoch_start between ? and ?
         AND account_id = ?
