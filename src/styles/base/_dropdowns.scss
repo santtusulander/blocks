@@ -342,6 +342,15 @@
   }
 }
 
+.navbar-fixed-top .dropdown-menu:not(.dropdown-user-menu) {
+  max-height: calc(100vh - #{$header-total-height});
+  overflow: auto;
+
+  @include md {
+    max-height: calc(100vh - #{$md-header-total-height});
+  }
+}
+
 .dropup,
 .navbar-fixed-bottom .dropdown {
 
