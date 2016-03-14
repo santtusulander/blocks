@@ -107,7 +107,8 @@ export class Groups extends React.Component {
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
       const trafficTotals = this.props.groups.map((group, i) => {
-        return this.props.metrics.get(i).get('totalTraffic')
+        return this.props.metrics.has(i) ?
+          this.props.metrics.get(i).get('totalTraffic') : 0
       })
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
@@ -188,21 +189,21 @@ export class Groups extends React.Component {
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
                     {this.props.groups.map((group, i) => {
-                      const metrics = this.props.metrics.get(i)
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic'))
+                      const metrics = this.props.metrics.find(metric => metric.get('group') === group.get('id')) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemChart key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
                           delete={this.deleteGroup}
-                          primaryData={metrics.get('traffic').toJS()}
-                          secondaryData={metrics.get('historical_traffic').toJS()}
-                          differenceData={metrics.get('historical_variance').toJS()}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
+                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          maxTransfer={metrics.get('transfer_rates').get('peak')}
-                          minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
                           fetchingMetrics={this.props.fetchingMetrics}
                           barWidth="1"
                           chartWidth={scaledWidth.toString()}
@@ -212,19 +213,19 @@ export class Groups extends React.Component {
                   </div> :
                   <div className="content-item-lists" key="lists">
                     {this.props.groups.map((group, i) => {
-                      const metrics = this.props.metrics.get(i)
+                      const metrics = this.props.metrics.find(metric => metric.get('group') === group.get('id')) || Immutable.Map()
                       return (
                         <ContentItemList key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
                           name={group.get('name')} description="Desc"
                           delete={this.deleteGroup}
-                          primaryData={metrics.get('traffic').toJS()}
-                          secondaryData={metrics.get('historical_traffic').toJS()}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          maxTransfer={metrics.get('transfer_rates').get('peak')}
-                          minTransfer={metrics.get('transfer_rates').get('lowest')}
-                          avgTransfer={metrics.get('transfer_rates').get('average')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}
