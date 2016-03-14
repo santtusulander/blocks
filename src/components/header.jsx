@@ -95,13 +95,14 @@ class Header extends React.Component {
           <Nav className="main-nav">
             <li className="main-nav-item">
               <Dropdown id="account-menu" ref="accountMenu"
-                open={this.state.accountMenuOpen}>
+                open={this.state.accountMenuOpen}
+                onToggle={this.toggleAccountMenu}>
                 <Link className="main-nav-link"
                   to={`/content/groups/udn/${firstAccount}`}
                   activeClassName="active">
                   Content
                 </Link>
-                <Dropdown.Toggle bsStyle='link' onClick={this.toggleAccountMenu}/>
+                <Dropdown.Toggle bsStyle='link'/>
                 <Dropdown.Menu>
                   {this.props.accounts ? this.props.accounts.map((account, i) => {
                     return (
