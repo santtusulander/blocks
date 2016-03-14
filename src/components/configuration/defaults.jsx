@@ -45,10 +45,10 @@ class ConfigurationDefaults extends React.Component {
   changeActiveRuleType(type) {
     let rulePath = this.state.activeRulePath;
     if(type === 'request') {
-      rulePath[0] = 'request_policies'
+      rulePath[0] = 'request_policy'
     }
     else if(type === 'response') {
-      rulePath[0] = 'response_policies'
+      rulePath[0] = 'response_policy'
     }
     this.setState({activeRulePath: rulePath})
   }
@@ -60,11 +60,19 @@ class ConfigurationDefaults extends React.Component {
       )
     }
     const policyPath = Immutable.List([
-      'default_policies']);
+      'default_policy', 'policy_rules'])
     let controlIndex = config.getIn(policyPath)
-      .findIndex(policy => policy.get('set').has('cache_control'))
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          policy.get('set').has('cache_control')
+        }
+      })
     let nameIndex = config.getIn(policyPath)
-      .findIndex(policy => policy.get('set').has('cache_name'))
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          return policy.get('set').has('cache_name')
+        }
+      })
     const policyPaths = {
       honor_origin_cache_policies: policyPath.push(controlIndex, 'honor_origin'),
       honor_etags: policyPath.push(controlIndex, 'check_etag'),

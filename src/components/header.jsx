@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { Link } from 'react-router'
 
 import Select from '../components/select'
@@ -13,10 +14,12 @@ class Header extends React.Component {
     this.activatePurge = this.activatePurge.bind(this)
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
+    this.toggleAccountMenu = this.toggleAccountMenu.bind(this)
 
     this.state = {
       showBreadcrumbs: false,
-      animatingGradient: false
+      animatingGradient: false,
+      accountMenuOpen: false
     }
   }
   componentDidMount() {
@@ -45,11 +48,31 @@ class Header extends React.Component {
     e.preventDefault()
     this.props.activatePurge()
   }
+  toggleAccountMenu() {
+    this.setState({accountMenuOpen: !this.state.accountMenuOpen})
+  }
   render() {
-    let className = 'header';
+    let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
+    const firstAccount = this.props.accounts && this.props.accounts.get(0) ?
+      this.props.accounts.get(0).get('id')
+      : 1
+    const activeAccount = this.props.activeAccount ?
+      this.props.activeAccount.get('id')
+      : null
+    // Show Configurations only for property levels
+    let showConfigurations = /(\/content\/property\/)/.test(this.props.pathname) ||
+      /(\/content\/configuration\/)/.test(this.props.pathname) ||
+      /(\/configurations\/)/.test(this.props.pathname) ||
+      /(\/analytics\/property\/)/.test(this.props.pathname)
+    // Hide Purge for all levels higher than group summary / property levels
+    let hidePurge = /(\/content\/accounts\/)/.test(this.props.pathname) ||
+      /(\/content\/groups\/)/.test(this.props.pathname) ||
+      /(\/analytics\/account\/)/.test(this.props.pathname) ||
+      this.props.pathname === '/security' ||
+      this.props.pathname === '/services'
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -71,26 +94,39 @@ class Header extends React.Component {
           </Navbar.Header>
           <Nav className="main-nav">
             <li className="main-nav-item">
-              <Dropdown id="dropdown-content">
-                <Link className="main-nav-link" to={`/content`} activeClassName="active">
+              <Dropdown id="account-menu" ref="accountMenu"
+                open={this.state.accountMenuOpen}>
+                <Link className="main-nav-link"
+                  to={`/content/groups/udn/${firstAccount}`}
+                  activeClassName="active">
                   Content
                 </Link>
-                <Dropdown.Toggle bsStyle='link'/>
+                <Dropdown.Toggle bsStyle='link' onClick={this.toggleAccountMenu}/>
                 <Dropdown.Menu>
-                  <MenuItem eventKey="1" active={true}><span>Disney Interactive</span></MenuItem>
-                  <MenuItem eventKey="2">Disney Cruises</MenuItem>
-                  <MenuItem eventKey="3">Lucas Arts</MenuItem>
-                  <MenuItem eventKey="4">Star Wars</MenuItem>
-                  <MenuItem eventKey="5">Ads</MenuItem>
-                  <MenuItem eventKey="6">Marvel</MenuItem>
+                  {this.props.accounts ? this.props.accounts.map((account, i) => {
+                    return (
+                      <li key={i}
+                        active={activeAccount === account.get('id')}>
+                        <Link className="main-nav-link"
+                          to={`/content/groups/udn/${account.get('id')}`}
+                          activeClassName="active"
+                          onClick={this.toggleAccountMenu}>
+                          {account.get('name')}
+                        </Link>
+                      </li>
+                    )
+                  }) : ''}
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
-                Configurations
-              </Link>
-            </li>
+            {showConfigurations ?
+              <li className="main-nav-item">
+                <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
+                  Configurations
+                </Link>
+              </li>
+              : ''
+            }
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
                 Security
@@ -101,12 +137,14 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            <li className="main-nav-item">
-              <a href="#" className="main-nav-link"
-                onClick={this.activatePurge}>
-                Purge
-              </a>
-            </li>
+            {hidePurge ? '' :
+              <li className="main-nav-item">
+                <a href="#" className="main-nav-link"
+                  onClick={this.activatePurge}>
+                  Purge
+                </a>
+              </li>
+            }
           </Nav>
           <Nav pullRight={true}>
             <li>
@@ -187,11 +225,14 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
+  accounts: React.PropTypes.instanceOf(Immutable.List),
   activatePurge: React.PropTypes.func,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
   logOut: React.PropTypes.func,
+  pathname: React.PropTypes.string,
   theme: React.PropTypes.string
 }
 

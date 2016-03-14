@@ -55,7 +55,7 @@ const fakeHost = Immutable.fromJS({
       "configurations": [
         {
           "config_id": "1",
-          "request_policies": [
+          "request_policy": {"policy_rules": [
             {
               "match": {
                 "default": [
@@ -135,7 +135,7 @@ const fakeHost = Immutable.fromJS({
                 "field_detail": "client_type"
               }
             }
-          ],
+          ]},
           "edge_configuration": {
             "published_name": "examplffffffe.com",
             "origin_host_name": "sdrgfdg.com",
@@ -146,7 +146,7 @@ const fakeHost = Immutable.fromJS({
             "last_edited": "10 Jan 2016 - 10:52",
             "environment": "staging"
           },
-          "default_policies": [
+          "default_policy": {"policy_rules": [
             {
               "set": {
                 "cache_control": {
@@ -162,8 +162,8 @@ const fakeHost = Immutable.fromJS({
                 }
               }
             }
-          ],
-          "response_policies": [
+          ]},
+          "response_policy": {"policy_rules": [
             {
               "match": {
                 "field": "response_code",
@@ -207,7 +207,7 @@ const fakeHost = Immutable.fromJS({
                 ]
               }
             }
-          ]
+          ]}
         }
       ]
     }
@@ -442,7 +442,8 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
-    expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
+    expect(hostActions.updateHost.mock.calls[0][3]).toEqual('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4]).toEqual(fakeHost.toJS())
   })
 
   it('should add a version', () => {

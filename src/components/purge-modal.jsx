@@ -56,7 +56,7 @@ class PurgeModal extends React.Component {
                 <Select className="input-select"
                   value={''+this.props.activeProperty}
                   options={this.props.availableProperties.map(
-                    (property, i) => [''+i, property.get('property')]
+                    (property, i) => [property, property]
                   ).toJS()}
                   onSelect={this.props.changeProperty}/>
 
@@ -148,7 +148,7 @@ class PurgeModal extends React.Component {
 
 PurgeModal.displayName = 'PurgeModal'
 PurgeModal.propTypes = {
-  activeProperty: React.PropTypes.number,
+  activeProperty: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   availableProperties: React.PropTypes.instanceOf(Immutable.List),
   changeProperty: React.PropTypes.func,
