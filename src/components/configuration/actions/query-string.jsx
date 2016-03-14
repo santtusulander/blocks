@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal, Panel } from 'react-bootstrap'
+import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -46,8 +46,10 @@ class QueryString extends React.Component {
         <Modal.Body>
 
           <div className="form-groups">
+
             <InputConnector show={true}
               hasTwoEnds={this.state.activeActivity !== 'remove'} />
+
             <div className="form-group">
               <label className="control-label">Activity</label>
               <Select className="input-select"
@@ -61,16 +63,50 @@ class QueryString extends React.Component {
                   ['remove', 'Remove']]}/>
             </div>
 
-            <Input type="text" label="Name"
-              onChange={this.handleChange(
-                ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
-              )}/>
             <Panel className="form-panel" collapsible={true}
-              expanded={this.state.activeActivity !== 'remove'}>
+              expanded={this.state.activeActivity !== 'modify'}>
+              <Input type="text" label="Name"
+                onChange={this.handleChange(
+                  ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
+                )}/>
+            </Panel>
+
+            <Panel className="form-panel" collapsible={true}
+              expanded={this.state.activeActivity === 'add'}>
               <Input type="text" label="Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_value']
                 )}/>
+            </Panel>
+
+            <Panel className="form-panel" collapsible={true}
+              expanded={this.state.activeActivity === 'modify'}>
+              <Row>
+                <Col xs={6}>
+                  <Input type="text" label="FROM Name"
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_from']
+                    )}/>
+                </Col>
+                <Col xs={6}>
+                  <Input type="text" label="TO Name"
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_to']
+                    )}/>
+                </Col>
+                <Col xs={6}>
+                  <Input type="text" label="FROM Value"
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_from']
+                    )}/>
+                </Col>
+                <Col xs={6}>
+                  <Input type="text" label="TO Value"
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_to']
+                    )}/>
+                </Col>
+              </Row>
             </Panel>
 
           </div>

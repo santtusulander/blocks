@@ -480,6 +480,7 @@
 
     &,
     &:hover,
+    &:focus,
     &:active,
     &.active {
       color: $dt-text-color;
@@ -701,6 +702,7 @@
 
     &,
     &:hover,
+    &:focus,
     &:active,
     &.active {
       color: inherit;

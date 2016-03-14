@@ -36,8 +36,8 @@ export class PropertyAnalytics extends React.Component {
       account: this.props.params.account,
       group: this.props.params.group,
       property: this.props.location.query.name,
-      startDate: this.state.startDate.format('YYYY-MM-DDTHH:MM:SS'),
-      endDate: this.state.endDate.format('YYYY-MM-DDTHH:MM:SS')
+      startDate: this.state.startDate.format('X'),
+      endDate: this.state.endDate.format('X')
     }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()

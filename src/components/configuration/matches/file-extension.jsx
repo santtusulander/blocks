@@ -1,23 +1,30 @@
 import React from 'react'
-import { Col, Input, Modal, Row } from 'react-bootstrap'
+import { Input, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import Toggle from '../../toggle'
+import Select from '../../select'
 
 class FileExtension extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      activeFilter: 'matches'
+    }
+
     this.handleChange = this.handleChange.bind(this)
-    this.handleToggleChange = this.handleToggleChange.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
   }
   handleChange(path) {
     return e => {
       this.props.changeValue(path, e.target.value)
     }
   }
-  handleToggleChange(path) {
+  handleSelectChange(path) {
     return value => {
+      this.setState({
+        activeFilter: value
+      })
       this.props.changeValue(path, value)
     }
   }
@@ -43,19 +50,14 @@ class FileExtension extends React.Component {
               ['edge_configuration', 'cache_rule', 'matches', 'file_extension_ignore_case']
             )}/>
 
-          <hr />
-
-          <Row className="no-gutters">
-            <Col xs={8} className="toggle-label">
-              <label>Matches File extension</label>
-            </Col>
-            <Col xs={4}>
-              <Toggle className="pull-right" value={true}
-                changeValue={this.handleToggleChange(
-                  ['edge_configuration', 'cache_rule', 'matches', 'file_extension']
-                )}/>
-            </Col>
-          </Row>
+          <Select className="input-select"
+            onSelect={this.handleSelectChange(
+              ['edge_configuration', 'cache_rule', 'matches', 'file_extension']
+            )}
+            value={this.state.activeFilter}
+            options={[
+              ['matches', 'Matches'],
+              ['does_not_match', 'Does not match']]}/>
 
         </Modal.Body>
       </div>

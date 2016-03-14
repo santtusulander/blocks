@@ -73,6 +73,7 @@ class Header extends React.Component {
       /(\/analytics\/account\/)/.test(this.props.pathname) ||
       this.props.pathname === '/security' ||
       this.props.pathname === '/services'
+    let contentActive = /(\/content\/)/.test(this.props.pathname) ? ' active' : ''
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -95,19 +96,22 @@ class Header extends React.Component {
           <Nav className="main-nav">
             <li className="main-nav-item">
               <Dropdown id="account-menu" ref="accountMenu"
-                open={this.state.accountMenuOpen}>
-                <Link className="main-nav-link"
+                open={this.state.accountMenuOpen}
+                onToggle={this.toggleAccountMenu}>
+                <Link className={'main-nav-link' + contentActive}
                   to={`/content/groups/udn/${firstAccount}`}
                   activeClassName="active">
                   Content
                 </Link>
-                <Dropdown.Toggle bsStyle='link' onClick={this.toggleAccountMenu}/>
+                <Dropdown.Toggle bsStyle='link'/>
                 <Dropdown.Menu>
                   {this.props.accounts ? this.props.accounts.map((account, i) => {
                     return (
                       <li key={i}
                         active={activeAccount === account.get('id')}>
-                        <Link className="main-nav-link"
+                        <Link
+                          className={activeAccount === account.get('id') &&
+                            contentActive ? 'active' : ''}
                           to={`/content/groups/udn/${account.get('id')}`}
                           activeClassName="active"
                           onClick={this.toggleAccountMenu}>
@@ -119,13 +123,12 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            {showConfigurations ?
+            {showConfigurations &&
               <li className="main-nav-item">
                 <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
               </li>
-              : ''
             }
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
@@ -137,7 +140,7 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            {hidePurge ? '' :
+            {!hidePurge &&
               <li className="main-nav-item">
                 <a href="#" className="main-nav-link"
                   onClick={this.activatePurge}>
@@ -148,7 +151,7 @@ class Header extends React.Component {
           </Nav>
           <Nav pullRight={true}>
             <li>
-              <Dropdown id="dropdown-content">
+              <Dropdown id="alert-menu">
                 <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
                   btn-alerts" noCaret={true}>
                   <IconAlerts />
@@ -170,44 +173,48 @@ class Header extends React.Component {
                 type="text" placeholder="Search" />
             </li>
             <li>
-              <Dropdown id="dropdown-content" pullRight={true}>
+              <Dropdown id="user-menu" pullRight={true}>
                 <Dropdown.Toggle bsStyle="primary"
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
                   <img src="/assets/img/img-user.jpg"></img>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-user-menu">
-                  <MenuItem header={true} className="dropdown-main-header">
-                    <div className="user-menu-item">Username</div>
-                  </MenuItem>
-                  <MenuItem eventKey="1">
-                    <div className="user-menu-item">
-                      <div className="helper-header">Company</div>
-                      Disney Studios
-                    </div>
-                  </MenuItem>
-                  <MenuItem eventKey="2">
-                    <div className="user-menu-item">
-                      <div className="helper-header">Role</div>
-                      Admin
-                    </div>
-                  </MenuItem>
-                  <li className="menu-item-theme">
-                    <div className="menuitem">
-                      <div className="user-menu-item">
-                        <div className="helper-header helper-ui-theme">UI Theme</div>
-                        <Select className="btn-block"
-                          onSelect={this.handleThemeChange}
-                          value={this.props.theme}
-                          options={[
-                            ['dark', 'Ericsson Dark Theme'],
-                            ['light', 'Ericsson Light Theme']]}/>
-                      </div>
-                    </div>
+                  <li className="dropdown-user-menu-container">
+                    <ul>
+                      <MenuItem header={true} className="dropdown-main-header">
+                        <div className="user-menu-item">Username</div>
+                      </MenuItem>
+                      <MenuItem eventKey="1">
+                        <div className="user-menu-item">
+                          <div className="helper-header">Company</div>
+                          Disney Studios
+                        </div>
+                      </MenuItem>
+                      <MenuItem eventKey="2">
+                        <div className="user-menu-item">
+                          <div className="helper-header">Role</div>
+                          Admin
+                        </div>
+                      </MenuItem>
+                      <li className="menu-item-theme">
+                        <div className="menuitem">
+                          <div className="user-menu-item">
+                            <div className="helper-header helper-ui-theme">UI Theme</div>
+                            <Select className="btn-block"
+                              onSelect={this.handleThemeChange}
+                              value={this.props.theme}
+                              options={[
+                                ['dark', 'Ericsson Dark Theme'],
+                                ['light', 'Ericsson Light Theme']]}/>
+                          </div>
+                        </div>
+                      </li>
+                      <MenuItem eventKey="4">
+                        <div className="user-menu-item">Account Management</div>
+                      </MenuItem>
+                    </ul>
                   </li>
-                  <MenuItem eventKey="4">
-                    <div className="user-menu-item">Account Management</div>
-                    </MenuItem>
                   <li className="bottom-item" eventKey="5">
                     <a href="#" onClick={this.props.logOut}>
                       <div className="user-menu-item">Log Out</div>

@@ -35,8 +35,8 @@ export class GroupAnalytics extends React.Component {
     const fetchOpts = {
       account: this.props.params.account,
       group: this.props.params.group,
-      startDate: this.state.startDate.format('YYYY-MM-DDTHH:MM:SS'),
-      endDate: this.state.endDate.format('YYYY-MM-DDTHH:MM:SS')
+      startDate: this.state.startDate.format('X'),
+      endDate: this.state.endDate.format('X')
     }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
