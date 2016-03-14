@@ -35,10 +35,10 @@ const qsBuilder = ({
     qs += `&property=${property}`
   }
   if(startDate) {
-    qs += `&startDate=${startDate}`
+    qs += `&start=${startDate}`
   }
   if(endDate) {
-    qs += `&endDate=${endDate}`
+    qs += `&end=${endDate}`
   }
   return qs
 }

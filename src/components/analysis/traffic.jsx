@@ -42,7 +42,7 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
-              dataKey="bytes_out"
+              dataKey="bytes"
               data={this.props.byTime.toJS()}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
             }

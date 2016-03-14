@@ -31,11 +31,13 @@ class AnalysisByTime extends React.Component {
       if(d1) {
         d = xDate - d0.timestamp.getTime() > d1.timestamp.getTime() - xDate ? d1 : d0
       }
-      this.setState({
-        tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
-        tooltipX: xScale(d.timestamp),
-        tooltipY: yScale(d[this.props.dataKey])
-      })
+      if(d) {
+        this.setState({
+          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
+          tooltipX: xScale(d.timestamp),
+          tooltipY: yScale(d[this.props.dataKey])
+        })
+      }
     }
   }
   deactivateTooltip() {
