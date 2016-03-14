@@ -18,9 +18,9 @@ let environmentConfigs = {
   development: {
     port: 3030,
     dbConnectionLimit: 100,
-    dbHost: 'localhost',
-    dbUser: 'root',
-    dbPassword: 'root',
+    dbHost: 'metrics-db.dal.cdx-dev.unifieddeliverynetwork.net',
+    dbUser: 'ro',
+    dbPassword: 'Read0nLy',
     dbName: 'metrics'
   },
   staging: {
