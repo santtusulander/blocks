@@ -108,7 +108,7 @@ class Header extends React.Component {
                     return (
                       <li key={i}
                         active={activeAccount === account.get('id')}>
-                        <Link className="main-nav-link"
+                        <Link
                           to={`/content/groups/udn/${account.get('id')}`}
                           activeClassName="active"
                           onClick={this.toggleAccountMenu}>
@@ -149,7 +149,7 @@ class Header extends React.Component {
           </Nav>
           <Nav pullRight={true}>
             <li>
-              <Dropdown id="dropdown-content">
+              <Dropdown id="alert-menu">
                 <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
                   btn-alerts" noCaret={true}>
                   <IconAlerts />
@@ -171,7 +171,7 @@ class Header extends React.Component {
                 type="text" placeholder="Search" />
             </li>
             <li>
-              <Dropdown id="dropdown-content" pullRight={true}>
+              <Dropdown id="user-menu" pullRight={true}>
                 <Dropdown.Toggle bsStyle="primary"
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
