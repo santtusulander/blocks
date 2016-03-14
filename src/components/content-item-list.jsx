@@ -81,7 +81,10 @@ class ContentItemList extends React.Component {
                   <p>Avg. Cache Hit Rate</p>
                 </Col>
                 <Col xs={6}>
-                  <h1>36<span className="heading-suffix"> ms</span></h1>
+                  <h1>
+                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0}
+                    <span className="heading-suffix"> {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}</span>
+                  </h1>
                   <p>Avg. TTFB</p>
                 </Col>
               </Row>
@@ -128,6 +131,7 @@ ContentItemList.propTypes = {
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
+  timeToFirstByte: React.PropTypes.string,
   toggleActive: React.PropTypes.func
 }
 

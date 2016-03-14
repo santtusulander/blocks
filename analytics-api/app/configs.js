@@ -16,7 +16,12 @@ let commonConfigs = {
 // Environment specific configs
 let environmentConfigs = {
   development: {
-    port: 3030
+    port: 3030,
+    dbConnectionLimit: 100,
+    dbHost: 'metrics-db.dal.cdx-dev.unifieddeliverynetwork.net',
+    dbUser: 'ro',
+    dbPassword: 'Read0nLy',
+    dbName: 'metrics'
   },
   staging: {
     port: 3040

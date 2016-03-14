@@ -2,6 +2,7 @@ import {createAction} from 'redux-actions'
 import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import {analyticsBase} from '../util'
 
@@ -28,13 +29,13 @@ const qsBuilder = ({
     qs += `&group=${group}`
   }
   if(property) {
-    qs += `&property=${property}`
+    qs += `&property=vidscale.cdx-stag.unifieddeliverynetwork.net`
   }
   if(startDate) {
-    qs += `&startDate=${startDate}`
+    qs += `&start=${startDate}`
   }
   if(endDate) {
-    qs += `&endDate=${endDate}`
+    qs += `&end=${endDate}`
   }
   return qs
 }
@@ -46,7 +47,7 @@ export default handleActions({
     next(state, action) {
       return state.merge({
         byTime: Immutable.fromJS(action.payload.data.map(datapoint => {
-          datapoint.timestamp = new Date(datapoint.timestamp)
+          datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
           return datapoint
         }))
       })

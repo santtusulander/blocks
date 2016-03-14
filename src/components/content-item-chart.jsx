@@ -16,7 +16,9 @@ class ContentItemChart extends React.Component {
       return <div>Loading...</div>
     }
     const primaryMax = d3.max(this.props.primaryData, d => d.bytes)
-    const secondaryMax = d3.max(this.props.secondaryData, d => d.bytes)
+    const secondaryMax = this.props.secondaryData.length ?
+      d3.max(this.props.secondaryData, d => d.bytes)
+      : primaryMax
     const barMaxHeight = this.props.barMaxHeight;
     const normalize = d3.scale.linear()
       .domain([0, Math.max(primaryMax, secondaryMax)])
@@ -110,7 +112,7 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {!this.props.fetchingMetrics ?
+              {!this.props.fetchingMetrics && this.props.secondaryData.length ?
                 <svg className="content-item-chart-svg secondary-data">
                   {/* Add center point as last coordinate to close the path */}
                   <path className="content-item-chart-line"
@@ -189,7 +191,9 @@ class ContentItemChart extends React.Component {
                 </div>
                 <div className="content-item-text-sm">
                   <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
-                  <p>42 ms TTFB</p>
+                  <p>
+                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'} TTFB
+                  </p>
                 </div>
               </div>
             </div>
@@ -241,7 +245,8 @@ ContentItemChart.propTypes = {
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
   primaryData: React.PropTypes.array,
-  secondaryData: React.PropTypes.array
+  secondaryData: React.PropTypes.array,
+  timeToFirstByte: React.PropTypes.string
 }
 
 module.exports = ContentItemChart
