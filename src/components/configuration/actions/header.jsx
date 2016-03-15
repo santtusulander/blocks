@@ -66,6 +66,7 @@ class Header extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity !== 'modify'}>
               <Input type="text" label="Name"
+                placeholder="Enter Header Name"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'header_name']
                 )}/>
@@ -74,6 +75,7 @@ class Header extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity === 'add'}>
               <Input type="text" label="Value"
+                placeholder="Enter Header Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'header_value']
                 )}/>
@@ -84,24 +86,28 @@ class Header extends React.Component {
               <Row>
                 <Col xs={6}>
                   <Input type="text" label="FROM Name"
+                    placeholder="Enter Header Name"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'header_name_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="TO Name"
+                    placeholder="Enter Header Name"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'header_name_to']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="FROM Value"
+                    placeholder="Enter Header Value"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'header_value_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="TO Value"
+                    placeholder="Enter Header Value"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'header_value_to']
                     )}/>

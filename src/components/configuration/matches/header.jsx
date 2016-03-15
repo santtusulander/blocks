@@ -40,7 +40,7 @@ class Header extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Name"
-            placeholder="originvalue"
+            placeholder="Enter Header Name"
             id="matches_header"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
@@ -68,6 +68,7 @@ class Header extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Value"
+                placeholder="Enter Rule Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'matches', 'header_rule_value']
                 )}/>

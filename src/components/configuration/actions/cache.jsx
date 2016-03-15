@@ -93,7 +93,7 @@ class Cache extends React.Component {
               <Col xs={6}>
                 <Input type="number"
                   id="actions_ttl-value-number"
-                  placeholder="number"
+                  placeholder="Enter TTL Value"
                   value={this.props.set.get('max_age')}
                   onChange={this.handleChange(
                     this.props.path.concat(['max_age'])

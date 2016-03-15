@@ -45,7 +45,7 @@ class QueryString extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Name"
-            placeholder="sessionID"
+            placeholder="Enter Query String"
             id="matches_query-string"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

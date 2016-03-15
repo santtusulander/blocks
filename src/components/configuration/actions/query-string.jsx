@@ -66,6 +66,7 @@ class QueryString extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity !== 'modify'}>
               <Input type="text" label="Name"
+                placeholder="Enter Query String Name"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
                 )}/>
@@ -74,6 +75,7 @@ class QueryString extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity === 'add'}>
               <Input type="text" label="Value"
+                placeholder="Enter Query String Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_value']
                 )}/>
@@ -84,24 +86,28 @@ class QueryString extends React.Component {
               <Row>
                 <Col xs={6}>
                   <Input type="text" label="FROM Name"
+                    placeholder="Query String Name"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="TO Name"
+                    placeholder="Query String Name"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_to']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="FROM Value"
+                    placeholder="Query String Value"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
                   <Input type="text" label="TO Value"
+                    placeholder="Query String Value"
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_to']
                     )}/>

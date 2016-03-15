@@ -61,7 +61,7 @@ class Path extends React.Component {
             </div>
 
             <Input type="text" label="Path"
-              placeholder="/originvalue/"
+              placeholder="Enter Path"
               onChange={this.handleChange(
                 ['edge_configuration', 'cache_rule', 'actions', 'path_value']
               )}/>

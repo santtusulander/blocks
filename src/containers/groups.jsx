@@ -176,8 +176,6 @@ export class Groups extends React.Component {
                     this.props.activeAccount.get('name') +
                     ' does not contain any groups'
                     : 'Loading...'}
-                <br/>
-                You can create new groups by clicking the Add New (+) button
                 </p>
               :
               <ReactCSSTransitionGroup

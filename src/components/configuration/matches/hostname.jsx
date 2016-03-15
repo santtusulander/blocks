@@ -38,7 +38,7 @@ class Hostname extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Hostname"
-            placeholder="www.foobar.com"
+            placeholder="Enter Hostname"
             id="matches_hostname"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

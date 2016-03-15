@@ -39,9 +39,7 @@ class IpAddress extends React.Component {
         <Modal.Body>
 
           <Input type="textarea" label="Media Type"
-            placeholder="127.0.0.1, 63.55.23.1/24,
-              2001:0:9d38:6ab8:38bb:38d0:7e3f:4fb9"
-            id="matches_mime-type"
+            placeholder="Enter Media Types separated by commas"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
               this.props.path.concat(['cases', 0, 0])
