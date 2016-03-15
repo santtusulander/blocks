@@ -72,7 +72,7 @@ class ConfigurationPolicyRules extends React.Component {
               const {matches, sets} = parsePolicy(policy)
               return (
                 <tr key={i}>
-                  <td>NEEDS_API</td>
+                  <td>{policy.get('rule_name')}</td>
                   <td>{matches.join(', ')}</td>
                   <td>{sets.join(', ')}</td>
                   <td className="right-btns">
