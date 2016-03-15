@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as purgeActionCreators from '../redux/modules/purge'
@@ -17,7 +18,7 @@ export class Main extends React.Component {
 
     this.state = {
       activePurge: null,
-      notificationOpen: false
+      notificationMessage: ''
     }
 
     this.activatePurge = this.activatePurge.bind(this)
@@ -25,6 +26,7 @@ export class Main extends React.Component {
     this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
     this.closeNotification = this.closeNotification.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
   activatePurge(property) {
     return e => {
@@ -55,9 +57,19 @@ export class Main extends React.Component {
     this.props.userActions.logOut()
     this.props.history.pushState(null, '/login')
   }
+  showNotification(message) {
+    this.setState({
+      notificationMessage: message
+    })
+    setTimeout(() => {
+      this.setState({
+        notificationMessage: ''
+      })
+    }, 5000)
+  }
   closeNotification() {
     this.setState({
-      notificationOpen: false
+      notificationMessage: ''
     })
   }
   render() {
@@ -91,15 +103,25 @@ export class Main extends React.Component {
             changeProperty={this.changePurge}
             changePurge={this.props.purgeActions.updateActivePurge}
             hideAction={this.activatePurge(null)}
-            savePurge={this.saveActivePurge}/>
+            savePurge={this.saveActivePurge}
+            showNotification={this.showNotification}/>
           : ''
         }
-        {this.state.notificationOpen ?
-          <Notification handleClose={this.closeNotification}>
-            Notification content
-          </Notification>
-          : ''
-        }
+        <ReactCSSTransitionGroup
+          component="div"
+          className="notification-transition"
+          transitionName="notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.state.notificationMessage ?
+            <Notification handleClose={this.closeNotification}>
+              {this.state.notificationMessage}
+            </Notification>
+            : ''
+          }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
