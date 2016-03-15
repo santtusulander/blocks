@@ -68,6 +68,7 @@ class Header extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Value"
+                placeholder="Enter Rule Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'matches', 'header_rule_value']
                 )}/>
