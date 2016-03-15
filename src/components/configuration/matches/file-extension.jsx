@@ -38,7 +38,7 @@ class FileExtension extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="File extension"
-            placeholder="png, gif, jpg"
+            placeholder="Enter File Extensions separated by commas"
             id="matches_file-extension"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

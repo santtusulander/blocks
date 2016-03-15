@@ -75,7 +75,7 @@ class PurgeModal extends React.Component {
               </Col>
             </Row>
             <Input type="textarea" id="purge__objects"
-              placeholder="/images/*"
+              placeholder="Enter URLs or Paths"
               value={this.props.activePurge.get('objects').join(',\n')}
               onChange={this.parsePurgeObjects}/>
 

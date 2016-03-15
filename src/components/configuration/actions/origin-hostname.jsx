@@ -47,7 +47,7 @@ class OriginHostname extends React.Component {
           <hr />
 
           <Input type="number" label="Origin Port"
-            placeholder="80"
+            placeholder="Enter Origin Port"
             id="actions_origin-port"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_port']
@@ -73,7 +73,7 @@ class OriginHostname extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={isOtherHostHeader}>
               <Input type="text"
-                placeholder="origin.foobar.com"
+                placeholder="Enter Hostname Value"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_value']
                 )}/>
@@ -83,7 +83,7 @@ class OriginHostname extends React.Component {
         <hr />
 
         <Input type="text" label="Origin Forward Path (optional)"
-          placeholder="/"
+          placeholder="Enter Origin Forward Path"
           id="actions_origin-forward-path"
           onChange={this.handleChange(
             ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_forward_path']

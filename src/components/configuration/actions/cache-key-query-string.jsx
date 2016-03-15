@@ -60,7 +60,7 @@ class CacheKeyQueryString extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Query Name"
-                placeholder="sessionID, country"
+                placeholder="Enter Query Name"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cache_key_value']
                 )}/>

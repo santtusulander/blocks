@@ -40,7 +40,7 @@ class Header extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Name"
-            placeholder="originvalue"
+            placeholder="Enter Header Name"
             id="matches_header"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

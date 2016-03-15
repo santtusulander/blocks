@@ -84,7 +84,7 @@ class AllowBlock extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={requiresInput}>
               <Input type="text" label="Redirect URL"
-                placeholder="http://origin.foobar.com"
+                placeholder="Enter Redirect URL"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'allow_block_redirect_url']
                 )}/>

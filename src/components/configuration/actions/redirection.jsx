@@ -92,7 +92,7 @@ class Redirection extends React.Component {
 
           <Input type="text"
             id="actions_domain"
-            placeholder="foobar.com"
+            placeholder="Enter Domain"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
             )}/>
@@ -115,7 +115,7 @@ class Redirection extends React.Component {
 
           <Input type="text"
             id="actions_path"
-            placeholder="/some/path"
+            placeholder="Enter Path"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
             )}/>
