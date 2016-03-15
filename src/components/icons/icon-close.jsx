@@ -4,8 +4,8 @@ import Icon from '../icon.jsx'
 
 class IconClose extends React.Component {
   render() {
-    let width = this.props.width ? this.props.width : 12
-    let height = this.props.height ? this.props.height : 12
+    let width = this.props.width ? this.props.width : '12'
+    let height = this.props.height ? this.props.height : '12'
     return (
       <Icon width={width} height={height}>
         <g>
