@@ -37,7 +37,7 @@ class MimeType extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label="Media Type"
+          <Input type="textarea" label="MIME Type"
             placeholder="Enter MIME Types separated by commas"
             id="matches_mime-type"
             value={this.props.match.get('cases').get(0).get(0)}
