@@ -1,12 +1,18 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Modal, Input, Button, ButtonToolbar, Row, Col } from 'react-bootstrap';
+import { Modal, Input, Button, ButtonToolbar, Row, Col, Panel } from 'react-bootstrap';
 
 import Select from './select'
 
 class PurgeModal extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      purgeObjectsError: '',
+      purgeObjectsWarning: '',
+      purgeEmailError: ''
+    }
 
     this.change = this.change.bind(this)
     this.parsePurgeObjects = this.parsePurgeObjects.bind(this)
@@ -15,18 +21,57 @@ class PurgeModal extends React.Component {
   }
   change(path) {
     return (e) => {
+      if(path[1] === 'email' && this.state.purgeEmailError !== '' && e.target.value) {
+        this.setState({
+          purgeEmailError: ''
+        })
+      }
       this.props.changePurge(this.props.activePurge.setIn(path, e.target.value))
     }
   }
   parsePurgeObjects(e) {
+    const maxObjects = 100
     const parsedObjs = e.target.value.split(',').map(val => val.trim())
-    this.props.changePurge(
-      this.props.activePurge.set('objects', Immutable.List(parsedObjs))
-    )
+    if(this.state.purgeObjectsError !== '') {
+      this.setState({
+        purgeObjectsError: ''
+      })
+    }
+    if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
+      this.setState({
+        purgeObjectsWarning: 'Maximum amount of purge objects exceeded'
+      })
+    } else if (this.state.purgeObjectsWarning !== '' && parsedObjs.length <= maxObjects) {
+      this.setState({
+        purgeObjectsWarning: ''
+      })
+    }
+    if(parsedObjs.length <= maxObjects) {
+      this.props.changePurge(
+        this.props.activePurge.set('objects', Immutable.List(parsedObjs))
+      )
+    }
   }
   submitForm(e) {
     e.preventDefault()
-    this.props.savePurge()
+    let hasErrors = false;
+    if(!this.props.activePurge.get('objects').get('0')) {
+      hasErrors = true
+      this.setState({
+        purgeObjectsError: 'Specify at least one purge object'
+      })
+    }
+    if(this.props.activePurge.get('feedback') &&
+      (!this.props.activePurge.getIn(['feedback','email']) ||
+      !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(this.props.activePurge.getIn(['feedback','email'])))) {
+      hasErrors = true
+      this.setState({
+        purgeEmailError: 'Enter a valid Email address'
+      })
+    }
+    if(!hasErrors) {
+      this.props.savePurge()
+    }
   }
   toggleNotification() {
     let feedback = null
@@ -56,7 +101,7 @@ class PurgeModal extends React.Component {
                 <Select className="input-select"
                   value={''+this.props.activeProperty}
                   options={this.props.availableProperties.map(
-                    (property, i) => [property, property]
+                    (property) => [property, property]
                   ).toJS()}
                   onSelect={this.props.changeProperty}/>
 
@@ -75,6 +120,8 @@ class PurgeModal extends React.Component {
               </Col>
             </Row>
             <Input type="textarea" id="purge__objects"
+              bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
+              help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
               placeholder="Enter URLs or Paths"
               value={this.props.activePurge.get('objects').join(',\n')}
               onChange={this.parsePurgeObjects}/>
@@ -115,10 +162,15 @@ class PurgeModal extends React.Component {
 
             {/* Email Address */}
 
-            <Input type="text"
-              className={!this.props.activePurge.get('feedback') ? 'hidden' : ''}
-              value={this.props.activePurge.getIn(['feedback','email'])}
-              onChange={this.change(['feedback','email'])}/>
+            <Panel className="form-panel" collapsible={true}
+              expanded={!!this.props.activePurge.get('feedback')}>
+              <Input type="text"
+                bsStyle={this.state.purgeEmailError ? 'error' : 'warning'}
+                help={this.state.purgeEmailError}
+                placeholder="Enter Email address"
+                value={this.props.activePurge.getIn(['feedback','email'])}
+                onChange={this.change(['feedback','email'])}/>
+            </Panel>
 
             <hr/>
 
