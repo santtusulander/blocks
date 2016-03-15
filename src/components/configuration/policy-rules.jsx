@@ -115,7 +115,7 @@ class ConfigurationPolicyRules extends React.Component {
                 No policies rules have been added yet.
               </td>
             </tr>
-            : ''}
+            : null}
           </tbody>
         </Table>
       </div>
