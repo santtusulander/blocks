@@ -71,6 +71,7 @@ class PurgeModal extends React.Component {
     }
     if(!hasErrors) {
       this.props.savePurge()
+      this.props.showNotification('Purge succesfully completed')
     }
   }
   toggleNotification() {
@@ -206,7 +207,8 @@ PurgeModal.propTypes = {
   changeProperty: React.PropTypes.func,
   changePurge: React.PropTypes.func,
   hideAction: React.PropTypes.func,
-  savePurge: React.PropTypes.func
+  savePurge: React.PropTypes.func,
+  showNotification: React.PropTypes.func
 }
 
 module.exports = PurgeModal
