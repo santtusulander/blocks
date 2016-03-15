@@ -32,11 +32,11 @@ class MatchesSelection extends React.Component {
                 Directory Path
               </a>
             </li>
-            <li>
+            {/*<li>
               <a href="#" onClick={this.setMatchField(null)}>
                 MIME Type NEEDS_API
               </a>
-            </li>
+            </li>*/}
             <li>
               <a href="#" onClick={this.setMatchField(null)}>
                 File Extension NEEDS_API
@@ -67,11 +67,11 @@ class MatchesSelection extends React.Component {
                 Cookie
               </a>
             </li>
-            <li>
+            {/*<li>
               <a href="#" onClick={this.setMatchField(null)}>
                 IP Address NEEDS_API
               </a>
-            </li>
+            </li>*/}
           </ul>
         </Modal.Body>
       </div>
