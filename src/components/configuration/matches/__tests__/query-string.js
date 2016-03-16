@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../query-string.jsx')
 const QueryString = require('../query-string.jsx')
 
@@ -29,16 +30,6 @@ describe('QueryString', () => {
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
-  })
-
-  it('should handle toggle changes', () => {
-    let changeValue = jest.genMockFunction()
-    let queryString = TestUtils.renderIntoDocument(
-      <QueryString changeValue={changeValue} match={fakeConfig} path={fakePath}/>
-    )
-    queryString.handleToggleChange('foo')('bar')
-    expect(changeValue.mock.calls[0][0]).toBe('foo')
-    expect(changeValue.mock.calls[0][1]).toBe('bar')
   })
 
   it('should handle select changes', () => {
