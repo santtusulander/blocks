@@ -14,29 +14,42 @@ class PurgeModal extends React.Component {
       purgeEmailError: ''
     }
 
+    this.emailValidationTimeout = null
+    this.purgeObjectsValidationTimeout = null
     this.change = this.change.bind(this)
     this.parsePurgeObjects = this.parsePurgeObjects.bind(this)
     this.submitForm = this.submitForm.bind(this)
     this.toggleNotification = this.toggleNotification.bind(this)
+    this.validateEmail = this.validateEmail.bind(this)
+    this.validatePurgeObjects = this.validatePurgeObjects.bind(this)
   }
   change(path) {
     return (e) => {
-      if(path[1] === 'email' && this.state.purgeEmailError !== '' && e.target.value) {
-        this.setState({
-          purgeEmailError: ''
-        })
+      if(path[1] === 'email') {
+        clearTimeout(this.emailValidationTimeout)
+        if(this.state.purgeEmailError !== '') {
+          this.setState({
+            purgeEmailError: ''
+          })
+        }
+        this.emailValidationTimeout = setTimeout(this.validateEmail, 1000)
       }
       this.props.changePurge(this.props.activePurge.setIn(path, e.target.value))
     }
   }
   parsePurgeObjects(e) {
     const maxObjects = 100
-    const parsedObjs = e.target.value.split(',').map(val => val.trim())
+    const value = e.target.value
+    const parsedObjs = value.split(',').map(val => val.trim())
     if(this.state.purgeObjectsError !== '') {
       this.setState({
         purgeObjectsError: ''
       })
     }
+    clearTimeout(this.purgeObjectsValidationTimeout)
+    this.purgeObjectsValidationTimeout = setTimeout(() => {
+      this.validatePurgeObjects(value)
+    }, 1000)
     if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
         purgeObjectsWarning: 'Maximum amount of purge objects exceeded'
@@ -52,23 +65,29 @@ class PurgeModal extends React.Component {
       )
     }
   }
-  submitForm(e) {
-    e.preventDefault()
-    let hasErrors = false;
-    if(!this.props.activePurge.get('objects').get('0')) {
-      hasErrors = true
+  validatePurgeObjects(value) {
+    if(!value) {
       this.setState({
         purgeObjectsError: 'Specify at least one purge object'
       })
+      return true
     }
+  }
+  validateEmail() {
     if(this.props.activePurge.get('feedback') &&
       (!this.props.activePurge.getIn(['feedback','email']) ||
       !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(this.props.activePurge.getIn(['feedback','email'])))) {
-      hasErrors = true
       this.setState({
         purgeEmailError: 'Enter a valid Email address'
       })
+      return true
     }
+  }
+  submitForm(e) {
+    e.preventDefault()
+    let hasErrors = false;
+    hasErrors = this.validatePurgeObjects(this.props.activePurge.get('objects').get('0'))
+      ? true : this.validateEmail() ? true : false
     if(!hasErrors) {
       this.props.savePurge()
     }
@@ -78,6 +97,9 @@ class PurgeModal extends React.Component {
     if(!this.props.activePurge.get('feedback')) {
       feedback = Immutable.Map({email: ''})
     }
+    this.setState({
+      purgeEmailError: ''
+    })
     this.props.changePurge(this.props.activePurge.set('feedback', feedback))
   }
   render() {
