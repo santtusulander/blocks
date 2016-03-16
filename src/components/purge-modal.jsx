@@ -71,7 +71,7 @@ class PurgeModal extends React.Component {
     }
     if(!hasErrors) {
       this.props.savePurge()
-      this.props.showNotification('Purge succesfully completed')
+      this.props.showNotification('Purge request succesfully submitted')
     }
   }
   toggleNotification() {
