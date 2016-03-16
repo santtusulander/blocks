@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.autoMockOff()
 jest.dontMock('../file-extension.jsx')
 const FileExtension = require('../file-extension.jsx')
 

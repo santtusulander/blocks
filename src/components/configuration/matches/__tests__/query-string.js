@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.autoMockOff()
 jest.dontMock('../query-string.jsx')
 const QueryString = require('../query-string.jsx')
 

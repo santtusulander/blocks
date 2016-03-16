@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.autoMockOff()
 jest.dontMock('../directory-path.jsx')
 const DirectoryPath = require('../directory-path.jsx')
 

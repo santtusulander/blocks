@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.autoMockOff()
 jest.dontMock('../ip-address.jsx')
 const IpAddress = require('../ip-address.jsx')
 
