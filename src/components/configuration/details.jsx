@@ -125,7 +125,7 @@ class ConfigurationDetails extends React.Component {
           </div>
 
           <Panel collapsible={true} expanded={isOtherHostHeader}>
-            <Input type="text" placeholder="origin.foo.com"
+            <Input type="text" placeholder="Enter Other Hostname Value"
               wrapperClassName="col-xs-9 col-xs-offset-3"
               addonAfter=' '
               value={this.props.edgeConfiguration.get('host_header')}

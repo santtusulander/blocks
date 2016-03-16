@@ -151,7 +151,8 @@ const fakeHost = Immutable.fromJS({
               "set": {
                 "cache_control": {
                   "honor_origin": true,
-                  "check_etag": "weak"
+                  "check_etag": "weak",
+                  "max_age": 0
                 }
               }
             },

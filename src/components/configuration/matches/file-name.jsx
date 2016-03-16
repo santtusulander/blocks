@@ -37,8 +37,8 @@ class Filename extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="text" label="File Name"
-            placeholder="index.html, home.htm"
+          <Input type="textarea" label="File Name"
+            placeholder="Enter File Names separated by commas"
             id="matches_file-name"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

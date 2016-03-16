@@ -134,7 +134,7 @@ class ConfigurationPolicies extends React.Component {
     if(this.state.activeMatchPath) {
       const activeMatch = this.props.config.getIn(this.state.activeMatchPath)
       switch(activeMatch.get('field')) {
-        case 'response_header':
+        case 'request_header':
           activeEditForm = (
             <ConfigurationMatchHeader
               changeValue={this.props.changeValue}
@@ -166,6 +166,14 @@ class ConfigurationPolicies extends React.Component {
               path={this.state.activeMatchPath}/>
           )
         break
+        case 'request_query':
+          activeEditForm = (
+            <ConfigurationMatchQueryString
+              changeValue={this.props.changeValue}
+              match={activeMatch}
+              path={this.state.activeMatchPath}/>
+          )
+        break
         default:
           activeEditForm = (
             <MatchesSelection
@@ -180,8 +188,6 @@ class ConfigurationPolicies extends React.Component {
             // <ConfigurationMatchFileExtension
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationMatchFileName
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationMatchQueryString
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationMatchIpAddress
             //   changeValue={this.props.changeValue}/>

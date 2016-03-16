@@ -75,6 +75,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
     this.cancelChanges = this.cancelChanges.bind(this)
+    this.submitForm = this.submitForm.bind(this)
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
@@ -160,10 +161,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.props.changeValue([], this.state.originalConfig)
     this.props.hideAction()
   }
+  submitForm(e) {
+    e.preventDefault()
+    this.props.hideAction()
+  }
   render() {
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
     return (
-      <form className="configuration-policy-rule-edit" onSubmit={this.props.hideAction}>
+      <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
 
         {/* [
           ['request_method', 'Request Method'],
@@ -187,7 +192,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <h3>Rule Name</h3>
 
           <Input type="text" id="configure__edge__add-cache-rule__rule-name"
-            onChange={this.handleChange(['path'])}/>
+            value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
+            onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
 
           <Row className="header-btn-row">
             <Col sm={8}>

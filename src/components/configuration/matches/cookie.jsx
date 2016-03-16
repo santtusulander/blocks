@@ -41,7 +41,7 @@ class Cookie extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Name"
-            placeholder="tracking"
+            placeholder="Enter Cookie Name"
             id="matches_cookie"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

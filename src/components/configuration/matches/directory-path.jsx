@@ -38,7 +38,7 @@ class DirectoryPath extends React.Component {
         <Modal.Body>
 
           <Input type="text" label="Path"
-            placeholder="/wp-admin/"
+            placeholder="Enter Path"
             id="matches_directory-path"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(

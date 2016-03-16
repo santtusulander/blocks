@@ -220,8 +220,7 @@ export class Configuration extends React.Component {
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}
-                changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
+                changeValue={this.changeValue}/>
               : null}
 
             {this.state.activeTab === 'defaults' ?

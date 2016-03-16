@@ -199,7 +199,7 @@ class Cors extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeFilter === 'restrict_domain'}>
               <Input type="text"
-                placeholder="http://www.foobar.com"
+                placeholder="Enter Domain"
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cors_restrict_domain']
                 )}/>

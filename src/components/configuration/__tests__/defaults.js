@@ -10,7 +10,8 @@ const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
     "set": {
       "cache_control": {
         "honor_origin": true,
-        "check_etag": "weak"
+        "check_etag": "weak",
+        "max_age": 10
       }
     }
   },
@@ -42,14 +43,20 @@ describe('ConfigurationDefaults', () => {
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
 
-  it('should save changes', () => {
-    const saveChanges = jest.genMockFunction()
+  it('should change ttl value based on unit', () => {
+    const agePath = ['default_policy','policy_rules',0,'set','cache_control','max_age']
+    const changeValue = jest.genMockFunction()
     let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults saveChanges={saveChanges}
+      <ConfigurationDefaults changeValue={changeValue}
         config={fakeConfig}/>
     );
-    let form = TestUtils.findRenderedDOMComponentWithTag(defaults, 'form');
-    TestUtils.Simulate.submit(form)
-    expect(saveChanges.mock.calls.length).toBe(1)
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(defaults, 'input')
+    inputs[0].value = 30
+    TestUtils.Simulate.change(inputs[0])
+    expect(changeValue.mock.calls[0][0].toJS()).toEqual(agePath)
+    expect(changeValue.mock.calls[0][1]).toBe(30)
+    defaults.changeTTLUnit(agePath)('minutes')
+    expect(changeValue.mock.calls[1][0]).toEqual(agePath)
+    expect(changeValue.mock.calls[1][1]).toBe(600)
   });
 })
