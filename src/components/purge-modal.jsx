@@ -188,7 +188,11 @@ class PurgeModal extends React.Component {
               <Button bsStyle="primary" onClick={this.props.hideAction}>
                 Cancel
               </Button>
-              <Button type="submit" bsStyle="primary">Purge</Button>
+              <Button type="submit" bsStyle="primary"
+                disabled={this.state.purgeObjectsError || this.state.purgeEmailError
+                  ? true : false}>
+                Purge
+              </Button>
             </ButtonToolbar>
 
           </form>
