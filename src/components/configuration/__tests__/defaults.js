@@ -41,15 +41,4 @@ describe('ConfigurationDefaults', () => {
     expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
-
-  it('should save changes', () => {
-    const saveChanges = jest.genMockFunction()
-    let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults saveChanges={saveChanges}
-        config={fakeConfig}/>
-    );
-    let form = TestUtils.findRenderedDOMComponentWithTag(defaults, 'form');
-    TestUtils.Simulate.submit(form)
-    expect(saveChanges.mock.calls.length).toBe(1)
-  });
 })
