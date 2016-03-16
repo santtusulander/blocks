@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../directory-path.jsx')
 const DirectoryPath = require('../directory-path.jsx')
 
@@ -29,5 +30,16 @@ describe('DirectoryPath', () => {
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
+  })
+
+  it('should update the parameters as select change happens', () => {
+    let changeValue = jest.genMockFunction()
+    let directoryPath = TestUtils.renderIntoDocument(
+      <DirectoryPath changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(directoryPath.state.activeFilter).toBe('matches')
+    directoryPath.handleSelectChange('activeFilter')('foo')
+    expect(directoryPath.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
   })
 })

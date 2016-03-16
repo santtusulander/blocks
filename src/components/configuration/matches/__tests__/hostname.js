@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../hostname.jsx')
 const Hostname = require('../hostname.jsx')
 
@@ -29,5 +30,16 @@ describe('Hostname', () => {
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
+  })
+
+  it('should update the parameters as select change happens', () => {
+    let changeValue = jest.genMockFunction()
+    let hostname = TestUtils.renderIntoDocument(
+      <Hostname changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(hostname.state.activeFilter).toBe('matches')
+    hostname.handleSelectChange('activeFilter')('foo')
+    expect(hostname.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
   })
 })

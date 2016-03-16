@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../file-extension.jsx')
 const FileExtension = require('../file-extension.jsx')
 
@@ -29,5 +30,16 @@ describe('DirectoryPath', () => {
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
+  })
+
+  it('should update the parameters as select change happens', () => {
+    let changeValue = jest.genMockFunction()
+    let fileExtension = TestUtils.renderIntoDocument(
+      <FileExtension changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(fileExtension.state.activeFilter).toBe('matches')
+    fileExtension.handleSelectChange('activeFilter')('foo')
+    expect(fileExtension.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
   })
 })
