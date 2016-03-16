@@ -7,6 +7,7 @@ import Toggle from '../toggle'
 import Select from '../select'
 
 function secondsToUnit(value, unit) {
+  value = parseInt(value || 0)
   switch(unit) {
     case 'minutes':
       value = value / 60
@@ -21,6 +22,7 @@ function secondsToUnit(value, unit) {
   return value
 }
 function secondsFromUnit(value, unit) {
+  value = parseInt(value || 0)
   switch(unit) {
     case 'minutes':
       value = value * 60
@@ -81,7 +83,7 @@ class ConfigurationDefaults extends React.Component {
     let controlIndex = config.getIn(policyPath)
       .findIndex(policy => {
         if(policy.has('set')) {
-          policy.get('set').has('cache_control')
+          return policy.get('set').has('cache_control')
         }
       })
     let nameIndex = config.getIn(policyPath)
@@ -91,10 +93,10 @@ class ConfigurationDefaults extends React.Component {
         }
       })
     const policyPaths = {
-      honor_origin_cache_policies: policyPath.push(controlIndex, 'honor_origin'),
-      honor_etags: policyPath.push(controlIndex, 'check_etag'),
-      max_age: policyPath.push(controlIndex, 'max_age'),
-      ignore_case: policyPath.push(nameIndex, 'ignore_case')
+      honor_origin_cache_policies: policyPath.push(controlIndex,'set','cache_control','honor_origin'),
+      honor_etags: policyPath.push(controlIndex,'set','cache_control','check_etag'),
+      max_age: policyPath.push(controlIndex,'set','cache_control','max_age'),
+      ignore_case: policyPath.push(nameIndex,'set','cache_name','ignore_case')
     };
 
     let ttlValue = secondsToUnit(
