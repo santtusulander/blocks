@@ -6,14 +6,68 @@ import ConfigurationDefaultPolicies from './default-policies'
 import Toggle from '../toggle'
 import Select from '../select'
 
+function secondsToUnit(value, unit) {
+  switch(unit) {
+    case 'minutes':
+      value = value / 60
+    break
+    case 'hours':
+      value = value / 3600
+    break
+    case 'days':
+      value = value / 86400
+    break
+  }
+  return value
+}
+function secondsFromUnit(value, unit) {
+  switch(unit) {
+    case 'minutes':
+      value = value * 60
+    break
+    case 'hours':
+      value = value * 3600
+    break
+    case 'days':
+      value = value * 86400
+    break
+  }
+  return value
+}
+
 class ConfigurationDefaults extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      ttlUnit: 'seconds'
+    }
+
+    this.changeTTLUnit = this.changeTTLUnit.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
   handleChange(path) {
-    return value => this.props.changeValue(path, value)
+    return value => {
+      if(value.target) {
+        value = value.target.value
+      }
+      this.props.changeValue(path, value)
+    }
+  }
+  changeTTLUnit(path) {
+    return unit => {
+      let value = this.props.config.getIn(path)
+      value = secondsToUnit(value, this.state.ttlUnit)
+      value = secondsFromUnit(value, unit)
+      this.props.changeValue(path, value)
+      this.setState({ttlUnit: unit})
+    }
+  }
+  changeTTLValue(path) {
+    return e => {
+      const value = secondsFromUnit(e.target.value, this.state.ttlUnit)
+      this.props.changeValue(path, value)
+    }
   }
   render() {
     let config = this.props.config;
@@ -39,27 +93,20 @@ class ConfigurationDefaults extends React.Component {
     const policyPaths = {
       honor_origin_cache_policies: policyPath.push(controlIndex, 'honor_origin'),
       honor_etags: policyPath.push(controlIndex, 'check_etag'),
+      max_age: policyPath.push(controlIndex, 'max_age'),
       ignore_case: policyPath.push(nameIndex, 'ignore_case')
     };
+
+    let ttlValue = secondsToUnit(
+      this.props.config.getIn(policyPaths.max_age),
+      this.state.ttlUnit
+    )
     return (
       <div className="configuration-defaults">
 
         {/* Origin Cache Control */}
 
         <h2>Origin Cache Control</h2>
-
-
-        { /* Honor Origin Cache Control */}
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            Honor Origin Cache Control
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle
-              value={config.getIn(policyPaths.honor_origin_cache_policies)}
-              changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
-          </Col>
-        </Row>
 
         { /* Ignore case from origin */}
         <Row className="form-group">
@@ -80,6 +127,41 @@ class ConfigurationDefaults extends React.Component {
           <Col lg={8} xs={6}>
             <Toggle value={config.getIn(policyPaths.honor_etags)}
               changeValue={this.handleChange(policyPaths.honor_etags)}/>
+          </Col>
+        </Row>
+
+        { /* Honor Origin Cache Control */}
+        <Row className="form-group">
+          <Col lg={4} xs={6} className="toggle-label">
+            Honor Origin Cache Control
+          </Col>
+          <Col lg={8} xs={6}>
+            <Toggle
+              value={config.getIn(policyPaths.honor_origin_cache_policies)}
+              changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
+          </Col>
+        </Row>
+
+        <Row className="form-group">
+          <Col lg={4} xs={6} className="toggle-label">
+            {config.getIn(policyPaths.honor_origin_cache_policies) ?
+              'TTL if not present' :
+              'CDN TTL'}
+          </Col>
+          <Col lg={2} xs={3}>
+            <Input type="text" placeholder="Time to live"
+              value={ttlValue}
+              onChange={this.changeTTLValue(policyPaths.max_age)}/>
+          </Col>
+          <Col xs={3}>
+            <Select className="input-select"
+              onSelect={this.changeTTLUnit(policyPaths.max_age)}
+              value={this.state.ttlUnit}
+              options={[
+                ['seconds', 'Seconds'],
+                ['minutes', 'Minutes'],
+                ['hours', 'Hours'],
+                ['days', 'Days']]}/>
           </Col>
         </Row>
 

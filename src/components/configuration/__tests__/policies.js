@@ -10,7 +10,8 @@ const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
     "set": {
       "cache_control": {
         "honor_origin": true,
-        "check_etag": "weak"
+        "check_etag": "weak",
+        "max_age": 0
       }
     }
   },

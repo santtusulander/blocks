@@ -24,7 +24,8 @@ const defaultPolicy = {policy_rules: [
     set: {
       cache_control: {
         honor_origin: false,
-        check_etag: false
+        check_etag: false,
+        max_age: 0
       }
     }
   },
