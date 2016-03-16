@@ -1,9 +1,10 @@
 import React from 'react'
-import {Row, Col} from 'react-bootstrap'
+import {Row, Col, Input} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationDefaultPolicies from './default-policies'
 import Toggle from '../toggle'
+import Select from '../select'
 
 class ConfigurationDefaults extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class ConfigurationDefaults extends React.Component {
       ignore_case: policyPath.push(nameIndex, 'ignore_case')
     };
     return (
-      <form className="configuration-defaults">
+      <div className="configuration-defaults">
 
         {/* Origin Cache Control */}
 
@@ -84,9 +85,34 @@ class ConfigurationDefaults extends React.Component {
 
         <hr/>
 
+        <h3>Cache Key - Query String</h3>
+        <Row className="form-group">
+          <Col lg={4} xs={6} className="toggle-label">
+            Cache Key
+          </Col>
+          <Col lg={5} xs={6}>
+            <Select className="input-select"
+              options={[
+                ['include_all_query_parameters', 'Include all query parameters'],
+                ['ignore_all_query_parameters', 'Ignore all query parameters'],
+                ['include_some_parameters', 'Include some parameters'],
+                ['ignore_some_parameters', 'Ignore some parameters']]}/>
+          </Col>
+        </Row>
+        <Row className="form-group">
+          <Col lg={4} xs={6} className="toggle-label">
+            Query Name
+          </Col>
+          <Col lg={5} xs={6}>
+            <Input type="text" placeholder="Enter Query Name"/>
+          </Col>
+        </Row>
+
+        <hr/>
+
         <h3>Edge Cache Default Rules</h3>
         <ConfigurationDefaultPolicies/>
-      </form>
+      </div>
     )
   }
 }
