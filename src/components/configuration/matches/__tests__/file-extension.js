@@ -24,7 +24,7 @@ describe('DirectoryPath', () => {
     let fileExtension = TestUtils.renderIntoDocument(
       <FileExtension changeValue={changeValue} match={fakeConfig} path={fakePath}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileExtension, 'input')
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileExtension, 'textarea')
     inputs[0].value = 'new'
     TestUtils.Simulate.change(inputs[0])
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
