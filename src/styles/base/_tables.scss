@@ -4,6 +4,7 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
+  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.1);
@@ -49,6 +50,10 @@
           padding-right: 10px;
           text-align: right;
           white-space: nowrap;
+        }
+
+        &.has-confirmation {
+          position: relative;
         }
       }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
+import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
@@ -49,20 +49,16 @@ class ContentItemList extends React.Component {
 
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
-              <Button bsSize="small"
-                className="edit-content-item btn-primary btn-icon
+              <Link to={this.props.configurationLink}
+                className="btn btn-sm edit-content-item btn-primary btn-icon
                 btn-round">
-                <Link to={this.props.configurationLink}>
-                  <IconConfiguration/>
-                </Link>
-              </Button> : ''
+                <IconConfiguration/>
+              </Link> : ''
             }
-            <Button bsSize="small"
-               className="btn-primary btn-icon btn-round">
-              <Link to={this.props.analyticsLink}>
-                <IconChart/>
-              </Link>
-            </Button>
+            <Link to={this.props.analyticsLink}
+              className="btn btn-sm btn-primary btn-icon btn-round">
+              <IconChart/>
+            </Link>
           </ButtonToolbar>
         </div>
 

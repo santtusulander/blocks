@@ -1,0 +1,38 @@
+// Confirmation
+// ============
+
+.confirmation-slider {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: ($btn-height / 4) ($btn-height / 3) ($btn-height / 4) ($btn-height / 2);
+
+  @include md {
+    padding: ($md-btn-height / 4) ($md-btn-height / 3) ($md-btn-height / 4) ($md-btn-height / 2);
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $purple;
+  }
+
+  .light-theme & {
+    color: $white;
+    background-color: $purple;
+  }
+
+  .confirmation-content {
+    display: inline-block;
+  }
+
+  .btn-toolbar {
+    display: inline-block;
+    margin-left: $btn-height / 2;
+    vertical-align: middle;
+
+    @include md {
+      margin-left: $md-btn-height / 2;
+    }
+  }
+}

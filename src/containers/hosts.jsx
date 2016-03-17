@@ -58,7 +58,7 @@ export class Hosts extends React.Component {
     this.props.metricsActions.fetchHostMetrics({
       account: this.props.params.account,
       group: this.props.params.group,
-      startDate: moment().subtract(30, 'days').format('X'),
+      startDate: moment().subtract(28, 'days').format('X'),
       endDate: moment().format('X')
     })
   }
@@ -115,11 +115,10 @@ export class Hosts extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
-                  <IconChart />
-                </Link>
-              </Button>
+              <Link className="btn btn-primary btn-icon"
+                to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
+                <IconChart />
+              </Link>
 
               <Button bsStyle="primary" className="btn-icon btn-add-new"
                 onClick={this.toggleAddHost}>
