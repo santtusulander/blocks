@@ -76,10 +76,10 @@ class ContentItemChart extends React.Component {
       <Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
         <div className="tooltip-header">
-          <b>TRAFFIC <span className="pull-right">30 days</span></b>
+          <b>TRAFFIC <span className="pull-right">28 days</span></b>
         </div>
         <div>
-          High
+          Peak
           <span className="pull-right">
             {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
             <span className="data-suffix"> {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[1] : ''}</span>
