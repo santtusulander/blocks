@@ -90,6 +90,7 @@ class PurgeModal extends React.Component {
     hasErrors = this.validateEmail() ? true : false
     if(!hasErrors) {
       this.props.savePurge()
+      this.props.showNotification('Purge request succesfully submitted')
     }
   }
   toggleNotification() {
@@ -232,7 +233,8 @@ PurgeModal.propTypes = {
   changeProperty: React.PropTypes.func,
   changePurge: React.PropTypes.func,
   hideAction: React.PropTypes.func,
-  savePurge: React.PropTypes.func
+  savePurge: React.PropTypes.func,
+  showNotification: React.PropTypes.func
 }
 
 module.exports = PurgeModal
