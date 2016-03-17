@@ -15,11 +15,6 @@ class ConfigurationDefaultPolicies extends React.Component {
           </thead>
           <tbody>
             <tr>
-              <td>DEFAULT</td>
-              <td>no-store</td>
-              <td><a href="#">edit</a></td>
-            </tr>
-            <tr>
               <td>Error Response</td>
               <td>10 s</td>
               <td><a href="#">edit</a></td>
