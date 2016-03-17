@@ -33,7 +33,7 @@ function routeTrafficTime(req, res) {
     property     : params.property,
     service_type : params.service_type,
     granularity  : params.granularity,
-    geography    : 'global'
+    dimension    : 'global'
   }).then((trafficData) => {
 
     res.jsend(trafficData || []);

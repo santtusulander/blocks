@@ -78,7 +78,7 @@ class AnalyticsDB {
       group        : null,
       property     : null,
       service_type : null,
-      geography    : 'global',
+      dimension    : 'global',
       granularity  : 'hour'
     }
 
@@ -432,14 +432,14 @@ class AnalyticsDB {
     let columns       = [];
 
     // Build the SELECT clause
-    // Include the geography option as a column to be selected unless it's
+    // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global'
-    optionsFinal.geography && optionsFinal.geography !== 'global' && columns.push(optionsFinal.geography);
+    optionsFinal.dimension && optionsFinal.dimension !== 'global' && columns.push(optionsFinal.dimension);
     let dynamicSelect  = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
     let dynamicGroupBy = `${columns.join(', ')}${columns.length ? ',' : ''}`;
 
     // Build the table name
-    let table = `${accountLevel}_${optionsFinal.geography}_${optionsFinal.granularity}`;
+    let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
 
     // Build the WHERE clause
     optionsFinal.account      && conditions.push('AND account_id = ?');
