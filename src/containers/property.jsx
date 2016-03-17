@@ -174,7 +174,7 @@ export class Property extends React.Component {
 
                 <div ref="byTimeHolder">
                   <AnalysisByTime axes={false} padding={40}
-                    data={fakeRecentData}
+                    primaryData={fakeRecentData}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
                     height={this.state.byTimeWidth / 2} />

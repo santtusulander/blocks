@@ -61,7 +61,7 @@ describe('AnalysisByTime', () => {
   it('should have a data line and area', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'path')
@@ -73,7 +73,7 @@ describe('AnalysisByTime', () => {
     momentFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
@@ -88,7 +88,7 @@ describe('AnalysisByTime', () => {
     numeralFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
@@ -104,7 +104,7 @@ describe('AnalysisByTime', () => {
     numeral.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')

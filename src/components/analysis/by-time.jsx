@@ -46,12 +46,12 @@ class AnalysisByTime extends React.Component {
     })
   }
   render() {
-    if(!this.props.width || !this.props.data) {
+    if(!this.props.width || !this.props.primaryData) {
       return <div>Loading...</div>
     }
 
-    const yExtent = d3.extent(this.props.data, d => d[this.props.dataKey])
-    const xExtent = d3.extent(this.props.data, d => d.timestamp)
+    const yExtent = d3.extent(this.props.primaryData, d => d[this.props.dataKey])
+    const xExtent = d3.extent(this.props.primaryData, d => d.timestamp)
 
     const yScale = d3.scale.linear()
       .domain([0, yExtent[1]])
@@ -91,10 +91,10 @@ class AnalysisByTime extends React.Component {
           width={this.props.width}
           height={this.props.height}
           ref='chart'
-          onMouseMove={this.moveMouse(xScale, yScale, this.props.data)}
+          onMouseMove={this.moveMouse(xScale, yScale, this.props.primaryData)}
           onMouseOut={this.deactivateTooltip}>
-          <path d={trafficLine(this.props.data)} className="line"/>
-          <path d={trafficArea(this.props.data)} className="area"
+          <path d={trafficLine(this.props.primaryData)} className="line"/>
+          <path d={trafficArea(this.props.primaryData)} className="area"
             fill="url(#dt-svg-gradient)" />
           {this.state.tooltipText ?
             <g>
@@ -153,10 +153,11 @@ AnalysisByTime.displayName = 'AnalysisByTime'
 AnalysisByTime.propTypes = {
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
-  data: React.PropTypes.array,
   dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
+  primaryData: React.PropTypes.array,
+  secondaryData: React.PropTypes.array,
   width: React.PropTypes.number
 }
 
