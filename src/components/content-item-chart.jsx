@@ -25,7 +25,9 @@ class ContentItemChart extends React.Component {
       .range([0, barMaxHeight]);
     const outerRadius = this.props.chartWidth / 2;
     const innerRadius = outerRadius - this.props.barMaxHeight;
-    const increment = 1.5;
+    // Increment is calculated based on the following formula:
+    // 360 degrees / (number of days * (24 hours / hours per bar))
+    const increment = 360 / (28 * (24 / 3));
     const radians = Math.PI / 180;
     let primaryAngle = -90;
     let secondaryAngle = -90;
