@@ -71,13 +71,15 @@ class AnalysisByTime extends React.Component {
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
       .x(d => xScale(d.timestamp))
-      .interpolate('cardinal');
+      .interpolate('cardinal')
+      .tension(0.9);
 
     const trafficArea = d3.svg.area()
       .y(d => yScale(d[this.props.dataKey]))
       .y0(yScale(0))
       .x(d => xScale(d.timestamp))
-      .interpolate('cardinal');
+      .interpolate('cardinal')
+      .tension(0.9);
 
     let className = 'analysis-by-time'
     if(this.props.className) {

@@ -1,6 +1,7 @@
 'use strict';
 
 let router               = require('express').Router();
+let configs              = require('./configs');
 let log                  = require('./logger');
 let routeTrafficTime     = require('./routes/traffic/time');
 let routeTrafficCountry  = require('./routes/traffic/country');
@@ -15,15 +16,15 @@ let routeVersion         = require('./routes/version');
 router.errorHandler = errorHandler;
 
 // API routes
-router.get('/traffic/time',     routeTrafficTime);
-router.get('/traffic/country',  routeTrafficCountry);
-router.get('/traffic/total',    routeTrafficTotal);
-router.get('/visitors/time',    routeVisitorsTime);
-router.get('/visitors/country', routeVisitorsCountry);
-router.get('/visitors/os',      routeVisitorsOS);
-router.get('/visitors/browser', routeVisitorsBrowser);
-router.get('/metrics',          routeMetrics);
-router.get('/version',          routeVersion);
+router.get(`/${configs.apiBaseFolder}/traffic/time`,     routeTrafficTime);
+router.get(`/${configs.apiBaseFolder}/traffic/country`,  routeTrafficCountry);
+router.get(`/${configs.apiBaseFolder}/traffic/total`,    routeTrafficTotal);
+router.get(`/${configs.apiBaseFolder}/visitors/time`,    routeVisitorsTime);
+router.get(`/${configs.apiBaseFolder}/visitors/country`, routeVisitorsCountry);
+router.get(`/${configs.apiBaseFolder}/visitors/os`,      routeVisitorsOS);
+router.get(`/${configs.apiBaseFolder}/visitors/browser`, routeVisitorsBrowser);
+router.get(`/${configs.apiBaseFolder}/metrics`,          routeMetrics);
+router.get(`/${configs.apiBaseFolder}/version`,          routeVersion);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests

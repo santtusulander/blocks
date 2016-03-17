@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as purgeActionCreators from '../redux/modules/purge'
@@ -16,15 +17,14 @@ export class Main extends React.Component {
     super(props);
 
     this.state = {
-      activePurge: null,
-      notificationOpen: false
+      activePurge: null
     }
 
     this.activatePurge = this.activatePurge.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
     this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
-    this.closeNotification = this.closeNotification.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
   activatePurge(property) {
     return e => {
@@ -55,10 +55,9 @@ export class Main extends React.Component {
     this.props.userActions.logOut()
     this.props.history.pushState(null, '/login')
   }
-  closeNotification() {
-    this.setState({
-      notificationOpen: false
-    })
+  showNotification(message) {
+    this.props.uiActions.changeNotification(message)
+    setTimeout(this.props.uiActions.changeNotification, 5000)
   }
   render() {
     let classNames = 'main-container';
@@ -91,15 +90,25 @@ export class Main extends React.Component {
             changeProperty={this.changePurge}
             changePurge={this.props.purgeActions.updateActivePurge}
             hideAction={this.activatePurge(null)}
-            savePurge={this.saveActivePurge}/>
+            savePurge={this.saveActivePurge}
+            showNotification={this.showNotification}/>
           : ''
         }
-        {this.state.notificationOpen ?
-          <Notification handleClose={this.closeNotification}>
-            Notification content
-          </Notification>
-          : ''
-        }
+        <ReactCSSTransitionGroup
+          component="div"
+          className="notification-transition"
+          transitionName="notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.props.notification ?
+            <Notification handleClose={this.props.uiActions.hideNotification}>
+              {this.props.notification}
+            </Notification>
+            : ''
+          }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -115,6 +124,7 @@ Main.propTypes = {
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
   location: React.PropTypes.object,
+  notification: React.PropTypes.string,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   theme: React.PropTypes.string,
@@ -136,6 +146,7 @@ function mapStateToProps(state) {
       state.topo.get('fetching') ||
       state.traffic.get('fetching') ||
       state.visitors.get('fetching'),
+    notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
     theme: state.ui.get('theme'),
     viewingChart: state.ui.get('viewingChart')

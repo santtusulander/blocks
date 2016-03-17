@@ -183,8 +183,6 @@ class ConfigurationDetails extends React.Component {
             ['edge_configuration', 'published_name']
           )}/>
 
-        <Button type="submit">Done</Button>
-
       </form>
     )
   }
