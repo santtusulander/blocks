@@ -9,6 +9,7 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Common configs for all environments
 let commonConfigs = {
+  apiBaseFolder: 'analytics',
   postmanCollection: './e2e/UDNP-Analytics-API.json.postman_collection',
   postmanEnvironment: `./e2e/UDNP-Analytics-API_${env}.postman_environment`
 }
