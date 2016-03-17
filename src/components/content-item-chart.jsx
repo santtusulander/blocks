@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { ButtonToolbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
@@ -202,21 +202,17 @@ class ContentItemChart extends React.Component {
             style={{bottom: this.props.barMaxHeight}}>
             <ButtonToolbar>
               {this.props.analyticsLink ?
-                <Button bsSize="small"
-                   className="btn-primary btn-icon btn-round invisible">
-                  <Link to={this.props.analyticsLink}>
-                    <IconChart/>
-                  </Link>
-                </Button> : ''
+                <Link to={this.props.analyticsLink}
+                  className="btn btn-sm btn-primary btn-icon btn-round invisible">
+                  <IconChart/>
+                </Link> : ''
               }
               {this.props.configurationLink ?
-                <Button bsSize="small"
-                  className="edit-content-item btn-primary btn-icon
+                <Link to={this.props.configurationLink}
+                  className="btn btn-sm edit-content-item btn-primary btn-icon
                   btn-round invisible">
-                  <Link to={this.props.configurationLink}>
-                    <IconConfiguration/>
-                  </Link>
-                </Button> : ''
+                  <IconConfiguration/>
+                </Link> : ''
               }
             </ButtonToolbar>
           </div>
