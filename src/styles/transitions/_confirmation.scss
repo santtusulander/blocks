@@ -1,0 +1,22 @@
+// Confirmation transitions
+// ========================
+
+.confirmation-slider {
+  transform: translateX(0);
+  transition: transform 350ms ease;
+}
+
+.confirmation-transition-enter,
+.confirmation-transition-appear {
+
+  &.confirmation-slider {
+    transform: translateX(100%);
+  }
+}
+
+.confirmation-transition-leave {
+
+  &.confirmation-slider {
+    transform: translateX(100%);
+  }
+}
