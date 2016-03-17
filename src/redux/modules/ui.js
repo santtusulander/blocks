@@ -3,8 +3,7 @@ import Immutable from 'immutable'
 
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
-const UI_SHOW_NOTIFICATION = 'UI_SHOW_NOTIFICATION'
-const UI_HIDE_NOTIFICATION = 'UI_HIDE_NOTIFICATION'
+const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
 
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
@@ -36,11 +35,8 @@ export default handleActions({
   UI_CHART_VIEW_TOGGLED: (state) => {
     return state.set('viewingChart', !state.get('viewingChart'))
   },
-  UI_SHOW_NOTIFICATION: (state, action) => {
+  UI_CHANGE_NOTIFICATION: (state, action) => {
     return state.set('notification', action.payload)
-  },
-  UI_HIDE_NOTIFICATION: (state) => {
-    return state.set('notification', '')
   }
 }, defaultUI)
 
@@ -48,5 +44,4 @@ export default handleActions({
 
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
-export const showNotification = createAction(UI_SHOW_NOTIFICATION)
-export const hideNotification = createAction(UI_HIDE_NOTIFICATION)
+export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)

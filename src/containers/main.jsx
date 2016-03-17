@@ -56,8 +56,8 @@ export class Main extends React.Component {
     this.props.history.pushState(null, '/login')
   }
   showNotification(message) {
-    this.props.uiActions.showNotification(message)
-    setTimeout(this.props.uiActions.hideNotification, 5000)
+    this.props.uiActions.changeNotification(message)
+    setTimeout(this.props.uiActions.changeNotification, 5000)
   }
   render() {
     let classNames = 'main-container';
