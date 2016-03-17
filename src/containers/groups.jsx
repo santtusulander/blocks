@@ -126,11 +126,10 @@ export class Groups extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/content/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
-                  <IconChart/>
-                </Link>
-              </Button>
+              <Link className="btn btn-primary btn-icon"
+                to={`/content/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
+                <IconChart/>
+              </Link>
 
               <Select
                 onSelect={this.handleSelectChange()}

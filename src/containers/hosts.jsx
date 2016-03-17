@@ -115,11 +115,10 @@ export class Hosts extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
-                  <IconChart />
-                </Link>
-              </Button>
+              <Link className="btn btn-primary btn-icon"
+                to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
+                <IconChart />
+              </Link>
 
               <Button bsStyle="primary" className="btn-icon btn-add-new"
                 onClick={this.toggleAddHost}>
