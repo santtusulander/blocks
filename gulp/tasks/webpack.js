@@ -34,6 +34,9 @@ gulp.task("webpack", ['preprocess'], function(callback) {
       proxy: {
         '/VCDN*': {
           target: config.apiUrl
+        },
+        '/analytics*': {
+          target: 'http://localhost:3030'
         }
       },
       stats: {
