@@ -1,0 +1,16 @@
+// Dialog transitions
+// ==================
+
+.configuration-dialog {
+  bottom: 0;
+  transition: bottom 350ms ease;
+}
+
+.dialog-transition-enter,
+.dialog-transition-appear,
+.dialog-transition-leave {
+
+  &.configuration-dialog {
+    bottom: -$configuration-dialog-height;
+  }
+}

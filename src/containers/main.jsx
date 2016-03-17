@@ -17,15 +17,13 @@ export class Main extends React.Component {
     super(props);
 
     this.state = {
-      activePurge: null,
-      notificationMessage: ''
+      activePurge: null
     }
 
     this.activatePurge = this.activatePurge.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
     this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
-    this.closeNotification = this.closeNotification.bind(this)
     this.showNotification = this.showNotification.bind(this)
   }
   activatePurge(property) {
@@ -58,19 +56,8 @@ export class Main extends React.Component {
     this.props.history.pushState(null, '/login')
   }
   showNotification(message) {
-    this.setState({
-      notificationMessage: message
-    })
-    setTimeout(() => {
-      this.setState({
-        notificationMessage: ''
-      })
-    }, 5000)
-  }
-  closeNotification() {
-    this.setState({
-      notificationMessage: ''
-    })
+    this.props.uiActions.changeNotification(message)
+    setTimeout(this.props.uiActions.changeNotification, 5000)
   }
   render() {
     let classNames = 'main-container';
@@ -115,9 +102,9 @@ export class Main extends React.Component {
           transitionLeaveTimeout={500}
           transitionAppear={true}
           transitionAppearTimeout={1000}>
-          {this.state.notificationMessage ?
-            <Notification handleClose={this.closeNotification}>
-              {this.state.notificationMessage}
+          {this.props.notification ?
+            <Notification handleClose={this.props.uiActions.hideNotification}>
+              {this.props.notification}
             </Notification>
             : ''
           }
@@ -137,6 +124,7 @@ Main.propTypes = {
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
   location: React.PropTypes.object,
+  notification: React.PropTypes.string,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   theme: React.PropTypes.string,
@@ -158,6 +146,7 @@ function mapStateToProps(state) {
       state.topo.get('fetching') ||
       state.traffic.get('fetching') ||
       state.visitors.get('fetching'),
+    notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
     theme: state.ui.get('theme'),
     viewingChart: state.ui.get('viewingChart')

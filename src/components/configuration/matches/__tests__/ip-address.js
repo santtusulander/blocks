@@ -30,4 +30,15 @@ describe('IpAddress', () => {
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'matches', 'ip_address_include_x_forwarded_for'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
+
+  it('should update the parameters as select change happens', () => {
+    let changeValue = jest.genMockFunction()
+    let ipAddress = TestUtils.renderIntoDocument(
+      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(ipAddress.state.activeFilter).toBe('matches')
+    ipAddress.handleSelectChange('activeFilter')('foo')
+    expect(ipAddress.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
+  })
 })
