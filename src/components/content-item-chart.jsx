@@ -25,7 +25,9 @@ class ContentItemChart extends React.Component {
       .range([0, barMaxHeight]);
     const outerRadius = this.props.chartWidth / 2;
     const innerRadius = outerRadius - this.props.barMaxHeight;
-    const increment = 1.5;
+    // Increment is calculated based on the following formula:
+    // 360 degrees / (number of days * (24 hours / hours per bar))
+    const increment = 360 / (28 * (24 / 3));
     const radians = Math.PI / 180;
     let primaryAngle = -90;
     let secondaryAngle = -90;
@@ -76,10 +78,10 @@ class ContentItemChart extends React.Component {
       <Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
         <div className="tooltip-header">
-          <b>TRAFFIC <span className="pull-right">30 days</span></b>
+          <b>TRAFFIC <span className="pull-right">28 days</span></b>
         </div>
         <div>
-          High
+          Peak
           <span className="pull-right">
             {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
             <span className="data-suffix"> {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[1] : ''}</span>
