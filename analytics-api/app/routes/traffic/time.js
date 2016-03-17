@@ -7,7 +7,7 @@ let validator = require('../../validator');
 let testData  = require('./time-data');
 
 function routeTrafficTime(req, res) {
-  log.info('Getting hourly traffic');
+  log.info('Getting traffic/time');
   log.debug('query params:', req.query);
 
   let params = req.query;
