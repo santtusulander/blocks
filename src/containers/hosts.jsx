@@ -62,12 +62,13 @@ export class Hosts extends React.Component {
       endDate: moment().format('X')
     })
   }
-  createNewHost(id) {
+  createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      id
+      id,
+      deploymentMode
     )
     this.toggleAddHost()
   }

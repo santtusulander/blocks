@@ -14,6 +14,14 @@ function uiActionsMaker() {
   }
 }
 
+function hostActionsMaker() {
+  return {
+    fetchHost: jest.genMockFunction().mockReturnValue({
+      then: (cb => cb({payload: {}}))
+    })
+  }
+}
+
 function purgeActionsMaker() {
   return {
     createPurge: jest.genMockFunction().mockReturnValue({
@@ -88,14 +96,15 @@ describe('Main', () => {
         activePurge={fakePurge}
         activeAccount={fakeActiveAccount}
         activeGroup={fakeActiveGroup}
-        purgeActions={purgeActions}/>
+        purgeActions={purgeActions}
+        hostActions={hostActionsMaker()}/>
     );
     main.activatePurge(fakeProperties.get(0))()
     main.saveActivePurge()
     expect(purgeActions.createPurge.mock.calls[0][0]).toBe('udn')
     expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
     expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
-    expect(purgeActions.createPurge.mock.calls[0][3].get('property')).toBe('www.foobar.com')
+    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('')
     expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakePurge.toJS())
   });
 
