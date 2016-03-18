@@ -78,7 +78,7 @@ class AnalyticsDB {
       group        : null,
       property     : null,
       service_type : null,
-      geography    : 'global',
+      dimension    : 'global',
       granularity  : 'hour'
     }
 
@@ -432,13 +432,14 @@ class AnalyticsDB {
     let columns       = [];
 
     // Build the SELECT clause
-    // Include the geography option as a column to be selected unless it's
+    // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global'
-    optionsFinal.geography && optionsFinal.geography !== 'global' && columns.push(optionsFinal.geography);
-    let dynamicSelect = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
+    optionsFinal.dimension && optionsFinal.dimension !== 'global' && columns.push(optionsFinal.dimension);
+    let dynamicSelect  = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
+    let dynamicGroupBy = `${columns.join(', ')}${columns.length ? ',' : ''}`;
 
     // Build the table name
-    let table = `${accountLevel}_${optionsFinal.geography}_${optionsFinal.granularity}`;
+    let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
 
     // Build the WHERE clause
     optionsFinal.account      && conditions.push('AND account_id = ?');
@@ -454,7 +455,7 @@ class AnalyticsDB {
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY epoch_start
+      GROUP BY ${dynamicGroupBy} epoch_start
       ORDER BY epoch_start asc;
     `;
 
@@ -467,6 +468,36 @@ class AnalyticsDB {
       optionsFinal.property,
       optionsFinal.service_type
     ]);
+  }
+
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account for a
+   * requested time frame AND the previous time frame of the same duration.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getEgressWithHistorical(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let start           = parseInt(optionsFinal.start);
+    let end             = parseInt(optionsFinal.end);
+    let duration        = end - start + 1;
+    let optionsHistoric = Object.assign({}, optionsFinal, {
+      start: start - duration,
+      end: start - 1
+    });
+    let queries = [
+      this.getEgress(optionsFinal),
+      this.getEgress(optionsHistoric)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
   }
 }
 

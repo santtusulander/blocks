@@ -425,14 +425,14 @@ describe('db.getEgress', function() {
     expect(queryParams[0]).toBe('property_global_hour');
   });
 
-  it('should select the country field if the geography options was passed as country', function() {
+  it('should select the country field if the dimension option was passed as country', function() {
     let options = {
       start: 1451606400,
       end: 1451692799,
       account: 3,
       group: 3,
       property: 'idean.com',
-      geography: 'country'
+      dimension: 'country'
     };
 
     db.getEgress(options);

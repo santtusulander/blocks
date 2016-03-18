@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal-analytics-api",
-  "version": "0.1.21",
+  "version": "0.1.23",
   "description": "A Node Express API server used by the Ericsson UDN Portal. The API responds to various GET requests with data from a remote MySQL database.",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "private": true,
   "dependencies": {
     "bluebird": "^3.3.1",
+    "country-data": "0.0.24",
     "express": "^4.13.4",
     "express-jsend": "^0.1.0",
     "lodash": "^4.5.1",
