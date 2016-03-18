@@ -81,6 +81,7 @@ export default handleActions({
         }
         return config;
       })
+      host.services[0].active_configurations = [{config_id: 1}]
       return state.merge({
         activeHost: Immutable.fromJS(host),
         fetching: false
