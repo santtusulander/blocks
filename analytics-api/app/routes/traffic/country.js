@@ -43,31 +43,61 @@ function routeTrafficCountry(req, res) {
         countries: []
       };
 
-      let allCountryTrafficData        = _.groupBy(trafficData, 'country');
-      let historicalTrafficDataGrouped = _.groupBy(historicalTrafficData, 'country');
+      let allCountryTrafficData           = _.groupBy(trafficData, 'country');
+      let allHistoricalCountryTrafficData = _.groupBy(historicalTrafficData, 'country');
 
       _.forOwn(allCountryTrafficData, (countryData, code) => {
+        let total = 0;
+        let historicalTotal = 0;
         let countryRecord = {
           code: code,
           name: countries[code] ? countries[code].name : code,
           percent_change: 0.10,
           percent_total: 0.20,
-          total: 0
+          historical_total: 0,
+          total: 0,
+          detail: []
         };
 
+        // Set the detail array on the countryRecord
+        // Calculate total egress for the country
+        // Remove the country key from each traffic record — since we're already
+        // grouped by country, we don't need to transfer all that extra data
+        // over the network.
         countryRecord.detail = countryData.map((data) => {
-          countryRecord.total += data.bytes;
+          total += data.bytes;
           delete data.country;
           return data;
         });
 
-        responseData.total += countryRecord.total;
+        // Save the country total to the countryRecord
+        countryRecord.total = total;
 
+        // Add to the total traffic amount for all countries
+        responseData.total += total;
+
+        // Sum the historical traffic
+        if (allHistoricalCountryTrafficData[code]) {
+          historicalTotal = allHistoricalCountryTrafficData[code].reduce((runningTotal, currentRecord) => {
+            return runningTotal + currentRecord.bytes;
+          }, 0);
+        }
+
+        // Save the historical total to the countryRecord
+        countryRecord.historical_total = historicalTotal;
+
+        // Calculate percent change
+        countryRecord.percent_change = parseFloat(((total - historicalTotal) / historicalTotal).toFixed(4));
+
+        // Add the countryRecord to the response data
         responseData.countries.push(countryRecord);
 
       });
 
-      // Calculate percent total
+      // Calculate percent total for each country
+      responseData.countries.forEach((countryRecord) => {
+        countryRecord.percent_total = parseFloat((countryRecord.total / responseData.total).toFixed(4));
+      });
 
       res.jsend(responseData);
     }
