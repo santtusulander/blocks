@@ -7,6 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
+import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
 import PurgeModal from '../components/purge-modal'
@@ -39,16 +40,41 @@ export class Main extends React.Component {
     this.setState({activePurge: property})
     this.props.purgeActions.resetActivePurge()
   }
+  submitPurge(property) {
+    let targetUrl = property.get('services').get(0)
+      .get('configurations').get(0).get('edge_configuration')
+      .get('published_name')
+    if(property.get('services').get(0).get('deployment_mode') === 'trial') {
+      targetUrl = property.get('services').get(0)
+        .get('configurations').get(0).get('edge_configuration')
+        .get('trial_name')
+    }
+    this.props.purgeActions.createPurge(
+      'udn',
+      this.props.activeAccount.get('id'),
+      this.props.activeGroup.get('id'),
+      targetUrl,
+      this.props.activePurge.toJS()
+    ).then(() => this.setState({activePurge: null}))
+  }
   saveActivePurge() {
     const purgeProperty = this.props.properties.find(property => property === this.state.activePurge)
     if(purgeProperty) {
-      this.props.purgeActions.createPurge(
-        'udn',
-        this.props.activeAccount.get('id'),
-        this.props.activeGroup.get('id'),
-        this.state.activePurge,
-        this.props.activePurge.toJS()
-      ).then(() => this.setState({activePurge: null}))
+      if(!this.props.activeHost || this.props.activeHost.get('services').get(0)
+        .get('configurations').get(0).get('edge_configuration')
+        .get('published_name') !== purgeProperty) {
+        this.props.hostActions.fetchHost(
+          'udn',
+          this.props.activeAccount.get('id'),
+          this.props.activeGroup.get('id'),
+          purgeProperty
+        ).then(action => {
+          this.submitPurge(Immutable.Map(action.payload))
+        })
+      }
+      else {
+        this.submitPurge(this.props.activeHost)
+      }
     }
   }
   logOut() {
@@ -119,10 +145,12 @@ Main.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
+  hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   properties: React.PropTypes.instanceOf(Immutable.List),
@@ -138,6 +166,7 @@ function mapStateToProps(state) {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.account.get('fetching') ||
       state.content.get('fetching') ||
@@ -155,6 +184,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
