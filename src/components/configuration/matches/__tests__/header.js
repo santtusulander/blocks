@@ -30,4 +30,15 @@ describe('Header', () => {
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
+
+  it('should update the parameters as select change happens', () => {
+    let changeValue = jest.genMockFunction()
+    let header = TestUtils.renderIntoDocument(
+      <Header changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+    )
+    expect(header.state.activeFilter).toBe('exists')
+    header.handleSelectChange('activeFilter')('foo')
+    expect(header.state.activeFilter).toBe('foo')
+    expect(changeValue.mock.calls[0][1]).toBe('foo')
+  })
 })

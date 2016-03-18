@@ -1,7 +1,9 @@
 import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import Immutable from 'immutable'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
+import Confirmation from '../confirmation.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 
 function parsePolicy(policy) {
@@ -36,8 +38,15 @@ class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      request_policy: null,
+      response_policy: null
+    }
+
     this.activateRule = this.activateRule.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
+    this.showConfirmation = this.showConfirmation.bind(this)
+    this.closeConfirmation = this.closeConfirmation.bind(this)
   }
   activateRule(rulePath) {
     return e => {
@@ -49,6 +58,23 @@ class ConfigurationPolicyRules extends React.Component {
     return e => {
       e.preventDefault()
       this.props.deleteRule(policyType, index)
+      this.setState({
+        [policyType]: false
+      })
+    }
+  }
+  showConfirmation(policyType, index) {
+    return () => {
+      this.setState({
+        [policyType]: index
+      })
+    }
+  }
+  closeConfirmation(policyType) {
+    return () => {
+      this.setState({
+        [policyType]: null
+      })
     }
   }
   render() {
@@ -75,16 +101,36 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{policy.get('rule_name')}</td>
                   <td>{matches.join(', ')}</td>
                   <td>{sets.join(', ')}</td>
-                  <td className="right-btns">
+                  <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
-                      onClick={this.deleteRule('request_policy', i)}>
+                      onClick={this.showConfirmation('request_policy', i)}>
                       <IconTrash/>
                     </Button>
+                    {this.state.request_policy !== false &&
+                      <ReactCSSTransitionGroup
+                        component="div"
+                        className="confirmation-transition"
+                        transitionName="confirmation-transition"
+                        transitionEnterTimeout={10}
+                        transitionLeaveTimeout={500}
+                        transitionAppear={true}
+                        transitionAppearTimeout={10}>
+                        {this.state.request_policy === i &&
+                          <Confirmation
+                            cancelText="No"
+                            confirmText="Yes"
+                            handleConfirm={this.deleteRule('request_policy', i)}
+                            handleCancel={this.closeConfirmation('request_policy')}>
+                            Are you sure you want to delete the rule?
+                          </Confirmation>
+                        }
+                      </ReactCSSTransitionGroup>
+                    }
                   </td>
                 </tr>
               )
@@ -96,16 +142,36 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>NEEDS_API</td>
                   <td>{matches.join(', ')}</td>
                   <td>{sets.join(', ')}</td>
-                  <td className="right-btns">
+                  <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
                       EDIT
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
-                      onClick={this.deleteRule('response_policy', i)}>
+                      onClick={this.showConfirmation('response_policy', i)}>
                       <IconTrash/>
                     </Button>
+                    {this.state.response_policy !== false &&
+                      <ReactCSSTransitionGroup
+                        component="div"
+                        className="confirmation-transition"
+                        transitionName="confirmation-transition"
+                        transitionEnterTimeout={10}
+                        transitionLeaveTimeout={500}
+                        transitionAppear={true}
+                        transitionAppearTimeout={10}>
+                        {this.state.response_policy === i &&
+                          <Confirmation
+                            cancelText="No"
+                            confirmText="Yes"
+                            handleConfirm={this.deleteRule('response_policy', i)}
+                            handleCancel={this.closeConfirmation('response_policy')}>
+                            Are you sure you want to delete the rule?
+                          </Confirmation>
+                        }
+                      </ReactCSSTransitionGroup>
+                    }
                   </td>
                 </tr>
               )

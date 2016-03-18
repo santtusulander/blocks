@@ -47,6 +47,7 @@
 // Components
 // ==========
 
+@import 'components/confirmation';
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
 @import 'components/datepicker';
@@ -79,7 +80,10 @@
 // Transitions
 // ===========
 
+@import 'transitions/confirmation';
 @import 'transitions/content';
+@import 'transitions/dialog';
+@import 'transitions/notification';
 
 
 // Styleguide

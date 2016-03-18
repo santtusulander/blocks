@@ -20,11 +20,6 @@ class QueryString extends React.Component {
       this.props.changeValue(path, e.target.value)
     }
   }
-  handleToggleChange(path) {
-    return value => {
-      this.props.changeValue(path, value)
-    }
-  }
   handleSelectChange(path) {
     return value => {
       this.setState({

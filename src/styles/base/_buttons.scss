@@ -75,9 +75,16 @@
 
   &.btn-sm {
     height: $btn-sm-height;
+    line-height: $btn-sm-height;
 
     @include md {
       height: $md-btn-sm-height;
+      line-height: $md-btn-sm-height;
+    }
+
+    &.btn-tertiary {
+      min-width: 0;
+      text-transform: uppercase;
     }
 
     &.btn-icon {
