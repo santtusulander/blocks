@@ -41,10 +41,10 @@ export class Main extends React.Component {
     this.props.purgeActions.resetActivePurge()
   }
   submitPurge(property) {
-    let targetUrl = property.get('services').get(0)
+    let targetUrl = property.size ? property.get('services').get(0)
       .get('configurations').get(0).get('edge_configuration')
-      .get('published_name')
-    if(property.get('services').get(0).get('deployment_mode') === 'trial') {
+      .get('published_name') : ''
+    if(property.size && property.get('services').get(0).get('deployment_mode') === 'trial') {
       targetUrl = property.get('services').get(0)
         .get('configurations').get(0).get('edge_configuration')
         .get('trial_name')
