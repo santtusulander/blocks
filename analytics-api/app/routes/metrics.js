@@ -52,19 +52,8 @@ function routeMetrics(req, res) {
         };
 
         // Reformat traffic data
-        let levelTrafficDataFormatted = levelTrafficData.map((item) => {
-          return {
-            bytes: item.bytes,
-            timestamp: item.timestamp
-          }
-        });
-
-        let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => {
-          return {
-            bytes: item.bytes,
-            timestamp: item.timestamp
-          }
-        });
+        let levelTrafficDataFormatted = levelTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
+        let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
 
         // Calculate historical variance
         let historicalVarianceData = [];

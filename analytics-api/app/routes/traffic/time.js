@@ -1,10 +1,11 @@
 'use strict';
 
 require('express-jsend');
-let log       = require('../../logger');
+let _         = require('lodash');
 let db        = require('../../db');
+let log       = require('../../logger');
 let validator = require('../../validator');
-let testData  = require('./time-data');
+// let testData  = require('./time-data');
 
 function routeTrafficTime(req, res) {
   log.info('Getting traffic/time');
@@ -36,7 +37,8 @@ function routeTrafficTime(req, res) {
     dimension    : 'global'
   }).then((trafficData) => {
 
-    res.jsend(trafficData || []);
+    let finalTrafficData = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes']));
+    res.jsend(finalTrafficData);
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');

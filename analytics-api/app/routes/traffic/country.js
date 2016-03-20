@@ -6,7 +6,7 @@ let _         = require('lodash');
 let log       = require('../../logger');
 let db        = require('../../db');
 let validator = require('../../validator');
-let testData  = require('./country-data');
+// let testData  = require('./country-data');
 
 function routeTrafficCountry(req, res) {
   log.info('Getting traffic/country');
@@ -66,8 +66,7 @@ function routeTrafficCountry(req, res) {
         // over the network.
         countryRecord.detail = countryData.map((data) => {
           total += data.bytes;
-          delete data.country;
-          return data;
+          return _.pick(data, ['bytes', 'timestamp']);
         });
 
         // Save the country total to the countryRecord
