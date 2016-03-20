@@ -290,8 +290,7 @@ class AnalyticsDB {
     let queries = [
       this[`_get${accountLevel}Traffic`](options),
       this[`_get${accountLevel}Traffic`](optionsHistoric),
-      this[`_get${accountLevel}AggregateNumbers`](options),
-      this[`_get${accountLevel}TransferRates`](options)
+      this._getAggregateNumbers(options, true)
     ];
 
     return Promise.all(queries)
