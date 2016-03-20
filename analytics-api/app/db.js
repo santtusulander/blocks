@@ -32,6 +32,24 @@ class AnalyticsDB {
       database        : cfg.dbName
     });
 
+    this.accountLevelFieldMap = {
+      account: {
+        select: 'account_id AS `account`',
+        where: 'AND account_id = ?',
+        group: 'account_id'
+      },
+      group: {
+        select: 'group_id AS `group`',
+        where: 'AND group_id = ?',
+        group: 'group_id'
+      },
+      property: {
+        select: 'property',
+        where: 'AND property = ?',
+        group: 'property'
+      }
+    }
+
     // Notify the log if a database connection couldn't be created
     this.pool.getConnection((err, connection) => {
       if (err) {
@@ -199,133 +217,58 @@ class AnalyticsDB {
   }
 
   /**
-   * Get the average cache hit rate and time to first byte for each property in a group.
-   * NOTE: The data returned is grouped by property.
+   * Get the average cache hit rate, time to first byte, and transfer rates for
+   * each property in a group.
+   * NOTE: The data returned is grouped by account level.
    *
    * @private
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  _getPropertyAggregateNumbers(options) {
-    let optionsFinal = this._getQueryOptions(options);
+  _getAggregateNumbers(options, isListingChildren) {
+    isListingChildren = !!isListingChildren || false;
+    let optionsFinal  = this._getQueryOptions(options);
+    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
+    let conditions    = [];
+    let queryOptions  = [];
+
+    // Build the table name
+    let table = `${accountLevel}_global_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && !isListingChildren
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
 
     let queryParameterized = `
       SELECT
         epoch_start,
-        property,
-        round(sum(connections * coalesce(0, chit_ratio))/sum(connections)*100) as chit_ratio,
-        sum(connections * coalesce(0, avg_fbl))/sum(connections) as avg_fbl
-      FROM property_global_day
+        ${this.accountLevelFieldMap[accountLevel].select},
+        max(bytes) as bytes_peak,
+        min(bytes) as bytes_lowest,
+        avg(bytes) as bytes_average,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
+      FROM ??
       WHERE epoch_start between ? and ?
-        AND account_id = ?
-        AND group_id = ?
+        ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY property;
+      GROUP BY ${this.accountLevelFieldMap[accountLevel].group};
     `;
 
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group
-    ]);
-  }
-
-  /**
-   * Get the average cache hit rate and time to first byte for each group in an account.
-   * NOTE: The data returned is grouped by group.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getGroupAggregateNumbers(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        group_id AS \`group\`,
-        round(sum(connections * coalesce(0, chit_ratio))/sum(connections)*100) as chit_ratio,
-        sum(connections * coalesce(0, avg_fbl))/sum(connections) as avg_fbl
-      FROM group_global_day
-      WHERE epoch_start between ? and ?
-        AND account_id = ?
-        AND flow_dir = 'out'
-      GROUP BY group_id;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account
-    ]);
-  }
-
-  /**
-   * Get the peak, lowest, and average transfer rates for each property in a group.
-   * NOTE: The data returned is grouped by property.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getPropertyTransferRates(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        property,
-        round(max(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) as transfer_rate_peak,
-        round(min(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) as transfer_rate_lowest,
-        round(avg(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) as transfer_rate_average
-      FROM property_global_hour
-      WHERE epoch_start between ? and ?
-        AND account_id = ?
-        AND group_id = ?
-        AND flow_dir = 'out'
-      GROUP BY property;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group
-    ]);
-  }
-
-  /**
-   * Get the peak, lowest, and average transfer rates for each group in an account.
-   * NOTE: The data returned is grouped by group.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getGroupTransferRates(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        group_id AS \`group\`,
-        round(max(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_peak,
-        round(min(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_lowest,
-        round(avg(bytes)/${bytesPerGigabit}/${secondsPerHour}, 1) AS transfer_rate_average
-      FROM group_global_hour
-      WHERE epoch_start between ? and ?
-        AND account_id = ?
-        AND flow_dir = 'out'
-      GROUP BY group_id;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account
-    ]);
+    return this._executeQuery(queryParameterized, queryOptions);
   }
 
   /**

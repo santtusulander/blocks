@@ -138,100 +138,156 @@ describe('db._getGroupTraffic', function() {
 });
 
 
-describe('db._getPropertyAggregateNumbers', function() {
-  let options = {start: 0, end: 1, account: 2, group: 3};
+describe('db._getAggregateNumbers', function() {
+  let options = {start: 0, end: 1, account: 2, granularity: 'hour'};
   beforeEach(function() {
     spyOn(db, '_getQueryOptions').and.callThrough();
     spyOn(db, '_executeQuery').and.stub();
-    db._getPropertyAggregateNumbers(options);
   });
 
-  it('should call _getQueryOptions with the options object passed to _getPropertyAggregateNumbers', function() {
+  it('should call _getQueryOptions with the options object passed to _getAggregateNumbers', function() {
+    db._getAggregateNumbers(options);
     let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
     expect(db._getQueryOptions.calls.any()).toBe(true);
     expect(finalOptions).toEqual(options);
   });
 
   it('should call _executeQuery with the options object values passed in an array as the second argument', function() {
+    db._getAggregateNumbers(options);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
     expect(db._executeQuery.calls.any()).toBe(true);
-    expect(optionsArray[0]).toBe(options.start);
-    expect(optionsArray[1]).toBe(options.end);
-    expect(optionsArray[2]).toBe(options.account);
-    expect(optionsArray[3]).toBe(options.group);
-  });
-});
-
-
-describe('db._getGroupAggregateNumbers', function() {
-  let options = {start: 0, end: 1, account: 2};
-  beforeEach(function() {
-    spyOn(db, '_getQueryOptions').and.callThrough();
-    spyOn(db, '_executeQuery').and.stub();
-    db._getGroupAggregateNumbers(options);
+    expect(optionsArray[0]).toBe('account_global_hour');
+    expect(optionsArray[1]).toBe(options.start);
+    expect(optionsArray[2]).toBe(options.end);
+    expect(optionsArray[3]).toBe(options.account);
+    expect(optionsArray[4]).toBeUndefined();
   });
 
-  it('should call _getQueryOptions with the options object passed to _getGroupAggregateNumbers', function() {
-    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
-    expect(db._getQueryOptions.calls.any()).toBe(true);
-    expect(finalOptions).toEqual(options);
-  });
-
-  it('should call _executeQuery with the options object values passed in an array as the second argument', function() {
+  it('should get numbers for child accounts when account, group, and property are NOT provided and isListingChildren is true', function() {
+    db._getAggregateNumbers({start: 0, end: 1, granularity: 'hour'}, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
     expect(db._executeQuery.calls.any()).toBe(true);
-    expect(optionsArray[0]).toBe(options.start);
-    expect(optionsArray[1]).toBe(options.end);
-    expect(optionsArray[2]).toBe(options.account);
-  });
-});
-
-
-describe('db._getPropertyTransferRates', function() {
-  let options = {start: 0, end: 1, account: 2, group: 3};
-  beforeEach(function() {
-    spyOn(db, '_getQueryOptions').and.callThrough();
-    spyOn(db, '_executeQuery').and.stub();
-    db._getPropertyTransferRates(options);
+    expect(/account_id AS `account`,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(false);
+    expect(/AND group_id = \?/.test(query)).toBe(false);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY account_id/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('account_global_hour');
+    expect(optionsArray[1]).toBe(options.start);
+    expect(optionsArray[2]).toBe(options.end);
+    expect(optionsArray[3]).toBeUndefined();
   });
 
-  it('should call _getQueryOptions with the options object passed to _getPropertyTransferRates', function() {
-    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
-    expect(db._getQueryOptions.calls.any()).toBe(true);
-    expect(finalOptions).toEqual(options);
-  });
-
-  it('should call _executeQuery with the options object values passed in an array as the second argument', function() {
+  it('should get numbers for child groups of an account when account is provided and isListingChildren is true', function() {
+    db._getAggregateNumbers(options, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
     expect(db._executeQuery.calls.any()).toBe(true);
-    expect(optionsArray[0]).toBe(options.start);
-    expect(optionsArray[1]).toBe(options.end);
-    expect(optionsArray[2]).toBe(options.account);
-    expect(optionsArray[3]).toBe(options.group);
-  });
-});
-
-
-describe('db._getGroupTransferRates', function() {
-  let options = {start: 0, end: 1, account: 2};
-  beforeEach(function() {
-    spyOn(db, '_getQueryOptions').and.callThrough();
-    spyOn(db, '_executeQuery').and.stub();
-    db._getGroupTransferRates(options);
+    expect(/group_id AS `group`,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(false);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY group_id/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('group_global_hour');
+    expect(optionsArray[1]).toBe(options.start);
+    expect(optionsArray[2]).toBe(options.end);
+    expect(optionsArray[3]).toBe(options.account);
+    expect(optionsArray[4]).toBeUndefined();
   });
 
-  it('should call _getQueryOptions with the options object passed to _getGroupTransferRates', function() {
-    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
-    expect(db._getQueryOptions.calls.any()).toBe(true);
-    expect(finalOptions).toEqual(options);
-  });
-
-  it('should call _executeQuery with the options object values passed in an array as the second argument', function() {
+  it('should get numbers for child properties of a group when account and group are provided and isListingChildren is true', function() {
+    let optionsModified = Object.assign({}, options, {group: 3});
+    db._getAggregateNumbers(optionsModified, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
     expect(db._executeQuery.calls.any()).toBe(true);
-    expect(optionsArray[0]).toBe(options.start);
-    expect(optionsArray[1]).toBe(options.end);
-    expect(optionsArray[2]).toBe(options.account);
+    expect(/property,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(true);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY property/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('property_global_hour');
+    expect(optionsArray[1]).toBe(optionsModified.start);
+    expect(optionsArray[2]).toBe(optionsModified.end);
+    expect(optionsArray[3]).toBe(optionsModified.account);
+    expect(optionsArray[4]).toBe(optionsModified.group);
+    expect(optionsArray[5]).toBeUndefined();
+  });
+
+  it('should get numbers for child properties of a group when account, group, and property are provided and isListingChildren is true', function() {
+    let optionsModified = Object.assign({}, options, {group: 3, property: 4});
+    db._getAggregateNumbers(optionsModified, true);
+    let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    expect(db._executeQuery.calls.any()).toBe(true);
+    expect(/property,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(true);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY property/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('property_global_hour');
+    expect(optionsArray[1]).toBe(optionsModified.start);
+    expect(optionsArray[2]).toBe(optionsModified.end);
+    expect(optionsArray[3]).toBe(optionsModified.account);
+    expect(optionsArray[4]).toBe(optionsModified.group);
+    expect(optionsArray[5]).toBeUndefined();
+  });
+
+  it('should get numbers for an account when an account is provided and isListingChildren is false', function() {
+    db._getAggregateNumbers(options);
+    let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    expect(db._executeQuery.calls.any()).toBe(true);
+    expect(/account_id AS `account`,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(false);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY account_id/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('account_global_hour');
+    expect(optionsArray[1]).toBe(options.start);
+    expect(optionsArray[2]).toBe(options.end);
+    expect(optionsArray[3]).toBe(options.account);
+    expect(optionsArray[4]).toBeUndefined();
+  });
+
+  it('should get numbers for a group when an account and group are provided and isListingChildren is false', function() {
+    let optionsModified = Object.assign({}, options, {group: 3});
+    db._getAggregateNumbers(optionsModified);
+    let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    expect(db._executeQuery.calls.any()).toBe(true);
+    expect(/group_id AS `group`,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(true);
+    expect(/AND property = \?/.test(query)).toBe(false);
+    expect(/GROUP BY group_id/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('group_global_hour');
+    expect(optionsArray[1]).toBe(optionsModified.start);
+    expect(optionsArray[2]).toBe(optionsModified.end);
+    expect(optionsArray[3]).toBe(optionsModified.account);
+    expect(optionsArray[4]).toBe(optionsModified.group);
+    expect(optionsArray[5]).toBeUndefined();
+  });
+
+  it('should get numbers for a property when an account, group, and property are provided and isListingChildren is false', function() {
+    let optionsModified = Object.assign({}, options, {group: 3, property: 4});
+    db._getAggregateNumbers(optionsModified);
+    let optionsArray = db._executeQuery.calls.argsFor(0)[1];
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    expect(db._executeQuery.calls.any()).toBe(true);
+    expect(/property,/.test(query)).toBe(true);
+    expect(/AND account_id = \?/.test(query)).toBe(true);
+    expect(/AND group_id = \?/.test(query)).toBe(true);
+    expect(/AND property = \?/.test(query)).toBe(true);
+    expect(/GROUP BY property/.test(query)).toBe(true);
+    expect(optionsArray[0]).toBe('property_global_hour');
+    expect(optionsArray[1]).toBe(optionsModified.start);
+    expect(optionsArray[2]).toBe(optionsModified.end);
+    expect(optionsArray[3]).toBe(optionsModified.account);
+    expect(optionsArray[4]).toBe(optionsModified.group);
+    expect(optionsArray[5]).toBe(optionsModified.property);
+    expect(optionsArray[6]).toBeUndefined();
   });
 });
 
