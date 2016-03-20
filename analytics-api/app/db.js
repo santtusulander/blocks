@@ -6,9 +6,6 @@ let mysql   = require('promise-mysql');
 let configs = require('./configs');
 let log     = require('./logger');
 
-const bytesPerGigabit = 125000000;
-const secondsPerHour  = 3600;
-
 /**
  * A collection of functions that query and return data from the MySQL analytics
  * database. NOTE: This file exports an instance of this class, effectively
