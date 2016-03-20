@@ -3,6 +3,7 @@
 require('express-jsend');
 let _         = require('lodash');
 let log       = require('../logger');
+let dataUtils = require('../data-utils');
 let db        = require('../db');
 let validator = require('../validator');
 let testData  = require('./metrics-data');
@@ -28,10 +29,10 @@ function routeMetrics(req, res) {
     end     : params.end,
     account : params.account,
     group   : params.group
-  }).spread((trafficData, historicalTrafficData, aggregateData, transferRateData) => {
+  }).spread((trafficData, historicalTrafficData, aggregateData) => {
     let responseData = [];
 
-    if (trafficData && historicalTrafficData && aggregateData && transferRateData) {
+    if (trafficData && historicalTrafficData && aggregateData) {
       // Set the selected level
       let selectedLevel = (params.group == null) ? 'group' : 'property';
 
@@ -45,7 +46,11 @@ function routeMetrics(req, res) {
         let levelTrafficData           = trafficData.filter((item) => item[selectedLevel] === level);
         let levelHistoricalTrafficData = historicalTrafficData.filter((item) => item[selectedLevel] === level);
         let levelAggregateData         = aggregateData.filter((item) => item[selectedLevel] === level)[0];
-        let levelTransferRateData      = transferRateData.filter((item) => item[selectedLevel] === level)[0];
+        let transferRates              = {
+          peak    : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_peak, 'hour'),
+          average : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_average, 'hour'),
+          lowest  : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_lowest, 'hour')
+        };
 
         // Reformat traffic data
         let levelTrafficDataFormatted = levelTrafficData.map((item) => {
@@ -123,15 +128,12 @@ function routeMetrics(req, res) {
           historicalVarianceData = historicalVarianceData.concat(_.fill(Array(numRecords), variance));
         }
 
+
         // Build the data object for a single level
         let levelData = {
           avg_cache_hit_rate: levelAggregateData.chit_ratio,
           avg_ttfb: `${Math.round(levelAggregateData.avg_fbl)} ms`,
-          transfer_rates: {
-            peak:    `${levelTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
-            lowest:  `${levelTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
-            average: `${levelTransferRateData.transfer_rate_average.toFixed(1)} Gbps`
-          },
+          transfer_rates: transferRates,
           historical_variance: historicalVarianceData,
           traffic: levelTrafficDataFormatted,
           historical_traffic: levelHistoricalTrafficDataFormatted
