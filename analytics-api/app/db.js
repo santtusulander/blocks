@@ -370,14 +370,18 @@ class AnalyticsDB {
     let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
     let accountLevelData = this.accountLevelFieldMap[accountLevel];
     let conditions       = [];
+    let grouping         = [];
     let queryOptions     = [];
+    let selectedDimension;
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global'
-    optionsFinal.dimension && optionsFinal.dimension !== 'global' && columns.push(optionsFinal.dimension);
-    let dynamicSelect  = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
-    let dynamicGroupBy = `${columns.join(', ')}${columns.length ? ',' : ''}`;
+    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
+      selectedDimension = `${optionsFinal.dimension},\n        `;
+    } else {
+      selectedDimension = '';
+    }
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
@@ -403,16 +407,27 @@ class AnalyticsDB {
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    // Build the GROUP BY clause
+    selectedDimension && grouping.push(selectedDimension);
+    (selectedDimension || isListingChildren) && grouping.push('epoch_start');
+    grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
+
     let queryParameterized = `
-      SELECT${dynamicSelect}
+      SELECT
         epoch_start AS timestamp,
-        sum(bytes) AS bytes
+        ${accountLevelData.select},
+        ${selectedDimension}service_type,
+        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY ${dynamicGroupBy} epoch_start
-      ORDER BY epoch_start asc;
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join('')}
+      ORDER BY
+        ${selectedDimension}epoch_start,
+        ${accountLevelData.field},
+        service_type;
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
