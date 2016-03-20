@@ -159,8 +159,8 @@ describe('Hosts', () => {
         hosts={Immutable.List()}
         params={urlParams}/>
     )
-    hosts.createNewHost('bbb')
-    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb'])
+    hosts.createNewHost('bbb','production')
+    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb','production'])
   })
 
   it('should delete a host when clicked', () => {

@@ -81,6 +81,7 @@ export default handleActions({
         }
         return config;
       })
+      host.services[0].active_configurations = [{config_id: 1}]
       return state.merge({
         activeHost: Immutable.fromJS(host),
         fetching: false
@@ -130,13 +131,13 @@ export default handleActions({
 
 // ACTIONS
 
-export const createHost = createAction(HOST_CREATED, (brand, account, group, id) => {
+export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
   return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
     {
       services:[
         {
           service_type: "large",
-          deployment_mode: "trial",
+          deployment_mode: deploymentMode,
           configurations: [
             {
               edge_configuration: {

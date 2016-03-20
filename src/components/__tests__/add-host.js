@@ -22,5 +22,6 @@ describe('AddHost', () => {
     let form = TestUtils.findRenderedDOMComponentWithTag(addHost, 'form')
     TestUtils.Simulate.submit(form)
     expect(createHost.mock.calls[0][0]).toEqual('new')
+    expect(createHost.mock.calls[0][1]).toEqual('trial')
   })
 })
