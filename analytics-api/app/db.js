@@ -6,9 +6,6 @@ let mysql   = require('promise-mysql');
 let configs = require('./configs');
 let log     = require('./logger');
 
-const bytesPerGigabit = 125000000;
-const secondsPerHour  = 3600;
-
 /**
  * A collection of functions that query and return data from the MySQL analytics
  * database. NOTE: This file exports an instance of this class, effectively
@@ -36,17 +33,17 @@ class AnalyticsDB {
       account: {
         select: 'account_id AS `account`',
         where: 'AND account_id = ?',
-        group: 'account_id'
+        field: 'account_id'
       },
       group: {
         select: 'group_id AS `group`',
         where: 'AND group_id = ?',
-        group: 'group_id'
+        field: 'group_id'
       },
       property: {
         select: 'property',
         where: 'AND property = ?',
-        group: 'property'
+        field: 'property'
       }
     }
 
@@ -155,68 +152,6 @@ class AnalyticsDB {
   }
 
   /**
-   * Get hourly traffic data (bytes out) for all properties in a group within a
-   * given time range. NOTE: The data returned is grouped by hour.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getPropertyTraffic(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        sum(bytes) AS bytes,
-        property
-      FROM property_global_hour
-      WHERE epoch_start BETWEEN ? and ?
-        AND account_id = ?
-        AND group_id = ?
-        AND flow_dir = 'out'
-      GROUP BY epoch_start;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group
-    ]);
-  }
-
-  /**
-   * Get hourly traffic data (bytes out) for all groups in an account within a
-   * given time range. NOTE: The data returned is grouped by hour.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getGroupTraffic(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        sum(bytes) AS bytes,
-        group_id AS \`group\`
-      FROM group_global_hour
-      WHERE epoch_start BETWEEN ? and ?
-        AND account_id = ?
-        AND flow_dir = 'out'
-      GROUP BY epoch_start;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account
-    ]);
-  }
-
-  /**
    * Get the average cache hit rate, time to first byte, and transfer rates for
    * each property in a group.
    * NOTE: The data returned is grouped by account level.
@@ -226,11 +161,12 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   _getAggregateNumbers(options, isListingChildren) {
-    isListingChildren = !!isListingChildren || false;
-    let optionsFinal  = this._getQueryOptions(options);
-    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
-    let conditions    = [];
-    let queryOptions  = [];
+    isListingChildren    = !!isListingChildren || false;
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let queryOptions     = [];
 
     // Build the table name
     let table = `${accountLevel}_global_${optionsFinal.granularity}`;
@@ -255,7 +191,7 @@ class AnalyticsDB {
     let queryParameterized = `
       SELECT
         epoch_start,
-        ${this.accountLevelFieldMap[accountLevel].select},
+        ${accountLevelData.select},
         max(bytes) as bytes_peak,
         min(bytes) as bytes_lowest,
         avg(bytes) as bytes_average,
@@ -265,7 +201,7 @@ class AnalyticsDB {
       WHERE epoch_start between ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY ${this.accountLevelFieldMap[accountLevel].group};
+      GROUP BY ${accountLevelData.field};
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
@@ -279,24 +215,26 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getMetrics(options) {
-    let accountLevel      = (options.group == null) ? 'Group' : 'Property';
-    let start             = parseInt(options.start);
-    let end               = parseInt(options.end);
-    let duration          = end - start + 1;
-    let optionsHistoric   = Object.assign({}, options, {
-      start: start - duration,
-      end: start - 1
-    });
     let queries = [
-      this[`_get${accountLevel}Traffic`](options),
-      this[`_get${accountLevel}Traffic`](optionsHistoric),
+      this.getEgressWithHistorical(options, true),
       this._getAggregateNumbers(options, true)
     ];
 
     return Promise.all(queries)
       .then((queryData) => {
-        log.info(`Successfully received data from ${queryData.length} queries.`);
-        return queryData;
+        let queryDataOrganized = [];
+
+        // queryData[0] is an array with two items (one for traffic data, and
+        // one for historical traffic data)
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+
+        // queryData[1] is an array of account levels with aggregate traffic data
+        queryDataOrganized.push(queryData[1]);
+
+        // NOTE: queryDataOrganized ends up looking something like this:
+        // [trafficData, historicalTrafficData, aggregateData]
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
       })
       .catch((err) => log.error(err));
   }
@@ -367,49 +305,72 @@ class AnalyticsDB {
    *                                     query results
    */
   getEgress(options, isListingChildren) {
-    isListingChildren = !!isListingChildren || false;
-    let optionsFinal  = this._getQueryOptions(options);
-    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
-    let conditions    = [];
-    let columns       = [];
+    isListingChildren    = !!isListingChildren || false;
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let grouping         = [];
+    let queryOptions     = [];
+    let selectedDimension;
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global'
-    optionsFinal.dimension && optionsFinal.dimension !== 'global' && columns.push(optionsFinal.dimension);
-    let dynamicSelect  = `${columns.length ? '\n        ' : ''}${columns.join('\n        ,')}${columns.length ? ',' : ''}`;
-    let dynamicGroupBy = `${columns.join(', ')}${columns.length ? ',' : ''}`;
+    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
+      selectedDimension = `${optionsFinal.dimension},\n        `;
+    } else {
+      selectedDimension = '';
+    }
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
-    optionsFinal.account      && conditions.push('AND account_id = ?');
-    optionsFinal.group        && conditions.push('AND group_id = ?');
-    optionsFinal.property     && !isListingChildren && conditions.push('AND property = ?');
-    optionsFinal.service_type && conditions.push('AND service_type = ?');
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && !isListingChildren
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    // Build the GROUP BY clause
+    selectedDimension && grouping.push(selectedDimension);
+    (selectedDimension || isListingChildren) && grouping.push('epoch_start');
+    grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
 
     let queryParameterized = `
-      SELECT${dynamicSelect}
+      SELECT
         epoch_start AS timestamp,
-        sum(bytes) AS bytes
+        ${accountLevelData.select},
+        ${selectedDimension}service_type,
+        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY ${dynamicGroupBy} epoch_start
-      ORDER BY epoch_start asc;
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join('')}
+      ORDER BY
+        ${selectedDimension}epoch_start,
+        ${accountLevelData.field},
+        service_type;
     `;
 
-    return this._executeQuery(queryParameterized, [
-      table,
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group,
-      optionsFinal.property,
-      optionsFinal.service_type
-    ]);
+    return this._executeQuery(queryParameterized, queryOptions);
   }
 
 
@@ -417,10 +378,14 @@ class AnalyticsDB {
    * Get outbound traffic (egress) for a property, group, or account for a
    * requested time frame AND the previous time frame of the same duration.
    *
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     See _getAccountLevel for more info.
+   * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getEgressWithHistorical(options) {
+  getEgressWithHistorical(options, isListingChildren) {
+    isListingChildren   = !!isListingChildren || false;
     let optionsFinal    = this._getQueryOptions(options);
     let start           = parseInt(optionsFinal.start);
     let end             = parseInt(optionsFinal.end);
@@ -430,8 +395,8 @@ class AnalyticsDB {
       end: start - 1
     });
     let queries = [
-      this.getEgress(optionsFinal),
-      this.getEgress(optionsHistoric)
+      this.getEgress(optionsFinal, isListingChildren),
+      this.getEgress(optionsHistoric, isListingChildren)
     ];
 
     return Promise.all(queries)
