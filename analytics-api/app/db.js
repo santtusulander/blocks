@@ -33,17 +33,17 @@ class AnalyticsDB {
       account: {
         select: 'account_id AS `account`',
         where: 'AND account_id = ?',
-        group: 'account_id'
+        field: 'account_id'
       },
       group: {
         select: 'group_id AS `group`',
         where: 'AND group_id = ?',
-        group: 'group_id'
+        field: 'group_id'
       },
       property: {
         select: 'property',
         where: 'AND property = ?',
-        group: 'property'
+        field: 'property'
       }
     }
 
@@ -223,11 +223,12 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   _getAggregateNumbers(options, isListingChildren) {
-    isListingChildren = !!isListingChildren || false;
-    let optionsFinal  = this._getQueryOptions(options);
-    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
-    let conditions    = [];
-    let queryOptions  = [];
+    isListingChildren    = !!isListingChildren || false;
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let queryOptions     = [];
 
     // Build the table name
     let table = `${accountLevel}_global_${optionsFinal.granularity}`;
@@ -252,7 +253,7 @@ class AnalyticsDB {
     let queryParameterized = `
       SELECT
         epoch_start,
-        ${this.accountLevelFieldMap[accountLevel].select},
+        ${accountLevelData.select},
         max(bytes) as bytes_peak,
         min(bytes) as bytes_lowest,
         avg(bytes) as bytes_average,
@@ -262,7 +263,7 @@ class AnalyticsDB {
       WHERE epoch_start between ? and ?
         ${conditions.join('\n        ')}
         AND flow_dir = 'out'
-      GROUP BY ${this.accountLevelFieldMap[accountLevel].group};
+      GROUP BY ${accountLevelData.field};
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
@@ -364,11 +365,12 @@ class AnalyticsDB {
    *                                     query results
    */
   getEgress(options, isListingChildren) {
-    isListingChildren = !!isListingChildren || false;
-    let optionsFinal  = this._getQueryOptions(options);
-    let accountLevel  = this._getAccountLevel(optionsFinal, isListingChildren);
-    let conditions    = [];
-    let columns       = [];
+    isListingChildren    = !!isListingChildren || false;
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let queryOptions     = [];
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
@@ -379,12 +381,27 @@ class AnalyticsDB {
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
-    optionsFinal.account      && conditions.push('AND account_id = ?');
-    optionsFinal.group        && conditions.push('AND group_id = ?');
-    optionsFinal.property     && !isListingChildren && conditions.push('AND property = ?');
-    optionsFinal.service_type && conditions.push('AND service_type = ?');
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && !isListingChildren
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
 
     let queryParameterized = `
       SELECT${dynamicSelect}
@@ -398,15 +415,7 @@ class AnalyticsDB {
       ORDER BY epoch_start asc;
     `;
 
-    return this._executeQuery(queryParameterized, [
-      table,
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group,
-      optionsFinal.property,
-      optionsFinal.service_type
-    ]);
+    return this._executeQuery(queryParameterized, queryOptions);
   }
 
 
