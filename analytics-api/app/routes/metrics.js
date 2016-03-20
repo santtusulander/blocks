@@ -6,7 +6,6 @@ let log       = require('../logger');
 let dataUtils = require('../data-utils');
 let db        = require('../db');
 let validator = require('../validator');
-let testData  = require('./metrics-data');
 
 function routeMetrics(req, res) {
   log.info('Getting metrics');
@@ -56,14 +55,14 @@ function routeMetrics(req, res) {
         let levelTrafficDataFormatted = levelTrafficData.map((item) => {
           return {
             bytes: item.bytes,
-            timestamp: item.epoch_start
+            timestamp: item.timestamp
           }
         });
 
         let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => {
           return {
             bytes: item.bytes,
-            timestamp: item.epoch_start
+            timestamp: item.timestamp
           }
         });
 

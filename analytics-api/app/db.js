@@ -152,68 +152,6 @@ class AnalyticsDB {
   }
 
   /**
-   * Get hourly traffic data (bytes out) for all properties in a group within a
-   * given time range. NOTE: The data returned is grouped by hour.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getPropertyTraffic(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        sum(bytes) AS bytes,
-        property
-      FROM property_global_hour
-      WHERE epoch_start BETWEEN ? and ?
-        AND account_id = ?
-        AND group_id = ?
-        AND flow_dir = 'out'
-      GROUP BY epoch_start;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account,
-      optionsFinal.group
-    ]);
-  }
-
-  /**
-   * Get hourly traffic data (bytes out) for all groups in an account within a
-   * given time range. NOTE: The data returned is grouped by hour.
-   *
-   * @private
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
-   */
-  _getGroupTraffic(options) {
-    let optionsFinal = this._getQueryOptions(options);
-
-    let queryParameterized = `
-      SELECT
-        epoch_start,
-        sum(bytes) AS bytes,
-        group_id AS \`group\`
-      FROM group_global_hour
-      WHERE epoch_start BETWEEN ? and ?
-        AND account_id = ?
-        AND flow_dir = 'out'
-      GROUP BY epoch_start;
-    `;
-
-    return this._executeQuery(queryParameterized, [
-      optionsFinal.start,
-      optionsFinal.end,
-      optionsFinal.account
-    ]);
-  }
-
-  /**
    * Get the average cache hit rate, time to first byte, and transfer rates for
    * each property in a group.
    * NOTE: The data returned is grouped by account level.
@@ -277,24 +215,26 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getMetrics(options) {
-    let accountLevel      = (options.group == null) ? 'Group' : 'Property';
-    let start             = parseInt(options.start);
-    let end               = parseInt(options.end);
-    let duration          = end - start + 1;
-    let optionsHistoric   = Object.assign({}, options, {
-      start: start - duration,
-      end: start - 1
-    });
     let queries = [
-      this[`_get${accountLevel}Traffic`](options),
-      this[`_get${accountLevel}Traffic`](optionsHistoric),
+      this.getEgressWithHistorical(options, true),
       this._getAggregateNumbers(options, true)
     ];
 
     return Promise.all(queries)
       .then((queryData) => {
-        log.info(`Successfully received data from ${queryData.length} queries.`);
-        return queryData;
+        let queryDataOrganized = [];
+
+        // queryData[0] is an array with two items (one for traffic data, and
+        // one for historical traffic data)
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+
+        // queryData[1] is an array of account levels with aggregate traffic data
+        queryDataOrganized.push(queryData[1]);
+
+        // NOTE: queryDataOrganized ends up looking something like this:
+        // [trafficData, historicalTrafficData, aggregateData]
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
       })
       .catch((err) => log.error(err));
   }
@@ -438,10 +378,14 @@ class AnalyticsDB {
    * Get outbound traffic (egress) for a property, group, or account for a
    * requested time frame AND the previous time frame of the same duration.
    *
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @param  {boolean} isListingChildren Determines whether or not the caller
+   *                                     is trying to list children of a level.
+   *                                     See _getAccountLevel for more info.
+   * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getEgressWithHistorical(options) {
+  getEgressWithHistorical(options, isListingChildren) {
+    isListingChildren   = !!isListingChildren || false;
     let optionsFinal    = this._getQueryOptions(options);
     let start           = parseInt(optionsFinal.start);
     let end             = parseInt(optionsFinal.end);
@@ -451,8 +395,8 @@ class AnalyticsDB {
       end: start - 1
     });
     let queries = [
-      this.getEgress(optionsFinal),
-      this.getEgress(optionsHistoric)
+      this.getEgress(optionsFinal, isListingChildren),
+      this.getEgress(optionsHistoric, isListingChildren)
     ];
 
     return Promise.all(queries)
