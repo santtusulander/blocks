@@ -57,7 +57,7 @@ export class Main extends React.Component {
   }
   showNotification(message) {
     this.props.uiActions.changeNotification(message)
-    setTimeout(this.props.uiActions.changeNotification, 5000)
+    setTimeout(this.props.uiActions.changeNotification, 10000)
   }
   render() {
     let classNames = 'main-container';
