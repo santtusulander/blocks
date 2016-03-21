@@ -5,12 +5,27 @@ import Immutable from 'immutable'
 jest.autoMockOff()
 const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
 
+const fakeAccounts = Immutable.fromJS([
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
+])
+
+const fakeGroups = Immutable.fromJS([
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
+])
+
+const fakeLocation = {query: {name: 'www.abc.com'}}
+
 describe('ConfigurationPolicyRuleEdit', () => {
   it('should exist', () => {
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit rule={Immutable.Map()}
         config={Immutable.Map()}
-        rulePath={[]}/>
+        rulePath={[]}
+        activeAccount={fakeAccounts}
+        activeGroup={fakeGroups}
+        location={fakeLocation}/>
     );
     expect(TestUtils.isCompositeComponent(policyRule)).toBeTruthy();
   });
@@ -21,7 +36,10 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit changeValue={changeValue}
         rule={Immutable.Map()}
         config={Immutable.Map()}
-        rulePath={[]}/>
+        rulePath={[]}
+        activeAccount={fakeAccounts}
+        activeGroup={fakeGroups}
+        location={fakeLocation}/>
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'input');
     inputs[0].value = "new"
@@ -36,7 +54,10 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit hideAction={hideAction}
         rule={Immutable.Map()}
         config={Immutable.Map()}
-        rulePath={[]}/>
+        rulePath={[]}
+        activeAccount={fakeAccounts}
+        activeGroup={fakeGroups}
+        location={fakeLocation}/>
     );
     let form = TestUtils.findRenderedDOMComponentWithTag(policyRule, 'form');
     TestUtils.Simulate.submit(form)
@@ -49,7 +70,10 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit activateMatch={activateMatch}
         rule={Immutable.Map()}
         config={Immutable.Map()}
-        rulePath={[]}/>
+        rulePath={[]}
+        activeAccount={fakeAccounts}
+        activeGroup={fakeGroups}
+        location={fakeLocation}/>
     );
     policyRule.activateMatch('aaa')()
     expect(activateMatch.mock.calls[0][0]).toBe('aaa')
@@ -61,7 +85,10 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit activateSet={activateSet}
         rule={Immutable.Map()}
         config={Immutable.Map()}
-        rulePath={[]}/>
+        rulePath={[]}
+        activeAccount={fakeAccounts}
+        activeGroup={fakeGroups}
+        location={fakeLocation}/>
     );
     policyRule.activateSet('aaa')()
     expect(activateSet.mock.calls[0][0]).toBe('aaa')
