@@ -6,6 +6,7 @@ import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as trafficActionCreators from '../redux/modules/traffic'
+import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
@@ -64,7 +65,9 @@ export class AccountAnalytics extends React.Component {
           <Analyses
             endDate={this.state.endDate}
             startDate={this.state.startDate}
-            changeDateRange={this.changeDateRange}/>
+            changeDateRange={this.changeDateRange}
+            serviceTypes={this.props.serviceTypes}
+            toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}/>
         </Sidebar>
 
         <Content>
@@ -77,7 +80,8 @@ export class AccountAnalytics extends React.Component {
             {this.state.activeTab === 'traffic' ?
               <AnalysisTraffic fetching={this.props.trafficFetching}
                 byTime={this.props.trafficByTime}
-                byCountry={this.props.trafficByCountry}/>
+                byCountry={this.props.trafficByCountry}
+                serviceTypes={this.props.serviceTypes}/>
               : ''}
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
@@ -96,10 +100,12 @@ export class AccountAnalytics extends React.Component {
 AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
   params: React.PropTypes.object,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
+  uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.List),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -110,6 +116,7 @@ AccountAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    serviceTypes: state.ui.get('analysisServiceTypes'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
@@ -124,6 +131,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   };
 }
