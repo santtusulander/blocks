@@ -79,7 +79,7 @@ describe('AnalysisByTime', () => {
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
     expect(texts[0].getAttribute('y')).toBe('190')
-    expect(moment.mock.calls.length).toEqual(5)
+    expect(moment.mock.calls.length).toEqual(82)
     expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
 
@@ -92,7 +92,7 @@ describe('AnalysisByTime', () => {
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[2].getAttribute('x')).toBe('205')
+    expect(texts[2].getAttribute('x')).toBe('29.14050437467833')
     expect(texts[2].getAttribute('y')).toBe('190')
     expect(numeral.mock.calls.length).toBe(4)
     expect(numeral.mock.calls[0]).toEqual([1000])

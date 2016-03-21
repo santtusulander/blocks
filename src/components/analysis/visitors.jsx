@@ -49,7 +49,7 @@ class AnalysisVisitors extends React.Component {
             <div>Loading...</div> :
             <AnalysisByLocation
             dataKey="uniq_vis"
-            timelineKey="visitors"
+            timelineKey="detail"
             width={this.state.byLocationWidth}
             height={this.state.byLocationWidth / 2}
             countryData={this.props.byCountry}/>
