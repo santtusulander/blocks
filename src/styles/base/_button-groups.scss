@@ -59,4 +59,12 @@
       }
     }
   }
+
+  &.extra-margin-top {
+    margin-top: $btn-height;
+
+    @include md {
+      margin-top: $md-btn-height;
+    }
+  }
 }

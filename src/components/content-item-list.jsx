@@ -14,7 +14,8 @@ class ContentItemList extends React.Component {
 
     this.state = {
       byLocationWidth: 0,
-      byTimeWidth: 0
+      byTimeWidth: 0,
+      byTimeHeight: 0
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -28,7 +29,8 @@ class ContentItemList extends React.Component {
   }
   measureContainers() {
     this.setState({
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
+      byTimeWidth: this.refs.byTimeHolder.clientWidth,
+      byTimeHeight: this.refs.byTimeHolder.clientHeight
     })
   }
   render() {
@@ -87,23 +89,21 @@ class ContentItemList extends React.Component {
             </div>
           </div>
 
-          <div className="content-item-list-chart">
-            <div ref="byTimeHolder">
-              <ReactCSSTransitionGroup
-                component="div"
-                className="content-transition"
-                transitionName="content-transition"
-                transitionEnterTimeout={250}
-                transitionLeaveTimeout={250}>
-                {!this.props.fetchingMetrics ?
-                  <AnalysisByTime axes={false} padding={0} className="bg-transparent"
-                    dataKey="bytes"
-                    primaryData={this.props.primaryData}
-                    width={this.state.byTimeWidth}
-                    height={200} />
-                : ''}
-              </ReactCSSTransitionGroup>
-            </div>
+          <div className="content-item-list-chart" ref="byTimeHolder">
+            <ReactCSSTransitionGroup
+              component="div"
+              className="content-transition"
+              transitionName="content-transition"
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}>
+              {!this.props.fetchingMetrics ?
+                <AnalysisByTime axes={false} padding={0} className="bg-transparent"
+                  dataKey="bytes"
+                  primaryData={this.props.primaryData}
+                  width={this.state.byTimeWidth}
+                  height={this.state.byTimeHeight} />
+              : ''}
+            </ReactCSSTransitionGroup>
           </div>
         </Link>
 

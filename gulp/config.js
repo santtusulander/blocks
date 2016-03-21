@@ -63,7 +63,7 @@ module.exports = {
           loader: 'file?name=src/assets/fonts/[name].[ext]'
         },
         {
-          test: /\.svg$/,
+          test: /\.(svg|ico)$/,
           exclude: /(node_modules|fonts|img)/,
           loader: 'file?name=src/assets/icons/[name].[ext]'
         },

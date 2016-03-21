@@ -9,7 +9,6 @@
   position: relative;
   height: $content-item-list-height;
   margin-top: 20px;
-  overflow: hidden;
 
   @include md {
     height: $md-content-item-list-height;
@@ -137,9 +136,11 @@
   }
 
   .content-item-list-chart {
+    height: $content-item-list-height;
     margin: 0 700px 0 450px;
 
     @include md {
+      height: $md-content-item-list-height;
       margin: 0 540px 0 340px;
     }
 
