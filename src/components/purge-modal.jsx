@@ -87,7 +87,7 @@ class PurgeModal extends React.Component {
     e.preventDefault()
     let hasErrors = false;
     hasErrors = this.validatePurgeObjects(this.props.activePurge.get('objects').get('0')) ? true : false
-    hasErrors = this.validateEmail() ? true : false
+    hasErrors = this.validateEmail() ? true : hasErrors
     if(!hasErrors) {
       this.props.savePurge()
       this.props.showNotification('Purge request succesfully submitted')
