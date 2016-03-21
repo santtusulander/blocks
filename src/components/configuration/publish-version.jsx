@@ -32,19 +32,18 @@ class ConfigurationPublishVersion extends React.Component {
         <hr/>
 
         {/* Publish To */}
-        <Input label="Publish to">
-          <Input type="radio"
-            label="Staging Platform"
-            onChange={this.setPublishTarget('staging')}
-            checked={this.state.publishTarget === 'staging'}/>
-          <Input type="radio"
-            label="Production Platform"
-            onChange={this.setPublishTarget('production')}
-            checked={this.state.publishTarget === 'production'}/>
-        </Input>
+        <label>Publish to</label>
+        <Input type="radio"
+          label="Staging Platform"
+          onChange={this.setPublishTarget('staging')}
+          checked={this.state.publishTarget === 'staging'}/>
+        <Input type="radio"
+          label="Production Platform"
+          onChange={this.setPublishTarget('production')}
+          checked={this.state.publishTarget === 'production'}/>
 
         {/* Action buttons */}
-        <ButtonToolbar className="text-right">
+        <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.props.hideAction}>
             Cancel
           </Button>
