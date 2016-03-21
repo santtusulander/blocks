@@ -2,6 +2,7 @@
 
 require('express-jsend');
 let _         = require('lodash');
+let dataUtils = require('../../data-utils');
 let db        = require('../../db');
 let log       = require('../../logger');
 let validator = require('../../validator');
@@ -26,7 +27,7 @@ function routeTrafficTime(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getEgress({
+  let options = {
     start        : params.start,
     end          : params.end,
     account      : params.account,
@@ -35,9 +36,22 @@ function routeTrafficTime(req, res) {
     service_type : params.service_type,
     granularity  : params.granularity,
     dimension    : 'global'
-  }).then((trafficData) => {
+  };
 
-    let finalTrafficData = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes']));
+  db.getEgress(options).then((trafficData) => {
+    let optionsFinal       = db._getQueryOptions(options);
+    let finalTrafficData   = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes']));
+    let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
+    let filledTrafficData  = _.mapValues(groupedTrafficData, (data) => {
+      return dataUtils.buildContiguousTimeline(
+        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+      );
+    });
+
+    finalTrafficData = [];
+    _.mapValues(filledTrafficData, (data) => finalTrafficData = finalTrafficData.concat(data));
+    finalTrafficData = _.sortBy(finalTrafficData, 'timestamp');
+
     res.jsend(finalTrafficData);
 
   }).catch(() => {
