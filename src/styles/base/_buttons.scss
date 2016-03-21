@@ -142,6 +142,8 @@
     margin-bottom: ($bar-height - $btn-height) / 2;
     margin-left: 10px;
     overflow: hidden;
+    background: url('../assets/img/img-user.jpg') center center no-repeat;
+    background-size: cover;
 
     @include md {
       margin-top: ($md-bar-height - $md-btn-height) / 2;
