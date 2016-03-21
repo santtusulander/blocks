@@ -47,6 +47,7 @@ class ConfigurationDefaults extends React.Component {
 
     this.changeTTLUnit = this.changeTTLUnit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleEtagChange = this.handleEtagChange.bind(this)
   }
   handleChange(path) {
     return value => {
@@ -54,6 +55,14 @@ class ConfigurationDefaults extends React.Component {
         value = value.target.value
       }
       this.props.changeValue(path, value)
+    }
+  }
+  handleEtagChange(path) {
+    return value => {
+      if(value.target) {
+        value = value.target.value
+      }
+      this.props.changeValue(path, value ? 'strong' : 'weak')
     }
   }
   changeTTLUnit(path) {
@@ -127,8 +136,8 @@ class ConfigurationDefaults extends React.Component {
             Enable e-Tag support
           </Col>
           <Col lg={8} xs={6}>
-            <Toggle value={config.getIn(policyPaths.honor_etags)}
-              changeValue={this.handleChange(policyPaths.honor_etags)}/>
+            <Toggle value={config.getIn(policyPaths.honor_etags) === "strong"}
+              changeValue={this.handleEtagChange(policyPaths.honor_etags)}/>
           </Col>
         </Row>
 
