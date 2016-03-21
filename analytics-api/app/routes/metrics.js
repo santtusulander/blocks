@@ -125,9 +125,9 @@ function routeMetrics(req, res) {
           avg_cache_hit_rate: levelAggregateData.chit_ratio,
           avg_ttfb: `${Math.round(levelAggregateData.avg_fbl)} ms`,
           transfer_rates: transferRates,
-          historical_variance: historicalVarianceData,
-          traffic: levelTrafficDataFormatted,
-          historical_traffic: levelHistoricalTrafficDataFormatted
+          historical_variance: historicalVarianceData.reverse(),
+          traffic: levelTrafficDataFormatted.reverse(),
+          historical_traffic: levelHistoricalTrafficDataFormatted.reverse()
         };
 
         // Dynamically set a "selectedLevel" property on the level data
