@@ -112,14 +112,14 @@ class AnalysisByTime extends React.Component {
             <path d={trafficArea(this.props.primaryData)}
               className="area primary"
               fill="url(#dt-primary-gradient)" />
-          </g> : ''}
+          </g> : null}
           {this.props.secondaryData ? <g>
             <path d={trafficLine(this.props.secondaryData)}
               className="line secondary"/>
             <path d={trafficArea(this.props.secondaryData)}
               className="area secondary"
               fill="url(#dt-secondary-gradient)" />
-          </g> : ''}
+          </g> : null}
           {this.state.tooltipText ?
             <g>
               <circle r="5"
