@@ -55,7 +55,7 @@ function routeTrafficCountry(req, res) {
         let total = 0;
         let historicalTotal = 0;
         let countryRecord = {
-          code: code,
+          code: countries[code] ? countries[code].alpha3 : code,
           name: countries[code] ? countries[code].name : code,
           percent_change: 0.10,
           percent_total: 0.20,
