@@ -61,7 +61,7 @@ export default handleActions({
   TRAFFIC_BY_COUNTRY_FETCHED: {
     next(state, action) {
       return state.merge({
-        byCountry: Immutable.fromJS(action.payload.data)
+        byCountry: Immutable.fromJS(action.payload.data.countries)
       })
     },
     throw(state) {
