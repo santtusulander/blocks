@@ -46,22 +46,35 @@ class AnalysisByTime extends React.Component {
     })
   }
   render() {
-    if(!this.props.width || !this.props.primaryData) {
+    if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
       return <div>Loading...</div>
     }
 
-    const yExtent = d3.extent(this.props.primaryData, d => d[this.props.dataKey])
-    const xExtent = d3.extent(this.props.primaryData, d => d.timestamp)
+    const yPrimaryExtent = this.props.primaryData && this.props.primaryData.length ?
+      d3.extent(this.props.primaryData, d => d[this.props.dataKey])
+      : [0,0]
+    const xPrimaryExtent =  this.props.primaryData && this.props.primaryData.length ?
+      d3.extent(this.props.primaryData, d => d.timestamp)
+      : [new Date(), new Date()]
+    const ySecondayExtent = this.props.secondaryData && this.props.secondaryData.length ?
+      d3.extent(this.props.secondaryData, d => d[this.props.dataKey])
+      : yPrimaryExtent
+    const xSecondayExtent = this.props.secondaryData && this.props.secondaryData.length ?
+      d3.extent(this.props.secondaryData, d => d.timestamp)
+      : [new Date(), new Date()]
 
     const yScale = d3.scale.linear()
-      .domain([0, yExtent[1]])
+      .domain([0, Math.max(yPrimaryExtent[1], ySecondayExtent[1])])
       .range([
         this.props.height - this.props.padding * (this.props.axes ? 2 : 1),
         this.props.padding
       ]);
 
     const xScale = d3.time.scale()
-      .domain([xExtent[0], xExtent[1]])
+      .domain([
+        Math.min(xPrimaryExtent[0], xSecondayExtent[0]),
+        Math.max(xPrimaryExtent[1], xSecondayExtent[1])
+      ])
       .range([
         this.props.padding * (this.props.axes ? 2 : 1),
         this.props.width - this.props.padding
@@ -93,9 +106,20 @@ class AnalysisByTime extends React.Component {
           ref='chart'
           onMouseMove={this.moveMouse(xScale, yScale, this.props.primaryData)}
           onMouseOut={this.deactivateTooltip}>
-          <path d={trafficLine(this.props.primaryData)} className="line"/>
-          <path d={trafficArea(this.props.primaryData)} className="area"
-            fill="url(#dt-svg-gradient)" />
+          {this.props.primaryData ? <g>
+            <path d={trafficLine(this.props.primaryData)}
+              className="line primary"/>
+            <path d={trafficArea(this.props.primaryData)}
+              className="area primary"
+              fill="url(#dt-primary-gradient)" />
+          </g> : ''}
+          {this.props.secondaryData ? <g>
+            <path d={trafficLine(this.props.secondaryData)}
+              className="line secondary"/>
+            <path d={trafficArea(this.props.secondaryData)}
+              className="area secondary"
+              fill="url(#dt-secondary-gradient)" />
+          </g> : ''}
           {this.state.tooltipText ?
             <g>
               <circle r="5"
@@ -134,9 +158,13 @@ class AnalysisByTime extends React.Component {
             : null
           }
           <defs>
-            <linearGradient id="dt-svg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient id="dt-primary-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
               <stop offset="100%" stopColor="#00a9d4" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="dt-secondary-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#89ba17" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>

@@ -185,7 +185,7 @@ export class AnalysisByLocation extends React.Component {
               //   hideCountry = true
               // }
               const data = this.props.countryData.find(
-                data => data.get('country').toLowerCase() === id
+                data => data.get('code').toLowerCase() === id
               )
               let classes = 'country'
               // if(hideCountry) {

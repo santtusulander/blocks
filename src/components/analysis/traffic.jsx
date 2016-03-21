@@ -31,6 +31,8 @@ class AnalysisTraffic extends React.Component {
     })
   }
   render() {
+    const httpData = this.props.byTime.filter(time => time.get('service_type') === 'http')
+    const httpsData = this.props.byTime.filter(time => time.get('service_type') === 'https')
     return (
       <div className="analysis-traffic">
         <div className="total-egress">
@@ -43,7 +45,8 @@ class AnalysisTraffic extends React.Component {
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
               dataKey="bytes"
-              primaryData={this.props.byTime.toJS()}
+              primaryData={httpData.toJS()}
+              secondaryData={httpsData.toJS()}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
             }
         </div>
@@ -72,11 +75,11 @@ class AnalysisTraffic extends React.Component {
           </thead>
           <tbody>
             {this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('traffic').reduce((total, traffic) => {
+              const totalBytes = country.get('detail').reduce((total, traffic) => {
                 return total + traffic.get('bytes')
               }, 0)
-              const startBytes = country.get('traffic').first().get('bytes')
-              const endBytes = country.get('traffic').last().get('bytes')
+              const startBytes = country.get('detail').first().get('bytes')
+              const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
               if(trending > 1) {
                 trending = numeral((trending - 1) * -1).format('0%')
@@ -86,7 +89,7 @@ class AnalysisTraffic extends React.Component {
               }
               return (
                 <tr key={i}>
-                  <td>{country.get('country')}</td>
+                  <td>{country.get('name')}</td>
                   <td>{numeral(totalBytes).format('0,0')}</td>
                   <td>{country.get('percent_total')}%</td>
                   <td>Chart</td>

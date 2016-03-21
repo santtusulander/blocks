@@ -26,6 +26,16 @@
     }
   }
 
+  .secondary {
+    .dark-theme & {
+      stroke: $green;
+    }
+
+    .light-theme & {
+      stroke: $green;
+    }
+  }
+
   .axis-tick {
     stroke: $silver;
   }
