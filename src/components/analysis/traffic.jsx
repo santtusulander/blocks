@@ -31,8 +31,12 @@ class AnalysisTraffic extends React.Component {
     })
   }
   render() {
-    const httpData = this.props.byTime.filter(time => time.get('service_type') === 'http')
-    const httpsData = this.props.byTime.filter(time => time.get('service_type') === 'https')
+    const httpData = this.props.serviceTypes.includes('http') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'http')
+      : Immutable.List()
+    const httpsData = this.props.serviceTypes.includes('https') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'https')
+      : Immutable.List()
     return (
       <div className="analysis-traffic">
         <div className="total-egress">
@@ -108,7 +112,8 @@ AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = AnalysisTraffic
