@@ -1,6 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
+const _      = require('lodash');
+const moment = require('moment');
 
 /**
  * @class
@@ -77,6 +78,64 @@ class DataUtils {
     let transferRate          = parseFloat((bytes / bytesPerUnit / secondsPerGranularity).toFixed(2));
 
     return _.isNaN(transferRate) ? null : `${transferRate} ${transferRateUnit.unit}`;
+  }
+
+  /**
+   * Given an array of traffic records, return a new array that contains the
+   * maximum number of records (based on the time granularity) possible within
+   * the provided time range. Any times missing from the original array will
+   * be represented by a null record. Check out the unit tests for more information.
+   * NOTE: This function has a major and not so obvious flaw — it depends on the
+   * start time being on a correct interval (start of month, start of day, start
+   * of hour, or start of a 5 minute interval counted from the beginning of a day).
+   * If the start time is incorrect, an array with almost all null traffic records
+   * will be returned.
+   * NOTE: A "null record" is still an object. It's the bytes property of the
+   * object that will be null, like this: {bytes: null, timestamp: 1451606400}
+   * NOTE: Any properties found on an existing traffic record (besides timestamp
+   * and bytes) will be preserved for a null record, like this:
+   * {bytes: null, timestamp: 1451606400, service_type: 'http'}
+   * So, it's important that all the objects in the data array have the same
+   * properties. The first record in the data array will be used as a template.
+   *
+   * @param {array}  data        Array of traffic records
+   * @param {number} start       Start of the time range as a UTC UNIX timestamp
+   * @param {number} end         End of the time range as a UTC UNIX timestamp
+   * @param {string} granularity The time granularity (5min, hour, day, or month)
+   */
+  buildContiguousTimeline(data, start, end, granularity) {
+    let finalData   = [];
+    let interval    = granularity === '5min' ? 5 : 1;
+    let unit        = granularity === '5min' ? 'minutes' : granularity;
+    let startTime   = moment.unix(start).utc();
+    let endTime     = moment.unix(end).utc();
+    let currentTime = moment(startTime);
+    let dataGrouped = _.groupBy(data, 'timestamp');
+
+    while (currentTime.isBefore(endTime)) {
+      let record;
+      let matchingRecord = dataGrouped[currentTime.format('X')];
+      let recordTemplate = data[0];
+
+      // If a record already exists for this time, use it
+      if (matchingRecord) {
+        record = matchingRecord[0];
+
+      // ...otherwise, push a null record
+      } else {
+        record = Object.assign({}, recordTemplate, {
+          bytes: null,
+          timestamp: parseFloat(currentTime.format('X'))
+        });
+      }
+
+      // Push the record and increment currentTime
+      finalData.push(record);
+      currentTime.add(interval, unit);
+    }
+
+    return finalData;
+
   }
 
 }

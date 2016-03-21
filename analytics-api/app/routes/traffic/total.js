@@ -4,7 +4,7 @@ require('express-jsend');
 let log       = require('../../logger');
 let db        = require('../../db');
 let validator = require('../../validator');
-let testData  = require('./total-data');
+// let testData  = require('./total-data');
 
 function routeTrafficTotal(req, res) {
   log.info('Getting traffic/total');

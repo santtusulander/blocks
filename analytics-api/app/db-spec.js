@@ -463,3 +463,52 @@ describe('db.getEgress', function() {
   });
 
 });
+
+
+describe('db.getEgressWithHistorical', function() {
+  let options = {start: 10, end: 19, account: 2, group: 3};
+  let optionsHistoric = {start: 0, end: 9, account: 2, group: 3};
+  beforeEach(function() {
+    spyOn(db, '_getQueryOptions').and.callThrough();
+    spyOn(db, '_getAccountLevel').and.callThrough();
+    spyOn(db, '_executeQuery').and.stub();
+    spyOn(db, 'getEgress').and.returnValue(Promise.resolve(0));
+    spyOn(log, 'info').and.stub();
+    spyOn(log, 'error').and.stub();
+  });
+
+  it('should call getEgress twice, once for the requested time range, and once for the previous time range of the same duration', function() {
+    db.getEgressWithHistorical(options);
+    let optionsFinal = db.getEgress.calls.argsFor(0)[0];
+    let optionsFinalHistoric = db.getEgress.calls.argsFor(1)[0];
+    expect(db.getEgress.calls.count()).toBe(2);
+    expect(optionsFinal.start).toBe(options.start);
+    expect(optionsFinal.end).toBe(options.end);
+    expect(optionsFinalHistoric.start).toBe(optionsHistoric.start);
+    expect(optionsFinalHistoric.end).toBe(optionsHistoric.end);
+  });
+
+  it('should return a promise', function() {
+    let getEgressWithHistoricalPromise = db.getEgressWithHistorical(options);
+    expect(getEgressWithHistoricalPromise instanceof Promise).toBe(true);
+  });
+
+  it('should log the number of result sets received from the queries', function(done) {
+    db.getEgressWithHistorical(options).then(function(data) {
+      expect(log.info.calls.any()).toBe(true);
+      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
+      done();
+    });
+  });
+
+  it('should log an error if one of the queries failed', function(done) {
+    let error = new Error('error');
+    db.getEgress.and.returnValue(Promise.reject(error));
+    db.getEgressWithHistorical(options).finally(function() {
+      expect(log.error.calls.any()).toBe(true);
+      expect(log.error.calls.argsFor(0)[0]).toEqual(error);
+      done();
+    });
+  });
+
+});

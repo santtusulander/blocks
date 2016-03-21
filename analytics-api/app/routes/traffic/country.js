@@ -3,10 +3,11 @@
 require('express-jsend');
 let countries = require('country-data').countries;
 let _         = require('lodash');
-let log       = require('../../logger');
+let dataUtils = require('../../data-utils');
 let db        = require('../../db');
+let log       = require('../../logger');
 let validator = require('../../validator');
-let testData  = require('./country-data');
+// let testData  = require('./country-data');
 
 function routeTrafficCountry(req, res) {
   log.info('Getting traffic/country');
@@ -27,7 +28,7 @@ function routeTrafficCountry(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getEgressWithHistorical({
+  let options = {
     start        : params.start,
     end          : params.end,
     account      : params.account,
@@ -36,8 +37,11 @@ function routeTrafficCountry(req, res) {
     service_type : params.service_type,
     granularity  : params.granularity,
     dimension    : 'country'
-  }).spread((trafficData, historicalTrafficData) => {
+  };
+
+  db.getEgressWithHistorical(options).spread((trafficData, historicalTrafficData) => {
     if (trafficData && historicalTrafficData) {
+      let optionsFinal = db._getQueryOptions(options);
       let responseData = {
         total: 0,
         countries: []
@@ -47,6 +51,7 @@ function routeTrafficCountry(req, res) {
       let allHistoricalCountryTrafficData = _.groupBy(historicalTrafficData, 'country');
 
       _.forOwn(allCountryTrafficData, (countryData, code) => {
+        let trafficRecords;
         let total = 0;
         let historicalTotal = 0;
         let countryRecord = {
@@ -64,11 +69,19 @@ function routeTrafficCountry(req, res) {
         // Remove the country key from each traffic record — since we're already
         // grouped by country, we don't need to transfer all that extra data
         // over the network.
-        countryRecord.detail = countryData.map((data) => {
+        trafficRecords = countryData.map((data) => {
           total += data.bytes;
-          delete data.country;
-          return data;
+          return _.pick(data, ['bytes', 'timestamp']);
         });
+
+        // Ensure there is a record for each time interval
+        trafficRecords = dataUtils.buildContiguousTimeline(
+          trafficRecords,
+          optionsFinal.start,
+          optionsFinal.end,
+          optionsFinal.granularity
+        );
+        countryRecord.detail = trafficRecords;
 
         // Save the country total to the countryRecord
         countryRecord.total = total;

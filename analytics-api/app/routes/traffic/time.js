@@ -1,10 +1,12 @@
 'use strict';
 
 require('express-jsend');
-let log       = require('../../logger');
+let _         = require('lodash');
+let dataUtils = require('../../data-utils');
 let db        = require('../../db');
+let log       = require('../../logger');
 let validator = require('../../validator');
-let testData  = require('./time-data');
+// let testData  = require('./time-data');
 
 function routeTrafficTime(req, res) {
   log.info('Getting traffic/time');
@@ -25,7 +27,7 @@ function routeTrafficTime(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getEgress({
+  let options = {
     start        : params.start,
     end          : params.end,
     account      : params.account,
@@ -34,9 +36,23 @@ function routeTrafficTime(req, res) {
     service_type : params.service_type,
     granularity  : params.granularity,
     dimension    : 'global'
-  }).then((trafficData) => {
+  };
 
-    res.jsend(trafficData || []);
+  db.getEgress(options).then((trafficData) => {
+    let optionsFinal       = db._getQueryOptions(options);
+    let finalTrafficData   = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes']));
+    let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
+    let filledTrafficData  = _.mapValues(groupedTrafficData, (data) => {
+      return dataUtils.buildContiguousTimeline(
+        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+      );
+    });
+
+    finalTrafficData = [];
+    _.mapValues(filledTrafficData, (data) => finalTrafficData = finalTrafficData.concat(data));
+    finalTrafficData = _.sortBy(finalTrafficData, 'timestamp');
+
+    res.jsend(finalTrafficData);
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
