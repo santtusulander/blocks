@@ -25,6 +25,7 @@ export class Main extends React.Component {
     this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.hideNotification = this.hideNotification.bind(this)
   }
   activatePurge(property) {
     return e => {
@@ -58,6 +59,9 @@ export class Main extends React.Component {
   showNotification(message) {
     this.props.uiActions.changeNotification(message)
     setTimeout(this.props.uiActions.changeNotification, 10000)
+  }
+  hideNotification() {
+    this.props.uiActions.changeNotification()
   }
   render() {
     let classNames = 'main-container';
@@ -103,7 +107,7 @@ export class Main extends React.Component {
           transitionAppear={true}
           transitionAppearTimeout={1000}>
           {this.props.notification ?
-            <Notification handleClose={this.props.uiActions.hideNotification}>
+            <Notification handleClose={this.hideNotification}>
               {this.props.notification}
             </Notification>
             : ''
