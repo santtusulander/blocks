@@ -57,9 +57,9 @@ const fakeCountries = Immutable.fromJS({
 
 const fakeCountryData = Immutable.fromJS([
   {
-    "country": "usa",
+    "code": "usa",
     "percent_total": 22,
-    "traffic": [
+    "detail": [
       {
         "bytes": 34857,
         "timestamp": "2016-01-01 01:00:00"
@@ -71,9 +71,9 @@ const fakeCountryData = Immutable.fromJS([
     ]
   },
   {
-    "country": "can",
+    "code": "can",
     "percent_total": 10,
-    "traffic": [
+    "detail": [
       {
         "bytes": 45767,
         "timestamp": "2016-01-01 01:00:00"
@@ -85,9 +85,9 @@ const fakeCountryData = Immutable.fromJS([
     ]
   },
   {
-    "country": "mex",
+    "code": "mex",
     "percent_total": 3,
-    "traffic": [
+    "detail": [
       {
         "bytes": 1111,
         "timestamp": "2016-01-01 01:00:00"
@@ -165,7 +165,7 @@ describe('AnalysisByLocation', () => {
         countries={fakeCountries}
         countryData={fakeCountryData}
         dataKey="bytes"
-        timelineKey="traffic"/>
+        timelineKey="detail"/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
     expect(paths.length).toBe(3)

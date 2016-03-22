@@ -66,7 +66,8 @@ describe('AnalysisTraffic', () => {
       <AnalysisTraffic
         fetching={true}
         byTime={Immutable.List()}
-        byCountry={Immutable.List()}/>
+        byCountry={Immutable.List()}
+        serviceTypes={Immutable.List()}/>
     );
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });

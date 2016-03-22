@@ -31,11 +31,17 @@ class AnalysisTraffic extends React.Component {
     })
   }
   render() {
+    const httpData = this.props.serviceTypes.includes('http') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'http')
+      : Immutable.List()
+    const httpsData = this.props.serviceTypes.includes('https') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'https')
+      : Immutable.List()
     return (
       <div className="analysis-traffic">
         <div className="total-egress">
           <h4>Total Egress Yesterday</h4>
-          <p>43,200 GB</p>
+          <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
@@ -43,7 +49,8 @@ class AnalysisTraffic extends React.Component {
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
               dataKey="bytes"
-              data={this.props.byTime.toJS()}
+              primaryData={httpData.toJS()}
+              secondaryData={httpsData.toJS()}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
             }
         </div>
@@ -53,7 +60,7 @@ class AnalysisTraffic extends React.Component {
             <div>Loading...</div> :
             <AnalysisByLocation
               dataKey="bytes"
-              timelineKey="traffic"
+              timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 2}
               countryData={this.props.byCountry}/>
@@ -72,11 +79,11 @@ class AnalysisTraffic extends React.Component {
           </thead>
           <tbody>
             {this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('traffic').reduce((total, traffic) => {
+              const totalBytes = country.get('detail').reduce((total, traffic) => {
                 return total + traffic.get('bytes')
               }, 0)
-              const startBytes = country.get('traffic').first().get('bytes')
-              const endBytes = country.get('traffic').last().get('bytes')
+              const startBytes = country.get('detail').first().get('bytes')
+              const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
               if(trending > 1) {
                 trending = numeral((trending - 1) * -1).format('0%')
@@ -86,7 +93,7 @@ class AnalysisTraffic extends React.Component {
               }
               return (
                 <tr key={i}>
-                  <td>{country.get('country')}</td>
+                  <td>{country.get('name')}</td>
                   <td>{numeral(totalBytes).format('0,0')}</td>
                   <td>{country.get('percent_total')}%</td>
                   <td>Chart</td>
@@ -105,7 +112,9 @@ AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  totalEgress: React.PropTypes.number
 }
 
 module.exports = AnalysisTraffic

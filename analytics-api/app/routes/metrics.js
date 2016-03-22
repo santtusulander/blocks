@@ -3,9 +3,9 @@
 require('express-jsend');
 let _         = require('lodash');
 let log       = require('../logger');
+let dataUtils = require('../data-utils');
 let db        = require('../db');
 let validator = require('../validator');
-let testData  = require('./metrics-data');
 
 function routeMetrics(req, res) {
   log.info('Getting metrics');
@@ -23,15 +23,26 @@ function routeMetrics(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getMetrics({
+  let options = {
     start   : params.start,
     end     : params.end,
     account : params.account,
     group   : params.group
-  }).spread((trafficData, historicalTrafficData, aggregateData, transferRateData) => {
+  };
+
+  db.getMetrics(options).spread((trafficData, historicalTrafficData, aggregateData) => {
     let responseData = [];
 
-    if (trafficData && historicalTrafficData && aggregateData && transferRateData) {
+    if (trafficData && historicalTrafficData && aggregateData) {
+      let optionsFinal    = db._getQueryOptions(options);
+      let startTime       = parseInt(optionsFinal.start);
+      let endTime         = parseInt(optionsFinal.end);
+      let duration        = endTime - startTime + 1;
+      let optionsHistoric = Object.assign({}, optionsFinal, {
+        start: startTime - duration,
+        end: startTime - 1
+      });
+
       // Set the selected level
       let selectedLevel = (params.group == null) ? 'group' : 'property';
 
@@ -45,54 +56,31 @@ function routeMetrics(req, res) {
         let levelTrafficData           = trafficData.filter((item) => item[selectedLevel] === level);
         let levelHistoricalTrafficData = historicalTrafficData.filter((item) => item[selectedLevel] === level);
         let levelAggregateData         = aggregateData.filter((item) => item[selectedLevel] === level)[0];
-        let levelTransferRateData      = transferRateData.filter((item) => item[selectedLevel] === level)[0];
+        let transferRates              = {
+          peak    : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_peak, 'hour'),
+          average : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_average, 'hour'),
+          lowest  : dataUtils.getTransferRatesFromBytes(levelAggregateData.bytes_lowest, 'hour')
+        };
 
         // Reformat traffic data
-        let levelTrafficDataFormatted = levelTrafficData.map((item) => {
-          return {
-            bytes: item.bytes,
-            timestamp: item.epoch_start
-          }
-        });
+        let levelTrafficDataFormatted = levelTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
+        let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
 
-        let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => {
-          return {
-            bytes: item.bytes,
-            timestamp: item.epoch_start
-          }
-        });
+        levelTrafficDataFormatted = dataUtils.buildContiguousTimeline(
+          levelTrafficDataFormatted, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+        );
+
+        levelHistoricalTrafficDataFormatted = dataUtils.buildContiguousTimeline(
+          levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity
+        );
 
         // Calculate historical variance
         let historicalVarianceData = [];
 
         // The historical data is from the duration of time prior to the
         // requested time range.
-        let duration               = parseInt(params.end) - parseInt(params.start) + 1;
-        let trafficBytes           = [];
-        let historicalTrafficBytes = [];
-        let matchIndex             = 0;
-
-        // Build arrays of bytes for requested traffic and historical traffic.
-        // Ensure we are operating on historical traffic that has the same
-        // number of records as the requested traffic.
-        _.forEach(levelTrafficDataFormatted, function(record){
-          // Match historical records based on timestamp
-          let matchingHistoricalRecord = levelHistoricalTrafficDataFormatted[matchIndex];
-          let isMatch = matchingHistoricalRecord && (parseInt(record.timestamp) - duration) === parseInt(matchingHistoricalRecord.timestamp);
-
-          trafficBytes.push(record.bytes);
-
-          // If a matching historical record exists, add it to the list
-          // Keep track of where we left off with matchIndex
-          if (matchingHistoricalRecord && isMatch) {
-            historicalTrafficBytes.push(matchingHistoricalRecord.bytes);
-            matchIndex++;
-
-          // Otherwise, push a zero
-          } else {
-            historicalTrafficBytes.push(0);
-          }
-        });
+        let trafficBytes           = levelTrafficDataFormatted.map((record) => record.bytes);
+        let historicalTrafficBytes = levelHistoricalTrafficDataFormatted.map((record) => record.bytes);
 
         let threshold              = 3;
         let numIterations          = Math.floor(trafficBytes.length / threshold);
@@ -105,8 +93,14 @@ function routeMetrics(req, res) {
           let numRecords               = (i === numIterations - 1) ? threshold + numOrphans : threshold;
           let start                    = i * threshold;
           let end                      = start + numRecords;
-          let averageTraffic           = _.mean(trafficBytes.slice(start, end));
-          let averageHistoricalTraffic = _.mean(historicalTrafficBytes.slice(start, end));
+          let trafficSlice             = trafficBytes.slice(start, end);
+          let historicalTrafficSlice   = historicalTrafficBytes.slice(start, end);
+          let trafficNulls             = trafficSlice.filter((bytes) => bytes === null);
+          let historicalTrafficNulls   = historicalTrafficSlice.filter((bytes) => bytes === null);
+          let averageTraffic           = _.mean(trafficSlice);
+          let averageHistoricalTraffic = _.mean(historicalTrafficSlice);
+          averageTraffic               = trafficNulls.length >= (threshold / 2) ? null : averageTraffic;
+          averageHistoricalTraffic     = historicalTrafficNulls.length >= (threshold / 2) ? null : averageHistoricalTraffic;
           let marginOfEquality         = averageHistoricalTraffic * percentConsideredEqual;
           let lowerEqualityLimit       = averageHistoricalTraffic - marginOfEquality;
           let upperEqualityLimit       = averageHistoricalTraffic + marginOfEquality;
@@ -118,23 +112,22 @@ function routeMetrics(req, res) {
             variance = 1;
           } else if (averageTraffic < averageHistoricalTraffic) {
             variance = -1;
+          } else if (averageTraffic === null && averageHistoricalTraffic === null) {
+            variance = null;
           }
 
           historicalVarianceData = historicalVarianceData.concat(_.fill(Array(numRecords), variance));
         }
 
+
         // Build the data object for a single level
         let levelData = {
           avg_cache_hit_rate: levelAggregateData.chit_ratio,
           avg_ttfb: `${Math.round(levelAggregateData.avg_fbl)} ms`,
-          transfer_rates: {
-            peak:    `${levelTransferRateData.transfer_rate_peak.toFixed(1)} Gbps`,
-            lowest:  `${levelTransferRateData.transfer_rate_lowest.toFixed(1)} Gbps`,
-            average: `${levelTransferRateData.transfer_rate_average.toFixed(1)} Gbps`
-          },
-          historical_variance: historicalVarianceData,
-          traffic: levelTrafficDataFormatted,
-          historical_traffic: levelHistoricalTrafficDataFormatted
+          transfer_rates: transferRates,
+          historical_variance: historicalVarianceData.reverse(),
+          traffic: levelTrafficDataFormatted.reverse(),
+          historical_traffic: levelHistoricalTrafficDataFormatted.reverse()
         };
 
         // Dynamically set a "selectedLevel" property on the level data

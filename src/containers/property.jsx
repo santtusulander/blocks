@@ -9,6 +9,7 @@ import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
 import * as purgeActionCreators from '../redux/modules/purge'
+import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -64,6 +65,7 @@ export class Property extends React.Component {
     this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.savePurge = this.savePurge.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -112,6 +114,10 @@ export class Property extends React.Component {
       targetUrl,
       this.props.activePurge.toJS()
     ).then(() => this.setState({purgeActive: false}))
+  }
+  showNotification(message) {
+    this.props.uiActions.changeNotification(message)
+    setTimeout(this.props.uiActions.changeNotification, 10000)
   }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
@@ -173,7 +179,7 @@ export class Property extends React.Component {
               <Col xs={6} className="property-analytics-summary">
                 <h3 className="has-btn">
                   Traffic Summary
-                  <span className="heading-suffix"> (last 30 days)</span>
+                  <span className="heading-suffix"> (last 28 days)</span>
                   <Link className="btn btn-primary btn-icon pull-right"
                     to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
                     <IconChart/>
@@ -182,7 +188,7 @@ export class Property extends React.Component {
 
                 <div ref="byTimeHolder">
                   <AnalysisByTime axes={false} padding={40}
-                    data={fakeRecentData}
+                    primaryData={fakeRecentData}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
                     height={this.state.byTimeWidth / 2} />
@@ -298,7 +304,8 @@ export class Property extends React.Component {
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
-          savePurge={this.savePurge}/> : ''}
+          savePurge={this.savePurge}
+          showNotification={this.showNotification}/> : ''}
       </PageContainer>
     )
   }
@@ -319,7 +326,8 @@ Property.propTypes = {
   location: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
-  purgeActions: React.PropTypes.object
+  purgeActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -333,7 +341,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
-    purgeActions: bindActionCreators(purgeActionCreators, dispatch)
+    purgeActions: bindActionCreators(purgeActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

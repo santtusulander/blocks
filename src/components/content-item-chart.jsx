@@ -15,9 +15,11 @@ class ContentItemChart extends React.Component {
     if (!this.props.primaryData) {
       return <div>Loading...</div>
     }
-    const primaryMax = d3.max(this.props.primaryData, d => d.bytes)
+    const primaryMax = d3.max(this.props.primaryData, d => {
+      return d.bytes || 0
+    })
     const secondaryMax = this.props.secondaryData.length ?
-      d3.max(this.props.secondaryData, d => d.bytes)
+      d3.max(this.props.secondaryData, d => d.bytes || 0)
       : primaryMax
     const barMaxHeight = this.props.barMaxHeight;
     const normalize = d3.scale.linear()
@@ -39,7 +41,7 @@ class ContentItemChart extends React.Component {
         /* If the value is 'center', set the X point to the center of the chart,
         otherwise the X is calculated with Cos using the known angle, radius
         (radius of the inner circle + bar height) and X of the circle's center */
-        return d === 'center' ? outerRadius :
+        return d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.cos(primaryAngle * radians)
           * (innerRadius + Number(d)) + outerRadius
       })
@@ -47,7 +49,7 @@ class ContentItemChart extends React.Component {
         /* If the value is 'center', set the Y point to the center of the chart,
         otherwise the Y is calculated with Sin using the known angle, radius
         (radius of the inner circle + bar height) and Y of the circle's center */
-        let y = d === 'center' ? outerRadius :
+        let y = d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.sin(primaryAngle * radians)
           * (innerRadius + Number(d)) + outerRadius
         // Increment the angle for the next point
@@ -59,13 +61,14 @@ class ContentItemChart extends React.Component {
       .x(function(d) {
         /* Calculate the X point with Cos using the known angle, radius (radius
         of the inner circle + bar height) and X of the circle's center */
-        return Math.cos(secondaryAngle * radians)
+        let x = isNaN(d) ? 0 : Math.cos(secondaryAngle * radians)
           * (innerRadius + Number(normalize(d.bytes))) + outerRadius
+        return x
       })
       .y(function(d) {
         /* Calculate the Y point with Sin using the known angle, radius (radius
         of the inner circle + bar height) and Y of the circle's center */
-        let y = Math.sin(secondaryAngle * radians)
+        let y = isNaN(d) ? 0 : Math.sin(secondaryAngle * radians)
           * (innerRadius + Number(normalize(d.bytes))) + outerRadius
         // Increment the angle for the next point
         secondaryAngle = secondaryAngle + increment
@@ -137,9 +140,16 @@ class ContentItemChart extends React.Component {
                   'center', which is translated in the d3 function in to coordinates */}
                   <path className="content-item-chart-line"
                     d={primaryLine(this.props.primaryData.reduce(
-                      (points, data) => {
-                        points.push(normalize(data.bytes))
-                        points.push('center')
+                      (points, data, i) => {
+                        if(!(i % 3)) {
+                          points.push('center')
+                          points.push(normalize(data.bytes || 0))
+                        }
+                        else {
+                          points[points.length-1] =
+                            parseInt(points[points.length-1]) +
+                            parseInt(normalize(data.bytes || 0))
+                        }
                         return points;
                       }, [])
                   )} />

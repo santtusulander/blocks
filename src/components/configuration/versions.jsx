@@ -28,7 +28,8 @@ export class ConfigurationVersions extends React.Component {
     }
   }
   render() {
-    if(this.props.fetching) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+      || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div>Loading...</div>
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
@@ -106,6 +107,7 @@ export class ConfigurationVersions extends React.Component {
 ConfigurationVersions.displayName = 'ConfigurationVersions'
 ConfigurationVersions.propTypes = {
   activate: React.PropTypes.func,
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeIndex: React.PropTypes.number,
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),

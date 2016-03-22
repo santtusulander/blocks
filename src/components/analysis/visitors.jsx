@@ -39,7 +39,7 @@ class AnalysisVisitors extends React.Component {
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
-              data={this.props.byTime.toJS()}
+              primaryData={this.props.byTime.toJS()}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
             }
         </div>
@@ -49,7 +49,7 @@ class AnalysisVisitors extends React.Component {
             <div>Loading...</div> :
             <AnalysisByLocation
             dataKey="uniq_vis"
-            timelineKey="visitors"
+            timelineKey="detail"
             width={this.state.byLocationWidth}
             height={this.state.byLocationWidth / 2}
             countryData={this.props.byCountry}/>
@@ -84,7 +84,7 @@ class AnalysisVisitors extends React.Component {
                 }
                 return (
                   <tr key={i}>
-                    <td>{country.get('country')}</td>
+                    <td>{country.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{country.get('percent_total')}%</td>
                     <td>Chart</td>
@@ -186,7 +186,8 @@ AnalysisVisitors.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = AnalysisVisitors
