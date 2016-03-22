@@ -44,7 +44,8 @@ export class PropertyAnalytics extends React.Component {
     this.props.visitorsActions.startFetching()
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
-      this.props.trafficActions.fetchByCountry(fetchOpts)
+      this.props.trafficActions.fetchByCountry(fetchOpts),
+      this.props.trafficActions.fetchTotalEgress(fetchOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -82,7 +83,8 @@ export class PropertyAnalytics extends React.Component {
               <AnalysisTraffic fetching={this.props.trafficFetching}
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
-                serviceTypes={this.props.serviceTypes}/>
+                serviceTypes={this.props.serviceTypes}
+                totalEgress={this.props.totalEgress}/>
               : ''}
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
@@ -103,6 +105,7 @@ PropertyAnalytics.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
@@ -119,6 +122,7 @@ PropertyAnalytics.propTypes = {
 function mapStateToProps(state) {
   return {
     serviceTypes: state.ui.get('analysisServiceTypes'),
+    totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
