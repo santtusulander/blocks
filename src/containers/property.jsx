@@ -8,6 +8,7 @@ import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
 import * as purgeActionCreators from '../redux/modules/purge'
+import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
@@ -16,40 +17,6 @@ import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-
-const fakeRecentData = [
-  {timestamp: new Date("2016-01-01"), bytes: 49405, requests: 943},
-  {timestamp: new Date("2016-01-02"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-03"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-04"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-01-05"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-06"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-07"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-08"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-01-09"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-01-10"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-11"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-01-12"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-01-13"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-17"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-21"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-01-24"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-01-25"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-01-26"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-27"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-28"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-29"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-30"), bytes: 23456, requests: 233},
-  {timestamp: new Date("2016-01-31"), bytes: 24675, requests: 435}
-]
 
 export class Property extends React.Component {
   constructor(props) {
@@ -76,6 +43,16 @@ export class Property extends React.Component {
       this.props.params.group,
       this.props.location.query.name
     )
+    this.props.trafficActions.startFetching()
+    Promise.all([
+      this.props.trafficActions.fetchByTime({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        property: this.props.location.query.name,
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X')
+      })
+    ]).then(this.props.trafficActions.finishFetching)
   }
   componentDidMount() {
     this.measureContainers()
@@ -200,7 +177,7 @@ export class Property extends React.Component {
 
                 <div ref="byTimeHolder">
                   <AnalysisByTime axes={false} padding={40}
-                    primaryData={fakeRecentData}
+                    primaryData={this.props.trafficByTime.toJS()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
                     height={this.state.byTimeWidth / 2} />
@@ -340,6 +317,9 @@ Property.propTypes = {
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  trafficActions: React.PropTypes.object,
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
+  trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object
 }
 
@@ -349,6 +329,8 @@ function mapStateToProps(state) {
     activePurge: state.purge.get('activePurge'),
     fetching: state.host.get('fetching'),
     properties: state.host.get('allHosts'),
+    trafficByTime: state.traffic.get('byTime'),
+    trafficFetching: state.traffic.get('fetching')
   };
 }
 
@@ -356,6 +338,7 @@ function mapDispatchToProps(dispatch) {
   return {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
