@@ -21,7 +21,8 @@ function routeTrafficCountry(req, res) {
     group        : {required: false, type: 'ID'},
     property     : {required: false, type: 'Property'},
     service_type : {required: false, type: 'Service'},
-    granularity  : {required: false, type: 'Granularity'}
+    granularity  : {required: false, type: 'Granularity'},
+    max_countries : {required: false, type: 'Number'}
   });
 
   if (errors) {
@@ -40,13 +41,14 @@ function routeTrafficCountry(req, res) {
   };
 
   db.getEgressWithHistorical(options).spread((trafficData, historicalTrafficData) => {
+    let responseData = {
+      total: 0,
+      countries: []
+    };
+
     if (trafficData && historicalTrafficData) {
       let optionsFinal = db._getQueryOptions(options);
-      let responseData = {
-        total: 0,
-        countries: []
-      };
-
+      let maxCountries = params.max_countries || 5;
       let allCountryTrafficData           = _.groupBy(trafficData, 'country');
       let allHistoricalCountryTrafficData = _.groupBy(historicalTrafficData, 'country');
 
@@ -112,10 +114,14 @@ function routeTrafficCountry(req, res) {
         countryRecord.percent_total = parseFloat((countryRecord.total / responseData.total).toFixed(4));
       });
 
-      res.jsend(responseData);
+      // Sort the countries by their total in descending order
+      responseData.countries = _.sortBy(responseData.countries, 'total').reverse();
+
+      // Only include the number of countries specified by maxCountries
+      responseData.countries = _.take(responseData.countries, maxCountries);
     }
 
-    // res.jsend(testData);
+    res.jsend(responseData);
 
   }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');

@@ -22,6 +22,7 @@ export class Analyses extends React.Component {
     this.handleOnFocus = this.handleOnFocus.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
     this.handleTimespanChange = this.handleTimespanChange.bind(this)
+    this.toggleServiceType = this.toggleServiceType.bind(this)
   }
   handleStartDateChange(date) {
     let endDate = this.props.endDate
@@ -74,6 +75,11 @@ export class Analyses extends React.Component {
     this.setState({
       activeFilter: value
     })
+  }
+  toggleServiceType(type) {
+    return () => {
+      this.props.toggleServiceType(type)
+    }
   }
   render() {
     return (
@@ -157,8 +163,12 @@ export class Analyses extends React.Component {
           SERVICE: MEDIA DELIVERY
         </div>
         <div className="sidebar-content">
-          <Input type="checkbox" label="HTTP" />
-          <Input type="checkbox" label="HTTPS" />
+          <Input type="checkbox" label="HTTP"
+            checked={this.props.serviceTypes.includes('http')}
+            onChange={this.toggleServiceType('http')}/>
+          <Input type="checkbox" label="HTTPS"
+            checked={this.props.serviceTypes.includes('https')}
+            onChange={this.toggleServiceType('https')}/>
         </div>
       </div>
     );
@@ -175,8 +185,10 @@ Analyses.propTypes = {
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
   propertyName: React.PropTypes.string,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
-  theme: React.PropTypes.string
+  theme: React.PropTypes.string,
+  toggleServiceType: React.PropTypes.func
 }
 
 function mapStateToProps(state) {

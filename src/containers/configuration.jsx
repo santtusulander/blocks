@@ -249,8 +249,6 @@ export class Configuration extends React.Component {
                 config={activeConfig}
                 changeValue={this.changeValue}
                 saveChanges={this.saveActiveHostChanges}
-                activeAccount={this.props.activeAccount}
-                activeGroup={this.props.activeGroup}
                 location={this.props.location}/>
               : null}
 

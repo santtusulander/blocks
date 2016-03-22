@@ -70,11 +70,11 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               this.props.byCountry.map((country, i) => {
-                const totalVis = country.get('detail').reduce((total, visitors) => {
+                const totalVis = country.get('visitors').reduce((total, visitors) => {
                   return total + visitors.get('uniq_vis')
                 }, 0)
-                const startVis = country.get('detail').first().get('uniq_vis')
-                const endVis = country.get('detail').last().get('uniq_vis')
+                const startVis = country.get('visitors').first().get('uniq_vis')
+                const endVis = country.get('visitors').last().get('uniq_vis')
                 let trending = startVis / endVis
                 if(trending > 1) {
                   trending = numeral((trending - 1) * -1).format('0%')
@@ -186,7 +186,8 @@ AnalysisVisitors.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = AnalysisVisitors
