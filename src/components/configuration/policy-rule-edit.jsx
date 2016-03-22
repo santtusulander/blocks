@@ -186,8 +186,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         <Modal.Header>
           <h1>Add Policy</h1>
           <p>
-            {this.props.activeAccount.get('name')}/
-            {this.props.activeGroup.get('name')}/
             {this.props.location.query.name}
           </p>
         </Modal.Header>
@@ -316,8 +314,6 @@ ConfigurationPolicyRuleEdit.displayName = 'ConfigurationPolicyRuleEdit'
 ConfigurationPolicyRuleEdit.propTypes = {
   activateMatch: React.PropTypes.func,
   activateSet: React.PropTypes.func,
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeMatchPath: React.PropTypes.array,
   activeSetPath: React.PropTypes.array,
   changeActiveRuleType: React.PropTypes.func,
