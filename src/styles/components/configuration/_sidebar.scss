@@ -127,11 +127,14 @@
     }
 
     .modal-header {
+      background: transparent;
 
-      .dark-theme &,
-      .light-theme & {
-        background: transparent;
+      .dark-theme & {
         border-bottom: 1px solid rgba($pale-blue, 0.2);
+      }
+
+      .light-theme & {
+        border-bottom: 1px solid rgba($white, 0.2);
       }
     }
   }

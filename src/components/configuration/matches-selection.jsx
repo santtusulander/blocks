@@ -32,26 +32,6 @@ class MatchesSelection extends React.Component {
                 Directory Path
               </a>
             </li>
-            {/*<li>
-              <a href="#" onClick={this.setMatchField(null)}>
-                MIME Type NEEDS_API
-              </a>
-            </li>*/}
-            <li>
-              <a href="#" onClick={this.setMatchField(null)}>
-                File Extension NEEDS_API
-              </a>
-            </li>
-            <li>
-              <a href="#" onClick={this.setMatchField(null)}>
-                File Name NEEDS_API
-              </a>
-            </li>
-            <li>
-              <a href="#" onClick={this.setMatchField(null)}>
-                File Type NEEDS_API
-              </a>
-            </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_query')}>
                 Query String
@@ -72,6 +52,26 @@ class MatchesSelection extends React.Component {
                 IP Address NEEDS_API
               </a>
             </li>*/}
+            {/*<li>
+              <a href="#" onClick={this.setMatchField(null)}>
+                MIME Type NEEDS_API
+              </a>
+            </li>*/}
+            <li>
+              <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                File Extension
+              </a>
+            </li>
+            <li>
+              <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                File Name
+              </a>
+            </li>
+            <li>
+              <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                File Type
+              </a>
+            </li>
           </ul>
         </Modal.Body>
       </div>
