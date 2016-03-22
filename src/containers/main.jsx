@@ -70,7 +70,7 @@ export class Main extends React.Component {
           this.props.activeGroup.get('id'),
           purgeProperty
         ).then(action => {
-          this.submitPurge(Immutable.Map(action.payload))
+          this.submitPurge(Immutable.fromJS(action.payload))
         })
       }
       else {
