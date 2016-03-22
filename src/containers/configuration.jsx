@@ -283,7 +283,7 @@ export class Configuration extends React.Component {
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1>Publish Version</h1>
-              <p>Lorem ipsum dolor</p>
+              <p>{this.props.location.query.name}</p>
             </Modal.Header>
             <Modal.Body>
               <ConfigurationPublishVersion
