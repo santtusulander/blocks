@@ -144,7 +144,8 @@ export class Configuration extends React.Component {
     setTimeout(this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+      || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
     const activeConfig = this.getActiveConfig()

@@ -28,7 +28,8 @@ export class ConfigurationVersions extends React.Component {
     }
   }
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+      || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div>Loading...</div>
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
