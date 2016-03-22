@@ -10,11 +10,13 @@ const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
+const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 
 const emptyTraffic = Immutable.Map({
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
-  fetching: false
+  fetching: false,
+  totalEgress: 0
 })
 
 const qsBuilder = ({
@@ -70,6 +72,18 @@ export default handleActions({
       })
     }
   },
+  TRAFFIC_TOTAL_EGRESS_FETCHED: {
+    next(state, action) {
+      return state.merge({
+        totalEgress: Immutable.fromJS(action.payload.data.bytes)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        totalEgress: Immutable.List()
+      })
+    }
+  },
   TRAFFIC_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
@@ -91,6 +105,15 @@ export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
 
 export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase}/traffic/country${qsBuilder(opts)}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/traffic/total${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
