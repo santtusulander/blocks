@@ -6,6 +6,7 @@ import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -43,6 +44,7 @@ export class Configuration extends React.Component {
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
     this.togglePublishModal = this.togglePublishModal.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -72,13 +74,19 @@ export class Configuration extends React.Component {
     )
   }
   saveActiveHostChanges() {
+    this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
       this.props.location.query.name,
       this.props.activeHost.toJS()
-    )
+    ).then((action) => {
+      this.setState({
+        activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
+      })
+      this.showNotification('Configurations succesfully saved')
+    })
   }
   activateTab(tabName) {
     this.setState({activeTab: tabName})
@@ -131,8 +139,12 @@ export class Configuration extends React.Component {
   togglePublishModal() {
     this.setState({showPublishModal: !this.state.showPublishModal})
   }
+  showNotification(message) {
+    this.props.uiActions.changeNotification(message)
+    setTimeout(this.props.uiActions.changeNotification, 10000)
+  }
   render() {
-    if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
     const activeConfig = this.getActiveConfig()
@@ -149,7 +161,8 @@ export class Configuration extends React.Component {
             propertyName={this.props.location.query.name}
             activeIndex={this.state.activeConfig}
             addVersion={this.cloneActiveVersion}
-            status={this.props.activeHost.get('status')}/>
+            status={this.props.activeHost.get('status')}
+            activeHost={this.props.activeHost}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -259,6 +272,7 @@ export class Configuration extends React.Component {
             currentConfig={activeConfig}
             originalConfig={this.state.activeConfigOriginal}
             saveConfig={this.saveActiveHostChanges}
+            saving={this.props.fetching}
             />
 
         </Content>
@@ -290,7 +304,8 @@ Configuration.propTypes = {
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  uiActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -302,7 +317,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    hostActions: bindActionCreators(hostActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

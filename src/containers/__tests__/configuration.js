@@ -17,9 +17,17 @@ function hostActionsMaker() {
   return {
     startFetching: jest.genMockFunction(),
     fetchHost: jest.genMockFunction(),
-    updateHost: jest.genMockFunction(),
+    updateHost: jest.genMockFunction().mockImplementation(() => {
+      return {then: cb => cb({payload: {}})}
+    }),
     changeActiveHost: jest.genMockFunction(),
     deleteConfiguration: jest.genMockFunction()
+  }
+}
+
+function uiActionsMaker() {
+  return {
+    changeNotification: jest.genMockFunction()
   }
 }
 
@@ -222,6 +230,7 @@ describe('Configuration', () => {
   it('should exist', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
     expect(TestUtils.isCompositeComponent(config)).toBeTruthy();
@@ -434,10 +443,12 @@ describe('Configuration', () => {
 
   it('should save changes to the host', () => {
     const hostActions = hostActionsMaker()
+    const uiActions = uiActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams} location={fakeLocation}
+        uiActions={uiActions}/>
     );
     config.saveActiveHostChanges()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
