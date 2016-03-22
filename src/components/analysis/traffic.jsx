@@ -41,7 +41,7 @@ class AnalysisTraffic extends React.Component {
       <div className="analysis-traffic">
         <div className="total-egress">
           <h4>Total Egress Yesterday</h4>
-          <p>43,200 GB</p>
+          <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
@@ -113,7 +113,8 @@ AnalysisTraffic.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  totalEgress: React.PropTypes.number
 }
 
 module.exports = AnalysisTraffic
