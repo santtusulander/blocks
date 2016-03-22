@@ -30,40 +30,64 @@ class ActionsSelection extends React.Component {
         <Modal.Body>
           <ul className="condition-selection list-unstyled">
             <li>
-              <a href="#" onClick={this.setSetKey('cache_control')}>Cache</a>
+              <a href="#" onClick={this.setSetKey('cache_control')}>
+                Cache
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey('cache_name')}>Cache Key - Query String</a>
+              <a href="#" onClick={this.setSetKey('cache_name')}>
+                Cache Key - Query String
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Redirection</a>
+              <a href="#" onClick={this.setSetKey('header')}>
+                Header
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Origin Hostname</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Redirection
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Compression</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Origin Hostname
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Path</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Compression
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Query String</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Path
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey('header')}>Header</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Query String
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Remove Vary</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Remove Vary
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>Allow/Block</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                Allow/Block
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>POST Support</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                POST Support
+              </a>
             </li>
             <li>
-              <a href="#" onClick={this.setSetKey(null)}>CORS</a>
+              <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                CORS
+              </a>
             </li>
           </ul>
         </Modal.Body>
