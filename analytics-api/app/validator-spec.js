@@ -256,3 +256,38 @@ describe('The granularity validator', function() {
     expect(result.indexOf('Error')).toBe(0);
   });
 });
+
+
+describe('The number validator', function() {
+  it('should return null for a valid number', function() {
+    let data = {
+      key: 'account',
+      value: 3,
+      required: true
+    };
+    let result = validator._validateValue('number', data);
+    expect(result).toBe(null);
+  });
+
+  it('should return an error message for an invalid number', function() {
+    let data = {
+      key: 'account',
+      value: '1a',
+      required: true
+    };
+    let result = validator._validateValue('number', data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+
+  it('should return an error message for an invalid number, even if the parameter is not required', function() {
+    let data = {
+      key: 'group',
+      value: '1a',
+      required: false
+    };
+    let result = validator._validateValue('number', data);
+    expect(typeof result).toBe('string');
+    expect(result.indexOf('Error')).toBe(0);
+  });
+});
