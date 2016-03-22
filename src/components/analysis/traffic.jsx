@@ -1,5 +1,6 @@
 import React from 'react'
 import numeral from 'numeral'
+import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisByTime from './by-time'
@@ -71,9 +72,9 @@ class AnalysisTraffic extends React.Component {
           <thead>
             <tr>
               <th>Country</th>
-              <th>Traffic GB</th>
+              <th>Traffic</th>
               <th>% of Traffic</th>
-              <th>Period Trend</th>
+              <th width="300">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -85,18 +86,45 @@ class AnalysisTraffic extends React.Component {
               const startBytes = country.get('detail').first().get('bytes')
               const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
-              if(trending > 1) {
+              if(isNaN(trending)) {
+                trending = 'N/A'
+              }
+              else if(trending > 1) {
                 trending = numeral((trending - 1) * -1).format('0%')
               }
               else {
                 trending = numeral(trending).format('+0%');
               }
+              let formattedBytes = numeral(totalBytes / 100000000).format('0,0')+' GB'
+              if(totalBytes < 1000) {
+                formattedBytes = numeral(totalBytes).format('0,0')+' B'
+
+              }
+              else if(totalBytes < 1000000) {
+                formattedBytes = numeral(totalBytes / 1000).format('0,0')+' KB'
+
+              }
+              else if(totalBytes < 100000000) {
+                formattedBytes = numeral(totalBytes / 1000000).format('0,0')+' MB'
+
+              }
               return (
                 <tr key={i}>
                   <td>{country.get('name')}</td>
-                  <td>{numeral(totalBytes).format('0,0')}</td>
-                  <td>{country.get('percent_total')}%</td>
-                  <td>Chart</td>
+                  <td>{formattedBytes}</td>
+                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                  <td width="300">
+                    <AnalysisByTime axes={false} padding={0}
+                      primaryData={country.get('detail').map(datapoint => {
+                        return datapoint.set(
+                          'timestamp',
+                          moment(datapoint.get('timestamp'), 'X').toDate()
+                        )
+                      }).toJS()}
+                      dataKey='bytes'
+                      width={300}
+                      height={50} />
+                  </td>
                   <td>{trending}</td>
                 </tr>
               )
