@@ -234,7 +234,8 @@ export class Configuration extends React.Component {
               <ConfigurationPolicies
                 config={activeConfig}
                 changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
+                saveChanges={this.saveActiveHostChanges}
+                location={this.props.location}/>
               : null}
 
             {this.state.activeTab === 'performance' ?
