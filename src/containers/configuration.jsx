@@ -247,7 +247,10 @@ export class Configuration extends React.Component {
               <ConfigurationPolicies
                 config={activeConfig}
                 changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
+                saveChanges={this.saveActiveHostChanges}
+                activeAccount={this.props.activeAccount}
+                activeGroup={this.props.activeGroup}
+                location={this.props.location}/>
               : null}
 
             {this.state.activeTab === 'performance' ?
@@ -300,6 +303,8 @@ export class Configuration extends React.Component {
 
 Configuration.displayName = 'Configuration'
 Configuration.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
@@ -310,6 +315,8 @@ Configuration.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching')
   };
