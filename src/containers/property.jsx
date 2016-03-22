@@ -2,8 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, MenuItem,
-  Row, Table } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Dropdown, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
 
@@ -59,13 +58,15 @@ export class Property extends React.Component {
     this.state = {
       byLocationWidth: 0,
       byTimeWidth: 0,
-      purgeActive: false
+      purgeActive: false,
+      propertyMenuOpen: false
     }
 
     this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.savePurge = this.savePurge.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -119,6 +120,9 @@ export class Property extends React.Component {
     this.props.uiActions.changeNotification(message)
     setTimeout(this.props.uiActions.changeNotification, 10000)
   }
+  togglePropertyMenu() {
+    this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
@@ -135,15 +139,23 @@ export class Property extends React.Component {
               </ButtonToolbar>
 
               <p>PROPERTY SUMMARY</p>
-              <Dropdown id="dropdown-content">
+              <Dropdown id="dropdown-content"
+                open={this.state.propertyMenuOpen}
+                onToggle={this.togglePropertyMenu}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{this.props.location.query.name}</h1>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <MenuItem eventKey="1">propertyname2.com</MenuItem>
-                  <MenuItem eventKey="2">propertyname3.com</MenuItem>
-                  <MenuItem eventKey="3">propertyname4.com</MenuItem>
-                  <MenuItem eventKey="4">propertyname5.com</MenuItem>
+                  {this.props.properties.map(
+                    (property, i) =>
+                      property !== this.props.location.query.name ?
+                      <li key={i}>
+                        <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
+                          onClick={this.togglePropertyMenu}>
+                          {property}
+                        </Link>
+                      </li> : null
+                  ).toJS()}
                 </Dropdown.Menu>
               </Dropdown>
             </Row>
@@ -326,6 +338,7 @@ Property.propTypes = {
   location: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
@@ -334,7 +347,8 @@ function mapStateToProps(state) {
   return {
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
-    fetching: state.host.get('fetching')
+    fetching: state.host.get('fetching'),
+    properties: state.host.get('allHosts'),
   };
 }
 
