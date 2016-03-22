@@ -184,28 +184,19 @@ export class AnalysisByLocation extends React.Component {
               //   this.props.activeCountry === id) {
               //   hideCountry = true
               // }
-              const data = this.props.countryData.find(
+              const dataIndex = this.props.countryData.findIndex(
                 data => data.get('code').toLowerCase() === id
               )
-              let classes = 'country'
+              let classes = `country country-${dataIndex}`
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              let trending = '0'
-              if(data) {
-                const startBytes = data.get(this.props.timelineKey).first()
-                  .get(this.props.dataKey)
-                const endBytes = data.get(this.props.timelineKey).last()
-                  .get(this.props.dataKey)
-                trending = startBytes / endBytes
-                if(trending > 1) {
-                  trending = (trending - 1) * -1
-                }
-                classes += ' ' + getTrendClass(trending)
-              }
+              const trending = numeral(
+                this.props.countryData.get(dataIndex).get('percent_change') || 0
+              ).format('+0%')
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, numeral(trending).format('+0%'))}
+                  onMouseMove={this.moveMouse(country.id, trending)}
                   className={classes}
                   style={pathStyle}/>
               )
