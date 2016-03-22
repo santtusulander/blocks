@@ -26,6 +26,8 @@
       background-color: rgba($black, 0.1);
     }
 
+    // scss-lint:disable SelectorDepth NestingDepth
+    // Need to be very specific here
     .analysis-by-time {
 
       .dark-theme & {
