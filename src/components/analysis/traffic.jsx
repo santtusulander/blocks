@@ -52,7 +52,7 @@ class AnalysisTraffic extends React.Component {
               dataKey="bytes"
               primaryData={httpData.toJS()}
               secondaryData={httpsData.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -63,7 +63,7 @@ class AnalysisTraffic extends React.Component {
               dataKey="bytes"
               timelineKey="detail"
               width={this.state.byLocationWidth}
-              height={this.state.byLocationWidth / 2}
+              height={this.state.byLocationWidth / 1.6}
               countryData={this.props.byCountry}/>
           }
         </div>

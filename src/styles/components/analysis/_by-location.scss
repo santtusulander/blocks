@@ -2,7 +2,7 @@
 // ====================
 
 .analysis-by-location {
-  overflow: hidden;
+  position: relative;
 
   .chart {
     position: relative;
@@ -60,7 +60,7 @@
   }
 
   .chart-tooltip {
-    margin-top: -130px;
-    margin-left: -340px;
+    margin-top: 50px;
+    margin-left: 50px;
   }
 }

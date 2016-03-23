@@ -109,12 +109,13 @@ export class AnalysisByLocation extends React.Component {
   // }
   moveMouse(country, percent) {
     return e => {
+      const bounds = this.refs.chart.getBoundingClientRect()
       e.stopPropagation()
       this.setState({
         tooltipCountry: country,
         tooltipPercent: percent,
-        tooltipX: e.pageX,
-        tooltipY: e.pageY
+        tooltipX: e.pageX - bounds.left,
+        tooltipY: e.pageY - (bounds.top + window.pageYOffset)
       })
     }
   }
@@ -123,8 +124,8 @@ export class AnalysisByLocation extends React.Component {
       return <div>Loading...</div>
     }
 
-    const projection = d3.geo.mercator().scale(150)
-      .translate([this.props.width / 2, this.props.height / 1.5])
+    const projection = d3.geo.mercator().scale(this.props.width / 7)
+      .translate([this.props.width / 2, this.props.height / 1.45])
     const path = d3.geo.path().projection(projection)
     const countries = topojson.feature(
       this.props.countries.toJS(),
@@ -171,12 +172,13 @@ export class AnalysisByLocation extends React.Component {
     }
 
     return (
-      <div className='analysis-by-location'>
-        <div className="chart">
+      <div className="analysis-by-location">
+        <div className="chart" ref="chart">
           <svg
             width={this.props.width}
             height={this.props.height}
-            onMouseMove={this.moveMouse(null, null)}>
+            onMouseMove={this.moveMouse(null, null)}
+            onMouseLeave={this.moveMouse(null, null)}>
             {countries.map((country, i) => {
               // let hideCountry = false
               const id = country.id.toLowerCase()
