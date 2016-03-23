@@ -40,7 +40,7 @@ class AnalysisVisitors extends React.Component {
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -51,7 +51,7 @@ class AnalysisVisitors extends React.Component {
             dataKey="uniq_vis"
             timelineKey="detail"
             width={this.state.byLocationWidth}
-            height={this.state.byLocationWidth / 2}
+            height={this.state.byLocationWidth / 1.6}
             countryData={this.props.byCountry}/>
           }
         </div>

@@ -123,8 +123,8 @@ export class AnalysisByLocation extends React.Component {
       return <div>Loading...</div>
     }
 
-    const projection = d3.geo.mercator().scale(150)
-      .translate([this.props.width / 2, this.props.height / 1.5])
+    const projection = d3.geo.mercator().scale(this.props.width / 7)
+      .translate([this.props.width / 2, this.props.height / 1.45])
     const path = d3.geo.path().projection(projection)
     const countries = topojson.feature(
       this.props.countries.toJS(),
