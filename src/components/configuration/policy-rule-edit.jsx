@@ -158,7 +158,24 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     return () => this.props.activateSet(newPath)
   }
   cancelChanges() {
-    this.props.changeValue([], this.state.originalConfig)
+    // If this started out as an empty rule, remove it
+    if(Immutable.is(
+      this.state.originalConfig.getIn(this.props.rulePath),
+      Immutable.fromJS(
+        {match: {field: null, cases: [['',[]]]}}
+      )
+    )) {
+      const parentPath = this.props.rulePath.slice(0, -1)
+      const newConfig = this.state.originalConfig.setIn(
+        parentPath,
+        this.state.originalConfig.getIn(parentPath)
+          .splice(this.props.rulePath[this.props.rulePath.length - 1], 1)
+      )
+      this.props.changeValue([], newConfig)
+    }
+    else {
+      this.props.changeValue([], this.state.originalConfig)
+    }
     this.props.hideAction()
   }
   submitForm(e) {
