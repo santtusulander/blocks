@@ -152,7 +152,7 @@ const fakeHost = Immutable.fromJS({
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 2
           },
           "default_policy": {"policy_rules": [
             {
@@ -473,7 +473,7 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations.length).toBe(2)
   })
 
-  it("should change a version's environment", () => {
+  it("should change a version's deployment_status", () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
@@ -486,6 +486,6 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
-      .configuration_status.environment).toBe(1)
+      .configuration_status.deployment_status).toBe(1)
   })
 })
