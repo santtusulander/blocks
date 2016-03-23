@@ -512,3 +512,69 @@ describe('db.getEgressWithHistorical', function() {
   });
 
 });
+
+
+describe('db.getVisitors', function() {
+  beforeEach(function() {
+    spyOn(db, '_getQueryOptions').and.callThrough();
+    spyOn(db, '_getAccountLevel').and.callThrough();
+    spyOn(db, '_executeQuery').and.stub();
+  });
+
+  it('should return hourly data for a property', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com'
+    };
+
+    db.getVisitors(options);
+
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+    expect(db._getAccountLevel.calls.any()).toBe(true);
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('property_global_hour');
+  });
+
+  it('should select the country field if the dimension option was passed as country', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      dimension: 'country'
+    };
+
+    db.getVisitors(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(/country,/.test(query)).toBe(true);
+  });
+
+  it('should not sum uniq_vis on non-traffic tables', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      dimension: 'browser'
+    };
+
+    db.getVisitors(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(/sum\(uniq_vis\) AS uniq_vis/.test(query)).toBe(false);
+    expect(/uniq_vis/.test(query)).toBe(true);
+  });
+
+});

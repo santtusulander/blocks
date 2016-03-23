@@ -406,6 +406,76 @@ class AnalyticsDB {
       })
       .catch((err) => log.error(err));
   }
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getVisitors(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal);
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let grouping         = [];
+    let queryOptions     = [];
+    let selectedDimension;
+
+    // Build the SELECT clause
+    // Include the dimension option as a column to be selected unless it's
+    // undefined or the default value of 'global'
+    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
+      selectedDimension = `${optionsFinal.dimension},\n        `;
+    } else {
+      selectedDimension = '';
+    }
+
+    let isTrafficTable = !!(optionsFinal.dimension === 'country' || optionsFinal.dimension === 'global');
+
+    // Build the table name
+    let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    isTrafficTable && conditions.push('AND flow_dir = \'out\'');
+
+    // Build the GROUP BY clause
+    selectedDimension && grouping.push(selectedDimension);
+    grouping.push('epoch_start');
+    grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        ${accountLevelData.select},
+        ${selectedDimension}${isTrafficTable ? 'sum(uniq_vis) AS uniq_vis' : 'uniq_vis'}
+      FROM ??
+      WHERE epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join('')}
+      ORDER BY
+        ${selectedDimension}epoch_start,
+        ${accountLevelData.field};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
 }
 
 module.exports = new AnalyticsDB(configs);

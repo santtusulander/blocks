@@ -98,12 +98,16 @@ class DataUtils {
    * So, it's important that all the objects in the data array have the same
    * properties. The first record in the data array will be used as a template.
    *
-   * @param {array}  data        Array of traffic records
-   * @param {number} start       Start of the time range as a UTC UNIX timestamp
-   * @param {number} end         End of the time range as a UTC UNIX timestamp
-   * @param {string} granularity The time granularity (5min, hour, day, or month)
+   * @param  {array}  data         Array of traffic records
+   * @param  {number} start        Start of the time range as a UTC UNIX timestamp
+   * @param  {number} end          End of the time range as a UTC UNIX timestamp
+   * @param  {string} granularity  The time granularity (5min, hour, day, or month)
+   * @param  {string} nullProperty The property of the object to set as null
+   *                               e.g. 'bytes' or 'uniq_vis'
+   * @return {array}               A new array with missing records populated
+   *                               by null records.
    */
-  buildContiguousTimeline(data, start, end, granularity) {
+  buildContiguousTimeline(data, start, end, granularity, nullProperty) {
     let finalData   = [];
     let interval    = granularity === '5min' ? 5 : 1;
     let unit        = granularity === '5min' ? 'minutes' : granularity;
@@ -111,6 +115,9 @@ class DataUtils {
     let endTime     = moment.unix(end).utc();
     let currentTime = moment(startTime);
     let dataGrouped = _.groupBy(data, 'timestamp');
+    let nullRecord  = {};
+
+    nullRecord[nullProperty] = null;
 
     while (currentTime.isBefore(endTime)) {
       let record;
@@ -123,10 +130,8 @@ class DataUtils {
 
       // ...otherwise, push a null record
       } else {
-        record = Object.assign({}, recordTemplate, {
-          bytes: null,
-          timestamp: parseFloat(currentTime.format('X'))
-        });
+        nullRecord.timestamp = parseFloat(currentTime.format('X'));
+        record = Object.assign({}, recordTemplate, nullRecord);
       }
 
       // Push the record and increment currentTime
