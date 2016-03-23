@@ -73,12 +73,12 @@ describe('dataUtils.buildContiguousTimeline', function() {
   ];
 
   it('should return the same number of records if there were no holes in the data', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, 'day', 'bytes');
     expect(data.length).toBe(1);
   });
 
   it('should return extra records if there were holes in the leading edge of the data', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan31Start, feb1End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan31Start, feb1End, 'day', 'bytes');
     expect(data.length).toBe(2);
     expect(data[0].timestamp).toBe(jan31Start);
     expect(data[0].bytes).toBe(null);
@@ -87,7 +87,7 @@ describe('dataUtils.buildContiguousTimeline', function() {
   });
 
   it('should return extra records if there were holes in the trailing edge of the data', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb2End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb2End, 'day', 'bytes');
     expect(data.length).toBe(2);
     expect(data[0].timestamp).toBe(feb1Start);
     expect(data[0].bytes).toBe(10);
@@ -96,7 +96,7 @@ describe('dataUtils.buildContiguousTimeline', function() {
   });
 
   it('should return extra records if there were holes in the middle of the data', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDayMissingMiddle, feb1Start, feb3End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDayMissingMiddle, feb1Start, feb3End, 'day', 'bytes');
     expect(data.length).toBe(3);
     expect(data[0].timestamp).toBe(feb1Start);
     expect(data[0].bytes).toBe(10);
@@ -108,34 +108,34 @@ describe('dataUtils.buildContiguousTimeline', function() {
 
   it('should retain properties besides timestamp and bytes when pushing extra records', function() {
     let dataDaySingleModified = [Object.assign({}, dataDaySingle[0], {whatever: true})];
-    let data = dataUtils.buildContiguousTimeline(dataDaySingleModified, feb1Start, feb2End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingleModified, feb1Start, feb2End, 'day', 'bytes');
     expect(data.length).toBe(2);
     expect(data[0].whatever).toBe(true);
     expect(data[1].whatever).toBe(true);
   });
 
   it('should return 288 records per day for the 5min granularity', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, '5min');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, '5min', 'bytes');
     expect(data.length).toBe(288);
   });
 
   it('should return 24 records per day for the hour granularity', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, 'hour');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb1End, 'hour', 'bytes');
     expect(data.length).toBe(24);
   });
 
   it('should return 31 records for Jan 2016 for the day granularity', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan1Start, jan31End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan1Start, jan31End, 'day', 'bytes');
     expect(data.length).toBe(31);
   });
 
   it('should return 29 records for Feb 2016 for the day granularity', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb29End, 'day');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, feb1Start, feb29End, 'day', 'bytes');
     expect(data.length).toBe(29);
   });
 
   it('should return 12 records per year for the month granularity', function() {
-    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan1Start, dec31End, 'month');
+    let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan1Start, dec31End, 'month', 'bytes');
     expect(data.length).toBe(12);
   });
 
