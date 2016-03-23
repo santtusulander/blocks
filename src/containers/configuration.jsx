@@ -113,7 +113,7 @@ export class Configuration extends React.Component {
     newVersion = newVersion
       .set('config_name', `Copy of ${newVersion.get('config_name') || newVersion.get('config_id')}`)
       .delete('config_id')
-      .setIn(['configuration_status','environment'], 1)
+      .setIn(['configuration_status','deployment_status'], 1)
     const newHost = this.props.activeHost.setIn(['services',0,'configurations'],
       this.props.activeHost.getIn(['services',0,'configurations']).push(newVersion))
     this.props.hostActions.updateHost(
@@ -127,7 +127,7 @@ export class Configuration extends React.Component {
   changeActiveVersionEnvironment(env) {
     let newHost = this.props.activeHost.setIn(
       ['services',0,'configurations',this.state.activeConfig],
-      this.getActiveConfig().setIn(['configuration_status','environment'], env))
+      this.getActiveConfig().setIn(['configuration_status','deployment_status'], env))
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
@@ -149,7 +149,7 @@ export class Configuration extends React.Component {
       return <div className="container">Loading...</div>
     }
     const activeConfig = this.getActiveConfig()
-    const activeEnvironment = activeConfig.get('configuration_status').get('environment')
+    const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (

@@ -7,8 +7,8 @@ const ConfigurationVersions = require('../versions.jsx')
 const ConfigurationVersion = require('../version.jsx')
 
 const fakeConfigs = Immutable.fromJS([
-  {config_id: 1, configuration_status: {environment: 'staging'}},
-  {config_id: 2, configuration_status: {environment: 'production'}},
+  {config_id: 1, configuration_status: {deployment_status: 2}},
+  {config_id: 2, configuration_status: {deployment_status: 3}},
   {config_id: 3, configuration_status: {}}
 ])
 
@@ -129,7 +129,7 @@ const fakeHost = Immutable.fromJS({
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 2
           },
           "default_policy": {"policy_rules": [
             {

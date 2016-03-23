@@ -122,7 +122,7 @@ const fakeConfig = Immutable.fromJS(
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 1
           },
           "default_policy": {"policy_rules": [
             {
