@@ -36,31 +36,39 @@ export class Property extends React.Component {
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
   }
   componentWillMount() {
-    this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      this.props.location.query.name
-    )
-    this.props.trafficActions.startFetching()
-    Promise.all([
-      this.props.trafficActions.fetchByTime({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        property: this.props.location.query.name,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X')
-      })
-    ]).then(this.props.trafficActions.finishFetching)
+    this.fetchData(this.props.location.query.name)
   }
   componentDidMount() {
     this.measureContainers()
     setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.location.query.name !== this.props.location.query.name) {
+      this.fetchData(nextProps.location.query.name)
+    }
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+  }
+  fetchData(property) {
+    this.props.hostActions.startFetching()
+    this.props.hostActions.fetchHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      property
+    )
+    this.props.trafficActions.startFetching()
+    Promise.all([
+      this.props.trafficActions.fetchByTime({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        property: property,
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X')
+      })
+    ]).then(this.props.trafficActions.finishFetching)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
