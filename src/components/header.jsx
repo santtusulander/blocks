@@ -62,11 +62,13 @@ class Header extends React.Component {
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
-    // Show Configurations only for property levels
-    let showConfigurations = /(\/content\/property\/)/.test(this.props.pathname) ||
-      /(\/content\/configuration\/)/.test(this.props.pathname) ||
-      /(\/configurations\/)/.test(this.props.pathname) ||
-      /(\/analytics\/property\/)/.test(this.props.pathname)
+    const activeHost = this.props.location.query.name
+    // Hide Configurations for all levels higher than group summary / property levels
+    let hideConfigurations = /(\/content\/accounts\/)/.test(this.props.pathname) ||
+      /(\/content\/groups\/)/.test(this.props.pathname) ||
+      /(\/analytics\/account\/)/.test(this.props.pathname) ||
+      this.props.pathname === '/security' ||
+      this.props.pathname === '/services'
     // Hide Purge for all levels higher than group summary / property levels
     let hidePurge = /(\/content\/accounts\/)/.test(this.props.pathname) ||
       /(\/content\/groups\/)/.test(this.props.pathname) ||
@@ -123,12 +125,13 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            {showConfigurations &&
+            {!hideConfigurations ?
               <li className="main-nav-item">
                 <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
               </li>
+              : null
             }
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
