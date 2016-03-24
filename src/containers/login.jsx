@@ -28,7 +28,25 @@ export class Login extends React.Component {
     this.checkUsernameActive = this.checkUsernameActive.bind(this)
     this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
+    this.goToAccountPage = this.goToAccountPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+  }
+  componentWillMount() {
+    if(this.props.loggedIn || this.props.userActions.checkToken().payload) {
+      this.goToAccountPage()
+    }
+  }
+  goToAccountPage() {
+    this.props.accountActions.startFetching()
+    this.props.accountActions.fetchAccounts('udn').then(action => {
+      if(!action.error && action.payload.data.length) {
+        const firstId = action.payload.data[0].id
+        this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
+      }
+      else {
+        this.setState({loginError: action.payload.message})
+      }
+    })
   }
   onSubmit(e) {
     e.preventDefault()
@@ -39,16 +57,7 @@ export class Login extends React.Component {
       this.state.password
     ).then(action => {
       if(!action.error) {
-        this.props.accountActions.startFetching()
-        this.props.accountActions.fetchAccounts('udn').then(action => {
-          if(!action.error && action.payload.data.length) {
-            const firstId = action.payload.data[0].id
-            this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
-          }
-          else {
-            this.setState({loginError: action.payload.message})
-          }
-        })
+        this.goToAccountPage()
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -151,12 +160,14 @@ Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
+  loggedIn: React.PropTypes.bool,
   userActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    fetching: state.user.get('fetching') || state.account.get('fetching')
+    fetching: state.user.get('fetching') || state.account.get('fetching'),
+    loggedIn: state.user.get('loggedIn')
   };
 }
 

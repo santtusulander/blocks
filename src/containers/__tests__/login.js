@@ -9,6 +9,9 @@ function userActionsMaker(cbResponse) {
     startFetching: jest.genMockFunction(),
     logIn: jest.genMockFunction().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
+    }),
+    checkToken: jest.genMockFunction().mockImplementation(() => {
+      return {payload: null}
     })
   }
 }
@@ -25,14 +28,14 @@ function accountActionsMaker(cbResponse) {
 describe('Login', () => {
   it('should exist', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     expect(TestUtils.isCompositeComponent(login)).toBeTruthy();
   })
 
   it('can show / hide password', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
     expect(inputs[1].type).toBe('password')
@@ -43,7 +46,7 @@ describe('Login', () => {
 
   it('maintains form state', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
     inputs[0].value = 'aaa'
@@ -56,7 +59,7 @@ describe('Login', () => {
 
   it('toggles active class when focused and blurred', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     const inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
 
