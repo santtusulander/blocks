@@ -37,7 +37,7 @@ export class Groups extends React.Component {
     }
   }
   componentWillMount() {
-    this.props.groupActions.changeActiveGroup(null)
+    // this.props.groupActions.changeActiveGroup(null)
     this.props.groupActions.startFetching()
     this.props.groupActions.fetchGroups(
       this.props.params.brand,
