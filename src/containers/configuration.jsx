@@ -45,6 +45,7 @@ export class Configuration extends React.Component {
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
     this.togglePublishModal = this.togglePublishModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.notificationTimeout = null
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -82,10 +83,16 @@ export class Configuration extends React.Component {
       this.props.location.query.name,
       this.props.activeHost.toJS()
     ).then((action) => {
-      this.setState({
-        activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
-      })
-      this.showNotification('Configurations succesfully saved')
+      if(action.error) {
+        this.showNotification('Saving configurations failed: ' +
+          action.payload.status + ' ' +
+          action.payload.statusText)
+      } else {
+        this.setState({
+          activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
+        })
+        this.showNotification('Configurations succesfully saved')
+      }
     })
   }
   activateTab(tabName) {
@@ -140,8 +147,10 @@ export class Configuration extends React.Component {
     this.setState({showPublishModal: !this.state.showPublishModal})
   }
   showNotification(message) {
+    clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
-    setTimeout(this.props.uiActions.changeNotification, 10000)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
   }
   render() {
     if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
@@ -271,8 +280,10 @@ export class Configuration extends React.Component {
 
           <ConfigurationDiffBar
             changeValue={this.changeValue}
-            currentConfig={activeConfig}
-            originalConfig={this.state.activeConfigOriginal}
+            currentConfig={!this.props.notification ?
+              activeConfig : Immutable.Map()}
+            originalConfig={!this.props.notification ?
+              this.state.activeConfigOriginal : Immutable.Map()}
             saveConfig={this.saveActiveHostChanges}
             saving={this.props.fetching}
             />
@@ -308,6 +319,7 @@ Configuration.propTypes = {
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
+  notification: React.PropTypes.string,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
@@ -317,7 +329,8 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
-    fetching: state.host.get('fetching')
+    fetching: state.host.get('fetching'),
+    notification: state.ui.get('notification')
   };
 }
 
