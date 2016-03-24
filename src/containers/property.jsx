@@ -34,6 +34,7 @@ export class Property extends React.Component {
     this.savePurge = this.savePurge.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
+    this.notificationTimeout = null
   }
   componentWillMount() {
     this.fetchData(this.props.location.query.name)
@@ -99,11 +100,23 @@ export class Property extends React.Component {
       this.props.params.group,
       targetUrl,
       this.props.activePurge.toJS()
-    ).then(() => this.setState({purgeActive: false}))
+    ).then((action) => {
+      if(action.payload instanceof Error) {
+        this.setState({purgeActive: false})
+        this.showNotification('Purge request failed: ' +
+          action.payload.message)
+      }
+      else {
+        this.setState({purgeActive: false})
+        this.showNotification('Purge request succesfully submitted')
+      }
+    })
   }
   showNotification(message) {
+    clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
-    setTimeout(this.props.uiActions.changeNotification, 10000)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
   }
   togglePropertyMenu() {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})

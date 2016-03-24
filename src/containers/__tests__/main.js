@@ -10,7 +10,8 @@ const Main = require('../main.jsx').Main
 
 function uiActionsMaker() {
   return {
-    changeTheme: jest.genMockFunction()
+    changeTheme: jest.genMockFunction(),
+    changeNotification: jest.genMockFunction()
   }
 }
 
@@ -25,7 +26,7 @@ function hostActionsMaker() {
 function purgeActionsMaker() {
   return {
     createPurge: jest.genMockFunction().mockReturnValue({
-      then: (cb => cb())
+      then: (cb => cb({payload: {}}))
     }),
     resetActivePurge: jest.genMockFunction(),
     updateActivePurge: jest.genMockFunction()

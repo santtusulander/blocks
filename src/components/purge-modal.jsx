@@ -90,7 +90,6 @@ class PurgeModal extends React.Component {
     hasErrors = this.validateEmail() ? true : hasErrors
     if(!hasErrors) {
       this.props.savePurge()
-      this.props.showNotification('Purge request succesfully submitted')
     }
   }
   toggleNotification() {
@@ -110,115 +109,117 @@ class PurgeModal extends React.Component {
         onHide={this.props.hideAction}>
         <Modal.Header>
           <h1>Purge Content</h1>
-          <p>Lorem ipsum dolor</p>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={this.submitForm}>
+          {this.props.activePurge ?
+            <form onSubmit={this.submitForm}>
 
-            {/* SECTION - Property */}
-            {showPropertySelect ?
-              <div>
-                <h3>Property</h3>
+              {/* SECTION - Property */}
+              {showPropertySelect ?
+                <div>
+                  <h3>Property</h3>
 
-                {/* If it's possible to change the property, show a list */}
-                <Select className="input-select"
-                  value={''+this.props.activeProperty}
-                  options={this.props.availableProperties.map(
-                    (property) => [property, property]
-                  ).toJS()}
-                  onSelect={this.props.changeProperty}/>
+                  {/* If it's possible to change the property, show a list */}
+                  <Select className="input-select"
+                    value={''+this.props.activeProperty}
+                    options={this.props.availableProperties.map(
+                      (property) => [property, property]
+                    ).toJS()}
+                    onSelect={this.props.changeProperty}/>
 
-                <hr/>
-              </div>
-              : ''
-            }
+                  <hr/>
+                </div>
+                : ''
+              }
 
-            {/* SECTION - What do you want to purge? */}
-            <Row>
-              <Col sm={6}>
-                <h3>What do you want to purge?</h3>
-              </Col>
-              <Col sm={6} className="text-right">
-                Up to 100 URLs, separated by comma
-              </Col>
-            </Row>
-            <Input type="textarea" id="purge__objects"
-              bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
-              help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
-              placeholder="Enter URLs or Paths"
-              value={this.props.activePurge.get('objects').join(',\n')}
-              onChange={this.parsePurgeObjects}/>
+              {/* SECTION - What do you want to purge? */}
+              <Row>
+                <Col sm={6}>
+                  <h3>What do you want to purge?</h3>
+                </Col>
+                <Col sm={6} className="text-right">
+                  Up to 100 URLs, separated by comma
+                </Col>
+              </Row>
+              <Input type="textarea" id="purge__objects"
+                bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
+                help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
+                placeholder="Enter URLs or Paths"
+                value={this.props.activePurge.get('objects').join(',\n')}
+                onChange={this.parsePurgeObjects}/>
 
-            <hr/>
+              <hr/>
 
-            {/* SECTION - Content Removal Method */}
-            <h3>Content Removal Method</h3>
+              {/* SECTION - Content Removal Method */}
+              <h3>Content Removal Method</h3>
 
-            {/* Invalidate content on platform */}
+              {/* Invalidate content on platform */}
 
-            <Input type="radio" name="purge__content-removal-method-invalidate"
-              label="Invalidate content"
-              value="invalidate"
-              checked={this.props.activePurge.get('action') === 'invalidate'}
-              onChange={this.change(['action'])}/>
+              <Input type="radio" name="purge__content-removal-method-invalidate"
+                label="Invalidate content"
+                value="invalidate"
+                checked={this.props.activePurge.get('action') === 'invalidate'}
+                onChange={this.change(['action'])}/>
 
-            {/* Delete content from platform */}
+              {/* Delete content from platform */}
 
-            <Input type="radio" name="purge__content-removal-method-delete"
-              label="Delete content"
-              value="purge"
-              checked={this.props.activePurge.get('action') === 'purge'}
-              onChange={this.change(['action'])}/>
+              <Input type="radio" name="purge__content-removal-method-delete"
+                label="Delete content"
+                value="purge"
+                checked={this.props.activePurge.get('action') === 'purge'}
+                onChange={this.change(['action'])}/>
 
-            <hr/>
+              <hr/>
 
-            {/* SECTION - Notification */}
+              {/* SECTION - Notification */}
 
-            <h3>Notification</h3>
+              <h3>Notification</h3>
 
-            {/* Don't send me any notification upon completion */}
+              {/* Don't send me any notification upon completion */}
 
-            <Input type="checkbox" name="purge__notification"
-              label="Notify me when purge is completed"
-              checked={!!this.props.activePurge.get('feedback')}
-              onChange={this.toggleNotification}/>
+              <Input type="checkbox" name="purge__notification"
+                label="Notify me when purge is completed"
+                checked={!!this.props.activePurge.get('feedback')}
+                onChange={this.toggleNotification}/>
 
-            {/* Email Address */}
+              {/* Email Address */}
 
-            <Panel className="form-panel" collapsible={true}
-              expanded={!!this.props.activePurge.get('feedback')}>
-              <Input type="text"
-                bsStyle={this.state.purgeEmailError ? 'error' : 'warning'}
-                help={this.state.purgeEmailError}
-                placeholder="Enter Email address"
-                value={this.props.activePurge.getIn(['feedback','email'])}
-                onChange={this.change(['feedback','email'])}/>
-            </Panel>
+              <Panel className="form-panel" collapsible={true}
+                expanded={!!this.props.activePurge.get('feedback')}>
+                <Input type="text"
+                  bsStyle={this.state.purgeEmailError ? 'error' : 'warning'}
+                  help={this.state.purgeEmailError}
+                  placeholder="Enter Email address"
+                  value={this.props.activePurge.getIn(['feedback','email'])}
+                  onChange={this.change(['feedback','email'])}/>
+              </Panel>
 
-            <hr/>
+              <hr/>
 
-            {/* Note */}
-            <h3>Note</h3>
+              {/* Note */}
+              <h3>Note</h3>
 
-            <Input type="textarea" id="purge__note"
-              placeholder="A note about the purge"
-              value={this.props.activePurge.get('note')}
-              onChange={this.change(['note'])}/>
+              <Input type="textarea" id="purge__note"
+                placeholder="A note about the purge"
+                value={this.props.activePurge.get('note')}
+                onChange={this.change(['note'])}/>
 
-            {/* Action buttons */}
+              {/* Action buttons */}
 
-            <ButtonToolbar className="text-right">
-              <Button bsStyle="primary" onClick={this.props.hideAction}>
-                Cancel
-              </Button>
-              <Button type="submit" bsStyle="primary"
-                disabled={this.state.purgeObjectsError || this.state.purgeEmailError
-                  ? true : false}>
-                Purge
-              </Button>
-            </ButtonToolbar>
+              <ButtonToolbar className="text-right">
+                <Button bsStyle="primary" onClick={this.props.hideAction}>
+                  Cancel
+                </Button>
+                <Button type="submit" bsStyle="primary"
+                  disabled={this.state.purgeObjectsError || this.state.purgeEmailError
+                    ? true : false}>
+                  Purge
+                </Button>
+              </ButtonToolbar>
 
-          </form>
+            </form>
+            : 'Loading...'
+          }
         </Modal.Body>
       </Modal>
     );

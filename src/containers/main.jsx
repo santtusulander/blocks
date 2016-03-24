@@ -27,6 +27,7 @@ export class Main extends React.Component {
     this.logOut = this.logOut.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.hideNotification = this.hideNotification.bind(this)
+    this.notificationTimeout = null
   }
   activatePurge(property) {
     return e => {
@@ -56,7 +57,17 @@ export class Main extends React.Component {
       this.props.activeGroup.get('id'),
       targetUrl,
       this.props.activePurge.toJS()
-    ).then(() => this.setState({activePurge: null}))
+    ).then((action) => {
+      if(action.payload instanceof Error) {
+        this.setState({activePurge: null})
+        this.showNotification('Purge request failed: ' +
+          action.payload.message)
+      }
+      else {
+        this.setState({activePurge: null})
+        this.showNotification('Purge request succesfully submitted')
+      }
+    })
   }
   saveActivePurge() {
     const purgeProperty = this.props.properties.find(property => property === this.state.activePurge)
@@ -83,8 +94,10 @@ export class Main extends React.Component {
     this.props.history.pushState(null, '/login')
   }
   showNotification(message) {
+    clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
-    setTimeout(this.props.uiActions.changeNotification, 10000)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
   }
   hideNotification() {
     this.props.uiActions.changeNotification()
