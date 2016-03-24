@@ -116,12 +116,16 @@ export class Main extends React.Component {
           <Header
             accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
+            activeGroup={this.props.activeGroup}
+            activeHost={this.props.activeHost}
             activatePurge={this.activatePurge(firstProperty)}
             fetching={this.props.fetching}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
             logOut={this.logOut}
-            pathname={this.props.location.pathname}/>
+            location={this.props.location}
+            pathname={this.props.location.pathname}
+            params={this.props.params}/>
           : ''
         }
         <div className="content-container">{this.props.children}</div>
@@ -170,6 +174,7 @@ Main.propTypes = {
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
+  params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   theme: React.PropTypes.string,
