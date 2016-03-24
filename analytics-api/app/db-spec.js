@@ -578,3 +578,60 @@ describe('db.getVisitors', function() {
   });
 
 });
+
+
+describe('db.getVisitorWithTotals', function() {
+  let options = {
+    start: 1451606400,
+    end: 1451692799,
+    account: 3,
+    group: 3,
+    property: 'idean.com',
+    granularity: 'hour',
+    aggregate_granularity: 'month'
+  };
+
+  beforeEach(function() {
+    spyOn(db, 'getVisitors').and.returnValue(Promise.resolve(0));
+    spyOn(log, 'info').and.stub();
+    spyOn(log, 'error').and.stub();
+  });
+
+  it('should call getVisitors three times with the correct options', function() {
+    db.getVisitorWithTotals(options);
+
+    let getVisitorsDetailOptions    = db.getVisitors.calls.argsFor(0)[0];
+    let getVisitorsDimensionOptions = db.getVisitors.calls.argsFor(1)[0];
+    let getVisitorsTotalOptions     = db.getVisitors.calls.argsFor(2)[0];
+
+    expect(db.getVisitors.calls.count()).toBe(3);
+    expect(getVisitorsDetailOptions).toEqual(options);
+    expect(getVisitorsDimensionOptions.granularity).toBe(options.aggregate_granularity);
+    expect(getVisitorsTotalOptions.granularity).toBe(options.aggregate_granularity);
+    expect(getVisitorsTotalOptions.dimension).toBe('global');
+  });
+
+  it('should return a promise', function() {
+    let getVisitorWithTotalsPromise = db.getVisitorWithTotals(options);
+    expect(getVisitorWithTotalsPromise instanceof Promise).toBe(true);
+  });
+
+  it('should log the number of result sets received from the queries', function(done) {
+    db.getVisitorWithTotals(options).then(function(data) {
+      expect(log.info.calls.any()).toBe(true);
+      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
+      done();
+    });
+  });
+
+  it('should log an error if one of the queries failed', function(done) {
+    let error = new Error('error');
+    db.getVisitors.and.returnValue(Promise.reject(error));
+    db.getVisitorWithTotals(options).finally(function() {
+      expect(log.error.calls.any()).toBe(true);
+      expect(log.error.calls.argsFor(0)[0]).toEqual(error);
+      done();
+    });
+  });
+
+});
