@@ -155,14 +155,15 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            {!hideConfigurations ?
-              <li className="main-nav-item">
+            <li className="main-nav-item">
+              {hideConfigurations ?
+                <span className="main-nav-link inactive">Configurations</span>
+              :
                 <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
-              </li>
-              : null
-            }
+              }
+            </li>
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
                 Security
@@ -173,15 +174,16 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            {!hidePurge ?
-              <li className="main-nav-item">
+            <li className="main-nav-item">
+              {hidePurge ?
+                <span className="main-nav-link inactive">Purge</span>
+              :
                 <a href="#" className="main-nav-link"
                   onClick={this.activatePurge}>
                   Purge
                 </a>
-              </li>
-              : null
-            }
+              }
+            </li>
           </Nav>
           <Nav pullRight={true}>
             <li>
