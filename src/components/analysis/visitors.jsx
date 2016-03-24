@@ -87,7 +87,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{country.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{country.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -127,7 +127,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{browser.get('browser')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{browser.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -167,7 +167,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{os.get('os')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{os.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )
