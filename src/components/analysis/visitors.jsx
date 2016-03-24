@@ -56,13 +56,13 @@ class AnalysisVisitors extends React.Component {
           }
         </div>
         <h3>BY COUNTRY</h3>
-        <table className="table by-country-table">
+        <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
               <th>Country</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -96,13 +96,13 @@ class AnalysisVisitors extends React.Component {
           </tbody>
         </table>
         <h3>BY BROWSER</h3>
-        <table className="table by-browser-table">
+        <table className="table table-striped table-analysis by-browser-table">
           <thead>
             <tr>
               <th>Browser</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -136,13 +136,13 @@ class AnalysisVisitors extends React.Component {
           </tbody>
         </table>
         <h3>BY OPERATING SYSTEM</h3>
-        <table className="table by-os-table">
+        <table className="table table-striped table-analysis by-os-table">
           <thead>
             <tr>
               <th>Operating System</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>

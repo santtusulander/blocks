@@ -68,7 +68,7 @@ class AnalysisTraffic extends React.Component {
           }
         </div>
         <h3>BY COUNTRY</h3>
-        <table className="table by-country-table">
+        <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
               <th>Country</th>
