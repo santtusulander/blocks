@@ -5,27 +5,6 @@
 
   .by-country-table {
 
-    th {
-      text-transform: uppercase;
-    }
-
-    td:nth-child(2),
-    td:nth-child(3),
-    td:nth-child(5) {
-      text-align: right;
-    }
-
-    td:nth-child(1),
-    td:nth-child(2),
-    td:nth-child(3),
-    td:nth-child(4) {
-      border-right: 1px solid rgba($black, 0.1);
-    }
-
-    tr:nth-child(odd) {
-      background-color: rgba($black, 0.1);
-    }
-
     // scss-lint:disable SelectorDepth NestingDepth
     // Need to be very specific here
     .analysis-by-time {
@@ -61,5 +40,29 @@
       font-size: 35px;
       font-weight: bold;
     }
+  }
+}
+
+.table-analysis {
+
+  th {
+    text-transform: uppercase;
+  }
+
+  th:not(:first-child):not(.text-center),
+  td:not(:first-child) {
+    text-align: right;
+  }
+
+  td:not(:last-child) {
+
+    .dark-theme &,
+    .light-theme & {
+      border-right: 1px solid rgba($black, 0.2);
+    }
+  }
+
+  svg {
+    vertical-align: middle;
   }
 }
