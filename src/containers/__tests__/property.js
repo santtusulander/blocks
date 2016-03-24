@@ -14,6 +14,14 @@ function hostActionsMaker() {
   }
 }
 
+function trafficActionsMaker() {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchByTime: jest.genMockFunction(),
+    finishFetching: jest.genMockFunction()
+  }
+}
+
 const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
@@ -135,7 +143,7 @@ const fakeHost = Immutable.fromJS({
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 2
           },
           "default_policy": {"policy_rules": [
             {
@@ -216,7 +224,8 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
-        hostActions={hostActionsMaker()} />
+        hostActions={hostActionsMaker()}
+        trafficActions={trafficActionsMaker()} />
     );
     expect(TestUtils.isCompositeComponent(property)).toBeTruthy();
   });
@@ -225,7 +234,8 @@ describe('Property', () => {
     const hostActions = hostActionsMaker()
     TestUtils.renderIntoDocument(
       <Property hostActions={hostActions} fetching={true}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams} location={fakeLocation}
+        trafficActions={trafficActionsMaker()}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
@@ -237,7 +247,10 @@ describe('Property', () => {
     const property = TestUtils.renderIntoDocument(
       <Property hostActions={hostActionsMaker()}
         params={urlParams} location={fakeLocation}
-        activeHost={fakeHost}/>
+        activeHost={fakeHost}
+        trafficActions={trafficActionsMaker()}
+        properties={Immutable.List(['www.abc.com'])}
+        trafficByTime={Immutable.List()}/>
     )
     let header = TestUtils.findRenderedDOMComponentWithClass(property, 'property-header')
     expect(header.textContent).toContain('www.abc.com')

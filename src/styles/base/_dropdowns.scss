@@ -78,6 +78,13 @@
 
   .header-toggle + & {
     top: 110%;
+    max-width: 1000px;
+    min-width: 640px;
+
+    @include md {
+      max-width: 800px;
+      min-width: 480px;
+    }
   }
 
   &.dropdown-user-menu {

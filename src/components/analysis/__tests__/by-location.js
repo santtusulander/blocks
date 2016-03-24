@@ -169,9 +169,9 @@ describe('AnalysisByLocation', () => {
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
     expect(paths.length).toBe(3)
-    expect(paths[0].getAttribute('class')).toContain('above-avg')
-    expect(paths[1].getAttribute('class')).toContain('below-avg')
-    expect(paths[2].getAttribute('class')).toContain('avg')
+    expect(paths[0].getAttribute('class')).toContain('country-0')
+    expect(paths[1].getAttribute('class')).toContain('country-1')
+    expect(paths[2].getAttribute('class')).toContain('country-2')
   });
   // Not supporting zoom in 0.5
   // it('should show states', () => {

@@ -512,3 +512,126 @@ describe('db.getEgressWithHistorical', function() {
   });
 
 });
+
+
+describe('db.getVisitors', function() {
+  beforeEach(function() {
+    spyOn(db, '_getQueryOptions').and.callThrough();
+    spyOn(db, '_getAccountLevel').and.callThrough();
+    spyOn(db, '_executeQuery').and.stub();
+  });
+
+  it('should return hourly data for a property', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com'
+    };
+
+    db.getVisitors(options);
+
+    let queryParams = db._executeQuery.calls.argsFor(0)[1];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(db._getQueryOptions.calls.any()).toBe(true);
+    expect(db._getAccountLevel.calls.any()).toBe(true);
+    expect(finalOptions).toEqual(options);
+    expect(queryParams[0]).toBe('property_global_hour');
+  });
+
+  it('should select the country field if the dimension option was passed as country', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      dimension: 'country'
+    };
+
+    db.getVisitors(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(/country,/.test(query)).toBe(true);
+  });
+
+  it('should not sum uniq_vis on non-traffic tables', function() {
+    let options = {
+      start: 1451606400,
+      end: 1451692799,
+      account: 3,
+      group: 3,
+      property: 'idean.com',
+      dimension: 'browser'
+    };
+
+    db.getVisitors(options);
+
+    let query = db._executeQuery.calls.argsFor(0)[0];
+    let finalOptions = db._getQueryOptions.calls.argsFor(0)[0];
+    expect(finalOptions).toEqual(options);
+    expect(/sum\(uniq_vis\) AS uniq_vis/.test(query)).toBe(false);
+    expect(/uniq_vis/.test(query)).toBe(true);
+  });
+
+});
+
+
+describe('db.getVisitorWithTotals', function() {
+  let options = {
+    start: 1451606400,
+    end: 1451692799,
+    account: 3,
+    group: 3,
+    property: 'idean.com',
+    granularity: 'hour',
+    aggregate_granularity: 'month'
+  };
+
+  beforeEach(function() {
+    spyOn(db, 'getVisitors').and.returnValue(Promise.resolve(0));
+    spyOn(log, 'info').and.stub();
+    spyOn(log, 'error').and.stub();
+  });
+
+  it('should call getVisitors three times with the correct options', function() {
+    db.getVisitorWithTotals(options);
+
+    let getVisitorsDetailOptions    = db.getVisitors.calls.argsFor(0)[0];
+    let getVisitorsDimensionOptions = db.getVisitors.calls.argsFor(1)[0];
+    let getVisitorsTotalOptions     = db.getVisitors.calls.argsFor(2)[0];
+
+    expect(db.getVisitors.calls.count()).toBe(3);
+    expect(getVisitorsDetailOptions).toEqual(options);
+    expect(getVisitorsDimensionOptions.granularity).toBe(options.aggregate_granularity);
+    expect(getVisitorsTotalOptions.granularity).toBe(options.aggregate_granularity);
+    expect(getVisitorsTotalOptions.dimension).toBe('global');
+  });
+
+  it('should return a promise', function() {
+    let getVisitorWithTotalsPromise = db.getVisitorWithTotals(options);
+    expect(getVisitorWithTotalsPromise instanceof Promise).toBe(true);
+  });
+
+  it('should log the number of result sets received from the queries', function(done) {
+    db.getVisitorWithTotals(options).then(function(data) {
+      expect(log.info.calls.any()).toBe(true);
+      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
+      done();
+    });
+  });
+
+  it('should log an error if one of the queries failed', function(done) {
+    let error = new Error('error');
+    db.getVisitors.and.returnValue(Promise.reject(error));
+    db.getVisitorWithTotals(options).finally(function() {
+      expect(log.error.calls.any()).toBe(true);
+      expect(log.error.calls.argsFor(0)[0]).toEqual(error);
+      done();
+    });
+  });
+
+});

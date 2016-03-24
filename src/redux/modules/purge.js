@@ -30,6 +30,11 @@ const emptyPurge = Immutable.fromJS({
 export default handleActions({
   PURGE_CREATED: {
     next(state, action) {
+      if(action.payload instanceof Error) {
+        return state.merge({
+          fetching: false
+        })
+      }
       return state.merge({
         activePurge: Immutable.fromJS(action.payload),
         fetching: false
@@ -89,7 +94,12 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
       'Content-Type': 'application/json'
     }
   })
-  .then(() => newPurge);
+  .then(() => {
+    return newPurge
+  })
+  .catch(res => {
+    return new Error(res.data.message)
+  })
 })
 
 export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, property, id) => {

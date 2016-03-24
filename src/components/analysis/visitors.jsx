@@ -40,7 +40,7 @@ class AnalysisVisitors extends React.Component {
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -51,18 +51,18 @@ class AnalysisVisitors extends React.Component {
             dataKey="uniq_vis"
             timelineKey="detail"
             width={this.state.byLocationWidth}
-            height={this.state.byLocationWidth / 2}
+            height={this.state.byLocationWidth / 1.6}
             countryData={this.props.byCountry}/>
           }
         </div>
         <h3>BY COUNTRY</h3>
-        <table className="table by-country-table">
+        <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
               <th>Country</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -87,7 +87,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{country.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{country.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -96,13 +96,13 @@ class AnalysisVisitors extends React.Component {
           </tbody>
         </table>
         <h3>BY BROWSER</h3>
-        <table className="table by-browser-table">
+        <table className="table table-striped table-analysis by-browser-table">
           <thead>
             <tr>
               <th>Browser</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -127,7 +127,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{browser.get('browser')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{browser.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -136,13 +136,13 @@ class AnalysisVisitors extends React.Component {
           </tbody>
         </table>
         <h3>BY OPERATING SYSTEM</h3>
-        <table className="table by-os-table">
+        <table className="table table-striped table-analysis by-os-table">
           <thead>
             <tr>
               <th>Operating System</th>
               <th>Total Visitors</th>
               <th>% of Visitors</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -167,7 +167,7 @@ class AnalysisVisitors extends React.Component {
                     <td>{os.get('os')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{os.get('percent_total')}%</td>
-                    <td>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>Chart</td>
                     <td>{trending}</td>
                   </tr>
                 )

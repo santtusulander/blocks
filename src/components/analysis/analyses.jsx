@@ -106,7 +106,7 @@ export class Analyses extends React.Component {
           </div>
         </div>
         <div className="sidebar-section-header">
-          TIMESPAN
+          DATE RANGE
         </div>
         <div className="sidebar-content">
           <div className="form-group">

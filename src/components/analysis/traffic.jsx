@@ -52,7 +52,7 @@ class AnalysisTraffic extends React.Component {
               dataKey="bytes"
               primaryData={httpData.toJS()}
               secondaryData={httpsData.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -63,18 +63,18 @@ class AnalysisTraffic extends React.Component {
               dataKey="bytes"
               timelineKey="detail"
               width={this.state.byLocationWidth}
-              height={this.state.byLocationWidth / 2}
+              height={this.state.byLocationWidth / 1.6}
               countryData={this.props.byCountry}/>
           }
         </div>
         <h3>BY COUNTRY</h3>
-        <table className="table by-country-table">
+        <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
               <th>Country</th>
               <th>Traffic</th>
               <th>% of Traffic</th>
-              <th width="300">Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
@@ -113,7 +113,7 @@ class AnalysisTraffic extends React.Component {
                   <td>{country.get('name')}</td>
                   <td>{formattedBytes}</td>
                   <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                  <td width="300">
+                  <td width={this.state.byTimeWidth / 3}>
                     <AnalysisByTime axes={false} padding={0}
                       primaryData={country.get('detail').map(datapoint => {
                         return datapoint.set(
@@ -122,7 +122,7 @@ class AnalysisTraffic extends React.Component {
                         )
                       }).toJS()}
                       dataKey='bytes'
-                      width={300}
+                      width={this.state.byTimeWidth / 3}
                       height={50} />
                   </td>
                   <td>{trending}</td>
