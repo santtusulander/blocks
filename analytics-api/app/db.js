@@ -408,7 +408,7 @@ class AnalyticsDB {
   }
 
   /**
-   * Get outbound traffic (egress) for a property, group, or account.
+   * Get unique visitor data for a property, group, or account.
    *
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
@@ -476,6 +476,31 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
+
+  /**
+   * Get unique visitor totals for a property, group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getVisitorWithTotals(options) {
+    let aggregateGranularity  = options.aggregate_granularity || 'month';
+    let dimensionTotalOptions = {granularity: aggregateGranularity};
+    let grandTotalOptions     = {dimension: 'global', granularity: aggregateGranularity};
+    let queries = [
+      this.getVisitors(options),
+      this.getVisitors(Object.assign({}, options, dimensionTotalOptions)),
+      this.getVisitors(Object.assign({}, options, grandTotalOptions))
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
+  }
+
 }
 
 module.exports = new AnalyticsDB(configs);
