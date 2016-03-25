@@ -114,7 +114,7 @@ class AnalysisTraffic extends React.Component {
                   <td>{formattedBytes}</td>
                   <td>{numeral(country.get('percent_total')).format('0%')}</td>
                   <td width={this.state.byTimeWidth / 3}>
-                    <AnalysisByTime axes={false} padding={0}
+                    <AnalysisByTime axes={false} padding={0} area={false}
                       primaryData={country.get('detail').map(datapoint => {
                         return datapoint.set(
                           'timestamp',

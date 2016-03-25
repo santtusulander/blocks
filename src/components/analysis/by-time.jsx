@@ -109,16 +109,20 @@ class AnalysisByTime extends React.Component {
           {this.props.primaryData ? <g>
             <path d={trafficLine(this.props.primaryData)}
               className="line primary"/>
-            <path d={trafficArea(this.props.primaryData)}
-              className="area primary"
-              fill="url(#dt-primary-gradient)" />
+            {typeof this.props.area !== 'undefined' && !this.props.area ? null :
+              <path d={trafficArea(this.props.primaryData)}
+                className="area primary"
+                fill="url(#dt-primary-gradient)" />
+            }
           </g> : null}
           {this.props.secondaryData ? <g>
             <path d={trafficLine(this.props.secondaryData)}
               className="line secondary"/>
-            <path d={trafficArea(this.props.secondaryData)}
-              className="area secondary"
-              fill="url(#dt-secondary-gradient)" />
+            {typeof this.props.area !== 'undefined' && !this.props.area ? null :
+              <path d={trafficArea(this.props.secondaryData)}
+                className="area secondary"
+                fill="url(#dt-secondary-gradient)" />
+            }
           </g> : null}
           {this.state.tooltipText ?
             <g>
@@ -179,6 +183,7 @@ class AnalysisByTime extends React.Component {
 
 AnalysisByTime.displayName = 'AnalysisByTime'
 AnalysisByTime.propTypes = {
+  area: React.PropTypes.bool,
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
   dataKey: React.PropTypes.string,
