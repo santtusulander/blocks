@@ -105,4 +105,16 @@
       }
     }
   }
+
+  &.extra-margin-top {
+    margin-top: $bar-height;
+
+    @include md {
+      margin-top: $md-bar-height;
+    }
+
+    @include sm {
+      margin-top: $sm-bar-height;
+    }
+  }
 }
