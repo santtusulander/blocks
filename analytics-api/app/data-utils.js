@@ -143,6 +143,62 @@ class DataUtils {
 
   }
 
+  /**
+   * Build an array of objects that each represent a dimension item that contains
+   * detailed unique visitor data, total visitor amount, and percent of total visitors.
+   *
+   * @param  {string} dimension     The name of the dimension (os, browser, or country)
+   * @param  {array}  visitorData   An array of visitor data
+   * @param  {object} totalsGrouped Total number of visitors grouped by dimension
+   * @param  {number} grandTotal    Total number of visitors for all dimension items
+   * @param  {number} max           The maximum number of records to return
+   * @param  {object} options       The options object passed to the db method
+   * @return {array}                An array of objects that each contain visitor
+   *                                data for a dimension item
+   */
+  processVisitorDataByDimension(dimension, visitorData, totalsGrouped, grandTotal, max, options) {
+    let records = [];
+    let visitorDataGrouped = _.groupBy(visitorData, dimension);
+
+    _.forOwn(visitorDataGrouped, (data, dimensionName) => {
+      let visitorRecords;
+      let dimensionTotal = totalsGrouped[dimensionName][0].uniq_vis;
+      let record = {
+        name: dimensionName,
+        percent_total: parseFloat((dimensionTotal / grandTotal).toFixed(4)),
+        total: dimensionTotal,
+        detail: []
+      };
+
+      // Set the detail array on the record
+      // Calculate total visitors for the dimension
+      // Remove the dimension key from each record — since we're already
+      // grouped by dimension, we don't need to transfer all that extra data
+      // over the network.
+      visitorRecords = data.map((data) => {
+        return _.pick(data, ['timestamp', 'uniq_vis']);
+      });
+
+      // Ensure there is a record for each time interval
+      visitorRecords = this.buildContiguousTimeline(
+        visitorRecords, options.start, options.end, options.granularity, 'uniq_vis'
+      );
+      record.detail = visitorRecords;
+
+      // Add the record to the response data
+      records.push(record);
+
+    });
+
+    // Sort the browsers by their total in descending order
+    records = _.sortBy(records, 'total').reverse();
+
+    // Only include the number of browsers specified by the max argument
+    records = _.take(records, max);
+
+    return records;
+  }
+
 }
 
 module.exports = new DataUtils();
