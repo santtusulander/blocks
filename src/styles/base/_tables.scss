@@ -4,7 +4,6 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
-  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.1);
@@ -55,10 +54,19 @@
         &.has-confirmation {
           position: relative;
         }
+
+        &:not(:last-child) {
+
+          .dark-theme &,
+          .light-theme & {
+            border-right: 1px solid rgba($black, 0.2);
+          }
+        }
       }
 
       > th {
         height: $btn-height;
+        text-transform: uppercase;
 
         @include md {
           height: $md-btn-height;
@@ -103,6 +111,18 @@
           line-height: inherit;
         }
       }
+    }
+  }
+
+  &.extra-margin-top {
+    margin-top: $bar-height;
+
+    @include md {
+      margin-top: $md-bar-height;
+    }
+
+    @include sm {
+      margin-top: $sm-bar-height;
     }
   }
 }

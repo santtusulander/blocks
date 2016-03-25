@@ -2,18 +2,17 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../traffic.jsx')
-const AnalysisTraffic = require('../traffic.jsx')
+jest.dontMock('../sp-report.jsx')
+const AnalysisSPReport = require('../sp-report.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')
 const numeral = require('numeral')
 
 const momentFormatMock = jest.genMockFunction()
-const momentToDateMock = jest.genMockFunction()
 const numeralFormatMock = jest.genMockFunction()
 
-moment.mockReturnValue({format:momentFormatMock, toDate:momentToDateMock})
+moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeCountryData = Immutable.fromJS([
@@ -52,27 +51,27 @@ const fakeCountryData = Immutable.fromJS([
   }
 ])
 
-describe('AnalysisTraffic', () => {
+describe('AnalysisSPReport', () => {
   it('should exist', () => {
-    let traffic = TestUtils.renderIntoDocument(
-      <AnalysisTraffic
+    let analysisSPReport = TestUtils.renderIntoDocument(
+      <AnalysisSPReport
         fetching={true}
         byTime={Immutable.List()}
         byCountry={Immutable.List()}
         serviceTypes={Immutable.List()}/>
     );
-    expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
+    expect(TestUtils.isCompositeComponent(analysisSPReport)).toBeTruthy();
   });
 
   it('should show data rows in table', () => {
-    let traffic = TestUtils.renderIntoDocument(
-      <AnalysisTraffic
+    let analysisSPReport = TestUtils.renderIntoDocument(
+      <AnalysisSPReport
         fetching={true}
         byTime={Immutable.List()}
         byCountry={fakeCountryData}
         serviceTypes={Immutable.List()}/>
     );
-    let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
-    expect(tds.length).toBe(10);
+    let tds = TestUtils.scryRenderedDOMComponentsWithTag(analysisSPReport, 'td')
+    expect(tds.length).toBe(12);
   });
 })

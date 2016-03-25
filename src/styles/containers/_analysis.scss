@@ -3,66 +3,84 @@
 
 .analysis-container {
 
-  .by-country-table {
+  .analysis-data-box {
+    width: 40%;
+    max-width: 350px;
+    padding: $btn-height / 2;
 
-    // scss-lint:disable SelectorDepth NestingDepth
-    // Need to be very specific here
-    .analysis-by-time {
-
-      .dark-theme & {
-        background-color: transparent;
-      }
-
-      .light-theme & {
-        background-color: transparent;
-      }
-
-      .area {
-        display: none;
-      }
+    @include md {
+      padding: $md-btn-height / 2;
     }
-  }
-
-  .total-egress {
-    width: 250px;
-    padding: 20px;
 
     .dark-theme & {
       background-color: rgba($black, 0.2);
     }
 
     h4 {
-      font-size: 12px;
+      margin-bottom: 5px;
+      font-size: $font-size-sm;
       text-transform: uppercase;
+
+      @include md {
+        font-size: $md-font-size-sm;
+      }
     }
 
     p {
-      font-size: 35px;
+      font-size: 40px;
       font-weight: bold;
+
+      @include sm {
+        font-size: 32px;
+      }
+    }
+  }
+
+  .row .analysis-data-box {
+    float: left;
+    margin-right: $btn-height;
+
+    @include md {
+      margin-right: $md-btn-height;
     }
   }
 }
 
 .table-analysis {
 
-  th {
-    text-transform: uppercase;
-  }
-
   th:not(:first-child):not(.text-center),
   td:not(:first-child) {
     text-align: right;
   }
 
-  td:not(:last-child) {
-
-    .dark-theme &,
-    .light-theme & {
-      border-right: 1px solid rgba($black, 0.2);
-    }
-  }
-
   svg {
     vertical-align: middle;
+  }
+
+  .analysis-by-time {
+
+    .dark-theme & {
+      background-color: transparent;
+    }
+
+    .light-theme & {
+      background-color: transparent;
+    }
+  }
+}
+
+.on-net {
+
+  .dark-theme &,
+  .light-theme & {
+    color: $pale-blue;
+  }
+}
+
+.off-net {
+
+  .dark-theme &,
+  .light-theme & {
+    color: $yellow;
   }
 }

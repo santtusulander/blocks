@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../by-time.jsx')
@@ -50,12 +51,31 @@ describe('AnalysisByTime', () => {
     expect(TestUtils.isCompositeComponent(byTime)).toBeTruthy();
   });
 
+  it('can be passed a custom css class', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime className="foo" width={400} height={200} padding={10}
+        primaryData={fakeData}
+        dataKey="bytes_out"/>
+    );
+    let div = TestUtils.findRenderedDOMComponentWithTag(byTime, 'div');
+    expect(ReactDOM.findDOMNode(div).className).toContain('foo');
+  });
+
   it('should show loading message if there is no width or data', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime />
     );
     let div = TestUtils.findRenderedDOMComponentWithTag(byTime, 'div')
     expect(div.textContent).toContain('Loading');
+  });
+
+  it('should deactivate tooltip', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime />
+    );
+    byTime.state.tooltipText = "foo"
+    byTime.deactivateTooltip()
+    expect(byTime.state.tooltipText).toBe(null);
   });
 
   it('should have a data line and area', () => {
