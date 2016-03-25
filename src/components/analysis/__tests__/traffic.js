@@ -10,51 +10,43 @@ const moment = require('moment')
 const numeral = require('numeral')
 
 const momentFormatMock = jest.genMockFunction()
+const momentToDateMock = jest.genMockFunction()
 const numeralFormatMock = jest.genMockFunction()
 
-moment.mockReturnValue({format:momentFormatMock})
+moment.mockReturnValue({format:momentFormatMock, toDate:momentToDateMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeCountryData = Immutable.fromJS([
   {
-    "country": "usa",
-    "percent_total": 22,
-    "traffic": [
+    code:"USA",
+    name:"United States",
+    percent_change:null,
+    percent_total:0.9995,
+    historical_total:0,
+    total:40372232,
+    detail:[
       {
-        "bytes": 34857,
-        "timestamp": "2016-01-01 01:00:00"
-      },
-      {
-        "bytes": 68745,
-        "timestamp": "2016-01-01 02:00:00"
+        bytes:60722,
+        timestamp:1456819200
+      },{
+        bytes:60722,
+        timestamp:1456822800
       }
     ]
-  },
-  {
-    "country": "can",
-    "percent_total": 10,
-    "traffic": [
+  },{
+    code:"UKR",
+    name:"Ukraine",
+    percent_change:null,
+    percent_total:0.0005,
+    historical_total:0,
+    total:19561,
+    detail:[
       {
-        "bytes": 45767,
-        "timestamp": "2016-01-01 01:00:00"
-      },
-      {
-        "bytes": 34556,
-        "timestamp": "2016-01-01 02:00:00"
-      }
-    ]
-  },
-  {
-    "country": "mex",
-    "percent_total": 3,
-    "traffic": [
-      {
-        "bytes": 1111,
-        "timestamp": "2016-01-01 01:00:00"
-      },
-      {
-        "bytes": 1111,
-        "timestamp": "2016-01-01 02:00:00"
+        bytes:3807,
+        timestamp:1456819200
+      },{
+        bytes:60722,
+        timestamp:1456822800
       }
     ]
   }
@@ -70,5 +62,17 @@ describe('AnalysisTraffic', () => {
         serviceTypes={Immutable.List()}/>
     );
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
+  });
+
+  it('should show data rows in table', () => {
+    let traffic = TestUtils.renderIntoDocument(
+      <AnalysisTraffic
+        fetching={true}
+        byTime={Immutable.List()}
+        byCountry={fakeCountryData}
+        serviceTypes={Immutable.List()}/>
+    );
+    let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
+    expect(tds.length).toBe(10);
   });
 })
