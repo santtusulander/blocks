@@ -10,8 +10,8 @@ class AnalysisVisitors extends React.Component {
     super(props);
 
     this.state = {
-      byLocationWidth: 0,
-      byTimeWidth: 0
+      byLocationWidth: 100,
+      byTimeWidth: 100
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -45,7 +45,7 @@ class AnalysisVisitors extends React.Component {
         </div>
         <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
-          {this.props.fetching ?
+          {this.props.fetching || !this.props.byCountry.size ?
             <div>Loading...</div> :
             <AnalysisByLocation
             dataKey="uniq_vis"
