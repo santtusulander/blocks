@@ -1,17 +1,17 @@
 import React from 'react'
+import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
-import AnalysisByTime from './by-time'
-import AnalysisByLocation from './by-location'
 
-class AnalysisTraffic extends React.Component {
+import AnalysisByTime from './by-time'
+
+class AnalysisSPReport extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      byLocationWidth: 100,
       byTimeWidth: 100
     }
 
@@ -27,7 +27,6 @@ class AnalysisTraffic extends React.Component {
   }
   measureContainers() {
     this.setState({
-      byLocationWidth: this.refs.byLocationHolder.clientWidth,
       byTimeWidth: this.refs.byTimeHolder.clientWidth
     })
   }
@@ -40,11 +39,39 @@ class AnalysisTraffic extends React.Component {
       : Immutable.List()
     return (
       <div className="analysis-traffic">
-        <div className="analysis-data-box">
-          <h4>Total Egress Yesterday</h4>
-          <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
-        </div>
-        <h3>TRANSFER BY TIME</h3>
+        <Row>
+          <Col xs={12}>
+            <div className="analysis-data-box">
+              <h4>Traffic today</h4>
+              <p>0 GB</p>
+              <Row className="extra-margin-top">
+                <Col xs={6}>
+                  <h4>On-net</h4>
+                  <p className="on-net">00%</p>
+                </Col>
+                <Col xs={6}>
+                  <h4>Off-net</h4>
+                  <p className="off-net">00%</p>
+                </Col>
+              </Row>
+            </div>
+            <div className="analysis-data-box">
+              <h4>Traffic today</h4>
+              <p>0 GB</p>
+              <Row className="extra-margin-top">
+                <Col xs={6}>
+                  <h4>On-net</h4>
+                  <p className="on-net">00%</p>
+                </Col>
+                <Col xs={6}>
+                  <h4>Off-net</h4>
+                  <p className="off-net">00%</p>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+        <h3>TRAFFIC OVER TIME</h3>
         <div ref="byTimeHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
@@ -55,27 +82,15 @@ class AnalysisTraffic extends React.Component {
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
-        <h3>BY GEOGRAPHY</h3>
-        <div ref="byLocationHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> :
-            <AnalysisByLocation
-              dataKey="bytes"
-              timelineKey="detail"
-              width={this.state.byLocationWidth}
-              height={this.state.byLocationWidth / 1.6}
-              countryData={this.props.byCountry}/>
-          }
-        </div>
-        <h3>BY COUNTRY</h3>
-        <table className="table table-striped table-analysis by-country-table">
+        <table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
-              <th>Country</th>
-              <th>Traffic</th>
-              <th>% of Traffic</th>
-              <th className="text-center">Period Trend</th>
-              <th>Change</th>
+              <th>Date</th>
+              <th>On-Net in GB</th>
+              <th>On-Net in %</th>
+              <th>Off-Net in GB</th>
+              <th>Off-Net in %</th>
+              <th>Total in GB</th>
             </tr>
           </thead>
           <tbody>
@@ -113,18 +128,8 @@ class AnalysisTraffic extends React.Component {
                   <td>{country.get('name')}</td>
                   <td>{formattedBytes}</td>
                   <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                  <td width={this.state.byTimeWidth / 3}>
-                    <AnalysisByTime axes={false} padding={0} area={false}
-                      primaryData={country.get('detail').map(datapoint => {
-                        return datapoint.set(
-                          'timestamp',
-                          moment(datapoint.get('timestamp'), 'X').toDate()
-                        )
-                      }).toJS()}
-                      dataKey='bytes'
-                      width={this.state.byTimeWidth / 3}
-                      height={50} />
-                  </td>
+                  <td>{trending}</td>
+                  <td>{trending}</td>
                   <td>{trending}</td>
                 </tr>
               )
@@ -136,8 +141,8 @@ class AnalysisTraffic extends React.Component {
   }
 }
 
-AnalysisTraffic.displayName = 'AnalysisTraffic'
-AnalysisTraffic.propTypes = {
+AnalysisSPReport.displayName = 'AnalysisSPReport'
+AnalysisSPReport.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
@@ -145,4 +150,4 @@ AnalysisTraffic.propTypes = {
   totalEgress: React.PropTypes.number
 }
 
-module.exports = AnalysisTraffic
+module.exports = AnalysisSPReport
