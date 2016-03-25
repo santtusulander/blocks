@@ -40,55 +40,21 @@ function routeVisitorsBrowser(req, res) {
   };
 
   db.getVisitorWithTotals(options).spread((visitorData, dimensionTotals, grandTotalData) => {
-    let dimensionTotalsGrouped = _.groupBy(dimensionTotals, 'browser');
-    let grandTotal             = grandTotalData[0].uniq_vis;
+    let dimension              = 'browser';
     let optionsFinal           = db._getQueryOptions(options);
     let maxBrowsers            = params.max_browsers || 5;
-    let allBrowserVisitorData  = _.groupBy(visitorData, 'browser');
+    let dimensionTotalsGrouped = _.groupBy(dimensionTotals, dimension);
+    let grandTotal             = grandTotalData[0].uniq_vis;
     let responseData = {
       total: grandTotal,
-      browsers: []
+      browsers: dataUtils.processVisitorDataByDimension(
+        dimension, visitorData, dimensionTotalsGrouped, grandTotal, maxBrowsers, optionsFinal
+      )
     };
-
-    _.forOwn(allBrowserVisitorData, (browserData, browserName) => {
-      let visitorRecords;
-      let browserTotal = dimensionTotalsGrouped[browserName][0].uniq_vis;
-      let browserRecord = {
-        name: browserName,
-        percent_total: parseFloat((browserTotal / grandTotal).toFixed(4)),
-        total: browserTotal,
-        detail: []
-      };
-
-      // Set the detail array on the browserRecord
-      // Calculate total visitors for the browser
-      // Remove the browser key from each record — since we're already
-      // grouped by browser, we don't need to transfer all that extra data
-      // over the network.
-      visitorRecords = browserData.map((data) => {
-        return _.pick(data, ['timestamp', 'uniq_vis']);
-      });
-
-      // Ensure there is a record for each time interval
-      visitorRecords = dataUtils.buildContiguousTimeline(
-        visitorRecords, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'uniq_vis'
-      );
-      browserRecord.detail = visitorRecords;
-
-      // Add the browserRecord to the response data
-      responseData.browsers.push(browserRecord);
-
-    });
-
-    // Sort the browsers by their total in descending order
-    responseData.browsers = _.sortBy(responseData.browsers, 'total').reverse();
-
-    // Only include the number of browsers specified by maxBrowsers
-    responseData.browsers = _.take(responseData.browsers, maxBrowsers);
 
     res.jsend(responseData);
 
-  }).catch((err) => {
+  }).catch(() => {
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 }

@@ -1,5 +1,6 @@
 'use strict';
 
+const _         = require('lodash');
 const dataUtils = require('./data-utils');
 
 describe('dataUtils._getAppropriateTransferRateUnit', function() {
@@ -137,6 +138,70 @@ describe('dataUtils.buildContiguousTimeline', function() {
   it('should return 12 records per year for the month granularity', function() {
     let data = dataUtils.buildContiguousTimeline(dataDaySingle, jan1Start, dec31End, 'month', 'bytes');
     expect(data.length).toBe(12);
+  });
+
+});
+
+describe('dataUtils.processVisitorDataByDimension', function() {
+  let options = {
+    start                 : 1451606400,
+    end                   : 1451692799,
+    granularity           : 'hour',
+    aggregate_granularity : 'day',
+    dimension             : 'fruit'
+  };
+
+  let mockVisitorData = [
+    {fruit: 'banana', uniq_vis: 10, timestamp: 1451606400},
+    {fruit: 'apple', uniq_vis: 20, timestamp: 1451606400},
+    {fruit: 'banana', uniq_vis: 20, timestamp: 1451610000},
+    {fruit: 'apple', uniq_vis: 40, timestamp: 1451610000},
+    {fruit: 'banana', uniq_vis: 30, timestamp: 1451613600},
+    {fruit: 'apple', uniq_vis: 60, timestamp: 1451613600}
+  ];
+
+  let mockTotalsGrouped = {
+    banana: [{fruit: 'banana', uniq_vis: 60, timestamp: 1451606400}],
+    apple: [{fruit: 'apple', uniq_vis: 120, timestamp: 1451606400}]
+  }
+
+  let grandTotal = 180;
+
+
+  it('should return an array of objects for each unique dimension item', function() {
+    let data = dataUtils.processVisitorDataByDimension(
+      'fruit', mockVisitorData, mockTotalsGrouped, grandTotal, 5, options
+    );
+    console.log(data);
+    expect(data.length).toBe(2);
+    expect(data[0].name).toBe('apple');
+    expect(data[1].name).toBe('banana');
+  });
+
+  it('should calculate the total and percent of total for each dimension item', function() {
+    let data = dataUtils.processVisitorDataByDimension(
+      'fruit', mockVisitorData, mockTotalsGrouped, grandTotal, 5, options
+    );
+    expect(data[0].percent_total).toBe(0.6667);
+    expect(data[0].total).toBe(120);
+    expect(data[1].percent_total).toBe(0.3333);
+    expect(data[1].total).toBe(60);
+  });
+
+  it('should return 24 detail records for each dimension item that only contain timestamp and uniq_vis properties', function() {
+    let data = dataUtils.processVisitorDataByDimension(
+      'fruit', mockVisitorData, mockTotalsGrouped, grandTotal, 5, options
+    );
+
+    data.forEach((dataItem) => {
+      expect(dataItem.detail.length).toBe(24);
+      dataItem.detail.forEach((record) => {
+        let keys = _.keys(record);
+        expect(keys.length).toBe(2);
+        expect(keys.indexOf('uniq_vis') >= 0).toBe(true);
+        expect(keys.indexOf('timestamp') >= 0).toBe(true);
+      });
+    });
   });
 
 });
