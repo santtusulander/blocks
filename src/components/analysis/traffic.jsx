@@ -40,7 +40,7 @@ class AnalysisTraffic extends React.Component {
       : Immutable.List()
     return (
       <div className="analysis-traffic">
-        <div className="total-egress">
+        <div className="analysis-data-box">
           <h4>Total Egress Yesterday</h4>
           <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
         </div>
