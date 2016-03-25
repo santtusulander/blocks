@@ -24,21 +24,21 @@
 
   .dark-theme & {
     background: url('../assets/img/dt-content-chart.svg') 0 0 no-repeat;
-    background-size: 120px;
+    background-size: 120px 120px;
     border-bottom: 2px solid rgba($white, 0.2);
 
     @include md {
-      background-size: 100px;
+      background-size: 100px 100px;
     }
   }
 
   .light-theme & {
     background: url('../assets/img/lt-content-chart.svg') 0 0 no-repeat;
-    background-size: 120px;
+    background-size: 120px 120px;
     border-bottom: 2px solid rgba($black, 0.2);
 
     @include md {
-      background-size: 100px;
+      background-size: 100px 100px;
     }
   }
 }
