@@ -4,7 +4,6 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
-  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.1);
