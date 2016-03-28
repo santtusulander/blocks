@@ -38,8 +38,8 @@ export class AccountAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
-      endDate: moment(),
-      startDate: moment().startOf('month')
+      endDate: moment().utc(),
+      startDate: moment().utc().startOf('month')
     }
 
     this.changeTab = this.changeTab.bind(this)
