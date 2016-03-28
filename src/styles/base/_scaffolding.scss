@@ -66,3 +66,11 @@ hr {
 .text-orange {
   color: $orange;
 }
+
+.extra-margin-top {
+  margin-top: $btn-height / 2;
+
+  @include md {
+    margin-top: $md-btn-height / 2;
+  }
+}

@@ -127,6 +127,13 @@ export class Property extends React.Component {
     }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
+    const metrics = this.props.metrics.find(
+      metric => metric.get('property') === this.props.location.query.name)
+      || Immutable.Map()
+    const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    const avg_transfer_rate = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('average').split(' ') : []
+    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : []
     return (
       <PageContainer>
         <Content>
@@ -196,12 +203,13 @@ export class Property extends React.Component {
                   </Link>
                 </h3>
 
-                <div ref="byTimeHolder">
-                  <AnalysisByTime axes={false} padding={40}
-                    primaryData={this.props.trafficByTime.toJS()}
+                <div className="extra-margin-top" ref="byTimeHolder">
+                  <AnalysisByTime axes={false} padding={0}
+                    className="bg-transparent"
+                    primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 2} />
+                    height={this.state.byTimeWidth / 3} />
                 </div>
 
                 <Row>
@@ -210,11 +218,16 @@ export class Property extends React.Component {
                     Unique visitors
                   </Col>
                   <Col xs={4}>
-                    <h1>8<span className="heading-suffix"> Gbps</span></h1>
+                    <h1>
+                      {avg_transfer_rate[0]}
+                      <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
+                    </h1>
                     Bandwidth
                   </Col>
                   <Col xs={4}>
-                    <h1>97<span className="heading-suffix"> %</span></h1>
+                    <h1>{avg_cache_hit_rate}
+                      <span className="heading-suffix"> %</span>
+                    </h1>
                     Cache Hit Rate
                   </Col>
                 </Row>
@@ -330,10 +343,12 @@ Property.propTypes = {
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   hostActions: React.PropTypes.object,
   id: React.PropTypes.string,
   location: React.PropTypes.object,
+  metrics: React.PropTypes.instanceOf(Immutable.List),
   name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
@@ -349,6 +364,8 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.host.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
+    metrics: state.metrics.get('hostMetrics'),
     properties: state.host.get('allHosts'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching')

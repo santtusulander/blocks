@@ -1,6 +1,7 @@
 import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import {analyticsBase} from '../util'
 
@@ -37,11 +38,11 @@ const qsBuilder = ({
 
 const parseDatapointTraffic = (datapoint) => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
-    traffic.timestamp = new Date(traffic.timestamp * 1000)
+    traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
     return traffic;
   })
   datapoint.traffic = datapoint.traffic.map(traffic => {
-    traffic.timestamp = new Date(traffic.timestamp * 1000)
+    traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
     return traffic;
   })
   datapoint.totalTraffic = datapoint.traffic.reduce((total, traffic) => {
