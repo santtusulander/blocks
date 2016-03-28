@@ -12,7 +12,10 @@ export class Analyses extends React.Component {
     super(props)
 
     this.state = {
-      activeFilter: 'month_to_date',
+      activeDateRange: 'month_to_date',
+      activeServiceProvider: 'all',
+      activePop: 'all',
+      activeChartType: 'bar',
       datepickerOpen: false
     }
 
@@ -21,6 +24,9 @@ export class Analyses extends React.Component {
     this.handleOnFocus = this.handleOnFocus.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
     this.handleTimespanChange = this.handleTimespanChange.bind(this)
+    this.handleServiceProviderChange = this.handleServiceProviderChange.bind(this)
+    this.handlePopChange = this.handlePopChange.bind(this)
+    this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
   handleStartDateChange(date) {
@@ -72,7 +78,22 @@ export class Analyses extends React.Component {
     }
     this.props.changeDateRange(startDate, moment())
     this.setState({
-      activeFilter: value
+      activeDateRange: value
+    })
+  }
+  handleServiceProviderChange(value) {
+    this.setState({
+      activeServiceProvider: value
+    })
+  }
+  handlePopChange(value) {
+    this.setState({
+      activePop: value
+    })
+  }
+  handleChartTypeChange(value) {
+    this.setState({
+      activeChartType: value
     })
   }
   toggleServiceType(type) {
@@ -111,14 +132,14 @@ export class Analyses extends React.Component {
           <div className="form-group">
             <Select className="btn-block"
               onSelect={this.handleTimespanChange}
-              value={this.state.activeFilter}
+              value={this.state.activeDateRange}
               options={[
                 ['month_to_date', 'Month to Date'],
                 ['week_to_date', 'Week to Date'],
                 ['today', 'Today'],
                 ['custom_timerange', 'Custom Time Range']]}/>
           </div>
-          {this.state.activeFilter === 'custom_timerange' ?
+          {this.state.activeDateRange === 'custom_timerange' ?
             <Row className="no-gutters">
               <Col xs={6}>
                 <p className="text-sm">FROM</p>
@@ -155,12 +176,67 @@ export class Analyses extends React.Component {
                 </div>
               </Col>
             </Row>
-            : ''
+            : null
           }
         </div>
+        {this.props.isSPReport ?
+          <div>
+            <div className="sidebar-section-header">
+              SERVICE PROVIDER
+            </div>
+            <div className="sidebar-content">
+              <div className="form-group">
+                <Select className="btn-block"
+                  onSelect={this.handleServiceProviderChange}
+                  value={this.state.activeServiceProvider}
+                  options={[
+                    ['all', 'All'],
+                    ['option', 'Option']]}/>
+              </div>
+            </div>
+            <div className="sidebar-section-header">
+              POP
+            </div>
+            <div className="sidebar-content">
+              <div className="form-group">
+                <Select className="btn-block"
+                  onSelect={this.handlePopChange}
+                  value={this.state.activePop}
+                  options={[
+                    ['all', 'All'],
+                    ['option', 'Option']]}/>
+              </div>
+            </div>
+            <div className="sidebar-section-header">
+              CHART TYPE
+            </div>
+            <div className="sidebar-content">
+              <div className="form-group">
+                <Select className="btn-block"
+                  onSelect={this.handleChartTypeChange}
+                  value={this.state.activeChartType}
+                  options={[
+                    ['bar', 'Bar Chart'],
+                    ['line', 'Line Chart']]}/>
+              </div>
+            </div>
+          </div>
+        : null}
         <div className="sidebar-section-header">
-          SERVICE: MEDIA DELIVERY
+          {this.props.isSPReport ?
+            'FILTERS' :
+            'SERVICE: MEDIA DELIVERY'
+          }
         </div>
+        {this.props.isSPReport ?
+          <div>
+            <div className="sidebar-content">
+              <Input type="checkbox" label="On-Net"/>
+              <Input type="checkbox" label="Off-Net"/>
+            </div>
+            <hr className="sidebar-hr" />
+          </div>
+        : null}
         <div className="sidebar-content">
           <Input type="checkbox" label="HTTP"
             checked={this.props.serviceTypes.includes('http')}
@@ -183,6 +259,7 @@ Analyses.propTypes = {
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
+  isSPReport: React.PropTypes.bool,
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
