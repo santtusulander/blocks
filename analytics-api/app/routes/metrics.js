@@ -67,11 +67,11 @@ function routeMetrics(req, res) {
         let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
 
         levelTrafficDataFormatted = dataUtils.buildContiguousTimeline(
-          levelTrafficDataFormatted, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+          levelTrafficDataFormatted, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'bytes'
         );
 
         levelHistoricalTrafficDataFormatted = dataUtils.buildContiguousTimeline(
-          levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity
+          levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity, 'bytes'
         );
 
         // Calculate historical variance

@@ -44,7 +44,7 @@ function routeTrafficTime(req, res) {
     let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
     let filledTrafficData  = _.mapValues(groupedTrafficData, (data) => {
       return dataUtils.buildContiguousTimeline(
-        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'bytes'
       );
     });
 

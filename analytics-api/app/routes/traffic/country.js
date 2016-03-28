@@ -81,7 +81,8 @@ function routeTrafficCountry(req, res) {
           trafficRecords,
           optionsFinal.start,
           optionsFinal.end,
-          optionsFinal.granularity
+          optionsFinal.granularity,
+          'bytes'
         );
         countryRecord.detail = trafficRecords;
 
