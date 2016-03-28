@@ -48,10 +48,10 @@ export class AccountAnalytics extends React.Component {
       this.props.trafficActions.fetchTotalEgress(fetchOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
-      this.props.visitorsActions.fetchByTime(fetchOpts),
-      this.props.visitorsActions.fetchByCountry(fetchOpts),
-      this.props.visitorsActions.fetchByBrowser(fetchOpts),
-      this.props.visitorsActions.fetchByOS(fetchOpts)
+      this.props.visitorsActions.fetchByTime(fetchOpts)//,
+      // this.props.visitorsActions.fetchByCountry(fetchOpts),
+      // this.props.visitorsActions.fetchByBrowser(fetchOpts),
+      // this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
   }
   changeTab(newTab) {

@@ -48,21 +48,9 @@
 
 .table-analysis {
 
-  th {
-    text-transform: uppercase;
-  }
-
   th:not(:first-child):not(.text-center),
   td:not(:first-child) {
     text-align: right;
-  }
-
-  td:not(:last-child) {
-
-    .dark-theme &,
-    .light-theme & {
-      border-right: 1px solid rgba($black, 0.2);
-    }
   }
 
   svg {
