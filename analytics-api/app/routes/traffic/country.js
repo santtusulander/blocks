@@ -81,7 +81,8 @@ function routeTrafficCountry(req, res) {
           trafficRecords,
           optionsFinal.start,
           optionsFinal.end,
-          optionsFinal.granularity
+          optionsFinal.granularity,
+          'bytes'
         );
         countryRecord.detail = trafficRecords;
 
@@ -123,7 +124,8 @@ function routeTrafficCountry(req, res) {
 
     res.jsend(responseData);
 
-  }).catch(() => {
+  }).catch((err) => {
+    log.error(err);
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 
