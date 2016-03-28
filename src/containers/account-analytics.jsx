@@ -17,6 +17,21 @@ import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 
+const fakeServiceProviderStats = Immutable.fromJS({
+ total: 31000000,
+ detail: [{
+   timestamp: moment(1451606400, 'X').toDate(),
+   total: 1000000,
+   net_on: {bytes: 500000, percent_total: 0.5},
+   net_off: {bytes: 500000, percent_total: 0.5}
+ }, {
+   timestamp: moment(1451692800, 'X').toDate(),
+   total: 1000000,
+   net_on: {bytes: 500000, percent_total: 0.5},
+   net_off: {bytes: 500000, percent_total: 0.5}
+ }]
+})
+
 export class AccountAnalytics extends React.Component {
   constructor(props) {
     super(props);
@@ -48,10 +63,10 @@ export class AccountAnalytics extends React.Component {
       this.props.trafficActions.fetchTotalEgress(fetchOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
-      this.props.visitorsActions.fetchByTime(fetchOpts)//,
-      // this.props.visitorsActions.fetchByCountry(fetchOpts),
-      // this.props.visitorsActions.fetchByBrowser(fetchOpts),
-      // this.props.visitorsActions.fetchByOS(fetchOpts)
+      this.props.visitorsActions.fetchByTime(fetchOpts),
+      this.props.visitorsActions.fetchByCountry(fetchOpts),
+      this.props.visitorsActions.fetchByBrowser(fetchOpts),
+      this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
   }
   changeTab(newTab) {
@@ -95,11 +110,8 @@ export class AccountAnalytics extends React.Component {
                 byOS={this.props.visitorsByOS}/>
               : ''}
             {this.state.activeTab === 'sp-report' ?
-              <AnalysisSPReport fetching={this.props.trafficFetching}
-                byTime={this.props.trafficByTime}
-                byCountry={this.props.trafficByCountry}
-                serviceTypes={this.props.serviceTypes}
-                totalEgress={this.props.totalEgress}/>
+              <AnalysisSPReport fetching={false}
+                serviceProviderStats={fakeServiceProviderStats}/>
               : ''}
           </div>
         </Content>
