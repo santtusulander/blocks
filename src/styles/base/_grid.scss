@@ -36,11 +36,3 @@
     margin-top: 14px;
   }
 }
-
-.row.extra-margin-top {
-  margin-top: $btn-height / 2;
-
-  @include md {
-    margin-top: $md-btn-height / 2;
-  }
-}
