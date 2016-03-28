@@ -31,7 +31,7 @@ const qsBuilder = ({
     qs += `&group=${group}`
   }
   if(property) {
-    qs += `&property=vidscale.cdx-stag.unifieddeliverynetwork.net`
+    qs += `&property=${property}`
   }
   if(startDate) {
     qs += `&start=${startDate}`
