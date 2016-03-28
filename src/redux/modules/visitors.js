@@ -13,11 +13,11 @@ const VISITORS_BY_COUNTRY_FETCHED = 'VISITORS_BY_COUNTRY_FETCHED'
 const VISITORS_BY_BROWSER_FETCHED = 'VISITORS_BY_BROWSER_FETCHED'
 const VISITORS_BY_OS_FETCHED = 'VISITORS_BY_OS_FETCHED'
 
-const emptyTraffic = Immutable.Map({
-  byBrowser: Immutable.List(),
-  byCountry: Immutable.List(),
-  byOS: Immutable.List(),
-  byTime: Immutable.List(),
+const emptyTraffic = Immutable.fromJS({
+  byBrowser: {browsers: []},
+  byCountry: {countries: []},
+  byOS: {os: []},
+  byTime: [],
   fetching: false
 })
 

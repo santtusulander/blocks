@@ -91,9 +91,9 @@ export class GroupAnalytics extends React.Component {
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
                 byTime={this.props.visitorsByTime}
-                byCountry={this.props.visitorsByCountry}
-                byBrowser={this.props.visitorsByBrowser}
-                byOS={this.props.visitorsByOS}/>
+                byCountry={this.props.visitorsByCountry.get('countries')}
+                byBrowser={this.props.visitorsByBrowser.get('browsers')}
+                byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
             {/*this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={this.props.trafficFetching}
@@ -120,9 +120,9 @@ GroupAnalytics.propTypes = {
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
-  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.List),
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
-  visitorsByOS: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
   visitorsFetching: React.PropTypes.bool
 }
