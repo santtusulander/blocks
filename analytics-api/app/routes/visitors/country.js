@@ -62,7 +62,8 @@ function routeVisitorsCountry(req, res) {
 
     res.jsend(responseData);
 
-  }).catch(() => {
+  }).catch((err) => {
+    log.error(err);
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 }
