@@ -67,11 +67,11 @@ function routeMetrics(req, res) {
         let levelHistoricalTrafficDataFormatted = levelHistoricalTrafficData.map((item) => _.pick(item, ['bytes', 'timestamp']));
 
         levelTrafficDataFormatted = dataUtils.buildContiguousTimeline(
-          levelTrafficDataFormatted, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+          levelTrafficDataFormatted, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'bytes'
         );
 
         levelHistoricalTrafficDataFormatted = dataUtils.buildContiguousTimeline(
-          levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity
+          levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity, 'bytes'
         );
 
         // Calculate historical variance
@@ -150,7 +150,8 @@ function routeMetrics(req, res) {
     //   end: params.end
     // }));
 
-  }).catch(() => {
+  }).catch((err) => {
+    log.error(err);
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 
