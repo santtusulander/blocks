@@ -15,24 +15,18 @@
   .line {
     stroke-width: 2px;
 
-    .dark-theme & {
-      stroke: $pale-blue;
-      fill: transparent;
-    }
-
+    .dark-theme &,
     .light-theme & {
       stroke: $pale-blue;
       fill: transparent;
     }
-  }
 
-  .secondary {
-    .dark-theme & {
-      stroke: $green;
-    }
+    &.secondary {
 
-    .light-theme & {
-      stroke: $green;
+      .dark-theme &,
+      .light-theme & {
+        stroke: $green;
+      }
     }
   }
 
