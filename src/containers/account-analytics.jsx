@@ -15,22 +15,22 @@ import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
-import AnalysisSPReport from '../components/analysis/sp-report'
+// import AnalysisSPReport from '../components/analysis/sp-report'
 
-const fakeServiceProviderStats = Immutable.fromJS({
- total: 31000000,
- detail: [{
-   timestamp: moment(1451606400, 'X').toDate(),
-   total: 1000000,
-   net_on: {bytes: 500000, percent_total: 0.5},
-   net_off: {bytes: 500000, percent_total: 0.5}
- }, {
-   timestamp: moment(1451692800, 'X').toDate(),
-   total: 1000000,
-   net_on: {bytes: 500000, percent_total: 0.5},
-   net_off: {bytes: 500000, percent_total: 0.5}
- }]
-})
+// const fakeServiceProviderStats = Immutable.fromJS({
+//  total: 31000000,
+//  detail: [{
+//    timestamp: moment(1451606400, 'X').toDate(),
+//    total: 1000000,
+//    net_on: {bytes: 500000, percent_total: 0.5},
+//    net_off: {bytes: 500000, percent_total: 0.5}
+//  }, {
+//    timestamp: moment(1451692800, 'X').toDate(),
+//    total: 1000000,
+//    net_on: {bytes: 500000, percent_total: 0.5},
+//    net_off: {bytes: 500000, percent_total: 0.5}
+//  }]
+// })
 
 export class AccountAnalytics extends React.Component {
   constructor(props) {
@@ -91,7 +91,7 @@ export class AccountAnalytics extends React.Component {
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP Report</NavItem>
+            {/*<NavItem eventKey="sp-report">SP Report</NavItem>*/}
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -109,10 +109,10 @@ export class AccountAnalytics extends React.Component {
                 byBrowser={this.props.visitorsByBrowser}
                 byOS={this.props.visitorsByOS}/>
               : ''}
-            {this.state.activeTab === 'sp-report' ?
+            {/*this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
                 serviceProviderStats={fakeServiceProviderStats}/>
-              : ''}
+              : ''*/}
           </div>
         </Content>
       </PageContainer>
