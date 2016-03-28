@@ -4,7 +4,6 @@ import { Button, ButtonToolbar, Col, Dropdown, Input,
   MenuItem, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
-import { connect } from 'react-redux'
 
 import Select from '../../components/select'
 
@@ -187,14 +186,7 @@ Analyses.propTypes = {
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
-  theme: React.PropTypes.string,
   toggleServiceType: React.PropTypes.func
 }
 
-function mapStateToProps(state) {
-  return {
-    theme: state.ui.get('theme')
-  };
-}
-
-export default connect(mapStateToProps)(Analyses);
+module.exports = Analyses
