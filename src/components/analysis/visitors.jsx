@@ -1,6 +1,7 @@
 import React from 'react'
 import numeral from 'numeral'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
@@ -70,12 +71,12 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               this.props.byCountry.map((country, i) => {
-                const totalVis = country.get('visitors').reduce((total, visitors) => {
-                  return total + visitors.get('uniq_vis')
+                const totalVis = country.get('detail').reduce((total, visitors) => {
+                  return total + (visitors.get('uniq_vis') || 0)
                 }, 0)
-                const startVis = country.get('visitors').first().get('uniq_vis')
-                const endVis = country.get('visitors').last().get('uniq_vis')
-                let trending = startVis / endVis
+                const startVis = country.get('detail').first().get('uniq_vis') || 0
+                const endVis = country.get('detail').last().get('uniq_vis') || 0
+                let trending = endVis ? startVis / endVis : 0
                 if(trending > 1) {
                   trending = numeral((trending - 1) * -1).format('0%')
                 }
@@ -87,7 +88,18 @@ class AnalysisVisitors extends React.Component {
                     <td>{country.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
                     <td>{country.get('percent_total')}%</td>
-                    <td width={this.state.byTimeWidth / 3}>Chart</td>
+                    <td width={this.state.byTimeWidth / 3}>
+                      <AnalysisByTime axes={false} padding={0} area={false}
+                        primaryData={country.get('detail').map(datapoint => {
+                          return datapoint.set(
+                            'timestamp',
+                            moment(datapoint.get('timestamp'), 'X').toDate()
+                          )
+                        }).toJS()}
+                        dataKey='uniq_vis'
+                        width={this.state.byTimeWidth / 3}
+                        height={50} />
+                    </td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -110,12 +122,12 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               this.props.byBrowser.map((browser, i) => {
-                const totalVis = browser.get('visitors').reduce((total, visitors) => {
-                  return total + visitors.get('uniq_vis')
+                const totalVis = browser.get('detail').reduce((total, visitors) => {
+                  return total + (visitors.get('uniq_vis') || 0)
                 }, 0)
-                const startVis = browser.get('visitors').first().get('uniq_vis')
-                const endVis = browser.get('visitors').last().get('uniq_vis')
-                let trending = startVis / endVis
+                const startVis = browser.get('detail').first().get('uniq_vis') || 0
+                const endVis = browser.get('detail').last().get('uniq_vis') || 0
+                let trending = endVis ? startVis / endVis : 0
                 if(trending > 1) {
                   trending = numeral((trending - 1) * -1).format('0%')
                 }
@@ -124,10 +136,21 @@ class AnalysisVisitors extends React.Component {
                 }
                 return (
                   <tr key={i}>
-                    <td>{browser.get('browser')}</td>
+                    <td>{browser.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
-                    <td>{browser.get('percent_total')}%</td>
-                    <td width={this.state.byTimeWidth / 3}>Chart</td>
+                    <td>{numeral(browser.get('percent_total') / 100).format('0,0.0%')}</td>
+                    <td width={this.state.byTimeWidth / 3}>
+                      <AnalysisByTime axes={false} padding={0} area={false}
+                        primaryData={browser.get('detail').map(datapoint => {
+                          return datapoint.set(
+                            'timestamp',
+                            moment(datapoint.get('timestamp'), 'X').toDate()
+                          )
+                        }).toJS()}
+                        dataKey='uniq_vis'
+                        width={this.state.byTimeWidth / 3}
+                        height={50} />
+                    </td>
                     <td>{trending}</td>
                   </tr>
                 )
@@ -150,12 +173,12 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               this.props.byOS.map((os, i) => {
-                const totalVis = os.get('visitors').reduce((total, visitors) => {
-                  return total + visitors.get('uniq_vis')
+                const totalVis = os.get('detail').reduce((total, visitors) => {
+                  return total + (visitors.get('uniq_vis') || 0)
                 }, 0)
-                const startVis = os.get('visitors').first().get('uniq_vis')
-                const endVis = os.get('visitors').last().get('uniq_vis')
-                let trending = startVis / endVis
+                const startVis = os.get('detail').first().get('uniq_vis') || 0
+                const endVis = os.get('detail').last().get('uniq_vis') || 0
+                let trending = endVis ? startVis / endVis : 0
                 if(trending > 1) {
                   trending = numeral((trending - 1) * -1).format('0%')
                 }
@@ -164,10 +187,21 @@ class AnalysisVisitors extends React.Component {
                 }
                 return (
                   <tr key={i}>
-                    <td>{os.get('os')}</td>
+                    <td>{os.get('name')}</td>
                     <td>{numeral(totalVis).format('0,0')}</td>
-                    <td>{os.get('percent_total')}%</td>
-                    <td width={this.state.byTimeWidth / 3}>Chart</td>
+                    <td>{numeral(os.get('percent_total') / 100).format('0,0.0%')}</td>
+                    <td width={this.state.byTimeWidth / 3}>
+                      <AnalysisByTime axes={false} padding={0} area={false}
+                        primaryData={os.get('detail').map(datapoint => {
+                          return datapoint.set(
+                            'timestamp',
+                            moment(datapoint.get('timestamp'), 'X').toDate()
+                          )
+                        }).toJS()}
+                        dataKey='uniq_vis'
+                        width={this.state.byTimeWidth / 3}
+                        height={50} />
+                    </td>
                     <td>{trending}</td>
                   </tr>
                 )
