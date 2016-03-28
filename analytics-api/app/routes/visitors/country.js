@@ -45,7 +45,7 @@ function routeVisitorsCountry(req, res) {
     let optionsFinal           = db._getQueryOptions(options);
     let maxCountries           = params.max_countries || 5;
     let dimensionTotalsGrouped = _.groupBy(dimensionTotals, dimension);
-    let grandTotal             = grandTotalData[0].uniq_vis;
+    let grandTotal             = (grandTotalData && grandTotalData[0] && grandTotalData[0].uniq_vis) || 0;
     let responseData = {
       total: grandTotal,
       countries: dataUtils.processVisitorDataByDimension(

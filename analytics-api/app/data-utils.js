@@ -162,10 +162,10 @@ class DataUtils {
 
     _.forOwn(visitorDataGrouped, (data, dimensionName) => {
       let visitorRecords;
-      let dimensionTotal = totalsGrouped[dimensionName][0].uniq_vis;
+      let dimensionTotal = (totalsGrouped && totalsGrouped[dimensionName] && totalsGrouped[dimensionName][0] && totalsGrouped[dimensionName][0].uniq_vis) || 0;
       let record = {
         name: dimensionName,
-        percent_total: parseFloat((dimensionTotal / grandTotal).toFixed(4)),
+        percent_total: parseFloat((dimensionTotal / grandTotal).toFixed(4)) || 0,
         total: dimensionTotal,
         detail: []
       };
