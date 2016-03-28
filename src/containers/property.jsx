@@ -206,7 +206,7 @@ export class Property extends React.Component {
                 <div className="extra-margin-top" ref="byTimeHolder">
                   <AnalysisByTime axes={false} padding={0}
                     className="bg-transparent"
-                    primaryData={metrics_traffic}
+                    primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
                     height={this.state.byTimeWidth / 3} />
