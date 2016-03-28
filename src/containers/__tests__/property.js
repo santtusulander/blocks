@@ -217,6 +217,31 @@ const fakeHost = Immutable.fromJS({
   "description": ""
 })
 
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
+
 describe('Property', () => {
   it('should exist', () => {
     const property = TestUtils.renderIntoDocument(
@@ -250,9 +275,24 @@ describe('Property', () => {
         activeHost={fakeHost}
         trafficActions={trafficActionsMaker()}
         properties={Immutable.List(['www.abc.com'])}
+        metrics={fakeMetrics}
         trafficByTime={Immutable.List()}/>
     )
     let header = TestUtils.findRenderedDOMComponentWithClass(property, 'property-header')
     expect(header.textContent).toContain('www.abc.com')
+  });
+
+  it('should toggle property menu', () => {
+    const property = TestUtils.renderIntoDocument(
+      <Property
+        params={urlParams}
+        location={fakeLocation}
+        fetching={true}
+        hostActions={hostActionsMaker()}
+        trafficActions={trafficActionsMaker()} />
+    )
+    expect(property.state.propertyMenuOpen).toBe(false)
+    property.togglePropertyMenu()
+    expect(property.state.propertyMenuOpen).toBe(true)
   });
 })
