@@ -104,7 +104,9 @@ label {
     padding-bottom: $md-form-group-padding;
   }
 
-  .header & {
+  .header &,
+  .sidebar-content &:only-child,
+  .sidebar-content &:last-child {
     padding-bottom: 0;
     margin-bottom: 0;
   }
