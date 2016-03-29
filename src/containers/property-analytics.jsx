@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
+import * as hostActionCreators from '../redux/modules/host'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -31,13 +32,26 @@ export class PropertyAnalytics extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
+    this.props.hostActions.fetchHosts(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
     this.fetchData()
   }
-  fetchData() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.location.query.name !== this.props.location.query.name) {
+      this.fetchData(nextProps.location.query.name)
+    }
+  }
+  fetchData(property) {
+    if(!property) {
+      property = this.props.location.query.name
+    }
     const fetchOpts = {
       account: this.props.params.account,
       group: this.props.params.group,
-      property: this.props.location.query.name,
+      property: property,
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
     }
@@ -62,6 +76,13 @@ export class PropertyAnalytics extends React.Component {
     this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
   }
   render() {
+    const availableHosts = this.props.hosts.map(host => {
+      return {
+        active: host === this.props.location.query.name,
+        link: `/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`,
+        name: host
+      }
+    })
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
@@ -73,7 +94,8 @@ export class PropertyAnalytics extends React.Component {
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             isSPReport={this.state.activeTab === 'sp-report'}
             type="property"
-            name={this.props.location.query.name}/>
+            name={this.props.location.query.name}
+            navOptions={availableHosts}/>
         </Sidebar>
 
         <Content>
@@ -114,6 +136,8 @@ export class PropertyAnalytics extends React.Component {
 
 PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
+  hostActions: React.PropTypes.object,
+  hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
@@ -133,6 +157,7 @@ PropertyAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    hosts: state.host.get('allHosts'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -148,6 +173,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)

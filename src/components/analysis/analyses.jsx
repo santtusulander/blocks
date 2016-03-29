@@ -1,9 +1,9 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, ButtonToolbar, Col, Dropdown, Input,
-  MenuItem, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, Dropdown, Input, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
+import { Link } from 'react-router'
 
 import Select from '../../components/select'
 
@@ -16,7 +16,8 @@ export class Analyses extends React.Component {
       activeServiceProvider: 'all',
       activePop: 'all',
       activeChartType: 'bar',
-      datepickerOpen: false
+      datepickerOpen: false,
+      navMenuOpen: false
     }
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this)
@@ -27,6 +28,7 @@ export class Analyses extends React.Component {
     this.handleServiceProviderChange = this.handleServiceProviderChange.bind(this)
     this.handlePopChange = this.handlePopChange.bind(this)
     this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
+    this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
   handleStartDateChange(date) {
@@ -101,21 +103,34 @@ export class Analyses extends React.Component {
       this.props.toggleServiceType(type)
     }
   }
+  toggleNavMenu() {
+    this.setState({navMenuOpen: !this.state.navMenuOpen})
+  }
   render() {
     const type = this.props.type ? this.props.type.toUpperCase() : ''
     return (
       <div className="analyses">
         <div className="sidebar-header">
           <p className="text-sm">{type} TRAFFIC OVERVIEW</p>
-          <Dropdown id="dropdown-content">
+          <Dropdown id="dropdown-content" open={this.state.navMenuOpen}
+            onToggle={this.toggleNavMenu}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">
               <h3>{this.props.name}</h3>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <MenuItem eventKey="1">propertyname2.com</MenuItem>
-              <MenuItem eventKey="2">propertyname3.com</MenuItem>
-              <MenuItem eventKey="3">propertyname4.com</MenuItem>
-              <MenuItem eventKey="4">propertyname5.com</MenuItem>
+              {this.props.navOptions ? this.props.navOptions.map((nav, i) => {
+                return (
+                  <li key={i} active={nav.active}>
+                    <Link
+                      className={nav.active ? 'active' : ''}
+                      to={nav.link}
+                      activeClassName="active"
+                      onClick={this.toggleNavMenu}>
+                      {nav.name}
+                    </Link>
+                  </li>
+                )
+              }) : ''}
             </Dropdown.Menu>
           </Dropdown>
           <div className="sidebar-actions">
@@ -262,6 +277,7 @@ Analyses.propTypes = {
   fetching: React.PropTypes.bool,
   isSPReport: React.PropTypes.bool,
   name: React.PropTypes.string,
+  navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),

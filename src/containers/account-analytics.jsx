@@ -49,9 +49,17 @@ export class AccountAnalytics extends React.Component {
   componentWillMount() {
     this.fetchData()
   }
-  fetchData() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params.account !== this.props.params.account) {
+      this.fetchData(nextProps.params.account)
+    }
+  }
+  fetchData(account) {
+    if(!account) {
+      account = this.props.params.account
+    }
     const fetchOpts = {
-      account: this.props.params.account,
+      account: account,
       group: this.props.params.group,
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
@@ -60,7 +68,7 @@ export class AccountAnalytics extends React.Component {
     this.props.visitorsActions.startFetching()
     this.props.accountActions.fetchAccount(
       this.props.params.brand,
-      this.props.params.account
+      account
     )
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
@@ -81,6 +89,13 @@ export class AccountAnalytics extends React.Component {
     this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
   }
   render() {
+    const availableAccounts = this.props.accounts.map(account => {
+      return {
+        active: account.get('id') === this.props.params.account,
+        link: `/content/analytics/account/${this.props.params.brand}/${account.get('id')}`,
+        name: account.get('name')
+      }
+    })
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
@@ -92,7 +107,8 @@ export class AccountAnalytics extends React.Component {
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             isSPReport={this.state.activeTab === 'sp-report'}
             type="account"
-            name={this.props.activeAccount.get('name')}/>
+            name={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
+            navOptions={availableAccounts}/>
         </Sidebar>
 
         <Content>
@@ -131,6 +147,7 @@ export class AccountAnalytics extends React.Component {
 AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
   accountActions: React.PropTypes.object,
+  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
@@ -150,6 +167,7 @@ AccountAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
