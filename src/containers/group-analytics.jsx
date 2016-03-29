@@ -32,12 +32,24 @@ export class GroupAnalytics extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
+    this.props.groupActions.fetchGroups(
+      this.props.params.brand,
+      this.props.params.account
+    )
     this.fetchData()
   }
-  fetchData() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params.group !== this.props.params.group) {
+      this.fetchData(nextProps.params.group)
+    }
+  }
+  fetchData(group) {
+    if(!group) {
+      group = this.props.params.group
+    }
     const fetchOpts = {
       account: this.props.params.account,
-      group: this.props.params.group,
+      group: group,
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
     }
@@ -46,7 +58,7 @@ export class GroupAnalytics extends React.Component {
     this.props.groupActions.fetchGroup(
       this.props.params.brand,
       this.props.params.account,
-      this.props.params.group
+      group
     )
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
@@ -67,6 +79,13 @@ export class GroupAnalytics extends React.Component {
     this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
   }
   render() {
+    const availableGroups = this.props.groups.map(group => {
+      return {
+        active: group.get('id') === this.props.params.group,
+        link: `/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`,
+        name: group.get('name')
+      }
+    })
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
@@ -78,7 +97,8 @@ export class GroupAnalytics extends React.Component {
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             isSPReport={this.state.activeTab === 'sp-report'}
             type="group"
-            name={this.props.activeGroup.get('name')}/>
+            name={this.props.activeGroup ? this.props.activeGroup.get('name') : ''}
+            navOptions={availableGroups}/>
         </Sidebar>
 
         <Content>
@@ -121,6 +141,7 @@ GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   groupActions: React.PropTypes.object,
+  groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -140,6 +161,7 @@ GroupAnalytics.propTypes = {
 function mapStateToProps(state) {
   return {
     activeGroup: state.group.get('activeGroup'),
+    groups: state.group.get('allGroups'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
