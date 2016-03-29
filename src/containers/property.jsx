@@ -5,11 +5,13 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Dropdown, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
+import numeral from 'numeral'
 
 import * as hostActionCreators from '../redux/modules/host'
 import * as purgeActionCreators from '../redux/modules/purge'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
+import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -70,6 +72,17 @@ export class Property extends React.Component {
         endDate: moment.utc().endOf('hour').format('X')
       })
     ]).then(this.props.trafficActions.finishFetching)
+    Promise.all([
+      this.props.visitorsActions.fetchByCountry({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        property: property,
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X'),
+        granularity: 'month',
+        aggregate_granularity: 'day'
+      })
+    ]).then(this.props.visitorsActions.finishFetching)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -134,6 +147,7 @@ export class Property extends React.Component {
     const avg_transfer_rate = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('average').split(' ') : []
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : []
+    const uniq_vis = this.props.visitorsByCountry.get('total')
     return (
       <PageContainer>
         <Content>
@@ -214,7 +228,7 @@ export class Property extends React.Component {
 
                 <Row>
                   <Col xs={4}>
-                    <h1>456,789</h1>
+                    <h1>{numeral(uniq_vis).format('0,0')}</h1>
                     Unique visitors
                   </Col>
                   <Col xs={4}>
@@ -356,7 +370,10 @@ Property.propTypes = {
   trafficActions: React.PropTypes.object,
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
-  uiActions: React.PropTypes.object
+  uiActions: React.PropTypes.object,
+  visitorsActions: React.PropTypes.object,
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
+  visitorsFetching: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
@@ -368,7 +385,9 @@ function mapStateToProps(state) {
     metrics: state.metrics.get('hostMetrics'),
     properties: state.host.get('allHosts'),
     trafficByTime: state.traffic.get('byTime'),
-    trafficFetching: state.traffic.get('fetching')
+    trafficFetching: state.traffic.get('fetching'),
+    visitorsByCountry: state.visitors.get('byCountry'),
+    visitorsFetching: state.traffic.get('fetching')
   };
 }
 
@@ -377,7 +396,8 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   };
 }
 
