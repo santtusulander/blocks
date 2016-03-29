@@ -26,7 +26,9 @@ const qsBuilder = ({
   group,
   property,
   startDate,
-  endDate
+  endDate,
+  granularity,
+  aggregate_granularity
 }) => {
   let qs = `?account=${account}`
   if(group) {
@@ -40,6 +42,12 @@ const qsBuilder = ({
   }
   if(endDate) {
     qs += `&end=${endDate}`
+  }
+  if(granularity) {
+    qs += `&granularity=${granularity}`
+  }
+  if(aggregate_granularity) {
+    qs += `&aggregate_granularity=${aggregate_granularity}`
   }
   return qs
 }
