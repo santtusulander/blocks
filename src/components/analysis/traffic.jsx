@@ -79,7 +79,7 @@ class AnalysisTraffic extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.byCountry.map((country, i) => {
+            {!this.props.fetching ? this.props.byCountry.map((country, i) => {
               const totalBytes = country.get('detail').reduce((total, traffic) => {
                 return total + traffic.get('bytes')
               }, 0)
@@ -128,7 +128,7 @@ class AnalysisTraffic extends React.Component {
                   <td>{trending}</td>
                 </tr>
               )
-            })}
+            }) : <tr><td colSpan="5">Loading...</td></tr>}
           </tbody>
         </table>
       </div>
