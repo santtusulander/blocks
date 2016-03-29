@@ -169,6 +169,16 @@
   min-width: 0;
   padding: 0;
   line-height: inherit;
+  text-align: left;
+
+  h3 {
+    max-width: calc(100% - #{$btn-height});
+    white-space: normal;
+
+    @include md {
+      max-width: calc(100% - #{$md-btn-height});
+    }
+  }
 
   .caret {
     position: relative;
