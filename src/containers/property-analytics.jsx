@@ -72,7 +72,8 @@ export class PropertyAnalytics extends React.Component {
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             isSPReport={this.state.activeTab === 'sp-report'}
-            type="property"/>
+            type="property"
+            name={this.props.location.query.name}/>
         </Sidebar>
 
         <Content>

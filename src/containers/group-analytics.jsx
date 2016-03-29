@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
+import * as groupActionCreators from '../redux/modules/group'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -42,6 +43,11 @@ export class GroupAnalytics extends React.Component {
     }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
+    this.props.groupActions.fetchGroup(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
@@ -71,7 +77,8 @@ export class GroupAnalytics extends React.Component {
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             isSPReport={this.state.activeTab === 'sp-report'}
-            type="group"/>
+            type="group"
+            name={this.props.activeGroup.get('name')}/>
         </Sidebar>
 
         <Content>
@@ -112,6 +119,8 @@ export class GroupAnalytics extends React.Component {
 
 GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  groupActions: React.PropTypes.object,
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -130,6 +139,7 @@ GroupAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeGroup: state.group.get('activeGroup'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -145,6 +155,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
