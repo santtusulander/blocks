@@ -115,7 +115,7 @@ export class Login extends React.Component {
             <Input type="text" id="username"
               wrapperClassName={'input-addon-before has-login-label '
                 + 'login-label-username'
-                + (this.state.usernameActive ? ' active' : '')}
+                + (this.state.usernameActive || this.state.username ? ' active' : '')}
               addonBefore={<IconEmail/>}
               onFocus={this.checkUsernameActive(true)}
               onBlur={this.checkUsernameActive(false)}
@@ -125,7 +125,7 @@ export class Login extends React.Component {
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
-                + (this.state.passwordActive ? ' active' : '')}
+                + (this.state.passwordActive || this.state.password ? ' active' : '')}
               addonBefore={<IconPassword/>}
               addonAfter={<a className={'input-addon-link' +
                   (this.state.passwordVisible ? ' active' : '')}
