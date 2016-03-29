@@ -79,8 +79,8 @@ export class Property extends React.Component {
         property: property,
         startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
         endDate: moment.utc().endOf('hour').format('X'),
-        granularity: 'month',
-        aggregate_granularity: 'day'
+        aggregate_granularity: 'day',
+        max_countries: 3
       })
     ]).then(this.props.visitorsActions.finishFetching)
   }
@@ -226,37 +226,43 @@ export class Property extends React.Component {
                     height={this.state.byTimeWidth / 3} />
                 </div>
 
-                <Row>
-                  <Col xs={4}>
-                    <h1>{numeral(uniq_vis).format('0,0')}</h1>
-                    Unique visitors
+                <Row className="extra-margin-top no-gutters">
+                  <Col xs={7}>
+                    <Row>
+                      <Col xs={6}>
+                        Unique visitors
+                        <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                      </Col>
+                      <Col xs={6}>
+                        Bandwidth
+                        <h2>
+                          {avg_transfer_rate[0]}
+                          <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
+                        </h2>
+                      </Col>
+                    </Row>
+                    <Row className="extra-margin-top">
+                      <Col xs={6}>
+                        Cache Hit Rate
+                        <h2>{avg_cache_hit_rate}
+                          <span className="heading-suffix"> %</span>
+                        </h2>
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col xs={4}>
-                    <h1>
-                      {avg_transfer_rate[0]}
-                      <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
-                    </h1>
-                    Bandwidth
-                  </Col>
-                  <Col xs={4}>
-                    <h1>{avg_cache_hit_rate}
-                      <span className="heading-suffix"> %</span>
-                    </h1>
-                    Cache Hit Rate
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col xs={12}>
-                    <h1>
-                      <span className="right-separator">40
-                        <span className="heading-suffix"> %</span> APAC
-                      </span>
-                      <span className="right-separator">22
-                        <span className="heading-suffix"> %</span> US
-                      </span>
-                      15<span className="heading-suffix"> %</span> EU</h1>
-                    Top 3 Regions by Visitors
+                  <Col xs={5}>
+                    Top 3 Countries by Visitors
+                    {this.props.fetching ?
+                      <p>Loading...</p> :
+                      this.props.visitorsByCountry.get('countries').map((country, i) => {
+                      return (
+                        <h2 key={i}>
+                          {numeral(country.get('percent_total')).format('0.00')}
+                          <span className="heading-suffix"> %</span>
+                          <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                        </h2>
+                      )
+                    })}
                   </Col>
                 </Row>
               </Col>
