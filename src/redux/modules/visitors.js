@@ -28,7 +28,8 @@ const qsBuilder = ({
   startDate,
   endDate,
   granularity,
-  aggregate_granularity
+  aggregate_granularity,
+  max_countries
 }) => {
   let qs = `?account=${account}`
   if(group) {
@@ -48,6 +49,9 @@ const qsBuilder = ({
   }
   if(aggregate_granularity) {
     qs += `&aggregate_granularity=${aggregate_granularity}`
+  }
+  if(max_countries) {
+    qs += `&max_countries=${max_countries}`
   }
   return qs
 }
