@@ -15,50 +15,27 @@ const numeralFormatMock = jest.genMockFunction()
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
-const fakeCountryData = Immutable.fromJS([
-  {
-    code:"USA",
-    name:"United States",
-    percent_change:null,
-    percent_total:0.9995,
-    historical_total:0,
-    total:40372232,
-    detail:[
-      {
-        bytes:60722,
-        timestamp:1456819200
-      },{
-        bytes:60722,
-        timestamp:1456822800
-      }
-    ]
-  },{
-    code:"UKR",
-    name:"Ukraine",
-    percent_change:null,
-    percent_total:0.0005,
-    historical_total:0,
-    total:19561,
-    detail:[
-      {
-        bytes:3807,
-        timestamp:1456819200
-      },{
-        bytes:60722,
-        timestamp:1456822800
-      }
-    ]
-  }
-])
+const fakeServiceProviderStats = Immutable.fromJS({
+ total: 31000000,
+ detail: [{
+   timestamp: new Date(1451606400 * 1000),
+   total: 1000000,
+   net_on: {bytes: 500000, percent_total: 0.5},
+   net_off: {bytes: 500000, percent_total: 0.5}
+ }, {
+   timestamp: new Date(1451692800 * 1000),
+   total: 1000000,
+   net_on: {bytes: 500000, percent_total: 0.5},
+   net_off: {bytes: 500000, percent_total: 0.5}
+ }]
+})
 
 describe('AnalysisSPReport', () => {
   it('should exist', () => {
     let analysisSPReport = TestUtils.renderIntoDocument(
       <AnalysisSPReport
         fetching={true}
-        byTime={Immutable.List()}
-        byCountry={Immutable.List()}
-        serviceTypes={Immutable.List()}/>
+        serviceProviderStats={fakeServiceProviderStats}/>
     );
     expect(TestUtils.isCompositeComponent(analysisSPReport)).toBeTruthy();
   });
@@ -67,11 +44,9 @@ describe('AnalysisSPReport', () => {
     let analysisSPReport = TestUtils.renderIntoDocument(
       <AnalysisSPReport
         fetching={true}
-        byTime={Immutable.List()}
-        byCountry={fakeCountryData}
-        serviceTypes={Immutable.List()}/>
+        serviceProviderStats={fakeServiceProviderStats}/>
     );
-    let tds = TestUtils.scryRenderedDOMComponentsWithTag(analysisSPReport, 'td')
-    expect(tds.length).toBe(12);
+    let trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisSPReport, 'tr')
+    expect(trs.length).toBe(3);
   });
 })

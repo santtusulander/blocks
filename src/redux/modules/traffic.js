@@ -1,6 +1,5 @@
-import {createAction} from 'redux-actions'
+import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 import moment from 'moment'
 
@@ -31,7 +30,7 @@ const qsBuilder = ({
     qs += `&group=${group}`
   }
   if(property) {
-    qs += `&property=vidscale.cdx-stag.unifieddeliverynetwork.net`
+    qs += `&property=${property}`
   }
   if(startDate) {
     qs += `&start=${startDate}`

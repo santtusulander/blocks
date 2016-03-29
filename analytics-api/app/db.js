@@ -426,7 +426,7 @@ class AnalyticsDB {
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global'
     if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension},\n        `;
+      selectedDimension = `${optionsFinal.dimension}`;
     } else {
       selectedDimension = '';
     }
@@ -456,21 +456,21 @@ class AnalyticsDB {
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
-    grouping.push('epoch_start');
-    grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
+    !optionsFinal.isAggregate && grouping.push('epoch_start');
+    grouping.length && grouping.unshift(accountLevelData.field);
 
     let queryParameterized = `
       SELECT
         epoch_start AS timestamp,
         ${accountLevelData.select},
-        ${selectedDimension}${isTrafficTable ? 'sum(uniq_vis) AS uniq_vis' : 'uniq_vis'}
+        ${selectedDimension ? selectedDimension + ',\n        ' : ''}${isTrafficTable ? 'sum(uniq_vis) AS uniq_vis' : 'uniq_vis'}
       FROM ??
       WHERE epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
-        ${grouping.join('')}
+        ${grouping.join(',\n        ')}
       ORDER BY
-        ${selectedDimension}epoch_start,
+        ${selectedDimension ? selectedDimension + ',\n        ' : ''}epoch_start,
         ${accountLevelData.field};
     `;
 
@@ -485,8 +485,8 @@ class AnalyticsDB {
    */
   getVisitorWithTotals(options) {
     let aggregateGranularity  = options.aggregate_granularity || 'month';
-    let dimensionTotalOptions = {granularity: aggregateGranularity};
-    let grandTotalOptions     = {dimension: 'global', granularity: aggregateGranularity};
+    let dimensionTotalOptions = {granularity: aggregateGranularity, isAggregate: true};
+    let grandTotalOptions     = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};
     let queries = [
       this.getVisitors(options),
       this.getVisitors(Object.assign({}, options, dimensionTotalOptions)),

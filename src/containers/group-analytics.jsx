@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
+import * as groupActionCreators from '../redux/modules/group'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -15,7 +16,7 @@ import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
-import AnalysisSPReport from '../components/analysis/sp-report'
+// import AnalysisSPReport from '../components/analysis/sp-report'
 
 export class GroupAnalytics extends React.Component {
   constructor(props) {
@@ -23,8 +24,8 @@ export class GroupAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
-      endDate: moment(),
-      startDate: moment().startOf('month')
+      endDate: moment().utc(),
+      startDate: moment().utc().startOf('month')
     }
 
     this.changeTab = this.changeTab.bind(this)
@@ -42,6 +43,11 @@ export class GroupAnalytics extends React.Component {
     }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
+    this.props.groupActions.fetchGroup(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
@@ -69,14 +75,17 @@ export class GroupAnalytics extends React.Component {
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
             serviceTypes={this.props.serviceTypes}
-            toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}/>
+            toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
+            isSPReport={this.state.activeTab === 'sp-report'}
+            type="group"
+            name={this.props.activeGroup.get('name')}/>
         </Sidebar>
 
         <Content>
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP Report</NavItem>
+            {/*<NavItem eventKey="sp-report">SP Report</NavItem>*/}
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -90,17 +99,17 @@ export class GroupAnalytics extends React.Component {
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
                 byTime={this.props.visitorsByTime}
-                byCountry={this.props.visitorsByCountry}
-                byBrowser={this.props.visitorsByBrowser}
-                byOS={this.props.visitorsByOS}/>
+                byCountry={this.props.visitorsByCountry.get('countries')}
+                byBrowser={this.props.visitorsByBrowser.get('browsers')}
+                byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
-            {this.state.activeTab === 'sp-report' ?
+            {/*this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={this.props.trafficFetching}
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
                 serviceTypes={this.props.serviceTypes}
                 totalEgress={this.props.totalEgress}/>
-              : ''}
+              : ''*/}
           </div>
         </Content>
       </PageContainer>
@@ -110,6 +119,8 @@ export class GroupAnalytics extends React.Component {
 
 GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  groupActions: React.PropTypes.object,
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -119,15 +130,16 @@ GroupAnalytics.propTypes = {
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
-  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.List),
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
-  visitorsByOS: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
   visitorsFetching: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
   return {
+    activeGroup: state.group.get('activeGroup'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -143,6 +155,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)

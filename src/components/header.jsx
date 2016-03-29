@@ -17,7 +17,6 @@ class Header extends React.Component {
     this.toggleAccountMenu = this.toggleAccountMenu.bind(this)
 
     this.state = {
-      showBreadcrumbs: false,
       animatingGradient: false,
       accountMenuOpen: false
     }
@@ -62,17 +61,23 @@ class Header extends React.Component {
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
-    // Show Configurations only for property levels
-    let showConfigurations = /(\/content\/property\/)/.test(this.props.pathname) ||
-      /(\/content\/configuration\/)/.test(this.props.pathname) ||
-      /(\/configurations\/)/.test(this.props.pathname) ||
-      /(\/analytics\/property\/)/.test(this.props.pathname)
+    const activeHost = this.props.location.query.name
+    // Hide Configurations for all levels higher than group summary / property levels
+    let hideConfigurations = /(\/content\/accounts\/)/.test(this.props.pathname) ||
+      /(\/content\/groups\/)/.test(this.props.pathname) ||
+      /(\/analytics\/account\/)/.test(this.props.pathname) ||
+      this.props.pathname === '/security' ||
+      this.props.pathname === '/services'
     // Hide Purge for all levels higher than group summary / property levels
     let hidePurge = /(\/content\/accounts\/)/.test(this.props.pathname) ||
       /(\/content\/groups\/)/.test(this.props.pathname) ||
       /(\/analytics\/account\/)/.test(this.props.pathname) ||
       this.props.pathname === '/security' ||
       this.props.pathname === '/services'
+    // Show breadcrumbs only for property levels
+    let showBreadcrumbs = /(\/content\/property\/)/.test(this.props.pathname) ||
+      /(\/content\/configuration\/)/.test(this.props.pathname) ||
+      /(\/analytics\/property\/)/.test(this.props.pathname)
     let contentActive = /(\/content\/)/.test(this.props.pathname) ? ' active' : ''
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
@@ -80,12 +85,39 @@ class Header extends React.Component {
           className={this.state.animatingGradient ?
             'header-gradient animated' :
             'header-gradient'}></div>
-        {this.state.showBreadcrumbs ?
+        {showBreadcrumbs ?
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
-            <li className="breadcrumb-back" />
-            <li>Content</li>
-            <li>Group Name</li>
-            <li className="active">Property Name</li>
+            <li className="breadcrumb-back">
+              <Link to={`/content/groups/udn/${firstAccount}`} />
+            </li>
+            <li>
+              <Link to={`/content/groups/udn/${this.props.params.account}`}>
+                {activeAccount ?
+                  activeAccount == this.props.params.account ?
+                    this.props.activeAccount.get('name')
+                  : 'ACCOUNT'
+                : null}
+              </Link>
+            </li>
+            <li>
+              <Link to={`/content/hosts/udn/${this.props.params.account}/${this.props.params.group}`}>
+                {this.props.activeGroup ?
+                  this.props.activeGroup.get('name')
+                : 'GROUP'}
+              </Link>
+            </li>
+            {/(\/content\/property\/)/.test(this.props.pathname) ? null :
+              <li>
+                <Link to={`/content/property/udn/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(activeHost).replace(/\./g, "%2e")}`}>
+                  {activeHost}
+                </Link>
+              </li>
+            }
+            <li className="active">
+              {/(\/content\/property\/)/.test(this.props.pathname) && activeHost}
+              {/(\/content\/configuration\/)/.test(this.props.pathname) && 'Configuration'}
+              {/(\/analytics\/property\/)/.test(this.props.pathname) && 'Analytics'}
+            </li>
           </ol> :
         <div>
           <Navbar.Header>
@@ -123,13 +155,15 @@ class Header extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-            {showConfigurations &&
-              <li className="main-nav-item">
+            <li className="main-nav-item">
+              {hideConfigurations ?
+                <span className="main-nav-link inactive">Configurations</span>
+              :
                 <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
-              </li>
-            }
+              }
+            </li>
             <li className="main-nav-item">
               <Link className="main-nav-link" to={`/security`} activeClassName="active">
                 Security
@@ -140,14 +174,16 @@ class Header extends React.Component {
                 Services
               </Link>
             </li>
-            {!hidePurge &&
-              <li className="main-nav-item">
+            <li className="main-nav-item">
+              {hidePurge ?
+                <span className="main-nav-link inactive">Purge</span>
+              :
                 <a href="#" className="main-nav-link"
                   onClick={this.activatePurge}>
                   Purge
                 </a>
-              </li>
-            }
+              }
+            </li>
           </Nav>
           <Nav pullRight={true}>
             <li>
@@ -234,10 +270,14 @@ Header.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activatePurge: React.PropTypes.func,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
+  location: React.PropTypes.object,
   logOut: React.PropTypes.func,
+  params: React.PropTypes.object,
   pathname: React.PropTypes.string,
   theme: React.PropTypes.string
 }

@@ -4,15 +4,15 @@ import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
-
-import AnalysisByTime from './by-time'
+import AnalysisStacked from './stacked'
+import {formatBytes} from '../../util/helpers'
 
 class AnalysisSPReport extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      byTimeWidth: 100
+      stacksWidth: 100
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -27,16 +27,10 @@ class AnalysisSPReport extends React.Component {
   }
   measureContainers() {
     this.setState({
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
+      stacksWidth: this.refs.stacksHolder.clientWidth
     })
   }
   render() {
-    const httpData = this.props.serviceTypes.includes('http') ?
-      this.props.byTime.filter(time => time.get('service_type') === 'http')
-      : Immutable.List()
-    const httpsData = this.props.serviceTypes.includes('https') ?
-      this.props.byTime.filter(time => time.get('service_type') === 'https')
-      : Immutable.List()
     return (
       <div className="analysis-traffic">
         <Row>
@@ -72,65 +66,35 @@ class AnalysisSPReport extends React.Component {
           </Col>
         </Row>
         <h3>TRAFFIC OVER TIME</h3>
-        <div ref="byTimeHolder">
+        <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
-            <AnalysisByTime axes={true} padding={40}
-              dataKey="bytes"
-              primaryData={httpData.toJS()}
-              secondaryData={httpsData.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
+            <AnalysisStacked padding={40}
+              data={this.props.serviceProviderStats.get('detail').toJS()}
+              width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
             }
         </div>
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
               <th>Date</th>
-              <th>On-Net in GB</th>
+              <th>On-Net in bytes</th>
               <th>On-Net in %</th>
-              <th>Off-Net in GB</th>
+              <th>Off-Net in bytes</th>
               <th>Off-Net in %</th>
-              <th>Total in GB</th>
+              <th>Total in bytes</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('detail').reduce((total, traffic) => {
-                return total + traffic.get('bytes')
-              }, 0)
-              const startBytes = country.get('detail').first().get('bytes')
-              const endBytes = country.get('detail').last().get('bytes')
-              let trending = startBytes / endBytes
-              if(isNaN(trending)) {
-                trending = 'N/A'
-              }
-              else if(trending > 1) {
-                trending = numeral((trending - 1) * -1).format('0%')
-              }
-              else {
-                trending = numeral(trending).format('+0%');
-              }
-              let formattedBytes = numeral(totalBytes / 100000000).format('0,0')+' GB'
-              if(totalBytes < 1000) {
-                formattedBytes = numeral(totalBytes).format('0,0')+' B'
-
-              }
-              else if(totalBytes < 1000000) {
-                formattedBytes = numeral(totalBytes / 1000).format('0,0')+' KB'
-
-              }
-              else if(totalBytes < 100000000) {
-                formattedBytes = numeral(totalBytes / 1000000).format('0,0')+' MB'
-
-              }
+            {this.props.serviceProviderStats.get('detail').map((day, i) => {
               return (
                 <tr key={i}>
-                  <td>{country.get('name')}</td>
-                  <td>{formattedBytes}</td>
-                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                  <td>{trending}</td>
-                  <td>{trending}</td>
-                  <td>{trending}</td>
+                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                  <td>{formatBytes(day.get('net_on').get('bytes'))}</td>
+                  <td>{numeral(day.get('net_on').get('percent_total')).format('0%')}</td>
+                  <td>{formatBytes(day.get('net_off').get('bytes'))}</td>
+                  <td>{numeral(day.get('net_off').get('percent_total')).format('0%')}</td>
+                  <td>{formatBytes(day.get('total'))}</td>
                 </tr>
               )
             })}
@@ -143,11 +107,8 @@ class AnalysisSPReport extends React.Component {
 
 AnalysisSPReport.displayName = 'AnalysisSPReport'
 AnalysisSPReport.propTypes = {
-  byCountry: React.PropTypes.instanceOf(Immutable.List),
-  byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  totalEgress: React.PropTypes.number
+  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = AnalysisSPReport

@@ -44,7 +44,7 @@ function routeTrafficTime(req, res) {
     let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
     let filledTrafficData  = _.mapValues(groupedTrafficData, (data) => {
       return dataUtils.buildContiguousTimeline(
-        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity
+        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'bytes'
       );
     });
 
@@ -54,7 +54,8 @@ function routeTrafficTime(req, res) {
 
     res.jsend(finalTrafficData);
 
-  }).catch(() => {
+  }).catch((err) => {
+    log.error(err);
     res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 }
