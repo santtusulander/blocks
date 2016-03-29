@@ -70,7 +70,8 @@ export class GroupAnalytics extends React.Component {
             changeDateRange={this.changeDateRange}
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
-            isSPReport={this.state.activeTab === 'sp-report'}/>
+            isSPReport={this.state.activeTab === 'sp-report'}
+            type="group"/>
         </Sidebar>
 
         <Content>
