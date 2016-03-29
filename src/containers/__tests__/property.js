@@ -22,6 +22,14 @@ function trafficActionsMaker() {
   }
 }
 
+function visitorsActionsMaker() {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchByCountry: jest.genMockFunction(),
+    finishFetching: jest.genMockFunction()
+  }
+}
+
 const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
@@ -242,6 +250,12 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
+const fakeVisitors = Immutable.fromJS([
+  {
+    total: 1
+  }
+])
+
 describe('Property', () => {
   it('should exist', () => {
     const property = TestUtils.renderIntoDocument(
@@ -250,7 +264,8 @@ describe('Property', () => {
         location={fakeLocation}
         fetching={true}
         hostActions={hostActionsMaker()}
-        trafficActions={trafficActionsMaker()} />
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()} />
     );
     expect(TestUtils.isCompositeComponent(property)).toBeTruthy();
   });
@@ -260,7 +275,8 @@ describe('Property', () => {
     TestUtils.renderIntoDocument(
       <Property hostActions={hostActions} fetching={true}
         params={urlParams} location={fakeLocation}
-        trafficActions={trafficActionsMaker()}/>
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
@@ -276,7 +292,9 @@ describe('Property', () => {
         trafficActions={trafficActionsMaker()}
         properties={Immutable.List(['www.abc.com'])}
         metrics={fakeMetrics}
-        trafficByTime={Immutable.List()}/>
+        trafficByTime={Immutable.List()}
+        visitorsByCountry={fakeVisitors}
+        visitorsActions={visitorsActionsMaker()}/>
     )
     let header = TestUtils.findRenderedDOMComponentWithClass(property, 'property-header')
     expect(header.textContent).toContain('www.abc.com')
@@ -289,7 +307,8 @@ describe('Property', () => {
         location={fakeLocation}
         fetching={true}
         hostActions={hostActionsMaker()}
-        trafficActions={trafficActionsMaker()} />
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()} />
     )
     expect(property.state.propertyMenuOpen).toBe(false)
     property.togglePropertyMenu()
