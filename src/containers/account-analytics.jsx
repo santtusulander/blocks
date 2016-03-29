@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
+import * as accountActionCreators from '../redux/modules/account'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -57,6 +58,10 @@ export class AccountAnalytics extends React.Component {
     }
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
+    this.props.accountActions.fetchAccount(
+      this.props.params.brand,
+      this.props.params.account
+    )
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
@@ -85,7 +90,9 @@ export class AccountAnalytics extends React.Component {
             changeDateRange={this.changeDateRange}
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
-            isSPReport={this.state.activeTab === 'sp-report'}/>
+            isSPReport={this.state.activeTab === 'sp-report'}
+            type="account"
+            name={this.props.activeAccount.get('name')}/>
         </Sidebar>
 
         <Content>
@@ -123,6 +130,8 @@ export class AccountAnalytics extends React.Component {
 
 AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -141,6 +150,7 @@ AccountAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -156,6 +166,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)

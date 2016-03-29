@@ -102,13 +102,14 @@ export class Analyses extends React.Component {
     }
   }
   render() {
+    const type = this.props.type ? this.props.type.toUpperCase() : ''
     return (
       <div className="analyses">
         <div className="sidebar-header">
-          <p className="text-sm">ACCOUNT TRAFFIC OVERVIEW</p>
+          <p className="text-sm">{type} TRAFFIC OVERVIEW</p>
           <Dropdown id="dropdown-content">
             <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">
-              <h3>Disney Interactive</h3>
+              <h3>{this.props.name}</h3>
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <MenuItem eventKey="1">propertyname2.com</MenuItem>
@@ -260,10 +261,12 @@ Analyses.propTypes = {
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
   isSPReport: React.PropTypes.bool,
+  name: React.PropTypes.string,
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
-  toggleServiceType: React.PropTypes.func
+  toggleServiceType: React.PropTypes.func,
+  type: React.PropTypes.string
 }
 
 module.exports = Analyses
