@@ -380,7 +380,7 @@ Property.propTypes = {
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.List),
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
 }
 
