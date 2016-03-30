@@ -3,16 +3,84 @@
 
 .analysis-container {
 
-  .by-country-table {
+  .analysis-data-box {
+    width: 40%;
+    max-width: 350px;
+    padding: $btn-height / 2;
 
-    th {
+    @include md {
+      padding: $md-btn-height / 2;
+    }
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+
+    h4 {
+      margin-bottom: 5px;
+      font-size: $font-size-sm;
       text-transform: uppercase;
+
+      @include md {
+        font-size: $md-font-size-sm;
+      }
     }
 
-    td:nth-child(2),
-    td:nth-child(3),
-    td:nth-child(5) {
-      text-align: right;
+    p {
+      font-size: 40px;
+      font-weight: bold;
+
+      @include sm {
+        font-size: 32px;
+      }
     }
+  }
+
+  .row .analysis-data-box {
+    float: left;
+    margin-right: $btn-height;
+
+    @include md {
+      margin-right: $md-btn-height;
+    }
+  }
+}
+
+.table-analysis {
+
+  th:not(:first-child):not(.text-center),
+  td:not(:first-child) {
+    text-align: right;
+  }
+
+  svg {
+    vertical-align: middle;
+  }
+
+  .analysis-by-time {
+
+    .dark-theme & {
+      background-color: transparent;
+    }
+
+    .light-theme & {
+      background-color: transparent;
+    }
+  }
+}
+
+.on-net {
+
+  .dark-theme &,
+  .light-theme & {
+    color: $pale-blue;
+  }
+}
+
+.off-net {
+
+  .dark-theme &,
+  .light-theme & {
+    color: $yellow;
   }
 }

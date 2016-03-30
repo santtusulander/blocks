@@ -45,7 +45,14 @@ body {
 }
 
 hr {
+  margin: 30px 0;
   border-top-color: rgba($pale-blue, 0.2);
+
+  .form-group + &,
+  .form-groups + &,
+  .form-panel + & {
+    margin-top: 5px;
+  }
 }
 
 .invisible {
@@ -58,4 +65,12 @@ hr {
 
 .text-orange {
   color: $orange;
+}
+
+.extra-margin-top {
+  margin-top: $btn-height / 2;
+
+  @include md {
+    margin-top: $md-btn-height / 2;
+  }
 }

@@ -1,14 +1,17 @@
 import React from 'react'
+import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
-import * as hostActionCreators from '../redux/modules/host'
-import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
+import * as hostActionCreators from '../redux/modules/host'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 import AddHost from '../components/add-host'
 import PageContainer from '../components/layout/page-container'
@@ -21,130 +24,6 @@ import IconAdd from '../components/icons/icon-add.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
-
-const fakeRecentData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 49405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 23456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 24675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 33456, requests: 456}
-]
-
-const fakeAverageData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 39405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 33456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
-]
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -175,13 +54,21 @@ export class Hosts extends React.Component {
       this.props.params.account,
       this.props.params.group
     )
+    this.props.metricsActions.startHostFetching()
+    this.props.metricsActions.fetchHostMetrics({
+      account: this.props.params.account,
+      group: this.props.params.group,
+      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+      endDate: moment.utc().endOf('hour').format('X')
+    })
   }
-  createNewHost(id) {
+  createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      id
+      id,
+      deploymentMode
     )
     this.toggleAddHost()
   }
@@ -206,14 +93,33 @@ export class Hosts extends React.Component {
     }
   }
   render() {
+    let trafficMin = 0
+    let trafficMax = 0
+    if(!this.props.fetchingMetrics) {
+      const trafficTotals = this.props.hosts.map((host, i) => {
+        return this.props.metrics.has(i) ?
+          this.props.metrics.get(i).get('totalTraffic') : 0
+      })
+      trafficMin = Math.min(...trafficTotals)
+      trafficMax = Math.max(...trafficTotals)
+    }
+    // If trafficMin === trafficMax, there's only one property or all properties
+    // have identical metrics. In that case the amoebas will all get the minimum
+    // size. Let's make trafficMin less than trafficMax and all amoebas will
+    // render with maximum size instead
+    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    const trafficScale = d3.scale.linear()
+      .domain([trafficMin, trafficMax])
+      .range([400, 500]);
     return (
       <PageContainer className='hosts-container content-subcontainer'>
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="success" className="btn-icon">
-                <Link to={`/analysis`}><IconChart /></Link>
-              </Button>
+              <Link className="btn btn-primary btn-icon"
+                to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
+                <IconChart />
+              </Link>
 
               <Button bsStyle="primary" className="btn-icon btn-add-new"
                 onClick={this.toggleAddHost}>
@@ -263,37 +169,70 @@ export class Hosts extends React.Component {
               </li>
             </ol>
 
-            {this.props.fetching ? <p>Loading...</p> : (
+            {this.props.fetching || this.props.fetchingMetrics  ?
+              <p className="fetching-info">Loading...</p> : (
+              this.props.hosts.size === 0 ?
+                <p className="fetching-info text-center">
+                  {this.props.activeGroup ?
+                    this.props.activeGroup.get('name') +
+                    ' does not contain any properties'
+                    : 'Loading...'}
+                <br/>
+                You can create new properties by clicking the Add New (+) button
+                </p>
+              :
               <ReactCSSTransitionGroup
                 component="div"
                 className="content-transition"
                 transitionName="content-transition"
                 transitionEnterTimeout={400}
-                transitionLeaveTimeout={500}>
+                transitionLeaveTimeout={250}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
-                    {this.props.hosts.map((host, i) =>
-                      <ContentItemChart key={i} id={host}
-                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                        name={host} description="Desc"
-                        delete={this.deleteHost}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}
-                        barWidth="1"
-                        chartWidth="480"
-                        barMaxHeight="80" />
-                    )}
+                    {this.props.hosts.map((host, i) => {
+                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
+                      return (
+                        <ContentItemChart key={i} id={host}
+                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          name={host} description="Desc"
+                          delete={this.deleteHost}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
+                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          fetchingMetrics={this.props.fetchingMetrics}
+                          barWidth="1"
+                          chartWidth={scaledWidth.toString()}
+                          barMaxHeight={(scaledWidth / 7).toString()} />
+                      )
+                    })}
                   </div> :
                   <div className="content-item-lists" key="lists">
-                    {this.props.hosts.map((host, i) =>
-                      <ContentItemList key={i} id={host}
-                        linkTo={`/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                        configurationLink={`/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                        name={host} description="Desc"
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}/>
-                    )}
+                    {this.props.hosts.map((host, i) => {
+                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
+                      return (
+                        <ContentItemList key={i} id={host}
+                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
+                          name={host} description="Desc"
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
+                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
+                          timeToFirstByte={metrics.get('avg_ttfb')}
+                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
+                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
+                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          fetchingMetrics={this.props.fetchingMetrics}/>
+                      )
+                    })}
                   </div>
                 }
               </ReactCSSTransitionGroup>
@@ -301,7 +240,6 @@ export class Hosts extends React.Component {
 
             {this.state.addHost ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                backdrop={false}
                 onHide={this.toggleAddHost}>
                 <Modal.Header>
                   <h1>Add Property</h1>
@@ -326,9 +264,12 @@ Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
@@ -338,8 +279,10 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    hosts: state.host.get('allHosts'),
     fetching: state.host.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
+    hosts: state.host.get('allHosts'),
+    metrics: state.metrics.get('hostMetrics'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
@@ -349,6 +292,7 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

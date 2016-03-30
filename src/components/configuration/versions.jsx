@@ -28,15 +28,16 @@ export class ConfigurationVersions extends React.Component {
     }
   }
   render() {
-    if(this.props.fetching) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+      || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div>Loading...</div>
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
       config = config.set('active', i === this.props.activeIndex)
-      if(config.get('configuration_status').get('environment') == 3){
+      if(config.get('configuration_status').get('deployment_status') == 3){
         built.production.push(config)
       }
-      else if(config.get('configuration_status').get('environment') == 2){
+      else if(config.get('configuration_status').get('deployment_status') == 2){
         built.staging.push(config)
       }
       else {
@@ -58,7 +59,7 @@ export class ConfigurationVersions extends React.Component {
           <p className="text-sm">{highestAttainment}</p>
           <div className="sidebar-actions">
             <ButtonToolbar>
-              <Button bsStyle="success" className="btn-icon add-btn"
+              <Button bsStyle="primary" className="btn-icon add-btn"
                 onClick={this.props.addVersion}>
                 <IconAdd width="30" height="30" />
               </Button>
@@ -106,6 +107,7 @@ export class ConfigurationVersions extends React.Component {
 ConfigurationVersions.displayName = 'ConfigurationVersions'
 ConfigurationVersions.propTypes = {
   activate: React.PropTypes.func,
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeIndex: React.PropTypes.number,
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),

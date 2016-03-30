@@ -4,12 +4,16 @@
 .chart-tooltip {
   position: absolute;
   z-index: 3;
-  max-width: 300px;
-  padding: 10px;
-  color: $white;
-  background-color: rgba($black, 0.2);
-  opacity: 0.95;
+  padding: 10px 15px;
+  white-space: nowrap;
+  opacity: 1;
   transition: opacity 500ms;
+
+  .dark-theme &,
+  .light-theme & {
+    color: $dt-text-color;
+    background-color: rgba($black, 0.8);
+  }
 
   &.hidden {
     left: -1000px;

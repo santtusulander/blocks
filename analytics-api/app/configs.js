@@ -9,6 +9,7 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Common configs for all environments
 let commonConfigs = {
+  apiBaseFolder: 'analytics',
   postmanCollection: './e2e/UDNP-Analytics-API.json.postman_collection',
   postmanEnvironment: `./e2e/UDNP-Analytics-API_${env}.postman_environment`
 }
@@ -16,7 +17,12 @@ let commonConfigs = {
 // Environment specific configs
 let environmentConfigs = {
   development: {
-    port: 3030
+    port: 3030,
+    dbConnectionLimit: 100,
+    dbHost: 'metrics-db.dal.cdx-dev.unifieddeliverynetwork.net',
+    dbUser: 'ro',
+    dbPassword: 'Read0nLy',
+    dbName: 'metrics'
   },
   staging: {
     port: 3040

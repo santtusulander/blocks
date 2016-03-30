@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {defaultHeaders, urlBase} from '../util'
+import {urlBase} from '../util'
 
 const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'
@@ -19,15 +19,33 @@ const emptyHosts = Immutable.Map({
   fetching: false
 })
 
+const defaultPolicy = {policy_rules: [
+  {
+    set: {
+      cache_control: {
+        honor_origin: false,
+        check_etag: "weak",
+        max_age: 0
+      }
+    }
+  },
+  {
+    set: {
+      cache_name: {
+        ignore_case: false
+      }
+    }
+  }
+]}
+
 // REDUCERS
 
 export default handleActions({
   HOST_CREATED: {
     next(state, action) {
-      const newHost = Immutable.fromJS(action.payload)
       return state.merge({
-        activeHost: newHost,
-        allHosts: state.get('allHosts').push(newHost.get('published_host_id'))
+        activeHost: null,
+        allHosts: state.get('allHosts').push(action.payload)
       })
     }
   },
@@ -50,8 +68,27 @@ export default handleActions({
   },
   HOST_FETCHED: {
     next(state, action) {
+      let host = action.payload
+      host.services[0].configurations = host.services[0].configurations.map(config => {
+        if(!config.default_policy || !config.default_policy.policy_rules) {
+          config.default_policy = {policy_rules:[]}
+        }
+        if(!config.request_policy || !config.request_policy.policy_rules) {
+          config.request_policy = {policy_rules:[]}
+        }
+        if(!config.response_policy || !config.response_policy.policy_rules) {
+          config.response_policy = {policy_rules:[]}
+        }
+        return config;
+      })
+      if(!host.services[0].active_configurations ||
+         !host.services[0].active_configurations.length) {
+        host.services[0].active_configurations = [{
+          config_id: host.services[0].configurations[0].config_id
+        }]
+      }
       return state.merge({
-        activeHost: Immutable.fromJS(action.payload),
+        activeHost: Immutable.fromJS(host),
         fetching: false
       })
     },
@@ -99,11 +136,36 @@ export default handleActions({
 
 // ACTIONS
 
-export const createHost = createAction(HOST_CREATED, (brand, account, group, id) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {})
+export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
+    {
+      services:[
+        {
+          service_type: "large",
+          deployment_mode: deploymentMode,
+          configurations: [
+            {
+              edge_configuration: {
+                published_name: id
+              },
+              configuration_status: {
+                last_edited_by: "Test User"
+              },
+              default_policy: defaultPolicy
+            }
+          ]
+        }
+      ]
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  )
   .then((res) => {
     if(res) {
-      return res.data;
+      return id;
     }
   })
 })
@@ -134,7 +196,11 @@ export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group)
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host)
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
   .then(() => {
     return host;
   })

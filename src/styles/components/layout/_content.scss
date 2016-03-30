@@ -7,29 +7,24 @@
 
   @include md {
     min-height: calc(100vh - #{$md-header-total-height});
-    margin-bottom: -$md-footer-height;
   }
 
   &::after {
     display: block;
     height: $footer-height;
     content: '';
-
-    @include md {
-      height: $md-footer-height;
-    }
   }
 
   > .container-fluid {
     position: relative;
-    padding: $btn-height $bar-height;
+    padding: $bar-height;
 
     @include md {
-      padding: $md-btn-height $md-bar-height;
+      padding: $md-bar-height;
     }
 
     @include sm {
-      padding: $md-btn-height ($md-bar-height / 2);
+      padding: ($md-bar-height / 2);
     }
   }
 }
@@ -42,6 +37,6 @@
   background-size: 100%;
 
   @include md {
-    min-height: calc(100vh - #{$md-header-total-height} - #{$md-page-header-height} - #{$md-footer-height});
+    min-height: calc(100vh - #{$md-header-total-height} - #{$md-page-header-height} - #{$footer-height});
   }
 }

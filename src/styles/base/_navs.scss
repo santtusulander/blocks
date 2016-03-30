@@ -41,6 +41,7 @@
     }
 
     @include md {
+      height: $md-bar-height;
       min-width: 120px;
     }
 
@@ -65,13 +66,17 @@
         line-height: $md-bar-height;
       }
 
+      &.inactive {
+        opacity: 0.3;
+      }
+
       .dark-theme &,
       .light-theme & {
         color: $dt-text-color;
       }
 
-      &:hover,
-      &:focus {
+      &:not(.inactive):not(.active):hover,
+      &:not(.inactive):focus {
         text-decoration: none;
         background-color: transparent;
         outline: none;
@@ -89,6 +94,19 @@
 
       @include sm {
         padding: 0 10px;
+      }
+
+      &.active {
+
+        &,
+        &:hover,
+        &:focus {
+          color: $pale-blue;
+          text-decoration: none;
+          background-color: inherit;
+          border: 0;
+          border-bottom: 5px solid $pale-blue;
+        }
       }
     }
 
@@ -126,11 +144,27 @@
 
   > li {
     height: calc(100% + 5px);
+    min-width: 200px;
     margin-bottom: -5px;
     color: $lt-text-color;
 
+    @include lg {
+      min-width: 120px;
+    }
+
+    @include md {
+      min-width: 0;
+    }
+
     &:first-of-type {
       margin-left: 20px;
+    }
+
+    > a {
+
+      @include md {
+        padding: 0 10px;
+      }
     }
 
     &:not(.active) {

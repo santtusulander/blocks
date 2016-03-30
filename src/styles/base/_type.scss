@@ -59,6 +59,18 @@ h2 {
   @include md {
     font-size: 24px;
   }
+
+  .heading-suffix {
+    font-size: 28px;
+
+    @include md {
+      font-size: 20px;
+    }
+
+    + .heading-suffix {
+      margin-left: 5px;
+    }
+  }
 }
 
 h3 {
@@ -70,6 +82,10 @@ h3 {
 
   &.has-btn {
     line-height: $btn-height;
+
+    @include md {
+      line-height: $md-btn-height;
+    }
   }
 
   &.extra-margin-top {

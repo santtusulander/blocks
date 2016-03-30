@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../by-time.jsx')
@@ -50,6 +51,16 @@ describe('AnalysisByTime', () => {
     expect(TestUtils.isCompositeComponent(byTime)).toBeTruthy();
   });
 
+  it('can be passed a custom css class', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime className="foo" width={400} height={200} padding={10}
+        primaryData={fakeData}
+        dataKey="bytes_out"/>
+    );
+    let div = TestUtils.findRenderedDOMComponentWithTag(byTime, 'div');
+    expect(ReactDOM.findDOMNode(div).className).toContain('foo');
+  });
+
   it('should show loading message if there is no width or data', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime />
@@ -58,10 +69,19 @@ describe('AnalysisByTime', () => {
     expect(div.textContent).toContain('Loading');
   });
 
+  it('should deactivate tooltip', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime />
+    );
+    byTime.state.tooltipText = "foo"
+    byTime.deactivateTooltip()
+    expect(byTime.state.tooltipText).toBe(null);
+  });
+
   it('should have a data line and area', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let paths = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'path')
@@ -73,13 +93,12 @@ describe('AnalysisByTime', () => {
     momentFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
     expect(texts[0].getAttribute('y')).toBe('190')
-    expect(moment.mock.calls.length).toEqual(5)
     expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
 
@@ -88,11 +107,10 @@ describe('AnalysisByTime', () => {
     numeralFormatMock.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[2].getAttribute('x')).toBe('205')
     expect(texts[2].getAttribute('y')).toBe('190')
     expect(numeral.mock.calls.length).toBe(4)
     expect(numeral.mock.calls[0]).toEqual([1000])
@@ -104,7 +122,7 @@ describe('AnalysisByTime', () => {
     numeral.mockClear()
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
-        data={fakeData}
+        primaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')

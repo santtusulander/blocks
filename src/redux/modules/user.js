@@ -8,6 +8,7 @@ import {urlBase} from '../util'
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
+const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -26,19 +27,33 @@ export default handleActions({
     next(state, action) {
       // TODO: Real auth will return a token or set a cookie
       const token = btoa(`${action.payload.username}:${action.payload.password}`)
+      localStorage.setItem('EricssonUDNUserToken', token)
       axios.defaults.headers.common['Authorization'] = 'Basic ' + token
-      return state.set('loggedIn', true)
+      return state.merge({loggedIn: true, fetching: false})
     },
     throw() {
       return emptyUser
     }
   },
   USER_LOGGED_OUT: (state) => {
+    localStorage.removeItem('EricssonUDNUserToken')
     axios.defaults.headers.common['Authorization'] = 'Basic 000'
     return state.set('loggedIn', false)
   },
   USER_START_FETCH: (state) => {
     return state.set('fetching', true)
+  },
+  USER_TOKEN_CHECKED: (state, action) => {
+    if(action.payload) {
+      localStorage.setItem('EricssonUDNUserToken', action.payload)
+      axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload
+      return state.set('loggedIn', true)
+    }
+    else {
+      localStorage.removeItem('EricssonUDNUserToken')
+      axios.defaults.headers.common['Authorization'] = 'Basic 000'
+      return state.set('loggedIn', false)
+    }
   }
 }, emptyUser)
 
@@ -63,3 +78,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
 export const logOut = createAction(USER_LOGGED_OUT)
 
 export const startFetching = createAction(USER_START_FETCH)
+
+export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
+  return localStorage.getItem('EricssonUDNUserToken') || null
+})

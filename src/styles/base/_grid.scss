@@ -24,3 +24,15 @@
     padding-right: 0;
   }
 }
+
+.row.header-btn-row {
+  margin-bottom: $btn-height / 3;
+
+  @include md {
+    margin-bottom: $md-btn-height / 3;
+  }
+
+  h3 {
+    margin-top: 14px;
+  }
+}

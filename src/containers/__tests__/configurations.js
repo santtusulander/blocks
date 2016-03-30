@@ -21,6 +21,12 @@ const fakeAccounts = Immutable.fromJS([
 const fakeGroups = Immutable.fromJS([
   {"account_id": 1, "group_id": 1, "name": "BBB"}
 ])
+const fakeActiveAccount = Immutable.fromJS(
+  {"id": 1}
+)
+const fakeActiveGroup = Immutable.fromJS(
+  {"id": 1}
+)
 const fakeProperties = Immutable.fromJS([
   {
     "account_id": 1, "group_id": 1,
@@ -89,18 +95,20 @@ describe('Configurations', () => {
       <Configurations
         params={{brand:'abc'}}
         accounts={fakeAccounts}
+        activeAccount={fakeActiveAccount}
+        activeGroup={fakeActiveGroup}
         groups={fakeGroups}
         properties={fakeProperties}
         fetching={false}
         activePurge={fakeProperties.get(0)}
         purgeActions={purgeActions}/>
     );
-    configurations.activatePurge(0)()
+    configurations.activatePurge(fakeProperties.get(0))()
     configurations.saveActivePurge()
     expect(purgeActions.createPurge.mock.calls[0][0]).toBe('abc')
     expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
     expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
-    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('www.bbb.com')
+    expect(purgeActions.createPurge.mock.calls[0][3].get('property')).toBe('www.bbb.com')
     expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakeProperties.get(0).toJS())
   });
   it('can sort properties', () => {

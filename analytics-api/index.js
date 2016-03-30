@@ -1,6 +1,6 @@
 'use strict';
 
-let app     = require('./app/server');
+let app     = require('./app/server')();
 let log     = require('./app/logger');
 let version = require('./app/routes/version').get();
 let configs = require('./app/configs');

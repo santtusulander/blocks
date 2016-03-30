@@ -9,7 +9,11 @@ class Footer extends React.Component {
     return (
       <footer className={className}>
         <div className="footer-content">
-          <p>v <!-- @echo PACKAGE_VERSION --></p>
+          <p className="text-center">
+            Powered By <a href="http://www.ericsson.com"
+            target="_blank">Ericsson</a> (v /* @echo PACKAGE_VERSION */). <a
+            href="#">Terms of Use</a>
+          </p>
         </div>
       </footer>
     );

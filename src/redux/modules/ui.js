@@ -3,6 +3,8 @@ import Immutable from 'immutable'
 
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
+const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
+const UI_ANALYSIS_SERVICE_TYPE_TOGGLED = 'UI_ANALYSIS_SERVICE_TYPE_TOGGLED'
 
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
@@ -15,9 +17,11 @@ const docBody = document.body
 
 docBody.className += theme + '-theme'
 
-const defaultUI = Immutable.Map({
+const defaultUI = Immutable.fromJS({
   theme: theme,
-  viewingChart: true
+  viewingChart: true,
+  notification: '',
+  analysisServiceTypes: ['http', 'https']
 })
 
 // REDUCERS
@@ -32,6 +36,19 @@ export default handleActions({
   },
   UI_CHART_VIEW_TOGGLED: (state) => {
     return state.set('viewingChart', !state.get('viewingChart'))
+  },
+  UI_CHANGE_NOTIFICATION: (state, action) => {
+    return state.set('notification', action.payload)
+  },
+  UI_ANALYSIS_SERVICE_TYPE_TOGGLED: (state, action) => {
+    let newServiceTypes = state.get('analysisServiceTypes')
+    if(newServiceTypes.includes(action.payload)) {
+      newServiceTypes = newServiceTypes.filter(type => type !== action.payload)
+    }
+    else {
+      newServiceTypes = newServiceTypes.push(action.payload)
+    }
+    return state.set('analysisServiceTypes', newServiceTypes)
   }
 }, defaultUI)
 
@@ -39,3 +56,5 @@ export default handleActions({
 
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
+export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
+export const toggleAnalysisServiceType = createAction(UI_ANALYSIS_SERVICE_TYPE_TOGGLED)

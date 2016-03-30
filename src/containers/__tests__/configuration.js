@@ -6,7 +6,8 @@ jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
 
 const Configuration = require('../configuration.jsx').Configuration
 const ConfigurationDetails = require('../../components/configuration/details')
-const ConfigurationCache = require('../../components/configuration/cache')
+const ConfigurationDefaults = require('../../components/configuration/defaults')
+const ConfigurationPolicies = require('../../components/configuration/policies')
 const ConfigurationPerformance = require('../../components/configuration/performance')
 const ConfigurationSecurity = require('../../components/configuration/security')
 const ConfigurationCertificates = require('../../components/configuration/certificates')
@@ -16,9 +17,17 @@ function hostActionsMaker() {
   return {
     startFetching: jest.genMockFunction(),
     fetchHost: jest.genMockFunction(),
-    updateHost: jest.genMockFunction(),
+    updateHost: jest.genMockFunction().mockImplementation(() => {
+      return {then: cb => cb({payload: {}})}
+    }),
     changeActiveHost: jest.genMockFunction(),
     deleteConfiguration: jest.genMockFunction()
+  }
+}
+
+function uiActionsMaker() {
+  return {
+    changeNotification: jest.genMockFunction()
   }
 }
 
@@ -54,7 +63,7 @@ const fakeHost = Immutable.fromJS({
       "configurations": [
         {
           "config_id": "1",
-          "request_policies": [
+          "request_policy": {"policy_rules": [
             {
               "match": {
                 "default": [
@@ -134,7 +143,7 @@ const fakeHost = Immutable.fromJS({
                 "field_detail": "client_type"
               }
             }
-          ],
+          ]},
           "edge_configuration": {
             "published_name": "examplffffffe.com",
             "origin_host_name": "sdrgfdg.com",
@@ -143,14 +152,15 @@ const fakeHost = Immutable.fromJS({
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 2
           },
-          "default_policies": [
+          "default_policy": {"policy_rules": [
             {
               "set": {
                 "cache_control": {
                   "honor_origin": true,
-                  "check_etag": "weak"
+                  "check_etag": "weak",
+                  "max_age": 0
                 }
               }
             },
@@ -161,8 +171,8 @@ const fakeHost = Immutable.fromJS({
                 }
               }
             }
-          ],
-          "response_policies": [
+          ]},
+          "response_policy": {"policy_rules": [
             {
               "match": {
                 "field": "response_code",
@@ -206,7 +216,7 @@ const fakeHost = Immutable.fromJS({
                 ]
               }
             }
-          ]
+          ]}
         }
       ]
     }
@@ -220,6 +230,7 @@ describe('Configuration', () => {
   it('should exist', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
     expect(TestUtils.isCompositeComponent(config)).toBeTruthy();
@@ -244,20 +255,22 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}/>
     );
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(1);
-		expect(cache.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(0);
 		expect(performance.length).toEqual(0);
 		expect(security.length).toEqual(0);
 		expect(certs.length).toEqual(0);
 		expect(changelog.length).toEqual(0);
   })
 
-  it('should render cache subcomponent when tab is clicked', () => {
+  it('should render defaults subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
         activeHost={fakeHost}
@@ -268,13 +281,41 @@ describe('Configuration', () => {
     TestUtils.Simulate.click(links[1]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
-		expect(cache.length).toEqual(1);
+		expect(defaults.length).toEqual(1);
+		expect(policies.length).toEqual(0);
+		expect(performance.length).toEqual(0);
+		expect(security.length).toEqual(0);
+		expect(certs.length).toEqual(0);
+		expect(changelog.length).toEqual(0);
+  })
+
+  it('should render policies subcomponent when tab is clicked', () => {
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActionsMaker()}
+        activeHost={fakeHost}
+        params={urlParams} location={fakeLocation}/>
+    );
+    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
+    let links = nav.getElementsByTagName('a')
+    TestUtils.Simulate.click(links[2]);
+
+    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
+    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
+    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
+    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
+    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+		expect(details.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(1);
 		expect(performance.length).toEqual(0);
 		expect(security.length).toEqual(0);
 		expect(certs.length).toEqual(0);
@@ -289,16 +330,18 @@ describe('Configuration', () => {
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[2]);
+    TestUtils.Simulate.click(links[3]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
-		expect(cache.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(0);
 		expect(performance.length).toEqual(1);
 		expect(security.length).toEqual(0);
 		expect(certs.length).toEqual(0);
@@ -313,16 +356,18 @@ describe('Configuration', () => {
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[3]);
+    TestUtils.Simulate.click(links[4]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
-		expect(cache.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(0);
 		expect(performance.length).toEqual(0);
 		expect(security.length).toEqual(1);
 		expect(certs.length).toEqual(0);
@@ -337,16 +382,18 @@ describe('Configuration', () => {
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[4]);
+    TestUtils.Simulate.click(links[5]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
-		expect(cache.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(0);
 		expect(performance.length).toEqual(0);
 		expect(security.length).toEqual(0);
 		expect(certs.length).toEqual(1);
@@ -361,16 +408,18 @@ describe('Configuration', () => {
     );
     let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
     let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[5]);
+    TestUtils.Simulate.click(links[6]);
 
     let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let cache = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCache);
+    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
+    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
     let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
     let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
     let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
     let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
-		expect(cache.length).toEqual(0);
+		expect(defaults.length).toEqual(0);
+		expect(policies.length).toEqual(0);
 		expect(performance.length).toEqual(0);
 		expect(security.length).toEqual(0);
 		expect(certs.length).toEqual(0);
@@ -394,16 +443,19 @@ describe('Configuration', () => {
 
   it('should save changes to the host', () => {
     const hostActions = hostActionsMaker()
+    const uiActions = uiActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams} location={fakeLocation}
+        uiActions={uiActions}/>
     );
     config.saveActiveHostChanges()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
-    expect(hostActions.updateHost.mock.calls[0][3]).toEqual(fakeHost.toJS())
+    expect(hostActions.updateHost.mock.calls[0][3]).toEqual('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4]).toEqual(fakeHost.toJS())
   })
 
   it('should add a version', () => {
@@ -421,7 +473,7 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations.length).toBe(2)
   })
 
-  it("should change a version's environment", () => {
+  it("should change a version's deployment_status", () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
@@ -434,6 +486,6 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
-      .configuration_status.environment).toBe(1)
+      .configuration_status.deployment_status).toBe(1)
   })
 })

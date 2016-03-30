@@ -47,11 +47,13 @@
 // Components
 // ==========
 
+@import 'components/confirmation';
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
 @import 'components/datepicker';
 @import 'components/footer';
 @import 'components/header';
+@import 'components/input-connector';
 @import 'components/notification';
 @import 'components/property';
 @import 'components/select';
@@ -62,7 +64,10 @@
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
 // Configuration
-@import 'components/configuration/cache';
+@import 'components/configuration/condition-selection';
+@import 'components/configuration/defaults';
+@import 'components/configuration/policy-rule-edit';
+@import 'components/configuration/sidebar';
 @import 'components/configuration/versions';
 // Layouts
 @import 'components/layout/content';
@@ -75,7 +80,10 @@
 // Transitions
 // ===========
 
+@import 'transitions/confirmation';
 @import 'transitions/content';
+@import 'transitions/dialog';
+@import 'transitions/notification';
 
 
 // Styleguide

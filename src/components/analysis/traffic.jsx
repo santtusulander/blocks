@@ -1,5 +1,6 @@
 import React from 'react'
 import numeral from 'numeral'
+import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisByTime from './by-time'
@@ -31,16 +32,27 @@ class AnalysisTraffic extends React.Component {
     })
   }
   render() {
+    const httpData = this.props.serviceTypes.includes('http') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'http')
+      : Immutable.List()
+    const httpsData = this.props.serviceTypes.includes('https') ?
+      this.props.byTime.filter(time => time.get('service_type') === 'https')
+      : Immutable.List()
     return (
       <div className="analysis-traffic">
+        <div className="analysis-data-box">
+          <h4>Total Egress Yesterday</h4>
+          <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
+        </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
-              dataKey="bytes_out"
-              data={this.props.byTime.toJS()}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2}/>
+              dataKey="bytes"
+              primaryData={httpData.toJS()}
+              secondaryData={httpsData.toJS()}
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -49,47 +61,74 @@ class AnalysisTraffic extends React.Component {
             <div>Loading...</div> :
             <AnalysisByLocation
               dataKey="bytes"
-              timelineKey="traffic"
+              timelineKey="detail"
               width={this.state.byLocationWidth}
-              height={this.state.byLocationWidth / 2}
+              height={this.state.byLocationWidth / 1.6}
               countryData={this.props.byCountry}/>
           }
         </div>
         <h3>BY COUNTRY</h3>
-        <table className="table by-country-table">
+        <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
               <th>Country</th>
-              <th>Traffic GB</th>
+              <th>Traffic</th>
               <th>% of Traffic</th>
-              <th>Period Trend</th>
+              <th className="text-center">Period Trend</th>
               <th>Change</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('traffic').reduce((total, traffic) => {
+            {!this.props.fetching ? this.props.byCountry.map((country, i) => {
+              const totalBytes = country.get('detail').reduce((total, traffic) => {
                 return total + traffic.get('bytes')
               }, 0)
-              const startBytes = country.get('traffic').first().get('bytes')
-              const endBytes = country.get('traffic').last().get('bytes')
+              const startBytes = country.get('detail').first().get('bytes')
+              const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
-              if(trending > 1) {
+              if(isNaN(trending)) {
+                trending = 'N/A'
+              }
+              else if(trending > 1) {
                 trending = numeral((trending - 1) * -1).format('0%')
               }
               else {
                 trending = numeral(trending).format('+0%');
               }
+              let formattedBytes = numeral(totalBytes / 100000000).format('0,0')+' GB'
+              if(totalBytes < 1000) {
+                formattedBytes = numeral(totalBytes).format('0,0')+' B'
+
+              }
+              else if(totalBytes < 1000000) {
+                formattedBytes = numeral(totalBytes / 1000).format('0,0')+' KB'
+
+              }
+              else if(totalBytes < 100000000) {
+                formattedBytes = numeral(totalBytes / 1000000).format('0,0')+' MB'
+
+              }
               return (
                 <tr key={i}>
-                  <td>{country.get('country')}</td>
-                  <td>{numeral(totalBytes).format('0,0')}</td>
-                  <td>{country.get('percent_total')}%</td>
-                  <td>Chart</td>
+                  <td>{country.get('name')}</td>
+                  <td>{formattedBytes}</td>
+                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                  <td width={this.state.byTimeWidth / 3}>
+                    <AnalysisByTime axes={false} padding={0} area={false}
+                      primaryData={country.get('detail').map(datapoint => {
+                        return datapoint.set(
+                          'timestamp',
+                          moment(datapoint.get('timestamp'), 'X').toDate()
+                        )
+                      }).toJS()}
+                      dataKey='bytes'
+                      width={this.state.byTimeWidth / 3}
+                      height={50} />
+                  </td>
                   <td>{trending}</td>
                 </tr>
               )
-            })}
+            }) : <tr><td colSpan="5">Loading...</td></tr>}
           </tbody>
         </table>
       </div>
@@ -101,7 +140,9 @@ AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  totalEgress: React.PropTypes.number
 }
 
 module.exports = AnalysisTraffic

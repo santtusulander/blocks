@@ -2,7 +2,7 @@
 // ====================
 
 .analysis-by-location {
-  overflow: hidden;
+  position: relative;
 
   .chart {
     position: relative;
@@ -24,16 +24,24 @@
     opacity: 0;
   }
 
-  .above-avg {
-    fill: rgba($purple, 0.8);
-  }
-
-  .below-avg {
-    fill: rgba($green, 0.8);
-  }
-
-  .avg {
+  .country-0 {
     fill: rgba($pale-blue, 0.8);
+  }
+
+  .country-1 {
+    fill: rgba($pale-blue, 0.7);
+  }
+
+  .country-2 {
+    fill: rgba($pale-blue, 0.6);
+  }
+
+  .country-3 {
+    fill: rgba($pale-blue, 0.5);
+  }
+
+  .country-4 {
+    fill: rgba($pale-blue, 0.4);
   }
 
   .zoom-out {
@@ -49,5 +57,10 @@
       text-decoration: none;
       background-color: $silver;
     }
+  }
+
+  .chart-tooltip {
+    margin-top: 50px;
+    margin-left: 50px;
   }
 }

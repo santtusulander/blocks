@@ -20,7 +20,7 @@
 
   .form-control {
     height: $header-btn-height;
-    padding-left: 50px;
+    padding: 10px 0 10px 50px;
     margin-top: ($bar-height - $header-btn-height) / 2;
     margin-right: 10px;
     margin-left: 10px;
@@ -55,7 +55,7 @@
       }
 
       &::placeholder {
-        color: rgba($dt-text-color, 0.5);
+        color: rgba($dt-text-color, 0.3);
       }
     }
 
@@ -79,24 +79,22 @@
     $gradient-bondi-blue,
     $gradient-navy,
     $gradient-magenta,
-    $gradient-navy,
-    $gradient-bondi-blue,
+    $gradient-lime,
     $gradient-green-haze,
-    $gradient-lime
+    $gradient-bondi-blue,
+    $gradient-navy,
+    $gradient-magenta
   );
-  background-size: 200% 200%;
+  background-position: 100% 50%;
+  background-size: 225% 200%;
 
   &.animated {
-    animation: HeaderAnimation 2s linear 1;
+    animation: HeaderAnimation 1s linear 1;
   }
 }
 
 @keyframes HeaderAnimation {
   0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
     background-position: 100% 50%;
   }
 
@@ -124,6 +122,10 @@
     &:focus {
       background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
       background-size: 30px 40px;
+
+      @include md {
+        background-size: 22.5px 30px;
+      }
     }
   }
 

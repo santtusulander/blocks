@@ -4,28 +4,31 @@
 .footer {
   height: $footer-height;
   padding: 0 ($bar-height / 2);
-  font-size: $sm-font-size;
+  font-size: $md-font-size-sm;
 
   @include md {
-    height: $md-footer-height;
     padding: 0 ($md-bar-height / 2);
-    font-size: $md-font-size-sm;
-  }
-
-  @include sm {
-    font-size: $sm-font-size-sm;
   }
 
   .dark-theme & {
-    color: $dt-text-color;
+    color: rgba($dt-text-color, 0.6);
     background-color: $black;
     background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)),
      linear-gradient(rgba($pale-blue, 0.125), rgba($pale-blue, 0.125));
     background-size: 100%;
+
+    a {
+      color: $dt-text-color;
+    }
   }
 
   .light-theme & {
+    color: rgba($lt-text-color, 0.6);
     background-color: $white;
+
+    a {
+      color: $lt-text-color;
+    }
   }
 
   .footer-content {

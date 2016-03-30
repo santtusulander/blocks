@@ -55,7 +55,7 @@ module.exports = {
         {
           test: /\.(jpg|jpeg|gif|png)$/,
           exclude: /node_modules/,
-          loader:'file?name=/assets/img/[name].[ext]'
+          loader:'file?name=src/assets/img/[name].[ext]'
         },
         {
           test: /\.(woff|woff2|eot|ttf|svg)$/,
@@ -63,7 +63,7 @@ module.exports = {
           loader: 'file?name=src/assets/fonts/[name].[ext]'
         },
         {
-          test: /\.svg$/,
+          test: /\.(svg|ico)$/,
           exclude: /(node_modules|fonts|img)/,
           loader: 'file?name=src/assets/icons/[name].[ext]'
         },

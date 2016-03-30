@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as userActionCreators from '../redux/modules/user'
+import * as accountActionCreators from '../redux/modules/account'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
@@ -27,7 +28,25 @@ export class Login extends React.Component {
     this.checkUsernameActive = this.checkUsernameActive.bind(this)
     this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
+    this.goToAccountPage = this.goToAccountPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+  }
+  componentWillMount() {
+    if(this.props.loggedIn || this.props.userActions.checkToken().payload) {
+      this.goToAccountPage()
+    }
+  }
+  goToAccountPage() {
+    this.props.accountActions.startFetching()
+    this.props.accountActions.fetchAccounts('udn').then(action => {
+      if(!action.error && action.payload.data.length) {
+        const firstId = action.payload.data[0].id
+        this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
+      }
+      else {
+        this.setState({loginError: action.payload.message})
+      }
+    })
   }
   onSubmit(e) {
     e.preventDefault()
@@ -36,9 +55,9 @@ export class Login extends React.Component {
     this.props.userActions.logIn(
       this.state.username,
       this.state.password
-    ).then((action) => {
+    ).then(action => {
       if(!action.error) {
-        this.props.history.pushState(null, '/')
+        this.goToAccountPage()
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -96,7 +115,7 @@ export class Login extends React.Component {
             <Input type="text" id="username"
               wrapperClassName={'input-addon-before has-login-label '
                 + 'login-label-username'
-                + (this.state.usernameActive ? ' active' : '')}
+                + (this.state.usernameActive || this.state.username ? ' active' : '')}
               addonBefore={<IconEmail/>}
               onFocus={this.checkUsernameActive(true)}
               onBlur={this.checkUsernameActive(false)}
@@ -106,7 +125,7 @@ export class Login extends React.Component {
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
-                + (this.state.passwordActive ? ' active' : '')}
+                + (this.state.passwordActive || this.state.password ? ' active' : '')}
               addonBefore={<IconPassword/>}
               addonAfter={<a className={'input-addon-link' +
                   (this.state.passwordVisible ? ' active' : '')}
@@ -138,19 +157,23 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
+  accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
+  loggedIn: React.PropTypes.bool,
   userActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    fetching: state.user.get('fetching')
+    fetching: state.user.get('fetching') || state.account.get('fetching'),
+    loggedIn: state.user.get('loggedIn')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }

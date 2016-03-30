@@ -107,21 +107,39 @@
     border-radius: 50%;
 
     &.difference-arc {
+      fill: transparent;
+      stroke-width: 1;
+    }
 
-      .dark-theme  & {
-        fill: $pale-blue;
+    .dark-theme &,
+    .light-theme & {
+
+      .below-avg {
+        fill: $green;
+        stroke: $green;
       }
 
-      .light-theme  & {
-        fill: $pale-blue;
+      .above-avg {
+        fill: $purple;
+        stroke: $purple;
       }
+    }
+
+    .dark-theme & .avg {
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+
+    .light-theme & .avg {
+      fill: rgba($white, 0.5);
+      stroke: rgba($white, 0.5);
     }
   }
 
   .primary-data .content-item-chart-line {
     stroke-width: 1.5;
 
-    .dark-theme  & {
+    .dark-theme & {
       stroke: $pale-blue;
       fill: $pale-blue;
     }
@@ -159,33 +177,44 @@
     .content-item-text-sm {
       font-size: 16px;
     }
+
+    p {
+      margin-bottom: 8px;
+      line-height: 1em;
+    }
   }
 
   .content-item-traffic {
     position: absolute;
-    top: 13%;
+    top: 11%;
     width: 100%;
     font-size: 24px;
+    line-height: 1em;
+
+    .content-item-text-bold {
+      margin-bottom: 4px;
+    }
   }
 
   .content-item-text-centered {
     position: absolute;
-    top: 53%;
+    top: 51%;
     width: 100%;
     transform: translateY(-50%);
   }
 
   .content-item-chart-name {
-    margin-bottom: 10px;
+    margin: 0 6% 8px;
     font-size: 36px;
     font-weight: 500;
     line-height: 1em;
+    word-wrap: break-word;
   }
 
   .content-item-toolbar {
     position: absolute;
     left: 50%;
-    margin-bottom: 10%;
+    margin-bottom: 8%;
     transform: translateX(-50%);
   }
 }

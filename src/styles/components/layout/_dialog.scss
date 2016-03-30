@@ -6,7 +6,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1080;
+  z-index: 1020;
   height: $configuration-dialog-height;
 
   @include md {
@@ -37,6 +37,14 @@
   .light-theme & {
     background-color: $white;
   }
+
+  .btn-toolbar {
+    margin: ($btn-height / 2) ($bar-height / 2) 0 0;
+
+    @include md {
+      margin: ($md-btn-height / 2) ($md-bar-height / 2) 0 0;
+    }
+  }
 }
 
 .configuration-dialog-gradient {
@@ -44,11 +52,26 @@
   background: $gradient-lg-green;
 }
 
-.configuration-dialog-body {
-  padding: ($btn-height / 2) ($bar-height / 2) 0;
+.configuration-dialog-content {
+  height: $configuration-dialog-height;
+  padding: ($btn-height / 3) ($bar-height / 2);
+  overflow: auto;
 
   @include md {
-    padding: ($md-btn-height / 2) ($md-bar-height / 2) 0;
+    height: $md-configuration-dialog-height;
+    padding: ($md-btn-height / 3) ($md-bar-height / 2);
+  }
+
+  p:not(.configuration-dialog-title) {
+    font-size: $font-size-sm;
+
+    @include sm {
+      font-size: $sm-font-size-sm;
+    }
+
+    @include md {
+      font-size: $md-font-size-sm;
+    }
   }
 
   .configuration-dialog-title {

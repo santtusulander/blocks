@@ -6,7 +6,7 @@
 // ===========
 
 $screen-md-min: 1200px;
-$screen-lg-min: 1600px;
+$screen-lg-min: 1690px;
 $screen-xl-min: 2000px;
 
 @mixin sm {
@@ -64,6 +64,7 @@ $md-header-btn-height: 40px;
 
 $form-group-padding: 25px;
 $md-form-group-padding: 15px;
+$form-label-margin: 15px;
 
 
 // Layout
@@ -99,6 +100,10 @@ $configuration-sidebar-width: 1060px;
 $md-configuration-sidebar-width: 800px;
 $sm-configuration-sidebar-width: 640px;
 
+$sidebar-right-col-width: 700px;
+$md-sidebar-right-col-width: 540px;
+$sm-sidebar-right-col-width: 380px;
+
 $modal-header-height: 250px;
 $md-modal-header-height: 200px;
 $sm-modal-header-height: 150px;
@@ -106,5 +111,4 @@ $sm-modal-header-height: 150px;
 $configuration-dialog-height: 130px;
 $md-configuration-dialog-height: 90px;
 
-$footer-height: 80px;
-$md-footer-height: 60px;
+$footer-height: 60px;

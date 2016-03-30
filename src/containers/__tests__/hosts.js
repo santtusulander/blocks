@@ -32,8 +32,39 @@ function groupActionsMaker() {
     fetchGroup: jest.genMockFunction()
   }
 }
+function metricsActionsMaker() {
+  return {
+    fetchHostMetrics: jest.genMockFunction(),
+    startHostFetching: jest.genMockFunction()
+  }
+}
 
 const urlParams = {brand: 'udn', account: '1', group: '1'}
+
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
 
 describe('Hosts', () => {
   it('should exist', () => {
@@ -41,7 +72,9 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(hosts)).toBeTruthy()
@@ -55,7 +88,10 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActions}
         groupActions={groupActions}
-        fetching={true} params={urlParams}/>
+        metricsActions={metricsActionsMaker()}
+        fetching={true}
+        fetchingMetrics={true}
+        params={urlParams}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHosts.mock.calls[0][0]).toBe('udn')
@@ -71,7 +107,10 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
-        fetching={true} params={urlParams}/>
+        metricsActions={metricsActionsMaker()}
+        fetching={true}
+        fetchingMetrics={true}
+        params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
     expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
@@ -83,13 +122,15 @@ describe('Hosts', () => {
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
-        hosts={Immutable.List([1,2])}
+        metricsActions={metricsActionsMaker()}
+        hosts={Immutable.List(['1','2'])}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemChart)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should show existing hosts as lists', () => {
@@ -97,13 +138,15 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
-        hosts={Immutable.List([1,2])}
+        metricsActions={metricsActionsMaker()}
+        hosts={Immutable.List(['1','2'])}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemList)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should add a new host when called', () => {
@@ -112,11 +155,12 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )
-    hosts.createNewHost('bbb')
-    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb'])
+    hosts.createNewHost('bbb','production')
+    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb','production'])
   })
 
   it('should delete a host when clicked', () => {
@@ -125,6 +169,7 @@ describe('Hosts', () => {
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )

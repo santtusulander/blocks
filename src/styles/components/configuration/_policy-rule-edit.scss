@@ -1,0 +1,76 @@
+// Policy Rule Edit
+// ================
+
+.configuration-policy-rule-edit {
+  width: 100%;
+
+  .conditions {
+    width: 100%;
+    margin-bottom: $bar-height;
+
+    @include md {
+      margin-bottom: $md-bar-height;
+    }
+  }
+
+  .right-col-visible & {
+    width: calc(100% - #{$sidebar-right-col-width});
+
+    @include md {
+      width: calc(100% - #{$md-sidebar-right-col-width});
+    }
+
+    @include sm {
+      width: calc(100% - #{$sm-sidebar-right-col-width});
+    }
+  }
+
+  .condition {
+    min-height: $bar-height;
+    padding: 10px 0 0 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    @include md {
+      min-height: $md-bar-height;
+    }
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background-color: rgba($white, 0.1);
+    }
+
+    .light-theme & {
+      background-color: rgba($white, 0.1);
+    }
+
+    &.active {
+
+      .dark-theme & {
+        background-color: $pale-blue;
+
+        // scss-lint:disable SelectorDepth NestingDepth
+        // Need to override default button styles
+        .btn-primary:hover:enabled,
+        .btn-primary:active:enabled,
+        .btn-primary.active:enabled {
+          color: rgba($black, 0.3);
+          fill: rgba($black, 0.3);
+          stroke: rgba($black, 0.3);
+        }
+      }
+
+      .light-theme & {
+        background-color: rgba($black, 0.2);
+      }
+    }
+
+    p {
+      margin-top: $btn-height / 4;
+
+      @include md {
+        margin-top: $md-btn-height / 4;
+      }
+    }
+  }
+}

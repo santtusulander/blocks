@@ -5,6 +5,12 @@
 
 .content-transition {
   position: relative;
+
+  .content-item-chart & {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .content-item-chart {
@@ -91,37 +97,14 @@
 
   .page-header-layout,
   .footer,
-  .breadcrumb {
+  .breadcrumb,
+  .fetching-info {
     opacity: 0;
   }
 
-  .content-item-chart {
-    top: 0;
-    opacity: 1;
-  }
-
+  .content-item-chart,
   .content-item-list {
-    opacity: 1;
-  }
-
-  &.content-transition-leave-active {
-
-    .content-item-chart {
-      opacity: 0;
-      transition: all 500ms ease-out;
-
-      &:nth-child(odd) {
-        top: 40px;
-      }
-
-      &:nth-child(even) {
-        top: 20px;
-      }
-    }
-
-    .content-item-list {
-      margin-top: 30px;
-      opacity: 0;
-    }
+    opacity: 0;
+    transition: opacity 250ms ease-out;
   }
 }

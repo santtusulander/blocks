@@ -6,29 +6,34 @@ import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
-import Dialog from '../components/layout/dialog'
 
 import ConfigurationDetails from '../components/configuration/details'
-import ConfigurationCache from '../components/configuration/cache'
+import ConfigurationDefaults from '../components/configuration/defaults'
+import ConfigurationPolicies from '../components/configuration/policies'
 import ConfigurationPerformance from '../components/configuration/performance'
 import ConfigurationSecurity from '../components/configuration/security'
 import ConfigurationCertificates from '../components/configuration/certificates'
 import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
+import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
 
+    const config = props.activeHost ? props.activeHost.getIn(['services',0,'configurations',0]) : null
+
     this.state = {
       activeTab: 'details',
       activeConfig: 0,
+      activeConfigOriginal: config,
       showPublishModal: false
     }
 
@@ -39,6 +44,8 @@ export class Configuration extends React.Component {
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
     this.togglePublishModal = this.togglePublishModal.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+    this.notificationTimeout = null
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -49,8 +56,15 @@ export class Configuration extends React.Component {
       this.props.location.query.name
     )
   }
+  componentWillReceiveProps(nextProps) {
+    if(!this.props.activeHost && nextProps.activeHost) {
+      this.setState({
+        activeConfigOriginal: nextProps.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
+      })
+    }
+  }
   getActiveConfig() {
-    return this.props.activeHost.get('services').get(0).get('configurations').get(this.state.activeConfig)
+    return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
   changeValue(path, value) {
     this.props.hostActions.changeActiveHost(
@@ -61,12 +75,25 @@ export class Configuration extends React.Component {
     )
   }
   saveActiveHostChanges() {
+    this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
+      this.props.location.query.name,
       this.props.activeHost.toJS()
-    )
+    ).then((action) => {
+      if(action.error) {
+        this.showNotification('Saving configurations failed: ' +
+          action.payload.status + ' ' +
+          action.payload.statusText)
+      } else {
+        this.setState({
+          activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
+        })
+        this.showNotification('Configurations succesfully saved')
+      }
+    })
   }
   activateTab(tabName) {
     this.setState({activeTab: tabName})
@@ -74,7 +101,10 @@ export class Configuration extends React.Component {
   activateVersion(id) {
     const index = this.props.activeHost.get('services').get(0)
       .get('configurations').findIndex(config => config.get('config_id') === id)
-    this.setState({activeConfig: index})
+    this.setState({
+      activeConfig: index,
+      activeConfigOriginal: this.props.activeHost.getIn(['services',0,'configurations',index])
+    })
   }
   createNewVersion(id) {
     this.props.hostActions.createConfiguration(
@@ -90,7 +120,7 @@ export class Configuration extends React.Component {
     newVersion = newVersion
       .set('config_name', `Copy of ${newVersion.get('config_name') || newVersion.get('config_id')}`)
       .delete('config_id')
-      .setIn(['configuration_status','environment'], 1)
+      .setIn(['configuration_status','deployment_status'], 1)
     const newHost = this.props.activeHost.setIn(['services',0,'configurations'],
       this.props.activeHost.getIn(['services',0,'configurations']).push(newVersion))
     this.props.hostActions.updateHost(
@@ -104,7 +134,7 @@ export class Configuration extends React.Component {
   changeActiveVersionEnvironment(env) {
     let newHost = this.props.activeHost.setIn(
       ['services',0,'configurations',this.state.activeConfig],
-      this.getActiveConfig().setIn(['configuration_status','environment'], env))
+      this.getActiveConfig().setIn(['configuration_status','deployment_status'], env))
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
@@ -116,12 +146,19 @@ export class Configuration extends React.Component {
   togglePublishModal() {
     this.setState({showPublishModal: !this.state.showPublishModal})
   }
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
+  }
   render() {
-    if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
+    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+      || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
     const activeConfig = this.getActiveConfig()
-    const activeEnvironment = activeConfig.get('configuration_status').get('environment')
+    const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (
@@ -134,7 +171,8 @@ export class Configuration extends React.Component {
             propertyName={this.props.location.query.name}
             activeIndex={this.state.activeConfig}
             addVersion={this.cloneActiveVersion}
-            status={this.props.activeHost.get('status')}/>
+            status={this.props.activeHost.get('status')}
+            activeHost={this.props.activeHost}/>
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -181,8 +219,11 @@ export class Configuration extends React.Component {
             <NavItem eventKey={'details'}>
               Hostname
             </NavItem>
-            <NavItem eventKey={'cache'}>
-              Cache
+            <NavItem eventKey={'defaults'}>
+              Defaults
+            </NavItem>
+            <NavItem eventKey={'policies'}>
+              Policies
             </NavItem>
             <NavItem eventKey={'performance'}>
               Performance
@@ -202,15 +243,22 @@ export class Configuration extends React.Component {
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}
+                changeValue={this.changeValue}/>
+              : null}
+
+            {this.state.activeTab === 'defaults' ?
+              <ConfigurationDefaults
+                config={activeConfig}
                 changeValue={this.changeValue}
                 saveChanges={this.saveActiveHostChanges}/>
               : null}
 
-            {this.state.activeTab === 'cache' ?
-              <ConfigurationCache
+            {this.state.activeTab === 'policies' ?
+              <ConfigurationPolicies
                 config={activeConfig}
                 changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
+                saveChanges={this.saveActiveHostChanges}
+                location={this.props.location}/>
               : null}
 
             {this.state.activeTab === 'performance' ?
@@ -230,26 +278,25 @@ export class Configuration extends React.Component {
               : null}
           </div>
 
-          <Dialog>
-            <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary">CANCEL</Button>
-              <Button className="btn btn-save">SAVE</Button>
-            </ButtonToolbar>
-            <div>
-            <p className="configuration-dialog-title">5 Changes</p>
-            <p>[versionname], [versionname], [versionname], [versionname], [versionname]</p></div>
-          </Dialog>
+          <ConfigurationDiffBar
+            changeValue={this.changeValue}
+            currentConfig={!this.props.notification ?
+              activeConfig : Immutable.Map()}
+            originalConfig={!this.props.notification ?
+              this.state.activeConfigOriginal : Immutable.Map()}
+            saveConfig={this.saveActiveHostChanges}
+            saving={this.props.fetching}
+            />
 
         </Content>
 
         {this.state.showPublishModal ?
           <Modal show={true}
             dialogClassName="configuration-sidebar"
-            backdrop={false}
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1>Publish Version</h1>
-              <p>Lorem ipsum dolor</p>
+              <p>{this.props.location.query.name}</p>
             </Modal.Header>
             <Modal.Body>
               <ConfigurationPublishVersion
@@ -266,23 +313,31 @@ export class Configuration extends React.Component {
 
 Configuration.displayName = 'Configuration'
 Configuration.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
-  params: React.PropTypes.object
+  notification: React.PropTypes.string,
+  params: React.PropTypes.object,
+  uiActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
-    fetching: state.host.get('fetching')
+    fetching: state.host.get('fetching'),
+    notification: state.ui.get('notification')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    hostActions: bindActionCreators(hostActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

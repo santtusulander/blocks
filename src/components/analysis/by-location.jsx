@@ -9,18 +9,6 @@ import { bindActionCreators } from 'redux'
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
 
-function getTrendClass(trending) {
-  if(trending < 0) {
-    return 'below-avg'
-  }
-  else if(trending > 0) {
-    return 'above-avg'
-  }
-  else {
-    return 'avg'
-  }
-}
-
 export class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
@@ -109,22 +97,24 @@ export class AnalysisByLocation extends React.Component {
   // }
   moveMouse(country, percent) {
     return e => {
+      const bounds = this.refs.chart.getBoundingClientRect()
       e.stopPropagation()
       this.setState({
         tooltipCountry: country,
         tooltipPercent: percent,
-        tooltipX: e.pageX,
-        tooltipY: e.pageY
+        tooltipX: e.pageX - bounds.left,
+        tooltipY: e.pageY - (bounds.top + window.pageYOffset)
       })
     }
   }
   render() {
-    if(!this.props.width || !this.props.countries.size || this.props.fetching) {
+    if(!this.props.width || !this.props.countries.size || this.props.fetching
+      || !this.props.countryData) {
       return <div>Loading...</div>
     }
 
-    const projection = d3.geo.mercator().scale(150)
-      .translate([this.props.width / 2, this.props.height / 1.5])
+    const projection = d3.geo.mercator().scale(this.props.width / 7)
+      .translate([this.props.width / 2, this.props.height / 1.45])
     const path = d3.geo.path().projection(projection)
     const countries = topojson.feature(
       this.props.countries.toJS(),
@@ -171,12 +161,13 @@ export class AnalysisByLocation extends React.Component {
     }
 
     return (
-      <div className='analysis-by-location'>
-        <div className="chart">
+      <div className="analysis-by-location">
+        <div className="chart" ref="chart">
           <svg
             width={this.props.width}
             height={this.props.height}
-            onMouseMove={this.moveMouse(null, null)}>
+            onMouseMove={this.moveMouse(null, null)}
+            onMouseLeave={this.moveMouse(null, null)}>
             {countries.map((country, i) => {
               // let hideCountry = false
               const id = country.id.toLowerCase()
@@ -184,28 +175,22 @@ export class AnalysisByLocation extends React.Component {
               //   this.props.activeCountry === id) {
               //   hideCountry = true
               // }
-              const data = this.props.countryData.find(
-                data => data.get('country').toLowerCase() === id
+              const dataIndex = this.props.countryData.findIndex(
+                data => data.get('code').toLowerCase() === id
               )
-              let classes = 'country'
+              let classes = `country country-${dataIndex}`
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              let trending = '0'
-              if(data) {
-                const startBytes = data.get(this.props.timelineKey).first()
-                  .get(this.props.dataKey)
-                const endBytes = data.get(this.props.timelineKey).last()
-                  .get(this.props.dataKey)
-                trending = startBytes / endBytes
-                if(trending > 1) {
-                  trending = (trending - 1) * -1
-                }
-                classes += ' ' + getTrendClass(trending)
+              let trending = '+0%'
+              if(this.props.countryData.get(dataIndex)) {
+                trending = numeral(
+                  this.props.countryData.get(dataIndex).get('percent_change') || 0
+                ).format('+0%')
               }
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, numeral(trending).format('+0%'))}
+                  onMouseMove={this.moveMouse(country.id, trending)}
                   className={classes}
                   style={pathStyle}/>
               )

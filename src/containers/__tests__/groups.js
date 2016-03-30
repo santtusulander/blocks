@@ -30,13 +30,44 @@ function accountActionsMaker() {
     fetchAccount: jest.genMockFunction()
   }
 }
+function metricsActionsMaker() {
+  return {
+    fetchGroupMetrics: jest.genMockFunction(),
+    startGroupFetching: jest.genMockFunction()
+  }
+}
 
 const fakeGroups = Immutable.fromJS([
-  {id: 1, name: 'aaa'},
-  {id: 2, name: 'bbb'}
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
 ])
 
-const urlParams = {brand: 'udn', account: 1}
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
+
+const urlParams = {brand: 'udn', account: '1'}
 
 describe('Groups', () => {
   it('should exist', () => {
@@ -44,7 +75,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
@@ -57,7 +90,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActions}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     expect(groupActions.startFetching.mock.calls.length).toBe(1)
@@ -70,7 +105,9 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         fetching={true}
+        fetchingMetrics={true}
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
@@ -82,13 +119,15 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={true}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemChart)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
 
   it('should show existing groups as lists', () => {
@@ -96,13 +135,15 @@ describe('Groups', () => {
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}
         viewingChart={false}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemList)
     expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe(1)
+    expect(child[0].props.id).toBe('1')
   });
   // Not in 0.5
   // it('should activate a group for edit when clicked', () => {
@@ -111,6 +152,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       params={urlParams}/>
   //   )
@@ -124,6 +166,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id:1})}
   //       params={urlParams}/>
@@ -138,6 +181,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -155,6 +199,7 @@ describe('Groups', () => {
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
   //       accountActions={accountActionsMaker()}
+  //       metricsActions={metricsActionsMaker()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -172,10 +217,12 @@ describe('Groups', () => {
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
         accountActions={accountActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         groups={fakeGroups}
+        metrics={fakeMetrics}
         params={urlParams}/>
     )
-    groups.deleteGroup(1)
-    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn',1,1])
+    groups.deleteGroup('1')
+    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','1'])
   })
 })

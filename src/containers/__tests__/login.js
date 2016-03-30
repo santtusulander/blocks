@@ -9,6 +9,18 @@ function userActionsMaker(cbResponse) {
     startFetching: jest.genMockFunction(),
     logIn: jest.genMockFunction().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
+    }),
+    checkToken: jest.genMockFunction().mockImplementation(() => {
+      return {payload: null}
+    })
+  }
+}
+
+function accountActionsMaker(cbResponse) {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchAccounts: jest.genMockFunction().mockImplementation(() => {
+      return {then: cb => cb(cbResponse)}
     })
   }
 }
@@ -16,14 +28,14 @@ function userActionsMaker(cbResponse) {
 describe('Login', () => {
   it('should exist', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     expect(TestUtils.isCompositeComponent(login)).toBeTruthy();
   })
 
   it('can show / hide password', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
     expect(inputs[1].type).toBe('password')
@@ -34,7 +46,7 @@ describe('Login', () => {
 
   it('maintains form state', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
     inputs[0].value = 'aaa'
@@ -47,7 +59,7 @@ describe('Login', () => {
 
   it('toggles active class when focused and blurred', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login />
+      <Login userActions={userActionsMaker({})}/>
     )
     const inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
 
@@ -83,16 +95,24 @@ describe('Login', () => {
 
   it('handles a successful log in attempt', () => {
     const userActions = userActionsMaker({})
+    const accountActions = accountActionsMaker({
+      payload: {
+        data: [
+          {id: 1}
+        ]
+      }
+    })
     const fakeHistory = {
       pushState: jest.genMockFunction()
     }
     const login = TestUtils.renderIntoDocument(
       <Login userActions={userActions}
+        accountActions={accountActions}
         history={fakeHistory}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/')
+    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/groups/udn/1')
   })
 })

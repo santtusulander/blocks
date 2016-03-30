@@ -3,7 +3,6 @@
 
 .analysis-by-time {
   position: relative;
-  overflow: hidden;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
@@ -16,14 +15,18 @@
   .line {
     stroke-width: 2px;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       stroke: $pale-blue;
       fill: transparent;
     }
 
-    .light-theme & {
-      stroke: $pale-blue;
-      fill: transparent;
+    &.secondary {
+
+      .dark-theme &,
+      .light-theme & {
+        stroke: $green;
+      }
     }
   }
 

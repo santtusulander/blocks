@@ -25,6 +25,14 @@
     min-width: $sm-btn-min-width;
   }
 
+  // scss-lint:disable QualifyingElement
+  // Need to override Bootstrap
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    opacity: 0.3;
+  }
+
   &.dropdown-toggle,
   &.btn-icon,
   &.btn-link {
@@ -67,9 +75,16 @@
 
   &.btn-sm {
     height: $btn-sm-height;
+    line-height: $btn-sm-height;
 
     @include md {
       height: $md-btn-sm-height;
+      line-height: $md-btn-sm-height;
+    }
+
+    &.btn-tertiary {
+      min-width: 0;
+      text-transform: uppercase;
     }
 
     &.btn-icon {
@@ -80,6 +95,14 @@
         width: $md-btn-sm-height;
         line-height: $md-btn-sm-height;
       }
+    }
+  }
+
+  &.sm-padding {
+    padding: 0 ($btn-height / 4);
+
+    @include md {
+      padding: 0 ($md-btn-height / 4);
     }
   }
 
@@ -119,6 +142,8 @@
     margin-bottom: ($bar-height - $btn-height) / 2;
     margin-left: 10px;
     overflow: hidden;
+    background: url('../assets/img/img-user.jpg') center center no-repeat;
+    background-size: cover;
 
     @include md {
       margin-top: ($md-bar-height - $md-btn-height) / 2;
@@ -144,6 +169,16 @@
   min-width: 0;
   padding: 0;
   line-height: inherit;
+  text-align: left;
+
+  h3 {
+    max-width: calc(100% - #{$btn-height});
+    white-space: normal;
+
+    @include md {
+      max-width: calc(100% - #{$md-btn-height});
+    }
+  }
 
   .caret {
     position: relative;
@@ -201,7 +236,7 @@
 
     .light-theme .sidebar-layout &,
     .light-theme .modal & {
-      stroke: rgba($white, 0.7);
+      stroke: $lt-button-color;
     }
   }
 
@@ -292,8 +327,8 @@
         stroke: $dt-text-color;
       }
 
-      &:hover:enabled,
-      &:hover:enabled .icon {
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon {
         color: $pale-blue;
         fill: $pale-blue;
         stroke: $pale-blue;
@@ -331,8 +366,8 @@
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
 
-    &:hover:enabled,
-    &:hover:enabled .icon {
+    &:hover:not(:disabled),
+    &:hover:not(:disabled) .icon {
       color: $white;
       fill: $white;
       stroke: $white;
@@ -351,9 +386,9 @@
       stroke: $dt-text-color;
     }
 
-    &:hover:enabled,
-    &:active:enabled,
-    &.active:enabled {
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
@@ -385,7 +420,7 @@
       background-color: $purple;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $white;
       fill: $white;
       stroke: $white;
@@ -406,8 +441,21 @@
       stroke: $dt-text-color;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .open:not(.dropdown-select) > .dropdown-toggle.btn-tertiary {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+      color: $pale-blue;
+      background-color: rgba($black, 0.2);
       fill: $pale-blue;
       stroke: $pale-blue;
     }
@@ -423,7 +471,7 @@
       stroke: $dt-text-color;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $white;
       fill: $white;
       stroke: $white;
@@ -434,12 +482,16 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $white;
       background-color: $pale-blue;
+      fill: $white;
+      stroke: $white;
     }
 
-    &:hover:enabled {
-      color: $white;
+    &:hover:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -447,6 +499,7 @@
 
     &,
     &:hover,
+    &:focus,
     &:active,
     &.active {
       color: $dt-text-color;
@@ -454,7 +507,7 @@
       background-color: transparent;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $pale-blue;
     }
   }
@@ -479,8 +532,8 @@
         stroke: $lt-text-color;
       }
 
-      &:hover:enabled,
-      &:hover:enabled .icon {
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon {
         color: $pale-blue;
         fill: $pale-blue;
         stroke: $pale-blue;
@@ -534,9 +587,9 @@
       stroke: $pale-blue;
     }
 
-    &:hover:enabled,
-    &:active:enabled,
-    &.active:enabled {
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
       color: $lt-text-color;
       fill: $lt-text-color;
       stroke: $lt-text-color;
@@ -550,16 +603,28 @@
     &:hover,
     &:active,
     &.active {
-      color: $dt-text-color;
+      color: $white;
       background-color: rgba($white, 0.2);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $white;
+      stroke: $white;
     }
 
-    &:hover:enabled,
-    &:active:enabled,
-    &.active:enabled {
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
+    }
+  }
+
+  .content-item-chart .btn-primary {
+
+    &,
+    &:active,
+    &.active {
       color: $white;
+      background-color: rgba($white, 0.4);
       fill: $white;
       stroke: $white;
     }
@@ -590,7 +655,7 @@
       background-color: $purple;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $white;
       fill: $white;
       stroke: $white;
@@ -605,13 +670,13 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
+      color: $lt-button-color;
       background-color: rgba($black, 0.2);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
@@ -622,16 +687,16 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
-      background-color: $btn-success-bg;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:enabled {
       color: $white;
+      background-color: $btn-success-bg;
       fill: $white;
       stroke: $white;
+    }
+
+    &:hover:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -639,16 +704,16 @@
 
     &,
     &:hover {
-      color: $dt-text-color;
-      background-color: $pale-blue;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:enabled {
       color: $white;
+      background-color: $pale-blue;
       fill: $white;
       stroke: $white;
+    }
+
+    &:hover:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 
@@ -656,6 +721,7 @@
 
     &,
     &:hover,
+    &:focus,
     &:active,
     &.active {
       color: inherit;
@@ -665,7 +731,7 @@
       stroke: inherit;
     }
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
@@ -674,9 +740,11 @@
 
   .sidebar-layout .btn-link,
   .modal .btn-link {
+    background-color: transparent;
 
-    &:hover:enabled {
+    &:hover:not(:disabled) {
       color: $white;
+      background-color: transparent;
     }
   }
 }

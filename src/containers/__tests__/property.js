@@ -14,6 +14,22 @@ function hostActionsMaker() {
   }
 }
 
+function trafficActionsMaker() {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchByTime: jest.genMockFunction(),
+    finishFetching: jest.genMockFunction()
+  }
+}
+
+function visitorsActionsMaker() {
+  return {
+    startFetching: jest.genMockFunction(),
+    fetchByCountry: jest.genMockFunction(),
+    finishFetching: jest.genMockFunction()
+  }
+}
+
 const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
@@ -46,7 +62,7 @@ const fakeHost = Immutable.fromJS({
       "configurations": [
         {
           "config_id": "1",
-          "request_policies": [
+          "request_policy": {"policy_rules": [
             {
               "match": {
                 "default": [
@@ -126,7 +142,7 @@ const fakeHost = Immutable.fromJS({
                 "field_detail": "client_type"
               }
             }
-          ],
+          ]},
           "edge_configuration": {
             "published_name": "examplffffffe.com",
             "origin_host_name": "sdrgfdg.com",
@@ -135,14 +151,15 @@ const fakeHost = Immutable.fromJS({
           "configuration_status": {
             "last_edited_by": "Stan Laurel",
             "last_edited": "10 Jan 2016 - 10:52",
-            "environment": "staging"
+            "deployment_status": 2
           },
-          "default_policies": [
+          "default_policy": {"policy_rules": [
             {
               "set": {
                 "cache_control": {
                   "honor_origin": true,
-                  "check_etag": "weak"
+                  "check_etag": "weak",
+                  "max_age": 0
                 }
               }
             },
@@ -153,8 +170,8 @@ const fakeHost = Immutable.fromJS({
                 }
               }
             }
-          ],
-          "response_policies": [
+          ]},
+          "response_policy": {"policy_rules": [
             {
               "match": {
                 "field": "response_code",
@@ -198,7 +215,7 @@ const fakeHost = Immutable.fromJS({
                 ]
               }
             }
-          ]
+          ]}
         }
       ]
     }
@@ -208,6 +225,45 @@ const fakeHost = Immutable.fromJS({
   "description": ""
 })
 
+const fakeMetrics = Immutable.fromJS([
+  {
+    avg_cache_hit_rate: 1,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '3 Unit',
+      average: '2 Unit',
+      lowest: '1 Unit'
+    }
+  },
+  {
+    avg_cache_hit_rate: 2,
+    historical_traffic: [],
+    historical_variance: [],
+    traffic: [],
+    transfer_rates: {
+      peak: '6 Unit',
+      average: '5 Unit',
+      lowest: '4 Unit'
+    }
+  }
+])
+
+const fakeVisitors = Immutable.fromJS({
+  "total":19080,
+  "countries": [
+    {
+      "name":"Sweden",
+      "percent_total":1
+    },
+    {
+      "name":"USA",
+      "percent_total":2
+    }
+  ]
+})
+
 describe('Property', () => {
   it('should exist', () => {
     const property = TestUtils.renderIntoDocument(
@@ -215,7 +271,9 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
-        hostActions={hostActionsMaker()} />
+        hostActions={hostActionsMaker()}
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()} />
     );
     expect(TestUtils.isCompositeComponent(property)).toBeTruthy();
   });
@@ -224,7 +282,9 @@ describe('Property', () => {
     const hostActions = hostActionsMaker()
     TestUtils.renderIntoDocument(
       <Property hostActions={hostActions} fetching={true}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams} location={fakeLocation}
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
@@ -236,9 +296,30 @@ describe('Property', () => {
     const property = TestUtils.renderIntoDocument(
       <Property hostActions={hostActionsMaker()}
         params={urlParams} location={fakeLocation}
-        activeHost={fakeHost}/>
+        activeHost={fakeHost}
+        trafficActions={trafficActionsMaker()}
+        properties={Immutable.List(['www.abc.com'])}
+        metrics={fakeMetrics}
+        trafficByTime={Immutable.List()}
+        visitorsByCountry={fakeVisitors}
+        visitorsActions={visitorsActionsMaker()}/>
     )
     let header = TestUtils.findRenderedDOMComponentWithClass(property, 'property-header')
     expect(header.textContent).toContain('www.abc.com')
+  });
+
+  it('should toggle property menu', () => {
+    const property = TestUtils.renderIntoDocument(
+      <Property
+        params={urlParams}
+        location={fakeLocation}
+        fetching={true}
+        hostActions={hostActionsMaker()}
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()} />
+    )
+    expect(property.state.propertyMenuOpen).toBe(false)
+    property.togglePropertyMenu()
+    expect(property.state.propertyMenuOpen).toBe(true)
   });
 })

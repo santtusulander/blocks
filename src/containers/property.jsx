@@ -2,52 +2,23 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, MenuItem,
-  Row, Table } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Dropdown, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
+import numeral from 'numeral'
 
 import * as hostActionCreators from '../redux/modules/host'
+import * as purgeActionCreators from '../redux/modules/purge'
+import * as trafficActionCreators from '../redux/modules/traffic'
+import * as uiActionCreators from '../redux/modules/ui'
+import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
-
-const fakeRecentData = [
-  {timestamp: new Date("2016-01-01"), bytes: 49405, requests: 943},
-  {timestamp: new Date("2016-01-02"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-03"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-04"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-01-05"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-06"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-07"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-08"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-01-09"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-01-10"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-11"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-01-12"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-01-13"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-17"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-21"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-01-24"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-01-25"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-01-26"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-27"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-28"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-29"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-30"), bytes: 23456, requests: 233},
-  {timestamp: new Date("2016-01-31"), bytes: 24675, requests: 435}
-]
+import PurgeModal from '../components/purge-modal'
 
 export class Property extends React.Component {
   constructor(props) {
@@ -55,27 +26,63 @@ export class Property extends React.Component {
 
     this.state = {
       byLocationWidth: 0,
-      byTimeWidth: 0
+      byTimeWidth: 0,
+      purgeActive: false,
+      propertyMenuOpen: false
     }
 
+    this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
+    this.savePurge = this.savePurge.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+    this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
+    this.notificationTimeout = null
   }
   componentWillMount() {
-    this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      this.props.location.query.name
-    )
+    this.fetchData(this.props.location.query.name)
   }
   componentDidMount() {
     this.measureContainers()
     setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.location.query.name !== this.props.location.query.name) {
+      this.fetchData(nextProps.location.query.name)
+    }
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+  }
+  fetchData(property) {
+    this.props.hostActions.startFetching()
+    this.props.hostActions.fetchHost(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      property
+    )
+    this.props.trafficActions.startFetching()
+    Promise.all([
+      this.props.trafficActions.fetchByTime({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        property: property,
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X')
+      })
+    ]).then(this.props.trafficActions.finishFetching)
+    Promise.all([
+      this.props.visitorsActions.fetchByCountry({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        property: property,
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X'),
+        aggregate_granularity: 'day',
+        max_countries: 3
+      })
+    ]).then(this.props.visitorsActions.finishFetching)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -84,31 +91,90 @@ export class Property extends React.Component {
       })
     }
   }
+  togglePurge() {
+    this.setState({
+      purgeActive: !this.state.purgeActive
+    })
+    this.props.purgeActions.resetActivePurge()
+  }
+  savePurge() {
+    let targetUrl = this.props.activeHost.get('services').get(0)
+      .get('configurations').get(0).get('edge_configuration')
+      .get('published_name')
+    if(this.props.activeHost.get('services').get(0)
+      .get('deployment_mode') === 'trial') {
+      targetUrl = this.props.activeHost.get('services').get(0)
+        .get('configurations').get(0).get('edge_configuration')
+        .get('trial_name')
+    }
+    this.props.purgeActions.createPurge(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      targetUrl,
+      this.props.activePurge.toJS()
+    ).then((action) => {
+      if(action.payload instanceof Error) {
+        this.setState({purgeActive: false})
+        this.showNotification('Purge request failed: ' +
+          action.payload.message)
+      }
+      else {
+        this.setState({purgeActive: false})
+        this.showNotification('Purge request succesfully submitted')
+      }
+    })
+  }
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
+  }
+  togglePropertyMenu() {
+    this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
+  }
   render() {
-    if(this.props.fetching) {
+    if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
+    const metrics = this.props.metrics.find(
+      metric => metric.get('property') === this.props.location.query.name)
+      || Immutable.Map()
+    const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    const avg_transfer_rate = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('average').split(' ') : [0, null]
+    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
+    const uniq_vis = this.props.visitorsByCountry.get('total')
     return (
       <PageContainer>
         <Content>
           <div className="container-fluid">
             <Row className="property-header no-end-gutters">
               <ButtonToolbar className="pull-right">
-                <Button bsStyle="primary">Purge</Button>
+                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               </ButtonToolbar>
 
               <p>PROPERTY SUMMARY</p>
-              <Dropdown id="dropdown-content">
+              <Dropdown id="dropdown-content"
+                open={this.state.propertyMenuOpen}
+                onToggle={this.togglePropertyMenu}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{this.props.location.query.name}</h1>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <MenuItem eventKey="1">propertyname2.com</MenuItem>
-                  <MenuItem eventKey="2">propertyname3.com</MenuItem>
-                  <MenuItem eventKey="3">propertyname4.com</MenuItem>
-                  <MenuItem eventKey="4">propertyname5.com</MenuItem>
+                  {this.props.properties.map(
+                    (property, i) =>
+                      property !== this.props.location.query.name ?
+                      <li key={i}>
+                        <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
+                          onClick={this.togglePropertyMenu}>
+                          {property}
+                        </Link>
+                      </li> : null
+                  ).toJS()}
                 </Dropdown.Menu>
               </Dropdown>
             </Row>
@@ -144,48 +210,61 @@ export class Property extends React.Component {
               <Col xs={6} className="property-analytics-summary">
                 <h3 className="has-btn">
                   Traffic Summary
-                  <span className="heading-suffix"> (last 30 days)</span>
-                  <Button bsStyle="primary" className="btn-icon pull-right">
-                    <Link to={`/analysis/`}>
-                      <IconChart/>
-                    </Link>
-                  </Button>
+                  <span className="heading-suffix"> (last 28 days)</span>
+                  <Link className="btn btn-primary btn-icon pull-right"
+                    to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                    <IconChart/>
+                  </Link>
                 </h3>
 
-                <div ref="byTimeHolder">
-                  <AnalysisByTime axes={false} padding={40}
-                    data={fakeRecentData}
+                <div className="extra-margin-top" ref="byTimeHolder">
+                  <AnalysisByTime axes={false} padding={0}
+                    className="bg-transparent"
+                    primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 2} />
+                    height={this.state.byTimeWidth / 3} />
                 </div>
 
-                <Row>
-                  <Col xs={4}>
-                    <h1>456,789</h1>
-                    Unique visitors
+                <Row className="extra-margin-top no-gutters">
+                  <Col xs={7}>
+                    <Row>
+                      <Col xs={6}>
+                        Unique visitors
+                        <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                      </Col>
+                      <Col xs={6}>
+                        Bandwidth
+                        <h2>
+                          {avg_transfer_rate[0]}
+                          <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
+                        </h2>
+                      </Col>
+                    </Row>
+                    <Row className="extra-margin-top">
+                      <Col xs={6}>
+                        Cache Hit Rate
+                        <h2>{avg_cache_hit_rate}
+                          <span className="heading-suffix"> %</span>
+                        </h2>
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col xs={4}>
-                    <h1>8<span className="heading-suffix"> Gbps</span></h1>
-                    Bandwidth
-                  </Col>
-                  <Col xs={4}>
-                    <h1>97<span className="heading-suffix"> %</span></h1>
-                    Cache Hit Rate
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col xs={12}>
-                    <h1>
-                      <span className="right-separator">40
-                        <span className="heading-suffix"> %</span> APAC
-                      </span>
-                      <span className="right-separator">22
-                        <span className="heading-suffix"> %</span> US
-                      </span>
-                      15<span className="heading-suffix"> %</span> EU</h1>
-                    Top 3 Regions by Visitors
+                  <Col xs={5}>
+                    Top 3 Countries by Visitors
+                    {this.props.fetching ?
+                      <p>Loading...</p> :
+                      this.props.visitorsByCountry.get('countries').size ?
+                        this.props.visitorsByCountry.get('countries').map((country, i) => {
+                        return (
+                          <h2 key={i}>
+                            {numeral(country.get('percent_total')).format('0.00')}
+                            <span className="heading-suffix"> %</span>
+                            <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                          </h2>
+                        )
+                      }) : <h2>0 %</h2>
+                    }
                   </Col>
                 </Row>
               </Col>
@@ -195,11 +274,10 @@ export class Property extends React.Component {
               <Col xs={6} className="property-configuration-summary">
                 <h3 className="has-btn">
                   Edge Configuration
-                  <Button bsStyle="primary" className="btn-icon pull-right">
-                    <Link to={`/configuration/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
-                      <IconConfiguration />
-                    </Link>
-                  </Button>
+                  <Link className="btn btn-primary btn-icon pull-right"
+                    to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                    <IconConfiguration />
+                  </Link>
                 </h3>
 
                 <Table className="unstyled no-padding auto-width">
@@ -267,6 +345,12 @@ export class Property extends React.Component {
             </Row>
           </div>
         </Content>
+        {this.state.purgeActive ? <PurgeModal
+          activePurge={this.props.activePurge}
+          changePurge={this.props.purgeActions.updateActivePurge}
+          hideAction={this.togglePurge}
+          savePurge={this.savePurge}
+          showNotification={this.showNotification}/> : ''}
       </PageContainer>
     )
   }
@@ -276,28 +360,52 @@ Property.displayName = 'Property'
 Property.propTypes = {
   account: React.PropTypes.string,
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   hostActions: React.PropTypes.object,
   id: React.PropTypes.string,
   location: React.PropTypes.object,
+  metrics: React.PropTypes.instanceOf(Immutable.List),
   name: React.PropTypes.string,
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  purgeActions: React.PropTypes.object,
+  trafficActions: React.PropTypes.object,
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
+  trafficFetching: React.PropTypes.bool,
+  uiActions: React.PropTypes.object,
+  visitorsActions: React.PropTypes.object,
+  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsFetching: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
   return {
     activeHost: state.host.get('activeHost'),
-    fetching: state.host.get('fetching')
+    activePurge: state.purge.get('activePurge'),
+    fetching: state.host.get('fetching'),
+    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
+    metrics: state.metrics.get('hostMetrics'),
+    properties: state.host.get('allHosts'),
+    trafficByTime: state.traffic.get('byTime'),
+    trafficFetching: state.traffic.get('fetching'),
+    visitorsByCountry: state.visitors.get('byCountry'),
+    visitorsFetching: state.traffic.get('fetching')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    hostActions: bindActionCreators(hostActionCreators, dispatch)
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    purgeActions: bindActionCreators(purgeActionCreators, dispatch),
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   };
 }
 

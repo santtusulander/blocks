@@ -10,7 +10,8 @@ var config = require('../config');
 var assetCopy = new CopyWebpackPlugin([
   {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
   {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
-  {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'}
+  {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
+  {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
 ]);
 
 gulp.task("webpack", ['preprocess'], function(callback) {
@@ -34,6 +35,9 @@ gulp.task("webpack", ['preprocess'], function(callback) {
       proxy: {
         '/VCDN*': {
           target: config.apiUrl
+        },
+        '/analytics*': {
+          target: 'http://localhost:3030'
         }
       },
       stats: {
