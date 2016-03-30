@@ -9,18 +9,6 @@ import { bindActionCreators } from 'redux'
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
 
-function getTrendClass(trending) {
-  if(trending < 0) {
-    return 'below-avg'
-  }
-  else if(trending > 0) {
-    return 'above-avg'
-  }
-  else {
-    return 'avg'
-  }
-}
-
 export class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
@@ -120,7 +108,8 @@ export class AnalysisByLocation extends React.Component {
     }
   }
   render() {
-    if(!this.props.width || !this.props.countries.size || this.props.fetching) {
+    if(!this.props.width || !this.props.countries.size || this.props.fetching
+      || !this.props.countryData) {
       return <div>Loading...</div>
     }
 
@@ -193,9 +182,12 @@ export class AnalysisByLocation extends React.Component {
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              const trending = numeral(
-                this.props.countryData.get(dataIndex).get('percent_change') || 0
-              ).format('+0%')
+              let trending = '+0%'
+              if(this.props.countryData.get(dataIndex)) {
+                trending = numeral(
+                  this.props.countryData.get(dataIndex).get('percent_change') || 0
+                ).format('+0%')
+              }
               return (
                 <path key={i} d={path(country)}
                   onMouseMove={this.moveMouse(country.id, trending)}
