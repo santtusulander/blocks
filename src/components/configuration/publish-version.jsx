@@ -35,12 +35,12 @@ class ConfigurationPublishVersion extends React.Component {
         <label>Publish to</label>
         <Input type="radio"
           label="Staging Platform"
-          onChange={this.setPublishTarget('staging')}
-          checked={this.state.publishTarget === 'staging'}/>
+          onChange={this.setPublishTarget(2)}
+          checked={this.state.publishTarget === 2}/>
         <Input type="radio"
           label="Production Platform"
-          onChange={this.setPublishTarget('production')}
-          checked={this.state.publishTarget === 'production'}/>
+          onChange={this.setPublishTarget(3)}
+          checked={this.state.publishTarget === 3}/>
 
         {/* Action buttons */}
         <ButtonToolbar className="text-right extra-margin-top">
