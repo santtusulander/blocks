@@ -79,7 +79,7 @@ export default handleActions({
     },
     throw(state) {
       return state.merge({
-        totalEgress: Immutable.List()
+        totalEgress: 0
       })
     }
   },

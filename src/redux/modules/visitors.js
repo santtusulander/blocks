@@ -78,7 +78,7 @@ export default handleActions({
     },
     throw(state) {
       return state.merge({
-        byCountry: Immutable.List()
+        byCountry: Immutable.fromJS({countries: []})
       })
     }
   },
@@ -90,7 +90,7 @@ export default handleActions({
     },
     throw(state) {
       return state.merge({
-        byBrowser: Immutable.List()
+        byBrowser: Immutable.fromJS({browsers: []})
       })
     }
   },
@@ -102,7 +102,7 @@ export default handleActions({
     },
     throw(state) {
       return state.merge({
-        byOS: Immutable.List()
+        byOS: Immutable.fromJS({os: []})
       })
     }
   },
