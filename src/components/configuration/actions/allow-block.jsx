@@ -43,7 +43,6 @@ class AllowBlock extends React.Component {
       <div>
         <Modal.Header>
           <h1>Allow/Block</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

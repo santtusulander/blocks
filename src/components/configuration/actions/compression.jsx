@@ -34,7 +34,6 @@ class Compression extends React.Component {
       <div>
         <Modal.Header>
           <h1>Compression</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

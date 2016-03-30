@@ -20,7 +20,6 @@ class PostSupport extends React.Component {
       <div>
         <Modal.Header>
           <h1>POST Support</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 
