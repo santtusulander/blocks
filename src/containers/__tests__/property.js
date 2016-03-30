@@ -250,11 +250,19 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
-const fakeVisitors = Immutable.fromJS([
-  {
-    total: 1
-  }
-])
+const fakeVisitors = Immutable.fromJS({
+  "total":19080,
+  "countries": [
+    {
+      "name":"Sweden",
+      "percent_total":1
+    },
+    {
+      "name":"USA",
+      "percent_total":2
+    }
+  ]
+})
 
 describe('Property', () => {
   it('should exist', () => {

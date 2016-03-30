@@ -56,7 +56,7 @@ function routeVisitorsCountry(req, res) {
     // Add the country code and proper country name
     responseData.countries.forEach((countryRecord) => {
       let code = countryRecord.name;
-      countryRecord.code = code;
+      countryRecord.code = countries[code] ? countries[code].alpha3 : code;
       countryRecord.name = countries[code] ? countries[code].name : code;
     });
 

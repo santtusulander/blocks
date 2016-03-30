@@ -46,7 +46,7 @@ class AnalysisVisitors extends React.Component {
         </div>
         <h3>BY GEOGRAPHY</h3>
         <div ref="byLocationHolder">
-          {this.props.fetching || !this.props.byCountry.size ?
+          {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
             dataKey="uniq_vis"
