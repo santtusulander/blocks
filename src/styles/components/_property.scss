@@ -48,6 +48,7 @@
 
   h3 {
     margin-bottom: 0;
+    word-wrap: break-word;
   }
 
   .dark-theme & {
@@ -99,15 +100,11 @@
     padding-right: ($md-bar-height / 2);
   }
 
-  h1 {
-    margin: $bar-height 0 0;
+  .analysis-by-time {
+    margin: $btn-height 0;
 
     @include md {
-      margin-top: $md-bar-height;
-    }
-
-    @include sm {
-      margin-top: ($md-bar-height / 2);
+      margin: $md-btn-height 0;
     }
   }
 }
