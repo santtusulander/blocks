@@ -41,7 +41,7 @@ class ConfigurationDetails extends React.Component {
 
         {/* Origin Hostname */}
 
-        <Input type="text" label="Origin Hostname"
+        <Input type="text" label="Customer Origin"
           id="origin_host_name"
           labelClassName="col-xs-3"
           wrapperClassName="col-xs-9"
@@ -94,7 +94,7 @@ class ConfigurationDetails extends React.Component {
             (isOtherHostHeader ? ' show' : '')}></div>
 
           <div className="form-group">
-            <label className="col-xs-3 control-label">Origin Hostname Value</label>
+            <label className="col-xs-3 control-label">Host Header Value</label>
             <Col xs={9} xsOffset={3}>
               <div className="input-group">
                 <Select className="input-select"
