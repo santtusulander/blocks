@@ -145,8 +145,8 @@ export class Property extends React.Component {
       || Immutable.Map()
     const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
     const avg_transfer_rate = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('average').split(' ') : []
-    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : []
+      metrics.get('transfer_rates').get('average').split(' ') : [0, null]
+    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
     return (
       <PageContainer>
@@ -254,15 +254,17 @@ export class Property extends React.Component {
                     Top 3 Countries by Visitors
                     {this.props.fetching ?
                       <p>Loading...</p> :
-                      this.props.visitorsByCountry.get('countries').map((country, i) => {
-                      return (
-                        <h2 key={i}>
-                          {numeral(country.get('percent_total')).format('0.00')}
-                          <span className="heading-suffix"> %</span>
-                          <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
-                        </h2>
-                      )
-                    })}
+                      this.props.visitorsByCountry.get('countries').size ?
+                        this.props.visitorsByCountry.get('countries').map((country, i) => {
+                        return (
+                          <h2 key={i}>
+                            {numeral(country.get('percent_total')).format('0.00')}
+                            <span className="heading-suffix"> %</span>
+                            <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                          </h2>
+                        )
+                      }) : <h2>0 %</h2>
+                    }
                   </Col>
                 </Row>
               </Col>
