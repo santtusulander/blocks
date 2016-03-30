@@ -47,7 +47,6 @@ class Redirection extends React.Component {
       <div>
         <Modal.Header>
           <h1>Redirection</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

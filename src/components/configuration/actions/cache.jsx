@@ -39,7 +39,6 @@ class Cache extends React.Component {
       <div>
         <Modal.Header>
           <h1>Cache</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 
