@@ -134,6 +134,12 @@ function routeMetrics(req, res) {
         // e.g. levelData = {group: 3}, levelData = {property: 'idean.com'}
         levelData[selectedLevel] = level;
 
+        // Strip out .cdx-stag.unifieddeliverynetwork.net from the property names
+        // NOTE: https://vidscale.atlassian.net/browse/UDNP-284
+        if (selectedLevel === 'property') {
+          levelData[selectedLevel] = level.replace(/(.+)\.cdx-.+?\.unifieddeliverynetwork\.net/, '$1');
+        }
+
         // Push the object to the response data
         responseData.push(levelData);
 
