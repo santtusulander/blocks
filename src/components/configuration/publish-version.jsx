@@ -18,12 +18,10 @@ class ConfigurationPublishVersion extends React.Component {
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges(this.state.publishTarget)
-    this.props.hideAction()
   }
   render() {
     return (
-      <form className="configuration-publish-version"
-        onSubmit={this.handleSave}>
+      <form className="configuration-publish-version">
 
         {/* Version Name */}
         <FormControls.Static label="Version Name"
@@ -48,6 +46,7 @@ class ConfigurationPublishVersion extends React.Component {
             Cancel
           </Button>
           <Button bsStyle="primary"
+            onClick={this.handleSave}
             disabled={this.props.publishing}>
             {this.props.publishing ? 'PUBLISHING...' : 'PUBLISH'}
           </Button>
