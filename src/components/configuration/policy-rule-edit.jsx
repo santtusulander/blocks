@@ -247,7 +247,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     }
                   </Col>
                   <Col xs={3}>
-                    <p>NEEDS_API</p>
+                    <p>Matches</p>
                   </Col>
                   <Col xs={2} className="text-right">
                     <Button onClick={this.deleteMatch(match.path)} bsStyle="primary"
