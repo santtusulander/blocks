@@ -151,7 +151,7 @@ class ContentItemChart extends React.Component {
                 <svg className="content-item-chart-svg secondary-data">
                   {/* Add center point as last coordinate to close the path */}
                   <path className="content-item-chart-line"
-                    d={secondaryLine(this.props.secondaryData)
+                    d={secondaryLine(secondaryData)
                       + 'L' + outerRadius + ' ' + outerRadius} />
                 </svg>
               : ''}
@@ -162,25 +162,18 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {!this.props.fetchingMetrics ?
+              {!this.props.fetchingMetrics && this.props.primaryData.length ?
                 <svg className="content-item-chart-svg primary-data">
                   {/* For performance reasons we draw the primary bar chart as a path. We need
                   to add extra points to the array so that the path draws the lines outwards
                   from the center of the graph. Every other value on the array is set to
                   'center', which is translated in the d3 function in to coordinates */}
                   <path className="content-item-chart-line"
-                    d={primaryLine(this.props.primaryData.reduce(
-                      (points, data, i) => {
-                        if(!(i % 3)) {
-                          points.push('center')
-                          points.push(normalize(data.bytes || 0))
-                        }
-                        else {
-                          points[points.length-1] =
-                            parseInt(points[points.length-1]) +
-                            parseInt(normalize(data.bytes || 0))
-                        }
-                        return points;
+                    d={primaryLine(primaryData.reduce(
+                      (points, data) => {
+                        points.push('center')
+                        points.push(data || 0)
+                        return points
                       }, [])
                   )} />
                 </svg>
@@ -197,12 +190,12 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {this.props.differenceData && !this.props.fetchingMetrics ?
+              {this.props.differenceData.length && !this.props.fetchingMetrics ?
                 <svg className="content-item-chart-svg difference-arc">
                   <g style={differenceArcStyle}>
                     {
-                      pie(Array(this.props.differenceData.length).fill(1)).map((arcs, i) => {
-                        let data = this.props.differenceData[i]
+                      pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
+                        let data = differenceData[i]
                         let style = data < 0 ? 'below-avg' :
                           data === 0 ? 'avg' :
                           data > 0 ? 'above-avg' : ''
