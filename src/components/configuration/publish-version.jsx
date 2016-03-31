@@ -47,8 +47,9 @@ class ConfigurationPublishVersion extends React.Component {
           <Button bsStyle="primary" onClick={this.props.hideAction}>
             Cancel
           </Button>
-          <Button type="submit" bsStyle="primary">
-            Publish
+          <Button bsStyle="primary"
+            disabled={this.props.publishing}>
+            {this.props.publishing ? 'PUBLISHING...' : 'PUBLISH'}
           </Button>
         </ButtonToolbar>
       </form>
@@ -59,6 +60,7 @@ class ConfigurationPublishVersion extends React.Component {
 ConfigurationPublishVersion.displayName = 'ConfigurationPublishVersion'
 ConfigurationPublishVersion.propTypes = {
   hideAction: React.PropTypes.func,
+  publishing: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   versionName: React.PropTypes.string
 }

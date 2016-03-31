@@ -302,7 +302,8 @@ export class Configuration extends React.Component {
               <ConfigurationPublishVersion
                 hideAction={this.togglePublishModal}
                 saveChanges={this.changeActiveVersionEnvironment}
-                versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}/>
+                versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}
+                publishing={this.props.fetching}/>
             </Modal.Body>
           </Modal>
           : ''}
