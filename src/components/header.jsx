@@ -215,18 +215,18 @@ class Header extends React.Component {
                   <li className="dropdown-user-menu-container">
                     <ul>
                       <MenuItem header={true} className="dropdown-main-header">
-                        <div className="user-menu-item">Username</div>
+                        <div className="user-menu-item">test</div>
                       </MenuItem>
                       <MenuItem eventKey="1">
                         <div className="user-menu-item">
                           <div className="helper-header">Company</div>
-                          Disney Studios
+                          Ericsson
                         </div>
                       </MenuItem>
                       <MenuItem eventKey="2">
                         <div className="user-menu-item">
                           <div className="helper-header">Role</div>
-                          Admin
+                          UDN Admin
                         </div>
                       </MenuItem>
                       <li className="menu-item-theme">
