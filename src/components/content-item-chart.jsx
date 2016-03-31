@@ -15,11 +15,40 @@ class ContentItemChart extends React.Component {
     if (!this.props.primaryData) {
       return <div>Loading...</div>
     }
-    const primaryMax = d3.max(this.props.primaryData, d => {
-      return d.bytes || 0
+    const primaryData = this.props.primaryData.reduce((points, data, i) => {
+      // Group data into chunks of 3 as one data point in the chart = 3 hours
+      if(!(i % 3)) {
+        points.push(data.bytes || 0)
+      } else {
+        points[points.length-1] =
+          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
+      }
+      return points;
+    }, [])
+    const secondaryData = this.props.secondaryData.reduce((points, data, i) => {
+      // Group data into chunks of 3 as one data point in the chart = 3 hours
+      if(!(i % 3)) {
+        points.push(data.bytes || 0)
+      } else {
+        points[points.length-1] =
+          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
+      }
+      return points;
+    }, [])
+    const differenceData = this.props.differenceData.reduce((points, data, i) => {
+      // Group data into chunks of 3 as one data point in the chart = 3 hours
+      if(!(i % 3)) {
+        points.push(data || null)
+      } else {
+        points[points.length-1] = data ? points[points.length-1] + data : null
+      }
+      return points;
+    }, [])
+    const primaryMax = d3.max(primaryData, d => {
+      return d || 0
     })
-    const secondaryMax = this.props.secondaryData.length ?
-      d3.max(this.props.secondaryData, d => d.bytes || 0)
+    const secondaryMax = secondaryData.length ?
+      d3.max(secondaryData, d => d || 0)
       : primaryMax
     const barMaxHeight = this.props.barMaxHeight;
     const normalize = d3.scale.linear()
