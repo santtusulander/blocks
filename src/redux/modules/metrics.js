@@ -5,14 +5,18 @@ import moment from 'moment'
 
 import {analyticsBase} from '../util'
 
+const ACCOUNT_METRICS_START_FETCH = 'ACCOUNT_METRICS_START_FETCH'
 const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
 const HOST_METRICS_START_FETCH = 'HOST_METRICS_START_FETCH'
+const ACCOUNT_METRICS_FETCHED = 'ACCOUNT_METRICS_FETCHED'
 const GROUP_METRICS_FETCHED = 'GROUP_METRICS_FETCHED'
 const HOST_METRICS_FETCHED = 'HOST_METRICS_FETCHED'
 
 const emptyMetrics = Immutable.Map({
+  accountMetrics: Immutable.List(),
   groupMetrics: Immutable.List(),
   hostMetrics: Immutable.List(),
+  fetchingAccountMetrics: false,
   fetchingGroupMetrics: false,
   fetchingHostMetrics: false
 })
@@ -23,17 +27,20 @@ const qsBuilder = ({
   startDate,
   endDate
 }) => {
-  let qs = `?account=${account}`
+  let qs = []
+  if(account) {
+    qs.push(`account=${account}`)
+  }
   if(group) {
-    qs += `&group=${group}`
+    qs.push(`group=${group}`)
   }
   if(startDate) {
-    qs += `&start=${startDate}`
+    qs.push(`start=${startDate}`)
   }
   if(endDate) {
-    qs += `&end=${endDate}`
+    qs.push(`end=${endDate}`)
   }
-  return qs
+  return qs.length ? '?'+qs.join('&') : ''
 }
 
 const parseDatapointTraffic = (datapoint) => {
@@ -69,6 +76,21 @@ export default handleActions({
       })
     }
   },
+  ACCOUNT_METRICS_FETCHED: {
+    next(state, action) {
+      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
+      return state.merge({
+        fetchingAccountMetrics: false,
+        accountMetrics: Immutable.fromJS(data)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        fetchingAccountMetrics: false,
+        accountMetrics: Immutable.List()
+      })
+    }
+  },
   HOST_METRICS_FETCHED: {
     next(state, action) {
       const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
@@ -84,6 +106,9 @@ export default handleActions({
       })
     }
   },
+  ACCOUNT_METRICS_START_FETCH: (state) => {
+    return state.set('fetchingAccountMetrics', true)
+  },
   GROUP_METRICS_START_FETCH: (state) => {
     return state.set('fetchingGroupMetrics', true)
   },
@@ -93,6 +118,15 @@ export default handleActions({
 }, emptyMetrics)
 
 // ACTIONS
+
+export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
 
 export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
@@ -111,6 +145,8 @@ export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, (opts) => {
     }
   });
 })
+
+export const startAccountFetching = createAction(ACCOUNT_METRICS_START_FETCH)
 
 export const startGroupFetching = createAction(GROUP_METRICS_START_FETCH)
 
