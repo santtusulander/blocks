@@ -27,17 +27,20 @@ const qsBuilder = ({
   startDate,
   endDate
 }) => {
-  let qs = `?account=${account}`
+  let qs = []
+  if(account) {
+    qs.push(`account=${account}`)
+  }
   if(group) {
-    qs += `&group=${group}`
+    qs.push(`group=${group}`)
   }
   if(startDate) {
-    qs += `&start=${startDate}`
+    qs.push(`start=${startDate}`)
   }
   if(endDate) {
-    qs += `&end=${endDate}`
+    qs.push(`end=${endDate}`)
   }
-  return qs
+  return qs.length ? '?'+qs.join('&') : ''
 }
 
 const parseDatapointTraffic = (datapoint) => {

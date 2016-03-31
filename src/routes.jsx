@@ -21,7 +21,7 @@ import ContentTransition from './transitions/content'
 
 module.exports = (
   <Route path="/" component={Main}>
-    <IndexRedirect to="/login" />
+    <IndexRedirect to="/content/accounts/udn" />
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
