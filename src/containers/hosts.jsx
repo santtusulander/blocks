@@ -243,7 +243,12 @@ export class Hosts extends React.Component {
                 onHide={this.toggleAddHost}>
                 <Modal.Header>
                   <h1>Add Property</h1>
-                  <p>Lorem ipsum dolor</p>
+                  <p>
+                    {this.props.activeAccount && this.props.activeGroup ?
+                      this.props.activeAccount.get('name') + ' / ' +
+                      this.props.activeGroup.get('name')
+                    : null}
+                  </p>
                 </Modal.Header>
                 <Modal.Body>
                   <AddHost createHost={this.createNewHost}

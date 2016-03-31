@@ -55,9 +55,6 @@ class Header extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
-    const firstAccount = this.props.accounts && this.props.accounts.get(0) ?
-      this.props.accounts.get(0).get('id')
-      : 1
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
@@ -88,7 +85,7 @@ class Header extends React.Component {
         {showBreadcrumbs ?
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
             <li className="breadcrumb-back">
-              <Link to={`/content/groups/udn/${firstAccount}`} />
+              <Link to={`/content/accounts/udn`} />
             </li>
             <li>
               <Link to={`/content/groups/udn/${this.props.params.account}`}>
@@ -122,7 +119,7 @@ class Header extends React.Component {
         <div>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">Ericsson</a>
+              <Link to={`/content/accounts/udn`}>Ericsson</Link>
             </Navbar.Brand>
           </Navbar.Header>
           <Nav className="main-nav">
@@ -131,7 +128,7 @@ class Header extends React.Component {
                 open={this.state.accountMenuOpen}
                 onToggle={this.toggleAccountMenu}>
                 <Link className={'main-nav-link' + contentActive}
-                  to={`/content/groups/udn/${firstAccount}`}
+                  to={`/content/accounts/udn`}
                   activeClassName="active">
                   Content
                 </Link>
@@ -218,18 +215,18 @@ class Header extends React.Component {
                   <li className="dropdown-user-menu-container">
                     <ul>
                       <MenuItem header={true} className="dropdown-main-header">
-                        <div className="user-menu-item">Username</div>
+                        <div className="user-menu-item">test</div>
                       </MenuItem>
                       <MenuItem eventKey="1">
                         <div className="user-menu-item">
                           <div className="helper-header">Company</div>
-                          Disney Studios
+                          Ericsson
                         </div>
                       </MenuItem>
                       <MenuItem eventKey="2">
                         <div className="user-menu-item">
                           <div className="helper-header">Role</div>
-                          Admin
+                          UDN Admin
                         </div>
                       </MenuItem>
                       <li className="menu-item-theme">

@@ -20,7 +20,6 @@ class RemoveVary extends React.Component {
       <div>
         <Modal.Header>
           <h1>Remove Vary</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

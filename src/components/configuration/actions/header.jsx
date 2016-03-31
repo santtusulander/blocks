@@ -41,7 +41,6 @@ class Header extends React.Component {
       <div>
         <Modal.Header>
           <h1>Header</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

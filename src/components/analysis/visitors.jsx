@@ -49,7 +49,6 @@ class AnalysisVisitors extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
-            dataKey="uniq_vis"
             timelineKey="detail"
             width={this.state.byLocationWidth}
             height={this.state.byLocationWidth / 1.6}
