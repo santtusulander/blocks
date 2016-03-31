@@ -182,15 +182,15 @@ export class AnalysisByLocation extends React.Component {
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              let trending = '+0%'
+              let label = '0'
               if(this.props.countryData.get(dataIndex)) {
-                trending = numeral(
-                  this.props.countryData.get(dataIndex).get('percent_change') || 0
-                ).format('+0%')
+                label = numeral(
+                  this.props.countryData.get(dataIndex).get('total') || 0
+                ).format('0,0')
               }
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, trending)}
+                  onMouseMove={this.moveMouse(country.id, label)}
                   className={classes}
                   style={pathStyle}/>
               )
@@ -257,7 +257,6 @@ AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
   countryData: React.PropTypes.instanceOf(Immutable.List),
-  dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
   stateData: React.PropTypes.instanceOf(Immutable.List),

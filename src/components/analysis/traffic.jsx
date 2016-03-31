@@ -60,7 +60,6 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
-              dataKey="bytes"
               timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 1.6}
