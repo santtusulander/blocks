@@ -48,8 +48,13 @@ class ConfigurationDetails extends React.Component {
           addonAfter={
             <OverlayTrigger placement="top" overlay={
               <Tooltip id="tooltip_origin_host_name">
-                <div className="tooltip-header">Origin Hostname</div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <div className="tooltip-header">Customer Origin</div>
+                <div className="text-sm">Customer Origin is the publicly
+                  addressable Web server location where the UDN platform will
+                  fetch content for delivery to end users. This value can either
+                  be a Fully Qualified Domain Name (FQDN) or an IP address.
+                  Usually, the customer origin value is a subdomain of the
+                  delivery domain, e.g. origin.domain.com.</div>
               </Tooltip>
             }>
               <Button bsStyle="link" className="btn-icon">
@@ -73,7 +78,11 @@ class ConfigurationDetails extends React.Component {
             <OverlayTrigger placement="top" overlay={
               <Tooltip id="tooltip_origin_host_port">
                 <div className="tooltip-header">Origin Port</div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <div className="text-sm">Origin Port is the value of the port on
+                  your origin Web server that UDN will use to fetch content for
+                  delivery. By default, the UDN platform will use port 80 to
+                  fetch HTTP content. The default port for HTTPS content is 443.
+                </div>
               </Tooltip>
             }>
               <Button bsStyle="link" className="btn-icon">
@@ -111,8 +120,14 @@ class ConfigurationDetails extends React.Component {
                 <span className="input-group-addon">
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_origin_path_append">
-                      <div className="tooltip-header">Origin Hostname Value</div>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      <div className="tooltip-header">Host Header Value</div>
+                      <div className="text-sm">Host Header Value is the value
+                        that the UDN server will submit to the origin hostname.
+                        There are 3 options that UDN allows: origin hostname
+                        value, published hostname value, or a custom hostname
+                        value. The value that UDN transmits is flexible to
+                        support how you have your origin Web server setup. Most
+                        origin Web servers use the origin hostname value.</div>
                     </Tooltip>
                   }>
                     <Button bsStyle="link" className="btn-icon">
@@ -146,7 +161,11 @@ class ConfigurationDetails extends React.Component {
             <OverlayTrigger placement="top" overlay={
               <Tooltip id="tooltip_origin_path_append">
                 <div className="tooltip-header">Origin Forward Path</div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <div className="text-sm">The Origin Forward Path should be used
+                  if the content on the origin Web server is not in the same
+                  request path as the end user request. By default, the Origin
+                  Forward Path will be the same path from the original end user
+                  URI request.</div>
               </Tooltip>
             }>
               <Button bsStyle="link" className="btn-icon">
@@ -170,7 +189,11 @@ class ConfigurationDetails extends React.Component {
             <OverlayTrigger placement="top" overlay={
               <Tooltip id="tooltip_published_name">
                 <div className="tooltip-header">Published Hostname Value</div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <div className="text-sm">The Published Hostname Value is the
+                  hostname used to deliver content to end users, aka a vanity
+                  hostname. The Published Hostname Value needs to a subdomain
+                  value, e.g. www.doamin.com, and cannot be an apex domain,
+                  e.g. domain.com.</div>
               </Tooltip>
             }>
               <Button bsStyle="link" className="btn-icon">
