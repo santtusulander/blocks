@@ -78,8 +78,9 @@ export class Property extends React.Component {
         account: this.props.params.account,
         group: this.props.params.group,
         property: property,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X'),
+        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('day').format('X'),
+        granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
       })
