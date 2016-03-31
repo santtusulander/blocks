@@ -70,9 +70,10 @@ class ContentItemChart extends React.Component {
         /* If the value is 'center', set the X point to the center of the chart,
         otherwise the X is calculated with Cos using the known angle, radius
         (radius of the inner circle + bar height) and X of the circle's center */
-        return d === 'center' ? outerRadius : isNaN(d) ? 0 :
+        let x = d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.cos(primaryAngle * radians)
-          * (innerRadius + Number(d)) + outerRadius
+          * (innerRadius + Number(normalize(d))) + outerRadius
+        return x
       })
       .y(function(d) {
         /* If the value is 'center', set the Y point to the center of the chart,
@@ -80,7 +81,7 @@ class ContentItemChart extends React.Component {
         (radius of the inner circle + bar height) and Y of the circle's center */
         let y = d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.sin(primaryAngle * radians)
-          * (innerRadius + Number(d)) + outerRadius
+          * (innerRadius + Number(normalize(d))) + outerRadius
         // Increment the angle for the next point
         primaryAngle = primaryAngle + (increment / 2)
         return y
@@ -91,14 +92,14 @@ class ContentItemChart extends React.Component {
         /* Calculate the X point with Cos using the known angle, radius (radius
         of the inner circle + bar height) and X of the circle's center */
         let x = isNaN(d) ? 0 : Math.cos(secondaryAngle * radians)
-          * (innerRadius + Number(normalize(d.bytes))) + outerRadius
+          * (innerRadius + Number(normalize(d))) + outerRadius
         return x
       })
       .y(function(d) {
         /* Calculate the Y point with Sin using the known angle, radius (radius
         of the inner circle + bar height) and Y of the circle's center */
         let y = isNaN(d) ? 0 : Math.sin(secondaryAngle * radians)
-          * (innerRadius + Number(normalize(d.bytes))) + outerRadius
+          * (innerRadius + Number(normalize(d))) + outerRadius
         // Increment the angle for the next point
         secondaryAngle = secondaryAngle + increment
         return y
