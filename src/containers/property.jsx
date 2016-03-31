@@ -39,6 +39,7 @@ export class Property extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    this.props.visitorsActions.visitorsReset()
     this.fetchData(this.props.location.query.name)
   }
   componentDidMount() {
