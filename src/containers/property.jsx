@@ -39,6 +39,7 @@ export class Property extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    this.props.visitorsActions.visitorsReset()
     this.fetchData(this.props.location.query.name)
   }
   componentDidMount() {
@@ -77,8 +78,9 @@ export class Property extends React.Component {
         account: this.props.params.account,
         group: this.props.params.group,
         property: property,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X'),
+        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('day').format('X'),
+        granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
       })
@@ -231,7 +233,10 @@ export class Property extends React.Component {
                     <Row>
                       <Col xs={6}>
                         Unique visitors
-                        <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                        {this.props.fetching || this.props.visitorsFetching ?
+                          <p>Loading...</p> :
+                          <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                        }
                       </Col>
                       <Col xs={6}>
                         Bandwidth
@@ -252,7 +257,7 @@ export class Property extends React.Component {
                   </Col>
                   <Col xs={5}>
                     Top 3 Countries by Visitors
-                    {this.props.fetching ?
+                    {this.props.fetching || this.props.visitorsFetching ?
                       <p>Loading...</p> :
                       this.props.visitorsByCountry.get('countries').size ?
                         this.props.visitorsByCountry.get('countries').map((country, i) => {
