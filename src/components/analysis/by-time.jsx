@@ -67,7 +67,7 @@ class AnalysisByTime extends React.Component {
       .domain([0, Math.max(yPrimaryExtent[1], ySecondayExtent[1])])
       .range([
         this.props.height - this.props.padding * (this.props.axes ? 2 : 1),
-        this.props.padding
+        this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)
       ]);
 
     const xScale = d3.time.scale()
@@ -93,6 +93,13 @@ class AnalysisByTime extends React.Component {
       .x(d => xScale(d.timestamp))
       .interpolate('cardinal')
       .tension(0.9);
+
+    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
+      (this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0)
+
+    const primaryLabelX = secondaryLabelX -
+      (this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0) -
+      (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
     if(this.props.className) {
@@ -124,6 +131,22 @@ class AnalysisByTime extends React.Component {
                 fill="url(#dt-secondary-gradient)" />
             }
           </g> : null}
+          {this.props.primaryLabel ?
+            <g>
+              <svg x={primaryLabelX} y={this.props.padding} ref="primaryLabel">
+                <path className="line primary" d="M0 5L25 5 M" />
+                <text x={35} y={10}>{this.props.primaryLabel}</text>
+              </svg>
+            </g>
+          : null}
+          {this.props.secondaryLabel ?
+            <g>
+              <svg x={secondaryLabelX} y={this.props.padding} ref="secondaryLabel">
+                <path className="line secondary" d="M0 5L25 5" />
+                <text x={35} y={10}>{this.props.secondaryLabel}</text>
+              </svg>
+            </g>
+          : null}
           {this.state.tooltipText ?
             <g>
               <circle r="5"
