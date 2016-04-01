@@ -15,7 +15,7 @@ function routeMetrics(req, res) {
   let errors = validator.validate(params, {
     start   : {required: true, type: 'Timestamp'},
     end     : {required: false, type: 'Timestamp'},
-    account : {required: true, type: 'ID'},
+    account : {required: false, type: 'ID'},
     group   : {required: false, type: 'ID'}
   });
 
@@ -44,7 +44,7 @@ function routeMetrics(req, res) {
       });
 
       // Set the selected level
-      let selectedLevel = (params.group == null) ? 'group' : 'property';
+      let selectedLevel = db._getAccountLevel(optionsFinal, true);
 
       // Build a list of unique level identifiers
       let levels = _.uniq(aggregateData.map((row) => row[selectedLevel]));

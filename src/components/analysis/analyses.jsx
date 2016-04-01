@@ -153,7 +153,7 @@ export class Analyses extends React.Component {
                 ['month_to_date', 'Month to Date'],
                 ['week_to_date', 'Week to Date'],
                 ['today', 'Today'],
-                ['custom_timerange', 'Custom Time Range']]}/>
+                ['custom_timerange', 'Custom Date Range']]}/>
           </div>
           {this.state.activeDateRange === 'custom_timerange' ?
             <Row className="no-gutters">
@@ -195,7 +195,7 @@ export class Analyses extends React.Component {
             : null
           }
         </div>
-        {this.props.isSPReport ?
+        {this.props.activeTab === 'sp-report' ?
           <div>
             <div className="sidebar-section-header">
               SERVICE PROVIDER
@@ -238,13 +238,15 @@ export class Analyses extends React.Component {
             </div>
           </div>
         : null}
-        <div className="sidebar-section-header">
-          {this.props.isSPReport ?
-            'FILTERS' :
-            'SERVICE: MEDIA DELIVERY'
-          }
-        </div>
-        {this.props.isSPReport ?
+        {this.props.activeTab !== 'visitors' ?
+          <div className="sidebar-section-header">
+            {this.props.activeTab === 'sp-report' ?
+              'FILTERS' :
+              'SERVICE: MEDIA DELIVERY'
+            }
+          </div>
+        : null}
+        {this.props.activeTab === 'sp-report' ?
           <div>
             <div className="sidebar-content">
               <Input type="checkbox" label="On-Net"/>
@@ -253,14 +255,16 @@ export class Analyses extends React.Component {
             <hr className="sidebar-hr" />
           </div>
         : null}
-        <div className="sidebar-content">
-          <Input type="checkbox" label="HTTP"
-            checked={this.props.serviceTypes.includes('http')}
-            onChange={this.toggleServiceType('http')}/>
-          <Input type="checkbox" label="HTTPS"
-            checked={this.props.serviceTypes.includes('https')}
-            onChange={this.toggleServiceType('https')}/>
-        </div>
+        {this.props.activeTab !== 'visitors' ?
+          <div className="sidebar-content">
+            <Input type="checkbox" label="HTTP"
+              checked={this.props.serviceTypes.includes('http')}
+              onChange={this.toggleServiceType('http')}/>
+            <Input type="checkbox" label="HTTPS"
+              checked={this.props.serviceTypes.includes('https')}
+              onChange={this.toggleServiceType('https')}/>
+          </div>
+        : null}
       </div>
     );
   }
@@ -270,12 +274,12 @@ Analyses.displayName = 'Analyses'
 Analyses.propTypes = {
   activate: React.PropTypes.func,
   activeIndex: React.PropTypes.number,
+  activeTab: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
-  isSPReport: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,

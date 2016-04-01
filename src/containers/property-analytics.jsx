@@ -92,7 +92,7 @@ export class PropertyAnalytics extends React.Component {
             changeDateRange={this.changeDateRange}
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
-            isSPReport={this.state.activeTab === 'sp-report'}
+            activeTab={this.state.activeTab}
             type="property"
             name={this.props.location.query.name}
             navOptions={availableHosts}/>
