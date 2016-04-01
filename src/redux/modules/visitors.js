@@ -11,6 +11,7 @@ const VISITORS_FINISH_FETCH = 'VISITORS_FINISH_FETCH'
 const VISITORS_BY_TIME_FETCHED = 'VISITORS_BY_TIME_FETCHED'
 const VISITORS_BY_COUNTRY_FETCHED = 'VISITORS_BY_COUNTRY_FETCHED'
 const VISITORS_BY_BROWSER_FETCHED = 'VISITORS_BY_BROWSER_FETCHED'
+const VISITORS_RESET = 'VISITORS_RESET'
 const VISITORS_BY_OS_FETCHED = 'VISITORS_BY_OS_FETCHED'
 
 const emptyTraffic = Immutable.fromJS({
@@ -110,6 +111,14 @@ export default handleActions({
       })
     }
   },
+  VISITORS_RESET: (state) => {
+    return state.merge({
+      byTime: Immutable.List(),
+      byCountry: Immutable.fromJS({countries: []}),
+      byBrowser: Immutable.fromJS({browsers: []}),
+      byOS: Immutable.fromJS({os: []})
+    })
+  },
   VISITORS_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
@@ -155,6 +164,8 @@ export const fetchByOS = createAction(VISITORS_BY_OS_FETCHED, (opts) => {
     }
   });
 })
+
+export const visitorsReset = createAction(VISITORS_RESET)
 
 export const startFetching = createAction(VISITORS_START_FETCH)
 
