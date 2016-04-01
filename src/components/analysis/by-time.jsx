@@ -190,7 +190,9 @@ AnalysisByTime.propTypes = {
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   primaryData: React.PropTypes.array,
+  primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
+  secondaryLabel: React.PropTypes.string,
   width: React.PropTypes.number
 }
 

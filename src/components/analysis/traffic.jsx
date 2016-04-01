@@ -53,6 +53,8 @@ class AnalysisTraffic extends React.Component {
               dataKey="bytes"
               primaryData={httpData.toJS()}
               secondaryData={httpsData.toJS()}
+              primaryLabel='HTTP'
+              secondaryLabel='HTTPS'
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
