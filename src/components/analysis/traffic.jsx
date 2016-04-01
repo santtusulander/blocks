@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
+import {formatBytes} from '../../util/helpers'
 
 class AnalysisTraffic extends React.Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class AnalysisTraffic extends React.Component {
       <div className="analysis-traffic">
         <div className="analysis-data-box">
           <h4>Total Egress Yesterday</h4>
-          <p>{Math.floor(this.props.totalEgress / 1000000)} GB</p>
+          <p>{formatBytes(this.props.totalEgress)}</p>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
@@ -94,23 +95,10 @@ class AnalysisTraffic extends React.Component {
               else {
                 trending = numeral(trending).format('+0%');
               }
-              let formattedBytes = numeral(totalBytes / 100000000).format('0,0')+' GB'
-              if(totalBytes < 1000) {
-                formattedBytes = numeral(totalBytes).format('0,0')+' B'
-
-              }
-              else if(totalBytes < 1000000) {
-                formattedBytes = numeral(totalBytes / 1000).format('0,0')+' KB'
-
-              }
-              else if(totalBytes < 100000000) {
-                formattedBytes = numeral(totalBytes / 1000000).format('0,0')+' MB'
-
-              }
               return (
                 <tr key={i}>
                   <td>{country.get('name')}</td>
-                  <td>{formattedBytes}</td>
+                  <td>{formatBytes(totalBytes)}</td>
                   <td>{numeral(country.get('percent_total')).format('0%')}</td>
                   <td width={this.state.byTimeWidth / 3}>
                     <AnalysisByTime axes={false} padding={0} area={false}
