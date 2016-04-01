@@ -105,7 +105,7 @@ export class AccountAnalytics extends React.Component {
             changeDateRange={this.changeDateRange}
             serviceTypes={this.props.serviceTypes}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
-            isSPReport={this.state.activeTab === 'sp-report'}
+            activeTab={this.state.activeTab}
             type="account"
             name={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
             navOptions={availableAccounts}/>
