@@ -74,7 +74,9 @@ class ContentItemChart extends React.Component {
     let primaryAngle = -90;
     let secondaryAngle = -90;
     const differenceArcStyle = {
-      transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
+      transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
+      webkitTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
+      msTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
     }
     const primaryLine = d3.svg.line()
       .x(function(d) {
@@ -278,8 +280,7 @@ class ContentItemChart extends React.Component {
               }
               {this.props.configurationLink ?
                 <Link to={this.props.configurationLink}
-                  className="btn btn-sm edit-content-item btn-primary btn-icon
-                  btn-round invisible">
+                  className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link> : ''
               }
