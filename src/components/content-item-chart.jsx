@@ -10,6 +10,17 @@ import IconConfiguration from '../components/icons/icon-configuration.jsx'
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      showDiffLegend: false
+    }
+
+    this.differenceHover = this.differenceHover.bind(this)
+  }
+  differenceHover(hover) {
+    return () => {
+      this.setState({ showDiffLegend: hover })
+    }
   }
   render() {
     if (!this.props.primaryData) {
@@ -107,33 +118,54 @@ class ContentItemChart extends React.Component {
       .interpolate('basis')
     const pie = d3.layout.pie().sort(null)
     const arc = d3.svg.arc().innerRadius(innerRadius - 9).outerRadius(innerRadius);
-    const tooltip = (
-      <Tooltip className="content-item-chart-tooltip"
+    const tooltip =
+      (<Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
         <div className="tooltip-header">
           <b>TRAFFIC <span className="pull-right">28 days</span></b>
         </div>
-        <div>
-          Peak
-          <span className="pull-right">
-            {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
-            <span className="data-suffix"> {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[1] : ''}</span>
-          </span>
-        </div>
-        <div>
-          Average <span className="pull-right">
-            {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
-            <span className="data-suffix"> {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[1] : ''}</span>
-          </span>
-        </div>
-        <div>
-          Low <span className="pull-right">
-            {this.props.minTransfer ? this.props.minTransfer.split(' ')[0] : ''}
-            <span className="data-suffix"> {this.props.minTransfer ? this.props.minTransfer.split(' ')[1] : ''}</span>
-          </span>
-        </div>
-      </Tooltip>
-    )
+        {this.state.showDiffLegend ?
+          <div>
+            <div>
+              Below Average
+              <div className="pull-right difference-legend below-avg" />
+            </div>
+            <div>
+              Average
+              <div className="pull-right difference-legend avg" />
+            </div>
+            <div>
+              Above Average
+              <div className="pull-right difference-legend above-avg" />
+            </div>
+          </div>
+          :
+          <div>
+            <div>
+              Peak
+              <span className="pull-right">
+                {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
+                <span className="data-suffix"> {this.props.maxTransfer ?
+                  this.props.maxTransfer.split(' ')[1] : ''}</span>
+              </span>
+            </div>
+            <div>
+              Average <span className="pull-right">
+                {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
+                <span className="data-suffix"> {this.props.avgTransfer ?
+                  this.props.avgTransfer.split(' ')[1] : ''}</span>
+              </span>
+            </div>
+            <div>
+              Low <span className="pull-right">
+                {this.props.minTransfer ? this.props.minTransfer.split(' ')[0] : ''}
+                <span className="data-suffix"> {this.props.minTransfer ?
+                  this.props.minTransfer.split(' ')[1] : ''}</span>
+              </span>
+            </div>
+          </div>
+        }
+        </Tooltip>)
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
@@ -192,7 +224,9 @@ class ContentItemChart extends React.Component {
               transitionLeaveTimeout={250}>
               {this.props.differenceData.length && !this.props.fetchingMetrics ?
                 <svg className="content-item-chart-svg difference-arc">
-                  <g style={differenceArcStyle}>
+                  <g style={differenceArcStyle}
+                    onMouseEnter={this.differenceHover(true)}
+                    onMouseLeave={this.differenceHover(false)}>
                     {
                       pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
                         let data = differenceData[i]
