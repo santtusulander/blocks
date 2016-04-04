@@ -243,7 +243,7 @@ class ContentItemChart extends React.Component {
               : ''}
             </ReactCSSTransitionGroup>
             <div className="text-content"
-              style={{width: innerRadius * 2, height: innerRadius * 2}}>
+              style={{width: innerRadius * 2 - 20, height: innerRadius * 2 - 20}}>
               <div className="content-item-traffic"
                 style={{fontSize: this.props.chartWidth / 23}}>
                 <div className="content-item-text-bold">
