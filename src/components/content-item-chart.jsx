@@ -75,7 +75,7 @@ class ContentItemChart extends React.Component {
     let secondaryAngle = -90;
     const differenceArcStyle = {
       transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
-      webkitTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
+      WebkitTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
       msTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
     }
     const primaryLine = d3.svg.line()
