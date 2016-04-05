@@ -217,6 +217,7 @@ export class Hosts extends React.Component {
                   <div className="content-item-lists" key="lists">
                     {this.props.hosts.map((host, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemList key={i} id={host}
                           linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
@@ -230,6 +231,7 @@ export class Hosts extends React.Component {
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          chartWidth={scaledWidth.toString()}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}

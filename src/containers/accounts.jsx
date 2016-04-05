@@ -171,6 +171,7 @@ export class Accounts extends React.Component {
                   <div className="content-item-lists" key="lists">
                     {this.props.accounts.map((account, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemList key={i} id={account.get('id').toString()}
                           linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
@@ -184,6 +185,7 @@ export class Accounts extends React.Component {
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          chartWidth={scaledWidth.toString()}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
                     })}
