@@ -207,7 +207,15 @@ export class Groups extends React.Component {
                           chartWidth={scaledWidth.toString()}
                           barMaxHeight={(scaledWidth / 7).toString()} />
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div> :
                   <div className="content-item-lists" key="lists">
                     {this.props.groups.map((group, i) => {
@@ -229,7 +237,15 @@ export class Groups extends React.Component {
                           chartWidth={scaledWidth.toString()}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div>
                 }
               </ReactCSSTransitionGroup>
