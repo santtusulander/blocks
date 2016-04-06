@@ -134,16 +134,16 @@ class AnalysisByTime extends React.Component {
           {this.props.primaryLabel ?
             <g>
               <svg x={primaryLabelX} y={this.props.padding} ref="primaryLabel">
-                <path className="line primary" d="M0 5L25 5" />
-                <text x={35} y={10}>{this.props.primaryLabel}</text>
+                <path className="line primary" d="M0 7L25 7" />
+                <text x={35} y={14}>{this.props.primaryLabel}</text>
               </svg>
             </g>
           : null}
           {this.props.secondaryLabel ?
             <g>
               <svg x={secondaryLabelX} y={this.props.padding} ref="secondaryLabel">
-                <path className="line secondary" d="M0 5L25 5" />
-                <text x={35} y={10}>{this.props.secondaryLabel}</text>
+                <path className="line secondary" d="M0 7L25 7" />
+                <text x={35} y={14}>{this.props.secondaryLabel}</text>
               </svg>
             </g>
           : null}
