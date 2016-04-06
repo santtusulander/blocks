@@ -14,11 +14,23 @@ class AnalysisByTime extends React.Component {
     this.state = {
       tooltipText: null,
       tooltipX: 0,
-      tooltipY: 0
+      tooltipY: 0,
+      primaryLabelWidth: 0,
+      secondaryLabelWidth: 0
     }
 
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
+    this.measureChartLabels = this.measureChartLabels.bind(this)
+  }
+  componentDidMount() {
+    this.measureChartLabels()
+  }
+  measureChartLabels() {
+    this.setState({
+      primaryLabelWidth: this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0,
+      secondaryLabelWidth: this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0
+    })
   }
   moveMouse(xScale, yScale, data) {
     return e => {
@@ -95,10 +107,9 @@ class AnalysisByTime extends React.Component {
       .tension(0.9);
 
     const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
-      (this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0)
+      this.state.secondaryLabelWidth
 
-    const primaryLabelX = secondaryLabelX -
-      (this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0) -
+    const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
       (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
