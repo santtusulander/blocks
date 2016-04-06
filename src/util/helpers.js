@@ -19,3 +19,23 @@ export function formatBytes(bytes) {
   }
   return formatted
 }
+
+export function formatBitsPerSecond(bits_per_second) {
+  let formatted = numeral(bits_per_second / 1000000000000000).format('0,0')+' Pbps'
+  if(bits_per_second < 1000) {
+    formatted = numeral(bits_per_second).format('0,0')+' bps'
+  }
+  else if(bits_per_second < 1000000) {
+    formatted = numeral(bits_per_second / 1000).format('0,0')+' Kbps'
+  }
+  else if(bits_per_second < 1000000000) {
+    formatted = numeral(bits_per_second / 1000000).format('0,0')+' Mbps'
+  }
+  else if(bits_per_second < 1000000000000) {
+    formatted = numeral(bits_per_second / 1000000000).format('0,0')+' Gbps'
+  }
+  else if(bits_per_second < 1000000000000000) {
+    formatted = numeral(bits_per_second / 1000000000000).format('0,0')+' Tbps'
+  }
+  return formatted
+}
