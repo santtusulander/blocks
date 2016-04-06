@@ -73,7 +73,7 @@ class AnalysisStacked extends React.Component {
       ])
       .nice(d3.time.day, 1);
 
-    let className = 'analysis-by-time'
+    let className = 'analysis-by-time analysis-stacked'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
@@ -87,11 +87,18 @@ class AnalysisStacked extends React.Component {
           onMouseOut={this.deactivateTooltip}>
           {this.props.data ? this.props.data.map((day, i) => {
             return (
-              <line key={i}
-                x1={xScale(day.timestamp)}
-                x2={xScale(day.timestamp)}
-                y1={yScale(day.total)}
-                y2={yScale(0)}/>
+              <g key={i}>
+                <line className="on-bar"
+                  x1={xScale(day.timestamp)}
+                  x2={xScale(day.timestamp)}
+                  y1={yScale(day.net_on.bytes)}
+                  y2={yScale(0)}/>
+                <line className="off-bar"
+                  x1={xScale(day.timestamp)}
+                  x2={xScale(day.timestamp)}
+                  y1={yScale(day.total)}
+                  y2={yScale(day.net_on.bytes)}/>
+              </g>
             )
           }) : null}
           {this.state.tooltipText ?
