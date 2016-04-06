@@ -90,7 +90,7 @@ class AnalysisTraffic extends React.Component {
               const startBytes = country.get('detail').first().get('bytes')
               const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
-              if(isNaN(trending)) {
+              if(isNaN(trending) || !startBytes || !endBytes) {
                 trending = 'N/A'
               }
               else if(trending > 1) {
