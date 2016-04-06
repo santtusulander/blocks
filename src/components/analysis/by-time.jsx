@@ -14,11 +14,23 @@ class AnalysisByTime extends React.Component {
     this.state = {
       tooltipText: null,
       tooltipX: 0,
-      tooltipY: 0
+      tooltipY: 0,
+      primaryLabelWidth: 0,
+      secondaryLabelWidth: 0
     }
 
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
+    this.measureChartLabels = this.measureChartLabels.bind(this)
+  }
+  componentDidMount() {
+    this.measureChartLabels()
+  }
+  measureChartLabels() {
+    this.setState({
+      primaryLabelWidth: this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0,
+      secondaryLabelWidth: this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0
+    })
   }
   moveMouse(xScale, yScale, data) {
     return e => {
@@ -76,8 +88,8 @@ class AnalysisByTime extends React.Component {
         Math.max(xPrimaryExtent[1], xSecondayExtent[1])
       ])
       .range([
-        this.props.padding * (this.props.axes ? 2 : 1),
-        this.props.width - this.props.padding
+        this.props.padding * (this.props.axes ? 3 : 1),
+        this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
       .nice(d3.time.day, 1);
 
@@ -95,10 +107,9 @@ class AnalysisByTime extends React.Component {
       .tension(0.9);
 
     const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
-      (this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0)
+      this.state.secondaryLabelWidth
 
-    const primaryLabelX = secondaryLabelX -
-      (this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0) -
+    const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
       (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
@@ -134,16 +145,16 @@ class AnalysisByTime extends React.Component {
           {this.props.primaryLabel ?
             <g>
               <svg x={primaryLabelX} y={this.props.padding} ref="primaryLabel">
-                <path className="line primary" d="M0 5L25 5" />
-                <text x={35} y={10}>{this.props.primaryLabel}</text>
+                <path className="line primary" d="M0 7L25 7" />
+                <text x={35} y={14}>{this.props.primaryLabel}</text>
               </svg>
             </g>
           : null}
           {this.props.secondaryLabel ?
             <g>
               <svg x={secondaryLabelX} y={this.props.padding} ref="secondaryLabel">
-                <path className="line secondary" d="M0 5L25 5" />
-                <text x={35} y={10}>{this.props.secondaryLabel}</text>
+                <path className="line secondary" d="M0 7L25 7" />
+                <text x={35} y={14}>{this.props.secondaryLabel}</text>
               </svg>
             </g>
           : null}
@@ -175,7 +186,12 @@ class AnalysisByTime extends React.Component {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>
-                      {numeral(tick).format('0a')}
+                      {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
+                      so we can use custom formatter for those cases */}
+                      {this.props.yAxisCustomFormat ?
+                        this.props.yAxisCustomFormat(numeral(tick).format('0'))
+                        : numeral(tick).format('0 a')
+                      }
                     </text>
                   </g>
                 );
@@ -216,7 +232,8 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
-  width: React.PropTypes.number
+  width: React.PropTypes.number,
+  yAxisCustomFormat: React.PropTypes.func
 }
 
 module.exports = AnalysisByTime
