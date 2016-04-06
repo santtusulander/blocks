@@ -88,12 +88,12 @@ class AnalysisStacked extends React.Component {
           {this.props.data ? this.props.data.map((day, i) => {
             return (
               <g key={i}>
-                <line className="on-bar"
+                <line className="on-net"
                   x1={xScale(day.timestamp)}
                   x2={xScale(day.timestamp)}
                   y1={yScale(day.net_on.bytes)}
                   y2={yScale(0)}/>
-                <line className="off-bar"
+                <line className="off-net"
                   x1={xScale(day.timestamp)}
                   x2={xScale(day.timestamp)}
                   y1={yScale(day.total)}
