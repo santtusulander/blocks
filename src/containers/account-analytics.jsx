@@ -16,22 +16,7 @@ import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
-// import AnalysisSPReport from '../components/analysis/sp-report'
-
-// const fakeServiceProviderStats = Immutable.fromJS({
-//  total: 31000000,
-//  detail: [{
-//    timestamp: moment(1451606400, 'X').toDate(),
-//    total: 1000000,
-//    net_on: {bytes: 500000, percent_total: 0.5},
-//    net_off: {bytes: 500000, percent_total: 0.5}
-//  }, {
-//    timestamp: moment(1451692800, 'X').toDate(),
-//    total: 1000000,
-//    net_on: {bytes: 500000, percent_total: 0.5},
-//    net_off: {bytes: 500000, percent_total: 0.5}
-//  }]
-// })
+import AnalysisSPReport from '../components/analysis/sp-report'
 
 export class AccountAnalytics extends React.Component {
   constructor(props) {
@@ -64,6 +49,8 @@ export class AccountAnalytics extends React.Component {
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
     }
+    const onOffOpts = Object.assign({}, fetchOpts)
+    onOffOpts.granularity = 'day'
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     this.props.accountActions.fetchAccount(
@@ -73,7 +60,8 @@ export class AccountAnalytics extends React.Component {
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
-      this.props.trafficActions.fetchTotalEgress(fetchOpts)
+      this.props.trafficActions.fetchTotalEgress(fetchOpts),
+      this.props.trafficActions.fetchOnOffNet(onOffOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -115,7 +103,7 @@ export class AccountAnalytics extends React.Component {
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            {/*<NavItem eventKey="sp-report">SP Report</NavItem>*/}
+            <NavItem eventKey="sp-report">SP Report</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -133,10 +121,10 @@ export class AccountAnalytics extends React.Component {
                 byBrowser={this.props.visitorsByBrowser.get('browsers')}
                 byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
-            {/*this.state.activeTab === 'sp-report' ?
+            {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
-                serviceProviderStats={fakeServiceProviderStats}/>
-              : ''*/}
+                serviceProviderStats={this.props.onOffNet}/>
+              : ''}
           </div>
         </Content>
       </PageContainer>
@@ -149,6 +137,7 @@ AccountAnalytics.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -169,8 +158,9 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
-    serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
+    serviceTypes: state.ui.get('analysisServiceTypes'),
+    onOffNet: state.traffic.get('onOffNet'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),

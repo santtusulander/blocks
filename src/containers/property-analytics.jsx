@@ -16,7 +16,7 @@ import Content from '../components/layout/content'
 import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
-// import AnalysisSPReport from '../components/analysis/sp-report'
+import AnalysisSPReport from '../components/analysis/sp-report'
 
 export class PropertyAnalytics extends React.Component {
   constructor(props) {
@@ -102,7 +102,7 @@ export class PropertyAnalytics extends React.Component {
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            {/*<NavItem eventKey="sp-report">SP Report</NavItem>*/}
+            {<NavItem eventKey="sp-report">SP Report</NavItem>}
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -120,13 +120,13 @@ export class PropertyAnalytics extends React.Component {
                 byBrowser={this.props.visitorsByBrowser.get('browsers')}
                 byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
-            {/*this.state.activeTab === 'sp-report' ?
+            {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={this.props.trafficFetching}
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
                 serviceTypes={this.props.serviceTypes}
                 totalEgress={this.props.totalEgress}/>
-              : ''*/}
+              : ''}
           </div>
         </Content>
       </PageContainer>
