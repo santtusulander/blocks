@@ -76,8 +76,8 @@ class AnalysisByTime extends React.Component {
         Math.max(xPrimaryExtent[1], xSecondayExtent[1])
       ])
       .range([
-        this.props.padding * (this.props.axes ? 2 : 1),
-        this.props.width - this.props.padding
+        this.props.padding * (this.props.axes ? 3 : 1),
+        this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
       .nice(d3.time.day, 1);
 
@@ -175,7 +175,12 @@ class AnalysisByTime extends React.Component {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>
-                      {numeral(tick).format('0a')}
+                      {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
+                      so we can use custom formatter for those cases */}
+                      {this.props.yAxisCustomFormat ?
+                        this.props.yAxisCustomFormat(numeral(tick).format('0'))
+                        : numeral(tick).format('0 a')
+                      }
                     </text>
                   </g>
                 );
@@ -216,7 +221,8 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
-  width: React.PropTypes.number
+  width: React.PropTypes.number,
+  yAxisCustomFormat: React.PropTypes.func
 }
 
 module.exports = AnalysisByTime
