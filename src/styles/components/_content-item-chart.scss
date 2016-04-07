@@ -27,10 +27,6 @@
 
   &:hover {
 
-    .glow {
-      opacity: 0.2;
-    }
-
     .content-item-toolbar .invisible {
       opacity: 1;
       visibility: visible;
@@ -52,12 +48,9 @@
     left: 50%;
     border-radius: 50%;
 
-    .dark-theme & {
-      background-color: $black;
-    }
-
+    .dark-theme &,
     .light-theme & {
-      background-color: $pale-blue;
+      background-color: $black;
     }
   }
 
@@ -69,15 +62,12 @@
     opacity: 0.3;
     transition: opacity 250ms;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center center;
       background-size: 100%;
       border-color: $black;
-    }
-
-    .light-theme & {
-      border-color: rgba($white, 0.75);
     }
   }
 
@@ -86,11 +76,11 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    opacity: 0.1;
-    transition: opacity 250ms;
+    transition: opacity 250ms, background 250ms;
 
     .dark-theme & {
       background-color: $pale-blue;
+      opacity: 0.1;
     }
 
     .light-theme & {
@@ -119,43 +109,37 @@
         stroke: $green;
       }
 
+      .avg {
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
       .above-avg {
         fill: $purple;
         stroke: $purple;
       }
-    }
-
-    .dark-theme & .avg {
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
-
-    .light-theme & .avg {
-      fill: rgba($white, 0.5);
-      stroke: rgba($white, 0.5);
     }
   }
 
   .primary-data .content-item-chart-line {
     stroke-width: 1.5;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme  & {
       stroke: $pale-blue;
       fill: $pale-blue;
-    }
-
-    .light-theme  & {
-      stroke: $white;
-      fill: $white;
     }
   }
 
   .secondary-data .content-item-chart-line {
     stroke: transparent;
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       fill: rgba($pale-blue, 0.2);
+    }
+
+    .light-theme & {
+      fill: $silver-40;
     }
   }
 
@@ -167,7 +151,7 @@
     transform: translate(-50%, -50%);
 
     .light-theme & {
-      color: $white;
+      color: $dt-text-color;
     }
 
     .content-item-text-bold {
