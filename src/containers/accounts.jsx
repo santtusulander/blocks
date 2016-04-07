@@ -177,8 +177,8 @@ export class Accounts extends React.Component {
                           analyticsLink={`/content/analytics/account/${this.props.params.brand}/${account.get('id')}`}
                           name={account.get('name')} description="Desc"
                           delete={this.deleteAccount}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
