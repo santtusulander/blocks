@@ -17,6 +17,7 @@ import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
+import { filterAccountsByUserName } from '../util/helpers'
 
 export class AccountAnalytics extends React.Component {
   constructor(props) {
@@ -77,7 +78,11 @@ export class AccountAnalytics extends React.Component {
     this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
   }
   render() {
-    const availableAccounts = this.props.accounts.map(account => {
+    const filteredAccounts = filterAccountsByUserName(
+      this.props.accounts,
+      this.props.username
+    )
+    const availableAccounts = filteredAccounts.map(account => {
       return {
         active: account.get('id') === this.props.params.account,
         link: `/content/analytics/account/${this.props.params.brand}/${account.get('id')}`,
@@ -146,6 +151,7 @@ AccountAnalytics.propTypes = {
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  username: React.PropTypes.string,
   visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
@@ -164,6 +170,7 @@ function mapStateToProps(state) {
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
+    username: state.user.get('username'),
     visitorsByBrowser: state.visitors.get('byBrowser'),
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsByOS: state.visitors.get('byOS'),
