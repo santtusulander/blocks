@@ -16,6 +16,10 @@
       background-color: rgba($black, 0.2);
     }
 
+    .light-theme & {
+      background-color: $white;
+    }
+
     h4 {
       margin-bottom: 5px;
       font-size: $font-size-sm;
