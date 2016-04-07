@@ -59,12 +59,15 @@ function routeTrafficTime(req, res) {
     _.mapValues(filledTrafficData, (data) => finalTrafficData = finalTrafficData.concat(data));
     finalTrafficData = _.sortBy(finalTrafficData, 'timestamp');
 
-    // Convert bytes to bits per second
+    // Add bits per second to each traffic record
     finalTrafficData = finalTrafficData.map((record) => {
       let secondsPerGranularity = secondsPerGranularityMap[optionsFinal.granularity];
-      let finalRecord = _.pick(record, ['timestamp', 'service_type']);
-      finalRecord.bits_per_second = Math.round((record.bytes * bitsPerByte) / secondsPerGranularity);
-      return finalRecord;
+      if (record.bytes == null) {
+        record.bits_per_second = null;
+      } else {
+        record.bits_per_second = Math.round((record.bytes * bitsPerByte) / secondsPerGranularity);
+      }
+      return record;
     });
 
     res.jsend(finalTrafficData);
