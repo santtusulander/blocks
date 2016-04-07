@@ -3,6 +3,13 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    filterAccountsByUserName: jest.genMockFunction()
+      .mockImplementation(accounts => accounts)
+  }
+})
+
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
