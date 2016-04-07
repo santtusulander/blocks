@@ -112,7 +112,7 @@ export class Accounts extends React.Component {
                   ['traffic_high_to_low', 'Traffic High to Low'],
                   ['traffic_low_to_high', 'Traffic Low to High']]}/>
 
-              <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
+              <Button bsStyle="primary" className={'btn-icon toggle-view' +
                 (this.props.viewingChart ? ' hidden' : '')}
                 onClick={this.props.uiActions.toggleChartView}>
                 <IconItemChart/>
