@@ -41,6 +41,9 @@ export function formatBitsPerSecond(bits_per_second) {
 }
 
 export function filterAccountsByUserName(accounts, username) {
+  if(username === 'test') {
+    return accounts
+  }
   return accounts.filter(account => {
     if(account.get('id') < 10000) {
       return username === 'UDNdev'
