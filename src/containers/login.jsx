@@ -32,7 +32,7 @@ export class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
   componentWillMount() {
-    if(this.props.loggedIn || this.props.userActions.checkToken().payload) {
+    if(this.props.loggedIn || this.props.userActions.checkToken().payload.token) {
       this.goToAccountPage()
     }
   }

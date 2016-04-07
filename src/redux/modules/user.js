@@ -28,8 +28,13 @@ export default handleActions({
       // TODO: Real auth will return a token or set a cookie
       const token = btoa(`${action.payload.username}:${action.payload.password}`)
       localStorage.setItem('EricssonUDNUserToken', token)
+      localStorage.setItem('EricssonUDNUserName', action.payload.username)
       axios.defaults.headers.common['Authorization'] = 'Basic ' + token
-      return state.merge({loggedIn: true, fetching: false})
+      return state.merge({
+        loggedIn: true,
+        fetching: false,
+        username: action.payload.username
+      })
     },
     throw() {
       return emptyUser
@@ -37,6 +42,7 @@ export default handleActions({
   },
   USER_LOGGED_OUT: (state) => {
     localStorage.removeItem('EricssonUDNUserToken')
+    localStorage.removeItem('EricssonUDNUserName')
     axios.defaults.headers.common['Authorization'] = 'Basic 000'
     return state.set('loggedIn', false)
   },
@@ -45,12 +51,16 @@ export default handleActions({
   },
   USER_TOKEN_CHECKED: (state, action) => {
     if(action.payload) {
-      localStorage.setItem('EricssonUDNUserToken', action.payload)
-      axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload
-      return state.set('loggedIn', true)
+      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+      axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload.token
+      return state.merge({
+        loggedIn: true,
+        username: action.payload.username
+      })
     }
     else {
       localStorage.removeItem('EricssonUDNUserToken')
+      localStorage.removeItem('EricssonUDNUserName')
       axios.defaults.headers.common['Authorization'] = 'Basic 000'
       return state.set('loggedIn', false)
     }
@@ -80,5 +90,8 @@ export const logOut = createAction(USER_LOGGED_OUT)
 export const startFetching = createAction(USER_START_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  return localStorage.getItem('EricssonUDNUserToken') || null
+  return {
+    token: localStorage.getItem('EricssonUDNUserToken') || null,
+    username: localStorage.getItem('EricssonUDNUserName')
+  }
 })
