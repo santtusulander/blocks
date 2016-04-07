@@ -10,11 +10,13 @@ const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
+const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 
 const emptyTraffic = Immutable.Map({
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
+  onOffNet: Immutable.Map(),
   totalEgress: 0
 })
 
@@ -23,7 +25,8 @@ const qsBuilder = ({
   group,
   property,
   startDate,
-  endDate
+  endDate,
+  granularity
 }) => {
   let qs = `?account=${account}`
   if(group) {
@@ -37,6 +40,9 @@ const qsBuilder = ({
   }
   if(endDate) {
     qs += `&end=${endDate}`
+  }
+  if(granularity) {
+    qs += `&granularity=${granularity}`
   }
   return qs
 }
@@ -83,6 +89,22 @@ export default handleActions({
       })
     }
   },
+  TRAFFIC_ON_OFF_NET_FETCHED: {
+    next(state, action) {
+      action.payload.data.detail = action.payload.data.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return state.merge({
+        onOffNet: Immutable.fromJS(action.payload.data)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        onOffNet: Immutable.Map()
+      })
+    }
+  },
   TRAFFIC_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
@@ -113,6 +135,15 @@ export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) =>
 
 export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase}/traffic/total${qsBuilder(opts)}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase}/traffic/service-provider${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;

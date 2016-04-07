@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import {formatBytes} from '../../util/helpers'
+import {formatBitsPerSecond} from '../../util/helpers'
 
 class AnalysisTraffic extends React.Component {
   constructor(props) {
@@ -50,12 +51,13 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
-              dataKey="bytes"
+              dataKey="bits_per_second"
               primaryData={httpData.toJS()}
               secondaryData={httpsData.toJS()}
               primaryLabel='HTTP'
               secondaryLabel='HTTPS'
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
+              yAxisCustomFormat={formatBitsPerSecond}
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
             }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -88,7 +90,7 @@ class AnalysisTraffic extends React.Component {
               const startBytes = country.get('detail').first().get('bytes')
               const endBytes = country.get('detail').last().get('bytes')
               let trending = startBytes / endBytes
-              if(isNaN(trending)) {
+              if(isNaN(trending) || !startBytes || !endBytes) {
                 trending = 'N/A'
               }
               else if(trending > 1) {
