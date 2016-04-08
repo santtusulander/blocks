@@ -169,7 +169,7 @@ class AnalysisByTime extends React.Component {
             </g>
             : null}
           {this.props.axes ?
-            xScale.ticks(d3.time.day, 1).map((tick, i) => {
+            xScale.ticks(d3.time.day, this.props.xAxisTickFrequency || 1).map((tick, i) => {
               return (
                 <g key={i}>
                   <text x={xScale(tick)} y={this.props.height - this.props.padding}>
@@ -188,10 +188,11 @@ class AnalysisByTime extends React.Component {
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.props.yAxisCustomFormat ?
+                      {this.props.yAxisFormat ?
+                        numeral(tick).format(this.props.yAxisFormat)
+                      : this.props.yAxisCustomFormat ?
                         this.props.yAxisCustomFormat(numeral(tick).format('0'))
-                        : numeral(tick).format('0 a')
-                      }
+                      : numeral(tick).format('0 a')}
                     </text>
                   </g>
                 );
@@ -233,7 +234,9 @@ AnalysisByTime.propTypes = {
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
   width: React.PropTypes.number,
-  yAxisCustomFormat: React.PropTypes.func
+  xAxisTickFrequency: React.PropTypes.number,
+  yAxisCustomFormat: React.PropTypes.func,
+  yAxisFormat: React.PropTypes.func
 }
 
 module.exports = AnalysisByTime
