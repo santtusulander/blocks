@@ -8,6 +8,10 @@
     background-color: rgba($black, 0.2);
   }
 
+  .light-theme & {
+    background-color: $white;
+  }
+
   &.bg-transparent {
     background-color: transparent;
   }

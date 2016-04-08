@@ -15,6 +15,7 @@ class AnalysisByTime extends React.Component {
       tooltipText: null,
       tooltipX: 0,
       tooltipY: 0,
+      tooltipOffsetTop: false,
       primaryLabelWidth: 0,
       secondaryLabelWidth: 0
     }
@@ -47,7 +48,8 @@ class AnalysisByTime extends React.Component {
         this.setState({
           tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
           tooltipX: xScale(d.timestamp),
-          tooltipY: yScale(d[this.props.dataKey])
+          tooltipY: yScale(d[this.props.dataKey]),
+          tooltipOffsetTop: yScale(d[this.props.dataKey]) + 50 > this.props.height
         })
       }
     }
@@ -96,15 +98,13 @@ class AnalysisByTime extends React.Component {
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
       .x(d => xScale(d.timestamp))
-      .interpolate('cardinal')
-      .tension(0.9);
+      .interpolate('monotone')
 
     const trafficArea = d3.svg.area()
       .y(d => yScale(d[this.props.dataKey]))
       .y0(yScale(0))
       .x(d => xScale(d.timestamp))
-      .interpolate('cardinal')
-      .tension(0.9);
+      .interpolate('monotone')
 
     const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
       this.state.secondaryLabelWidth
@@ -117,13 +117,13 @@ class AnalysisByTime extends React.Component {
       className = className + ' ' + this.props.className
     }
     return (
-      <div className={className}>
+      <div className={className}
+      onMouseMove={this.moveMouse(xScale, yScale, this.props.primaryData)}
+      onMouseOut={this.deactivateTooltip}>
         <svg
           width={this.props.width}
           height={this.props.height}
-          ref='chart'
-          onMouseMove={this.moveMouse(xScale, yScale, this.props.primaryData)}
-          onMouseOut={this.deactivateTooltip}>
+          ref='chart'>
           {this.props.primaryData ? <g>
             <path d={trafficLine(this.props.primaryData)}
               className="line primary"/>
@@ -212,7 +212,7 @@ class AnalysisByTime extends React.Component {
           </defs>
         </svg>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
-          hidden={!this.state.tooltipText}>
+          hidden={!this.state.tooltipText} offsetTop={this.state.tooltipOffsetTop}>
           {this.state.tooltipText}
         </Tooltip>
       </div>

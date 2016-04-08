@@ -25,7 +25,7 @@
   font-size: inherit;
   text-transform: none;
   border: 0;
-  border-radius: 0;
+  border-radius: 0 0 2px 2px;
   box-shadow: none;
 
   .navbar-right &:not(.dropdown-menu-right) {
@@ -42,7 +42,9 @@
   }
 
   .dark-theme &,
-  .light-theme .header & {
+  .light-theme .header &,
+  .light-theme .sidebar-layout &,
+  .light-theme .configuration-sidebar & {
     color: $dt-text-color;
     background-color: $black;
     background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
@@ -63,7 +65,7 @@
 
   .light-theme & {
     color: $lt-text-color;
-    background-color: $silver-40;
+    background-color: $silver-30;
 
     .active > a {
 
@@ -88,6 +90,10 @@
         min-width: 480px;
       }
     }
+  }
+
+  &.dropdown-account-menu {
+    width: 200%;
   }
 
   &.dropdown-user-menu {
@@ -174,6 +180,7 @@
 
       > ul > li,
       &.bottom-item {
+
         > a,
         > .menuitem {
           position: relative;
@@ -230,7 +237,9 @@
             }
 
             .dark-theme &,
-            .light-theme .header & {
+            .light-theme .header &,
+            .light-theme .sidebar-layout &,
+            .light-theme .configuration-sidebar & {
               border-left-color: $dt-text-color;
             }
 
@@ -242,7 +251,9 @@
           &:hover::after {
 
             .dark-theme &,
-            .light-theme .header & {
+            .light-theme .header &,
+            .light-theme .sidebar-layout &,
+            .light-theme .configuration-sidebar & {
               border-left-color: $white;
             }
           }
@@ -288,7 +299,8 @@
           }
 
           > .dropdown-toggle {
-            background-color: transparent;
+            font-weight: inherit;
+            background: transparent;
           }
 
           .dropdown-menu {
@@ -335,8 +347,14 @@
       }
 
       .dark-theme &,
-      .light-theme .header & {
+      .light-theme .header &,
+      .light-theme .sidebar-layout &,
+      .light-theme .configuration-sidebar & {
         color: $dt-text-color;
+
+        &:not(.active) {
+          border-top: 1px solid rgba($pale-blue, 0.1);
+        }
 
         &:hover,
         &:focus {
@@ -347,6 +365,8 @@
 
       .light-theme & {
         color: $lt-text-color;
+        border-right: 1px solid rgba($black, 0.1);
+        border-bottom: 1px solid rgba($black, 0.1);
 
         &:hover,
         &:focus {
@@ -363,7 +383,9 @@
       color: inherit;
 
       .dark-theme &,
-      .light-theme .header & {
+      .light-theme .header &,
+      .light-theme .sidebar-layout &,
+      .light-theme .configuration-sidebar & {
         background: rgba($black, 0.2);
       }
     }
@@ -371,7 +393,9 @@
     &.active::after {
 
       .dark-theme &,
-      .light-theme .header & {
+      .light-theme .header &,
+      .light-theme .sidebar-layout &,
+      .light-theme .configuration-sidebar & {
         background-color: rgba($pale-blue, 0.1);
       }
 

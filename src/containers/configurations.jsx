@@ -92,10 +92,10 @@ export class Configurations extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Input className="search" type="text" placeholder="Search" />
               <Button bsStyle="primary" className="btn-icon add-btn">
                 <IconAdd width="30" height="30" />
               </Button>
+              <Input className="search" type="text" placeholder="Search" />
               <Select onSelect={this.handleSelectChange()}
                 value={this.state.activeFilter}
                 options={[
