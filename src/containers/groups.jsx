@@ -207,11 +207,20 @@ export class Groups extends React.Component {
                           chartWidth={scaledWidth.toString()}
                           barMaxHeight={(scaledWidth / 7).toString()} />
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div> :
                   <div className="content-item-lists" key="lists">
                     {this.props.groups.map((group, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('group') === group.get('id')) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemList key={i} id={group.get('id').toString()}
                           linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
@@ -225,9 +234,18 @@ export class Groups extends React.Component {
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          chartWidth={scaledWidth.toString()}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div>
                 }
               </ReactCSSTransitionGroup>
