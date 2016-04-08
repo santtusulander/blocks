@@ -31,11 +31,6 @@ export class Login extends React.Component {
     this.goToAccountPage = this.goToAccountPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
-  componentWillMount() {
-    if(this.props.loggedIn || this.props.userActions.checkToken().payload.token) {
-      this.goToAccountPage()
-    }
-  }
   goToAccountPage() {
     // this.props.accountActions.startFetching()
     // this.props.accountActions.fetchAccounts('udn').then(action => {
