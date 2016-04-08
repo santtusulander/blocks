@@ -39,3 +39,23 @@ export function formatBitsPerSecond(bits_per_second) {
   }
   return formatted
 }
+
+export function filterAccountsByUserName(accounts, username) {
+  if(username === 'test') {
+    return accounts
+  }
+  return accounts.filter(account => {
+    if(account.get('id') < 10000) {
+      return username === 'UDNdev'
+    }
+    else if(account.get('id') < 20000) {
+      return username === 'UDNtest'
+    }
+    else if(account.get('id') < 40000) {
+      return username === 'UDNstag'
+    }
+    else {
+      return username === 'UDNprod'
+    }
+  })
+}

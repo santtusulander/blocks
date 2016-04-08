@@ -163,7 +163,9 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    overflow: hidden;
     text-align: center;
+    border-radius: 50%;
     transform: translate(-50%, -50%);
 
     .light-theme & {
@@ -186,10 +188,11 @@
 
   .content-item-traffic {
     position: absolute;
-    top: 11%;
-    width: 100%;
+    top: 10%;
+    left: 50%;
     font-size: 24px;
     line-height: 1em;
+    transform: translateX(-50%);
 
     .content-item-text-bold {
       margin-bottom: 4px;
@@ -199,12 +202,13 @@
   .content-item-text-centered {
     position: absolute;
     top: 51%;
-    width: 100%;
-    transform: translateY(-50%);
+    left: 50%;
+    width: 90%;
+    transform: translate(-50%, -50%);
   }
 
   .content-item-chart-name {
-    margin: 0 6% 8px;
+    margin-bottom: 8px;
     font-size: 36px;
     font-weight: 500;
     line-height: 1em;
@@ -214,7 +218,40 @@
   .content-item-toolbar {
     position: absolute;
     left: 50%;
-    margin-bottom: 8%;
+    margin-bottom: 7%;
     transform: translateX(-50%);
+  }
+}
+
+.difference-legend {
+  width: $font-size;
+  height: $font-size;
+  margin-top: 5px;
+
+  @include md {
+    width: $md-font-size;
+    height: $md-font-size;
+  }
+
+  @include sm {
+    width: $md-font-size;
+    height: $sm-font-size;
+  }
+
+  &.below-avg {
+    background-color: $green;
+  }
+
+  &.above-avg {
+    background-color: $purple;
+  }
+
+  .dark-theme &.avg {
+    background-color: $pale-blue;
+  }
+
+  .light-theme &.avg {
+    background-color: $pale-blue;
+    background-image: linear-gradient(rgba($white, 0.5), rgba($white, 0.5));
   }
 }

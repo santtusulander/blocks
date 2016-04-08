@@ -21,6 +21,7 @@ import Select from '../components/select'
 // Not in 0.5 import IconChart from '../components/icons/icon-chart.jsx'
 import IconItemList from '../components/icons/icon-item-list.jsx'
 import IconItemChart from '../components/icons/icon-item-chart.jsx'
+import { filterAccountsByUserName } from '../util/helpers'
 
 export class Accounts extends React.Component {
   constructor(props) {
@@ -78,8 +79,12 @@ export class Accounts extends React.Component {
   render() {
     let trafficMin = 0
     let trafficMax = 0
+    const filteredAccounts = filterAccountsByUserName(
+      this.props.accounts,
+      this.props.username
+    )
     if(!this.props.fetchingMetrics) {
-      const trafficTotals = this.props.accounts.map((account, i) => {
+      const trafficTotals = filteredAccounts.map((account, i) => {
         return this.props.metrics.has(i) ?
           this.props.metrics.get(i).get('totalTraffic') : 0
       })
@@ -131,7 +136,7 @@ export class Accounts extends React.Component {
           <div className="container-fluid body-content">
             {this.props.fetching || this.props.fetchingMetrics ?
               <p className="fetching-info">Loading...</p> : (
-              this.props.accounts.size === 0 ?
+              filteredAccounts.size === 0 ?
                 <p className="fetching-info text-center">
                   No accounts found.
                 </p>
@@ -144,7 +149,7 @@ export class Accounts extends React.Component {
                 transitionLeaveTimeout={250}>
                 {this.props.viewingChart ?
                   <div className="content-item-grid">
-                    {this.props.accounts.map((account, i) => {
+                    {filteredAccounts.map((account, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
                       const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
@@ -169,7 +174,7 @@ export class Accounts extends React.Component {
                     })}
                   </div> :
                   <div className="content-item-lists" key="lists">
-                    {this.props.accounts.map((account, i) => {
+                    {filteredAccounts.map((account, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
                       return (
                         <ContentItemList key={i} id={account.get('id').toString()}
@@ -227,6 +232,7 @@ Accounts.propTypes = {
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   uiActions: React.PropTypes.object,
+  username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 
@@ -237,7 +243,8 @@ function mapStateToProps(state) {
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
-    viewingChart: state.ui.get('viewingChart')
+    viewingChart: state.ui.get('viewingChart'),
+    username: state.user.get('username')
   };
 }
 

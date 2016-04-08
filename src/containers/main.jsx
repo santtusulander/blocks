@@ -12,6 +12,7 @@ import * as hostActionCreators from '../redux/modules/host'
 import Header from '../components/header'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
+import { filterAccountsByUserName } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -110,11 +111,15 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
+    const filteredAccounts = filterAccountsByUserName(
+      this.props.accounts,
+      this.props.username
+    )
     return (
       <div className={classNames}>
         {this.props.location.pathname !== '/login' ?
           <Header
-            accounts={this.props.accounts}
+            accounts={filteredAccounts}
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
@@ -180,6 +185,7 @@ Main.propTypes = {
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
+  username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 
@@ -200,6 +206,7 @@ function mapStateToProps(state) {
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
     theme: state.ui.get('theme'),
+    username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
