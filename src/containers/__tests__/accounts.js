@@ -3,13 +3,6 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-jest.mock('../../util/helpers', () => {
-  return {
-    filterAccountsByUserName: jest.genMockFunction()
-      .mockImplementation(accounts => accounts)
-  }
-})
-
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
@@ -80,6 +73,7 @@ describe('Accounts', () => {
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        accounts={fakeAccounts}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
@@ -96,6 +90,7 @@ describe('Accounts', () => {
         metricsActions={metricsActionsMaker()}
         fetching={true}
         fetchingMetrics={true}
+        username="test"
         params={urlParams}/>
     )
     expect(accountActions.startFetching.mock.calls.length).toBe(1)
@@ -110,6 +105,7 @@ describe('Accounts', () => {
         metricsActions={metricsActionsMaker()}
         fetching={true}
         fetchingMetrics={true}
+        username="test"
         params={urlParams}/>
     )
     let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
@@ -125,6 +121,7 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
+        username="test"
         viewingChart={true}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
@@ -141,6 +138,7 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
+        username="test"
         viewingChart={false}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
@@ -226,6 +224,7 @@ describe('Accounts', () => {
         metricsActions={metricsActionsMaker()}
         accounts={fakeAccounts}
         params={urlParams}
+        username="test"
         metrics={fakeMetrics}/>
     )
     accounts.deleteAccount('1')

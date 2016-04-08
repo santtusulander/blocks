@@ -43,6 +43,7 @@ function purgeActionsMaker() {
 function userActionsMaker(cbResponse) {
   return {
     startFetching: jest.genMockFunction(),
+    checkToken: jest.genMockFunction(),
     logOut: jest.genMockFunction().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     })
@@ -79,7 +80,8 @@ const fakeLocation = {query: {name: 'www.abc.com'}}
 describe('Main', () => {
   it('should exist', () => {
     let main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark" />
+      <Main location={fakeLocation} uiActions={uiActionsMaker()}
+        userActions={userActionsMaker()} theme="dark" />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
   });
@@ -88,6 +90,7 @@ describe('Main', () => {
     let main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation}
         uiActions={uiActionsMaker()}
+        userActions={userActionsMaker()}
         purgeActions = {purgeActionsMaker()}
         activePurge={fakePurge}
         theme="dark" />
@@ -102,6 +105,7 @@ describe('Main', () => {
     let main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation}
         uiActions={uiActionsMaker()}
+        userActions={userActionsMaker()}
         properties={fakeProperties}
         activePurge={fakePurge}
         activeAccount={fakeActiveAccount}
@@ -121,6 +125,7 @@ describe('Main', () => {
   it('should have .chart-view class when viewing charts', () => {
     let main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
+        userActions={userActionsMaker()}
         viewingChart={true} />
     );
     let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
