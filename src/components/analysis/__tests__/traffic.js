@@ -64,6 +64,8 @@ describe('AnalysisTraffic', () => {
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });
 
+  // TODO: Uses a smart component as a child and therefore need to figure out
+  // how to test this properly
   // it('should show data rows in table', () => {
   //   let traffic = TestUtils.renderIntoDocument(
   //     <AnalysisTraffic
