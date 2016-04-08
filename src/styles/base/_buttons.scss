@@ -233,11 +233,6 @@
     margin-left: 10px;
     vertical-align: middle;
     border-width: 0;
-
-    .light-theme .sidebar-layout &,
-    .light-theme .modal & {
-      stroke: $lt-button-color;
-    }
   }
 
   &:hover .icon,
@@ -246,11 +241,6 @@
     .dark-theme &,
     .light-theme & {
       stroke: $pale-blue;
-    }
-
-    .light-theme .sidebar-layout &,
-    .light-theme .modal & {
-      stroke: $white;
     }
   }
 
@@ -266,21 +256,6 @@
       background-color: transparent;
       box-shadow: none;
       stroke: $pale-blue;
-    }
-  }
-
-  .light-theme .sidebar-layout .open > &,
-  .light-theme .modal .open > & {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus,
-    .icon {
-      color: $white;
-      background-color: transparent;
-      box-shadow: none;
-      stroke: $white;
     }
   }
 
@@ -311,7 +286,9 @@
 }
 
 .dark-theme,
-.light-theme .header {
+.light-theme .header,
+.light-theme .sidebar-layout,
+.light-theme .configuration-sidebar {
 
   .dropdown-select {
 
@@ -350,8 +327,12 @@
 
       &,
       &:hover {
+        font-weight: 500;
         color: $pale-blue;
-        background-color: rgba($black, 0.2);
+        background-color: $black;
+        background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
+          linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        background-size: 100%;
         box-shadow: none;
         fill: $pale-blue;
         stroke: $pale-blue;
@@ -550,8 +531,11 @@
 
       &,
       &:hover {
+        font-weight: 500;
         color: $pale-blue;
-        background-color: $white;
+        background-color: $silver-30;
+        border-right: 1px solid rgba($black, 0.1);
+        border-bottom: 1px solid rgba($black, 0.1);
         box-shadow: none;
       }
 
@@ -581,52 +565,39 @@
     &:hover,
     &:active,
     &.active {
-      color: $pale-blue;
-      background-color: rgba($pale-blue, 0.1);
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
       color: $lt-text-color;
+      background-color: rgba($black, 0.1);
       fill: $lt-text-color;
       stroke: $lt-text-color;
     }
-  }
-
-  .sidebar-layout .btn-primary,
-  .modal .btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $white;
-      background-color: rgba($white, 0.2);
-      fill: $white;
-      stroke: $white;
-    }
 
     &:hover:not(:disabled),
     &:active:not(:disabled),
     &.active:not(:disabled) {
-      color: $lt-button-color;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
     }
   }
 
   .content-item-chart .btn-primary {
 
     &,
+    &:hover,
     &:active,
     &.active {
-      color: $white;
-      background-color: rgba($white, 0.4);
-      fill: $white;
-      stroke: $white;
+      color: $dt-text-color;
+      background-color: rgba($pale-blue, 0.1);
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+    }
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
+      color: $pale-blue;
+      fill: $pale-blue;
+      stroke: $pale-blue;
     }
   }
 
@@ -735,16 +706,6 @@
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
-    }
-  }
-
-  .sidebar-layout .btn-link,
-  .modal .btn-link {
-    background-color: transparent;
-
-    &:hover:not(:disabled) {
-      color: $white;
-      background-color: transparent;
     }
   }
 }

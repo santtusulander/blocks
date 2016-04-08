@@ -117,7 +117,7 @@ export class Accounts extends React.Component {
                   ['traffic_high_to_low', 'Traffic High to Low'],
                   ['traffic_low_to_high', 'Traffic Low to High']]}/>
 
-              <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
+              <Button bsStyle="primary" className={'btn-icon toggle-view' +
                 (this.props.viewingChart ? ' hidden' : '')}
                 onClick={this.props.uiActions.toggleChartView}>
                 <IconItemChart/>
@@ -171,27 +171,45 @@ export class Accounts extends React.Component {
                           chartWidth={scaledWidth.toString()}
                           barMaxHeight={(scaledWidth / 7).toString()} />
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div> :
                   <div className="content-item-lists" key="lists">
                     {filteredAccounts.map((account, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
                       return (
                         <ContentItemList key={i} id={account.get('id').toString()}
                           linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
                           analyticsLink={`/content/analytics/account/${this.props.params.brand}/${account.get('id')}`}
                           name={account.get('name')} description="Desc"
                           delete={this.deleteAccount}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
+                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
+                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
                           minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
                           avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
+                          chartWidth={scaledWidth.toString()}
                           fetchingMetrics={this.props.fetchingMetrics}/>
                       )
-                    })}
+                    }).sort(
+                      (item1, item2) => {
+                        let sortType = item2.props.chartWidth - item1.props.chartWidth
+                        if (this.state.activeFilter === 'traffic_low_to_high') {
+                          sortType = item1.props.chartWidth - item2.props.chartWidth
+                        }
+                        return sortType
+                      }
+                    )}
                   </div>
                 }
               </ReactCSSTransitionGroup>

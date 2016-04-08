@@ -70,9 +70,6 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               this.props.byCountry.map((country, i) => {
-                const totalVis = country.get('detail').reduce((total, visitors) => {
-                  return total + (visitors.get('uniq_vis') || 0)
-                }, 0)
                 const startVis = country.get('detail').first().get('uniq_vis') || 0
                 const endVis = country.get('detail').last().get('uniq_vis') || 0
                 let trending = endVis ? startVis / endVis : 0
@@ -85,7 +82,7 @@ class AnalysisVisitors extends React.Component {
                 return (
                   <tr key={i}>
                     <td>{country.get('name')}</td>
-                    <td>{numeral(totalVis).format('0,0')}</td>
+                    <td>{numeral(country.get('total')).format('0,0')}</td>
                     <td>{country.get('percent_total')}%</td>
                     <td width={this.state.byTimeWidth / 3}>
                       <AnalysisByTime axes={false} padding={0} area={false}

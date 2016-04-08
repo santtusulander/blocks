@@ -1,8 +1,5 @@
 import React from 'react';
 
-import DescCaret from './icons/icon-header-caret'
-import AscCaret from './icons/icon-select-caret'
-
 class TableSorter extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +27,7 @@ class TableSorter extends React.Component {
     return (
       <th className="table-sorter">
         <a href="#" onClick={this.activateSort}>
-          {this.props.children} {caret}
+          {this.props.children}{caret}
         </a>
       </th>
     )

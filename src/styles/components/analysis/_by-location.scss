@@ -12,6 +12,10 @@
     background-color: rgba($black, 0.2);
   }
 
+  .light-theme & {
+    background-color: $white;
+  }
+
   .country {
     opacity: 1;
     transition: transform 500ms linear, opacity 500ms, stroke-width 500ms;

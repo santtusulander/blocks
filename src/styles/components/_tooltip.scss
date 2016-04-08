@@ -15,6 +15,10 @@
     background-color: rgba($black, 0.8);
   }
 
+  &.offset-top {
+    transform: translateY(-100%);
+  }
+
   &.hidden {
     left: -1000px;
     opacity: 0;

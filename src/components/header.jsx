@@ -133,7 +133,7 @@ class Header extends React.Component {
                   Content
                 </Link>
                 <Dropdown.Toggle bsStyle='link'/>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="dropdown-account-menu">
                   {this.props.accounts ? this.props.accounts.map((account, i) => {
                     return (
                       <li key={i}
@@ -184,22 +184,13 @@ class Header extends React.Component {
           </Nav>
           <Nav pullRight={true}>
             <li>
-              <Dropdown id="alert-menu">
-                <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
-                  btn-alerts" noCaret={true}>
-                  <IconAlerts />
-                  <span className="btn-alerts-indicator" />
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <MenuItem eventKey="1">Alert 1</MenuItem>
-                  <MenuItem eventKey="2">Alert 2</MenuItem>
-                  <MenuItem eventKey="3">Alert 3</MenuItem>
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
+                <IconAlerts />
+                <span className="btn-alerts-indicator" />
+              </Button>
             </li>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon
-                btn-round">?</Button>
+              <Button className="btn-header btn-tertiary btn-icon btn-round">?</Button>
             </li>
             <li>
               <Input className="header-search-input"

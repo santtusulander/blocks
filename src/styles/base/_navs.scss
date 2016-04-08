@@ -76,7 +76,7 @@
       }
 
       &:not(.inactive):not(.active):hover,
-      &:not(.inactive):focus {
+      &:not(.inactive):not(.active):focus {
         text-decoration: none;
         background-color: transparent;
         outline: none;
@@ -112,17 +112,22 @@
 
     &.active {
 
-      > a,
+      > a:not(.inactive):not(.active),
       .main-nav-link {
 
         &,
         &:hover,
         &:focus {
-          color: $pale-blue;
-          text-decoration: none;
-          background-color: inherit;
-          border: 0;
-          border-bottom: 5px solid $pale-blue;
+
+          .dark-theme &,
+          .light-theme & {
+            font-weight: 500;
+            color: $pale-blue;
+            text-decoration: none;
+            background-color: inherit;
+            border: 0;
+            border-bottom: 5px solid $pale-blue;
+          }
         }
       }
     }
@@ -138,8 +143,8 @@
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.5);
-    border-color: rgba($black, 0.2);
+    background-color: $silver-20;
+    border-color: $silver-60;
   }
 
   > li {
@@ -167,7 +172,7 @@
       }
     }
 
-    &:not(.active) {
+    &:not(.inactive):not(.active) {
 
       > a {
 
