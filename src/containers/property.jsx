@@ -220,12 +220,14 @@ export class Property extends React.Component {
                 </h3>
 
                 <div className="extra-margin-top" ref="byTimeHolder">
-                  <AnalysisByTime axes={false} padding={0}
-                    className="bg-transparent"
+                  <AnalysisByTime axes={true} padding={30}
                     primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 3} />
+                    height={this.state.byTimeWidth / 2.5}
+                    xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+                      : this.state.byTimeWidth > 600 ? 2 : 3}
+                    yAxisFormat="0 b"/>
                 </div>
 
                 <Row className="extra-margin-top no-gutters">
