@@ -30,6 +30,9 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
+  componentWillMount() {
+    this.props.userActions.checkToken()
+  }
   activatePurge(property) {
     return e => {
       if(e) {
