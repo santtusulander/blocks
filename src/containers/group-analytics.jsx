@@ -56,6 +56,9 @@ export class GroupAnalytics extends React.Component {
     }
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     this.props.groupActions.fetchGroup(
@@ -67,7 +70,8 @@ export class GroupAnalytics extends React.Component {
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
-      this.props.trafficActions.fetchOnOffNet(onOffOpts)
+      this.props.trafficActions.fetchOnOffNet(onOffOpts),
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -130,7 +134,8 @@ export class GroupAnalytics extends React.Component {
               : ''}
             {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
-                serviceProviderStats={this.props.onOffNet}/>
+                serviceProviderStats={this.props.onOffNet}
+                serviceProviderStatsToday={this.props.onOffNetToday}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
@@ -148,6 +153,7 @@ GroupAnalytics.propTypes = {
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -169,6 +175,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
     onOffNet: state.traffic.get('onOffNet'),
+    onOffNetToday: state.traffic.get('onOffNetToday'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),

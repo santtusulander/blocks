@@ -53,6 +53,9 @@ export class AccountAnalytics extends React.Component {
     }
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     this.props.accountActions.fetchAccount(
@@ -63,7 +66,8 @@ export class AccountAnalytics extends React.Component {
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
-      this.props.trafficActions.fetchOnOffNet(onOffOpts)
+      this.props.trafficActions.fetchOnOffNet(onOffOpts),
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -130,7 +134,8 @@ export class AccountAnalytics extends React.Component {
               : ''}
             {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
-                serviceProviderStats={this.props.onOffNet}/>
+                serviceProviderStats={this.props.onOffNet}
+                serviceProviderStatsToday={this.props.onOffNetToday}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
@@ -148,6 +153,7 @@ AccountAnalytics.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -172,6 +178,7 @@ function mapStateToProps(state) {
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     onOffNet: state.traffic.get('onOffNet'),
+    onOffNetToday: state.traffic.get('onOffNetToday'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),

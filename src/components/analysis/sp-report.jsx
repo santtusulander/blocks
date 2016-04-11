@@ -32,21 +32,26 @@ class AnalysisSPReport extends React.Component {
   }
   render() {
     const stats = this.props.serviceProviderStats
+    const statsToday = this.props.serviceProviderStatsToday
     return (
       <div className="analysis-traffic">
         <Row>
           <Col xs={12}>
             <div className="analysis-data-box">
               <h4>Traffic today</h4>
-              <p>0 GB</p>
+              <p>{formatBytes(statsToday.get('total'))}</p>
               <Row className="extra-margin-top">
                 <Col xs={6}>
                   <h4>On-net</h4>
-                  <p className="on-net">00%</p>
+                  <p className="on-net">
+                    {numeral(statsToday.get('net_on').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
-                  <p className="off-net">00%</p>
+                  <p className="off-net">
+                    {numeral(statsToday.get('net_off').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
               </Row>
             </div>
@@ -113,7 +118,8 @@ class AnalysisSPReport extends React.Component {
 AnalysisSPReport.displayName = 'AnalysisSPReport'
 AnalysisSPReport.propTypes = {
   fetching: React.PropTypes.bool,
-  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map)
+  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map),
+  serviceProviderStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = AnalysisSPReport
