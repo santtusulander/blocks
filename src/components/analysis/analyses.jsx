@@ -26,6 +26,7 @@ export class Analyses extends React.Component {
     this.handleTimespanChange = this.handleTimespanChange.bind(this)
     this.handleServiceProviderChange = this.handleServiceProviderChange.bind(this)
     this.handlePopChange = this.handlePopChange.bind(this)
+    this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
@@ -90,6 +91,9 @@ export class Analyses extends React.Component {
     this.setState({
       activePop: value
     })
+  }
+  handleChartTypeChange(type) {
+    this.props.changeSPChartType(type)
   }
   toggleServiceType(type) {
     return () => {
@@ -225,7 +229,7 @@ export class Analyses extends React.Component {
             <div className="sidebar-content">
               <div className="form-group">
                 <Select className="btn-block"
-                  onSelect={this.props.changeSPChartType}
+                  onSelect={this.handleChartTypeChange}
                   value={this.props.spChartType}
                   options={[
                     ['bar', 'Bar Chart'],

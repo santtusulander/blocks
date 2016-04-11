@@ -94,12 +94,13 @@ describe('Analyses', () => {
   });
 
   it('should change chart type', () => {
+    const changeSPChartType = jest.genMockFunction()
     let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}/>
+      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}
+        changeSPChartType={changeSPChartType}/>
     );
-    expect(analyses.state.activeChartType).toBe('bar')
     analyses.handleChartTypeChange('foo')
-    expect(analyses.state.activeChartType).toBe('foo')
+    expect(changeSPChartType.mock.calls[0][0]).toEqual('foo')
   });
 
   it('should toggle service types', () => {
@@ -111,5 +112,14 @@ describe('Analyses', () => {
     analyses.toggleServiceType('zyx')()
     expect(toggleServiceType.mock.calls.length).toBe(1)
     expect(toggleServiceType.mock.calls[0][0]).toEqual('zyx')
+  });
+
+  it('should toggle the nav menu', () => {
+    let analyses = TestUtils.renderIntoDocument(
+      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}/>
+    );
+    expect(analyses.state.navMenuOpen).toBe(false)
+    analyses.toggleNavMenu()
+    expect(analyses.state.navMenuOpen).toBe(true)
   });
 })
