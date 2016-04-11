@@ -349,36 +349,21 @@ export class Property extends React.Component {
                 <Table striped={true}>
                   <thead>
                     <tr>
-                      <th>TYPE</th>
-                      <th>PRIORITY</th>
+                      <th>RULE TYPE</th>
                       <th>TTL VALUE</th>
                       <th>RULE</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Default</td>
-                      <td>0</td>
-                      <td>no-store</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
                       <td>Error Response</td>
-                      <td>1</td>
                       <td>10 sec</td>
                       <td>-</td>
                     </tr>
                     <tr>
-                      <td>United Kingdom</td>
-                      <td>0</td>
+                      <td>Redirect</td>
                       <td>no-store</td>
                       <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Redirect</td>
-                      <td>2</td>
-                      <td>1 day</td>
-                      <td>gif</td>
                     </tr>
                   </tbody>
                 </Table>
