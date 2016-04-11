@@ -111,7 +111,10 @@ export class Analyses extends React.Component {
     return (
       <div className="analyses">
         <div className="sidebar-header">
-          <p className="text-sm">{type} TRAFFIC OVERVIEW</p>
+          {this.props.activeTab === 'file-error' ?
+            <p className="text-sm">FILE ERROR</p> :
+            <p className="text-sm">{type} TRAFFIC OVERVIEW</p>
+          }
           <Dropdown id="dropdown-content" open={this.state.navMenuOpen}
             onToggle={this.toggleNavMenu}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">
