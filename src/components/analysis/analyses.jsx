@@ -15,7 +15,6 @@ export class Analyses extends React.Component {
       activeDateRange: 'month_to_date',
       activeServiceProvider: 'all',
       activePop: 'all',
-      activeChartType: 'bar',
       datepickerOpen: false,
       navMenuOpen: false
     }
@@ -27,7 +26,6 @@ export class Analyses extends React.Component {
     this.handleTimespanChange = this.handleTimespanChange.bind(this)
     this.handleServiceProviderChange = this.handleServiceProviderChange.bind(this)
     this.handlePopChange = this.handlePopChange.bind(this)
-    this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
@@ -91,11 +89,6 @@ export class Analyses extends React.Component {
   handlePopChange(value) {
     this.setState({
       activePop: value
-    })
-  }
-  handleChartTypeChange(value) {
-    this.setState({
-      activeChartType: value
     })
   }
   toggleServiceType(type) {
@@ -232,8 +225,8 @@ export class Analyses extends React.Component {
             <div className="sidebar-content">
               <div className="form-group">
                 <Select className="btn-block"
-                  onSelect={this.handleChartTypeChange}
-                  value={this.state.activeChartType}
+                  onSelect={this.props.changeSPChartType}
+                  value={this.props.spChartType}
                   options={[
                     ['bar', 'Bar Chart'],
                     ['line', 'Line Chart']]}/>
@@ -313,6 +306,7 @@ Analyses.propTypes = {
   activeTab: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
+  changeSPChartType: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
@@ -320,6 +314,7 @@ Analyses.propTypes = {
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
   type: React.PropTypes.string

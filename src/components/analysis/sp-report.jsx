@@ -5,6 +5,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisStacked from './stacked'
+import AnalysisByTime from './by-time'
 import {formatBytes} from '../../util/helpers'
 
 class AnalysisSPReport extends React.Component {
@@ -33,6 +34,38 @@ class AnalysisSPReport extends React.Component {
   render() {
     const stats = this.props.serviceProviderStats
     const statsToday = this.props.serviceProviderStatsToday
+    let chart = null
+    if(this.props.spChartType === 'bar') {
+      chart = (
+        <AnalysisStacked padding={40}
+          data={stats.get('detail').toJS()}
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+      )
+    }
+    else {
+      const onNet = stats.get('detail').toJS().map(datapoint => {
+        return {
+          bytes: datapoint.net_on.bytes,
+          timestamp: datapoint.timestamp
+        }
+      })
+      const offNet = stats.get('detail').toJS().map(datapoint => {
+        return {
+          bytes: datapoint.net_off.bytes,
+          timestamp: datapoint.timestamp
+        }
+      })
+      chart = (
+        <AnalysisByTime axes={true} padding={40}
+          dataKey="bytes"
+          primaryData={onNet}
+          secondaryData={offNet}
+          primaryLabel='On Net'
+          secondaryLabel='Off Net'
+          yAxisCustomFormat={formatBytes}
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+      )
+    }
     return (
       <div className="analysis-traffic">
         <Row>
@@ -78,11 +111,7 @@ class AnalysisSPReport extends React.Component {
         <h3>SERVICE PROVIDER ON/OFF NET</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
-            <div>Loading...</div> :
-            <AnalysisStacked padding={40}
-              data={stats.get('detail').toJS()}
-              width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
-            }
+            <div>Loading...</div> : chart}
         </div>
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
@@ -119,7 +148,8 @@ AnalysisSPReport.displayName = 'AnalysisSPReport'
 AnalysisSPReport.propTypes = {
   fetching: React.PropTypes.bool,
   serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map),
-  serviceProviderStatsToday: React.PropTypes.instanceOf(Immutable.Map)
+  serviceProviderStatsToday: React.PropTypes.instanceOf(Immutable.Map),
+  spChartType: React.PropTypes.string
 }
 
 module.exports = AnalysisSPReport

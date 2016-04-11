@@ -98,7 +98,9 @@ export class PropertyAnalytics extends React.Component {
             endDate={this.state.endDate}
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
+            changeSPChartType={this.props.uiActions.changeSPChartType}
             serviceTypes={this.props.serviceTypes}
+            spChartType={this.props.spChartType}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             activeTab={this.state.activeTab}
             type="property"
@@ -132,7 +134,8 @@ export class PropertyAnalytics extends React.Component {
             {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
                 serviceProviderStats={this.props.onOffNet}
-                serviceProviderStatsToday={this.props.onOffNetToday}/>
+                serviceProviderStatsToday={this.props.onOffNetToday}
+                spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
@@ -153,6 +156,7 @@ PropertyAnalytics.propTypes = {
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  spChartType: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -173,6 +177,7 @@ function mapStateToProps(state) {
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
+    spChartType: state.ui.get('analysisSPChartType'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),

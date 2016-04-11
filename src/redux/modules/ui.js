@@ -5,6 +5,7 @@ const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
 const UI_ANALYSIS_SERVICE_TYPE_TOGGLED = 'UI_ANALYSIS_SERVICE_TYPE_TOGGLED'
+const UI_ANALYSIS_SP_CHART_CHANGED = 'UI_ANALYSIS_SP_CHART_CHANGED'
 
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
@@ -21,7 +22,8 @@ const defaultUI = Immutable.fromJS({
   theme: theme,
   viewingChart: true,
   notification: '',
-  analysisServiceTypes: ['http', 'https']
+  analysisServiceTypes: ['http', 'https'],
+  analysisSPChartType: 'bar'
 })
 
 // REDUCERS
@@ -49,6 +51,9 @@ export default handleActions({
       newServiceTypes = newServiceTypes.push(action.payload)
     }
     return state.set('analysisServiceTypes', newServiceTypes)
+  },
+  UI_ANALYSIS_SP_CHART_CHANGED: (state, action) => {
+    return state.set('analysisSPChartType', action.payload)
   }
 }, defaultUI)
 
@@ -58,3 +63,4 @@ export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
 export const toggleAnalysisServiceType = createAction(UI_ANALYSIS_SERVICE_TYPE_TOGGLED)
+export const changeSPChartType = createAction(UI_ANALYSIS_SP_CHART_CHANGED)
