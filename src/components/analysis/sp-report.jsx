@@ -65,7 +65,7 @@ class AnalysisSPReport extends React.Component {
             </div>
           </Col>
         </Row>
-        <h3>TRAFFIC OVER TIME</h3>
+        <h3>SERVICE PROVIDER ON/OFF NET</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
