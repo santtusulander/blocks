@@ -102,7 +102,7 @@ export class PropertyAnalytics extends React.Component {
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            {<NavItem eventKey="sp-report">SP Report</NavItem>}
+            <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
