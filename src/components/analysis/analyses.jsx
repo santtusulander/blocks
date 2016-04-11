@@ -265,6 +265,39 @@ export class Analyses extends React.Component {
               onChange={this.toggleServiceType('https')}/>
           </div>
         : null}
+        {this.props.activeTab === 'file-error' ?
+          <div>
+            <div className="sidebar-section-header">
+              RESPONSE CODE
+            </div>
+            <div className="sidebar-content">
+              <Input type="checkbox" label="All"/>
+              <Input type="checkbox" label="401"/>
+              <Input type="checkbox" label="402"/>
+              <Input type="checkbox" label="403"/>
+              <Input type="checkbox" label="404"/>
+              <Input type="checkbox" label="405"/>
+              <Input type="checkbox" label="411"/>
+              <Input type="checkbox" label="412"/>
+              <Input type="checkbox" label="413"/>
+              <Input type="checkbox" label="500"/>
+              <Input type="checkbox" label="501"/>
+              <Input type="checkbox" label="502"/>
+              <Input type="checkbox" label="503"/>
+            </div>
+            <div className="sidebar-section-header">
+              PROPERTIES
+            </div>
+            <div className="sidebar-content">
+              <div className="form-group">
+                <Select className="btn-block"
+                  value={'all'}
+                  options={[
+                    ['all', 'All']]}/>
+              </div>
+            </div>
+          </div>
+        : null}
       </div>
     );
   }

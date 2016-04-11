@@ -17,6 +17,7 @@ import Analyses from '../components/analysis/analyses'
 import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
+import AnalysisFileError from '../components/analysis/file-error'
 
 export class PropertyAnalytics extends React.Component {
   constructor(props) {
@@ -106,6 +107,7 @@ export class PropertyAnalytics extends React.Component {
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
+            <NavItem eventKey="file-error">File Error</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -127,6 +129,8 @@ export class PropertyAnalytics extends React.Component {
               <AnalysisSPReport fetching={false}
                 serviceProviderStats={this.props.onOffNet}/>
               : ''}
+            {this.state.activeTab === 'file-error' ?
+              <AnalysisFileError fetching={false}/>
               : ''}
           </div>
         </Content>
