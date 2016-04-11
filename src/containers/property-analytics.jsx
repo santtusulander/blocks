@@ -55,12 +55,15 @@ export class PropertyAnalytics extends React.Component {
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
     }
+    const onOffOpts = Object.assign({}, fetchOpts)
+    onOffOpts.granularity = 'day'
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
-      this.props.trafficActions.fetchTotalEgress(fetchOpts)
+      this.props.trafficActions.fetchTotalEgress(fetchOpts),
+      this.props.trafficActions.fetchOnOffNet(onOffOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -121,11 +124,9 @@ export class PropertyAnalytics extends React.Component {
                 byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
             {this.state.activeTab === 'sp-report' ?
-              <AnalysisSPReport fetching={this.props.trafficFetching}
-                byTime={this.props.trafficByTime}
-                byCountry={this.props.trafficByCountry}
-                serviceTypes={this.props.serviceTypes}
-                totalEgress={this.props.totalEgress}/>
+              <AnalysisSPReport fetching={false}
+                serviceProviderStats={this.props.onOffNet}/>
+              : ''}
               : ''}
           </div>
         </Content>
@@ -139,6 +140,7 @@ PropertyAnalytics.propTypes = {
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
+  onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -158,6 +160,7 @@ PropertyAnalytics.propTypes = {
 function mapStateToProps(state) {
   return {
     hosts: state.host.get('allHosts'),
+    onOffNet: state.traffic.get('onOffNet'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
