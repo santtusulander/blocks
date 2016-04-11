@@ -36,3 +36,23 @@
     margin-top: 14px;
   }
 }
+
+.has-middle-separator {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    left: 50%;
+    display: block;
+    height: 100%;
+    content: '';
+
+    .dark-theme & {
+      border-right: 1px solid $dt-text-color;
+    }
+
+    .light-theme & {
+      border-right: 1px solid $lt-text-color;
+    }
+  }
+}

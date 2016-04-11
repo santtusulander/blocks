@@ -33,6 +33,7 @@
 
       > th,
       > td {
+        position: relative;
         padding: 5px ($btn-height / 2);
         vertical-align: middle;
         border: 0;
@@ -143,6 +144,34 @@
 
     @include sm {
       margin-top: $sm-bar-height;
+    }
+  }
+}
+
+.table-percentage-line {
+  position: absolute;
+  right: $btn-height / 3;
+  bottom: 20%;
+  left: $btn-height / 3;
+  height: 2px;
+
+  @include md {
+    right: $md-btn-height / 3;
+    left: $md-btn-height / 3;
+  }
+
+  .dark-theme &,
+  .light-theme & {
+    background: rgba($black, 0.2);
+  }
+
+  .line {
+    display: block;
+    height: 100%;
+
+    .dark-theme &,
+    .light-theme & {
+      background: $pale-blue;
     }
   }
 }
