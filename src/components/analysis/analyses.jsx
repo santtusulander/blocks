@@ -15,7 +15,6 @@ export class Analyses extends React.Component {
       activeDateRange: 'month_to_date',
       activeServiceProvider: 'all',
       activePop: 'all',
-      activeChartType: 'bar',
       datepickerOpen: false,
       navMenuOpen: false
     }
@@ -93,10 +92,8 @@ export class Analyses extends React.Component {
       activePop: value
     })
   }
-  handleChartTypeChange(value) {
-    this.setState({
-      activeChartType: value
-    })
+  handleChartTypeChange(type) {
+    this.props.changeSPChartType(type)
   }
   toggleServiceType(type) {
     return () => {
@@ -233,7 +230,7 @@ export class Analyses extends React.Component {
               <div className="form-group">
                 <Select className="btn-block"
                   onSelect={this.handleChartTypeChange}
-                  value={this.state.activeChartType}
+                  value={this.props.spChartType}
                   options={[
                     ['bar', 'Bar Chart'],
                     ['line', 'Line Chart']]}/>
@@ -313,6 +310,7 @@ Analyses.propTypes = {
   activeTab: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
+  changeSPChartType: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
@@ -320,6 +318,7 @@ Analyses.propTypes = {
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
   type: React.PropTypes.string

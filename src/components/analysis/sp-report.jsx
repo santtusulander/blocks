@@ -5,6 +5,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisStacked from './stacked'
+import AnalysisByTime from './by-time'
 import {formatBytes} from '../../util/helpers'
 
 class AnalysisSPReport extends React.Component {
@@ -31,35 +32,77 @@ class AnalysisSPReport extends React.Component {
     })
   }
   render() {
+    const stats = this.props.serviceProviderStats
+    const statsToday = this.props.serviceProviderStatsToday
+    let chart = null
+    if(this.props.spChartType === 'bar') {
+      chart = (
+        <AnalysisStacked padding={40}
+          data={stats.get('detail').toJS()}
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+      )
+    }
+    else {
+      const onNet = stats.get('detail').toJS().map(datapoint => {
+        return {
+          bytes: datapoint.net_on.bytes,
+          timestamp: datapoint.timestamp
+        }
+      })
+      const offNet = stats.get('detail').toJS().map(datapoint => {
+        return {
+          bytes: datapoint.net_off.bytes,
+          timestamp: datapoint.timestamp
+        }
+      })
+      chart = (
+        <AnalysisByTime axes={true} padding={40}
+          dataKey="bytes"
+          primaryData={onNet}
+          secondaryData={offNet}
+          primaryLabel='On Net'
+          secondaryLabel='Off Net'
+          yAxisCustomFormat={formatBytes}
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+      )
+    }
     return (
       <div className="analysis-traffic">
         <Row>
           <Col xs={12}>
             <div className="analysis-data-box">
               <h4>Traffic today</h4>
-              <p>0 GB</p>
+              <p>{formatBytes(statsToday.get('total'))}</p>
               <Row className="extra-margin-top">
                 <Col xs={6}>
                   <h4>On-net</h4>
-                  <p className="on-net">00%</p>
+                  <p className="on-net">
+                    {numeral(statsToday.get('net_on').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
-                  <p className="off-net">00%</p>
+                  <p className="off-net">
+                    {numeral(statsToday.get('net_off').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
               </Row>
             </div>
             <div className="analysis-data-box">
-              <h4>Traffic today</h4>
-              <p>0 GB</p>
+              <h4>Traffic Month to Date</h4>
+              <p>{formatBytes(stats.get('total'))}</p>
               <Row className="extra-margin-top">
                 <Col xs={6}>
                   <h4>On-net</h4>
-                  <p className="on-net">00%</p>
+                  <p className="on-net">
+                    {numeral(stats.get('net_on').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
-                  <p className="off-net">00%</p>
+                  <p className="off-net">
+                    {numeral(stats.get('net_off').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
               </Row>
             </div>
@@ -68,11 +111,7 @@ class AnalysisSPReport extends React.Component {
         <h3>SERVICE PROVIDER ON/OFF NET</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
-            <div>Loading...</div> :
-            <AnalysisStacked padding={40}
-              data={this.props.serviceProviderStats.get('detail').toJS()}
-              width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
-            }
+            <div>Loading...</div> : chart}
         </div>
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
@@ -86,7 +125,7 @@ class AnalysisSPReport extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.serviceProviderStats.get('detail').map((day, i) => {
+            {stats.get('detail').map((day, i) => {
               return (
                 <tr key={i}>
                   <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
@@ -108,7 +147,9 @@ class AnalysisSPReport extends React.Component {
 AnalysisSPReport.displayName = 'AnalysisSPReport'
 AnalysisSPReport.propTypes = {
   fetching: React.PropTypes.bool,
-  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map)
+  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map),
+  serviceProviderStatsToday: React.PropTypes.instanceOf(Immutable.Map),
+  spChartType: React.PropTypes.string
 }
 
 module.exports = AnalysisSPReport

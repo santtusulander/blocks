@@ -58,13 +58,17 @@ export class PropertyAnalytics extends React.Component {
     }
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
-      this.props.trafficActions.fetchOnOffNet(onOffOpts)
+      this.props.trafficActions.fetchOnOffNet(onOffOpts),
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -94,7 +98,9 @@ export class PropertyAnalytics extends React.Component {
             endDate={this.state.endDate}
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
+            changeSPChartType={this.props.uiActions.changeSPChartType}
             serviceTypes={this.props.serviceTypes}
+            spChartType={this.props.spChartType}
             toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
             activeTab={this.state.activeTab}
             type="property"
@@ -127,7 +133,9 @@ export class PropertyAnalytics extends React.Component {
               : ''}
             {this.state.activeTab === 'sp-report' ?
               <AnalysisSPReport fetching={false}
-                serviceProviderStats={this.props.onOffNet}/>
+                serviceProviderStats={this.props.onOffNet}
+                serviceProviderStatsToday={this.props.onOffNetToday}
+                spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
@@ -145,8 +153,10 @@ PropertyAnalytics.propTypes = {
   hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  spChartType: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -165,7 +175,9 @@ function mapStateToProps(state) {
   return {
     hosts: state.host.get('allHosts'),
     onOffNet: state.traffic.get('onOffNet'),
+    onOffNetToday: state.traffic.get('onOffNetToday'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
+    spChartType: state.ui.get('analysisSPChartType'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
