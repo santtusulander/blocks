@@ -31,6 +31,7 @@ class AnalysisSPReport extends React.Component {
     })
   }
   render() {
+    const stats = this.props.serviceProviderStats
     return (
       <div className="analysis-traffic">
         <Row>
@@ -50,16 +51,20 @@ class AnalysisSPReport extends React.Component {
               </Row>
             </div>
             <div className="analysis-data-box">
-              <h4>Traffic today</h4>
-              <p>0 GB</p>
+              <h4>Traffic Month to Date</h4>
+              <p>{formatBytes(stats.get('total'))}</p>
               <Row className="extra-margin-top">
                 <Col xs={6}>
                   <h4>On-net</h4>
-                  <p className="on-net">00%</p>
+                  <p className="on-net">
+                    {numeral(stats.get('net_on').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
-                  <p className="off-net">00%</p>
+                  <p className="off-net">
+                    {numeral(stats.get('net_off').get('percent_total')).format('0,0%')}
+                  </p>
                 </Col>
               </Row>
             </div>
@@ -70,7 +75,7 @@ class AnalysisSPReport extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisStacked padding={40}
-              data={this.props.serviceProviderStats.get('detail').toJS()}
+              data={stats.get('detail').toJS()}
               width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
             }
         </div>
@@ -86,7 +91,7 @@ class AnalysisSPReport extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.serviceProviderStats.get('detail').map((day, i) => {
+            {stats.get('detail').map((day, i) => {
               return (
                 <tr key={i}>
                   <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
