@@ -150,6 +150,7 @@ export class Property extends React.Component {
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
     return (
       <PageContainer>
         <Content>
@@ -194,7 +195,7 @@ export class Property extends React.Component {
                   {activeConfig.get('edge_configuration').get('published_name')}
                 </h3>
               </Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 Configuration Version
                 <h3>{activeConfig.get('config_name')}</h3>
               </Col>
@@ -205,6 +206,10 @@ export class Property extends React.Component {
                     activeConfig.get('configuration_status').get('deployment_date'), 'X'
                   ).format('M/D/YYYY, h:mma')}
                 </h3>
+              </Col>
+              <Col xs={1}>
+                Trial
+                <h3>{isTrial ? 'TRUE' : 'FALSE'}</h3>
               </Col>
             </Row>
 
