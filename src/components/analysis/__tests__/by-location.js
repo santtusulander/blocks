@@ -2,8 +2,13 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+// This component connects to redux, so mock that
+const reactRedux = require('react-redux')
+reactRedux.connect = jest.genMockFunction()
+reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
+
 jest.dontMock('../by-location.jsx')
-const AnalysisByLocation = require('../by-location.jsx').AnalysisByLocation
+const AnalysisByLocation = require('../by-location.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')

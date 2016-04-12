@@ -52,11 +52,25 @@ describe('AnalysisSPReport', () => {
   it('should show data rows in table', () => {
     let analysisSPReport = TestUtils.renderIntoDocument(
       <AnalysisSPReport
-        fetching={true}
+        fetching={false}
         serviceProviderStats={fakeServiceProviderStats}
         serviceProviderStatsToday={fakeServiceProviderStatsToday}/>
     );
     let trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisSPReport, 'tr')
     expect(trs.length).toBe(3);
+  });
+
+  it('should show summary stats', () => {
+    moment.mockClear()
+    numeral.mockClear()
+    TestUtils.renderIntoDocument(
+      <AnalysisSPReport
+        fetching={false}
+        serviceProviderStats={fakeServiceProviderStats}
+        serviceProviderStatsToday={fakeServiceProviderStatsToday}/>
+    );
+    expect(numeral.mock.calls.length).toBe(16)
+    expect(numeral.mock.calls[0]).toEqual([0.2])
+    expect(numeralFormatMock.mock.calls[0][0]).toBe('0,0%')
   });
 })
