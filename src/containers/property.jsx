@@ -150,6 +150,27 @@ export class Property extends React.Component {
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
+    const policyPath = Immutable.List([
+      'default_policy', 'policy_rules'])
+    let controlIndex = activeConfig.getIn(policyPath)
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          return policy.get('set').has('cache_control')
+        }
+      })
+    let nameIndex = activeConfig.getIn(policyPath)
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          return policy.get('set').has('cache_name')
+        }
+      })
+    const policyPaths = {
+      honor_origin_cache_policies: policyPath.push(controlIndex,'set','cache_control','honor_origin'),
+      honor_etags: policyPath.push(controlIndex,'set','cache_control','check_etag'),
+      max_age: policyPath.push(controlIndex,'set','cache_control','max_age'),
+      ignore_case: policyPath.push(nameIndex,'set','cache_name','ignore_case')
+    }
     return (
       <PageContainer>
         <Content>
@@ -194,7 +215,7 @@ export class Property extends React.Component {
                   {activeConfig.get('edge_configuration').get('published_name')}
                 </h3>
               </Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 Configuration Version
                 <h3>{activeConfig.get('config_name')}</h3>
               </Col>
@@ -205,6 +226,10 @@ export class Property extends React.Component {
                     activeConfig.get('configuration_status').get('deployment_date'), 'X'
                   ).format('M/D/YYYY, h:mma')}
                 </h3>
+              </Col>
+              <Col xs={1}>
+                Trial
+                <h3>{isTrial ? 'TRUE' : 'FALSE'}</h3>
               </Col>
             </Row>
 
@@ -292,19 +317,28 @@ export class Property extends React.Component {
                     <tr>
                       <td>Honor Origin Cache Control</td>
                       <td>
-                        <b className="text-green">On</b>
+                        {activeConfig.getIn(policyPaths.ignore_case) ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                     <tr>
                       <td>Ignore case from origin</td>
                       <td>
-                        <b className="text-orange">Off</b>
+                        {activeConfig.getIn(policyPaths.honor_etags) === "strong" ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                     <tr>
                       <td>Enable e-Tag support</td>
                       <td>
-                        <b className="text-green">On</b>
+                        {activeConfig.getIn(policyPaths.honor_origin_cache_policies) ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                   </tbody>
@@ -315,36 +349,21 @@ export class Property extends React.Component {
                 <Table striped={true}>
                   <thead>
                     <tr>
-                      <th>TYPE</th>
-                      <th>PRIORITY</th>
+                      <th>RULE TYPE</th>
                       <th>TTL VALUE</th>
                       <th>RULE</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Default</td>
-                      <td>0</td>
-                      <td>no-store</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
                       <td>Error Response</td>
-                      <td>1</td>
                       <td>10 sec</td>
                       <td>-</td>
                     </tr>
                     <tr>
-                      <td>United Kingdom</td>
-                      <td>0</td>
+                      <td>Redirect</td>
                       <td>no-store</td>
                       <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Redirect</td>
-                      <td>2</td>
-                      <td>1 day</td>
-                      <td>gif</td>
                     </tr>
                   </tbody>
                 </Table>

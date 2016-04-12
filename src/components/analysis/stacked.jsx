@@ -125,7 +125,7 @@ class AnalysisStacked extends React.Component {
               axes.push(
                 <g key={i}>
                   <text x={this.props.padding} y={yScale(tick)}>
-                    {numeral(tick).format('0a')}
+                    {numeral(tick).format('0 a')}
                   </text>
                 </g>
               );
