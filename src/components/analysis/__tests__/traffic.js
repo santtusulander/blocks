@@ -2,6 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+// This component has a child that connects to redux, so mock that
+const reactRedux = require('react-redux')
+reactRedux.connect = jest.genMockFunction()
+reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
+
 jest.dontMock('../traffic.jsx')
 const AnalysisTraffic = require('../traffic.jsx')
 
@@ -27,10 +32,10 @@ const fakeCountryData = Immutable.fromJS([
     detail:[
       {
         bytes:60722,
-        timestamp:1456819200
+        timestamp:new Date("2016-01-01 00:00:00")
       },{
         bytes:60722,
-        timestamp:1456822800
+        timestamp:new Date("2016-01-02 00:00:00")
       }
     ]
   },{
@@ -43,10 +48,10 @@ const fakeCountryData = Immutable.fromJS([
     detail:[
       {
         bytes:3807,
-        timestamp:1456819200
+        timestamp:new Date("2016-01-01 00:00:00")
       },{
         bytes:60722,
-        timestamp:1456822800
+        timestamp:new Date("2016-01-02 00:00:00")
       }
     ]
   }
@@ -64,17 +69,15 @@ describe('AnalysisTraffic', () => {
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });
 
-  // TODO: Uses a smart component as a child and therefore need to figure out
-  // how to test this properly
-  // it('should show data rows in table', () => {
-  //   let traffic = TestUtils.renderIntoDocument(
-  //     <AnalysisTraffic
-  //       fetching={true}
-  //       byTime={Immutable.List()}
-  //       byCountry={fakeCountryData}
-  //       serviceTypes={Immutable.List()}/>
-  //   );
-  //   let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
-  //   expect(tds.length).toBe(10);
-  // });
+  it('should show data rows in table', () => {
+    let traffic = TestUtils.renderIntoDocument(
+      <AnalysisTraffic
+        fetching={false}
+        byTime={Immutable.List()}
+        byCountry={fakeCountryData}
+        serviceTypes={Immutable.List()}/>
+    );
+    let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
+    expect(tds.length).toBe(10);
+  });
 })

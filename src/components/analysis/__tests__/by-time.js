@@ -94,6 +94,7 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
@@ -108,6 +109,7 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
@@ -123,6 +125,7 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')

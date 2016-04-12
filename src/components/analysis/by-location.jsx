@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux'
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
 
-export class AnalysisByLocation extends React.Component {
+class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
 
@@ -28,8 +28,10 @@ export class AnalysisByLocation extends React.Component {
     // this.zoomOut = this.zoomOut.bind(this)
   }
   componentWillMount() {
-    this.props.topoActions.startFetching()
-    this.props.topoActions.fetchCountries()
+    if(this.props.topoActions) {
+      this.props.topoActions.startFetching()
+      this.props.topoActions.fetchCountries()
+    }
   }
   // selectCountry(country, path) {
   //   const id = country.id.toLowerCase()
@@ -108,8 +110,8 @@ export class AnalysisByLocation extends React.Component {
     }
   }
   render() {
-    if(!this.props.width || !this.props.countries.size || this.props.fetching
-      || !this.props.countryData) {
+    if(!this.props.width || !this.props.countries || !this.props.countries.size
+      || this.props.fetching || !this.props.countryData) {
       return <div>Loading...</div>
     }
 
@@ -283,4 +285,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalysisByLocation);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(AnalysisByLocation);
