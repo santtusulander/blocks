@@ -1,0 +1,63 @@
+.playback-demo-container {
+  .container-fluid.low-pad {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .summary-stat {
+    display: inline-block;
+    padding-right: 20px;
+    margin-right: 20px;
+    border-right: 1px solid $silver;
+
+    &:last-child {
+      margin-right: 0;
+      border-right-width: 0;
+    }
+
+    h4 {
+      margin-bottom: 0;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+  }
+
+  .stat {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .unit {
+    font-size: 20px;
+  }
+
+  .video-holder {
+    text-align: center;
+    background-color: $black;
+  }
+
+  .chart-row {
+    position: relative;
+    margin-bottom: 40px;
+    overflow: auto;
+
+    .title {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-weight: bold;
+    }
+
+    .stat {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  }
+
+  .analysis-by-time {
+    .dark-theme & {
+      background-color: rgba($pale-blue, 0.1);
+    }
+  }
+}
