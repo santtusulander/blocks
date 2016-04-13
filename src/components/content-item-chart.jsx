@@ -48,7 +48,7 @@ class ContentItemChart extends React.Component {
     }, [])
     const differenceData = this.props.differenceData.reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
+      if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
       } else {
         points[points.length-1] = data ? points[points.length-1] + data : data === 0 ? 0 : null
