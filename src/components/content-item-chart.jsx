@@ -48,7 +48,7 @@ class ContentItemChart extends React.Component {
     }, [])
     const differenceData = this.props.differenceData.reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
+      if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
       } else {
         points[points.length-1] = data ? points[points.length-1] + data : data === 0 ? 0 : null
@@ -123,26 +123,33 @@ class ContentItemChart extends React.Component {
     const tooltip =
       (<Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
-        <div className="tooltip-header">
-          <b>TRAFFIC <span className="pull-right">28 days</span></b>
-        </div>
         {this.state.showDiffLegend ?
           <div>
+            <div className="tooltip-header">
+              <b>TRAFFIC VS 28 DAYS AGO</b>
+            </div>
             <div>
-              Below Average
+              Higher
               <div className="pull-right difference-legend below-avg" />
             </div>
             <div>
-              Average
+              Same
               <div className="pull-right difference-legend avg" />
             </div>
             <div>
-              Above Average
+              Lower
               <div className="pull-right difference-legend above-avg" />
+            </div>
+            <div>
+              Data Missing
+              <div className="pull-right difference-legend no-data" />
             </div>
           </div>
           :
           <div>
+            <div className="tooltip-header">
+              <b>TRAFFIC (28 days)</b>
+            </div>
             <div>
               Peak
               <span className="pull-right">
