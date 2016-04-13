@@ -18,6 +18,7 @@ import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 import AnalysisFileError from '../components/analysis/file-error'
+import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
 
 export class PropertyAnalytics extends React.Component {
   constructor(props) {
@@ -114,6 +115,7 @@ export class PropertyAnalytics extends React.Component {
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
+            <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -139,6 +141,9 @@ export class PropertyAnalytics extends React.Component {
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
+              : ''}
+            {this.state.activeTab === 'playback-demo' ?
+              <AnalysisPlaybackDemo/>
               : ''}
           </div>
         </Content>

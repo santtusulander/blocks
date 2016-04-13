@@ -1,13 +1,10 @@
 import React from 'react'
 import Hls from 'hls.js'
 import Immutable from 'immutable'
-import { Row, Col } from 'react-bootstrap'
 import numeral from 'numeral'
 
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import Select from '../components/select'
-import AnalysisByKey from '../components/analysis/by-key'
+import Select from '../select'
+import AnalysisByKey from './by-key'
 
 export class PlaybackDemo extends React.Component {
   constructor(props) {
@@ -107,78 +104,76 @@ export class PlaybackDemo extends React.Component {
         [0, 0]
       )[0]
     return (
-      <PageContainer className="playback-demo-container">
-        <Content>
-          <div className="container-fluid low-pad">
-            <div className="summary-stat">
-              <h4>Time to First Play</h4>
-              <div className="stat">
-                {this.state.ttfp} <span className="unit">ms</span>
-              </div>
-            </div>
-            <div className="summary-stat">
-              <h4>Dominant Bitrate</h4>
-              <div className="stat">
-                {numeral(dominantBitrate / 1000).format('0,0.00')}
-                <span className="unit"> Mb/s</span>
-              </div>
-            </div>
-            <div className="summary-stat">
-              <h4>Client Buffer Events</h4>
-              <div className="stat">
-                {this.state.events.size}
-              </div>
+      <div className="analysis-playback-demo">
+        <div className="container-fluid low-pad">
+          <div className="summary-stat">
+            <h4>Time to First Play</h4>
+            <div className="stat">
+              {this.state.ttfp} <span className="unit">ms</span>
             </div>
           </div>
-          <div className="video-holder">
-            <div className="container-fluid">
-              <video ref="player" controls={true}></video>
+          <div className="summary-stat">
+            <h4>Dominant Bitrate</h4>
+            <div className="stat">
+              {numeral(dominantBitrate / 1000).format('0,0.00')}
+              <span className="unit"> Mb/s</span>
             </div>
           </div>
-          <Select
-            onSelect={this.handleVideoChange}
-            value={this.state.activeVideo}
-            options={[
-              ['/elephant/169ar/elephant_master.m3u8', '/elephant/169ar/elephant_master.m3u8'],
-              ['/elephant/43ar/elephant_master.m3u8', '/elephant/43ar/elephant_master.m3u8'],
-              ['/sintel/169ar/sintel_master.m3u8', '/sintel/169ar/sintel_master.m3u8'],
-              ['/sintel/43ar/sintel_master.m3u8', '/sintel/43ar/sintel_master.m3u8'],
-              ['/bbb/169ar/bbb_master.m3u8', '/bbb/169ar/bbb_master.m3u8'],
-              ['/bbb/43ar/bbb_master.m3u8', '/bbb/43ar/bbb_master.m3u8']]}/>
-          <div className="container-fluid low-pad">
-            <div className="chart-row" ref="chartHolder">
-              <AnalysisByKey width={this.state.chartWidth} height={200}
-                padding={0} axes={false} area={false}
-                primaryData={this.state.events.toJS()}
-                xKey="index" yKey="bitrate"/>
-              <div className="title">
-                Bitrate by Segment
-              </div>
-              <div className="stat">
-                {this.state.events.size ?
-                  numeral(this.state.events.last().get('bitrate') / 1000).format('0,0.00')
-                  : 0}
-                <span className="unit"> Mb/s</span>
-              </div>
-            </div>
-            <div className="chart-row">
-              <AnalysisByKey width={this.state.chartWidth} height={200}
-                padding={0} axes={false} area={false}
-                primaryData={this.state.events.toJS()}
-                xKey="index" yKey="bandwidth"/>
-              <div className="title">
-                Bandwidth by Segment
-              </div>
-              <div className="stat">
-                {this.state.events.size ?
-                  numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0.00')
-                  : 0}
-                <span className="unit"> Mb/s</span>
-              </div>
+          <div className="summary-stat">
+            <h4>Client Buffer Events</h4>
+            <div className="stat">
+              {this.state.events.size}
             </div>
           </div>
-        </Content>
-      </PageContainer>
+        </div>
+        <div className="video-holder">
+          <div className="container-fluid">
+            <video ref="player" controls={true}></video>
+          </div>
+        </div>
+        <Select
+          onSelect={this.handleVideoChange}
+          value={this.state.activeVideo}
+          options={[
+            ['/elephant/169ar/elephant_master.m3u8', '/elephant/169ar/elephant_master.m3u8'],
+            ['/elephant/43ar/elephant_master.m3u8', '/elephant/43ar/elephant_master.m3u8'],
+            ['/sintel/169ar/sintel_master.m3u8', '/sintel/169ar/sintel_master.m3u8'],
+            ['/sintel/43ar/sintel_master.m3u8', '/sintel/43ar/sintel_master.m3u8'],
+            ['/bbb/169ar/bbb_master.m3u8', '/bbb/169ar/bbb_master.m3u8'],
+            ['/bbb/43ar/bbb_master.m3u8', '/bbb/43ar/bbb_master.m3u8']]}/>
+        <div className="container-fluid low-pad">
+          <div className="chart-row" ref="chartHolder">
+            <AnalysisByKey width={this.state.chartWidth} height={200}
+              padding={0} axes={false} area={false}
+              primaryData={this.state.events.toJS()}
+              xKey="index" yKey="bitrate"/>
+            <div className="title">
+              Bitrate by Segment
+            </div>
+            <div className="stat">
+              {this.state.events.size ?
+                numeral(this.state.events.last().get('bitrate') / 1000).format('0,0.00')
+                : 0}
+              <span className="unit"> Mb/s</span>
+            </div>
+          </div>
+          <div className="chart-row">
+            <AnalysisByKey width={this.state.chartWidth} height={200}
+              padding={0} axes={false} area={false}
+              primaryData={this.state.events.toJS()}
+              xKey="index" yKey="bandwidth"/>
+            <div className="title">
+              Bandwidth by Segment
+            </div>
+            <div className="stat">
+              {this.state.events.size ?
+                numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0.00')
+                : 0}
+              <span className="unit"> Mb/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 }

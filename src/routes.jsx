@@ -10,7 +10,6 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
-import PlaybackDemo from './containers/playback-demo'
 import Property from './containers/property'
 import PropertyAnalytics from './containers/property-analytics'
 import Purge from './containers/configure/purge'
@@ -91,6 +90,5 @@ module.exports = (
     </Route>
     <Route path="/security" component={Security}/>
     <Route path="/services" component={Services}/>
-    <Route path="/playback-demo" component={PlaybackDemo}/>
   </Route>
 );

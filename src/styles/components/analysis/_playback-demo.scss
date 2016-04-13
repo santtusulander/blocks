@@ -1,7 +1,12 @@
-.playback-demo-container {
+.analysis-playback-demo {
+  margin: -80px;
+
+  @media (max-width: 1689px) {
+    margin: -60px;
+  }
+
   .container-fluid.low-pad {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 40px;
   }
 
   .summary-stat {

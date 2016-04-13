@@ -181,11 +181,6 @@ class Header extends React.Component {
                 </a>
               }
             </li>
-            <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/playback-demo`} activeClassName="active">
-                Playback Demo
-              </Link>
-            </li>
           </Nav>
           <Nav pullRight={true}>
             <li>
