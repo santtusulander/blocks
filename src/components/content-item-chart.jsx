@@ -61,12 +61,13 @@ class ContentItemChart extends React.Component {
     const secondaryMax = secondaryData.length ?
       d3.max(secondaryData, d => d || 0)
       : primaryMax
-    const barMaxHeight = this.props.barMaxHeight;
+    const barMaxHeight = Math.round(this.props.barMaxHeight);
     const normalize = d3.scale.linear()
       .domain([0, Math.max(primaryMax, secondaryMax)])
       .range([0, barMaxHeight]);
-    const outerRadius = this.props.chartWidth / 2;
-    const innerRadius = outerRadius - this.props.barMaxHeight;
+    const chartWidth = Math.round(this.props.chartWidth)
+    const outerRadius = chartWidth / 2;
+    const innerRadius = outerRadius - barMaxHeight;
     // Increment is calculated based on the following formula:
     // 360 degrees / (number of days * (24 hours / hours per bar))
     const increment = 360 / (28 * (24 / 3));
@@ -175,7 +176,7 @@ class ContentItemChart extends React.Component {
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
-          style={{width: this.props.chartWidth, height: this.props.chartWidth}}
+          style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
             <div className="glow"></div>
@@ -251,7 +252,7 @@ class ContentItemChart extends React.Component {
             <div className="text-content"
               style={{width: innerRadius * 2 - 20, height: innerRadius * 2 - 20}}>
               <div className="content-item-traffic"
-                style={{fontSize: this.props.chartWidth / 23}}>
+                style={{fontSize: chartWidth / 23}}>
                 <div className="content-item-text-bold">
                   {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
                 </div>
@@ -261,7 +262,7 @@ class ContentItemChart extends React.Component {
               </div>
               <div className="content-item-text-centered">
                 <div className="content-item-chart-name"
-                  style={{fontSize: this.props.chartWidth / 16}}>
+                  style={{fontSize: chartWidth / 16}}>
                   {this.props.name}
                 </div>
                 <div className="content-item-text-sm">
@@ -274,7 +275,7 @@ class ContentItemChart extends React.Component {
             </div>
           </Link>
           <div className="content-item-toolbar"
-            style={{bottom: this.props.barMaxHeight}}>
+            style={{bottom: barMaxHeight}}>
             <ButtonToolbar>
               {this.props.analyticsLink ?
                 <Link to={this.props.analyticsLink}
