@@ -64,7 +64,8 @@ describe('AnalysisTraffic', () => {
         fetching={true}
         byTime={Immutable.List()}
         byCountry={Immutable.List()}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        dateRange='foo'/>
     );
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });
@@ -75,9 +76,10 @@ describe('AnalysisTraffic', () => {
         fetching={false}
         byTime={Immutable.List()}
         byCountry={fakeCountryData}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        dateRange='foo'/>
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
-    expect(tds.length).toBe(10);
+    expect(tds.length).toBe(6);
   });
 })
