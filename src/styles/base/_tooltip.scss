@@ -5,11 +5,12 @@
   z-index: 1020;
   max-width: 360px;
   min-width: 280px;
-  font-size: inherit;
+  font-size: $tooltip-font-size;
 
   @include md {
     max-width: 320px;
     min-width: 240px;
+    font-size: $md-tooltip-font-size;
   }
 
   &.in {
@@ -64,6 +65,10 @@
 
   .data-suffix {
     font-size: 15px;
+
+    @include md {
+      font-size: 13px;
+    }
   }
 
   .tooltip-arrow {

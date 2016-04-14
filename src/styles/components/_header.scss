@@ -120,7 +120,7 @@
     &,
     &:hover,
     &:focus {
-      background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
+      background: url('../assets/img/logo-ericsson.svg') rgba($black, 0.2) center center no-repeat;
       background-size: 30px 40px;
 
       @include md {
