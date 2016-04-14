@@ -37,15 +37,10 @@
   }
 }
 
-.has-middle-separator {
-  position: relative;
+[class^="col-"],
+[class*=" col-"] {
 
-  &::before {
-    position: absolute;
-    left: 50%;
-    display: block;
-    height: 100%;
-    content: '';
+  &.right-separator {
 
     .dark-theme & {
       border-right: 1px solid $dt-text-color;
