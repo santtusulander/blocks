@@ -73,11 +73,8 @@ class ContentItemChart extends React.Component {
     const radians = Math.PI / 180;
     let primaryAngle = -90;
     let secondaryAngle = -90;
-    const differenceArcStyle = {
-      transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
-      WebkitTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
-      msTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
-    }
+    const differenceArcViewBox = -outerRadius + ' ' + -outerRadius + ' '
+      + chartWidth + ' ' + chartWidth
     const primaryLine = d3.svg.line()
       .x(function(d) {
         /* If the value is 'center', set the X point to the center of the chart,
@@ -232,9 +229,9 @@ class ContentItemChart extends React.Component {
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
               {this.props.differenceData.length && !this.props.fetchingMetrics ?
-                <svg className="content-item-chart-svg difference-arc">
-                  <g style={differenceArcStyle}
-                    onMouseEnter={this.differenceHover(true)}
+                <svg className="content-item-chart-svg difference-arc"
+                  viewBox={differenceArcViewBox}>
+                  <g onMouseEnter={this.differenceHover(true)}
                     onMouseLeave={this.differenceHover(false)}>
                     {
                       pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
