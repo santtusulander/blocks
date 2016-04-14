@@ -14,6 +14,7 @@ export class PlaybackDemo extends React.Component {
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
       bitrates: Immutable.List(),
       chartWidth: 400,
+      droppedFrames: 0,
       events: Immutable.List(),
       fragMaxKbps: 0,
       ttfp: 0,
@@ -75,6 +76,9 @@ export class PlaybackDemo extends React.Component {
           bandwidth: bandwidth,
           size: data.stats.length
         });
+        hls.on(Hls.Events.FPS_DROP, (event, data) => {
+          this.setState({droppedFrames: data.totalDroppedFrames})
+        });
         this.setState({
           events: this.state.events.push(event),
           fragMaxKbps: Math.max(data.stats.fragMaxKbps, bandwidth)
@@ -86,6 +90,7 @@ export class PlaybackDemo extends React.Component {
     this.setState({
       activeVideo: newVideo,
       bitrates: Immutable.List(),
+      droppedFrames: 0,
       events: Immutable.List(),
       fragMaxKbps: 0,
       ttfp: 0,
@@ -123,6 +128,12 @@ export class PlaybackDemo extends React.Component {
             <h4>Client Buffer Events</h4>
             <div className="stat">
               {this.state.events.size}
+            </div>
+          </div>
+          <div className="summary-stat">
+            <h4>Dropped Frames</h4>
+            <div className="stat">
+              {this.state.droppedFrames}
             </div>
           </div>
         </div>
