@@ -2,6 +2,7 @@ import React from 'react'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
+import { Col, Row } from 'react-bootstrap'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
@@ -42,9 +43,26 @@ class AnalysisTraffic extends React.Component {
       : Immutable.List()
     return (
       <div className="analysis-traffic">
-        <div className="analysis-data-box">
+        {/*<div className="analysis-data-box">
           <h4>Total Egress Yesterday</h4>
           <p>{formatBytes(this.props.totalEgress)}</p>
+        </div>*/}
+        <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
+        <div className="analysis-data-box wide">
+          <Row>
+            <Col xs={4} className="right-separator">
+              <h4>Peak</h4>
+              <p>{this.props.peakTraffic ? this.props.peakTraffic : '0 Kpbs'}</p>
+            </Col>
+            <Col xs={4} className="right-separator">
+              <h4>Average</h4>
+              <p>{this.props.avgTraffic ? this.props.avgTraffic : '0 Kpbs'}</p>
+            </Col>
+            <Col xs={4}>
+              <h4>Low</h4>
+              <p>{this.props.lowTraffic ? this.props.lowTraffic : '0 Kpbs'}</p>
+            </Col>
+          </Row>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
@@ -129,9 +147,13 @@ class AnalysisTraffic extends React.Component {
 
 AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes = {
+  avgTraffic: React.PropTypes.string,
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
+  dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  lowTraffic: React.PropTypes.string,
+  peakTraffic: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number
 }
