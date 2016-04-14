@@ -82,7 +82,7 @@ function routeMetrics(req, res) {
         let trafficBytes           = levelTrafficDataFormatted.map((record) => record.bytes);
         let historicalTrafficBytes = levelHistoricalTrafficDataFormatted.map((record) => record.bytes);
 
-        let threshold              = 3;
+        let threshold              = 24;
         let numIterations          = Math.floor(trafficBytes.length / threshold);
         let numOrphans             = trafficBytes.length % threshold;
         let percentConsideredEqual = 0.1;

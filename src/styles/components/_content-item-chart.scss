@@ -208,18 +208,12 @@
 }
 
 .difference-legend {
-  width: $font-size;
-  height: $font-size;
-  margin-top: 5px;
+  width: 10px;
+  height: 10px;
+  margin-top: 8px;
 
   @include md {
-    width: $md-font-size;
-    height: $md-font-size;
-  }
-
-  @include sm {
-    width: $md-font-size;
-    height: $sm-font-size;
+    margin-top: 6px;
   }
 
   &.below-avg {
@@ -230,12 +224,13 @@
     background-color: $purple;
   }
 
-  .dark-theme &.avg {
-    background-color: $pale-blue;
+  &.no-data {
+    background-color: $black;
+    border: 1px solid rgba($white, 0.2);
   }
 
+  .dark-theme &.avg,
   .light-theme &.avg {
     background-color: $pale-blue;
-    background-image: linear-gradient(rgba($white, 0.5), rgba($white, 0.5));
   }
 }

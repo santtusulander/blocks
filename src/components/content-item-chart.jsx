@@ -48,7 +48,7 @@ class ContentItemChart extends React.Component {
     }, [])
     const differenceData = this.props.differenceData.reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
+      if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
       } else {
         points[points.length-1] = data ? points[points.length-1] + data : data === 0 ? 0 : null
@@ -61,23 +61,21 @@ class ContentItemChart extends React.Component {
     const secondaryMax = secondaryData.length ?
       d3.max(secondaryData, d => d || 0)
       : primaryMax
-    const barMaxHeight = this.props.barMaxHeight;
+    const barMaxHeight = Math.round(this.props.barMaxHeight);
     const normalize = d3.scale.linear()
       .domain([0, Math.max(primaryMax, secondaryMax)])
       .range([0, barMaxHeight]);
-    const outerRadius = this.props.chartWidth / 2;
-    const innerRadius = outerRadius - this.props.barMaxHeight;
+    const chartWidth = Math.round(this.props.chartWidth)
+    const outerRadius = chartWidth / 2;
+    const innerRadius = outerRadius - barMaxHeight;
     // Increment is calculated based on the following formula:
     // 360 degrees / (number of days * (24 hours / hours per bar))
     const increment = 360 / (28 * (24 / 3));
     const radians = Math.PI / 180;
     let primaryAngle = -90;
     let secondaryAngle = -90;
-    const differenceArcStyle = {
-      transform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
-      WebkitTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)',
-      msTransform: 'translate(' + outerRadius + 'px, ' + outerRadius + 'px)'
-    }
+    const differenceArcViewBox = -outerRadius + ' ' + -outerRadius + ' '
+      + chartWidth + ' ' + chartWidth
     const primaryLine = d3.svg.line()
       .x(function(d) {
         /* If the value is 'center', set the X point to the center of the chart,
@@ -123,26 +121,33 @@ class ContentItemChart extends React.Component {
     const tooltip =
       (<Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
-        <div className="tooltip-header">
-          <b>TRAFFIC <span className="pull-right">28 days</span></b>
-        </div>
         {this.state.showDiffLegend ?
           <div>
+            <div className="tooltip-header">
+              <b>TRAFFIC VS 28 DAYS AGO</b>
+            </div>
             <div>
-              Below Average
+              Higher
               <div className="pull-right difference-legend below-avg" />
             </div>
             <div>
-              Average
+              Same
               <div className="pull-right difference-legend avg" />
             </div>
             <div>
-              Above Average
+              Lower
               <div className="pull-right difference-legend above-avg" />
+            </div>
+            <div>
+              Data Missing
+              <div className="pull-right difference-legend no-data" />
             </div>
           </div>
           :
           <div>
+            <div className="tooltip-header">
+              <b>TRAFFIC (28 days)</b>
+            </div>
             <div>
               Peak
               <span className="pull-right">
@@ -171,7 +176,7 @@ class ContentItemChart extends React.Component {
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
-          style={{width: this.props.chartWidth, height: this.props.chartWidth}}
+          style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
             <div className="glow"></div>
@@ -225,9 +230,9 @@ class ContentItemChart extends React.Component {
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
               {this.props.differenceData.length && !this.props.fetchingMetrics ?
-                <svg className="content-item-chart-svg difference-arc">
-                  <g style={differenceArcStyle}
-                    onMouseEnter={this.differenceHover(true)}
+                <svg className="content-item-chart-svg difference-arc"
+                  viewBox={differenceArcViewBox}>
+                  <g onMouseEnter={this.differenceHover(true)}
                     onMouseLeave={this.differenceHover(false)}>
                     {
                       pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
@@ -247,7 +252,7 @@ class ContentItemChart extends React.Component {
             <div className="text-content"
               style={{width: innerRadius * 2 - 20, height: innerRadius * 2 - 20}}>
               <div className="content-item-traffic"
-                style={{fontSize: this.props.chartWidth / 23}}>
+                style={{fontSize: chartWidth / 23}}>
                 <div className="content-item-text-bold">
                   {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
                 </div>
@@ -257,7 +262,7 @@ class ContentItemChart extends React.Component {
               </div>
               <div className="content-item-text-centered">
                 <div className="content-item-chart-name"
-                  style={{fontSize: this.props.chartWidth / 16}}>
+                  style={{fontSize: chartWidth / 16}}>
                   {this.props.name}
                 </div>
                 <div className="content-item-text-sm">
@@ -270,7 +275,7 @@ class ContentItemChart extends React.Component {
             </div>
           </Link>
           <div className="content-item-toolbar"
-            style={{bottom: this.props.barMaxHeight}}>
+            style={{bottom: barMaxHeight}}>
             <ButtonToolbar>
               {this.props.analyticsLink ?
                 <Link to={this.props.analyticsLink}

@@ -172,7 +172,6 @@ describe('dataUtils.processVisitorDataByDimension', function() {
     let data = dataUtils.processVisitorDataByDimension(
       'fruit', mockVisitorData, mockTotalsGrouped, grandTotal, 5, options
     );
-    console.log(data);
     expect(data.length).toBe(2);
     expect(data[0].name).toBe('apple');
     expect(data[1].name).toBe('banana');
