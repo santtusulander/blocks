@@ -1,12 +1,10 @@
 import React from 'react'
-import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 import { Col, Row } from 'react-bootstrap'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import {formatBytes} from '../../util/helpers'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 class AnalysisTraffic extends React.Component {
@@ -94,35 +92,17 @@ class AnalysisTraffic extends React.Component {
           <thead>
             <tr>
               <th>Country</th>
-              <th>Traffic</th>
-              <th>% of Traffic</th>
+              <th>Bandwidth</th>
               <th className="text-center">Period Trend</th>
-              <th>Change</th>
             </tr>
           </thead>
           <tbody>
             {!this.props.fetching ? this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('detail').reduce((total, traffic) => {
-                return total + traffic.get('bytes')
-              }, 0)
-              const startBytes = country.get('detail').first().get('bytes')
-              const endBytes = country.get('detail').last().get('bytes')
-              let trending = startBytes / endBytes
-              if(isNaN(trending) || !startBytes || !endBytes) {
-                trending = 'N/A'
-              }
-              else if(trending > 1) {
-                trending = numeral((trending - 1) * -1).format('0%')
-              }
-              else {
-                trending = numeral(trending).format('+0%');
-              }
               return (
                 <tr key={i}>
                   <td>{country.get('name')}</td>
-                  <td>{formatBytes(totalBytes)}</td>
-                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                  <td width={this.state.byTimeWidth / 3}>
+                  <td>{formatBitsPerSecond(country.get('average_bits_per_second'))}</td>
+                  <td width={this.state.byTimeWidth / 2}>
                     <AnalysisByTime axes={false} padding={0} area={false}
                       primaryData={country.get('detail').map(datapoint => {
                         return datapoint.set(
@@ -130,14 +110,13 @@ class AnalysisTraffic extends React.Component {
                           moment(datapoint.get('timestamp'), 'X').toDate()
                         )
                       }).toJS()}
-                      dataKey='bytes'
-                      width={this.state.byTimeWidth / 3}
+                      dataKey='bits_per_second'
+                      width={this.state.byTimeWidth / 2}
                       height={50} />
                   </td>
-                  <td>{trending}</td>
                 </tr>
               )
-            }) : <tr><td colSpan="5">Loading...</td></tr>}
+            }) : <tr><td colSpan="3">Loading...</td></tr>}
           </tbody>
         </table>
       </div>
