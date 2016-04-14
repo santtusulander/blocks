@@ -13,8 +13,8 @@ class AnalysisFileError extends React.Component {
             <div className="analysis-data-box">
               <h4>Client errors</h4>
               <p>4XX</p>
-              <Row className="extra-margin-top has-middle-separator">
-                <Col xs={6} className="text-center">
+              <Row className="extra-margin-top">
+                <Col xs={6} className="text-center right-separator">
                   <p>00</p>
                   <h4>400 Bad request</h4>
                 </Col>
@@ -27,8 +27,8 @@ class AnalysisFileError extends React.Component {
             <div className="analysis-data-box">
               <h4>Server errors</h4>
               <p>5XX</p>
-              <Row className="extra-margin-top has-middle-separator">
-                <Col xs={6} className="text-center">
+              <Row className="extra-margin-top">
+                <Col xs={6} className="text-center right-separator">
                   <p>00</p>
                   <h4>500 Internal Server Error</h4>
                 </Col>
