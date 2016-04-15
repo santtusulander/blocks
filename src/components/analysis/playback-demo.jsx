@@ -59,7 +59,7 @@ export class PlaybackDemo extends React.Component {
   playVideo() {
     if(Hls.isSupported()) {
       const hls = new Hls()
-      hls.loadSource('http://video.demo.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
+      hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
       hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
         this.setState({ttfp: ((new Date()) - this.state.videoStartPlayTime)})
