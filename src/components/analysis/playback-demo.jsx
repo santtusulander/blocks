@@ -13,6 +13,7 @@ export class PlaybackDemo extends React.Component {
     this.state = {
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
       bitrates: Immutable.List(),
+      bufferErrors: 0,
       chartWidth: 400,
       droppedFrames: 0,
       events: Immutable.List(),
@@ -76,20 +77,26 @@ export class PlaybackDemo extends React.Component {
           bandwidth: bandwidth,
           size: data.stats.length
         });
-        hls.on(Hls.Events.FPS_DROP, (event, data) => {
-          this.setState({droppedFrames: data.totalDroppedFrames})
-        });
         this.setState({
           events: this.state.events.push(event),
           fragMaxKbps: Math.max(data.stats.fragMaxKbps, bandwidth)
         })
       })
+      hls.on(Hls.Events.FPS_DROP, (event, data) => {
+        this.setState({droppedFrames: data.totalDroppedFrames})
+      });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if(data.type == "mediaError" && data.details === "bufferStalledError") {
+          this.setState({bufferErrors: this.state.bufferErrors + 1})
+        }
+      });
     }
   }
   handleVideoChange(newVideo) {
     this.setState({
       activeVideo: newVideo,
       bitrates: Immutable.List(),
+      bufferErrors: 0,
       droppedFrames: 0,
       events: Immutable.List(),
       fragMaxKbps: 0,
@@ -127,7 +134,7 @@ export class PlaybackDemo extends React.Component {
           <div className="summary-stat">
             <h4>Client Buffer Events</h4>
             <div className="stat">
-              {this.state.events.size}
+              {this.state.bufferErrors}
             </div>
           </div>
           <div className="summary-stat">
