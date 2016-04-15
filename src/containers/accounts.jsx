@@ -84,9 +84,9 @@ export class Accounts extends React.Component {
       this.props.username
     )
     if(!this.props.fetchingMetrics) {
-      const trafficTotals = filteredAccounts.map((account, i) => {
-        return this.props.metrics.has(i) ?
-          this.props.metrics.get(i).get('totalTraffic') : 0
+      const trafficTotals = filteredAccounts.map((account) => {
+        const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
+        return metrics.has('totalTraffic') ? metrics.get('totalTraffic') : 0
       })
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
