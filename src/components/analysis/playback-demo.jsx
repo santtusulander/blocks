@@ -127,7 +127,7 @@ export class PlaybackDemo extends React.Component {
           <div className="summary-stat">
             <h4>Dominant Bitrate</h4>
             <div className="stat">
-              {numeral(dominantBitrate / 1000).format('0,0.00')}
+              {numeral(dominantBitrate / 1000000).format('0,0.00')}
               <span className="unit"> Mb/s</span>
             </div>
           </div>
@@ -172,7 +172,7 @@ export class PlaybackDemo extends React.Component {
               {this.state.events.size ?
                 numeral(this.state.events.last().get('bitrate') / 1000).format('0,0.00')
                 : 0}
-              <span className="unit"> Mb/s</span>
+              <span className="unit"> Kb/s</span>
             </div>
           </div>
           <div className="chart-row">
@@ -187,7 +187,7 @@ export class PlaybackDemo extends React.Component {
               {this.state.events.size ?
                 numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0.00')
                 : 0}
-              <span className="unit"> Mb/s</span>
+              <span className="unit"> Kb/s</span>
             </div>
           </div>
         </div>
