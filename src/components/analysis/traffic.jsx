@@ -56,6 +56,7 @@ class AnalysisTraffic extends React.Component {
               secondaryData={httpsData.toJS()}
               primaryLabel='HTTP'
               secondaryLabel='HTTPS'
+              stacked={true}
               yAxisCustomFormat={formatBitsPerSecond}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
             }

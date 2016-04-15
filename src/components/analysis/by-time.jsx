@@ -63,18 +63,26 @@ class AnalysisByTime extends React.Component {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
       return <div>Loading...</div>
     }
+    const primaryData = this.props.primaryData
+    let secondaryData = this.props.secondaryData
+    console.log(primaryData)
+    // if(this.props.stacked && primaryData && primaryData.length) {
+    //   secondaryData = secondaryData.map((data, i) => {
+    //     return
+    //   })
+    // }
 
-    const yPrimaryExtent = this.props.primaryData && this.props.primaryData.length ?
-      d3.extent(this.props.primaryData, d => d[this.props.dataKey])
+    const yPrimaryExtent = primaryData && primaryData.length ?
+      d3.extent(primaryData, d => d[this.props.dataKey])
       : [0,0]
-    const xPrimaryExtent =  this.props.primaryData && this.props.primaryData.length ?
-      d3.extent(this.props.primaryData, d => d.timestamp)
+    const xPrimaryExtent =  primaryData && primaryData.length ?
+      d3.extent(primaryData, d => d.timestamp)
       : [new Date(), new Date()]
-    const ySecondayExtent = this.props.secondaryData && this.props.secondaryData.length ?
-      d3.extent(this.props.secondaryData, d => d[this.props.dataKey])
+    const ySecondayExtent = secondaryData && secondaryData.length ?
+      d3.extent(secondaryData, d => d[this.props.dataKey])
       : yPrimaryExtent
-    const xSecondayExtent = this.props.secondaryData && this.props.secondaryData.length ?
-      d3.extent(this.props.secondaryData, d => d.timestamp)
+    const xSecondayExtent = secondaryData && secondaryData.length ?
+      d3.extent(secondaryData, d => d.timestamp)
       : [new Date(), new Date()]
 
     const yScale = d3.scale.linear()
@@ -118,26 +126,26 @@ class AnalysisByTime extends React.Component {
     }
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, this.props.primaryData)}
+      onMouseMove={this.moveMouse(xScale, yScale, primaryData)}
       onMouseOut={this.deactivateTooltip}>
         <svg
           width={this.props.width}
           height={this.props.height}
           ref='chart'>
-          {this.props.primaryData ? <g>
-            <path d={trafficLine(this.props.primaryData)}
+          {primaryData ? <g>
+            <path d={trafficLine(primaryData)}
               className="line primary"/>
             {typeof this.props.area !== 'undefined' && !this.props.area ? null :
-              <path d={trafficArea(this.props.primaryData)}
+              <path d={trafficArea(primaryData)}
                 className="area primary"
                 fill="url(#dt-primary-gradient)" />
             }
           </g> : null}
-          {this.props.secondaryData ? <g>
-            <path d={trafficLine(this.props.secondaryData)}
+          {secondaryData ? <g>
+            <path d={trafficLine(secondaryData)}
               className="line secondary"/>
             {typeof this.props.area !== 'undefined' && !this.props.area ? null :
-              <path d={trafficArea(this.props.secondaryData)}
+              <path d={trafficArea(secondaryData)}
                 className="area secondary"
                 fill="url(#dt-secondary-gradient)" />
             }
@@ -233,6 +241,7 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
+  stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
   yAxisCustomFormat: React.PropTypes.func,

@@ -41,6 +41,7 @@ class AnalysisVisitors extends React.Component {
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
+              stacked={true}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
