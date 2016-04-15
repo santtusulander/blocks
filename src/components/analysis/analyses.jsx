@@ -141,60 +141,65 @@ export class Analyses extends React.Component {
             </ButtonToolbar>
           </div>
         </div>
-        <div className="sidebar-section-header">
-          DATE RANGE
-        </div>
-        <div className="sidebar-content">
-          <div className="form-group">
-            <Select className="btn-block"
-              onSelect={this.handleTimespanChange}
-              value={this.state.activeDateRange}
-              options={[
-                ['month_to_date', 'Month to Date'],
-                ['week_to_date', 'Week to Date'],
-                ['today', 'Today'],
-                ['custom_timerange', 'Custom Date Range']]}/>
+        {this.props.activeTab !== 'playback-demo' ?
+          <div>
+            <div className="sidebar-section-header">
+              DATE RANGE
+            </div>
+            <div className="sidebar-content">
+              <div className="form-group">
+                <Select className="btn-block"
+                  onSelect={this.handleTimespanChange}
+                  value={this.state.activeDateRange}
+                  options={[
+                    ['month_to_date', 'Month to Date'],
+                    ['week_to_date', 'Week to Date'],
+                    ['today', 'Today'],
+                    ['custom_timerange', 'Custom Date Range']]}/>
+              </div>
+              {this.state.activeDateRange === 'custom_timerange' ?
+                <Row className="no-gutters">
+                  <Col xs={6}>
+                    <p className="text-sm">FROM</p>
+                    <div ref="startDateHolder"
+                      className={'datepicker-input-wrapper start-date' +
+                      (this.state.datepickerOpen ?
+                      ' datepicker-open' : '')}>
+                      <DatePicker
+                        dateFormat="MM/DD/YYYY"
+                        selected={this.props.startDate}
+                        startDate={this.props.startDate}
+                        endDate={this.props.endDate}
+                        onChange={this.handleStartDateChange}
+                        onFocus={this.handleOnFocus}
+                        onBlur={this.handleOnBlur} />
+                    </div>
+                  </Col>
+                  <Col xs={6}>
+                    <p className="text-sm">TO</p>
+                    <div ref="endDateHolder"
+                      className={'datepicker-input-wrapper end-date' +
+                      (this.state.datepickerOpen ?
+                      ' datepicker-open' : '')}>
+                      <DatePicker
+                        popoverAttachment='top right'
+                        popoverTargetAttachment='bottom right'
+                        dateFormat="MM/DD/YYYY"
+                        selected={this.props.endDate}
+                        startDate={this.props.startDate}
+                        endDate={this.props.endDate}
+                        onChange={this.handleEndDateChange}
+                        onFocus={this.handleOnFocus}
+                        onBlur={this.handleOnBlur} />
+                    </div>
+                  </Col>
+                </Row>
+                : null
+              }
+            </div>
           </div>
-          {this.state.activeDateRange === 'custom_timerange' ?
-            <Row className="no-gutters">
-              <Col xs={6}>
-                <p className="text-sm">FROM</p>
-                <div ref="startDateHolder"
-                  className={'datepicker-input-wrapper start-date' +
-                  (this.state.datepickerOpen ?
-                  ' datepicker-open' : '')}>
-                  <DatePicker
-                    dateFormat="MM/DD/YYYY"
-                    selected={this.props.startDate}
-                    startDate={this.props.startDate}
-                    endDate={this.props.endDate}
-                    onChange={this.handleStartDateChange}
-                    onFocus={this.handleOnFocus}
-                    onBlur={this.handleOnBlur} />
-                </div>
-              </Col>
-              <Col xs={6}>
-                <p className="text-sm">TO</p>
-                <div ref="endDateHolder"
-                  className={'datepicker-input-wrapper end-date' +
-                  (this.state.datepickerOpen ?
-                  ' datepicker-open' : '')}>
-                  <DatePicker
-                    popoverAttachment='top right'
-                    popoverTargetAttachment='bottom right'
-                    dateFormat="MM/DD/YYYY"
-                    selected={this.props.endDate}
-                    startDate={this.props.startDate}
-                    endDate={this.props.endDate}
-                    onChange={this.handleEndDateChange}
-                    onFocus={this.handleOnFocus}
-                    onBlur={this.handleOnBlur} />
-                </div>
-              </Col>
-            </Row>
-            : null
-          }
-        </div>
+          : null
+        }
         {this.props.activeTab === 'sp-report' ?
           <div>
             <div className="sidebar-section-header">
@@ -238,7 +243,7 @@ export class Analyses extends React.Component {
             </div>
           </div>
         : null}
-        {this.props.activeTab !== 'visitors' ?
+        {this.props.activeTab !== 'visitors' && this.props.activeTab !== 'playback-demo' ?
           <div className="sidebar-section-header">
             {this.props.activeTab === 'sp-report' ?
               'FILTERS' :
@@ -255,7 +260,7 @@ export class Analyses extends React.Component {
             <hr className="sidebar-hr" />
           </div>
         : null}
-        {this.props.activeTab !== 'visitors' ?
+        {this.props.activeTab !== 'visitors' && this.props.activeTab !== 'playback-demo' ?
           <div className="sidebar-content">
             <Input type="checkbox" label="HTTP"
               checked={this.props.serviceTypes.includes('http')}
@@ -298,6 +303,26 @@ export class Analyses extends React.Component {
             </div>
           </div>
         : null}
+        {this.props.activeTab === 'playback-demo' ?
+          <div>
+            <div className="sidebar-section-header">
+              VIDEO URL
+            </div>
+            <div className="sidebar-content">
+              <Select
+                onSelect={this.props.changeVideo}
+                value={this.props.activeVideo}
+                options={[
+                  ['/elephant/169ar/elephant_master.m3u8', '/elephant/169ar/elephant_master.m3u8'],
+                  ['/elephant/43ar/elephant_master.m3u8', '/elephant/43ar/elephant_master.m3u8'],
+                  ['/sintel/169ar/sintel_master.m3u8', '/sintel/169ar/sintel_master.m3u8'],
+                  ['/sintel/43ar/sintel_master.m3u8', '/sintel/43ar/sintel_master.m3u8'],
+                  ['/bbb/169ar/bbb_master.m3u8', '/bbb/169ar/bbb_master.m3u8'],
+                  ['/bbb/43ar/bbb_master.m3u8', '/bbb/43ar/bbb_master.m3u8']]}/>
+            </div>
+          </div>
+          : null
+        }
       </div>
     );
   }
@@ -308,9 +333,11 @@ Analyses.propTypes = {
   activate: React.PropTypes.func,
   activeIndex: React.PropTypes.number,
   activeTab: React.PropTypes.string,
+  activeVideo: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
   changeSPChartType: React.PropTypes.func,
+  changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,

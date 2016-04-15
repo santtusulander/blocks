@@ -29,6 +29,7 @@ function routeTrafficCountry(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
+  let bitsPerByte = 8;
   let options = {
     start        : params.start,
     end          : params.end,
@@ -39,6 +40,12 @@ function routeTrafficCountry(req, res) {
     granularity  : params.granularity,
     dimension    : 'country'
   };
+  let secondsPerGranularityMap = {
+    '5min' : 300,
+    hour   : 3600,
+    day    : 86400,
+    month  : 2629743 // 30.44 days
+  };
 
   db.getEgressWithHistorical(options).spread((trafficData, historicalTrafficData) => {
     let responseData = {
@@ -47,8 +54,9 @@ function routeTrafficCountry(req, res) {
     };
 
     if (trafficData && historicalTrafficData) {
-      let optionsFinal = db._getQueryOptions(options);
-      let maxCountries = params.max_countries || 5;
+      let optionsFinal                    = db._getQueryOptions(options);
+      let maxCountries                    = params.max_countries || 5;
+      let secondsPerGranularity           = secondsPerGranularityMap[optionsFinal.granularity];
       let allCountryTrafficData           = _.groupBy(trafficData, 'country');
       let allHistoricalCountryTrafficData = _.groupBy(historicalTrafficData, 'country');
 
@@ -84,10 +92,30 @@ function routeTrafficCountry(req, res) {
           optionsFinal.granularity,
           'bytes'
         );
-        countryRecord.detail = trafficRecords;
+
+        // Add bits per second to each traffic record
+        trafficRecords = trafficRecords.map((record) => {
+          if (record.bytes == null) {
+            record.bits_per_second = null;
+          } else {
+            record.bits_per_second = Math.round((record.bytes * bitsPerByte) / secondsPerGranularity);
+          }
+          return record;
+        });
 
         // Save the country total to the countryRecord
         countryRecord.total = total;
+
+        // Save total bits per second to the countryRecord
+        countryRecord.bits_per_second = Math.round((total * bitsPerByte) / (optionsFinal.end - optionsFinal.start));
+
+        // Save average bits per second to the countryRecord
+        let populatedTrafficBytes = trafficRecords
+          .filter((record) => record.bytes !== null)
+          .map((record) => record.bytes);
+        let averageBytes = _.mean(populatedTrafficBytes);
+        countryRecord.average_bits_per_second = Math.round((averageBytes * bitsPerByte) / secondsPerGranularity);
+        countryRecord.average_bytes = Math.round(averageBytes);
 
         // Add to the total traffic amount for all countries
         responseData.total += total;
@@ -104,6 +132,8 @@ function routeTrafficCountry(req, res) {
 
         // Calculate percent change
         countryRecord.percent_change = parseFloat(((total - historicalTotal) / historicalTotal).toFixed(4));
+
+        countryRecord.detail = trafficRecords;
 
         // Add the countryRecord to the response data
         responseData.countries.push(countryRecord);
