@@ -236,7 +236,7 @@ AnalysisByTime.propTypes = {
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
   yAxisCustomFormat: React.PropTypes.func,
-  yAxisFormat: React.PropTypes.func
+  yAxisFormat: React.PropTypes.string
 }
 
 module.exports = AnalysisByTime

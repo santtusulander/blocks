@@ -186,9 +186,12 @@ class AnalysisByLocation extends React.Component {
               // }
               let label = '0'
               if(this.props.countryData.get(dataIndex)) {
-                label = numeral(
-                  this.props.countryData.get(dataIndex).get('total') || 0
-                ).format('0,0')
+                label = this.props.tooltipCustomFormat ?
+                  this.props.tooltipCustomFormat(
+                    this.props.countryData.get(dataIndex).get(this.props.dataKey) || 0
+                  ) : numeral(
+                    this.props.countryData.get(dataIndex).get(this.props.dataKey) || 0
+                  ).format('0,0')
               }
               return (
                 <path key={i} d={path(country)}
@@ -259,11 +262,13 @@ AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
   stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
   timelineKey: React.PropTypes.string,
+  tooltipCustomFormat: React.PropTypes.func,
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
 }

@@ -30,21 +30,13 @@ export class Analyses extends React.Component {
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
-  handleStartDateChange(date) {
-    let endDate = this.props.endDate
-    if(date > this.props.endDate) {
-      endDate = date
-    }
-    this.props.changeDateRange(date, endDate)
+  handleStartDateChange(startDate) {
+    this.props.changeDateRange(startDate.utc().startOf('day'), this.props.endDate)
     this.refs.endDateHolder.getElementsByTagName('input')[0].focus()
     this.refs.endDateHolder.getElementsByTagName('input')[0].click()
   }
-  handleEndDateChange(date) {
-    let startDate = this.props.startDate
-    if(date < this.props.startDate) {
-      startDate = date
-    }
-    this.props.changeDateRange(startDate, date)
+  handleEndDateChange(endDate) {
+    this.props.changeDateRange(this.props.startDate, endDate.utc().endOf('day'))
     if(this.state.datepickerOpen) {
       this.setState({
         datepickerOpen: false
@@ -69,15 +61,15 @@ export class Analyses extends React.Component {
   handleTimespanChange(value) {
     let startDate = this.props.startDate
     if(value === 'month_to_date') {
-      startDate = moment().startOf('month')
+      startDate = moment().utc().startOf('month')
     }
     else if(value === 'week_to_date') {
-      startDate = moment().startOf('week')
+      startDate = moment().utc().startOf('week')
     }
     else if(value === 'today') {
-      startDate = moment().startOf('day')
+      startDate = moment().utc().startOf('day')
     }
-    this.props.changeDateRange(startDate, moment())
+    this.props.changeDateRange(startDate, moment().utc().endOf('day'))
     this.setState({
       activeDateRange: value
     })

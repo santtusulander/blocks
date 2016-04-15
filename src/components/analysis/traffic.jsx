@@ -1,11 +1,10 @@
 import React from 'react'
-import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
+import { Col, Row } from 'react-bootstrap'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import {formatBytes} from '../../util/helpers'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 class AnalysisTraffic extends React.Component {
@@ -42,9 +41,26 @@ class AnalysisTraffic extends React.Component {
       : Immutable.List()
     return (
       <div className="analysis-traffic">
-        <div className="analysis-data-box">
+        {/*<div className="analysis-data-box">
           <h4>Total Egress Yesterday</h4>
           <p>{formatBytes(this.props.totalEgress)}</p>
+        </div>*/}
+        <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
+        <div className="analysis-data-box wide">
+          <Row>
+            <Col xs={4} className="right-separator">
+              <h4>Peak</h4>
+              <p>{this.props.peakTraffic ? this.props.peakTraffic : '0 Kpbs'}</p>
+            </Col>
+            <Col xs={4} className="right-separator">
+              <h4>Average</h4>
+              <p>{this.props.avgTraffic ? this.props.avgTraffic : '0 Kpbs'}</p>
+            </Col>
+            <Col xs={4}>
+              <h4>Low</h4>
+              <p>{this.props.lowTraffic ? this.props.lowTraffic : '0 Kpbs'}</p>
+            </Col>
+          </Row>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder">
@@ -65,6 +81,8 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
+              dataKey="average_bits_per_second"
+              tooltipCustomFormat={formatBitsPerSecond}
               timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 1.6}
@@ -76,35 +94,17 @@ class AnalysisTraffic extends React.Component {
           <thead>
             <tr>
               <th>Country</th>
-              <th>Traffic</th>
-              <th>% of Traffic</th>
+              <th>Bandwidth</th>
               <th className="text-center">Period Trend</th>
-              <th>Change</th>
             </tr>
           </thead>
           <tbody>
             {!this.props.fetching ? this.props.byCountry.map((country, i) => {
-              const totalBytes = country.get('detail').reduce((total, traffic) => {
-                return total + traffic.get('bytes')
-              }, 0)
-              const startBytes = country.get('detail').first().get('bytes')
-              const endBytes = country.get('detail').last().get('bytes')
-              let trending = startBytes / endBytes
-              if(isNaN(trending) || !startBytes || !endBytes) {
-                trending = 'N/A'
-              }
-              else if(trending > 1) {
-                trending = numeral((trending - 1) * -1).format('0%')
-              }
-              else {
-                trending = numeral(trending).format('+0%');
-              }
               return (
                 <tr key={i}>
                   <td>{country.get('name')}</td>
-                  <td>{formatBytes(totalBytes)}</td>
-                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                  <td width={this.state.byTimeWidth / 3}>
+                  <td>{formatBitsPerSecond(country.get('average_bits_per_second'))}</td>
+                  <td width={this.state.byTimeWidth / 2}>
                     <AnalysisByTime axes={false} padding={0} area={false}
                       primaryData={country.get('detail').map(datapoint => {
                         return datapoint.set(
@@ -112,14 +112,13 @@ class AnalysisTraffic extends React.Component {
                           moment(datapoint.get('timestamp'), 'X').toDate()
                         )
                       }).toJS()}
-                      dataKey='bytes'
-                      width={this.state.byTimeWidth / 3}
+                      dataKey='bits_per_second'
+                      width={this.state.byTimeWidth / 2}
                       height={50} />
                   </td>
-                  <td>{trending}</td>
                 </tr>
               )
-            }) : <tr><td colSpan="5">Loading...</td></tr>}
+            }) : <tr><td colSpan="3">Loading...</td></tr>}
           </tbody>
         </table>
       </div>
@@ -129,9 +128,13 @@ class AnalysisTraffic extends React.Component {
 
 AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes = {
+  avgTraffic: React.PropTypes.string,
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
+  dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  lowTraffic: React.PropTypes.string,
+  peakTraffic: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number
 }

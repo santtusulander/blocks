@@ -6,6 +6,7 @@ import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as groupActionCreators from '../redux/modules/group'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -27,7 +28,8 @@ export class GroupAnalytics extends React.Component {
     this.state = {
       activeTab: 'traffic',
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
-      endDate: moment().utc(),
+      dateRange: 'month to date',
+      endDate: moment().utc().endOf('day'),
       startDate: moment().utc().startOf('month')
     }
 
@@ -69,6 +71,14 @@ export class GroupAnalytics extends React.Component {
       this.props.params.account,
       group
     )
+    this.props.metricsActions.startGroupFetching()
+    Promise.all([
+      this.props.metricsActions.fetchGroupMetrics({
+        account: this.props.params.account,
+        startDate: this.state.startDate.format('X'),
+        endDate: this.state.endDate.format('X')
+      })
+    ]).then(this.props.metricsActions.finishFetching)
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
@@ -87,7 +97,17 @@ export class GroupAnalytics extends React.Component {
     this.setState({activeTab: newTab})
   }
   changeDateRange(startDate, endDate) {
-    this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
+    const dateRange =
+      endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
+      startDate._d == moment().utc().startOf('month')._d + "" ? 'month to date' :
+      startDate._d == moment().utc().startOf('week')._d + "" ? 'week to date' :
+      startDate._d == moment().utc().startOf('day')._d + "" ? 'today' :
+      'custom'
+    this.setState({
+      dateRange: dateRange,
+      endDate: endDate,
+      startDate: startDate
+    }, this.fetchData)
   }
   changeActiveVideo(video) {
     this.setState({activeVideo: video})
@@ -100,6 +120,15 @@ export class GroupAnalytics extends React.Component {
         name: group.get('name')
       }
     })
+    // TODO: This should have its own endpoint so we don't have to fetch info
+    // for all accounts
+    const metrics = this.props.metrics.find(metric => metric.get('group') + "" === this.props.params.group) || Immutable.Map()
+    const peakTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
+    const avgTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('average') : '0.0 Gbps'
+    const lowTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
@@ -134,7 +163,11 @@ export class GroupAnalytics extends React.Component {
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
                 serviceTypes={this.props.serviceTypes}
-                totalEgress={this.props.totalEgress}/>
+                totalEgress={this.props.totalEgress}
+                peakTraffic={!this.props.fetchingMetrics ? peakTraffic : null}
+                avgTraffic={!this.props.fetchingMetrics ? avgTraffic : null}
+                lowTraffic={!this.props.fetchingMetrics ? lowTraffic : null}
+                dateRange={this.state.dateRange}/>
               : ''}
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
@@ -166,8 +199,11 @@ export class GroupAnalytics extends React.Component {
 GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
@@ -191,6 +227,8 @@ function mapStateToProps(state) {
   return {
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
+    fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
+    metrics: state.metrics.get('groupMetrics'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
@@ -210,6 +248,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
