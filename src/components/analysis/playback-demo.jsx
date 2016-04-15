@@ -133,7 +133,7 @@ export class PlaybackDemo extends React.Component {
           <div className="summary-stat">
             <h4>Client Buffer Events</h4>
             <div className="stat">
-              {this.state.bufferErrors}
+              {0/*this.state.bufferErrors*/}
             </div>
           </div>
           <div className="summary-stat">
@@ -157,9 +157,9 @@ export class PlaybackDemo extends React.Component {
             </div>
             <div className="stat">
               {this.state.events.size ?
-                numeral(this.state.events.last().get('bitrate') / 1000).format('0,0.00')
+                numeral(this.state.events.last().get('bitrate') / 1000000).format('0,0.00')
                 : 0}
-              <span className="unit"> Kb/s</span>
+              <span className="unit"> Mb/s</span>
             </div>
           </div>
           <div className="chart-row">
@@ -172,7 +172,7 @@ export class PlaybackDemo extends React.Component {
             </div>
             <div className="stat">
               {this.state.events.size ?
-                numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0.00')
+                numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0')
                 : 0}
               <span className="unit"> Kb/s</span>
             </div>
