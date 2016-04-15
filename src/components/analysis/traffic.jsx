@@ -81,6 +81,8 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
+              dataKey="average_bits_per_second"
+              tooltipCustomFormat={formatBitsPerSecond}
               timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 1.6}
