@@ -133,7 +133,7 @@ export class PlaybackDemo extends React.Component {
           <div className="summary-stat">
             <h4>Client Buffer Events</h4>
             <div className="stat">
-              {this.state.bufferErrors}
+              {0/*this.state.bufferErrors*/}
             </div>
           </div>
           <div className="summary-stat">
