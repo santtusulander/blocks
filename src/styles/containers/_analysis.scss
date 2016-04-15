@@ -12,6 +12,11 @@
       padding: $md-btn-height / 2;
     }
 
+    &.wide {
+      width: 100%;
+      max-width: 900px;
+    }
+
     .dark-theme & {
       background-color: rgba($black, 0.2);
     }
@@ -47,6 +52,10 @@
 
     @include md {
       margin-right: $md-btn-height;
+    }
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
