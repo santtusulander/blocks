@@ -27,12 +27,14 @@ export class AccountAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
+      activeVideo: '/elephant/169ar/elephant_master.m3u8',
       endDate: moment().utc(),
       startDate: moment().utc().startOf('month')
     }
 
     this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
+    this.changeActiveVideo = this.changeActiveVideo.bind(this)
   }
   componentWillMount() {
     this.fetchData()
@@ -83,6 +85,9 @@ export class AccountAnalytics extends React.Component {
   changeDateRange(startDate, endDate) {
     this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
   }
+  changeActiveVideo(video) {
+    this.setState({activeVideo: video})
+  }
   render() {
     const filteredAccounts = filterAccountsByUserName(
       this.props.accounts,
@@ -109,7 +114,9 @@ export class AccountAnalytics extends React.Component {
             activeTab={this.state.activeTab}
             type="account"
             name={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
-            navOptions={availableAccounts}/>
+            navOptions={availableAccounts}
+            activeVideo={this.state.activeVideo}
+            changeVideo={this.changeActiveVideo}/>
         </Sidebar>
 
         <Content>
@@ -146,7 +153,8 @@ export class AccountAnalytics extends React.Component {
               <AnalysisFileError fetching={false}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
-              <AnalysisPlaybackDemo/>
+              <AnalysisPlaybackDemo
+                activeVideo={this.state.activeVideo}/>
               : ''}
           </div>
         </Content>
