@@ -309,16 +309,13 @@ export class Analyses extends React.Component {
               VIDEO URL
             </div>
             <div className="sidebar-content">
-              <Select
+              <Select className="btn-block"
                 onSelect={this.props.changeVideo}
                 value={this.props.activeVideo}
                 options={[
-                  ['/elephant/169ar/elephant_master.m3u8', '/elephant/169ar/elephant_master.m3u8'],
-                  ['/elephant/43ar/elephant_master.m3u8', '/elephant/43ar/elephant_master.m3u8'],
-                  ['/sintel/169ar/sintel_master.m3u8', '/sintel/169ar/sintel_master.m3u8'],
-                  ['/sintel/43ar/sintel_master.m3u8', '/sintel/43ar/sintel_master.m3u8'],
-                  ['/bbb/169ar/bbb_master.m3u8', '/bbb/169ar/bbb_master.m3u8'],
-                  ['/bbb/43ar/bbb_master.m3u8', '/bbb/43ar/bbb_master.m3u8']]}/>
+                  ['/elephant/169ar/elephant_master.m3u8', 'Elephants Dream'],
+                  ['/sintel/169ar/sintel_master.m3u8', 'Sintel'],
+                  ['/bbb/169ar/bbb_master.m3u8', 'Big Buck Bunny']]}/>
             </div>
           </div>
           : null
