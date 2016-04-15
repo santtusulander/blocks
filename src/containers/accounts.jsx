@@ -151,7 +151,7 @@ export class Accounts extends React.Component {
                   <div className="content-item-grid">
                     {filteredAccounts.map((account, i) => {
                       const metrics = this.props.metrics.find(metric => metric.get('account') === account.get('id')) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
+                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || trafficMin)
                       return (
                         <ContentItemChart key={i} id={account.get('id').toString()}
                           linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
