@@ -65,12 +65,14 @@ class AnalysisByTime extends React.Component {
     }
     const primaryData = this.props.primaryData
     let secondaryData = this.props.secondaryData
-    console.log(primaryData)
-    // if(this.props.stacked && primaryData && primaryData.length) {
-    //   secondaryData = secondaryData.map((data, i) => {
-    //     return
-    //   })
-    // }
+    if(this.props.stacked && primaryData && primaryData.length &&
+      secondaryData && secondaryData.length) {
+      secondaryData = secondaryData.map((data, i) => {
+        data.bits_per_second += primaryData[i].bits_per_second
+        data.bytes += primaryData[i].bytes
+        return data
+      })
+    }
 
     const yPrimaryExtent = primaryData && primaryData.length ?
       d3.extent(primaryData, d => d[this.props.dataKey])
@@ -245,7 +247,7 @@ AnalysisByTime.propTypes = {
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
   yAxisCustomFormat: React.PropTypes.func,
-  yAxisFormat: React.PropTypes.func
+  yAxisFormat: React.PropTypes.string
 }
 
 module.exports = AnalysisByTime

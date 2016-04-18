@@ -3,7 +3,6 @@ import Hls from 'hls.js'
 import Immutable from 'immutable'
 import numeral from 'numeral'
 
-import Select from '../select'
 import AnalysisByKey from './by-key'
 
 export class PlaybackDemo extends React.Component {
@@ -11,8 +10,8 @@ export class PlaybackDemo extends React.Component {
     super(props)
 
     this.state = {
-      activeVideo: '/elephant/169ar/elephant_master.m3u8',
       bitrates: Immutable.List(),
+      bufferErrors: 0,
       chartWidth: 400,
       droppedFrames: 0,
       events: Immutable.List(),
@@ -21,7 +20,6 @@ export class PlaybackDemo extends React.Component {
       videoStartPlayTime: null
     }
 
-    this.handleVideoChange = this.handleVideoChange.bind(this)
     this.playVideo = this.playVideo.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
   }
@@ -31,8 +29,22 @@ export class PlaybackDemo extends React.Component {
     setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
-  componentDidUpdate(prevProps, prevState) {
-    if(prevState.activeVideo !== this.state.activeVideo) {
+  componentWillUpdate(nextProps) {
+    if(nextProps.activeVideo !== this.props.activeVideo) {
+      this.setState({
+        bitrates: Immutable.List(),
+        bufferErrors: 0,
+        droppedFrames: 0,
+        events: Immutable.List(),
+        fragMaxKbps: 0,
+        ttfp: 0,
+        videoStartPlayTime: null
+      })
+      this.playVideo()
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if(prevProps.activeVideo !== this.props.activeVideo) {
       this.playVideo()
     }
   }
@@ -47,7 +59,7 @@ export class PlaybackDemo extends React.Component {
   playVideo() {
     if(Hls.isSupported()) {
       const hls = new Hls()
-      hls.loadSource('http://video.demo.cdx-stag.unifieddeliverynetwork.net'+this.state.activeVideo)
+      hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
       hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
         this.setState({ttfp: ((new Date()) - this.state.videoStartPlayTime)})
@@ -76,26 +88,20 @@ export class PlaybackDemo extends React.Component {
           bandwidth: bandwidth,
           size: data.stats.length
         });
-        hls.on(Hls.Events.FPS_DROP, (event, data) => {
-          this.setState({droppedFrames: data.totalDroppedFrames})
-        });
         this.setState({
           events: this.state.events.push(event),
           fragMaxKbps: Math.max(data.stats.fragMaxKbps, bandwidth)
         })
       })
+      hls.on(Hls.Events.FPS_DROP, (event, data) => {
+        this.setState({droppedFrames: data.totalDroppedFrames})
+      });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if(data.type == "mediaError" && data.details === "bufferStalledError") {
+          this.setState({bufferErrors: this.state.bufferErrors + 1})
+        }
+      });
     }
-  }
-  handleVideoChange(newVideo) {
-    this.setState({
-      activeVideo: newVideo,
-      bitrates: Immutable.List(),
-      droppedFrames: 0,
-      events: Immutable.List(),
-      fragMaxKbps: 0,
-      ttfp: 0,
-      videoStartPlayTime: null
-    })
   }
   render() {
     const dominantBitrate = this.state.events
@@ -120,14 +126,14 @@ export class PlaybackDemo extends React.Component {
           <div className="summary-stat">
             <h4>Dominant Bitrate</h4>
             <div className="stat">
-              {numeral(dominantBitrate / 1000).format('0,0.00')}
+              {numeral(dominantBitrate / 1000000).format('0,0.00')}
               <span className="unit"> Mb/s</span>
             </div>
           </div>
           <div className="summary-stat">
             <h4>Client Buffer Events</h4>
             <div className="stat">
-              {this.state.events.size}
+              {0/*this.state.bufferErrors*/}
             </div>
           </div>
           <div className="summary-stat">
@@ -137,21 +143,9 @@ export class PlaybackDemo extends React.Component {
             </div>
           </div>
         </div>
-        <div className="video-holder">
-          <div className="container-fluid">
-            <video ref="player" controls={true}></video>
-          </div>
+        <div className="container-fluid text-center">
+          <video ref="player" controls={true}></video>
         </div>
-        <Select
-          onSelect={this.handleVideoChange}
-          value={this.state.activeVideo}
-          options={[
-            ['/elephant/169ar/elephant_master.m3u8', '/elephant/169ar/elephant_master.m3u8'],
-            ['/elephant/43ar/elephant_master.m3u8', '/elephant/43ar/elephant_master.m3u8'],
-            ['/sintel/169ar/sintel_master.m3u8', '/sintel/169ar/sintel_master.m3u8'],
-            ['/sintel/43ar/sintel_master.m3u8', '/sintel/43ar/sintel_master.m3u8'],
-            ['/bbb/169ar/bbb_master.m3u8', '/bbb/169ar/bbb_master.m3u8'],
-            ['/bbb/43ar/bbb_master.m3u8', '/bbb/43ar/bbb_master.m3u8']]}/>
         <div className="container-fluid low-pad">
           <div className="chart-row" ref="chartHolder">
             <AnalysisByKey width={this.state.chartWidth} height={200}
@@ -163,7 +157,7 @@ export class PlaybackDemo extends React.Component {
             </div>
             <div className="stat">
               {this.state.events.size ?
-                numeral(this.state.events.last().get('bitrate') / 1000).format('0,0.00')
+                numeral(this.state.events.last().get('bitrate') / 1000000).format('0,0.00')
                 : 0}
               <span className="unit"> Mb/s</span>
             </div>
@@ -178,9 +172,9 @@ export class PlaybackDemo extends React.Component {
             </div>
             <div className="stat">
               {this.state.events.size ?
-                numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0.00')
+                numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0')
                 : 0}
-              <span className="unit"> Mb/s</span>
+              <span className="unit"> Kb/s</span>
             </div>
           </div>
         </div>
@@ -191,6 +185,7 @@ export class PlaybackDemo extends React.Component {
 
 PlaybackDemo.displayName = 'PlaybackDemo'
 PlaybackDemo.propTypes = {
+  activeVideo: React.PropTypes.string
 }
 
 module.exports = PlaybackDemo

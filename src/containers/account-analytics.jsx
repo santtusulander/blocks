@@ -6,6 +6,7 @@ import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
@@ -27,12 +28,15 @@ export class AccountAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
-      endDate: moment().utc(),
+      activeVideo: '/elephant/169ar/elephant_master.m3u8',
+      dateRange: 'month to date',
+      endDate: moment().utc().endOf('day'),
       startDate: moment().utc().startOf('month')
     }
 
     this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
+    this.changeActiveVideo = this.changeActiveVideo.bind(this)
   }
   componentWillMount() {
     this.fetchData()
@@ -63,6 +67,13 @@ export class AccountAnalytics extends React.Component {
       this.props.params.brand,
       account
     )
+    this.props.metricsActions.startAccountFetching()
+    Promise.all([
+      this.props.metricsActions.fetchAccountMetrics({
+        startDate: this.state.startDate.format('X'),
+        endDate: this.state.endDate.format('X')
+      })
+    ]).then(this.props.metricsActions.finishFetching)
     Promise.all([
       this.props.trafficActions.fetchByTime(fetchOpts),
       this.props.trafficActions.fetchByCountry(fetchOpts),
@@ -81,7 +92,20 @@ export class AccountAnalytics extends React.Component {
     this.setState({activeTab: newTab})
   }
   changeDateRange(startDate, endDate) {
-    this.setState({endDate: endDate, startDate: startDate}, this.fetchData)
+    const dateRange =
+      endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
+      startDate._d == moment().utc().startOf('month')._d + "" ? 'month to date' :
+      startDate._d == moment().utc().startOf('week')._d + "" ? 'week to date' :
+      startDate._d == moment().utc().startOf('day')._d + "" ? 'today' :
+      'custom'
+    this.setState({
+      dateRange: dateRange,
+      endDate: endDate,
+      startDate: startDate
+    }, this.fetchData)
+  }
+  changeActiveVideo(video) {
+    this.setState({activeVideo: video})
   }
   render() {
     const filteredAccounts = filterAccountsByUserName(
@@ -95,6 +119,15 @@ export class AccountAnalytics extends React.Component {
         name: account.get('name')
       }
     })
+    // TODO: This should have its own endpoint so we don't have to fetch info
+    // for all accounts
+    const metrics = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
+    const peakTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
+    const avgTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('average') : '0.0 Gbps'
+    const lowTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
@@ -109,7 +142,9 @@ export class AccountAnalytics extends React.Component {
             activeTab={this.state.activeTab}
             type="account"
             name={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
-            navOptions={availableAccounts}/>
+            navOptions={availableAccounts}
+            activeVideo={this.state.activeVideo}
+            changeVideo={this.changeActiveVideo}/>
         </Sidebar>
 
         <Content>
@@ -127,7 +162,11 @@ export class AccountAnalytics extends React.Component {
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
                 serviceTypes={this.props.serviceTypes}
-                totalEgress={this.props.totalEgress}/>
+                totalEgress={this.props.totalEgress}
+                peakTraffic={!this.props.fetchingMetrics ? peakTraffic : null}
+                avgTraffic={!this.props.fetchingMetrics ? avgTraffic : null}
+                lowTraffic={!this.props.fetchingMetrics ? lowTraffic : null}
+                dateRange={this.state.dateRange}/>
               : ''}
             {this.state.activeTab === 'visitors' ?
               <AnalysisVisitors fetching={this.props.visitorsFetching}
@@ -146,7 +185,8 @@ export class AccountAnalytics extends React.Component {
               <AnalysisFileError fetching={false}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
-              <AnalysisPlaybackDemo/>
+              <AnalysisPlaybackDemo
+                activeVideo={this.state.activeVideo}/>
               : ''}
           </div>
         </Content>
@@ -160,6 +200,9 @@ AccountAnalytics.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  fetchingMetrics: React.PropTypes.bool,
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
@@ -184,6 +227,8 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
+    fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
+    metrics: state.metrics.get('accountMetrics'),
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     spChartType: state.ui.get('analysisSPChartType'),
@@ -204,6 +249,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
