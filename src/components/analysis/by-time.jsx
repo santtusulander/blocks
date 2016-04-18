@@ -12,11 +12,15 @@ class AnalysisByTime extends React.Component {
     super(props)
 
     this.state = {
-      tooltipText: null,
-      tooltipX: 0,
-      tooltipY: 0,
-      tooltipOffsetTop: false,
+      primaryTooltipText: null,
+      primaryTooltipX: 0,
+      primaryTooltipY: 0,
+      primaryTooltipOffsetTop: false,
       primaryLabelWidth: 0,
+      secondaryTooltipText: null,
+      secondaryTooltipX: 0,
+      secondaryTooltipY: 0,
+      secondaryTooltipOffsetTop: false,
       secondaryLabelWidth: 0
     }
 
@@ -33,31 +37,49 @@ class AnalysisByTime extends React.Component {
       secondaryLabelWidth: this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0
     })
   }
-  moveMouse(xScale, yScale, data) {
+  moveMouse(xScale, yScale, primaryData, secondaryData) {
     return e => {
+      const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
       const bounds = this.refs.chart.getBoundingClientRect()
       const xDate = xScale.invert(e.pageX - bounds.left)
-      const i = closestDate(data, xDate, 1)
-      const d0 = data[i - 1]
-      const d1 = data[i]
-      let d = d0;
-      if(d1) {
-        d = xDate - d0.timestamp.getTime() > d1.timestamp.getTime() - xDate ? d1 : d0
+      let i = closestDate(sourceData, xDate, 1)
+      const d0 = sourceData[i - 1]
+      const d1 = sourceData[i]
+      if(d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
+        i = i -1
       }
-      if(d) {
+      if(primaryData && primaryData.length && primaryData[i]) {
+        const primaryD = primaryData[i]
         this.setState({
-          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
-          tooltipX: xScale(d.timestamp),
-          tooltipY: yScale(d[this.props.dataKey]),
-          tooltipOffsetTop: yScale(d[this.props.dataKey]) + 50 > this.props.height
+          primaryTooltipText: `${moment(primaryD.timestamp).format('MMM D')} ${this.formatY(primaryD[this.props.dataKey])}`,
+          primaryTooltipX: xScale(primaryD.timestamp),
+          primaryTooltipY: yScale(primaryD[this.props.dataKey]),
+          primaryTooltipOffsetTop: yScale(primaryD[this.props.dataKey]) + 50 > this.props.height
+        })
+      }
+      if(secondaryData && secondaryData.length && secondaryData[i]) {
+        const secondaryD = secondaryData[i]
+        this.setState({
+          secondaryTooltipText: `${moment(secondaryD.timestamp).format('MMM D')} ${this.formatY(secondaryD[this.props.dataKey])}`,
+          secondaryTooltipX: xScale(secondaryD.timestamp),
+          secondaryTooltipY: yScale(secondaryD[this.props.dataKey]),
+          secondaryTooltipOffsetTop: yScale(secondaryD[this.props.dataKey]) + 50 > this.props.height
         })
       }
     }
   }
   deactivateTooltip() {
     this.setState({
-      tooltipText: null
+      primaryTooltipText: null,
+      secondaryTooltipText: null
     })
+  }
+  formatY(val) {
+    return this.props.yAxisFormat ?
+      numeral(val).format(this.props.yAxisFormat)
+    : this.props.yAxisCustomFormat ?
+      this.props.yAxisCustomFormat(numeral(val).format('0'))
+    : numeral(val).format('0 a')
   }
   render() {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
@@ -129,7 +151,7 @@ class AnalysisByTime extends React.Component {
     }
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, primaryData)}
+      onMouseMove={this.moveMouse(xScale, yScale, primaryData, secondaryData)}
       onMouseOut={this.deactivateTooltip}>
         <svg
           width={this.props.width}
@@ -169,13 +191,24 @@ class AnalysisByTime extends React.Component {
               </svg>
             </g>
           : null}
-          {this.state.tooltipText ?
+          {this.state.primaryTooltipText ?
             <g>
               <circle r="5"
-                cx={this.state.tooltipX}
-                cy={this.state.tooltipY}/>
+                cx={this.state.primaryTooltipX}
+                cy={this.state.primaryTooltipY}/>
               <line className="crosshair"
-                x1={this.state.tooltipX} x2={this.state.tooltipX}
+                x1={this.state.primaryTooltipX} x2={this.state.primaryTooltipX}
+                y1={0} y2={this.props.height}/>
+            </g>
+            : null}
+          {this.state.secondaryTooltipText ?
+            <g>
+              <circle r="5"
+                cx={this.state.secondaryTooltipX}
+                cy={this.state.secondaryTooltipY}/>
+              <line className="crosshair"
+                x1={this.state.secondaryTooltipX}
+                x2={this.state.secondaryTooltipX}
                 y1={0} y2={this.props.height}/>
             </g>
             : null}
@@ -199,11 +232,7 @@ class AnalysisByTime extends React.Component {
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.props.yAxisFormat ?
-                        numeral(tick).format(this.props.yAxisFormat)
-                      : this.props.yAxisCustomFormat ?
-                        this.props.yAxisCustomFormat(numeral(tick).format('0'))
-                      : numeral(tick).format('0 a')}
+                      {this.formatY(tick)}
                     </text>
                   </g>
                 );
@@ -223,9 +252,13 @@ class AnalysisByTime extends React.Component {
             </linearGradient>
           </defs>
         </svg>
-        <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
-          hidden={!this.state.tooltipText} offsetTop={this.state.tooltipOffsetTop}>
-          {this.state.tooltipText}
+        <Tooltip x={this.state.primaryTooltipX} y={this.state.primaryTooltipY}
+          hidden={!this.state.primaryTooltipText} offsetTop={this.state.primaryTooltipOffsetTop}>
+          {this.state.primaryTooltipText}
+        </Tooltip>
+        <Tooltip x={this.state.secondaryTooltipX} y={this.state.secondaryTooltipY}
+          hidden={!this.state.secondaryTooltipText} offsetTop={this.state.secondaryTooltipOffsetTop}>
+          {this.state.secondaryTooltipText}
         </Tooltip>
       </div>
     )
