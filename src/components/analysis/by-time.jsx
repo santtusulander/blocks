@@ -68,9 +68,10 @@ class AnalysisByTime extends React.Component {
     if(this.props.stacked && primaryData && primaryData.length &&
       secondaryData && secondaryData.length) {
       secondaryData = secondaryData.map((data, i) => {
-        data.bits_per_second += primaryData[i].bits_per_second
-        data.bytes += primaryData[i].bytes
-        return data
+        const newData = Object.assign({}, data)
+        newData.bits_per_second += primaryData[i].bits_per_second
+        newData.bytes += primaryData[i].bytes
+        return newData
       })
     }
 
