@@ -73,9 +73,11 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime />
     );
-    byTime.state.tooltipText = "foo"
+    byTime.state.primaryTooltipText = "foo"
+    byTime.state.secondaryTooltipText = "bar"
     byTime.deactivateTooltip()
-    expect(byTime.state.tooltipText).toBe(null);
+    expect(byTime.state.primaryTooltipText).toBe(null);
+    expect(byTime.state.secondaryTooltipText).toBe(null);
   });
 
   it('should have a data line and area', () => {
