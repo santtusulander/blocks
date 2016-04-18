@@ -46,7 +46,7 @@ class AnalysisByTime extends React.Component {
       }
       if(d) {
         this.setState({
-          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d[this.props.dataKey]).format('0,0')}`,
+          tooltipText: `${moment(d.timestamp).format('MMM D')} ${this.formatY(d[this.props.dataKey])}`,
           tooltipX: xScale(d.timestamp),
           tooltipY: yScale(d[this.props.dataKey]),
           tooltipOffsetTop: yScale(d[this.props.dataKey]) + 50 > this.props.height
@@ -58,6 +58,13 @@ class AnalysisByTime extends React.Component {
     this.setState({
       tooltipText: null
     })
+  }
+  formatY(val) {
+    return this.props.yAxisFormat ?
+      numeral(val).format(this.props.yAxisFormat)
+    : this.props.yAxisCustomFormat ?
+      this.props.yAxisCustomFormat(numeral(val).format('0'))
+    : numeral(val).format('0 a')
   }
   render() {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
@@ -199,11 +206,7 @@ class AnalysisByTime extends React.Component {
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.props.yAxisFormat ?
-                        numeral(tick).format(this.props.yAxisFormat)
-                      : this.props.yAxisCustomFormat ?
-                        this.props.yAxisCustomFormat(numeral(tick).format('0'))
-                      : numeral(tick).format('0 a')}
+                      {this.formatY(tick)}
                     </text>
                   </g>
                 );
