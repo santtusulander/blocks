@@ -12,7 +12,13 @@ const numeral = require('numeral')
 const momentFormatMock = jest.genMockFunction()
 const numeralFormatMock = jest.genMockFunction()
 
-moment.mockReturnValue({format:momentFormatMock})
+moment.mockReturnValue({
+  format: momentFormatMock,
+  date: jest.genMockFunction()
+})
+moment.utc.mockReturnValue({
+  format: momentFormatMock
+})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeData = [
@@ -73,9 +79,11 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime />
     );
-    byTime.state.tooltipText = "foo"
+    byTime.state.primaryTooltipText = "foo"
+    byTime.state.secondaryTooltipText = "bar"
     byTime.deactivateTooltip()
-    expect(byTime.state.tooltipText).toBe(null);
+    expect(byTime.state.primaryTooltipText).toBe(null);
+    expect(byTime.state.secondaryTooltipText).toBe(null);
   });
 
   it('should have a data line and area', () => {
