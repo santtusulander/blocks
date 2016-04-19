@@ -117,7 +117,7 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)
       ]);
 
-    const xScale = d3.time.scale()
+    const xScale = d3.time.scale.utc()
       .domain([
         Math.min(xPrimaryExtent[0], xSecondayExtent[0]),
         Math.max(xPrimaryExtent[1], xSecondayExtent[1])
@@ -126,7 +126,7 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.axes ? 3 : 1),
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
-      .nice(d3.time.day, 1);
+      .nice(d3.time.day.utc, 1);
 
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
@@ -148,6 +148,21 @@ class AnalysisByTime extends React.Component {
     let className = 'analysis-by-time'
     if(this.props.className) {
       className = className + ' ' + this.props.className
+    }
+    let dayTicks = xScale.ticks(d3.time.day.utc, this.props.xAxisTickFrequency || 1)
+    if (dayTicks.length > 12) {
+      dayTicks = xScale.ticks(12)
+    }
+    let monthTicks = xScale.ticks(d3.time.month.utc, this.props.xAxisTickFrequency || 1)
+    if (monthTicks.length > 3) {
+      monthTicks = xScale.ticks(3)
+    }
+    /* Display the start month even if the date range doesn't start on the 1st
+       but only if it's not so close to the end of the month that it'll overlap
+       the next month's label */
+    const dayTicksStartDate = this.props.axes ? moment(dayTicks[0]).date() : 1
+    if(dayTicksStartDate < 25 && dayTicksStartDate > 1) {
+      monthTicks.unshift(dayTicks[0])
     }
     return (
       <div className={className}
@@ -213,11 +228,23 @@ class AnalysisByTime extends React.Component {
             </g>
             : null}
           {this.props.axes ?
-            xScale.ticks(d3.time.day, this.props.xAxisTickFrequency || 1).map((tick, i) => {
+            dayTicks.map((tick, i) => {
               return (
                 <g key={i}>
                   <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                    {moment(tick).format('D')}
+                    {moment.utc(tick).format('D')}
+                  </text>
+                </g>
+              )
+            })
+            : null
+          }
+          {this.props.axes ?
+            monthTicks.map((tick, i) => {
+              return (
+                <g key={i}>
+                  <text x={xScale(tick)} y={this.props.height - (this.props.padding / 2)}>
+                    {moment.utc(tick).format('MMMM')}
                   </text>
                 </g>
               )
