@@ -102,13 +102,13 @@ class AnalysisByTime extends React.Component {
       : [0,0]
     const xPrimaryExtent =  primaryData && primaryData.length ?
       d3.extent(primaryData, d => d.timestamp)
-      : [new Date(), new Date()]
+      : d3.extent(secondaryData, d => d.timestamp)
     const ySecondayExtent = secondaryData && secondaryData.length ?
       d3.extent(secondaryData, d => d[this.props.dataKey])
       : yPrimaryExtent
     const xSecondayExtent = secondaryData && secondaryData.length ?
       d3.extent(secondaryData, d => d.timestamp)
-      : [new Date(), new Date()]
+      : d3.extent(primaryData, d => d.timestamp)
 
     const yScale = d3.scale.linear()
       .domain([0, Math.max(yPrimaryExtent[1], ySecondayExtent[1])])
