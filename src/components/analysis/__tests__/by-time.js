@@ -12,7 +12,13 @@ const numeral = require('numeral')
 const momentFormatMock = jest.genMockFunction()
 const numeralFormatMock = jest.genMockFunction()
 
-moment.mockReturnValue({format:momentFormatMock})
+moment.mockReturnValue({
+  format: momentFormatMock,
+  date: jest.genMockFunction()
+})
+moment.utc.mockReturnValue({
+  format: momentFormatMock
+})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeData = [
