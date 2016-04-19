@@ -106,14 +106,14 @@ function routeMetrics(req, res) {
           let upperEqualityLimit       = averageHistoricalTraffic + marginOfEquality;
           let variance;
 
-          if (_.inRange(averageTraffic, lowerEqualityLimit, upperEqualityLimit)) {
+          if (averageTraffic === null || averageHistoricalTraffic === null) {
+            variance = null;
+          } else if (_.inRange(averageTraffic, lowerEqualityLimit, upperEqualityLimit)) {
             variance = 0;
           } else if (averageTraffic > averageHistoricalTraffic) {
             variance = 1;
           } else if (averageTraffic < averageHistoricalTraffic) {
             variance = -1;
-          } else if (averageTraffic === null && averageHistoricalTraffic === null) {
-            variance = null;
           }
 
           historicalVarianceData = historicalVarianceData.concat(_.fill(Array(numRecords), variance));
