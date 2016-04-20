@@ -9,6 +9,9 @@ reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
 jest.autoMockOff()
 jest.dontMock('../visitors.jsx')
+
+jest.dontMock('../../table-sorter.jsx')
+
 const AnalysisVisitors = require('../visitors.jsx')
 
 const fakeCountryData = Immutable.fromJS([
