@@ -16,7 +16,9 @@ export class Analyses extends React.Component {
       activeServiceProvider: 'all',
       activePop: 'all',
       datepickerOpen: false,
-      navMenuOpen: false
+      endDate: null,
+      navMenuOpen: false,
+      startDate: null
     }
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this)
@@ -30,13 +32,19 @@ export class Analyses extends React.Component {
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
   }
+  componentWillMount() {
+    this.setState({
+      endDate: this.props.endDate,
+      startDate: this.props.startDate
+    })
+  }
   handleStartDateChange(startDate) {
-    this.props.changeDateRange(startDate.utc().startOf('day'), this.props.endDate)
+    this.setState({startDate: startDate.utc().startOf('day')})
     this.refs.endDateHolder.getElementsByTagName('input')[0].focus()
     this.refs.endDateHolder.getElementsByTagName('input')[0].click()
   }
   handleEndDateChange(endDate) {
-    this.props.changeDateRange(this.props.startDate, endDate.utc().endOf('day'))
+    this.setState({endDate: endDate.utc().endOf('day')})
     if(this.state.datepickerOpen) {
       this.setState({
         datepickerOpen: false
@@ -52,6 +60,10 @@ export class Analyses extends React.Component {
     })
   }
   handleOnBlur() {
+    if(this.props.startDate !== this.state.startDate ||
+      this.props.endDate !== this.state.endDate) {
+      this.props.changeDateRange(this.state.startDate, this.state.endDate)
+    }
     if(this.state.datepickerOpen) {
       this.setState({
         datepickerOpen: false
@@ -69,9 +81,12 @@ export class Analyses extends React.Component {
     else if(value === 'today') {
       startDate = moment().utc().startOf('day')
     }
-    this.props.changeDateRange(startDate, moment().utc().endOf('day'))
+    const endDate = moment().utc().endOf('day')
+    this.props.changeDateRange(startDate, endDate)
     this.setState({
-      activeDateRange: value
+      activeDateRange: value,
+      endDate: endDate,
+      startDate: startDate
     })
   }
   handleServiceProviderChange(value) {
@@ -159,9 +174,9 @@ export class Analyses extends React.Component {
                       ' datepicker-open' : '')}>
                       <DatePicker
                         dateFormat="MM/DD/YYYY"
-                        selected={this.props.startDate}
-                        startDate={this.props.startDate}
-                        endDate={this.props.endDate}
+                        selected={this.state.startDate}
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
                         onChange={this.handleStartDateChange}
                         onFocus={this.handleOnFocus}
                         onBlur={this.handleOnBlur} />
@@ -177,9 +192,9 @@ export class Analyses extends React.Component {
                         popoverAttachment='top right'
                         popoverTargetAttachment='bottom right'
                         dateFormat="MM/DD/YYYY"
-                        selected={this.props.endDate}
-                        startDate={this.props.startDate}
-                        endDate={this.props.endDate}
+                        selected={this.state.endDate}
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
                         onChange={this.handleEndDateChange}
                         onFocus={this.handleOnFocus}
                         onBlur={this.handleOnBlur} />
