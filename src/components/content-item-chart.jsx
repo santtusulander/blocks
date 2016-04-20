@@ -128,7 +128,7 @@ class ContentItemChart extends React.Component {
             </div>
             <div>
               Higher
-              <div className="pull-right difference-legend below-avg" />
+              <div className="pull-right difference-legend above-avg" />
             </div>
             <div>
               Same
@@ -136,7 +136,7 @@ class ContentItemChart extends React.Component {
             </div>
             <div>
               Lower
-              <div className="pull-right difference-legend above-avg" />
+              <div className="pull-right difference-legend below-avg" />
             </div>
             <div>
               Data Missing
