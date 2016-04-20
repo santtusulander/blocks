@@ -241,13 +241,19 @@ class AnalysisByTime extends React.Component {
           }
           {this.props.axes ?
             monthTicks.map((tick, i) => {
-              return (
-                <g key={i}>
-                  <text x={xScale(tick)} y={this.props.height - (this.props.padding / 2)}>
-                    {moment.utc(tick).format('MMMM')}
-                  </text>
-                </g>
-              )
+              if(tick) {
+                return (
+                  <g key={i}>
+                    <text x={xScale(tick)}
+                      y={this.props.height - (this.props.padding / 2)}>
+                      {moment.utc(tick).format('MMMM')}
+                    </text>
+                  </g>
+                )
+              }
+              else {
+                return null
+              }
             })
             : null
           }
