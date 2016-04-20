@@ -9,6 +9,17 @@ import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
+const StatsSorter = ({column, children, reversed, sortFunc, changeSort, sortBy, sortDir}) => <TableSorter
+    column={column}
+    reversed={reversed}
+    sortFunc={sortFunc}
+    activateSort={changeSort}
+    activeColumn={sortBy}
+    activeDirection={sortDir}>
+    {children}
+  </TableSorter>
+StatsSorter.displayName = 'StatsSorter'
+
 class AnalysisSPReport extends React.Component {
   constructor(props) {
     super(props);
@@ -105,15 +116,6 @@ class AnalysisSPReport extends React.Component {
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
-    const StatsSorter = ({column, children, reversed, sortFunc}) => <TableSorter
-        column={column}
-        reversed={reversed}
-        sortFunc={sortFunc}
-        activateSort={this.changeSort}
-        activeColumn={this.state.sortBy}
-        activeDirection={this.state.sortDir}>
-        {children}
-      </TableSorter>
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
@@ -165,22 +167,40 @@ class AnalysisSPReport extends React.Component {
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
-              <StatsSorter column="timestamp">
+              <StatsSorter column="timestamp"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Date
               </StatsSorter>
-              <StatsSorter column="net_on,bytes" sortFunc="specific">
+              <StatsSorter column="net_on,bytes" sortFunc="specific"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 On-Net in bytes
               </StatsSorter>
-              <StatsSorter column="net_on,percent_total" sortFunc="specific">
+              <StatsSorter column="net_on,percent_total" sortFunc="specific"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 On-Net in %
               </StatsSorter>
-              <StatsSorter column="net_off,bytes" sortFunc="specific">
+              <StatsSorter column="net_off,bytes" sortFunc="specific"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Off-Net in bytes
               </StatsSorter>
-              <StatsSorter column="net_off,percent_total" sortFunc="specific">
+              <StatsSorter column="net_off,percent_total" sortFunc="specific"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Off-Net in %
               </StatsSorter>
-              <StatsSorter column="total">
+              <StatsSorter column="total"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Total in bytes
               </StatsSorter>
             </tr>

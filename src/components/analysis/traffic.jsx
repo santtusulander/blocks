@@ -8,6 +8,16 @@ import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import {formatBitsPerSecond} from '../../util/helpers'
 
+const ConfigSorter = ({column, children, reversed, changeSort, sortBy, sortDir}) => <TableSorter
+  column={column}
+  reversed={reversed}
+  activateSort={changeSort}
+  activeColumn={sortBy}
+  activeDirection={sortDir}>
+  {children}
+</TableSorter>
+ConfigSorter.displayName = 'ConfigSorter'
+
 class AnalysisTraffic extends React.Component {
   constructor(props) {
     super(props);
@@ -61,14 +71,6 @@ class AnalysisTraffic extends React.Component {
     const httpsData = this.props.serviceTypes.includes('https') ?
       this.props.byTime.filter(time => time.get('service_type') === 'https')
       : Immutable.List()
-    const ConfigSorter = ({column, children, reversed}) => <TableSorter
-        column={column}
-        reversed={reversed}
-        activateSort={this.changeSort}
-        activeColumn={this.state.sortBy}
-        activeDirection={this.state.sortDir}>
-        {children}
-      </TableSorter>
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
@@ -125,10 +127,16 @@ class AnalysisTraffic extends React.Component {
         <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
-              <ConfigSorter column="name">
+              <ConfigSorter column="name"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Country
               </ConfigSorter>
-              <ConfigSorter column="average_bits_per_second">
+              <ConfigSorter column="average_bits_per_second"
+                changeSort={this.changeSort}
+                sortBy={this.state.sortBy}
+                sortDir={this.state.sortDir}>
                 Bandwidth
               </ConfigSorter>
               <th className="text-center">Period Trend</th>
