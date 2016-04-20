@@ -65,6 +65,16 @@
   th:not(:first-child):not(.text-center),
   td:not(:first-child) {
     text-align: right;
+
+    .active {
+      padding-right: $btn-height / 2;
+      text-indent: -$btn-height / 2;
+
+      @include md {
+        padding-right: $md-btn-height / 2;
+        text-indent: -$md-btn-height / 2;
+      }
+    }
   }
 
   svg {
