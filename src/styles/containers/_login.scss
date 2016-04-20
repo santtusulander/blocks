@@ -26,11 +26,12 @@
 
 .login-header {
   position: relative;
-  padding: $btn-height $bar-height;
+  padding: $btn-height 135px;
+  color: $white;
   border: 0;
 
   @include md {
-    padding: $md-btn-height $md-bar-height;
+    padding: $md-btn-height 110px;
   }
 
   .login-header-gradient {
@@ -44,21 +45,26 @@
 
   .logo-ericsson {
     float: left;
-    width: $bar-height;
-    height: $bar-height;
-    margin-right: 60px;
+    width: 45px;
+    height: 60px;
+    margin: 20px ($bar-height / 2) 10px 0;
     text-indent: -9999em;
-    background: url('../assets/img/logo-ericsson.svg') $pale-blue center center no-repeat;
-    background-size: 30px 40px;
+    background: url('../assets/img/logo-ericsson.svg') center center no-repeat;
+    background-size: 100%;
 
     @include md {
-      width: $md-bar-height;
-      height: $md-bar-height;
+      width: 36px;
+      height: 48px;
+      margin: 12px ($md-bar-height / 2) 10px 0;
+    }
+
+    @include sm {
+      margin-top: 8px;
     }
   }
 
   h1 {
-    line-height: 48px;
+    margin-bottom: 5px;
   }
 }
 

@@ -63,7 +63,7 @@
       width: 450px;
 
       @include md {
-        width: 340px;
+        width: 330px;
       }
 
       @include sm {
@@ -73,15 +73,15 @@
 
     &.section-sm {
       width: 250px;
-      padding-top: 48px;
+      padding-top: 56px;
 
       @include md {
-        width: 200px;
-        padding-top: 26px;
+        width: 190px;
+        padding-top: 33px;
       }
 
       @include sm {
-        width: 180px;
+        width: 160px;
       }
 
       .dark-theme & {
@@ -102,6 +102,10 @@
 
     @include md {
       font-size: 24px;
+    }
+
+    @include sm {
+      font-size: 20px;
     }
   }
 
@@ -141,11 +145,16 @@
 
     @include md {
       height: $md-content-item-list-height;
-      margin: 0 540px 0 340px;
+      margin: 0 520px 0 330px;
     }
 
     @include sm {
-      margin: 0 460px 0 280px;
+      margin: 0 440px 0 280px;
+    }
+
+    .light-theme & {
+      border-right: 1px solid $silver-20;
+      border-left: 1px solid $silver-20;
     }
 
     svg {

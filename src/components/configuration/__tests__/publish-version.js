@@ -19,9 +19,8 @@ describe('ConfigurationPublishVersion', () => {
         saveChanges={saveChanges}
         hideAction={hideAction}/>
     )
-    let form = TestUtils.findRenderedDOMComponentWithTag(publish, 'form')
-    TestUtils.Simulate.submit(form)
+    let btns = TestUtils.scryRenderedDOMComponentsWithTag(publish, 'button')
+    TestUtils.Simulate.click(btns[1])
     expect(saveChanges.mock.calls.length).toEqual(1)
-    expect(hideAction.mock.calls.length).toEqual(1)
   })
 })

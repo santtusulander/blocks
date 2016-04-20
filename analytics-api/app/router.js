@@ -1,30 +1,32 @@
 'use strict';
 
-let router               = require('express').Router();
-let configs              = require('./configs');
-let log                  = require('./logger');
-let routeTrafficTime     = require('./routes/traffic/time');
-let routeTrafficCountry  = require('./routes/traffic/country');
-let routeTrafficTotal    = require('./routes/traffic/total');
-let routeVisitorsTime    = require('./routes/visitors/time');
-let routeVisitorsCountry = require('./routes/visitors/country');
-let routeVisitorsOS      = require('./routes/visitors/os');
-let routeVisitorsBrowser = require('./routes/visitors/browser');
-let routeMetrics         = require('./routes/metrics');
-let routeVersion         = require('./routes/version');
+let router                      = require('express').Router();
+let configs                     = require('./configs');
+let log                         = require('./logger');
+let routeTrafficTime            = require('./routes/traffic/time');
+let routeTrafficCountry         = require('./routes/traffic/country');
+let routeTrafficTotal           = require('./routes/traffic/total');
+let routeTrafficServiceProvider = require('./routes/traffic/service-provider');
+let routeVisitorsTime           = require('./routes/visitors/time');
+let routeVisitorsCountry        = require('./routes/visitors/country');
+let routeVisitorsOS             = require('./routes/visitors/os');
+let routeVisitorsBrowser        = require('./routes/visitors/browser');
+let routeMetrics                = require('./routes/metrics');
+let routeVersion                = require('./routes/version');
 
 router.errorHandler = errorHandler;
 
 // API routes
-router.get(`/${configs.apiBaseFolder}/traffic/time`,     routeTrafficTime);
-router.get(`/${configs.apiBaseFolder}/traffic/country`,  routeTrafficCountry);
-router.get(`/${configs.apiBaseFolder}/traffic/total`,    routeTrafficTotal);
-router.get(`/${configs.apiBaseFolder}/visitors/time`,    routeVisitorsTime);
-router.get(`/${configs.apiBaseFolder}/visitors/country`, routeVisitorsCountry);
-router.get(`/${configs.apiBaseFolder}/visitors/os`,      routeVisitorsOS);
-router.get(`/${configs.apiBaseFolder}/visitors/browser`, routeVisitorsBrowser);
-router.get(`/${configs.apiBaseFolder}/metrics`,          routeMetrics);
-router.get(`/${configs.apiBaseFolder}/version`,          routeVersion);
+router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTime);
+router.get(`/${configs.apiBaseFolder}/traffic/country`,          routeTrafficCountry);
+router.get(`/${configs.apiBaseFolder}/traffic/total`,            routeTrafficTotal);
+router.get(`/${configs.apiBaseFolder}/traffic/service-provider`, routeTrafficServiceProvider);
+router.get(`/${configs.apiBaseFolder}/visitors/time`,            routeVisitorsTime);
+router.get(`/${configs.apiBaseFolder}/visitors/country`,         routeVisitorsCountry);
+router.get(`/${configs.apiBaseFolder}/visitors/os`,              routeVisitorsOS);
+router.get(`/${configs.apiBaseFolder}/visitors/browser`,         routeVisitorsBrowser);
+router.get(`/${configs.apiBaseFolder}/metrics`,                  routeMetrics);
+router.get(`/${configs.apiBaseFolder}/version`,                  routeVersion);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests

@@ -36,3 +36,18 @@
     margin-top: 14px;
   }
 }
+
+[class^="col-"],
+[class*=" col-"] {
+
+  &.right-separator {
+
+    .dark-theme & {
+      border-right: 1px solid $dt-text-color;
+    }
+
+    .light-theme & {
+      border-right: 1px solid $lt-text-color;
+    }
+  }
+}

@@ -41,7 +41,6 @@ class Cors extends React.Component {
       <div>
         <Modal.Header>
           <h1>CORS</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

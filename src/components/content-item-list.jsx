@@ -66,7 +66,7 @@ class ContentItemList extends React.Component {
 
         <Link className="content-item-list-link" to={this.props.linkTo}>
           <div className="pull-right">
-            <div className="content-item-list-section section-sm">
+            <div className="content-item-list-section section-sm text-sm">
               <p>Peak <b className="pull-right">{this.props.maxTransfer}</b></p>
               <p>Lowest <b className="pull-right">{this.props.minTransfer}</b></p>
               <p>Average <b className="pull-right">{this.props.avgTransfer}</b></p>
@@ -76,14 +76,14 @@ class ContentItemList extends React.Component {
               <Row>
                 <Col xs={6}>
                   <h1>{this.props.cacheHitRate}<span className="heading-suffix"> %</span></h1>
-                  <p>Avg. Cache Hit Rate</p>
+                  <p className="text-sm">Avg. Cache Hit Rate</p>
                 </Col>
                 <Col xs={6}>
                   <h1>
                     {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0}
                     <span className="heading-suffix"> {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}</span>
                   </h1>
-                  <p>Avg. TTFB</p>
+                  <p className="text-sm">Avg. TTFB</p>
                 </Col>
               </Row>
             </div>

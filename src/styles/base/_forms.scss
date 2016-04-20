@@ -30,7 +30,9 @@ label {
     display: none;
   }
 
-  .dark-theme & {
+  .dark-theme &,
+  .light-theme .configuration-sidebar & {
+    color: $dt-text-color;
     background-color: rgba($black, 0.2);
 
     &:focus,
@@ -67,14 +69,6 @@ label {
 
     &::placeholder {
       color: rgba($lt-text-color, 0.3);
-    }
-  }
-
-  .light-theme .configuration-sidebar & {
-
-    &:focus,
-    &:active {
-      box-shadow: inset 0 0 0 1px rgba($black, 0.7);
     }
   }
 
@@ -163,7 +157,9 @@ label {
         margin-right: 15px;
       }
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme .sidebar-layout &,
+      .light-theme .configuration-sidebar & {
         background: rgba($black, 0.2);
       }
 
@@ -173,13 +169,13 @@ label {
     }
 
     .dark-theme &:checked + span::before,
-    .light-theme &:checked + span::before {
+    .light-theme &:checked + span::before,
+    .light-theme .modal .configuration-sidebar &:checked + span::before {
       background: $pale-blue url('../assets/icons/icon-checkbox.svg')
         center center no-repeat;
       background-size: 17px 16px;
     }
 
-    .light-theme .sidebar-layout &:checked + span::before,
     .light-theme .modal &:checked + span::before {
       background: rgba($black, 0.2) url('../assets/icons/icon-checkbox.svg')
         center center no-repeat;
@@ -215,7 +211,8 @@ label {
         margin-right: 15px;
       }
 
-      .dark-theme & {
+      .dark-theme &,
+      .light-theme .configuration-sidebar & {
         background-color: rgba($black, 0.2);
       }
 
@@ -244,20 +241,8 @@ label {
     .dark-theme &:checked + span,
     .light-theme &:checked + span {
 
-      &::before {
-        background-color: $pale-blue;
-      }
-
       &::after {
-        background-color: $dt-text-color;
-      }
-    }
-
-    .light-theme .sidebar-layout &:checked + span,
-    .light-theme .modal &:checked + span {
-
-      &::before {
-        background-color: rgba($black, 0.2);
+        background-color: $pale-blue;
       }
     }
   }

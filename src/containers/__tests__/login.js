@@ -11,7 +11,7 @@ function userActionsMaker(cbResponse) {
       return {then: cb => cb(cbResponse)}
     }),
     checkToken: jest.genMockFunction().mockImplementation(() => {
-      return {payload: null}
+      return {payload: {token:null}}
     })
   }
 }
@@ -113,6 +113,6 @@ describe('Login', () => {
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/groups/udn/1')
+    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/accounts/udn/')
   })
 })
