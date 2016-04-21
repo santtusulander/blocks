@@ -1,5 +1,8 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
+import numeral from 'numeral'
+
+import {formatBytes} from '../../util/helpers'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
@@ -45,53 +48,72 @@ class AnalysisURLReport extends React.Component {
           <thead>
             <tr>
               <th>URL</th>
-              <th width="20%">Bytes</th>
-              <th width="20%">Requests</th>
+              <th width="15%">Bytes</th>
+              <th width="15%">Requests</th>
+              <th width="15%">Seconds</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>www.domain.com/assets/videos/video.mp4</td>
               <td>
-                123544786367
+                {formatBytes(123544786367)}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '100%'}} />
                 </div>
               </td>
               <td>
-                213678
+                {numeral(213678).format('0,0')}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '90%'}} />
+                </div>
+              </td>
+              <td>
+                {numeral(82457).format('0,0')}
+                <div className="table-percentage-line">
+                  <div className="line" style={{width: '50%'}} />
                 </div>
               </td>
             </tr>
             <tr>
               <td>www.foobar.com/assets/images/image.jpg</td>
               <td>
-                6541632
+                {formatBytes(6541632)}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '80%'}} />
                 </div>
               </td>
               <td>
-                987
+                {numeral(987).format('0,0')}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '70%'}} />
+                </div>
+              </td>
+              <td>
+                {numeral(213678).format('0,0')}
+                <div className="table-percentage-line">
+                  <div className="line" style={{width: '90%'}} />
                 </div>
               </td>
             </tr>
             <tr>
               <td>www.domain.com/favicon.ico</td>
               <td>
-                9871
+                {formatBytes(9871)}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '60%'}} />
                 </div>
               </td>
               <td>
-                987123
+                {numeral(987123).format('0,0')}
                 <div className="table-percentage-line">
                   <div className="line" style={{width: '50%'}} />
+                </div>
+              </td>
+              <td>
+                {numeral(934875).format('0,0')}
+                <div className="table-percentage-line">
+                  <div className="line" style={{width: '80%'}} />
                 </div>
               </td>
             </tr>
