@@ -7,17 +7,6 @@ import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 
-const DataSorter = ({column, children, reversed, sortFunc, changeSort, sortBy, sortDir}) => <TableSorter
-    column={column}
-    reversed={reversed}
-    activateSort={changeSort}
-    activeColumn={sortBy}
-    sortFunc={sortFunc}
-    activeDirection={sortDir}>
-    {children}
-  </TableSorter>
-DataSorter.displayName = 'DataSorter'
-
 class AnalysisVisitors extends React.Component {
   constructor(props) {
     super(props);
@@ -120,8 +109,23 @@ class AnalysisVisitors extends React.Component {
     return sortFunc
   }
   render() {
+    const countrySorterProps = {
+      activateSort: this.changeCountrySort,
+      activeColumn: this.state.sortCountryBy,
+      activeDirection: this.state.sortCountryDir
+    }
     const sortedCountries = !this.props.fetching ? this.sortedData(this.props.byCountry, this.state.sortCountryBy, this.state.sortCountryDir, 'country') : ''
+    const browserSorterProps = {
+      activateSort: this.changeBrowserSort,
+      activeColumn: this.state.sortBrowserBy,
+      activeDirection: this.state.sortBrowserDir
+    }
     const sortedBrowsers = !this.props.fetching ? this.sortedData(this.props.byBrowser, this.state.sortBrowserBy, this.state.sortBrowserDir, 'browser') : ''
+    const OSSorterProps = {
+      activateSort: this.changeOSSort,
+      activeColumn: this.state.sortOSBy,
+      activeDirection: this.state.sortOSDir
+    }
     const sortedOS = !this.props.fetching ? this.sortedData(this.props.byOS, this.state.sortOSBy, this.state.sortOSDir, 'os') : ''
     return (
       <div className="analysis-traffic">
@@ -152,31 +156,19 @@ class AnalysisVisitors extends React.Component {
         <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
-              <DataSorter column="name"
-                changeSort={this.changeCountrySort}
-                sortBy={this.state.sortCountryBy}
-                sortDir={this.state.sortCountryDir}>
+              <TableSorter {...countrySorterProps} column="name">
                 Country
-              </DataSorter>
-              <DataSorter column="total"
-                changeSort={this.changeCountrySort}
-                sortBy={this.state.sortCountryBy}
-                sortDir={this.state.sortCountryDir}>
+              </TableSorter>
+              <TableSorter {...countrySorterProps} column="total">
                 Total Visitors
-              </DataSorter>
-              <DataSorter column="percent_total"
-                changeSort={this.changeCountrySort}
-                sortBy={this.state.sortCountryBy}
-                sortDir={this.state.sortCountryDir}>
+              </TableSorter>
+              <TableSorter {...countrySorterProps} column="percent_total">
                 % of Visitors
-              </DataSorter>
+              </TableSorter>
               <th className="text-center">Period Trend</th>
-              <DataSorter column="change" sortFunc="trending"
-                changeSort={this.changeCountrySort}
-                sortBy={this.state.sortCountryBy}
-                sortDir={this.state.sortCountryDir}>
+              <TableSorter {...countrySorterProps} column="change" sortFunc="trending">
                 Change
-              </DataSorter>
+              </TableSorter>
             </tr>
           </thead>
           <tbody>
@@ -211,31 +203,19 @@ class AnalysisVisitors extends React.Component {
         <table className="table table-striped table-analysis by-browser-table">
           <thead>
             <tr>
-              <DataSorter column="name"
-                changeSort={this.changeBrowserSort}
-                sortBy={this.state.sortBrowserBy}
-                sortDir={this.state.sortBrowserDir}>
+              <TableSorter {...browserSorterProps} column="name">
                 Country
-              </DataSorter>
-              <DataSorter column="total"
-                changeSort={this.changeBrowserSort}
-                sortBy={this.state.sortBrowserBy}
-                sortDir={this.state.sortBrowserDir}>
+              </TableSorter>
+              <TableSorter {...browserSorterProps} column="total">
                 Total Visitors
-              </DataSorter>
-              <DataSorter column="percent_total"
-                changeSort={this.changeBrowserSort}
-                sortBy={this.state.sortBrowserBy}
-                sortDir={this.state.sortBrowserDir}>
+              </TableSorter>
+              <TableSorter {...browserSorterProps} column="percent_total">
                 % of Visitors
-              </DataSorter>
+              </TableSorter>
               <th className="text-center">Period Trend</th>
-              <DataSorter column="change" sortFunc="trending"
-                changeSort={this.changeBrowserSort}
-                sortBy={this.state.sortBrowserBy}
-                sortDir={this.state.sortBrowserDir}>
+              <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
                 Change
-              </DataSorter>
+              </TableSorter>
             </tr>
           </thead>
           <tbody>
@@ -270,31 +250,19 @@ class AnalysisVisitors extends React.Component {
         <table className="table table-striped table-analysis by-os-table">
           <thead>
             <tr>
-              <DataSorter column="name"
-                changeSort={this.changeOSSort}
-                sortBy={this.state.sortOSBy}
-                sortDir={this.state.sortOSDir}>
+              <TableSorter {...OSSorterProps} column="name">
                 Operating System
-              </DataSorter>
-              <DataSorter column="total"
-                changeSort={this.changeOSSort}
-                sortBy={this.state.sortOSBy}
-                sortDir={this.state.sortOSDir}>
+              </TableSorter>
+              <TableSorter {...OSSorterProps} column="total">
                 Total Visitors
-              </DataSorter>
-              <DataSorter column="percent_total"
-                changeSort={this.changeOSSort}
-                sortBy={this.state.sortOSBy}
-                sortDir={this.state.sortOSDir}>
+              </TableSorter>
+              <TableSorter {...OSSorterProps} column="percent_total">
                 % of Visitors
-              </DataSorter>
+              </TableSorter>
               <th className="text-center">Period Trend</th>
-              <DataSorter column="change" sortFunc="trending"
-                changeSort={this.changeOSSort}
-                sortBy={this.state.sortOSBy}
-                sortDir={this.state.sortOSDir}>
+              <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
                 Change
-              </DataSorter>
+              </TableSorter>
             </tr>
           </thead>
           <tbody>

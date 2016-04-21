@@ -16,17 +16,6 @@ import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
 import TableSorter from '../components/table-sorter'
 
-const ConfigSorter = ({column, children, reversed, sortFunc, changeSort, sortBy, sortDir}) => <TableSorter
-    column={column}
-    reversed={reversed}
-    sortFunc={sortFunc}
-    activateSort={changeSort}
-    activeColumn={sortBy}
-    activeDirection={sortDir}>
-    {children}
-  </TableSorter>
-ConfigSorter.displayName = 'ConfigSorter'
-
 export class Configurations extends React.Component {
   constructor(props) {
     super(props);
@@ -123,6 +112,11 @@ export class Configurations extends React.Component {
     if(this.props.fetching) {
       return <p>Loading...</p>
     }
+    const sorterProps = {
+      activateSort: this.changeSort,
+      activeColumn: this.state.sortBy,
+      activeDirection: this.state.sortDir
+    }
     const sortedProperties = this.sortedData(this.props.properties, this.state.sortBy, this.state.sortDir)
     return (
       <PageContainer className="configurations-container">
@@ -149,42 +143,24 @@ export class Configurations extends React.Component {
             <Table striped={true}>
               <thead>
                 <tr>
-                  <ConfigSorter column="property"
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  <TableSorter {...sorterProps} column="property">
                     Hostname
-                  </ConfigSorter>
-                  <ConfigSorter column="last_edited" reversed={true}
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="last_edited" reversed={true}>
                     Last Edited
-                  </ConfigSorter>
-                  <ConfigSorter column="last_editor"
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="last_editor">
                     By
-                  </ConfigSorter>
-                  <ConfigSorter column="status"
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="status">
                     Status
-                  </ConfigSorter>
-                  <ConfigSorter column="active_version"
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="active_version">
                     Active Version
-                  </ConfigSorter>
-                  <ConfigSorter column="parents" sortFunc="parents"
-                    changeSort={this.changeSort}
-                    sortBy={this.state.sortBy}
-                    sortDir={this.state.sortDir}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="parents" sortFunc="parents">
                     Belongs to
-                  </ConfigSorter>
+                  </TableSorter>
                   <th></th>
                 </tr>
               </thead>
