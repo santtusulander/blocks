@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 
 import AnalysisStacked from './stacked'
 import AnalysisByTime from './by-time'
+import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
 class AnalysisSPReport extends React.Component {
@@ -13,10 +14,15 @@ class AnalysisSPReport extends React.Component {
     super(props);
 
     this.state = {
-      stacksWidth: 100
+      stacksWidth: 100,
+      sortBy: 'timestamp',
+      sortDir: -1,
+      sortFunc: ''
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+    this.changeSort = this.changeSort.bind(this)
+    this.sortedData = this.sortedData.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -30,6 +36,39 @@ class AnalysisSPReport extends React.Component {
     this.setState({
       stacksWidth: this.refs.stacksHolder.clientWidth
     })
+  }
+  changeSort(column, direction, sortFunc) {
+    this.setState({
+      sortBy: column,
+      sortDir: direction,
+      sortFunc: sortFunc
+    })
+  }
+  sortedData(data, sortBy, sortDir) {
+    let sortFunc = ''
+    if(this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
+      sortFunc = data.sort((a, b) => {
+        sortBy = sortBy.toString().split(',')
+        if(a.get(sortBy[0]).get(sortBy[1]) < b.get(sortBy[0]).get(sortBy[1])) {
+          return -1 * sortDir
+        }
+        else if(a.get(sortBy[0]).get(sortBy[1]) > b.get(sortBy[0]).get(sortBy[1])) {
+          return 1 * sortDir
+        }
+        return 0
+      })
+    } else {
+      sortFunc = data.sort((a, b) => {
+        if(a.get(sortBy) < b.get(sortBy)) {
+          return -1 * sortDir
+        }
+        else if(a.get(sortBy) > b.get(sortBy)) {
+          return 1 * sortDir
+        }
+        return 0
+      })
+    }
+    return sortFunc
   }
   render() {
     const stats = this.props.serviceProviderStats
@@ -66,6 +105,12 @@ class AnalysisSPReport extends React.Component {
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
+    const sorterProps = {
+      activateSort: this.changeSort,
+      activeColumn: this.state.sortBy,
+      activeDirection: this.state.sortDir
+    }
+    const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
         <Row>
@@ -116,16 +161,28 @@ class AnalysisSPReport extends React.Component {
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>On-Net in bytes</th>
-              <th>On-Net in %</th>
-              <th>Off-Net in bytes</th>
-              <th>Off-Net in %</th>
-              <th>Total in bytes</th>
+              <TableSorter {...sorterProps} column="timestamp">
+                Date
+              </TableSorter>
+              <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
+                On-Net in bytes
+              </TableSorter>
+              <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
+                On-Net in %
+              </TableSorter>
+              <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
+                Off-Net in bytes
+              </TableSorter>
+              <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
+                Off-Net in %
+              </TableSorter>
+              <TableSorter {...sorterProps} column="total">
+                Total in bytes
+              </TableSorter>
             </tr>
           </thead>
           <tbody>
-            {stats.get('detail').map((day, i) => {
+            {sortedStats.map((day, i) => {
               return (
                 <tr key={i}>
                   <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
