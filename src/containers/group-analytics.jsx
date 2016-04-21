@@ -19,6 +19,7 @@ import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 import AnalysisFileError from '../components/analysis/file-error'
+import AnalysisURLReport from '../components/analysis/url-report'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
 
 export class GroupAnalytics extends React.Component {
@@ -154,6 +155,7 @@ export class GroupAnalytics extends React.Component {
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
+            <NavItem eventKey="url-report">URL Report</NavItem>
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
@@ -184,6 +186,9 @@ export class GroupAnalytics extends React.Component {
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
+              : ''}
+            {this.state.activeTab === 'url-report' ?
+              <AnalysisURLReport fetching={false}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
