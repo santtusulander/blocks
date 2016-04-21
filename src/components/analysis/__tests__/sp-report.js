@@ -3,6 +3,8 @@ import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
 jest.dontMock('../sp-report.jsx')
+jest.dontMock('../../table-sorter.jsx')
+
 const AnalysisSPReport = require('../sp-report.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly

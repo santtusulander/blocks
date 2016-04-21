@@ -6,11 +6,7 @@
 .table-sorter > a {
   position: relative;
   display: block;
-  padding-right: $btn-height / 2;
-
-  @include md {
-    padding-right: $md-btn-height / 2;
-  }
+  text-decoration: none;
 
   .dark-theme & {
     color: $dt-text-color;
