@@ -244,7 +244,7 @@ export class Property extends React.Component {
                   </Link>
                 </h3>
 
-                <div className="extra-margin-top" ref="byTimeHolder">
+                <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
                   <AnalysisByTime axes={true} padding={30}
                     primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
