@@ -80,6 +80,7 @@ class AnalysisStacked extends React.Component {
     return (
       <div className={className}>
         <svg
+          viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
           ref='chart'
