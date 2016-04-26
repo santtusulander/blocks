@@ -12,6 +12,10 @@
       padding: $md-btn-height / 2;
     }
 
+    @include print {
+      padding: 0;
+    }
+
     &.wide {
       width: 100%;
       max-width: 900px;
@@ -33,6 +37,10 @@
       @include md {
         font-size: $md-font-size-sm;
       }
+
+      @include print {
+        font-size: $print-font-size;
+      }
     }
 
     p {
@@ -42,6 +50,10 @@
 
       @include sm {
         font-size: 32px;
+      }
+
+      @include print {
+        font-size: $print-font-size * 2;
       }
     }
   }
@@ -61,6 +73,15 @@
 }
 
 .table-analysis {
+
+  @include print {
+    // scss-lint:disable ImportantRule
+    // Need to override default styles
+    th,
+    td {
+      width: auto !important;
+    }
+  }
 
   th:not(:first-child):not(.text-center),
   td:not(:first-child) {

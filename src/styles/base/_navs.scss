@@ -137,6 +137,10 @@
 .nav-tabs {
   border-bottom: 5px solid;
 
+  @include print {
+    display: none;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.1);
     border-color: rgba($black, 0.4);

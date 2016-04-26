@@ -6,15 +6,27 @@
   h2 {
     padding-bottom: 30px;
     margin: 0;
+
+    @include print {
+      padding-bottom: 10px;
+    }
   }
 
   h3 {
     padding: 20px 0;
     margin: 0;
+
+    @include print {
+      padding: 10px 0;
+    }
   }
 
   hr {
     margin-top: 20px;
+
+    @include print {
+      margin: 10px 0;
+    }
   }
 
   td:last-child {
