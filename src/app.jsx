@@ -11,7 +11,7 @@ import axios from 'axios'
 import routes from './routes'
 import * as reducers from './redux/modules'
 
-require('./styles/style.scss')
+import './styles/style.scss'
 
 window.React = React
 

@@ -45,6 +45,8 @@
   "dependencies": {
     "axios": "^0.9.1",
     "d3": "^3.5.14",
+    "dotenv": "^2.0.0",
+    "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
     "moment": "^2.11.2",
@@ -62,6 +64,9 @@
     "topojson": "^1.6.22"
   },
   "scripts": {
+    "start": "node dev-server.js",
+    "dist": "webpack -p --config webpack/production.js",
+    "lint": "eslint src",
     "test": "jest"
   },
   "jest": {
