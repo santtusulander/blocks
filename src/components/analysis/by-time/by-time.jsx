@@ -9,6 +9,17 @@ import AnalysisLineLabel from './line-label'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
+const configureTooltip = (date, val, height, formatY, xScale, yScale) => {
+  const formattedDate = moment(date).format('MMM D')
+  const formattedValue = formatY(val)
+  return {
+    text: `${formattedDate} ${formattedValue}`,
+    x: xScale(date),
+    y: yScale(val),
+    top: yScale(val) + 50 > height
+  }
+}
+
 class AnalysisByTime extends React.Component {
   constructor(props) {
     super(props)
@@ -29,6 +40,7 @@ class AnalysisByTime extends React.Component {
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
     this.measureChartLabels = this.measureChartLabels.bind(this)
+    this.formatY = this.formatY.bind(this)
   }
   componentDidMount() {
     this.measureChartLabels()
@@ -40,6 +52,14 @@ class AnalysisByTime extends React.Component {
     })
   }
   moveMouse(xScale, yScale, primaryData, secondaryData) {
+    const configTooltip = (time, date) => configureTooltip(
+      time,
+      date,
+      this.props.height,
+      this.formatY,
+      xScale,
+      yScale
+    )
     return e => {
       const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
       const bounds = this.refs.chart.getBoundingClientRect()
@@ -51,21 +71,27 @@ class AnalysisByTime extends React.Component {
         i = i -1
       }
       if(primaryData && primaryData.length && primaryData[i]) {
-        const primaryD = primaryData[i]
+        const tooltipConfig = configTooltip(
+          primaryData[i].timestamp,
+          primaryData[i][this.props.dataKey]
+        )
         this.setState({
-          primaryTooltipText: `${moment(primaryD.timestamp).format('MMM D')} ${this.formatY(primaryD[this.props.dataKey])}`,
-          primaryTooltipX: xScale(primaryD.timestamp),
-          primaryTooltipY: yScale(primaryD[this.props.dataKey]),
-          primaryTooltipOffsetTop: yScale(primaryD[this.props.dataKey]) + 50 > this.props.height
+          primaryTooltipText: tooltipConfig.text,
+          primaryTooltipX: tooltipConfig.x,
+          primaryTooltipY: tooltipConfig.y,
+          primaryTooltipOffsetTop: tooltipConfig.top
         })
       }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
-        const secondaryD = secondaryData[i]
+        const tooltipConfig = configTooltip(
+          secondaryData[i].timestamp,
+          secondaryData[i][this.props.dataKey]
+        )
         this.setState({
-          secondaryTooltipText: `${moment(secondaryD.timestamp).format('MMM D')} ${this.formatY(secondaryD[this.props.dataKey])}`,
-          secondaryTooltipX: xScale(secondaryD.timestamp),
-          secondaryTooltipY: yScale(secondaryD[this.props.dataKey]),
-          secondaryTooltipOffsetTop: yScale(secondaryD[this.props.dataKey]) + 50 > this.props.height
+          secondaryTooltipText: tooltipConfig.text,
+          secondaryTooltipX: tooltipConfig.x,
+          secondaryTooltipY: tooltipConfig.y,
+          secondaryTooltipOffsetTop: tooltipConfig.top
         })
       }
     }
