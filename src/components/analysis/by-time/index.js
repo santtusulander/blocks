@@ -1,1 +1,1 @@
-export default require('./by-time')
+module.exports = require('./by-time')
