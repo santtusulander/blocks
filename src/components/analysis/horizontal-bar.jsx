@@ -15,20 +15,20 @@ class AnalysisHorizontalBar extends React.Component {
       return <div>Loading...</div>
     }
 
-    const extent = d3.extent(this.props.data.length, d => d[this.props.dataKey])
+    const maxX = d3.max(this.props.data, d => d[this.props.dataKey])
 
     const yScale = d3.scale.linear()
       .domain([0, this.props.data.length])
       .range([
-        this.props.height - this.props.padding * 2,
-        this.props.padding
+        this.props.padding * 2,
+        this.props.height - this.props.padding * 2
       ]);
 
     const xScale = d3.scale.linear()
-      .domain([extent[0], extent[1]])
+      .domain([0, maxX])
       .range([
-        this.props.padding * 3,
-        this.props.width - this.props.padding * 2
+        this.props.padding,
+        this.props.width - this.props.padding * 3
       ])
 
     let className = 'analysis-horizontal-bar'
@@ -55,7 +55,7 @@ class AnalysisHorizontalBar extends React.Component {
               return (
                 <g key={i}>
                   <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                    {this.xFormat(tick)}
+                    {this.formatX(tick)}
                   </text>
                 </g>
               )

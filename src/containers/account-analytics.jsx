@@ -10,6 +10,7 @@ import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
+import * as reportsActionCreators from '../redux/modules/reports'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -64,6 +65,7 @@ export class AccountAnalytics extends React.Component {
     onOffTodayOpts.endDate = moment().utc().format('X')
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
+    this.props.reportsActions.startFetching()
     this.props.accountActions.fetchAccount(
       this.props.params.brand,
       account
@@ -88,6 +90,9 @@ export class AccountAnalytics extends React.Component {
       this.props.visitorsActions.fetchByBrowser(fetchOpts),
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
+    Promise.all([
+      this.props.reportsActions.fetchURLMetrics()
+    ]).then(this.props.reportsActions.finishFetching)
   }
   changeTab(newTab) {
     this.setState({activeTab: newTab})
@@ -184,10 +189,11 @@ export class AccountAnalytics extends React.Component {
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={false}/>
+              <AnalysisFileError fetching={this.props.reportsFetching}/>
               : ''}
             {this.state.activeTab === 'url-report' ?
-              <AnalysisURLReport fetching={false}/>
+              <AnalysisURLReport fetching={this.props.reportsFetching}
+                urls={this.props.urlMetrics}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
@@ -211,6 +217,8 @@ AccountAnalytics.propTypes = {
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
+  reportsActions: React.PropTypes.object,
+  reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
@@ -219,6 +227,7 @@ AccountAnalytics.propTypes = {
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  urlMetrics: React.PropTypes.instanceOf(Immutable.List),
   username: React.PropTypes.string,
   visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
@@ -239,9 +248,11 @@ function mapStateToProps(state) {
     spChartType: state.ui.get('analysisSPChartType'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
+    reportsFetching: state.reports.get('fetching'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
+    urlMetrics: state.reports.get('urlMetrics'),
     username: state.user.get('username'),
     visitorsByBrowser: state.visitors.get('byBrowser'),
     visitorsByCountry: state.visitors.get('byCountry'),
@@ -255,6 +266,7 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)

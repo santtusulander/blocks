@@ -1,5 +1,31 @@
 .analysis-horizontal-bar {
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
   .url-bar {
     stroke-width: 20px;
+
+    .dark-theme &,
+    .light-theme & {
+      stroke: rgba($pale-blue, 0.5);
+      fill: transparent;
+    }
+  }
+
+  text {
+
+    .dark-theme & {
+      fill: $dt-text-color;
+    }
+
+    .light-theme & {
+      fill: $lt-text-color;
+    }
   }
 }

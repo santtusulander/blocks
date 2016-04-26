@@ -10,6 +10,7 @@ import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
+import * as reportsActionCreators from '../redux/modules/reports'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -67,6 +68,7 @@ export class GroupAnalytics extends React.Component {
     onOffTodayOpts.endDate = moment().utc().format('X')
     this.props.trafficActions.startFetching()
     this.props.visitorsActions.startFetching()
+    this.props.reportsActions.startFetching()
     this.props.groupActions.fetchGroup(
       this.props.params.brand,
       this.props.params.account,
@@ -93,6 +95,9 @@ export class GroupAnalytics extends React.Component {
       this.props.visitorsActions.fetchByBrowser(fetchOpts),
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
+    Promise.all([
+      this.props.reportsActions.fetchURLMetrics()
+    ]).then(this.props.reportsActions.finishFetching)
   }
   changeTab(newTab) {
     this.setState({activeTab: newTab})
@@ -185,10 +190,11 @@ export class GroupAnalytics extends React.Component {
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={false}/>
+              <AnalysisFileError fetching={this.props.reportsFetching}/>
               : ''}
             {this.state.activeTab === 'url-report' ?
-              <AnalysisURLReport fetching={false}/>
+              <AnalysisURLReport fetching={this.props.reportsFetching}
+                urls={this.props.urlMetrics}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
@@ -212,6 +218,8 @@ GroupAnalytics.propTypes = {
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
+  reportsActions: React.PropTypes.object,
+  reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
@@ -220,6 +228,7 @@ GroupAnalytics.propTypes = {
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  urlMetrics: React.PropTypes.instanceOf(Immutable.List),
   visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
@@ -236,12 +245,14 @@ function mapStateToProps(state) {
     metrics: state.metrics.get('groupMetrics'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
+    reportsFetching: state.reports.get('fetching'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     spChartType: state.ui.get('analysisSPChartType'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
+    urlMetrics: state.reports.get('urlMetrics'),
     visitorsByBrowser: state.visitors.get('byBrowser'),
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsByOS: state.visitors.get('byOS'),
@@ -254,6 +265,7 @@ function mapDispatchToProps(dispatch) {
   return {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)

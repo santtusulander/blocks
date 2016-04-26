@@ -1,48 +1,46 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
+import Immutable from 'immutable'
 
+import AnalysisHorizontalBar from './horizontal-bar'
 import {formatBytes} from '../../util/helpers'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      chartWidth: 100
+    }
+
+    this.measureContainers = this.measureContainers.bind(this)
+  }
+  componentDidMount() {
+    this.measureContainers()
+    setTimeout(() => {this.measureContainers()}, 500)
+    window.addEventListener('resize', this.measureContainers)
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.measureContainers)
+  }
+  measureContainers() {
+    this.setState({
+      chartWidth: this.refs.chartHolder.clientWidth
+    })
   }
   render() {
+    const chartHeight = this.props.urls.size * 40 + 40;
     return (
       <div className="analysis-url-report">
-        <Row>
-          <Col xs={12}>
-            <div className="analysis-data-box">
-              <h4>Client errors</h4>
-              <p>4XX</p>
-              <Row className="extra-margin-top">
-                <Col xs={6} className="text-center right-separator">
-                  <p>00</p>
-                  <h4>400 Bad request</h4>
-                </Col>
-                <Col xs={6} className="text-center">
-                  <p>00</p>
-                  <h4>403 Bad Request</h4>
-                </Col>
-              </Row>
-            </div>
-            <div className="analysis-data-box">
-              <h4>Server errors</h4>
-              <p>5XX</p>
-              <Row className="extra-margin-top">
-                <Col xs={6} className="text-center right-separator">
-                  <p>00</p>
-                  <h4>500 Internal Server Error</h4>
-                </Col>
-                <Col xs={6} className="text-center">
-                  <p>00</p>
-                  <h4>503 Service Unavailable</h4>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
+        <div ref="chartHolder">
+          <AnalysisHorizontalBar
+            data={this.props.urls.toJS()}
+            dataKey="bytes"
+            height={chartHeight}
+            width={this.state.chartWidth}
+            padding={20}
+            xAxisCustomFormat={formatBytes}/>
+        </div>
         <h3>HEADER</h3>
         <table className="table table-striped table-analysis">
           <thead>
@@ -126,7 +124,8 @@ class AnalysisURLReport extends React.Component {
 
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  urls: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = AnalysisURLReport
