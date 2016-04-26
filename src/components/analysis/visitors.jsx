@@ -130,7 +130,7 @@ class AnalysisVisitors extends React.Component {
     return (
       <div className="analysis-traffic">
         <h3>VISITORS BY TIME</h3>
-        <div ref="byTimeHolder">
+        <div ref="byTimeHolder" className="visitors-by-time">
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}

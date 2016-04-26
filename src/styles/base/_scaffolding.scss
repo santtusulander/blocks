@@ -5,6 +5,12 @@ html,
 body {
   min-width: 1024px;
   min-height: 100%;
+
+  @include print {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
 }
 
 body {
@@ -20,6 +26,10 @@ body {
 
   @include sm {
     font-size: $sm-font-size;
+  }
+
+  @include print {
+    font-size: $print-font-size;
   }
 
   &.dark-theme {

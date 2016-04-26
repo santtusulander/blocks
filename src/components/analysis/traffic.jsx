@@ -91,7 +91,7 @@ class AnalysisTraffic extends React.Component {
           </Row>
         </div>
         <h3>TRANSFER BY TIME</h3>
-        <div ref="byTimeHolder">
+        <div ref="byTimeHolder" className="transfer-by-time">
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}

@@ -166,6 +166,7 @@ class AnalysisByLocation extends React.Component {
       <div className="analysis-by-location">
         <div className="chart" ref="chart">
           <svg
+            viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
             width={this.props.width}
             height={this.props.height}
             onMouseMove={this.moveMouse(null, null)}

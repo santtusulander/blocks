@@ -14,5 +14,9 @@
     @include sm {
       padding-left: $sm-sidebar-width;
     }
+
+    @include print {
+      padding-left: 0;
+    }
   }
 }

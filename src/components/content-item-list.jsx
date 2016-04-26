@@ -75,7 +75,8 @@ class ContentItemList extends React.Component {
             <div className="content-item-list-section section-lg">
               <Row>
                 <Col xs={6}>
-                  <h1>{this.props.cacheHitRate}<span className="heading-suffix"> %</span></h1>
+                  <h1>{this.props.cacheHitRate || 0}
+                    <span className="heading-suffix"> %</span></h1>
                   <p className="text-sm">Avg. Cache Hit Rate</p>
                 </Col>
                 <Col xs={6}>
