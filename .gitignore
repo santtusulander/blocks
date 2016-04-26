@@ -78,7 +78,7 @@ Temporary Items
 
 # Private Files
 private.json
-
+.env
 
 /.settings/
 
