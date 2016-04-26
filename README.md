@@ -19,14 +19,6 @@ Download at https://nodejs.org/en/download/
 
 Install ruby as instructed for your platform
 https://www.ruby-lang.org/en/documentation/installation/
-
-### Gulp
-
-``` shell
-$ npm install -g gulp
-
-// If you get an error message, you will likely need to use the 'sudo' command.
-$ sudo npm install -g gulp
 ```
 
 ### Sass
@@ -59,9 +51,9 @@ $ sudo gem install sass
 
 ### Development mode
 
-1. Run Gulp
+1. Run dev server
    ``` shell
-   $ gulp
+   $ npm start
    ```
 
 2. Navigate to http://localhost:3000/webpack-dev-server/
@@ -69,7 +61,7 @@ $ sudo gem install sass
 ### Building for deployment
 
 ```shell
-$ gulp build
+$ npm run dist
 ```
 
 ### Testing
