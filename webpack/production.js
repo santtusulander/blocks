@@ -1,6 +1,10 @@
 var path = require('path');
+
 var webpack = require('webpack');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+
 var helpers = require('./helpers');
 
 var env = helpers.parseDotenvConfig(
@@ -10,16 +14,25 @@ var env = helpers.parseDotenvConfig(
 module.exports = Object.assign({}, {
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
-      'process.env.NODE_ENV': '"production"'
+        'process.env.NODE_ENV': '"production"',
+        'VERSION': JSON.stringify(require('../package.json').version)
     }, env)),
     new webpack.ProvidePlugin({
       // Polyfill here
     }),
+    new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({
       inject: 'body',
-      template: 'src/index.html'
+      template: 'src/index.html',
+      favicon: 'src/assets/icons/favicon.ico'
     }),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new CopyWebpackPlugin([
+      {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
+    ]),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false
