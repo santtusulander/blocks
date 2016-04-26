@@ -50,13 +50,14 @@ $ sudo gem install sass
 ## Running the application
 
 ### Development mode
+1. Rename .env.example to .env and configure settings
 
-1. Run dev server
+2. Run dev server
    ``` shell
    $ npm start
    ```
-
-2. Navigate to http://localhost:3000/webpack-dev-server/
+    
+3. Navigate to http://localhost:3000/webpack-dev-server/
 
 ### Building for deployment
 
