@@ -2,8 +2,10 @@ import React from 'react'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
+import { findDOMNode } from 'react-dom'
 
-import Tooltip from '../tooltip'
+import Tooltip from '../../tooltip'
+import AnalysisLineLabel from './line-label'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
@@ -33,8 +35,8 @@ class AnalysisByTime extends React.Component {
   }
   measureChartLabels() {
     this.setState({
-      primaryLabelWidth: this.refs.primaryLabel ? this.refs.primaryLabel.getBBox().width : 0,
-      secondaryLabelWidth: this.refs.secondaryLabel ? this.refs.secondaryLabel.getBBox().width : 0
+      primaryLabelWidth: this.refs.primaryLabel ? findDOMNode(this.refs.primaryLabel).getBBox().width : 0,
+      secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
     })
   }
   moveMouse(xScale, yScale, primaryData, secondaryData) {
@@ -191,22 +193,18 @@ class AnalysisByTime extends React.Component {
                 fill="url(#dt-secondary-gradient)" />
             }
           </g> : null}
-          {this.props.primaryLabel ?
-            <g>
-              <svg x={primaryLabelX} y={this.props.padding} ref="primaryLabel">
-                <path className="line primary" d="M0 7L25 7" />
-                <text x={35} y={14}>{this.props.primaryLabel}</text>
-              </svg>
-            </g>
-          : null}
-          {this.props.secondaryLabel ?
-            <g>
-              <svg x={secondaryLabelX} y={this.props.padding} ref="secondaryLabel">
-                <path className="line secondary" d="M0 7L25 7" />
-                <text x={35} y={14}>{this.props.secondaryLabel}</text>
-              </svg>
-            </g>
-          : null}
+          {this.props.primaryLabel && <AnalysisLineLabel
+            ref="primaryLabel"
+            type="primary"
+            padding={this.props.padding}
+            labelX={primaryLabelX}
+            label={this.props.primaryLabel}/>}
+          {this.props.secondaryLabel && <AnalysisLineLabel
+            ref="secondaryLabel"
+            type="secondary"
+            padding={this.props.padding}
+            labelX={secondaryLabelX}
+            label={this.props.secondaryLabel}/>}
           {this.state.primaryTooltipText ?
             <g>
               <circle r="5"
