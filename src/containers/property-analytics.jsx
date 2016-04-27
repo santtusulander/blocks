@@ -19,6 +19,7 @@ import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 import AnalysisFileError from '../components/analysis/file-error'
+import AnalysisStorageUsage from '../components/analysis/storage-usage'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
 
 export class PropertyAnalytics extends React.Component {
@@ -82,7 +83,8 @@ export class PropertyAnalytics extends React.Component {
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
       this.props.trafficActions.fetchOnOffNet(onOffOpts),
-      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      this.props.trafficActions.fetchStorage()
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -152,6 +154,7 @@ export class PropertyAnalytics extends React.Component {
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
+            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
@@ -183,6 +186,10 @@ export class PropertyAnalytics extends React.Component {
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
               : ''}
+            {this.state.activeTab === 'storage-usage' ?
+              <AnalysisStorageUsage fetching={this.props.trafficFetching}
+                storageStats={this.props.storageStats}/>
+              : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
                 activeVideo={this.state.activeVideo}/>
@@ -207,6 +214,7 @@ PropertyAnalytics.propTypes = {
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
+  storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -230,6 +238,7 @@ function mapStateToProps(state) {
     onOffNetToday: state.traffic.get('onOffNetToday'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     spChartType: state.ui.get('analysisSPChartType'),
+    storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),

@@ -19,6 +19,7 @@ import AnalysisTraffic from '../components/analysis/traffic'
 import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 import AnalysisFileError from '../components/analysis/file-error'
+import AnalysisStorageUsage from '../components/analysis/storage-usage'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
 import { filterAccountsByUserName } from '../util/helpers'
 
@@ -79,7 +80,8 @@ export class AccountAnalytics extends React.Component {
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
       this.props.trafficActions.fetchOnOffNet(onOffOpts),
-      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      this.props.trafficActions.fetchStorage()
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -153,6 +155,7 @@ export class AccountAnalytics extends React.Component {
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
+            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
@@ -176,13 +179,17 @@ export class AccountAnalytics extends React.Component {
                 byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
             {this.state.activeTab === 'sp-report' ?
-              <AnalysisSPReport fetching={false}
+              <AnalysisSPReport fetching={this.props.trafficFetching}
                 serviceProviderStats={this.props.onOffNet}
                 serviceProviderStatsToday={this.props.onOffNetToday}
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
               <AnalysisFileError fetching={false}/>
+              : ''}
+            {this.state.activeTab === 'storage-usage' ?
+              <AnalysisStorageUsage fetching={this.props.trafficFetching}
+                storageStats={this.props.storageStats}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
@@ -208,6 +215,7 @@ AccountAnalytics.propTypes = {
   params: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
+  storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -232,6 +240,7 @@ function mapStateToProps(state) {
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     spChartType: state.ui.get('analysisSPChartType'),
+    storageStats: state.traffic.get('storage'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
     trafficByCountry: state.traffic.get('byCountry'),
