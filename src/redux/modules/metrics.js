@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import {analyticsBase} from '../util'
+import { analyticsBase, returnData } from '../util'
 
 const ACCOUNT_METRICS_START_FETCH = 'ACCOUNT_METRICS_START_FETCH'
 const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
@@ -43,7 +43,7 @@ const qsBuilder = ({
   return qs.length ? '?'+qs.join('&') : ''
 }
 
-const parseDatapointTraffic = (datapoint) => {
+const parseDatapointTraffic = datapoint => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
     traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
     return traffic;
@@ -58,92 +58,48 @@ const parseDatapointTraffic = (datapoint) => {
   return datapoint;
 }
 
+export const makeMetricsReducer = (fetchKey, dataKey) => {
+  return {
+    next: (state, action) => {
+      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
+      return state
+        .set(fetchKey, false)
+        .set(dataKey, Immutable.fromJS(data))
+    },
+    throw: state => state
+      .set(fetchKey, false)
+      .set(dataKey, Immutable.List())
+  }
+}
+
+export const makeFetchStarter = fetchKey => state => state.set(fetchKey, true)
+
 // REDUCERS
 
 export default handleActions({
-  GROUP_METRICS_FETCHED: {
-    next(state, action) {
-      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
-      return state.merge({
-        fetchingGroupMetrics: false,
-        groupMetrics: Immutable.fromJS(data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetchingGroupMetrics: false,
-        groupMetrics: Immutable.List()
-      })
-    }
-  },
-  ACCOUNT_METRICS_FETCHED: {
-    next(state, action) {
-      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
-      return state.merge({
-        fetchingAccountMetrics: false,
-        accountMetrics: Immutable.fromJS(data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetchingAccountMetrics: false,
-        accountMetrics: Immutable.List()
-      })
-    }
-  },
-  HOST_METRICS_FETCHED: {
-    next(state, action) {
-      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
-      return state.merge({
-        fetchingHostMetrics: false,
-        hostMetrics: Immutable.fromJS(data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetchingHostMetrics: false,
-        hostMetrics: Immutable.List()
-      })
-    }
-  },
-  ACCOUNT_METRICS_START_FETCH: (state) => {
-    return state.set('fetchingAccountMetrics', true)
-  },
-  GROUP_METRICS_START_FETCH: (state) => {
-    return state.set('fetchingGroupMetrics', true)
-  },
-  HOST_METRICS_START_FETCH: (state) => {
-    return state.set('fetchingHostMetrics', true)
-  }
+  ACCOUNT_METRICS_FETCHED: makeMetricsReducer('fetchingAccountMetrics', 'accountMetrics'),
+  GROUP_METRICS_FETCHED: makeMetricsReducer('fetchingGroupMetrics', 'groupMetrics'),
+  HOST_METRICS_FETCHED: makeMetricsReducer('fetchingHostMetrics', 'hostMetrics'),
+  ACCOUNT_METRICS_START_FETCH: makeFetchStarter('fetchingAccountMetrics'),
+  GROUP_METRICS_START_FETCH: makeFetchStarter('fetchingGroupMetrics'),
+  HOST_METRICS_START_FETCH: makeFetchStarter('fetchingHostMetrics')
 }, emptyMetrics)
 
 // ACTIONS
 
-export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, (opts) => {
+export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(returnData)
 })
 
-export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, (opts) => {
+export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(returnData)
 })
 
-export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, (opts) => {
+export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(returnData)
 })
 
 export const startAccountFetching = createAction(ACCOUNT_METRICS_START_FETCH)

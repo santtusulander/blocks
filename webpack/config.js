@@ -3,6 +3,7 @@ var path = require('path');
 module.exports = {
   entry: {
     app: [path.resolve(__dirname, '../src/app.jsx')]
+  },
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
