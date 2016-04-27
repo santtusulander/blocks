@@ -15,10 +15,11 @@ describe('Account Module', () => {
       allAccounts: Immutable.List()
     });
     const newState = createSuccess(state, {payload: {account_id: 1}});
-    expect(newState.toJS()).toEqual({
-      activeAccount: {account_id: 1},
-      allAccounts: [1]
-    });
+    const expectedState = Immutable.fromJS({
+      allAccounts: [1],
+      activeAccount: {account_id: 1}
+    })
+    expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });
 
   it('should delete account succeed', () => {

@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, returnData } from '../util'
+import { analyticsBase, parseResponseData } from '../util'
 
 const ACCOUNT_METRICS_START_FETCH = 'ACCOUNT_METRICS_START_FETCH'
 const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
@@ -89,17 +89,17 @@ export default handleActions({
 
 export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then(returnData)
+  .then(parseResponseData)
 })
 
 export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then(returnData)
+  .then(parseResponseData)
 })
 
 export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
-  .then(returnData)
+  .then(parseResponseData)
 })
 
 export const startAccountFetching = createAction(ACCOUNT_METRICS_START_FETCH)
