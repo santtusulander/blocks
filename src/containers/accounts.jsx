@@ -253,6 +253,11 @@ Accounts.propTypes = {
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
+Accounts.defaultProps = {
+  accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  metrics: Immutable.List()
+}
 
 function mapStateToProps(state) {
   return {

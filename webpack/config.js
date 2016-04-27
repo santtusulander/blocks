@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
-    publicPath: '/',
+    publicPath: 'http://localhost:3000/',
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js'
   },
@@ -49,6 +49,10 @@ module.exports = {
         test: /\.svg$/,
         exclude: /(node_modules|fonts|icons)/,
         loader: 'file?name=src/assets/img/[name].[ext]'
+      },
+      {
+        test: require.resolve("react"),
+        loader: "expose?React"
       }
     ]
   }

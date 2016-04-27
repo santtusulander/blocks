@@ -3,6 +3,7 @@
       "jsx": true,
       "modules": true
     },
+    "parser": "babel-eslint",
     "env": {
       "es6": true,
       "node": true,
@@ -194,7 +195,7 @@
         "react/jsx-curly-spacing": 1,
         "react/jsx-no-duplicate-props": 1,
         "react/jsx-no-undef": 1,
-        "react/jsx-sort-prop-types": 1,
+        "react/sort-prop-types": 1,
         "react/jsx-sort-props": 0,
         "react/jsx-uses-react": 1,
         "react/jsx-uses-vars": 1,

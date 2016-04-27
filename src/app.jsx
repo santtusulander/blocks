@@ -13,8 +13,6 @@ import * as reducers from './redux/modules'
 
 import './styles/style.scss'
 
-window.React = React
-
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
