@@ -74,26 +74,26 @@ class AnalysisSPReport extends React.Component {
     const stats = this.props.serviceProviderStats
     const statsToday = this.props.serviceProviderStatsToday
     let chart = null
+    const onNet = stats.get('detail').toJS().map(datapoint => {
+      return {
+        bytes: datapoint.net_on.bytes,
+        timestamp: datapoint.timestamp
+      }
+    })
+    const offNet = stats.get('detail').toJS().map(datapoint => {
+      return {
+        bytes: datapoint.net_off.bytes,
+        timestamp: datapoint.timestamp
+      }
+    })
     if(this.props.spChartType === 'bar') {
       chart = (
         <AnalysisStacked padding={40}
-          data={stats.get('detail').toJS()}
+          dataSets={[onNet, offNet]}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
     else {
-      const onNet = stats.get('detail').toJS().map(datapoint => {
-        return {
-          bytes: datapoint.net_on.bytes,
-          timestamp: datapoint.timestamp
-        }
-      })
-      const offNet = stats.get('detail').toJS().map(datapoint => {
-        return {
-          bytes: datapoint.net_off.bytes,
-          timestamp: datapoint.timestamp
-        }
-      })
       chart = (
         <AnalysisByTime axes={true} padding={40}
           dataKey="bytes"
