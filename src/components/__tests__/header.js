@@ -58,7 +58,7 @@ describe('Header', () => {
     );
     let gradient = TestUtils.findRenderedDOMComponentWithClass(header, 'header-gradient');
     header.resetGradientAnimation()
-      expect(ReactDOM.findDOMNode(gradient).className).not.toContain('animated');
+    expect(ReactDOM.findDOMNode(gradient).className).not.toContain('animated');
   });
 
   it('should call purge function when link is clicked', () => {
