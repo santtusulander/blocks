@@ -159,8 +159,8 @@
     .light-theme & {
 
       .below-avg {
-        fill: $green;
-        stroke: $green;
+        fill: $purple;
+        stroke: $purple;
       }
 
       .avg {
@@ -169,8 +169,8 @@
       }
 
       .above-avg {
-        fill: $purple;
-        stroke: $purple;
+        fill: $green;
+        stroke: $green;
       }
     }
   }
@@ -271,11 +271,11 @@
   }
 
   &.below-avg {
-    background-color: $green;
+    background-color: $purple;
   }
 
   &.above-avg {
-    background-color: $purple;
+    background-color: $green;
   }
 
   &.no-data {
