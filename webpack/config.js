@@ -49,6 +49,10 @@ module.exports = {
         test: /\.svg$/,
         exclude: /(node_modules|fonts|icons)/,
         loader: 'file?name=src/assets/img/[name].[ext]'
+      },
+      {
+        test: require.resolve("react"),
+        loader: "expose?React"
       }
     ]
   }
