@@ -11,9 +11,7 @@ import axios from 'axios'
 import routes from './routes'
 import * as reducers from './redux/modules'
 
-require('./styles/style.scss')
-
-window.React = React
+import './styles/style.scss'
 
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'

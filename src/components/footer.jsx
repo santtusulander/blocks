@@ -11,8 +11,7 @@ class Footer extends React.Component {
         <div className="footer-content">
           <p className="text-center">
             Powered By <a href="http://www.ericsson.com"
-            target="_blank">Ericsson</a> (v /* @echo PACKAGE_VERSION */). <a
-            href="#">Terms of Use</a>
+            target="_blank">Ericsson</a> (v {VERSION}). <a href="#">Terms of Use</a>
           </p>
         </div>
       </footer>
