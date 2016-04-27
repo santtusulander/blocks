@@ -58,7 +58,6 @@ describe('Header', () => {
     );
     let gradient = TestUtils.findRenderedDOMComponentWithClass(header, 'header-gradient');
     header.resetGradientAnimation()
-      //expect(ReactDOM.findDOMNode(gradient).className).toNotContain('animated');
       expect(ReactDOM.findDOMNode(gradient).className).not.toContain('animated');
   });
 
