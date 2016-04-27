@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import { urlBase, mapReducers, parseResponseData } from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
 const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
@@ -13,9 +13,9 @@ const ACCOUNT_START_FETCH = 'ACCOUNT_START_FETCH'
 const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
 const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
 
-const emptyAccounts = Immutable.Map({
+const emptyAccounts = Immutable.fromJS({
   activeAccount: null,
-  allAccounts: Immutable.List(),
+  allAccounts: [],
   fetching: false
 })
 
@@ -93,44 +93,12 @@ export function changeActive(state, action) {
 // REDUCERS
 
 export default handleActions({
-  ACCOUNT_CREATED: {
-    next(state, action) {
-      return createSuccess(state, action)
-    }
-  },
-  ACCOUNT_DELETED: {
-    next(state, action) {
-      return deleteSuccess(state, action)
-    },
-    throw(state, action) {
-      return deleteFailure(state, action)
-    }
-  },
-  ACCOUNT_FETCHED: {
-    next(state, action) {
-      return fetchSuccess(state, action)
-    },
-    throw(state, action) {
-      return fetchFailure(state, action)
-    }
-  },
-  ACCOUNT_FETCHED_ALL: {
-    next(state, action) {
-      return fetchAllSuccess(state, action)
-    },
-    throw(state, action) {
-      return fetchAllFailure(state, action)
-    }
-  },
+  ACCOUNT_CREATED: createSuccess,
+  ACCOUNT_DELETED: mapReducers(deleteSuccess, deleteFailure),
+  ACCOUNT_FETCHED: mapReducers(fetchSuccess, fetchFailure),
+  ACCOUNT_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   ACCOUNT_START_FETCH: startFetch,
-  ACCOUNT_UPDATED: {
-    next(state, action) {
-      return updateSuccess(state, action)
-    },
-    throw(state, action) {
-      return updateFailure(state, action)
-    }
-  },
+  ACCOUNT_UPDATED: mapReducers(updateSuccess, updateFailure),
   ACTIVE_ACCOUNT_CHANGED: changeActive
 }, emptyAccounts)
 
@@ -142,11 +110,7 @@ export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
       'Content-Type': 'application/json'
     }
   })
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  })
+  .then(parseResponseData)
 })
 
 export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
@@ -158,20 +122,12 @@ export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, account) => {
