@@ -19,82 +19,119 @@ const emptyAccounts = Immutable.Map({
   fetching: false
 })
 
+export function createSuccess(state, action) {
+  const newAccount = Immutable.fromJS(action.payload)
+  return state.merge({
+    activeAccount: newAccount,
+    allAccounts: state.get('allAccounts').push(newAccount.get('account_id'))
+  })
+}
+
+export function deleteSuccess(state, action) {
+  const newAllAccounts = state.get('allAccounts').filterNot(account => account === action.payload.id)
+  return state.merge({
+    allAccounts: newAllAccounts,
+    fetching: false
+  })
+}
+
+export function deleteFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    activeAccount: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    activeAccount: null,
+    fetching: false
+  })
+}
+
+export function fetchAllSuccess(state, action) {
+  return state.merge({
+    allAccounts: Immutable.fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchAllFailure(state) {
+  return state.merge({
+    allAccounts: Immutable.List(),
+    fetching: false
+  })
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function updateSuccess(state) {
+  return state.merge({
+    activeAccount: null,
+    fetching: false
+  })
+}
+
+export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function changeActive(state, action) {
+  return state.set('activeAccount', action.payload)
+}
+
 // REDUCERS
 
 export default handleActions({
   ACCOUNT_CREATED: {
     next(state, action) {
-      const newAccount = Immutable.fromJS(action.payload)
-      return state.merge({
-        activeAccount: newAccount,
-        allAccounts: state.get('allAccounts').push(newAccount.get('account_id'))
-      })
+      return createSuccess(state, action)
     }
   },
   ACCOUNT_DELETED: {
     next(state, action) {
-      let newAllAccounts = state.get('allAccounts')
-        .filterNot(account => {
-          return account === action.payload.id
-        })
-      return state.merge({
-        allAccounts: newAllAccounts,
-        fetching: false
-      })
+      return deleteSuccess(state, action)
     },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
+    throw(state, action) {
+      return deleteFailure(state, action)
     }
   },
   ACCOUNT_FETCHED: {
     next(state, action) {
-      return state.merge({
-        activeAccount: Immutable.fromJS(action.payload),
-        fetching: false
-      })
+      return fetchSuccess(state, action)
     },
-    throw(state) {
-      return state.merge({
-        activeAccount: null,
-        fetching: false
-      })
+    throw(state, action) {
+      return fetchFailure(state, action)
     }
   },
   ACCOUNT_FETCHED_ALL: {
     next(state, action) {
-      return state.merge({
-        allAccounts: Immutable.fromJS(action.payload.data),
-        fetching: false
-      })
+      return fetchAllSuccess(state, action)
     },
-    throw(state) {
-      return state.merge({
-        allAccounts: Immutable.List(),
-        fetching: false
-      })
+    throw(state, action) {
+      return fetchAllFailure(state, action)
     }
   },
-  ACCOUNT_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
+  ACCOUNT_START_FETCH: startFetch,
   ACCOUNT_UPDATED: {
-    next(state) {
-      return state.merge({
-        activeAccount: null,
-        fetching: false
-      })
+    next(state, action) {
+      return updateSuccess(state, action)
     },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
+    throw(state, action) {
+      return updateFailure(state, action)
     }
   },
-  ACTIVE_ACCOUNT_CHANGED: (state, action) => {
-    return state.set('activeAccount', action.payload)
-  }
+  ACTIVE_ACCOUNT_CHANGED: changeActive
 }, emptyAccounts)
 
 // ACTIONS
