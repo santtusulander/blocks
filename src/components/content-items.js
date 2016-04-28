@@ -1,90 +1,33 @@
 import React from 'react'
-import d3 from 'd3'
-import Immutable from 'immutable'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
-import { Link } from 'react-router'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import moment from 'moment'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as hostActionCreators from '../redux/modules/host'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as uiActionCreators from '../redux/modules/ui'
+import AddHost from './add-host'
+import PageContainer from './layout/page-container'
+import Content from './layout/content'
+import PageHeader from './layout/page-header'
+import ContentItemList from './content-item-list'
+import ContentItemChart from './content-item-chart'
+import Select from './select'
+import IconAdd from './icons/icon-add.jsx'
+import IconChart from './icons/icon-chart.jsx'
+import IconItemList from './icons/icon-item-list.jsx'
+import IconItemChart from './icons/icon-item-chart.jsx'
 
-import ContentItems from '../components/content-items'
-
-export class Hosts extends React.Component {
+class ContentItems extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createNewHost = this.createNewHost.bind(this)
-    this.deleteHost = this.deleteHost.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.toggleAddHost = this.toggleAddHost.bind(this)
     this.state = {
       activeFilter: 'traffic_high_to_low',
       addHost: false
     }
-  }
-  componentWillMount() {
-    this.props.hostActions.startFetching()
-    const {brand, account, group} = this.props.params;
-    this.props.hostActions.fetchHosts(brand, account, group)
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.groupActions.fetchGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-    this.props.metricsActions.startHostFetching()
-    this.props.metricsActions.fetchHostMetrics({
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-      endDate: moment.utc().endOf('hour').format('X')
-    })
-  }
-  createNewHost(id, deploymentMode) {
-    this.props.hostActions.createHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      id,
-      deploymentMode
-    )
-    this.toggleAddHost()
-  }
-  deleteHost(id) {
-    this.props.hostActions.deleteHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      id
-    )
-  }
-  toggleAddHost() {
-    this.setState({
-      addHost: !this.state.addHost
-    })
-  }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-    }
+
+    this.cancelChanges = this.cancelChanges.bind(this)
   }
   render() {
     let trafficMin = 0
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
-      const trafficTotals = this.props.hosts.map((host, i) => {
+      const trafficTotals = this.props.contentItems.map((item, i) => {
         return this.props.metrics.has(i) ?
           this.props.metrics.get(i).get('totalTraffic') : 0
       })
@@ -265,47 +208,20 @@ export class Hosts extends React.Component {
           </div>
         </Content>
       </PageContainer>
-    );
+    )
   }
 }
 
-Hosts.displayName = 'Hosts'
-Hosts.propTypes = {
-  accountActions: React.PropTypes.object,
+ContentItems.displayName = 'ContentItems'
+ContentItems.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
-  hostActions: React.PropTypes.object,
-  hosts: React.PropTypes.instanceOf(Immutable.List),
+  contentItems: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
-  params: React.PropTypes.object,
-  uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
 
-function mapStateToProps(state) {
-  return {
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
-    fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    hosts: state.host.get('allHosts'),
-    metrics: state.metrics.get('hostMetrics'),
-    viewingChart: state.ui.get('viewingChart')
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Hosts);
+module.exports = ContentItems
