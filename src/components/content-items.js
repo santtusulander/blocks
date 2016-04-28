@@ -1,11 +1,15 @@
 import React from 'react'
+import d3 from 'd3'
+import { Modal, Button, ButtonToolbar } from 'react-bootstrap'
+import { Link } from 'react-router'
+import Immutable from 'immutable'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import AddHost from './add-host'
 import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
-import ContentItemList from './content-item-list'
-import ContentItemChart from './content-item-chart'
+import ContentItem from './content-item'
 import Select from './select'
 import IconAdd from './icons/icon-add.jsx'
 import IconChart from './icons/icon-chart.jsx'
@@ -20,10 +24,9 @@ class ContentItems extends React.Component {
       activeFilter: 'traffic_high_to_low',
       addHost: false
     }
-
-    this.cancelChanges = this.cancelChanges.bind(this)
   }
   render() {
+    const {brand, account, group} = this.props;
     let trafficMin = 0
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
@@ -48,7 +51,7 @@ class ContentItems extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               <Link className="btn btn-primary btn-icon"
-                to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
+                to={`/content/analytics/group/${brand}/${account}/${group}`}>
                 <IconChart />
               </Link>
 
@@ -57,21 +60,21 @@ class ContentItems extends React.Component {
                 <IconAdd />
               </Button>
 
-              <Select
+              {/*<Select
                 onSelect={this.handleSelectChange()}
                 value={this.state.activeFilter}
                 options={[
                   ['traffic_high_to_low', 'Traffic High to Low'],
-                  ['traffic_low_to_high', 'Traffic Low to High']]}/>
+                  ['traffic_low_to_high', 'Traffic Low to High']]}/>*/}
 
               <Button bsStyle="primary" className={'btn-icon toggle-view' +
                 (this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
+                onClick={this.props.toggleChartView}>
                 <IconItemChart/>
               </Button>
               <Button bsStyle="primary" className={'btn-icon toggle-view' +
                 (!this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
+                onClick={this.props.toggleChartView}>
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
@@ -87,7 +90,7 @@ class ContentItems extends React.Component {
           <div className="container-fluid body-content">
             <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
               <li>
-                <Link to={`/content/groups/udn/${this.props.params.account}`}>
+                <Link to={`/content/groups/udn/${this.props.account}`}>
                   {this.props.activeAccount ?
                     this.props.activeAccount.get('name')
                     : 'Loading...'}
@@ -102,7 +105,7 @@ class ContentItems extends React.Component {
 
             {this.props.fetching || this.props.fetchingMetrics  ?
               <p className="fetching-info">Loading...</p> : (
-              this.props.hosts.size === 0 ?
+              this.props.contentItems.size === 0 ?
                 <p className="fetching-info text-center">
                   {this.props.activeGroup ?
                     this.props.activeGroup.get('name') +
@@ -118,72 +121,54 @@ class ContentItems extends React.Component {
                 transitionName="content-transition"
                 transitionEnterTimeout={400}
                 transitionLeaveTimeout={250}>
-                {this.props.viewingChart ?
-                  <div className="content-item-grid">
-                    {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
-                      return (
-                        <ContentItemChart key={i} id={host}
-                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          name={host} description="Desc"
-                          delete={this.deleteHost}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
-                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          fetchingMetrics={this.props.fetchingMetrics}
-                          barWidth="1"
-                          chartWidth={scaledWidth.toString()}
-                          barMaxHeight={(scaledWidth / 7).toString()} />
-                      )
-                    }).sort(
-                      (item1, item2) => {
-                        let sortType = item2.props.chartWidth - item1.props.chartWidth
-                        if (this.state.activeFilter === 'traffic_low_to_high') {
-                          sortType = item1.props.chartWidth - item2.props.chartWidth
-                        }
-                        return sortType
+                <div
+                  key={this.props.viewingChart}
+                  className={this.props.viewingChart ?
+                    'content-item-grid' :
+                    'content-item-lists'}>
+                  {this.props.contentItems.map((item, i) => {
+                    const id = item.get('id')
+                    const metrics = this.props.metrics.find(metric => {
+                      return metric.get('property') === id
+                    }) || Immutable.Map()
+                    const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
+                    const itemProps = {
+                      id: id,
+                      linkTo: this.props.nextPageURLBuilder(id),
+                      configurationLink: this.props.configURLBuilder(id),
+                      analyticsLink: this.props.analyticsURLBuilder(id),
+                      name: item.get('name'),
+                      description: 'Desc',
+                      delete: this.props.deleteItem,
+                      primaryData: metrics.get('traffic'),
+                      secondaryData: metrics.get('historical_traffic'),
+                      differenceData: metrics.get('historical_variance'),
+                      cacheHitRate: metrics.get('avg_cache_hit_rate'),
+                      timeToFirstByte: metrics.get('avg_ttfb'),
+                      maxTransfer: metrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
+                      minTransfer: metrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
+                      avgTransfer: metrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
+                      fetchingMetrics: this.props.fetchingMetrics,
+                      chartWidth: scaledWidth.toString(),
+                      barMaxHeight: (scaledWidth / 7).toString()
+                    }
+                    return (
+                      <ContentItem key={i}
+                        isChart={this.props.viewingChart}
+                        itemProps={itemProps}
+                        scaledWidth={scaledWidth}
+                        deleteItem={this.props.deleteItem}/>
+                    )
+                  }).sort(
+                    (item1, item2) => {
+                      let sortType = item2.props.chartWidth - item1.props.chartWidth
+                      if (this.state.activeFilter === 'traffic_low_to_high') {
+                        sortType = item1.props.chartWidth - item2.props.chartWidth
                       }
-                    )}
-                  </div> :
-                  <div className="content-item-lists" key="lists">
-                    {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
-                      return (
-                        <ContentItemList key={i} id={host}
-                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          name={host} description="Desc"
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          chartWidth={scaledWidth.toString()}
-                          fetchingMetrics={this.props.fetchingMetrics}/>
-                      )
-                    }).sort(
-                      (item1, item2) => {
-                        let sortType = item2.props.chartWidth - item1.props.chartWidth
-                        if (this.state.activeFilter === 'traffic_low_to_high') {
-                          sortType = item1.props.chartWidth - item2.props.chartWidth
-                        }
-                        return sortType
-                      }
-                    )}
-                  </div>
-                }
+                      return sortType
+                    }
+                  )}
+                </div>
               </ReactCSSTransitionGroup>
             )}
 
@@ -214,13 +199,21 @@ class ContentItems extends React.Component {
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
+  account: React.PropTypes.string,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  analyticsURLBuilder: React.PropTypes.func,
+  brand: React.PropTypes.string,
   className: React.PropTypes.string,
+  configURLBuilder: React.PropTypes.func,
+  contentItems: React.PropTypes.instanceOf(Immutable.List),
+  deleteItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  contentItems: React.PropTypes.instanceOf(Immutable.List),
+  group: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
+  nextPageURLBuilder: React.PropTypes.func,
+  toggleChartView: React.PropTypes.func,
   viewingChart: React.PropTypes.bool
 }
 

@@ -158,9 +158,9 @@ export class Accounts extends React.Component {
                           analyticsLink={`/content/analytics/account/${this.props.params.brand}/${account.get('id')}`}
                           name={account.get('name')} description="Desc"
                           delete={this.deleteAccount}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
-                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
+                          primaryData={metrics.get('traffic')}
+                          secondaryData={metrics.get('historical_traffic')}
+                          differenceData={metrics.get('historical_variance')}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
@@ -191,8 +191,7 @@ export class Accounts extends React.Component {
                           analyticsLink={`/content/analytics/account/${this.props.params.brand}/${account.get('id')}`}
                           name={account.get('name')} description="Desc"
                           delete={this.deleteAccount}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
+                          primaryData={metrics.get('traffic').reverse()}
                           cacheHitRate={metrics.get('avg_cache_hit_rate')}
                           timeToFirstByte={metrics.get('avg_ttfb')}
                           maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
