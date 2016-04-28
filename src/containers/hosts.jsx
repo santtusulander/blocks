@@ -18,10 +18,11 @@ export class Hosts extends React.Component {
 
     this.createNewHost = this.createNewHost.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.sortItems = this.sortItems.bind(this)
     this.toggleAddHost = this.toggleAddHost.bind(this)
+    this.sortItems = this.sortItems.bind(this)
+
     this.state = {
-      activeFilter: 'traffic_high_to_low',
       addHost: false
     }
   }
@@ -69,12 +70,8 @@ export class Hosts extends React.Component {
       addHost: !this.state.addHost
     })
   }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-    }
+  sortItems(valuePath, direction) {
+    this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
     const {brand, account, group} = this.props.params;
@@ -113,6 +110,9 @@ export class Hosts extends React.Component {
         group={this.props.params.group}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        sortDirection={this.props.sortDirection}
+        sortItems={this.sortItems}
+        sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         viewingChart={this.props.viewingChart}/>
     )
@@ -132,6 +132,8 @@ Hosts.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  sortDirection: React.PropTypes.number,
+  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
@@ -144,6 +146,8 @@ function mapStateToProps(state) {
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
     metrics: state.metrics.get('hostMetrics'),
+    sortDirection: state.ui.get('contentItemSortDirection'),
+    sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
