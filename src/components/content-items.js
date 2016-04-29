@@ -35,16 +35,27 @@ class ContentItems extends React.Component {
 
     this.state = {
       activeFilter: 'traffic_high_to_low',
-      addHost: false
+      addItem: false
     }
 
     this.handleSortChange = this.handleSortChange.bind(this)
+    this.toggleAddItem = this.toggleAddItem.bind(this)
+    this.createNewItem = this.createNewItem.bind(this)
   }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
     if(sortOption) {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
+  }
+  toggleAddItem() {
+    this.setState({
+      addItem: !this.state.addItem
+    })
+  }
+  createNewItem() {
+    this.props.createNewItem(...arguments)
+    this.toggleAddItem()
   }
   render() {
     const {brand, account, group, sortValuePath, sortDirection, metrics} = this.props
@@ -81,7 +92,7 @@ class ContentItems extends React.Component {
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     return (
-      <PageContainer className='hosts-container content-subcontainer'>
+      <PageContainer className={`${this.props.className} content-subcontainer`}>
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
@@ -90,10 +101,13 @@ class ContentItems extends React.Component {
                 <IconChart />
               </Link>
 
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.toggleAddHost}>
-                <IconAdd />
-              </Button>
+              {this.props.createNewItem ?
+                <Button bsStyle="primary" className="btn-icon btn-add-new"
+                  onClick={this.toggleAddItem}>
+                  <IconAdd />
+                </Button>
+                : null
+              }
 
               <Select
                 onSelect={this.handleSortChange}
@@ -196,9 +210,9 @@ class ContentItems extends React.Component {
               </ReactCSSTransitionGroup>
             )}
 
-            {this.state.addHost ?
+            {this.state.addItem ?
               <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.toggleAddHost}>
+                onHide={this.toggleAddItem}>
                 <Modal.Header>
                   <h1>Add Property</h1>
                   <p>
@@ -209,8 +223,8 @@ class ContentItems extends React.Component {
                   </p>
                 </Modal.Header>
                 <Modal.Body>
-                  <AddHost createHost={this.createNewHost}
-                    cancelChanges={this.toggleAddHost}/>
+                  <AddHost createHost={this.createNewItem}
+                    cancelChanges={this.toggleAddItem}/>
                 </Modal.Body>
               </Modal> : null
             }
@@ -231,6 +245,7 @@ ContentItems.propTypes = {
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
+  createNewItem: React.PropTypes.func,
   deleteItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,

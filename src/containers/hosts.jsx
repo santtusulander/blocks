@@ -16,15 +16,9 @@ export class Hosts extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createNewHost = this.createNewHost.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
-    this.toggleAddHost = this.toggleAddHost.bind(this)
-    this.sortItems = this.sortItems.bind(this)
-
-    this.state = {
-      addHost: false
-    }
+    this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
     this.props.hostActions.startFetching()
@@ -55,7 +49,6 @@ export class Hosts extends React.Component {
       id,
       deploymentMode
     )
-    this.toggleAddHost()
   }
   deleteHost(id) {
     this.props.hostActions.deleteHost(
@@ -64,11 +57,6 @@ export class Hosts extends React.Component {
       this.props.params.group,
       id
     )
-  }
-  toggleAddHost() {
-    this.setState({
-      addHost: !this.state.addHost
-    })
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
@@ -104,6 +92,7 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
+        createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
