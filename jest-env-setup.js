@@ -5,4 +5,3 @@ global.localStorage = {
 }
 
 global.VERSION = '11.22.33'
-
