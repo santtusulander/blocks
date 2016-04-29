@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -31,6 +31,7 @@
     "gulp-util": "^3.0.7",
     "history": "^1.17.0",
     "hls.js": "^0.5.20",
+    "jasmine-reporters": "^2.1.1",
     "jest-cli": "^0.9.0",
     "node-sass": "^3.4.2",
     "preprocess": "^3.1.0",
@@ -69,7 +70,7 @@
   "scripts": {
     "start": "node dev-server.js",
     "dist": "webpack -p --config webpack/production.js",
-    "lint": "eslint src",
+    "lint": "eslint src/",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -80,6 +81,7 @@
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor",
     "setupEnvScriptFile": "<rootDir>/jest-env-setup",
+    "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup",
     "moduleFileExtensions": [
       "js",
       "jsx"

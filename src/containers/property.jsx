@@ -233,9 +233,10 @@ export class Property extends React.Component {
               </Col>
             </Row>
 
-            <Row className="no-end-gutters property-content">
-              <Col xs={6} className="property-analytics-summary">
-                <h3 className="has-btn">
+            {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
+              <Row className="no-end-gutters property-content">
+              <Col xs={6} className="property-analytics-summary">*/}
+                <h3 className="has-btn extra-margin-top">
                   Traffic Summary
                   <span className="heading-suffix"> (last 28 days)</span>
                   <Link className="btn btn-primary btn-icon pull-right"
@@ -288,17 +289,19 @@ export class Property extends React.Component {
                       <p>Loading...</p> :
                       this.props.visitorsByCountry.get('countries').size ?
                         this.props.visitorsByCountry.get('countries').map((country, i) => {
-                        return (
-                          <h2 key={i}>
-                            {numeral(country.get('percent_total')).format('0.00')}
-                            <span className="heading-suffix"> %</span>
-                            <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
-                          </h2>
-                        )
-                      }) : <h2>0 %</h2>
+                          return (
+                            <h2 key={i}>
+                              {numeral(country.get('percent_total')).format('0.00')}
+                              <span className="heading-suffix"> %</span>
+                              <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                            </h2>
+                          )
+                        }
+                      ) : <h2>0 %</h2>
                     }
                   </Col>
                 </Row>
+              {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
               </Col>
 
               <div className="content-separator"></div>
@@ -368,7 +371,7 @@ export class Property extends React.Component {
                   </tbody>
                 </Table>
               </Col>
-            </Row>
+            </Row>*/}
           </div>
         </Content>
         {this.state.purgeActive ? <PurgeModal
