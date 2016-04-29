@@ -12,6 +12,7 @@ import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
 import ContentItem from './content-item'
+import Breadcrumbs from './breadcrumbs'
 import Select from './select'
 import IconAdd from './icons/icon-add.jsx'
 import IconChart from './icons/icon-chart.jsx'
@@ -62,10 +63,7 @@ class ContentItems extends React.Component {
     let trafficMin = 0
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
-      const trafficTotals = this.props.contentItems.map((item, i) => {
-        return metrics.has(i) ?
-          metrics.get(i).get('totalTraffic') : 0
-      })
+      const trafficTotals = this.props.contentItems.map((item, i) => metrics.getIn([i, 'totalTraffic'], 0))
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
     }
@@ -81,7 +79,7 @@ class ContentItems extends React.Component {
       return Immutable.Map({
         item: item,
         metrics: metrics.find(metric => {
-          return metric.get('property') === item.get('id')
+          return metric.get(this.props.type) === item.get('id')
         }) || Immutable.Map()
       })
     })
@@ -135,7 +133,7 @@ class ContentItems extends React.Component {
           </PageHeader>
 
           <div className="container-fluid body-content">
-            <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+            {/*<ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
               <li>
                 <Link to={`/content/groups/udn/${this.props.account}`}>
                   {this.props.activeAccount ?
@@ -143,12 +141,14 @@ class ContentItems extends React.Component {
                     : 'Loading...'}
                 </Link>
               </li>
+              {this.props.group ?
                 <li className="active">
-                {this.props.activeGroup ?
-                  this.props.activeGroup.get('name')
-                  : 'Loading...'}
-              </li>
-            </ol>
+                  {this.props.activeGroup ?
+                    this.props.activeGroup.get('name')
+                    : 'Loading...'}
+                </li> : null}
+            </ol>*/}
+            <Breadcrumbs links={this.props.breadcrumbs}/>
 
             {this.props.fetching || this.props.fetchingMetrics  ?
               <p className="fetching-info">Loading...</p> : (
@@ -176,7 +176,7 @@ class ContentItems extends React.Component {
                   {contentItems.map((content, i) => {
                     const item = content.get('item')
                     const contentMetrics = content.get('metrics')
-                    const id = item.get('id')
+                    const id = String(item.get('id'))
                     const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                     const itemProps = {
                       id: id,
@@ -242,6 +242,7 @@ ContentItems.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
   brand: React.PropTypes.string,
+  breadcrumbs:React.PropTypes.array,
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
@@ -256,6 +257,7 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
+  type: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 

@@ -1,93 +1,26 @@
 import React from 'react'
-import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar } from 'react-bootstrap';
-import { Link } from 'react-router'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
-import * as groupActionCreators from '../redux/modules/group'
 import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
-// Not in 0.5 import EditGroup from '../components/edit-group'
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
-import ContentItemList from '../components/content-item-list'
-import ContentItemChart from '../components/content-item-chart'
-import Select from '../components/select'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconItemList from '../components/icons/icon-item-list.jsx'
-import IconItemChart from '../components/icons/icon-item-chart.jsx'
+
+import ContentItems from '../components/content-items'
 
 export class Groups extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    // this.changeActiveGroupValue = this.changeActiveGroupValue.bind(this)
-    // this.saveActiveGroupChanges = this.saveActiveGroupChanges.bind(this)
-    // this.toggleActiveGroup = this.toggleActiveGroup.bind(this)
-    // this.createNewGroup = this.createNewGroup.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.state = {
-      activeFilter: 'traffic_high_to_low'
-    }
+    this.deleteGroup = this.deleteGroup.bind(this)
+    this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    // this.props.groupActions.changeActiveGroup(null)
-    this.props.groupActions.startFetching()
-    this.props.groupActions.fetchGroups(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.metricsActions.startGroupFetching()
-    this.props.metricsActions.fetchGroupMetrics({
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-      endDate: moment.utc().endOf('hour').format('X')
-    })
+    this.props.fetchData()
   }
-  // toggleActiveGroup(id) {
-  //   return () => {
-  //     if(this.props.activeGroup && this.props.activeGroup.get('group_id') === id){
-  //       this.props.groupActions.changeActiveGroup(null)
-  //     }
-  //     else {
-  //       this.props.groupActions.fetchGroup(
-  //         this.props.params.brand,
-  //         this.props.params.account,
-  //         id
-  //       )
-  //     }
-  //   }
-  // }
-  // changeActiveGroupValue(valPath, value) {
-  //   this.props.groupActions.changeActiveGroup(
-  //     this.props.activeGroup.setIn(valPath, value)
-  //   )
-  // }
-  // saveActiveGroupChanges() {
-  //   this.props.groupActions.updateGroup(
-  //     this.props.params.brand,
-  //     this.props.params.account,
-  //     this.props.activeGroup.toJS()
-  //   )
-  // }
-  // createNewGroup(name) {
-  //   this.props.groupActions.createGroup(
-  //     this.props.params.brand,
-  //     this.props.params.account,
-  //     name
-  //   )
-  // }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
       this.props.params.brand,
@@ -95,196 +28,55 @@ export class Groups extends React.Component {
       id
     )
   }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-    }
+  sortItems(valuePath, direction) {
+    this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    let trafficMin = 0
-    let trafficMax = 0
-    if(!this.props.fetchingMetrics) {
-      const trafficTotals = this.props.groups.map((group, i) => {
-        return this.props.metrics.has(i) ?
-          this.props.metrics.get(i).get('totalTraffic') : 0
-      })
-      trafficMin = Math.min(...trafficTotals)
-      trafficMax = Math.max(...trafficTotals)
-    }
-    // If trafficMin === trafficMax, there's only one property or all properties
-    // have identical metrics. In that case the amoebas will all get the minimum
-    // size. Let's make trafficMin less than trafficMax and all amoebas will
-    // render with maximum size instead
-    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
-    const trafficScale = d3.scale.linear()
-      .domain([trafficMin, trafficMax])
-      .range([460, 560]);
+    const {brand, account} = this.props.params
+    const builtPath = `${brand}/${account}`
+    const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
+    const analyticsURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
+    const configURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
+    const breadcrumbs = [{ label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...' }]
     return (
-      <PageContainer className='groups-container content-subcontainer'>
-        <Content>
-          <PageHeader>
-            <ButtonToolbar className="pull-right">
-              <Link className="btn btn-primary btn-icon"
-                to={`/content/analytics/account/${this.props.params.brand}/${this.props.params.account}`}>
-                <IconChart/>
-              </Link>
-
-              <Select
-                onSelect={this.handleSelectChange()}
-                value={this.state.activeFilter}
-                options={[
-                  ['traffic_high_to_low', 'Traffic High to Low'],
-                  ['traffic_low_to_high', 'Traffic Low to High']]}/>
-
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemChart/>
-              </Button>
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (!this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemList/>
-              </Button>
-            </ButtonToolbar>
-
-            <p>ACCOUNT CONTENT SUMMARY</p>
-            <h1>
-              {this.props.activeAccount ?
-                this.props.activeAccount.get('name')
-                : 'Loading...'}
-            </h1>
-          </PageHeader>
-
-          <div className="container-fluid body-content">
-            <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
-              <li className="active">
-                {this.props.activeAccount ?
-                  this.props.activeAccount.get('name')
-                  : 'Loading...'}
-              </li>
-            </ol>
-
-            {this.props.fetching || this.props.fetchingMetrics ?
-              <p className="fetching-info">Loading...</p> : (
-              this.props.groups.size === 0 ?
-                <p className="fetching-info text-center">
-                  {this.props.activeAccount ?
-                    this.props.activeAccount.get('name') +
-                    ' does not contain any groups'
-                    : 'Loading...'}
-                </p>
-              :
-              <ReactCSSTransitionGroup
-                component="div"
-                className="content-transition"
-                transitionName="content-transition"
-                transitionEnterTimeout={400}
-                transitionLeaveTimeout={250}>
-                {this.props.viewingChart ?
-                  <div className="content-item-grid">
-                    {this.props.groups.map((group, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('group') === group.get('id')) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || trafficMin)
-                      return (
-                        <ContentItemChart key={i} id={group.get('id').toString()}
-                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                          analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                          name={group.get('name')} description="Desc"
-                          delete={this.deleteGroup}
-                          primaryData={metrics.get('traffic')}
-                          secondaryData={metrics.get('historical_traffic')}
-                          differenceData={metrics.get('historical_variance')}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          fetchingMetrics={this.props.fetchingMetrics}
-                          barWidth="1"
-                          chartWidth={scaledWidth.toString()}
-                          barMaxHeight={(scaledWidth / 7).toString()} />
-                      )
-                    }).sort(
-                      (item1, item2) => {
-                        let sortType = item2.props.chartWidth - item1.props.chartWidth
-                        if (this.state.activeFilter === 'traffic_low_to_high') {
-                          sortType = item1.props.chartWidth - item2.props.chartWidth
-                        }
-                        return sortType
-                      }
-                    )}
-                  </div> :
-                  <div className="content-item-lists" key="lists">
-                    {this.props.groups.map((group, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('group') === group.get('id')) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
-                      return (
-                        <ContentItemList key={i} id={group.get('id').toString()}
-                          linkTo={`/content/hosts/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                          analyticsLink={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`}
-                          name={group.get('name')} description="Desc"
-                          delete={this.deleteGroup}
-                          primaryData={metrics.get('traffic').reverse()}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          chartWidth={scaledWidth.toString()}
-                          fetchingMetrics={this.props.fetchingMetrics}/>
-                      )
-                    }).sort(
-                      (item1, item2) => {
-                        let sortType = item2.props.chartWidth - item1.props.chartWidth
-                        if (this.state.activeFilter === 'traffic_low_to_high') {
-                          sortType = item1.props.chartWidth - item2.props.chartWidth
-                        }
-                        return sortType
-                      }
-                    )}
-                  </div>
-                }
-              </ReactCSSTransitionGroup>
-            )}
-
-            {/* Not in 0.5
-            activeGroup ?
-              <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.toggleActiveGroup(this.props.activeGroup.get('group_id'))}>
-                <Modal.Header>
-                  <h1>Edit Group</h1>
-                  <p>Lorem ipsum dolor</p>
-                </Modal.Header>
-                <Modal.Body>
-                  <EditGroup group={this.props.activeGroup}
-                    changeValue={this.changeActiveGroupValue}
-                    saveChanges={this.saveActiveGroupChanges}
-                    cancelChanges={this.toggleActiveGroup(this.props.activeGroup.get('group_id'))}/>
-                </Modal.Body>
-              </Modal> : null
-            */}
-          </div>
-        </Content>
-      </PageContainer>
-    );
+      <ContentItems
+        account={account}
+        activeAccount={this.props.activeAccount}
+        activeGroup={this.props.activeGroup}
+        analyticsURLBuilder={analyticsURLBuilder}
+        brand={brand}
+        breadcrumbs={breadcrumbs}
+        className="groups-container"
+        configURLBuilder={configURLBuilder}
+        contentItems={this.props.groups}
+        deleteItem={this.deleteGroup}
+        fetching={this.props.fetching}
+        fetchingMetrics={this.props.fetchingMetrics}
+        metrics={this.props.metrics}
+        nextPageURLBuilder={nextPageURLBuilder}
+        sortDirection={this.props.sortDirection}
+        sortItems={this.sortItems}
+        sortValuePath={this.props.sortValuePath}
+        toggleChartView={this.props.uiActions.toggleChartView}
+        type='group'
+        viewingChart={this.props.viewingChart}/>
+    )
   }
 }
 
 Groups.displayName = 'Groups'
 Groups.propTypes = {
-  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  sortDirection: React.PropTypes.number,
+  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
@@ -297,15 +89,32 @@ function mapStateToProps(state) {
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
     metrics: state.metrics.get('groupMetrics'),
+    sortDirection: state.ui.get('contentItemSortDirection'),
+    sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const {brand, account} = ownProps.params
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const fetchData = () => {
+    groupActions.startFetching()
+    accountActions.fetchAccount(brand, account)
+    groupActions.fetchGroups(brand, account)
+    metricsActions.startGroupFetching()
+    metricsActions.fetchGroupMetrics({
+      account: account,
+      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+      endDate: moment.utc().endOf('hour').format('X')
+    })
+
+  }
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    fetchData: fetchData,
+    groupActions: groupActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

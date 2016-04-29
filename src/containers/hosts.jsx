@@ -64,13 +64,18 @@ export class Hosts extends React.Component {
       const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
       return `/content/analytics/property/${builtPath}${encoded}`
     }
+    const breadcrumbs = [
+      { label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...' },
+      { label: this.props.activeGroup ? this.props.activeGroup.get('name') : 'Loading...' }
+    ]
     return (
       <ContentItems
-        account={this.props.params.account}
+        account={account}
         activeAccount={this.props.activeAccount}
         activeGroup={this.props.activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
-        brand={this.props.params.brand}
+        brand={brand}
+        breadcrumbs={breadcrumbs}
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
@@ -78,13 +83,14 @@ export class Hosts extends React.Component {
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        group={this.props.params.group}
+        group={group}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
+        type='property'
         viewingChart={this.props.viewingChart}/>
     )
   }
