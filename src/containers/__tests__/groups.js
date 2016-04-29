@@ -44,6 +44,7 @@ const fakeGroups = Immutable.fromJS([
 
 const fakeMetrics = Immutable.fromJS([
   {
+    group: '1',
     avg_cache_hit_rate: 1,
     historical_traffic: [],
     historical_variance: [],
@@ -55,6 +56,7 @@ const fakeMetrics = Immutable.fromJS([
     }
   },
   {
+    group: '2',
     avg_cache_hit_rate: 2,
     historical_traffic: [],
     historical_variance: [],
@@ -74,8 +76,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        accountActions={accountActionsMaker()}
-        metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
@@ -84,28 +85,23 @@ describe('Groups', () => {
   });
 
   it('should request data on mount', () => {
-    const groupActions = groupActionsMaker()
-    const accountActions = accountActionsMaker()
+    const fetchData = jest.genMockFunction()
     TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
+      <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        accountActions={accountActions}
-        metricsActions={metricsActionsMaker()}
+        fetchData={fetchData}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
     )
-    expect(groupActions.startFetching.mock.calls.length).toBe(1)
-    expect(groupActions.fetchGroups.mock.calls[0][0]).toBe('udn')
-    expect(accountActions.fetchAccount.mock.calls[0][0]).toBe('udn')
+    expect(fetchData.mock.calls.length).toBe(1)
   });
 
   it('should show a loading message', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        accountActions={accountActionsMaker()}
-        metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
@@ -118,8 +114,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        accountActions={accountActionsMaker()}
-        metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         groups={fakeGroups}
         metrics={fakeMetrics}
         params={urlParams}
@@ -134,8 +129,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
-        accountActions={accountActionsMaker()}
-        metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         groups={fakeGroups}
         metrics={fakeMetrics}
         params={urlParams}
@@ -151,8 +145,7 @@ describe('Groups', () => {
   //   let groups = TestUtils.renderIntoDocument(
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
-  //       accountActions={accountActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
+  //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
   //       params={urlParams}/>
   //   )
@@ -165,8 +158,7 @@ describe('Groups', () => {
   //   let groups = TestUtils.renderIntoDocument(
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
-  //       accountActions={accountActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
+  //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id:1})}
   //       params={urlParams}/>
@@ -180,8 +172,7 @@ describe('Groups', () => {
   //   let groups = TestUtils.renderIntoDocument(
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
-  //       accountActions={accountActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
+  //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -198,8 +189,7 @@ describe('Groups', () => {
   //   let groups = TestUtils.renderIntoDocument(
   //     <Groups groupActions={groupActions}
   //       uiActions={uiActionsMaker()}
-  //       accountActions={accountActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
+  //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
   //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
   //       params={urlParams}/>
@@ -216,8 +206,7 @@ describe('Groups', () => {
     let groups = TestUtils.renderIntoDocument(
       <Groups groupActions={groupActions}
         uiActions={uiActionsMaker()}
-        accountActions={accountActionsMaker()}
-        metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         groups={fakeGroups}
         metrics={fakeMetrics}
         params={urlParams}/>

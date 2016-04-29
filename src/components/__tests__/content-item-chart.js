@@ -7,19 +7,19 @@ jest.autoMockOff()
 jest.dontMock('../content-item-chart.jsx')
 const ContentItemChart = require('../content-item-chart.jsx')
 
-const fakePrimaryData = [
+const fakePrimaryData = Immutable.List([
   {bytes: 123, timestamp: 123},
   {bytes: 234, timestamp: 234},
   {bytes: 345, timestamp: 345}
-]
+])
 
-const fakeSecondaryData = [
+const fakeSecondaryData = Immutable.List([
   {bytes: 234, timestamp: 234},
   {bytes: 345, timestamp: 345},
   {bytes: 456, timestamp: 456}
-]
+])
 
-const fakeDifferenceData = [0, 0, 0, 1, 1, 1]
+const fakeDifferenceData = Immutable.List([0, 0, 0, 1, 1, 1])
 
 describe('ContentItemChart', () => {
   it('should exist', () => {
