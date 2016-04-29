@@ -21,25 +21,7 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    this.props.hostActions.startFetching()
-    const {brand, account, group} = this.props.params;
-    this.props.hostActions.fetchHosts(brand, account, group)
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.groupActions.fetchGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-    this.props.metricsActions.startHostFetching()
-    this.props.metricsActions.fetchHostMetrics({
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-      endDate: moment.utc().endOf('hour').format('X')
-    })
+    this.props.fetchData()
   }
   createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
@@ -110,16 +92,14 @@ export class Hosts extends React.Component {
 
 Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
-  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
@@ -141,12 +121,29 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const {brand, account, group} = ownProps.params
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const hostActions = bindActionCreators(hostActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const fetchData = () => {
+    hostActions.startFetching()
+    accountActions.fetchAccount(brand, account)
+    groupActions.fetchGroup(brand, account, group)
+    hostActions.fetchHosts(brand, account, group)
+    metricsActions.startHostFetching()
+    metricsActions.fetchHostMetrics({
+      account: account,
+      group: group,
+      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+      endDate: moment.utc().endOf('hour').format('X')
+    })
+
+  }
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    fetchData: fetchData,
+    hostActions: hostActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
