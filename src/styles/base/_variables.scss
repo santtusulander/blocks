@@ -6,8 +6,8 @@
 // ===========
 
 $screen-md-min: 1200px;
-$screen-lg-min: 1690px;
-$screen-xl-min: 2000px;
+$screen-lg-min: 2100px;
+$screen-xl-min: 2500px;
 
 @mixin sm {
   @media (max-width: #{$screen-md-min - 1}), only print {
