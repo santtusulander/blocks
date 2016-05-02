@@ -1,35 +1,43 @@
-// 
-//
-// jest.dontMock('../account.js')
-// jest.dontMock('redux-actions')
-//
-// let axios = require('axios')
-// axios.post = jest.genMockFunction().mockImplementation(function() {
-//   return {
-//     then: jest.genMockFunction()
-//   };
-// })
-//
-// const {createAccount, deleteAccount, fetchAccount, fetchAccounts, updateAccount, startFetching} = require('../account.js')
-//
-// describe('Account Module', () => {
-//   it('should have a create action', () => {
-//     createAccount('aaa')
-//     expect(axios.post.mock.calls[0][0]).toBe('http://localhost:3000/VCDN/v2/aaa/accounts')
-//   });
-  // it('should have a delete action', () => {
-  //   console.log(deleteAccount)
-  // });
-  // it('should have a fetch one action', () => {
-  //   console.log(fetchAccount)
-  // });
-  // it('should have a fetch all action', () => {
-  //   console.log(fetchAccounts)
-  // });
-  // it('should have an update action', () => {
-  //   console.log(updateAccount)
-  // });
-  // it('should have a start fetch action', () => {
-  //   console.log(startFetching)
-  // });
-// })
+const Immutable = require('immutable');
+
+jest.dontMock('../account.js')
+
+const {
+  createSuccess,
+  deleteSuccess,
+  deleteFailure,
+} = require('../account.js');
+
+describe('Account Module', () => {
+
+  it('should create account succeed', () => {
+    const state = Immutable.Map({
+      allAccounts: Immutable.List()
+    });
+    const newState = createSuccess(state, {payload: {account_id: 1}});
+    const expectedState = Immutable.fromJS({
+      allAccounts: [1],
+      activeAccount: {account_id: 1}
+    })
+    expect(Immutable.is(newState, expectedState)).toBeTruthy();
+  });
+
+  it('should delete account succeed', () => {
+    const state = Immutable.Map({
+      allAccounts: Immutable.List.of(1)
+    });
+    const newState = deleteSuccess(state, {payload: {id: 1}});
+    expect(newState.get('allAccounts')).not.toContain(1);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should delete account fail', () => {
+    const state = Immutable.Map({
+      allAccounts: Immutable.List.of(1)
+    });
+    const newState = deleteFailure(state, {payload: {id: 1}});
+    expect(newState.get('allAccounts')).toContain(1);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+});

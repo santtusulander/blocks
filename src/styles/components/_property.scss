@@ -10,6 +10,11 @@
     padding: 20px 0 30px 140px;
   }
 
+  @include print {
+    min-height: 0;
+    padding: 0;
+  }
+
   p {
     margin-bottom: -5px;
   }
@@ -86,6 +91,15 @@
 
   @include md {
     padding-top: ($btn-sm-height / 2);
+  }
+
+  @include print {
+    // scss-lint:disable ImportantRule
+    // Need to override default styles
+    float: none;
+    width: 100%;
+    padding: 0 !important;
+    border-top: 1px solid $silver-40;
   }
 }
 

@@ -21,6 +21,10 @@
     width: $sm-sidebar-width;
   }
 
+  @include print {
+    display: none;
+  }
+
   .dark-theme &,
   .light-theme & {
     color: $dt-text-color;

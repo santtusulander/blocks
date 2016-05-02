@@ -4,6 +4,16 @@
 .analysis-by-location {
   position: relative;
 
+  @include print {
+    // scss-lint:disable ImportantRule
+    // Need to override default styles
+    svg {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 400px;
+    }
+  }
+
   .chart {
     position: relative;
   }

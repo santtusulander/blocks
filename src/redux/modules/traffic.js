@@ -12,6 +12,7 @@ const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
+const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
   byTime: Immutable.List(),
@@ -19,6 +20,7 @@ const emptyTraffic = Immutable.Map({
   fetching: false,
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
+  storage: Immutable.List(),
   totalEgress: 0
 })
 
@@ -119,6 +121,22 @@ export default handleActions({
       })
     }
   },
+  TRAFFIC_STORAGE_FETCHED: {
+    next(state, action) {
+      action.payload.data = action.payload.data.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return state.merge({
+        storage: Immutable.fromJS(action.payload.data)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        storage: Immutable.Map()
+      })
+    }
+  },
   TRAFFIC_START_FETCH: (state) => {
     return state.set('fetching', true)
   },
@@ -172,6 +190,23 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
       return res.data;
     }
   });
+})
+
+export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {
+  return Promise.resolve({data: [
+    {
+      timestamp: 1459468800,
+      bytes: 6531816426588
+    },
+    {
+      timestamp: 1459555200,
+      bytes: 3531816426500
+    },
+    {
+      timestamp: 1459641600,
+      bytes: 9367492184905
+    }
+  ]})
 })
 
 export const startFetching = createAction(TRAFFIC_START_FETCH)

@@ -25,6 +25,14 @@
     min-width: $sm-btn-min-width;
   }
 
+  @include print {
+    // scss-lint:disable ImportantRule
+    // Need to override Bootstrap link href for buttons
+    &::after {
+      content: '' !important;
+    }
+  }
+
   // scss-lint:disable QualifyingElement
   // Need to override Bootstrap
   &.disabled,
@@ -318,6 +326,10 @@
       .icon {
         fill: $dt-text-color;
         stroke: $dt-text-color;
+
+        @include print {
+          display: none;
+        }
       }
     }
 

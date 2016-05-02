@@ -11,6 +11,7 @@ moment.mockReturnValue({format:momentFormatMock})
 // Don't mock the layout components
 jest.dontMock('../../components/layout/content.jsx')
 jest.dontMock('../../components/layout/page-container.jsx')
+jest.dontMock('../../components/table-sorter.jsx')
 
 jest.dontMock('../configurations.jsx')
 const Configurations = require('../configurations.jsx').Configurations

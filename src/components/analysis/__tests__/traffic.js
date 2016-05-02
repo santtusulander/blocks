@@ -8,6 +8,8 @@ reactRedux.connect = jest.genMockFunction()
 reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
 jest.dontMock('../traffic.jsx')
+jest.dontMock('../../table-sorter.jsx')
+
 const AnalysisTraffic = require('../traffic.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly

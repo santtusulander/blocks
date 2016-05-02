@@ -250,7 +250,9 @@ export class Analyses extends React.Component {
             </div>
           </div>
         : null}
-        {this.props.activeTab !== 'visitors' && this.props.activeTab !== 'playback-demo' ?
+        {this.props.activeTab !== 'visitors' &&
+          this.props.activeTab !== 'playback-demo' &&
+          this.props.activeTab !== 'storage-usage' ?
           <div className="sidebar-section-header">
             {this.props.activeTab === 'sp-report' ?
               'FILTERS' :
@@ -267,7 +269,9 @@ export class Analyses extends React.Component {
             <hr className="sidebar-hr" />
           </div>
         : null}
-        {this.props.activeTab !== 'visitors' && this.props.activeTab !== 'playback-demo' ?
+        {this.props.activeTab !== 'visitors' &&
+          this.props.activeTab !== 'playback-demo' &&
+          this.props.activeTab !== 'storage-usage' ?
           <div className="sidebar-content">
             <Input type="checkbox" label="HTTP"
               checked={this.props.serviceTypes.includes('http')}

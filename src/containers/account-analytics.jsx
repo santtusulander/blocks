@@ -21,6 +21,7 @@ import AnalysisVisitors from '../components/analysis/visitors'
 import AnalysisSPReport from '../components/analysis/sp-report'
 import AnalysisFileError from '../components/analysis/file-error'
 import AnalysisURLReport from '../components/analysis/url-report'
+import AnalysisStorageUsage from '../components/analysis/storage-usage'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
 import { filterAccountsByUserName } from '../util/helpers'
 
@@ -82,7 +83,8 @@ export class AccountAnalytics extends React.Component {
       this.props.trafficActions.fetchByCountry(fetchOpts),
       this.props.trafficActions.fetchTotalEgress(fetchOpts),
       this.props.trafficActions.fetchOnOffNet(onOffOpts),
-      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
+      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      this.props.trafficActions.fetchStorage()
     ]).then(this.props.trafficActions.finishFetching)
     Promise.all([
       this.props.visitorsActions.fetchByTime(fetchOpts),
@@ -160,6 +162,7 @@ export class AccountAnalytics extends React.Component {
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
+            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
@@ -183,7 +186,7 @@ export class AccountAnalytics extends React.Component {
                 byOS={this.props.visitorsByOS.get('os')}/>
               : ''}
             {this.state.activeTab === 'sp-report' ?
-              <AnalysisSPReport fetching={false}
+              <AnalysisSPReport fetching={this.props.trafficFetching}
                 serviceProviderStats={this.props.onOffNet}
                 serviceProviderStatsToday={this.props.onOffNetToday}
                 spChartType={this.props.spChartType}/>
@@ -194,6 +197,10 @@ export class AccountAnalytics extends React.Component {
             {this.state.activeTab === 'url-report' ?
               <AnalysisURLReport fetching={this.props.reportsFetching}
                 urls={this.props.urlMetrics}/>
+              : ''}
+            {this.state.activeTab === 'storage-usage' ?
+              <AnalysisStorageUsage fetching={this.props.trafficFetching}
+                storageStats={this.props.storageStats}/>
               : ''}
             {this.state.activeTab === 'playback-demo' ?
               <AnalysisPlaybackDemo
@@ -221,6 +228,7 @@ AccountAnalytics.propTypes = {
   reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
+  storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -246,6 +254,7 @@ function mapStateToProps(state) {
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     spChartType: state.ui.get('analysisSPChartType'),
+    storageStats: state.traffic.get('storage'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
     reportsFetching: state.reports.get('fetching'),

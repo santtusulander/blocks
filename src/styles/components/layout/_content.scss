@@ -26,5 +26,9 @@
     @include sm {
       padding: ($md-bar-height / 2);
     }
+
+    @include print {
+      padding: 0;
+    }
   }
 }

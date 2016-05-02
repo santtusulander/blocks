@@ -6,11 +6,11 @@
 // ===========
 
 $screen-md-min: 1200px;
-$screen-lg-min: 1690px;
-$screen-xl-min: 2000px;
+$screen-lg-min: 2100px;
+$screen-xl-min: 2500px;
 
 @mixin sm {
-  @media (max-width: #{$screen-md-min - 1}) {
+  @media (max-width: #{$screen-md-min - 1}), only print {
     @content;
   }
 }
@@ -29,6 +29,12 @@ $screen-xl-min: 2000px;
 
 @mixin xl {
   @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+@mixin print {
+  @media only print {
     @content;
   }
 }
@@ -115,3 +121,9 @@ $configuration-dialog-height: 130px;
 $md-configuration-dialog-height: 90px;
 
 $footer-height: 60px;
+
+
+// Print
+// =====
+
+$print-font-size: 12px;
