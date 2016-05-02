@@ -69,3 +69,11 @@ $ npm run dist
 ```shell
 $ npm test
 ```
+
+### Component Lib
+1. Run server
+   ```shell
+   $ npm run storybook
+   ```
+   
+2. Navigate to http://localhost:9001/

@@ -5,6 +5,7 @@
   "main": "dist/js/app.js",
   "author": "Idean",
   "devDependencies": {
+    "@kadira/storybook": "^1.19.0",
     "autoprefixer-loader": "^3.2.0",
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
@@ -72,7 +73,8 @@
     "dist": "webpack -p --config webpack/production.js",
     "lint": "eslint src/",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "storybook": "start-storybook -p 9001"
   },
   "jest": {
     "collectCoverage": true,
