@@ -9,9 +9,17 @@
     padding-top: $md-header-total-height;
   }
 
+  @include print {
+    padding-top: 0;
+  }
+
   .modal-open & {
     filter: blur(20px);
     // Enable hardware acceleration
     transform: translate3d(0, 0, 0);
+
+    @include print {
+      display: none;
+    }
   }
 }

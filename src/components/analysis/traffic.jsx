@@ -5,6 +5,7 @@ import { Col, Row } from 'react-bootstrap'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
+import TableSorter from '../table-sorter'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 class AnalysisTraffic extends React.Component {
@@ -13,10 +14,14 @@ class AnalysisTraffic extends React.Component {
 
     this.state = {
       byLocationWidth: 100,
-      byTimeWidth: 100
+      byTimeWidth: 100,
+      sortBy: 'average_bits_per_second',
+      sortDir: -1
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+    this.changeSort = this.changeSort.bind(this)
+    this.sortedData = this.sortedData.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -32,6 +37,23 @@ class AnalysisTraffic extends React.Component {
       byTimeWidth: this.refs.byTimeHolder.clientWidth
     })
   }
+  changeSort(column, direction) {
+    this.setState({
+      sortBy: column,
+      sortDir: direction
+    })
+  }
+  sortedData(data, sortBy, sortDir) {
+    return data.sort((a, b) => {
+      if(a.get(sortBy) < b.get(sortBy)) {
+        return -1 * sortDir
+      }
+      else if(a.get(sortBy) > b.get(sortBy)) {
+        return 1 * sortDir
+      }
+      return 0
+    })
+  }
   render() {
     const httpData = this.props.serviceTypes.includes('http') ?
       this.props.byTime.filter(time => time.get('service_type') === 'http')
@@ -39,6 +61,12 @@ class AnalysisTraffic extends React.Component {
     const httpsData = this.props.serviceTypes.includes('https') ?
       this.props.byTime.filter(time => time.get('service_type') === 'https')
       : Immutable.List()
+    const sorterProps = {
+      activateSort: this.changeSort,
+      activeColumn: this.state.sortBy,
+      activeDirection: this.state.sortDir
+    }
+    const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
         {/*<div className="analysis-data-box">
@@ -63,7 +91,7 @@ class AnalysisTraffic extends React.Component {
           </Row>
         </div>
         <h3>TRANSFER BY TIME</h3>
-        <div ref="byTimeHolder">
+        <div ref="byTimeHolder" className="transfer-by-time">
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByTime axes={true} padding={40}
@@ -72,6 +100,7 @@ class AnalysisTraffic extends React.Component {
               secondaryData={httpsData.toJS()}
               primaryLabel='HTTP'
               secondaryLabel='HTTPS'
+              stacked={true}
               yAxisCustomFormat={formatBitsPerSecond}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
             }
@@ -93,13 +122,17 @@ class AnalysisTraffic extends React.Component {
         <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
-              <th>Country</th>
-              <th>Bandwidth</th>
+              <TableSorter {...sorterProps} column="name">
+                Country
+              </TableSorter>
+              <TableSorter {...sorterProps} column="average_bits_per_second">
+                Bandwidth
+              </TableSorter>
               <th className="text-center">Period Trend</th>
             </tr>
           </thead>
           <tbody>
-            {!this.props.fetching ? this.props.byCountry.map((country, i) => {
+            {!this.props.fetching ? sortedCountries.map((country, i) => {
               return (
                 <tr key={i}>
                   <td>{country.get('name')}</td>

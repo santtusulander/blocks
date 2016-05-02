@@ -5,6 +5,10 @@
 // Need to override BootStrap
 .table {
 
+  @include print {
+    page-break-inside: avoid;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.1);
 
@@ -40,6 +44,15 @@
 
         @include md {
           padding: 5px ($md-btn-height / 2);
+        }
+
+        @include print {
+          // scss-lint:disable ImportantRule
+          // Need to override table styles
+          height: auto !important;
+          padding: 5px 10px 5px 0;
+          border: 0 !important;
+          border-bottom: 1px solid $silver-40 !important;
         }
       }
 
@@ -153,7 +166,7 @@
   right: $btn-height / 3;
   bottom: 20%;
   left: $btn-height / 3;
-  height: 2px;
+  height: 5px;
 
   @include md {
     right: $md-btn-height / 3;

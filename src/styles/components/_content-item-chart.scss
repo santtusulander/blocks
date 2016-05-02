@@ -12,6 +12,10 @@
     @include md {
       margin: -40px;
     }
+
+    @include print {
+      margin: -110px;
+    }
   }
 }
 
@@ -23,6 +27,10 @@
 
   @include md {
     transform: scale(0.75);
+  }
+
+  @include print {
+    transform: scale(0.5);
   }
 
   &:hover {
@@ -40,6 +48,14 @@
     height: 100%;
     color: inherit;
     border-radius: 50%;
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
+    }
   }
 
   .circle-base {
@@ -47,6 +63,29 @@
     top: 50%;
     left: 50%;
     border-radius: 50%;
+
+    @include print {
+      overflow: hidden;
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 200px solid $white;
+        content: '';
+      }
+
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 10px solid transparent;
+        border-radius: 50%;
+        content: '';
+      }
+    }
 
     .dark-theme &,
     .light-theme & {
@@ -78,6 +117,21 @@
     border-radius: 50%;
     transition: opacity 250ms, background 250ms;
 
+    @include print {
+      opacity: 0.1;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 200px solid$pale-blue;
+        border-radius: 50%;
+        content: '';
+      }
+    }
+
     .dark-theme & {
       background-color: $pale-blue;
       opacity: 0.1;
@@ -105,8 +159,8 @@
     .light-theme & {
 
       .below-avg {
-        fill: $green;
-        stroke: $green;
+        fill: $purple;
+        stroke: $purple;
       }
 
       .avg {
@@ -115,8 +169,8 @@
       }
 
       .above-avg {
-        fill: $purple;
-        stroke: $purple;
+        fill: $green;
+        stroke: $green;
       }
     }
   }
@@ -217,11 +271,11 @@
   }
 
   &.below-avg {
-    background-color: $green;
+    background-color: $purple;
   }
 
   &.above-avg {
-    background-color: $purple;
+    background-color: $green;
   }
 
   &.no-data {

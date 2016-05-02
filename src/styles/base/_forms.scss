@@ -42,6 +42,10 @@ label {
 
     &::placeholder {
       color: rgba($dt-text-color, 0.3);
+
+      @include print {
+        color: transparent;
+      }
     }
   }
 
@@ -96,6 +100,10 @@ label {
 
   @include md {
     padding-bottom: $md-form-group-padding;
+  }
+
+  @include print {
+    padding-bottom: 0;
   }
 
   .header &,

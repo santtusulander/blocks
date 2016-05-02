@@ -4,6 +4,10 @@
 .caret {
   border-width: 5px;
 
+  @include print {
+    display: none;
+  }
+
   &.up {
     border-top-style: none;
     border-bottom-style: solid;

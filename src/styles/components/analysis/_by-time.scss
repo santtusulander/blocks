@@ -4,6 +4,24 @@
 .analysis-by-time {
   position: relative;
 
+  @include print {
+    // scss-lint:disable ImportantRule SelectorDepth
+    // Need to override default styles
+    &:not(.bg-transparent) {
+      border: 1px solid $silver-40;
+    }
+
+    svg {
+      width: 100% !important;
+      height: auto !important;
+
+      .transfer-by-time &,
+      .visitors-by-time & {
+        min-height: 250px;
+      }
+    }
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.2);
   }
@@ -39,6 +57,13 @@
   }
 
   text {
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override default styles
+      font-size: $font-size;
+      fill: $black !important;
+    }
 
     .dark-theme & {
       fill: $dt-text-color;
