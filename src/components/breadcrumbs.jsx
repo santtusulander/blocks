@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router'
 
 export const Breadcrumbs = props => {
-  const amountOfLinks = props.links.length
+  const lastLink = props.links.length - 1
   return (
     <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
       {props.links.map((link, index) => {
-        const active = index === amountOfLinks - 1 ? { className: 'active' } : null
+        const active = index === lastLink ? { className: 'active' } : null
         return (
-          <li { ...active }>
-            {link.url ? <Link key={index} to={link.url}>{link.label}</Link> : link.label}
+          <li { ...active } key={index}>
+            {link.url ? <Link to={link.url}>{link.label}</Link> : link.label}
           </li>
         )
       })}

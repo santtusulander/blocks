@@ -32,17 +32,18 @@ export class Groups extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    const {brand, account} = this.props.params
+    const { brand, account } = this.props.params
+    const { activeAccount, activeGroup } = this.props
     const builtPath = `${brand}/${account}`
     const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
     const analyticsURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
     const configURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
-    const breadcrumbs = [{ label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...' }]
+    const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
       <ContentItems
         account={account}
-        activeAccount={this.props.activeAccount}
-        activeGroup={this.props.activeGroup}
+        activeAccount={activeAccount}
+        activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         breadcrumbs={breadcrumbs}
@@ -52,6 +53,7 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
+        headerText={['ACCOUNT CONTENT SUMMARY', breadcrumbs[0].label]}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={this.props.sortDirection}

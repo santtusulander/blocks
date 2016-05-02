@@ -44,7 +44,8 @@ export class Hosts extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    const {brand, account, group} = this.props.params;
+    const { brand, account, group } = this.props.params
+    const { activeAccount, activeGroup } = this.props
     const properties = this.props.hosts.map(host => {
       return Immutable.Map({
         id: host,
@@ -66,18 +67,18 @@ export class Hosts extends React.Component {
     }
     const breadcrumbs = [
       {
-        label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...',
+        label: activeAccount ? activeAccount.get('name') : 'Loading...',
         url: `/content/groups/udn/${account}`
       },
       {
-        label: this.props.activeGroup ? this.props.activeGroup.get('name') : 'Loading...'
+        label: activeGroup ? activeGroup.get('name') : 'Loading...'
       }
     ]
     return (
       <ContentItems
         account={account}
         activeAccount={this.props.activeAccount}
-        activeGroup={this.props.activeGroup}
+        activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         breadcrumbs={breadcrumbs}
@@ -87,6 +88,7 @@ export class Hosts extends React.Component {
         createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
+        headerText={['GROUP CONTENT SUMMARY', breadcrumbs[1].label]}
         fetchingMetrics={this.props.fetchingMetrics}
         group={group}
         metrics={this.props.metrics}

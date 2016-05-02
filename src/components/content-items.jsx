@@ -35,7 +35,6 @@ class ContentItems extends React.Component {
     super(props);
 
     this.state = {
-      activeFilter: 'traffic_high_to_low',
       addItem: false
     }
 
@@ -59,7 +58,7 @@ class ContentItems extends React.Component {
     this.toggleAddItem()
   }
   render() {
-    const {brand, account, group, sortValuePath, sortDirection, metrics} = this.props
+    const { sortValuePath, sortDirection, metrics, headerText } = this.props
     let trafficMin = 0
     let trafficMax = 0
     if(!this.props.fetchingMetrics) {
@@ -86,7 +85,7 @@ class ContentItems extends React.Component {
     .sort(sortContent(sortValuePath, sortDirection))
     const foundSort = sortOptions.find(opt => {
       return Immutable.is(opt.path, this.props.sortValuePath) &&
-        opt.direction === this.props.sortDirection
+        opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     return (
@@ -94,10 +93,10 @@ class ContentItems extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Link className="btn btn-primary btn-icon"
-                to={`/content/analytics/group/${brand}/${account}/${group}`}>
-                <IconChart />
-              </Link>
+             { /*<Link className="btn btn-primary btn-icon"
+                             to={`/content/analytics/group/${brand}/${account}/${group}`}>
+                             <IconChart />
+                           </Link>*/}
 
               {this.props.createNewItem ?
                 <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -123,33 +122,12 @@ class ContentItems extends React.Component {
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
-
-            <p>GROUP CONTENT SUMMARY</p>
-            <h1>
-              {this.props.activeGroup ?
-                this.props.activeGroup.get('name')
-                : 'Loading...'}
-            </h1>
+            <p>{headerText[0]}</p>
+            <h1>{headerText[1]}</h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
-            {/*<ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
-              <li>
-                <Link to={`/content/groups/udn/${this.props.account}`}>
-                  {this.props.activeAccount ?
-                    this.props.activeAccount.get('name')
-                    : 'Loading...'}
-                </Link>
-              </li>
-              {this.props.group ?
-                <li className="active">
-                  {this.props.activeGroup ?
-                    this.props.activeGroup.get('name')
-                    : 'Loading...'}
-                </li> : null}
-            </ol>*/}
-            <Breadcrumbs links={this.props.breadcrumbs}/>
-
+            {this.props.type !== 'account' ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
               <p className="fetching-info">Loading...</p> : (
               this.props.contentItems.size === 0 ?
@@ -181,7 +159,7 @@ class ContentItems extends React.Component {
                     const itemProps = {
                       id: id,
                       linkTo: this.props.nextPageURLBuilder(id),
-                      configurationLink: this.props.configURLBuilder(id),
+                      configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
                       description: 'Desc',
@@ -242,7 +220,7 @@ ContentItems.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
   brand: React.PropTypes.string,
-  breadcrumbs:React.PropTypes.array,
+  breadcrumbs: React.PropTypes.array,
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
@@ -251,6 +229,7 @@ ContentItems.propTypes = {
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
+  headerText: React.PropTypes.array,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   sortDirection: React.PropTypes.number,
