@@ -65,8 +65,13 @@ export class Hosts extends React.Component {
       return `/content/analytics/property/${builtPath}${encoded}`
     }
     const breadcrumbs = [
-      { label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...' },
-      { label: this.props.activeGroup ? this.props.activeGroup.get('name') : 'Loading...' }
+      {
+        label: this.props.activeAccount ? this.props.activeAccount.get('name') : 'Loading...',
+        url: `/content/groups/udn/${account}`
+      },
+      {
+        label: this.props.activeGroup ? this.props.activeGroup.get('name') : 'Loading...'
+      }
     ]
     return (
       <ContentItems
