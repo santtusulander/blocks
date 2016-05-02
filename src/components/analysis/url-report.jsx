@@ -29,7 +29,9 @@ class AnalysisURLReport extends React.Component {
     })
   }
   render() {
-    const chartHeight = this.props.urls.size * 40 + 40;
+    const chartHeight = this.props.urls.size * 40 + 40
+    const maxBytes = Math.max(...this.props.urls.toJS().map(url => url.bytes))
+    const maxReqs = Math.max(...this.props.urls.toJS().map(url => url.requests))
     return (
       <div className="analysis-url-report">
         <div ref="chartHolder">
@@ -37,6 +39,7 @@ class AnalysisURLReport extends React.Component {
             data={this.props.urls.toJS()}
             dataKey="bytes"
             height={chartHeight}
+            labelKey="url"
             width={this.state.chartWidth}
             padding={20}
             xAxisCustomFormat={formatBytes}/>
@@ -46,75 +49,32 @@ class AnalysisURLReport extends React.Component {
           <thead>
             <tr>
               <th>URL</th>
-              <th width="15%">Bytes</th>
-              <th width="15%">Requests</th>
-              <th width="15%">Seconds</th>
+              <th width="20%">Bytes</th>
+              <th width="20%">Requests</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>www.domain.com/assets/videos/video.mp4</td>
-              <td>
-                {formatBytes(123544786367)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '100%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(213678).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '90%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(82457).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '50%'}} />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>www.foobar.com/assets/images/image.jpg</td>
-              <td>
-                {formatBytes(6541632)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '80%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(987).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '70%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(213678).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '90%'}} />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>www.domain.com/favicon.ico</td>
-              <td>
-                {formatBytes(9871)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '60%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(987123).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '50%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(934875).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '80%'}} />
-                </div>
-              </td>
-            </tr>
+            {this.props.urls.map((url, i) => {
+              const bytesOfMax = (url.get('bytes') / maxBytes) * 100
+              const reqsOfMax = (url.get('requests') / maxReqs) * 100
+              return (
+                <tr key={i}>
+                  <td>{url.get('url')}</td>
+                  <td>
+                    {formatBytes(url.get('bytes'))}
+                    <div className="table-percentage-line">
+                      <div className="line" style={{width: `${bytesOfMax}%`}} />
+                    </div>
+                  </td>
+                  <td>
+                    {numeral(url.get('requests')).format('0,0')}
+                    <div className="table-percentage-line">
+                      <div className="line" style={{width: `${reqsOfMax}%`}} />
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

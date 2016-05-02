@@ -42,14 +42,17 @@ class AnalysisHorizontalBar extends React.Component {
           width={this.props.width}
           height={this.props.height}
           ref='chart'>
-          {this.props.data.map((url, i) => <line
-            key={i}
-            className="url-bar"
-            x1={xScale(0)}
-            x2={xScale(url[this.props.dataKey])}
-            y1={yScale(i)}
-            y2={yScale(i)}/>
-          )}
+          {this.props.data.map((url, i) => <g key={i}>
+            <line
+              className="url-bar"
+              x1={xScale(0)}
+              x2={xScale(url[this.props.dataKey])}
+              y1={yScale(i)}
+              y2={yScale(i)}/>
+            <text x={xScale(20)} y={yScale(i) + 4}>
+              {url[this.props.labelKey]}
+            </text>
+          </g>)}
           {xScale.ticks(4).map((tick, i) => {
             if(tick) {
               return (
@@ -76,6 +79,7 @@ AnalysisHorizontalBar.propTypes = {
   data: React.PropTypes.array,
   dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
+  labelKey: React.PropTypes.string,
   padding: React.PropTypes.number,
   width: React.PropTypes.number,
   xAxisCustomFormat: React.PropTypes.func,
