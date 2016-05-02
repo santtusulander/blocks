@@ -9,3 +9,4 @@ export const visitors = require('./visitors').default;
 export const purge = require('./purge').default;
 export const user = require('./user').default;
 export const metrics = require('./metrics').default;
+export const reports = require('./reports').default;

@@ -40,20 +40,17 @@ export const fetchURLMetrics = createAction(REPORTS_URL_METRICS_FETCHED, () => {
     {
       url: 'www.abc.com',
       bytes: 1000,
-      requests: 287536,
-      seconds: 309567
+      requests: 287536
     },
     {
       url: 'www.sirut.com/ksdjg/sefksgh/ksjehfsdg.jpg',
       bytes: 2000,
-      requests: 467567,
-      seconds: 234
+      requests: 467567
     },
     {
       url: 'www.rtytyu.com/dfgfghfgh/sdf/dfgdr.mp4',
       bytes: 3000,
-      requests: 343456,
-      seconds: 34
+      requests: 343456
     }
   ])
 })
