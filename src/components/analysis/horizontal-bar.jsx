@@ -57,7 +57,8 @@ class AnalysisHorizontalBar extends React.Component {
             if(tick) {
               return (
                 <g key={i}>
-                  <text x={xScale(tick)} y={this.props.height - this.props.padding}>
+                  <text x={xScale(tick)}
+                    y={this.props.height - this.props.padding}>
                     {this.formatX(tick)}
                   </text>
                 </g>

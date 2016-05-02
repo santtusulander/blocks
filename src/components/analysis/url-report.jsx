@@ -84,8 +84,10 @@ class AnalysisURLReport extends React.Component {
 
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
-  fetching: React.PropTypes.bool,
   urls: React.PropTypes.instanceOf(Immutable.List)
+}
+AnalysisURLReport.defaultProps = {
+  urls: Immutable.List()
 }
 
 module.exports = AnalysisURLReport
