@@ -36,7 +36,10 @@ export class Groups extends React.Component {
     const { activeAccount, activeGroup } = this.props
     const builtPath = `${brand}/${account}`
     const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
-    const analyticsURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
+    const analyticsURLBuilder = (...groupID) => {
+        return groupID[0] ? `/content/analytics/group/${builtPath}/${groupID[0]}`
+          : `/content/analytics/account/${brand}/${account}`
+    }
     const configURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
@@ -56,6 +59,7 @@ export class Groups extends React.Component {
         headerText={['ACCOUNT CONTENT SUMMARY', breadcrumbs[0].label]}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        showAnalyticsLink={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}

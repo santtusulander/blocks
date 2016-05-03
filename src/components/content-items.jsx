@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, Button, ButtonToolbar } from 'react-bootstrap'
+import { Modal, ButtonToolbar } from 'react-bootstrap'
 import { Link } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -8,6 +8,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import sortOptions from '../constants/content-item-sort-options'
 
 import AddHost from './add-host'
+import { ButtonWrapper as Button } from './button'
 import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
@@ -58,10 +59,22 @@ class ContentItems extends React.Component {
     this.toggleAddItem()
   }
   render() {
-    const { sortValuePath, sortDirection, metrics, headerText } = this.props
+    const {
+      sortValuePath,
+      sortDirection,
+      metrics,
+      headerText,
+      activeGroup,
+      activeAccount,
+      type,
+      analyticsURLBuilder,
+      fetchingMetrics,
+      showAnalyticsLink,
+      viewingChart,
+      createNewItem } = this.props
     let trafficMin = 0
     let trafficMax = 0
-    if(!this.props.fetchingMetrics) {
+    if(!fetchingMetrics) {
       const trafficTotals = this.props.contentItems.map((item, i) => metrics.getIn([i, 'totalTraffic'], 0))
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
@@ -78,13 +91,13 @@ class ContentItems extends React.Component {
       return Immutable.Map({
         item: item,
         metrics: metrics.find(metric => {
-          return metric.get(this.props.type) === item.get('id')
+          return metric.get(type) === item.get('id')
         }) || Immutable.Map()
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
     const foundSort = sortOptions.find(opt => {
-      return Immutable.is(opt.path, this.props.sortValuePath) &&
+      return Immutable.is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
@@ -93,31 +106,29 @@ class ContentItems extends React.Component {
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-             { /*<Link className="btn btn-primary btn-icon"
-                             to={`/content/analytics/group/${brand}/${account}/${group}`}>
-                             <IconChart />
-                           </Link>*/}
-
-              {this.props.createNewItem ?
-                <Button bsStyle="primary" className="btn-icon btn-add-new"
-                  onClick={this.toggleAddItem}>
-                  <IconAdd />
-                </Button>
-                : null
-              }
-
+              {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
+              <Button bsStyle="primary"
+                icon={true}
+                addNew={true}
+                hidden={createNewItem === undefined}
+                onClick={this.toggleAddItem}>
+                <IconAdd/>
+              </Button>
               <Select
                 onSelect={this.handleSortChange}
                 value={currentValue}
                 options={sortOptions.map(opt => [opt.value, opt.label])}/>
-
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (this.props.viewingChart ? ' hidden' : '')}
+              <Button bsStyle="primary"
+                icon={true}
+                toggleView={true}
+                hidden={viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemChart/>
               </Button>
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (!this.props.viewingChart ? ' hidden' : '')}
+              <Button bsStyle="primary"
+                icon={true}
+                toggleView={true}
+                hidden={!viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemList/>
               </Button>
@@ -127,13 +138,13 @@ class ContentItems extends React.Component {
           </PageHeader>
 
           <div className="container-fluid body-content">
-            {this.props.type !== 'account' ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
+            {this.props.breadcrumbs ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
               <p className="fetching-info">Loading...</p> : (
               this.props.contentItems.size === 0 ?
                 <p className="fetching-info text-center">
-                  {this.props.activeGroup ?
-                    this.props.activeGroup.get('name') +
+                  {activeGroup ?
+                    activeGroup.get('name') +
                     ' does not contain any properties'
                     : 'Loading...'}
                 <br/>
@@ -147,8 +158,8 @@ class ContentItems extends React.Component {
                 transitionEnterTimeout={400}
                 transitionLeaveTimeout={250}>
                 <div
-                  key={this.props.viewingChart}
-                  className={this.props.viewingChart ?
+                  key={viewingChart}
+                  className={viewingChart ?
                     'content-item-grid' :
                     'content-item-lists'}>
                   {contentItems.map((content, i) => {
@@ -178,7 +189,7 @@ class ContentItems extends React.Component {
                     }
                     return (
                       <ContentItem key={i}
-                        isChart={this.props.viewingChart}
+                        isChart={viewingChart}
                         itemProps={itemProps}
                         scaledWidth={scaledWidth}
                         deleteItem={this.props.deleteItem}/>
@@ -194,9 +205,9 @@ class ContentItems extends React.Component {
                 <Modal.Header>
                   <h1>Add Property</h1>
                   <p>
-                    {this.props.activeAccount && this.props.activeGroup ?
-                      this.props.activeAccount.get('name') + ' / ' +
-                      this.props.activeGroup.get('name')
+                    {activeAccount && activeGroup ?
+                      activeAccount.get('name') + ' / ' +
+                      activeGroup.get('name')
                     : null}
                   </p>
                 </Modal.Header>
@@ -212,6 +223,18 @@ class ContentItems extends React.Component {
     )
   }
 }
+
+const AnalyticsLink = props => {
+  return (
+    <Link
+      className="btn btn-primary btn-icon"
+      to={props.url()}>
+      <IconChart />
+   </Link>
+  )
+}
+
+AnalyticsLink.propTypes = { url: React.PropTypes.func }
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
@@ -232,6 +255,7 @@ ContentItems.propTypes = {
   headerText: React.PropTypes.array,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
+  showAnalyticsLink: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),

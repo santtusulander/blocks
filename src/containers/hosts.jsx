@@ -61,9 +61,12 @@ export class Hosts extends React.Component {
       const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
       return `/content/configuration/${builtPath}${encoded}`
     }
-    const analyticsURLBuilder = (property) => {
-      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
-      return `/content/analytics/property/${builtPath}${encoded}`
+    const analyticsURLBuilder = (...property) => {
+      if(property[0]) {
+        const encoded = encodeURIComponent(property[0]).replace(/\./g, "%2e")
+        return `/content/analytics/property/${builtPath}${encoded}`
+      }
+      return `/content/analytics/group/${brand}/${account}/${group}`
     }
     const breadcrumbs = [
       {
@@ -93,6 +96,7 @@ export class Hosts extends React.Component {
         group={group}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        showAnalyticsLink={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
