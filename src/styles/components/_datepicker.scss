@@ -34,8 +34,7 @@
   .light-theme & {
     color: $dt-text-color;
     background-color: $black;
-    background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
-      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+    background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
     background-size: 100%;
   }
 }
@@ -331,14 +330,12 @@
     .dark-theme &,
     .light-theme & {
       background: $black;
-      background-image: linear-gradient(rgba($purple, 0.025), rgba($purple, 0.025)),
-        linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
+      background-image: linear-gradient(rgba($purple, 0.025), rgba($purple, 0.025)), linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
       background-size: 100%;
 
       &.datepicker__tether-enabled {
         background: $black;
-        background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)),
-          linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
         background-size: 100%;
       }
     }
@@ -370,8 +367,7 @@
 
     .dark-theme &,
     .light-theme & {
-      background: url('../assets/icons/dt-icon-calendar.svg')
-        rgba($black, 0.2) right center no-repeat;
+      background: url('../assets/icons/dt-icon-calendar.svg') rgba($black, 0.2) right center no-repeat;
       background-size: 60px 60px;
 
       @include md {
