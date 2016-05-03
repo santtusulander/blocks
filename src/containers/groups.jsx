@@ -82,6 +82,13 @@ Groups.propTypes = {
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
+Groups.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  groups: Immutable.List(),
+  metrics: Immutable.List(),
+  sortValuePath: Immutable.List()
+}
 
 function mapStateToProps(state) {
   return {

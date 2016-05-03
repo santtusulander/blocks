@@ -119,6 +119,13 @@ Hosts.propTypes = {
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
 }
+Hosts.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  hosts: Immutable.List(),
+  metrics: Immutable.List(),
+  sortValuePath: Immutable.List()
+}
 
 function mapStateToProps(state) {
   return {

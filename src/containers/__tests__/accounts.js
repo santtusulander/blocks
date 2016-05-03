@@ -41,6 +41,7 @@ const fakeAccounts = Immutable.fromJS([
 
 const fakeMetrics = Immutable.fromJS([
   {
+    account: '1',
     avg_cache_hit_rate: 1,
     historical_traffic: [],
     historical_variance: [],
@@ -52,6 +53,7 @@ const fakeMetrics = Immutable.fromJS([
     }
   },
   {
+    account: '2',
     avg_cache_hit_rate: 2,
     historical_traffic: [],
     historical_variance: [],
