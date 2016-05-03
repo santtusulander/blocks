@@ -13,8 +13,7 @@
   .dark-theme & {
     color: rgba($dt-text-color, 0.6);
     background-color: $black;
-    background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)),
-     linear-gradient(rgba($pale-blue, 0.125), rgba($pale-blue, 0.125));
+    background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.125), rgba($pale-blue, 0.125));
     background-size: 100%;
 
     a {
