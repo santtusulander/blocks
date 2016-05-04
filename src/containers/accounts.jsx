@@ -26,7 +26,9 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData()
+    if(this.props.accounts.isEmpty()) {
+      this.props.fetchData()
+    }
   }
   // toggleActiveAccount(id) {
   //   return () => {

@@ -21,7 +21,9 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData()
+    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+      this.props.fetchData()
+    }
   }
   createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
@@ -163,7 +165,6 @@ function mapDispatchToProps(dispatch, ownProps) {
       startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
       endDate: moment.utc().endOf('hour').format('X')
     })
-
   }
   return {
     fetchData: fetchData,

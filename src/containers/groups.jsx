@@ -19,7 +19,9 @@ export class Groups extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData()
+    if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
+      this.props.fetchData()
+    }
   }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
@@ -97,6 +99,7 @@ Groups.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
+    allAccounts: state.account.get('allAccounts'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.group.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
@@ -114,16 +117,15 @@ function mapDispatchToProps(dispatch, ownProps) {
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const fetchData = () => {
-    groupActions.startFetching()
     accountActions.fetchAccount(brand, account)
-    groupActions.fetchGroups(brand, account)
+    groupActions.startFetching()
     metricsActions.startGroupFetching()
+    groupActions.fetchGroups(brand, account)
     metricsActions.fetchGroupMetrics({
       account: account,
       startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
       endDate: moment.utc().endOf('hour').format('X')
     })
-
   }
   return {
     fetchData: fetchData,
