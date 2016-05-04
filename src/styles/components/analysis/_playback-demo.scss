@@ -36,9 +36,24 @@
     font-size: 30px;
   }
 
+  .container-fluid-video {
+    position: relative;
+    min-height: 540px;
+  }
+
   video {
     width: 960px;
     height: 540px;
+  }
+
+  .video-error-msg {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    left: 40px;
+    padding: 15px 10px;
+    margin: -52px 0 0;
+    background: $purple;
   }
 
   .chart-row {
