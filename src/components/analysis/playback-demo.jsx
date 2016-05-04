@@ -2,8 +2,10 @@ import React from 'react'
 import Hls from 'hls.js'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-
+import { isSafari } from '../../util/helpers'
 import AnalysisByKey from './by-key'
+
+const videoErrorMsgOnSafari = 'This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox'
 
 export class PlaybackDemo extends React.Component {
   constructor(props) {
@@ -57,7 +59,7 @@ export class PlaybackDemo extends React.Component {
     })
   }
   playVideo() {
-    if(Hls.isSupported()) {
+    if(Hls.isSupported() && !isSafari()) {
       const hls = new Hls()
       hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
       hls.attachMedia(this.refs.player)
@@ -143,8 +145,8 @@ export class PlaybackDemo extends React.Component {
             </div>
           </div>
         </div>
-        <div className="container-fluid text-center">
-          <video ref="player" controls={true}></video>
+        <div className="container-fluid container-fluid-video text-center">
+          {!isSafari() ? <video ref="player" controls={true}></video> : <p className="video-error-msg">{videoErrorMsgOnSafari}</p>}
         </div>
         <div className="container-fluid low-pad">
           <div className="chart-row" ref="chartHolder">
