@@ -29,8 +29,7 @@
   .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
-    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)),
-      linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
     background-size: 100%;
   }
 

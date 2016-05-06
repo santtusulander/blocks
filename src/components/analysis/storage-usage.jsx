@@ -1,0 +1,52 @@
+import React from 'react'
+import Immutable from 'immutable'
+
+import AnalysisStacked from './stacked'
+
+class AnalysisStorageUsageReport extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      chartWidth: 100
+    }
+
+    this.measureContainers = this.measureContainers.bind(this)
+  }
+  componentDidMount() {
+    this.measureContainers()
+    setTimeout(() => {this.measureContainers()}, 500)
+    window.addEventListener('resize', this.measureContainers)
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.measureContainers)
+  }
+  measureContainers() {
+    this.setState({
+      chartWidth: this.refs.chartHolder.clientWidth
+    })
+  }
+  render() {
+    const stats = this.props.storageStats
+    return (
+      <div className="analysis-storage-usage">
+        <h3>Storage Volume Reporting</h3>
+        <div ref="chartHolder">
+          {this.props.fetching ?
+            <div>Loading...</div> :
+            <AnalysisStacked padding={40}
+              dataSets={[stats.toJS()]}
+              width={this.state.chartWidth} height={this.state.chartWidth / 3}/>}
+        </div>
+      </div>
+    )
+  }
+}
+
+AnalysisStorageUsageReport.displayName = 'AnalysisStorageUsageReport'
+AnalysisStorageUsageReport.propTypes = {
+  fetching: React.PropTypes.bool,
+  storageStats: React.PropTypes.instanceOf(Immutable.List)
+}
+
+module.exports = AnalysisStorageUsageReport

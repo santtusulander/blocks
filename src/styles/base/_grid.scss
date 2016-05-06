@@ -7,14 +7,14 @@
   margin-left: 0;
 }
 
-.row.no-gutters > [class^="col-"],
-.row.no-gutters > [class*=" col-"] {
+.row.no-gutters > [class^='col-'],
+.row.no-gutters > [class*=' col-'] {
   padding-right: 0;
   padding-left: 0;
 }
 
-.row.no-end-gutters > [class^="col-"],
-.row.no-end-gutters > [class*=" col-"] {
+.row.no-end-gutters > [class^='col-'],
+.row.no-end-gutters > [class*=' col-'] {
 
   &:first-of-type {
     padding-left: 0;
@@ -37,8 +37,8 @@
   }
 }
 
-[class^="col-"],
-[class*=" col-"] {
+[class^='col-'],
+[class*=' col-'] {
 
   &.right-separator {
 

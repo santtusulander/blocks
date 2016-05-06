@@ -1,35 +1,121 @@
-// 
-//
-// jest.dontMock('../account.js')
-// jest.dontMock('redux-actions')
-//
-// let axios = require('axios')
-// axios.post = jest.genMockFunction().mockImplementation(function() {
-//   return {
-//     then: jest.genMockFunction()
-//   };
-// })
-//
-// const {createAccount, deleteAccount, fetchAccount, fetchAccounts, updateAccount, startFetching} = require('../account.js')
-//
-// describe('Account Module', () => {
-//   it('should have a create action', () => {
-//     createAccount('aaa')
-//     expect(axios.post.mock.calls[0][0]).toBe('http://localhost:3000/VCDN/v2/aaa/accounts')
-//   });
-  // it('should have a delete action', () => {
-  //   console.log(deleteAccount)
-  // });
-  // it('should have a fetch one action', () => {
-  //   console.log(fetchAccount)
-  // });
-  // it('should have a fetch all action', () => {
-  //   console.log(fetchAccounts)
-  // });
-  // it('should have an update action', () => {
-  //   console.log(updateAccount)
-  // });
-  // it('should have a start fetch action', () => {
-  //   console.log(startFetching)
-  // });
-// })
+const Immutable = require('immutable');
+
+jest.dontMock('../account.js')
+
+const {
+  createSuccess,
+  deleteSuccess,
+  deleteFailure,
+  fetchSuccess,
+  fetchFailure,
+  fetchAllSuccess,
+  fetchAllFailure,
+  startFetch,
+  updateSuccess,
+  updateFailure,
+  changeActive
+} = require('../account.js');
+
+describe('Account Module', () => {
+
+  it('should handle create account success', () => {
+    const state = Immutable.fromJS({
+      allAccounts: []
+    });
+    const newState = createSuccess(state, {payload: {account_id: 1}});
+    const expectedState = Immutable.fromJS({
+      allAccounts: [1],
+      activeAccount: {account_id: 1}
+    })
+    expect(Immutable.is(newState, expectedState)).toBeTruthy();
+  });
+
+  it('should handle delete account success', () => {
+    const state = Immutable.fromJS({
+      allAccounts: [1]
+    });
+    const newState = deleteSuccess(state, {payload: {id: 1}});
+    expect(newState.get('allAccounts')).not.toContain(1);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle delete account failure', () => {
+    const state = Immutable.fromJS({
+      allAccounts: [1]
+    });
+    const newState = deleteFailure(state, {payload: {id: 1}});
+    expect(newState.get('allAccounts')).toContain(1);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch account success', () => {
+    const state = Immutable.fromJS({
+      activeAccount: {id: 1}
+    });
+    const newState = fetchSuccess(state, {payload: {id: 2}});
+    expect(newState.get('activeAccount').get('id')).toBe(2);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch account failure', () => {
+    const state = Immutable.fromJS({
+      activeAccount: {id: 1}
+    });
+    const newState = fetchFailure(state, {payload: {id: 2}});
+    expect(newState.get('activeAccount')).toBe(null);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch all success', () => {
+    const state = Immutable.fromJS({
+      allAccounts: [1]
+    });
+    const newState = fetchAllSuccess(state, {payload: {data: [2]}});
+    expect(newState.get('allAccounts').get(0)).toBe(2);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch all failure', () => {
+    const state = Immutable.fromJS({
+      allAccounts: [1]
+    });
+    const newState = fetchAllFailure(state, {payload: {data: [2]}});
+    expect(newState.get('allAccounts').size).toBe(0);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle starting to fetch', () => {
+    const state = Immutable.fromJS({
+      fetching: false
+    });
+    const newState = startFetch(state);
+    expect(newState.get('fetching')).toBeTruthy();
+  });
+
+  it('should handle update success', () => {
+    const state = Immutable.fromJS({
+      activeAccount: 'something'
+    });
+    const newState = updateSuccess(state);
+    expect(newState.get('activeAccount')).toBe(null);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle update failure', () => {
+    const state = Immutable.fromJS({
+      activeAccount: 'something'
+    });
+    const newState = updateFailure(state);
+    expect(newState.get('activeAccount')).toBe('something');
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle changing active account', () => {
+    const state = Immutable.fromJS({
+      activeAccount: 'something'
+    });
+    const newState = changeActive(state, {payload: 'something else'});
+    expect(newState.get('activeAccount')).toBe('something else');
+  });
+
+});

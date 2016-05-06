@@ -1,9 +1,23 @@
 .analysis-stacked {
-  .on-net {
+  line {
     stroke-width: 20px;
   }
 
-  .off-net {
-    stroke-width: 20px;
+  .line-0 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .line-1 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $yellow;
+      stroke: $yellow;
+    }
   }
 }

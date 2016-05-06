@@ -9,37 +9,33 @@ const AnalysisStacked = require('../stacked.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
+const momentFormatMock = jest.genMockFunction().mockReturnValue('time')
+const numeralFormatMock = jest.genMockFunction().mockReturnValue('number')
 
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeData = [
-  {
-    "total":123,
-    "timestamp":new Date(1459468800*1000),
-    "net_on":{
-      "bytes":456,
-      "percent_total":0.1
+  [
+    {
+      "timestamp":new Date(1459468800*1000),
+      "bytes":456
     },
-    "net_off":{
-      "bytes":789,
-      "percent_total":0.90
+    {
+      "timestamp":new Date(1459555200*1000),
+      "bytes":654
     }
-  },
-  {
-    "total":987,
-    "timestamp":new Date(1459555200*1000),
-    "net_on":{
-      "bytes":654,
-      "percent_total":0.8
+  ],
+  [
+    {
+      "timestamp":new Date(1459468800*1000),
+      "bytes":789
     },
-    "net_off":{
-      "bytes":321,
-      "percent_total":0.2
+    {
+      "timestamp":new Date(1459555200*1000),
+      "bytes":321
     }
-  }
+  ]
 ]
 
 describe('AnalysisStacked', () => {
@@ -53,7 +49,7 @@ describe('AnalysisStacked', () => {
   it('can be passed a custom css class', () => {
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStacked className="foo" width={400} height={200} padding={10}
-        data={fakeData}/>
+        dataSets={fakeData}/>
     );
     let div = TestUtils.findRenderedDOMComponentWithTag(stacks, 'div');
     expect(ReactDOM.findDOMNode(div).className).toContain('foo');
@@ -78,7 +74,7 @@ describe('AnalysisStacked', () => {
 
   it('should have data lines', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} data={fakeData}/>
+      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let lines = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'line')
     expect(lines.length).toBe(4);
@@ -88,11 +84,11 @@ describe('AnalysisStacked', () => {
     moment.mockClear()
     momentFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} data={fakeData}/>
+      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
-    expect(texts[0].getAttribute('y')).toBe('190')
+    expect(texts[0].textContent).toBe('time')
     expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
 
@@ -100,12 +96,12 @@ describe('AnalysisStacked', () => {
     numeral.mockClear()
     numeralFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} data={fakeData}/>
+      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
-    expect(texts[2].getAttribute('y')).toBe('190')
-    expect(numeral.mock.calls.length).toBe(4)
-    expect(numeral.mock.calls[0]).toEqual([200])
+    expect(texts[3].textContent).toBe('number')
+    expect(numeral.mock.calls.length).toBe(2)
+    expect(numeral.mock.calls[0]).toEqual([500])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0 a')
   });
 });
