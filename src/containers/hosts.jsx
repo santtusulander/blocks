@@ -93,7 +93,7 @@ export class Hosts extends React.Component {
         createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
-        headerText={['GROUP CONTENT SUMMARY', breadcrumbs[1].label]}
+        headerText={{ summary: 'GROUP CONTENT SUMMARY', label: breadcrumbs[1].label }}
         fetchingMetrics={this.props.fetchingMetrics}
         group={group}
         metrics={this.props.metrics}

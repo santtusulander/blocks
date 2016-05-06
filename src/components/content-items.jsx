@@ -133,8 +133,8 @@ class ContentItems extends React.Component {
                 <IconItemList/>
               </Button>
             </ButtonToolbar>
-            <p>{headerText[0]}</p>
-            <h1>{headerText[1]}</h1>
+            <p>{headerText.summary}</p>
+            <h1>{headerText.label}</h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
@@ -252,7 +252,7 @@ ContentItems.propTypes = {
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
-  headerText: React.PropTypes.array,
+  headerText: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   showAnalyticsLink: React.PropTypes.bool,

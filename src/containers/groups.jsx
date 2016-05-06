@@ -58,7 +58,7 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        headerText={['ACCOUNT CONTENT SUMMARY', breadcrumbs[0].label]}
+        headerText={{ summary: 'ACCOUNT CONTENT SUMMARY', label: breadcrumbs[0].label }}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}

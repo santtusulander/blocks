@@ -82,7 +82,7 @@ export class Accounts extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
-        headerText={['BRAND CONTENT SUMMARY', 'Accounts']}
+        headerText={{ summary: 'BRAND CONTENT SUMMARY', label: 'Accounts' }}
         metrics={metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
