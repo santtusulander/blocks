@@ -88,17 +88,17 @@ export default handleActions({
 // ACTIONS
 
 export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, opts => {
-  return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/metrics${qsBuilder(opts)}`)
   .then(parseResponseData)
 })
 
 export const fetchGroupMetrics = createAction(GROUP_METRICS_FETCHED, opts => {
-  return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/metrics${qsBuilder(opts)}`)
   .then(parseResponseData)
 })
 
 export const fetchHostMetrics = createAction(HOST_METRICS_FETCHED, opts => {
-  return axios.get(`${analyticsBase}/metrics${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/metrics${qsBuilder(opts)}`)
   .then(parseResponseData)
 })
 
