@@ -38,6 +38,7 @@
     "style-loader": "^0.13.0",
     "underscore": "^1.8.3",
     "webpack": "^1.12.13",
+    "webpack-cleanup-plugin": "^0.2.0",
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
@@ -63,9 +64,9 @@
   },
   "scripts": {
     "start": "node dev-server.js",
-    "dist": "webpack -p --config webpack/production.js",
+    "dist": "webpack -p --progress --config webpack/production.js",
     "lint:js": "eslint src/",
-    "lint:styles": "./node_modules/.bin/sass-lint -v -v -q; exit 0;",
+    "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
     "test:watch": "jest --watch",
     "storybook": "start-storybook -p 9001"
