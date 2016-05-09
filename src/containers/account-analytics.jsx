@@ -93,7 +93,8 @@ export class AccountAnalytics extends React.Component {
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
     Promise.all([
-      this.props.reportsActions.fetchURLMetrics()
+      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
+      this.props.reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(this.props.reportsActions.finishFetching)
   }
   changeTab(newTab) {
@@ -192,7 +193,9 @@ export class AccountAnalytics extends React.Component {
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={this.props.reportsFetching}/>
+              <AnalysisFileError fetching={this.props.reportsFetching}
+                summary={this.props.fileErrorSummary}
+                urls={this.props.fileErrorURLs}/>
               : ''}
             {this.state.activeTab === 'url-report' ?
               <AnalysisURLReport fetching={this.props.reportsFetching}
@@ -219,6 +222,8 @@ AccountAnalytics.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   fetchingMetrics: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
@@ -250,6 +255,8 @@ function mapStateToProps(state) {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
+    fileErrorSummary: state.reports.get('fileErrorSummary'),
+    fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('accountMetrics'),
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),

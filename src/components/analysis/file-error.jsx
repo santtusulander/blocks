@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
+import Immutable from 'immutable'
 
 import {formatBytes} from '../../util/helpers'
 
@@ -107,7 +108,9 @@ class AnalysisFileError extends React.Component {
 
 AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
-  fetching: React.PropTypes.bool
+  fetching: React.PropTypes.bool,
+  summary: React.PropTypes.instanceOf(Immutable.Map),
+  urls: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = AnalysisFileError

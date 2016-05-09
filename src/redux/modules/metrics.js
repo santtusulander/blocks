@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, parseResponseData } from '../util'
+import { analyticsBase, parseResponseData, qsBuilder } from '../util'
 
 const ACCOUNT_METRICS_START_FETCH = 'ACCOUNT_METRICS_START_FETCH'
 const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
@@ -20,28 +20,6 @@ const emptyMetrics = Immutable.Map({
   fetchingGroupMetrics: false,
   fetchingHostMetrics: false
 })
-
-const qsBuilder = ({
-  account,
-  group,
-  startDate,
-  endDate
-}) => {
-  let qs = []
-  if(account) {
-    qs.push(`account=${account}`)
-  }
-  if(group) {
-    qs.push(`group=${group}`)
-  }
-  if(startDate) {
-    qs.push(`start=${startDate}`)
-  }
-  if(endDate) {
-    qs.push(`end=${endDate}`)
-  }
-  return qs.length ? '?'+qs.join('&') : ''
-}
 
 const parseDatapointTraffic = datapoint => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
