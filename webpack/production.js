@@ -26,11 +26,17 @@ module.exports = Object.assign({}, {
       template: 'src/index.html',
       favicon: 'src/assets/icons/favicon.ico'
     }),
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      template: 'src/downtime.html',
+      favicon: 'src/assets/icons/favicon.ico',
+      filename: 'downtime.html'
+    }),
     new CopyWebpackPlugin([
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
+      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'},
     ]),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
