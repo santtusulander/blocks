@@ -113,8 +113,11 @@ class AnalysisByTime extends React.Component {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
       return <div>Loading...</div>
     }
-    const primaryData = this.props.primaryData
-    let secondaryData = this.props.secondaryData
+    const primaryData = this.props.primaryData || []
+    let secondaryData = this.props.secondaryData || []
+    if(!primaryData.length && !secondaryData.length) {
+      return <div>No data found.</div>
+    }
     if(this.props.stacked && primaryData && primaryData.length &&
       secondaryData && secondaryData.length) {
       secondaryData = secondaryData.map((data, i) => {
@@ -201,7 +204,7 @@ class AnalysisByTime extends React.Component {
           width={this.props.width}
           height={this.props.height}
           ref='chart'>
-          {primaryData ? <g>
+          {primaryData && primaryData.length ? <g>
             <path d={trafficLine(primaryData)}
               className="line primary"/>
             {typeof this.props.area !== 'undefined' && !this.props.area ? null :
@@ -210,7 +213,7 @@ class AnalysisByTime extends React.Component {
                 fill="url(#dt-primary-gradient)" />
             }
           </g> : null}
-          {secondaryData ? <g>
+          {secondaryData && secondaryData.length ? <g>
             <path d={trafficLine(secondaryData)}
               className="line secondary"/>
             {typeof this.props.area !== 'undefined' && !this.props.area ? null :
