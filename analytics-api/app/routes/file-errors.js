@@ -61,7 +61,8 @@ function routeFileErrors(req, res) {
     responseData.num_errors  = numStatusCodes;
     responseData.url_details = fileErrorData;
 
-    res.jsend(responseData);
+    // res.jsend(responseData);
+    res.jsend(testData);
 
   }).catch((err) => {
     log.error(err);
