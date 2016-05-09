@@ -43,3 +43,4 @@ export function removeProps(object, remove) {
 
   return result
 }
+

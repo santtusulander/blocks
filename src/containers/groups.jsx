@@ -39,8 +39,8 @@ export class Groups extends React.Component {
     const builtPath = `${brand}/${account}`
     const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
     const analyticsURLBuilder = (...groupID) => {
-        return groupID[0] ? `/content/analytics/group/${builtPath}/${groupID[0]}`
-          : `/content/analytics/account/${brand}/${account}`
+      return groupID[0] ? `/content/analytics/group/${builtPath}/${groupID[0]}`
+        : `/content/analytics/account/${brand}/${account}`
     }
     const configURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
@@ -99,7 +99,6 @@ Groups.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
-    allAccounts: state.account.get('allAccounts'),
     activeGroup: state.group.get('activeGroup'),
     fetching: state.group.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
