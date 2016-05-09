@@ -12,6 +12,7 @@ let routeVisitorsCountry        = require('./routes/visitors/country');
 let routeVisitorsOS             = require('./routes/visitors/os');
 let routeVisitorsBrowser        = require('./routes/visitors/browser');
 let routeMetrics                = require('./routes/metrics');
+let routeFileErrors             = require('./routes/file-errors');
 let routeVersion                = require('./routes/version');
 
 router.errorHandler = errorHandler;
@@ -26,6 +27,7 @@ router.get(`/${configs.apiBaseFolder}/visitors/country`,         routeVisitorsCo
 router.get(`/${configs.apiBaseFolder}/visitors/os`,              routeVisitorsOS);
 router.get(`/${configs.apiBaseFolder}/visitors/browser`,         routeVisitorsBrowser);
 router.get(`/${configs.apiBaseFolder}/metrics`,                  routeMetrics);
+router.get(`/${configs.apiBaseFolder}/file-errors`,              routeFileErrors);
 router.get(`/${configs.apiBaseFolder}/version`,                  routeVersion);
 
 // This middleware should always come after the configured routes.
