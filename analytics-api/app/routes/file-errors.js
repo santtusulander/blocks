@@ -33,6 +33,11 @@ function routeFileErrors(req, res) {
     service_type : params.service_type
   };
 
+
+  return res.jsend(testData);
+  /* eslint no-unreachable: 0 */
+
+
   db.getFileErrors(options).then((fileErrorData) => {
     let responseData   = {};
     let numStatusCodes = {};
@@ -61,8 +66,7 @@ function routeFileErrors(req, res) {
     responseData.num_errors  = numStatusCodes;
     responseData.url_details = fileErrorData;
 
-    // res.jsend(responseData);
-    res.jsend(testData);
+    res.jsend(responseData);
 
   }).catch((err) => {
     log.error(err);
