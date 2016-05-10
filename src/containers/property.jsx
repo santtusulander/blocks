@@ -165,12 +165,6 @@ export class Property extends React.Component {
           return policy.get('set').has('cache_name')
         }
       })
-    const policyPaths = {
-      honor_origin_cache_policies: policyPath.push(controlIndex,'set','cache_control','honor_origin'),
-      honor_etags: policyPath.push(controlIndex,'set','cache_control','check_etag'),
-      max_age: policyPath.push(controlIndex,'set','cache_control','max_age'),
-      ignore_case: policyPath.push(nameIndex,'set','cache_name','ignore_case')
-    }
     return (
       <PageContainer>
         <Content>
@@ -256,51 +250,54 @@ export class Property extends React.Component {
                     yAxisFormat="0 b"/>
                 </div>
 
-                <Row className="extra-margin-top no-gutters">
-                  <Col xs={7}>
-                    <Row>
-                      <Col xs={6}>
-                        Unique visitors
-                        {this.props.fetching || this.props.visitorsFetching ?
-                          <p>Loading...</p> :
-                          <h2>{numeral(uniq_vis).format('0,0')}</h2>
-                        }
-                      </Col>
-                      <Col xs={6}>
-                        Bandwidth
-                        <h2>
-                          {avg_transfer_rate[0]}
-                          <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
-                        </h2>
-                      </Col>
-                    </Row>
-                    <Row className="extra-margin-top">
-                      <Col xs={6}>
-                        Cache Hit Rate
-                        <h2>{avg_cache_hit_rate}
-                          <span className="heading-suffix"> %</span>
-                        </h2>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col xs={5}>
-                    Top 3 Countries by Visitors
-                    {this.props.fetching || this.props.visitorsFetching ?
-                      <p>Loading...</p> :
-                      this.props.visitorsByCountry.get('countries').size ?
-                        this.props.visitorsByCountry.get('countries').map((country, i) => {
-                          return (
-                            <h2 key={i}>
-                              {numeral(country.get('percent_total')).format('0.00')}
-                              <span className="heading-suffix"> %</span>
-                              <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
-                            </h2>
-                          )
-                        }
-                      ) : <h2>0 %</h2>
-                    }
-                  </Col>
-                </Row>
+                {metrics_traffic && metrics_traffic.length ?
+                  <Row className="extra-margin-top no-gutters">
+                    <Col xs={7}>
+                      <Row>
+                        <Col xs={6}>
+                          Unique visitors
+                          {this.props.fetching || this.props.visitorsFetching ?
+                            <p>Loading...</p> :
+                            <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                          }
+                        </Col>
+                        <Col xs={6}>
+                          Bandwidth
+                          <h2>
+                            {avg_transfer_rate[0]}
+                            <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
+                          </h2>
+                        </Col>
+                      </Row>
+                      <Row className="extra-margin-top">
+                        <Col xs={6}>
+                          Cache Hit Rate
+                          <h2>{avg_cache_hit_rate}
+                            <span className="heading-suffix"> %</span>
+                          </h2>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col xs={5}>
+                      Top 3 Countries by Visitors
+                      {this.props.fetching || this.props.visitorsFetching ?
+                        <p>Loading...</p> :
+                        this.props.visitorsByCountry.get('countries').size ?
+                          this.props.visitorsByCountry.get('countries').map((country, i) => {
+                            return (
+                              <h2 key={i}>
+                                {numeral(country.get('percent_total')).format('0.00')}
+                                <span className="heading-suffix"> %</span>
+                                <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                              </h2>
+                            )
+                          }
+                        ) : <h2>0 %</h2>
+                      }
+                    </Col>
+                  </Row>
+                  : null
+                }
               {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
               </Col>
 

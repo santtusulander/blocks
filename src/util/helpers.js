@@ -59,3 +59,15 @@ export function filterAccountsByUserName(accounts, username) {
     }
   })
 }
+
+export function matchesRegexp(string, pattern){
+  if(!(pattern instanceof RegExp)){
+    throw new Error(`${pattern} is not a valid RegExp string`);
+  }
+  var testPattern = new RegExp(pattern, 'i');
+  return testPattern.test(string);
+}
+
+export function isSafari() {
+  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
+}

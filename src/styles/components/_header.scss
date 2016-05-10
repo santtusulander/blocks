@@ -32,8 +32,7 @@
   .dark-theme &,
   .light-theme & {
     background-color: $black;
-    background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)),
-     linear-gradient(rgba($pale-blue, 0.25), rgba($pale-blue, 0.25));
+    background-image: linear-gradient(to right, rgba($purple, 0.1), rgba($purple, 0.05), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.25), rgba($pale-blue, 0.25));
     background-size: 100%;
   }
 

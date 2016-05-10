@@ -9,8 +9,8 @@ const AnalysisStacked = require('../stacked.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
+const momentFormatMock = jest.genMockFunction().mockReturnValue('time')
+const numeralFormatMock = jest.genMockFunction().mockReturnValue('number')
 
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
@@ -88,7 +88,7 @@ describe('AnalysisStacked', () => {
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
-    expect(texts[0].getAttribute('y')).toBe('190')
+    expect(texts[0].textContent).toBe('time')
     expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
 
@@ -99,7 +99,7 @@ describe('AnalysisStacked', () => {
       <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
-    expect(texts[2].getAttribute('y')).toBe('190')
+    expect(texts[3].textContent).toBe('number')
     expect(numeral.mock.calls.length).toBe(2)
     expect(numeral.mock.calls[0]).toEqual([500])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0 a')
