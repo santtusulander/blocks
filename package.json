@@ -64,7 +64,7 @@
   },
   "scripts": {
     "start": "node dev-server.js",
-    "dist": "webpack -p --progress --config webpack/production.js",
+    "dist": "webpack -p --progress --config webpack/production.js --production-build",
     "lint:js": "eslint src/",
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
