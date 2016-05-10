@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -10,12 +10,12 @@
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^6.0.4",
-    "babel-jest": "^6.0.1",
+    "babel-jest": "^12.0.2",
     "babel-loader": "^6.2.2",
     "babel-polyfill": "^6.7.2",
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-react": "^6.5.0",
-    "copy-webpack-plugin": "^1.1.1",
+    "copy-webpack-plugin": "^2.1.3",
     "css-loader": "^0.23.1",
     "eslint": "^2.8.0",
     "eslint-plugin-react": "^5.0.1",
@@ -25,7 +25,7 @@
     "history": "^1.17.0",
     "hls.js": "^0.5.20",
     "jasmine-reporters": "^2.1.1",
-    "jest-cli": "^0.9.0",
+    "jest-cli": "^12.0.2",
     "node-sass": "^3.4.2",
     "preprocess": "^3.1.0",
     "preprocess-loader": "^0.2.0",
@@ -75,9 +75,9 @@
     "testPathDirs": [
       "src"
     ],
-    "scriptPreprocessor": "<rootDir>/jest-preprocessor",
-    "setupEnvScriptFile": "<rootDir>/jest-env-setup",
-    "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup",
+    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "setupEnvScriptFile": "<rootDir>/jest-env-setup.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup.js",
     "moduleFileExtensions": [
       "js",
       "jsx"

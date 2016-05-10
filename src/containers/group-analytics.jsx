@@ -98,6 +98,7 @@ export class GroupAnalytics extends React.Component {
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
     Promise.all([
+      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
       this.props.reportsActions.fetchURLMetrics()
     ]).then(this.props.reportsActions.finishFetching)
   }
@@ -193,7 +194,9 @@ export class GroupAnalytics extends React.Component {
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={this.props.reportsFetching}/>
+              <AnalysisFileError fetching={this.props.reportsFetching}
+                summary={this.props.fileErrorSummary}
+                urls={this.props.fileErrorURLs}/>
               : ''}
             {this.state.activeTab === 'url-report' ?
               <AnalysisURLReport fetching={this.props.reportsFetching}
@@ -218,6 +221,8 @@ GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetchingMetrics: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
@@ -250,6 +255,8 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
+    fileErrorSummary: state.reports.get('fileErrorSummary'),
+    fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('groupMetrics'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
