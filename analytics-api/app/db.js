@@ -501,6 +501,61 @@ class AnalyticsDB {
       .catch((err) => log.error(err));
   }
 
+  /**
+   * Get unique visitor totals for a property, group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getFileErrors(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    conditions.push("AND (status_code LIKE '4%' OR status_code LIKE '5%')");
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    let queryParameterized = `
+      SELECT
+        status_code,
+        url_path AS url,
+        sum(bytes) AS bytes,
+        sum(requests) AS requests,
+        service_type
+      FROM url_property_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        url_path,
+        service_type,
+        status_code
+      ORDER BY bytes DESC;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+
+  }
+
 }
 
 module.exports = new AnalyticsDB(configs);

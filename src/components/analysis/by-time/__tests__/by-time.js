@@ -141,4 +141,14 @@ describe('AnalysisByTime', () => {
     expect(moment.mock.calls.length).toBe(0)
     expect(numeral.mock.calls.length).toBe(0)
   });
+
+  it('should show no data if the data is empty', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime width={400} height={200}
+        primaryData={[]}
+        secondaryData={null}/>
+    );
+    let div = TestUtils.findRenderedDOMComponentWithTag(byTime, 'div')
+    expect(div.textContent).toContain('No data found.');
+  });
 })
