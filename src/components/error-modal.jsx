@@ -15,8 +15,6 @@ class ErrorModal extends React.Component {
   }
 
   render() {
-    console.log('render - props', this.props);
-
     return (
       <Modal show={this.props.showErrorDialog} className="error-modal" onHide={() => {  this.closeModal(); } }>
         <Modal.Header className="login-header">
