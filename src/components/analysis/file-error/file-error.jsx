@@ -3,45 +3,33 @@ import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 
-import {formatBytes} from '../../util/helpers'
+import {formatBytes} from '../../../util/helpers'
+import AnalysisFileErrorDataBox from './data-box'
 
 class AnalysisFileError extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
+    const {serverErrs, clientErrs} = this.props.summary.entrySeq().reduce(
+      (totals, summary) => {
+        const code = parseInt(summary[0].substring(1))
+        totals[code < 500 ? 'clientErrs' : 'serverErrs'].push({
+          code: code,
+          value: summary[1]
+        })
+        return totals
+      }, {serverErrs: [], clientErrs: []}
+    )
     return (
-      <div className="analysis-traffic">
+      <div className="analysis-file-error">
         <Row>
           <Col xs={12}>
-            <div className="analysis-data-box">
-              <h4>Client errors</h4>
-              <p>4XX</p>
-              <Row className="extra-margin-top">
-                <Col xs={6} className="text-center right-separator">
-                  <p>00</p>
-                  <h4>400 Bad request</h4>
-                </Col>
-                <Col xs={6} className="text-center">
-                  <p>00</p>
-                  <h4>403 Bad Request</h4>
-                </Col>
-              </Row>
-            </div>
-            <div className="analysis-data-box">
-              <h4>Server errors</h4>
-              <p>5XX</p>
-              <Row className="extra-margin-top">
-                <Col xs={6} className="text-center right-separator">
-                  <p>00</p>
-                  <h4>500 Internal Server Error</h4>
-                </Col>
-                <Col xs={6} className="text-center">
-                  <p>00</p>
-                  <h4>503 Service Unavailable</h4>
-                </Col>
-              </Row>
-            </div>
+            <AnalysisFileErrorDataBox
+              label="Client errors"
+              code="4XX"
+              errs={clientErrs}/>
+            <AnalysisFileErrorDataBox
+              label="Server errors"
+              code="5XX"
+              errs={serverErrs}/>
           </Col>
         </Row>
         <h3>HEADER</h3>
