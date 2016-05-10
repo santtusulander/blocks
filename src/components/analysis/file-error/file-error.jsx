@@ -46,5 +46,9 @@ AnalysisFileError.propTypes = {
   summary: React.PropTypes.instanceOf(Immutable.Map),
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
+AnalysisFileError.defaultProps = {
+  summary: Immutable.Map(),
+  urls: Immutable.List()
+}
 
 module.exports = AnalysisFileError

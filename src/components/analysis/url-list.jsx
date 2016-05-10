@@ -37,7 +37,7 @@ const AnalysisURLList = ({labelFormat, urls}) => {
               </td>
             </tr>
           )
-        })}
+        }).toJS()}
       </tbody>
     </table>
   )
@@ -47,6 +47,9 @@ AnalysisURLList.displayName = 'AnalysisURLList'
 AnalysisURLList.propTypes = {
   labelFormat: React.PropTypes.func,
   urls: React.PropTypes.instanceOf(Immutable.List)
+}
+AnalysisURLList.defaultProps = {
+  urls: Immutable.List()
 }
 
 module.exports = AnalysisURLList

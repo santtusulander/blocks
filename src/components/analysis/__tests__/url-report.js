@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 jest.dontMock('../url-report.jsx')
 const AnalysisURLReport = require('../url-report.jsx')
+const URLList = require('../url-list.jsx')
+const HorizontalBar = require('../horizontal-bar.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
 const numeral = require('numeral')
@@ -24,21 +26,20 @@ const fakeData = Immutable.fromJS([
 ])
 
 describe('AnalysisURLReport', () => {
-  it('should exist', () => {
-    const urlReport = TestUtils.renderIntoDocument(
-      <AnalysisURLReport/>
-    );
-    expect(TestUtils.isCompositeComponent(urlReport)).toBeTruthy();
-  })
   it('should show urls in the table', () => {
-    numeralFormatMock.mockClear()
-    const urlReport = TestUtils.renderIntoDocument(
-      <AnalysisURLReport urls={fakeData}/>
-    );
-    const trs = TestUtils.scryRenderedDOMComponentsWithTag(urlReport, 'tr')
-    expect(trs.length).toBe(3)
-    const tds = trs[1].getElementsByTagName('td')
-    expect(tds[0].textContent).toContain('www.abc.com')
-    expect(numeralFormatMock.mock.calls.length).toBe(4)
+    const renderer = TestUtils.createRenderer()
+    renderer.render(<AnalysisURLReport urls={fakeData}/>);
+    const result = renderer.getRenderOutput()
+    const urlList = result.props.children[2]
+    expect(urlList.type).toEqual(URLList)
+    expect(urlList.props.urls).toEqual(fakeData)
+  })
+  it('should show urls in the bar chart', () => {
+    const renderer = TestUtils.createRenderer()
+    renderer.render(<AnalysisURLReport urls={fakeData}/>);
+    const result = renderer.getRenderOutput()
+    const barChart = result.props.children[0].props.children
+    expect(barChart.type).toEqual(HorizontalBar)
+    expect(barChart.props.data).toEqual(fakeData.toJS())
   })
 })

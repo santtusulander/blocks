@@ -23,5 +23,8 @@ AnalysisFileErrorDataBox.propTypes = {
   errs: React.PropTypes.array,
   label: React.PropTypes.string
 }
+AnalysisFileErrorDataBox.defaultProps = {
+  errs: []
+}
 
 module.exports = AnalysisFileErrorDataBox
