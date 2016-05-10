@@ -9,7 +9,7 @@ const AnalysisFileErrorDataBox = ({label, code, errs}) => (
         return (
           <div className="error-summary" key={i}>
             <p>{summary.value.get('total')}</p>
-            <h4>{summary.code}dddd</h4>
+            <h4>{summary.code}</h4>
           </div>
         )
       })}

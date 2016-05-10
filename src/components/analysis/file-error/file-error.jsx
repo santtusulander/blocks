@@ -1,10 +1,9 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import numeral from 'numeral'
 import Immutable from 'immutable'
 
-import {formatBytes} from '../../../util/helpers'
 import AnalysisFileErrorDataBox from './data-box'
+import AnalysisURLList from '../url-list'
 
 class AnalysisFileError extends React.Component {
   render() {
@@ -33,62 +32,9 @@ class AnalysisFileError extends React.Component {
           </Col>
         </Row>
         <h3>HEADER</h3>
-        <table className="table table-striped table-analysis">
-          <thead>
-            <tr>
-              <th>URL</th>
-              <th width="20%">Bytes</th>
-              <th width="20%">Requests</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>www.domain.com/assets/videos/video.mp4</td>
-              <td>
-                {formatBytes(123544786367)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '100%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(213678).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '90%'}} />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>www.foobar.com/assets/images/image.jpg</td>
-              <td>
-                {formatBytes(6541632)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '80%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(987).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '70%'}} />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>www.domain.com/favicon.ico</td>
-              <td>
-                {formatBytes(9871)}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '60%'}} />
-                </div>
-              </td>
-              <td>
-                {numeral(987123).format('0,0')}
-                <div className="table-percentage-line">
-                  <div className="line" style={{width: '50%'}} />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <AnalysisURLList
+          urls={this.props.urls}
+          labelFormat={url => `${url.get('status_code')} ${url.get('url')}`}/>
       </div>
     )
   }
