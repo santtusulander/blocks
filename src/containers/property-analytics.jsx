@@ -96,6 +96,7 @@ export class PropertyAnalytics extends React.Component {
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
     Promise.all([
+      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
       this.props.reportsActions.fetchURLMetrics()
     ]).then(this.props.reportsActions.finishFetching)
   }
@@ -191,7 +192,9 @@ export class PropertyAnalytics extends React.Component {
                 spChartType={this.props.spChartType}/>
               : ''}
             {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={this.props.reportsFetching}/>
+              <AnalysisFileError fetching={this.props.reportsFetching}
+                summary={this.props.fileErrorSummary}
+                urls={this.props.fileErrorURLs}/>
               : ''}
             {this.state.activeTab === 'url-report' ?
               <AnalysisURLReport fetching={this.props.reportsFetching}
@@ -215,6 +218,8 @@ export class PropertyAnalytics extends React.Component {
 PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
@@ -247,6 +252,8 @@ function mapStateToProps(state) {
   return {
     hosts: state.host.get('allHosts'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
+    fileErrorSummary: state.reports.get('fileErrorSummary'),
+    fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('hostMetrics'),
     onOffNet: state.traffic.get('onOffNet'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
