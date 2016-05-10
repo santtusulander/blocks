@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import {analyticsBase} from '../util'
+import { analyticsBase, qsBuilder } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -23,33 +23,6 @@ const emptyTraffic = Immutable.Map({
   storage: Immutable.List(),
   totalEgress: 0
 })
-
-const qsBuilder = ({
-  account,
-  group,
-  property,
-  startDate,
-  endDate,
-  granularity
-}) => {
-  let qs = `?account=${account}`
-  if(group) {
-    qs += `&group=${group}`
-  }
-  if(property) {
-    qs += `&property=${property}`
-  }
-  if(startDate) {
-    qs += `&start=${startDate}`
-  }
-  if(endDate) {
-    qs += `&end=${endDate}`
-  }
-  if(granularity) {
-    qs += `&granularity=${granularity}`
-  }
-  return qs
-}
 
 // REDUCERS
 
