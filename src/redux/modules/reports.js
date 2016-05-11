@@ -7,7 +7,7 @@ const REPORTS_FINISH_FETCH = 'REPORTS_FINISH_FETCH'
 const REPORTS_URL_METRICS_FETCHED = 'REPORTS_URL_METRICS_FETCHED'
 const REPORTS_FILE_ERROR_METRICS_FETCHED = 'REPORTS_FILE_ERROR_METRICS_FETCHED'
 
-import { analyticsBase, parseResponseData, qsBuilder } from '../util'
+import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 
 const emptyReports = Immutable.Map({
   fetching: false,
@@ -16,41 +16,52 @@ const emptyReports = Immutable.Map({
   urlMetrics: Immutable.List()
 })
 
+export function fetchUrlMetricsSuccess(state, action) {
+  return state.merge({
+    urlMetrics: Immutable.fromJS(action.payload)
+  })
+}
+
+export function fetchUrlMetricsFailure(state) {
+  return state.merge({
+    urlMetrics: Immutable.List()
+  })
+}
+
+export function fetchFileErrorMetricsSuccess(state, action) {
+  return state.merge({
+    fileErrorSummary: Immutable.fromJS(action.payload.data.num_errors),
+    fileErrorURLs: Immutable.fromJS(action.payload.data.url_details)
+  })
+}
+
+export function fetchFileErrorMetricsFailure(state) {
+  return state.merge({
+    fileErrorSummary: Immutable.Map(),
+    fileErrorURLs: Immutable.List()
+  })
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function finishFetch(state) {
+  return state.set('fetching', false)
+}
+
 // REDUCERS
 
 export default handleActions({
-  REPORTS_URL_METRICS_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        urlMetrics: Immutable.fromJS(action.payload)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        urlMetrics: Immutable.List()
-      })
-    }
-  },
-  REPORTS_FILE_ERROR_METRICS_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        fileErrorSummary: Immutable.fromJS(action.payload.data.num_errors),
-        fileErrorURLs: Immutable.fromJS(action.payload.data.url_details)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fileErrorSummary: Immutable.Map(),
-        fileErrorURLs: Immutable.List()
-      })
-    }
-  },
-  REPORTS_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  REPORTS_FINISH_FETCH: (state) => {
-    return state.set('fetching', false)
-  }
+  REPORTS_URL_METRICS_FETCHED: mapReducers(
+    fetchUrlMetricsSuccess,
+    fetchUrlMetricsFailure),
+  REPORTS_FILE_ERROR_METRICS_FETCHED: mapReducers(
+    fetchFileErrorMetricsSuccess,
+    fetchFileErrorMetricsFailure
+  ),
+  REPORTS_START_FETCH: startFetch,
+  REPORTS_FINISH_FETCH: finishFetch
 }, emptyReports)
 
 // ACTIONS
