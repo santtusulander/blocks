@@ -87,7 +87,7 @@ export const fetchURLMetrics = createAction(REPORTS_URL_METRICS_FETCHED, () => {
 })
 
 export const fetchFileErrorsMetrics = createAction(REPORTS_FILE_ERROR_METRICS_FETCHED, opts => {
-  return axios.get(`${analyticsBase}/file-errors${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/file-errors${qsBuilder(opts)}`)
     .then(parseResponseData);
 })
 
