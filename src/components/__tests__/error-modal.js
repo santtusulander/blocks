@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-import { shallow, render, mount } from 'enzyme';
+import { shallow, render, mount } from 'enzyme'
 
 jest.dontMock('../error-modal.jsx')
 const ErrorModal = require('../error-modal.jsx')
@@ -41,5 +41,18 @@ describe('ErrorModal', () => {
     expect(uiActions.hideErrorDialog.mock.calls.length).toBe(1)
 
   })
-})
 
+  it('should call reloadPage', () => {
+
+    const modal = shallow(<ErrorModal />)
+    let btns = modal.find('Button');
+
+    //should call reload
+    ErrorModal.prototype.reloadPage = jest.genMockFunction()
+
+    btns.last().simulate('click');
+    expect(ErrorModal.prototype.reloadPage.mock.calls.length).toBe(1);
+
+  })
+
+});
