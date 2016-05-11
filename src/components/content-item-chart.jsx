@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -23,10 +24,10 @@ class ContentItemChart extends React.Component {
     }
   }
   render() {
-    if (!this.props.primaryData) {
+    if (!this.props.primaryData.size) {
       return <div>Loading...</div>
     }
-    const primaryData = this.props.primaryData.reduce((points, data, i) => {
+    const primaryData = this.props.primaryData.toJS().reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
       if(!(i % 3)) {
         points.push(data.bytes || 0)
@@ -36,7 +37,7 @@ class ContentItemChart extends React.Component {
       }
       return points;
     }, [])
-    const secondaryData = this.props.secondaryData.reduce((points, data, i) => {
+    const secondaryData = this.props.secondaryData.toJS().reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
       if(!(i % 3)) {
         points.push(data.bytes || 0)
@@ -46,7 +47,7 @@ class ContentItemChart extends React.Component {
       }
       return points;
     }, [])
-    const differenceData = this.props.differenceData.reduce((points, data, i) => {
+    const differenceData = this.props.differenceData.toJS().reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
       if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
@@ -186,7 +187,7 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {!this.props.fetchingMetrics && this.props.secondaryData.length ?
+              {!this.props.fetchingMetrics && this.props.secondaryData.size ?
                 <svg className="content-item-chart-svg secondary-data">
                   {/* Add center point as last coordinate to close the path */}
                   <path className="content-item-chart-line"
@@ -201,7 +202,7 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {!this.props.fetchingMetrics && this.props.primaryData.length ?
+              {!this.props.fetchingMetrics && this.props.primaryData.size ?
                 <svg className="content-item-chart-svg primary-data">
                   {/* For performance reasons we draw the primary bar chart as a path. We need
                   to add extra points to the array so that the path draws the lines outwards
@@ -229,13 +230,13 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {this.props.differenceData.length && !this.props.fetchingMetrics ?
+              {this.props.differenceData.size && !this.props.fetchingMetrics ?
                 <svg className="content-item-chart-svg difference-arc"
                   viewBox={differenceArcViewBox}>
                   <g onMouseEnter={this.differenceHover(true)}
                     onMouseLeave={this.differenceHover(false)}>
                     {
-                      pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
+                      pie(Array(differenceData.size).fill(1)).map((arcs, i) => {
                         let data = differenceData[i]
                         let style = data < 0 ? 'below-avg' :
                           data === 0 ? 'avg' :
@@ -308,16 +309,21 @@ ContentItemChart.propTypes = {
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
-  differenceData: React.PropTypes.array,
+  differenceData: React.PropTypes.instanceOf(Immutable.List),
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
-  primaryData: React.PropTypes.array,
-  secondaryData: React.PropTypes.array,
+  primaryData: React.PropTypes.instanceOf(Immutable.List),
+  secondaryData: React.PropTypes.instanceOf(Immutable.List),
   timeToFirstByte: React.PropTypes.string
+}
+ContentItemChart.defaultProps = {
+  differenceData: Immutable.List(),
+  primaryData: Immutable.List(),
+  secondaryData: Immutable.List()
 }
 
 module.exports = ContentItemChart
