@@ -35,34 +35,39 @@ function metricsActionsMaker() {
 }
 
 const fakeAccounts = Immutable.fromJS([
-  {id: '1', name: 'aaa'},
-  {id: '2', name: 'bbb'}
+  {id: 1, name: 'aaa'}
 ])
 
 const fakeMetrics = Immutable.fromJS([
   {
-    account: '1',
-    avg_cache_hit_rate: 1,
-    historical_traffic: [],
-    historical_variance: [],
-    traffic: [],
-    transfer_rates: {
-      peak: '3 Unit',
-      average: '2 Unit',
-      lowest: '1 Unit'
-    }
-  },
-  {
-    account: '2',
-    avg_cache_hit_rate: 2,
-    historical_traffic: [],
-    historical_variance: [],
-    traffic: [],
-    transfer_rates: {
-      peak: '6 Unit',
-      average: '5 Unit',
-      lowest: '4 Unit'
-    }
+    "avg_cache_hit_rate": 94,
+    "avg_ttfb": "13 ms",
+    "transfer_rates": {
+      "peak": "1.94 Mbps",
+      "average": "126.96 Kbps",
+      "lowest": "27.51 Kbps"
+    },
+    "historical_variance": [
+      {
+        "bytes": 50552191,
+        "timestamp": 1461607200
+      },
+      {
+        "bytes": 28499240,
+        "timestamp": 1460552400
+      }
+    ],
+    "historical_traffic": [
+      {
+        "bytes": null,
+        "timestamp": 1458136800
+      },
+      {
+        "bytes": null,
+        "timestamp": 1458133200
+      }
+    ],
+    "account": 1
   }
 ])
 
@@ -130,7 +135,7 @@ describe('Accounts', () => {
         viewingChart={true}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
-    expect(child.length).toBe(2)
+    expect(child.length).toBe(1)
     expect(child[0].props.id).toBe('1')
   });
 
@@ -148,7 +153,7 @@ describe('Accounts', () => {
         viewingChart={false}/>
     )
     let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
-    expect(child.length).toBe(2)
+    expect(child.length).toBe(1)
     expect(child[0].props.id).toBe('1')
   });
 

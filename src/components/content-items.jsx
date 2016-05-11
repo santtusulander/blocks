@@ -20,6 +20,12 @@ import IconChart from './icons/icon-chart.jsx'
 import IconItemList from './icons/icon-item-list.jsx'
 import IconItemChart from './icons/icon-item-chart.jsx'
 
+const rangeMin = 400
+const rangeMax = 500
+
+let trafficMin = 0
+let trafficMax = 0
+
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path)
   const val2 = item2.getIn(path)
@@ -72,8 +78,6 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       createNewItem } = this.props
-    let trafficMin = 0
-    let trafficMax = 0
     if(!fetchingMetrics) {
       const trafficTotals = this.props.contentItems.map((item, i) => metrics.getIn([i, 'totalTraffic'], 0))
       trafficMin = Math.min(...trafficTotals)
@@ -86,7 +90,7 @@ class ContentItems extends React.Component {
     trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
-      .range([400, 500]);
+      .range([rangeMin, rangeMax]);
     const contentItems = this.props.contentItems.map(item => {
       return Immutable.Map({
         item: item,
