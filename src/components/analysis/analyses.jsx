@@ -1,11 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, ButtonToolbar, Col, Dropdown, Input, Row } from 'react-bootstrap'
+import { Col, Dropdown, MenuItem, Input, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import { Link } from 'react-router'
 
 import Select from '../../components/select'
+import IconSelectCaret from '../../components/icons/icon-select-caret.jsx'
 
 export class Analyses extends React.Component {
   constructor(props) {
@@ -141,11 +142,24 @@ export class Analyses extends React.Component {
             </Dropdown.Menu>
           </Dropdown>
           <div className="sidebar-actions">
-            <ButtonToolbar>
-              <Button bsStyle="primary">
+            <Dropdown id="export-menu"
+              className="dropdown-select btn-block">
+              <Dropdown.Toggle bsStyle="default" noCaret={true}>
+                <IconSelectCaret/>
                 Export
-              </Button>
-            </ButtonToolbar>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <MenuItem onSelect={this.props.exportCSV}>
+                  Download CSV
+                </MenuItem>
+                <MenuItem onSelect={this.props.exportPDF}>
+                  Download PDF
+                </MenuItem>
+                <MenuItem onSelect={this.props.exportEmail}>
+                  Send Email
+                </MenuItem>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
         {this.props.activeTab !== 'playback-demo' ?
@@ -348,6 +362,9 @@ Analyses.propTypes = {
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
+  exportCSV: React.PropTypes.func,
+  exportEmail: React.PropTypes.func,
+  exportPDF: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
