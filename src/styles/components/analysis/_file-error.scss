@@ -1,0 +1,27 @@
+.analysis-file-error {
+
+  .analysis-data-box {
+    width: initial;
+    max-width: initial;
+    margin-bottom: 15px;
+  }
+
+  .error-summary {
+    width: 170px;
+    text-align: center;
+    padding: 0 15px;
+    display: inline-block;
+
+    .dark-theme & {
+      border-left: 1px solid $dt-text-color;
+    }
+
+    .light-left & {
+      border-right: 1px solid $lt-text-color;
+    }
+
+    &:first-child() {
+      border-left: 0;
+    }
+  }
+}
