@@ -39,6 +39,9 @@ export class GroupAnalytics extends React.Component {
     this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
     this.changeActiveVideo = this.changeActiveVideo.bind(this)
+    this.exportCSV = this.exportCSV.bind(this)
+    this.exportEmail = this.exportEmail.bind(this)
+    this.exportPDF = this.exportPDF.bind(this)
   }
   componentWillMount() {
     this.props.groupActions.fetchGroups(
@@ -121,6 +124,15 @@ export class GroupAnalytics extends React.Component {
   changeActiveVideo(video) {
     this.setState({activeVideo: video})
   }
+  exportCSV() {
+    // export the csv based on this.state.activeTab
+  }
+  exportEmail() {
+    // show the send email modal
+  }
+  exportPDF() {
+    // export the pdf based on this.state.activeTab
+  }
   render() {
     const availableGroups = this.props.groups.map(group => {
       return {
@@ -154,7 +166,10 @@ export class GroupAnalytics extends React.Component {
             name={this.props.activeGroup ? this.props.activeGroup.get('name') : ''}
             navOptions={availableGroups}
             activeVideo={this.state.activeVideo}
-            changeVideo={this.changeActiveVideo}/>
+            changeVideo={this.changeActiveVideo}
+            exportCSV={this.exportCSV}
+            exportEmail={this.exportEmail}
+            exportPDF={this.exportPDF}/>
         </Sidebar>
 
         <Content>
