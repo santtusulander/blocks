@@ -46,8 +46,6 @@ export class AnalyticsPage extends React.Component {
     // export the pdf based on this.state.activeTab
   }
   render() {
-    // TODO: This should have its own endpoint so we don't have to fetch info
-    // for all accounts
     const metrics = this.props.metrics
     const peakTraffic = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
@@ -89,7 +87,7 @@ export class AnalyticsPage extends React.Component {
           </Nav>
 
           <div className="container-fluid analysis-container">
-            {this.state.activeTab === 'traffic' ?
+            {this.state.activeTab === 'traffic' &&
               <AnalysisTraffic fetching={this.props.trafficFetching}
                 byTime={this.props.trafficByTime}
                 byCountry={this.props.trafficByCountry}
@@ -99,37 +97,37 @@ export class AnalyticsPage extends React.Component {
                 avgTraffic={!this.props.fetchingMetrics ? avgTraffic : null}
                 lowTraffic={!this.props.fetchingMetrics ? lowTraffic : null}
                 dateRange={this.props.dateRange}/>
-              : ''}
-            {this.state.activeTab === 'visitors' ?
+            }
+            {this.state.activeTab === 'visitors' &&
               <AnalysisVisitors fetching={this.props.visitorsFetching}
                 byTime={this.props.visitorsByTime}
                 byCountry={this.props.visitorsByCountry.get('countries')}
                 byBrowser={this.props.visitorsByBrowser.get('browsers')}
                 byOS={this.props.visitorsByOS.get('os')}/>
-              : ''}
-            {this.state.activeTab === 'sp-report' ?
+            }
+            {this.state.activeTab === 'sp-report' &&
               <AnalysisSPReport fetching={this.props.trafficFetching}
                 serviceProviderStats={this.props.onOffNet}
                 serviceProviderStatsToday={this.props.onOffNetToday}
                 spChartType={this.props.spChartType}/>
-              : ''}
-            {this.state.activeTab === 'file-error' ?
+            }
+            {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
                 summary={this.props.fileErrorSummary}
                 urls={this.props.fileErrorURLs}/>
-              : ''}
-            {this.state.activeTab === 'url-report' ?
+            }
+            {this.state.activeTab === 'url-report' &&
               <AnalysisURLReport fetching={this.props.reportsFetching}
                 urls={this.props.urlMetrics}/>
-              : ''}
-            {this.state.activeTab === 'storage-usage' ?
+            }
+            {this.state.activeTab === 'storage-usage' &&
               <AnalysisStorageUsage fetching={this.props.trafficFetching}
                 storageStats={this.props.storageStats}/>
-              : ''}
-            {this.state.activeTab === 'playback-demo' ?
+            }
+            {this.state.activeTab === 'playback-demo' &&
               <AnalysisPlaybackDemo
                 activeVideo={this.state.activeVideo}/>
-              : ''}
+            }
           </div>
         </Content>
       </PageContainer>
@@ -168,6 +166,24 @@ AnalyticsPage.propTypes = {
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
   visitorsFetching: React.PropTypes.bool
+}
+
+AnalyticsPage.defaultProps = {
+  fileErrorSummary: Immutable.Map(),
+  fileErrorURLs: Immutable.List(),
+  metrics: Immutable.Map(),
+  onOffNet: Immutable.Map(),
+  onOffNetToday: Immutable.Map(),
+  serviceTypes: Immutable.List(),
+  siblings: Immutable.List(),
+  storageStats: Immutable.List(),
+  trafficByCountry: Immutable.List(),
+  trafficByTime: Immutable.List(),
+  urlMetrics: Immutable.List(),
+  visitorsByBrowser: Immutable.Map(),
+  visitorsByCountry: Immutable.Map(),
+  visitorsByOS: Immutable.Map(),
+  visitorsByTime: Immutable.List()
 }
 
 module.exports = AnalyticsPage
