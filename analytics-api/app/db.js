@@ -175,6 +175,12 @@ class AnalyticsDB {
     queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
+    if (optionsFinal.granularity === 'day' || optionsFinal.granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
@@ -198,8 +204,7 @@ class AnalyticsDB {
         round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
         round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
       FROM ??
-      WHERE epoch_start between ? and ?
-        ${conditions.join('\n        ')}
+      WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'
       GROUP BY ${accountLevelData.field};
     `;
@@ -268,6 +273,12 @@ class AnalyticsDB {
     let table = `${accountLevel}_global_${granularity}`;
 
     // Build the WHERE clause
+    if (granularity === 'day' || granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
     optionsFinal.account  && conditions.push('AND account_id = ?');
     optionsFinal.group    && conditions.push('AND group_id = ?');
     optionsFinal.property && conditions.push('AND property = ?');
@@ -278,8 +289,7 @@ class AnalyticsDB {
         epoch_start AS timestamp,
         sum(bytes) AS bytes
       FROM ??
-      WHERE epoch_start BETWEEN ? and ?
-        ${conditions.join('\n        ')}
+      WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'
       GROUP BY epoch_start;
     `;
@@ -330,6 +340,12 @@ class AnalyticsDB {
     queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
+    if (optionsFinal.granularity === 'day' || optionsFinal.granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
@@ -359,8 +375,7 @@ class AnalyticsDB {
         ${selectedDimension}service_type,
         ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
       FROM ??
-      WHERE epoch_start BETWEEN ? and ?
-        ${conditions.join('\n        ')}
+      WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join('')}
@@ -440,6 +455,12 @@ class AnalyticsDB {
     queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
+    if (optionsFinal.granularity === 'day' || optionsFinal.granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
@@ -465,8 +486,7 @@ class AnalyticsDB {
         ${accountLevelData.select},
         ${selectedDimension ? selectedDimension + ',\n        ' : ''}${isTrafficTable ? 'sum(uniq_vis) AS uniq_vis' : 'uniq_vis'}
       FROM ??
-      WHERE epoch_start BETWEEN ? and ?
-        ${conditions.join('\n        ')}
+      WHERE ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join(',\n        ')}
       ORDER BY
