@@ -1,9 +1,9 @@
-var path = require('path');
-var webpack = require('webpack');
+var path              = require('path');
+var webpack           = require('webpack');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var helpers = require('./helpers');
+var helpers           = require('./helpers');
 
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
@@ -15,7 +15,7 @@ var development = Object.assign({}, {
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
-      VERSION: JSON.stringify(require('../package.json').version)
+      'VERSION': JSON.stringify(require('../package.json').version)
     }, environment)),
     new webpack.ProvidePlugin({
       // Polyfill here

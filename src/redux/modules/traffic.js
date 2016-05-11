@@ -121,7 +121,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/time${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -130,7 +130,7 @@ export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
 })
 
 export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/country${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -139,7 +139,7 @@ export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) =>
 })
 
 export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/total${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/total${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -148,7 +148,7 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -157,7 +157,7 @@ export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => 
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
