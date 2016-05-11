@@ -2,7 +2,6 @@ var path = require('path');
 
 const isProductionBuild = () => (process.argv.indexOf('--production-build') !== -1)
 
-//
 module.exports = {
   entry: {
     app: [path.resolve(__dirname, '../src/app.jsx')]
@@ -10,7 +9,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
-    publicPath: isProductionBuild() ? process.env.PUBLIC_URL : `http://localhost:${process.env.PORT}`,
+    publicPath: isProductionBuild() ? process.env.PUBLIC_URL : `http://localhost:${process.env.PORT}/`,
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js'
   },
