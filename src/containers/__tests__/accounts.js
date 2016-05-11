@@ -85,18 +85,19 @@ describe('Accounts', () => {
 
   it('should request data on mount', () => {
     const accountActions = accountActionsMaker()
+    const fetchData=jest.genMockFunction()
     TestUtils.renderIntoDocument(
       <Accounts
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        fetchData={fetchData}
         fetching={true}
         fetchingMetrics={true}
         username="test"
         params={urlParams}/>
     )
-    expect(accountActions.startFetching.mock.calls.length).toBe(1)
-    expect(accountActions.fetchAccounts.mock.calls[0][0]).toBe('udn')
+    expect(fetchData.mock.calls.length).toBe(1)
   });
 
   it('should show a loading message', () => {
@@ -105,6 +106,7 @@ describe('Accounts', () => {
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         username="test"
@@ -120,6 +122,7 @@ describe('Accounts', () => {
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
@@ -137,6 +140,7 @@ describe('Accounts', () => {
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
@@ -224,6 +228,7 @@ describe('Accounts', () => {
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
+        fetchData={jest.genMockFunction()}
         accounts={fakeAccounts}
         params={urlParams}
         username="test"

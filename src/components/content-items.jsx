@@ -13,7 +13,7 @@ import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
 import ContentItem from './content-item'
-import Breadcrumbs from './breadcrumbs'
+import { Breadcrumbs } from './breadcrumbs'
 import Select from './select'
 import IconAdd from './icons/icon-add.jsx'
 import IconChart from './icons/icon-chart.jsx'
@@ -21,15 +21,15 @@ import IconItemList from './icons/icon-item-list.jsx'
 import IconItemChart from './icons/icon-item-chart.jsx'
 
 const sortContent = (path, direction) => (item1, item2) => {
-    const val1 = item1.getIn(path)
-    const val2 = item2.getIn(path)
-    if(val1 > val2) {
-      return direction
-    }
-    else if(val1 < val2) {
-      return -1 * direction
-    }
+  const val1 = item1.getIn(path)
+  const val2 = item2.getIn(path)
+  if(val1 > val2) {
+    return direction
   }
+  else if(val1 < val2) {
+    return -1 * direction
+  }
+}
 
 class ContentItems extends React.Component {
   constructor(props) {
@@ -242,7 +242,6 @@ ContentItems.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
-  brand: React.PropTypes.string,
   breadcrumbs: React.PropTypes.array,
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,

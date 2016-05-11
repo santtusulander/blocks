@@ -21,4 +21,3 @@ Breadcrumbs.propTypes = {
   links: React.PropTypes.array
 };
 
-module.exports = Breadcrumbs

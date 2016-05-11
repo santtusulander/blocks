@@ -1,9 +1,13 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Button } from 'react-bootstrap'
 import classNames from 'classnames'
 
-export const ButtonWrapper = props => {
-  return <Button {...removeProps(props, ['hidden'])} className={createButtonClassName(props)}/>
+import { removeProps } from '../util/helpers'
+
+export class ButtonWrapper extends Component {
+  render() {
+    return <Button {...removeProps(this.props, ['hidden'])} className={createButtonClassName(this.props)}/>
+  }
 }
 
 const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link']
@@ -22,25 +26,5 @@ function createButtonClassName(props){
     'hidden': props.hidden,
     'toggle-view': props.toggleView
   })
-}
-
-/**
- * Removes properties from the given object.
- * This method is used for removing valid attributes from component props prior to rendering.
- *
- * @param {Object} object
- * @param {Array} remove
- * @returns {Object}
- */
-export function removeProps(object, remove) {
-  const result = {}
-
-  for (const property in object) {
-    if (object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
-      result[property] = object[property];
-    }
-  }
-
-  return result
 }
 
