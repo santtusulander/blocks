@@ -1,8 +1,9 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Nav, NavItem } from 'react-bootstrap'
+import { Modal, Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as hostActionCreators from '../redux/modules/host'
@@ -30,15 +31,20 @@ export class PropertyAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
+      activeTabDescription: 'Traffic',
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
 
     this.changeTab = this.changeTab.bind(this)
+    this.getTabDescription = this.getTabDescription.bind(this)
+    this.changeExport = this.changeExport.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
     this.changeActiveVideo = this.changeActiveVideo.bind(this)
+
   }
   componentWillMount() {
     this.props.hostActions.fetchHosts(
@@ -52,6 +58,10 @@ export class PropertyAnalytics extends React.Component {
     if(nextProps.location.query.name !== this.props.location.query.name) {
       this.fetchData(nextProps.location.query.name)
     }
+  }
+  getTabDescription(tab) {
+    let description = ReactDOM.findDOMNode(this.refs[tab]).childNodes[0].innerHTML
+    return description
   }
   fetchData(property) {
     if(!property) {
@@ -101,7 +111,15 @@ export class PropertyAnalytics extends React.Component {
     ]).then(this.props.reportsActions.finishFetching)
   }
   changeTab(newTab) {
-    this.setState({activeTab: newTab})
+    this.setState({
+      activeTab: newTab,
+      activeTabDescription: this.getTabDescription(newTab)
+    })
+  }
+  changeExport() {
+    this.setState({
+      showExportPanel: !this.state.showExportPanel
+    })
   }
   changeDateRange(startDate, endDate) {
     const dateRange =
@@ -136,10 +154,12 @@ export class PropertyAnalytics extends React.Component {
       metrics.get('transfer_rates').get('average') : '0.0 Gbps'
     const lowTraffic = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
+
     return (
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
           <Analyses
+            changeExport={this.changeExport}
             endDate={this.state.endDate}
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
@@ -157,13 +177,13 @@ export class PropertyAnalytics extends React.Component {
 
         <Content>
           <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
-            <NavItem eventKey="traffic">Traffic</NavItem>
-            <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
-            <NavItem eventKey="file-error">File Error</NavItem>
-            <NavItem eventKey="url-report">URL Report</NavItem>
-            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
-            <NavItem eventKey="playback-demo">Playback Demo</NavItem>
+            <NavItem eventKey="traffic" ref="traffic">Traffic</NavItem>
+            <NavItem eventKey="visitors" ref="visitors">Visitors</NavItem>
+            <NavItem eventKey="sp-report" ref="sp-report">SP On/Off Net</NavItem>
+            <NavItem eventKey="file-error" ref="file-error">File Error</NavItem>
+            <NavItem eventKey="url-report" ref="url-report">URL Report</NavItem>
+            <NavItem eventKey="storage-usage" ref="storage-usage">Storage Usage</NavItem>
+            <NavItem eventKey="playback-demo" ref="playback-demo">Playback Demo</NavItem>
           </Nav>
 
           <div className="container-fluid analysis-container">
@@ -208,6 +228,22 @@ export class PropertyAnalytics extends React.Component {
               <AnalysisPlaybackDemo
                 activeVideo={this.state.activeVideo}/>
               : ''}
+
+            {this.state.showExportPanel ?
+              <Modal show={true}
+                     onHide={this.changeExport}
+                     dialogClassName="configuration-sidebar">
+                <Modal.Header>
+                  <h1>Export</h1>
+                  <p>
+                    {this.state.activeTabDescription} report
+                  </p>
+                </Modal.Header>
+                <Modal.Body>
+                  <p>Export panel body</p>
+                </Modal.Body>
+              </Modal> : null
+            }
           </div>
         </Content>
       </PageContainer>

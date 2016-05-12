@@ -140,13 +140,19 @@ export class Analyses extends React.Component {
               }) : ''}
             </Dropdown.Menu>
           </Dropdown>
-          <div className="sidebar-actions">
-            <ButtonToolbar>
-              <Button bsStyle="primary">
-                Export
-              </Button>
-            </ButtonToolbar>
-          </div>
+          {this.props.activeTab !== 'playback-demo' ?
+            <div className="sidebar-actions">
+              <div className="form-group">
+                <Select className="btn-block"
+                        onSelect={this.props.changeExport}
+                        value=""
+                        options={[
+                          ['', 'Export report'],
+                          ['download_pdf', 'Download PDF'],
+                        ]}/>
+              </div>
+            </div>
+          : null }
         </div>
         {this.props.activeTab !== 'playback-demo' ?
           <div>
@@ -344,6 +350,7 @@ Analyses.propTypes = {
   activeVideo: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
+  changeExport: React.PropTypes.func,
   changeSPChartType: React.PropTypes.func,
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
