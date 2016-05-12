@@ -4,6 +4,9 @@ import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 class ErrorModal extends React.Component {
   constructor(props) {
     super(props);
+
+    this.reloadPage = this.reloadPage.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   reloadPage() {
@@ -16,7 +19,7 @@ class ErrorModal extends React.Component {
 
   render() {
     return (
-      <Modal show={this.props.showErrorDialog} className="error-modal" onHide={() => {  this.closeModal(); } }>
+      <Modal show={this.props.showErrorDialog} className="error-modal" onHide={ this.closeModal }>
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
           <h1>An error occured</h1>
@@ -30,8 +33,8 @@ class ErrorModal extends React.Component {
 
         <Modal.Footer>
           <ButtonToolbar className="pull-right">
-            <Button onClick={ () => { this.closeModal(); } } bsStyle="primary" >Close</Button>
-            <Button onClick={ () => { this.reloadPage(); } } bsStyle="primary" >Reload</Button>
+            <Button onClick={ this.closeModal } bsStyle="primary" >Close</Button>
+            <Button onClick={ this.reloadPage } bsStyle="primary" >Reload</Button>
           </ButtonToolbar>
         </Modal.Footer>
       </Modal>
