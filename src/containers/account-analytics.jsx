@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Nav, NavItem } from 'react-bootstrap'
+import { Modal, Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -23,6 +23,7 @@ import AnalysisFileError from '../components/analysis/file-error'
 import AnalysisURLReport from '../components/analysis/url-report'
 import AnalysisStorageUsage from '../components/analysis/storage-usage'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
+import ExportPanel from '../components/export-panel'
 import { filterAccountsByUserName } from '../util/helpers'
 
 export class AccountAnalytics extends React.Component {
@@ -34,10 +35,12 @@ export class AccountAnalytics extends React.Component {
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
 
     this.changeTab = this.changeTab.bind(this)
+    this.changeExportSelect = this.changeExportSelect.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
     this.changeActiveVideo = this.changeActiveVideo.bind(this)
   }
@@ -100,6 +103,11 @@ export class AccountAnalytics extends React.Component {
   changeTab(newTab) {
     this.setState({activeTab: newTab})
   }
+  changeExportSelect() {
+    this.setState({
+      showExportPanel: !this.state.showExportPanel
+    })
+  }
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -141,6 +149,7 @@ export class AccountAnalytics extends React.Component {
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
           <Analyses
+            changeExportSelect={this.changeExportSelect}
             endDate={this.state.endDate}
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
@@ -209,6 +218,10 @@ export class AccountAnalytics extends React.Component {
               <AnalysisPlaybackDemo
                 activeVideo={this.state.activeVideo}/>
               : ''}
+            {this.state.showExportPanel ?
+              <ExportPanel onHide={this.changeExportSelect} />
+             : null
+            }
           </div>
         </Content>
       </PageContainer>

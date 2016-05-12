@@ -31,6 +31,7 @@ export class Analyses extends React.Component {
     this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
+
   }
   componentWillMount() {
     this.setState({
@@ -144,15 +145,15 @@ export class Analyses extends React.Component {
             <div className="sidebar-actions">
               <div className="form-group">
                 <Select className="btn-block"
-                        onSelect={this.props.changeExport}
+                        onSelect={this.props.changeExportSelect}
                         value=""
                         options={[
                           ['', 'Export report'],
-                          ['download_pdf', 'Download PDF'],
+                          ['download_pdf', 'Download PDF']
                         ]}/>
               </div>
             </div>
-          : null }
+          : null}
         </div>
         {this.props.activeTab !== 'playback-demo' ?
           <div>
@@ -350,7 +351,7 @@ Analyses.propTypes = {
   activeVideo: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
-  changeExport: React.PropTypes.func,
+  changeExportSelect: React.PropTypes.func,
   changeSPChartType: React.PropTypes.func,
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),

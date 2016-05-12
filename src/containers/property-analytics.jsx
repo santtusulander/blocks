@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -24,6 +23,7 @@ import AnalysisFileError from '../components/analysis/file-error'
 import AnalysisURLReport from '../components/analysis/url-report'
 import AnalysisStorageUsage from '../components/analysis/storage-usage'
 import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
+import ExportPanel from '../components/export-panel'
 
 export class PropertyAnalytics extends React.Component {
   constructor(props) {
@@ -31,7 +31,6 @@ export class PropertyAnalytics extends React.Component {
 
     this.state = {
       activeTab: 'traffic',
-      activeTabDescription: 'Traffic',
       activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
@@ -40,11 +39,9 @@ export class PropertyAnalytics extends React.Component {
     }
 
     this.changeTab = this.changeTab.bind(this)
-    this.getTabDescription = this.getTabDescription.bind(this)
-    this.changeExport = this.changeExport.bind(this)
+    this.changeExportSelect = this.changeExportSelect.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
     this.changeActiveVideo = this.changeActiveVideo.bind(this)
-
   }
   componentWillMount() {
     this.props.hostActions.fetchHosts(
@@ -58,10 +55,6 @@ export class PropertyAnalytics extends React.Component {
     if(nextProps.location.query.name !== this.props.location.query.name) {
       this.fetchData(nextProps.location.query.name)
     }
-  }
-  getTabDescription(tab) {
-    let description = ReactDOM.findDOMNode(this.refs[tab]).childNodes[0].innerHTML
-    return description
   }
   fetchData(property) {
     if(!property) {
@@ -111,12 +104,9 @@ export class PropertyAnalytics extends React.Component {
     ]).then(this.props.reportsActions.finishFetching)
   }
   changeTab(newTab) {
-    this.setState({
-      activeTab: newTab,
-      activeTabDescription: this.getTabDescription(newTab)
-    })
+    this.setState({activeTab: newTab})
   }
-  changeExport() {
+  changeExportSelect() {
     this.setState({
       showExportPanel: !this.state.showExportPanel
     })
@@ -159,7 +149,7 @@ export class PropertyAnalytics extends React.Component {
       <PageContainer hasSidebar={true} className="configuration-container">
         <Sidebar>
           <Analyses
-            changeExport={this.changeExport}
+            changeExportSelect={this.changeExportSelect}
             endDate={this.state.endDate}
             startDate={this.state.startDate}
             changeDateRange={this.changeDateRange}
@@ -228,21 +218,9 @@ export class PropertyAnalytics extends React.Component {
               <AnalysisPlaybackDemo
                 activeVideo={this.state.activeVideo}/>
               : ''}
-
             {this.state.showExportPanel ?
-              <Modal show={true}
-                     onHide={this.changeExport}
-                     dialogClassName="configuration-sidebar">
-                <Modal.Header>
-                  <h1>Export</h1>
-                  <p>
-                    {this.state.activeTabDescription} report
-                  </p>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>Export panel body</p>
-                </Modal.Body>
-              </Modal> : null
+              <ExportPanel onHide={this.changeExportSelect} />
+              : null
             }
           </div>
         </Content>
