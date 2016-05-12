@@ -90,6 +90,8 @@ class AnalyticsDB {
       start        : null,
       end          : Math.round(Date.now() / 1000),
       account      : null,
+      account_min  : null,
+      account_max  : null,
       group        : null,
       property     : null,
       service_type : null,
@@ -184,6 +186,10 @@ class AnalyticsDB {
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
+
+    if (!optionsFinal.account && optionsFinal.account_min != null && optionsFinal.account_max != null) {
+      conditions.push(`AND account_id BETWEEN ${optionsFinal.account_min} AND ${optionsFinal.account_max}`);
+    }
 
     optionsFinal.group
       && conditions.push(this.accountLevelFieldMap.group.where)
@@ -349,6 +355,10 @@ class AnalyticsDB {
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
+
+    if (!optionsFinal.account && optionsFinal.account_min != null && optionsFinal.account_max != null) {
+      conditions.push(`AND account_id BETWEEN ${optionsFinal.account_min} AND ${optionsFinal.account_max}`);
+    }
 
     optionsFinal.group
       && conditions.push(this.accountLevelFieldMap.group.where)
