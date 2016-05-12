@@ -113,6 +113,31 @@ describe('ContentItems', () => {
     expect(contentItems.find('Breadcrumbs').length).toBe(1);
   });
 
+  it('should not show breadcrumbs', () => {
+    let contentItems = shallow(
+      <ContentItems
+        account={'account'}
+        activeAccount={Immutable.Map()}
+        activeGroup={Immutable.Map()}
+        analyticsURLBuilder={jest.genMockFunction()}
+        className="hosts-container"
+        configURLBuilder={jest.genMockFunction()}
+        contentItems={fakeItems}
+        fetching={true}
+        fetchingMetrics={true}
+        headerText={fakeHeader}
+        metrics={fakeMetrics}
+        nextPageURLBuilder={jest.genMockFunction()}
+        showAnalyticsLink={false}
+        sortDirection={1}
+        sortItems={jest.genMockFunction()}
+        toggleChartView={jest.genMockFunction()}
+        type='property'
+        viewingChart={true}/>
+    );
+    expect(contentItems.find('Breadcrumbs').length).toBe(0);
+  });
+
   it('should show analytics link', () => {
     let contentItems = shallow(
       <ContentItems
@@ -164,29 +189,28 @@ describe('ContentItems', () => {
     expect(contentItems.find('AnalyticsLink').length).toBe(0);
   });
 
-  it('should not show breadcrumbs', () => {
+  it('should show text for no content', () => {
     let contentItems = shallow(
       <ContentItems
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
         analyticsURLBuilder={jest.genMockFunction()}
+        breadcrumbs={fakeLinks}
         className="hosts-container"
         configURLBuilder={jest.genMockFunction()}
-        contentItems={fakeItems}
-        fetching={true}
-        fetchingMetrics={true}
+        contentItems={Immutable.List()}
         headerText={fakeHeader}
+        ifNoContent={'test'}
         metrics={fakeMetrics}
         nextPageURLBuilder={jest.genMockFunction()}
-        showAnalyticsLink={false}
         sortDirection={1}
         sortItems={jest.genMockFunction()}
         toggleChartView={jest.genMockFunction()}
         type='property'
         viewingChart={true}/>
     );
-    expect(contentItems.find('Breadcrumbs').length).toBe(0);
+    expect(contentItems.find('NoContentItems').length).toBe(1);
   });
 
   it('should pass chart prop to content item', () => {

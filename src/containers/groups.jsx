@@ -46,7 +46,6 @@ export class Groups extends React.Component {
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
       <ContentItems
-        account={account}
         activeAccount={activeAccount}
         activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
@@ -59,6 +58,7 @@ export class Groups extends React.Component {
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
         headerText={{ summary: 'ACCOUNT CONTENT SUMMARY', label: breadcrumbs[0].label }}
+        ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : 'Loading...'}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}

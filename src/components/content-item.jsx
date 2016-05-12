@@ -6,16 +6,14 @@ import ContentItemChart from './content-item-chart'
 const ContentItem = ({
   deleteItem,
   isChart,
-  itemProps,
-  scaledWidth
+  itemProps
 }) => {
   if(isChart) {
     return (
       <ContentItemChart
         {...itemProps}
         delete={deleteItem}
-        barWidth="1"
-        barMaxHeight={(scaledWidth / 7).toString()} />
+        barWidth="1" />
     )
   }
   else {

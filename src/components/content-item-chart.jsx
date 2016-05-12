@@ -24,8 +24,8 @@ class ContentItemChart extends React.Component {
     }
   }
   render() {
-    if (!this.props.primaryData) {
-      return <div>Loading...</div>
+    if (this.props.fetchingMetrics) {
+      return <div id="fetchingMetrics">Loading...</div>
     }
     const primaryData = this.props.primaryData.toJS().reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours

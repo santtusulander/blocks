@@ -81,7 +81,6 @@ export class Hosts extends React.Component {
     ]
     return (
       <ContentItems
-        account={account}
         activeAccount={this.props.activeAccount}
         activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
@@ -93,9 +92,10 @@ export class Hosts extends React.Component {
         createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
-        headerText={{ summary: 'GROUP CONTENT SUMMARY', label: breadcrumbs[1].label }}
         fetchingMetrics={this.props.fetchingMetrics}
         group={group}
+        headerText={{ summary: 'GROUP CONTENT SUMMARY', label: breadcrumbs[1].label }}
+        ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : 'Loading...'}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}

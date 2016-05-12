@@ -70,6 +70,7 @@ class ContentItems extends React.Component {
       sortDirection,
       metrics,
       headerText,
+      ifNoContent,
       activeGroup,
       activeAccount,
       type,
@@ -145,15 +146,8 @@ class ContentItems extends React.Component {
             {this.props.breadcrumbs ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
               <p className="fetching-info">Loading...</p> : (
-              this.props.contentItems.size === 0 ?
-                <p className="fetching-info text-center">
-                  {activeGroup ?
-                    activeGroup.get('name') +
-                    ' does not contain any properties'
-                    : 'Loading...'}
-                <br/>
-                You can create new properties by clicking the Add New (+) button
-                </p>
+              this.props.contentItems.isEmpty() ?
+                <NoContentItems content={ifNoContent} />
               :
               <ReactCSSTransitionGroup
                 component="div"
@@ -237,12 +231,21 @@ const AnalyticsLink = props => {
    </Link>
   )
 }
-
 AnalyticsLink.propTypes = { url: React.PropTypes.func }
+
+const NoContentItems = props => {
+  return (
+    <p className="fetching-info text-center">
+      {props.content}
+      <br/>
+      You can create new properties by clicking the Add New (+) button
+    </p>
+  )
+}
+NoContentItems.propTypes = { content: React.PropTypes.string }
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
-  account: React.PropTypes.string,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
@@ -256,6 +259,7 @@ ContentItems.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
+  ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   showAnalyticsLink: React.PropTypes.bool,
