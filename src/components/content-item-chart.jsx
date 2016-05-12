@@ -24,7 +24,7 @@ class ContentItemChart extends React.Component {
     }
   }
   render() {
-    if (!this.props.primaryData.size) {
+    if (!this.props.primaryData) {
       return <div>Loading...</div>
     }
     const primaryData = this.props.primaryData.toJS().reduce((points, data, i) => {
