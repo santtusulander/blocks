@@ -1,0 +1,57 @@
+// Export Sidebar
+// =====================
+
+.modal-dialog.export-sidebar {
+  @extend .modal-dialog.configuration-sidebar;
+
+  .modal-body {
+    padding: 0 $bar-height !important;
+
+    @include md {
+      padding: 0 $md-bar-height !important;
+    }
+
+    @include sm {
+      padding: 0 ($md-bar-height / 2) !important;
+    }
+  }
+
+  h4 {
+    text-transform: uppercase;
+  }
+
+  .export-panel-tabs {
+    .nav-tabs {
+      margin: 0 ($bar-height *-1) ($bar-height / 2) ($bar-height *-1);
+
+      @include md {
+        margin: 0 ($md-bar-height *-1) ($md-bar-height / 2) ($md-bar-height *-1);
+      }
+
+      @include sm {
+        margin: 0 (($md-bar-height / 2) *-1) (($md-bar-height / 2) / 2) (($md-bar-height / 2) *-1);
+      }
+
+      > li {
+        width: 50%;
+
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .file-types {
+    margin: ($bar-height / 2) 0;
+
+    .form-group {
+      background-color: rgba($black, 0.1);
+      padding: 15px;
+
+      &:nth-of-type(odd) {
+        background-color: rgba($black, 0.2);
+      }
+    }
+  }
+}
