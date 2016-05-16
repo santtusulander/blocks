@@ -88,7 +88,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
-  return axios.get(`${topoBase}/countries.topo.json`)
+  return axios.get(`${topoBase()}/countries.topo.json`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -97,7 +97,7 @@ export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
 })
 
 export const fetchStates = createAction(TOPO_STATES_FETCHED, (country) => {
-  return axios.get(`${topoBase}/states_${country}.topo.json`)
+  return axios.get(`${topoBase()}/states_${country}.topo.json`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -106,7 +106,7 @@ export const fetchStates = createAction(TOPO_STATES_FETCHED, (country) => {
 })
 
 export const fetchCities = createAction(TOPO_CITIES_FETCHED, (country) => {
-  return axios.get(`${topoBase}/cities_${country}.topo.json`)
+  return axios.get(`${topoBase()}/cities_${country}.topo.json`)
   .then((res) => {
     if(res) {
       return res.data;

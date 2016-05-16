@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -52,8 +53,7 @@ class ContentItemList extends React.Component {
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
               <Link to={this.props.configurationLink}
-                className="btn btn-sm edit-content-item btn-primary btn-icon
-                btn-round">
+                className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
                 <IconConfiguration/>
               </Link> : ''
             }
@@ -100,7 +100,7 @@ class ContentItemList extends React.Component {
               {!this.props.fetchingMetrics ?
                 <AnalysisByTime axes={false} padding={0} className="bg-transparent"
                   dataKey="bytes"
-                  primaryData={this.props.primaryData}
+                  primaryData={this.props.primaryData.toJS()}
                   width={this.state.byTimeWidth}
                   height={this.state.byTimeHeight} />
               : ''}
@@ -127,9 +127,12 @@ ContentItemList.propTypes = {
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
-  primaryData: React.PropTypes.array,
+  primaryData: React.PropTypes.instanceOf(Immutable.List),
   timeToFirstByte: React.PropTypes.string,
   toggleActive: React.PropTypes.func
+}
+ContentItemList.defaultProps = {
+  primaryData: Immutable.List()
 }
 
 module.exports = ContentItemList

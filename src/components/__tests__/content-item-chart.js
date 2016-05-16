@@ -1,42 +1,42 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
 jest.dontMock('../content-item-chart.jsx')
 const ContentItemChart = require('../content-item-chart.jsx')
 
-const fakePrimaryData = [
+const fakePrimaryData = Immutable.List([
   {bytes: 123, timestamp: 123},
   {bytes: 234, timestamp: 234},
   {bytes: 345, timestamp: 345}
-]
+])
 
-const fakeSecondaryData = [
+const fakeSecondaryData = Immutable.List([
   {bytes: 234, timestamp: 234},
   {bytes: 345, timestamp: 345},
   {bytes: 456, timestamp: 456}
-]
+])
 
-const fakeDifferenceData = [0, 0, 0, 1, 1, 1]
+const fakeDifferenceData = Immutable.List([0, 0, 0, 1, 1, 1])
 
 describe('ContentItemChart', () => {
   it('should exist', () => {
     let contentItem = TestUtils.renderIntoDocument(
-      <ContentItemChart
-        account={Immutable.Map()} />
+      <ContentItemChart />
     );
     expect(TestUtils.isCompositeComponent(contentItem)).toBeTruthy();
   })
 
   it('should show a loading message', () => {
-    let contentItem = TestUtils.renderIntoDocument(
-      <ContentItemChart
-        account={Immutable.Map()} />
-    )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(contentItem, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
+    let contentItem = shallow(<ContentItemChart fetchingMetrics={true}/>)
+    expect(contentItem.find('#fetchingMetrics').length).toBe(1)
+  });
+
+  it('should not show a loading message', () => {
+    let contentItem = shallow(<ContentItemChart/>)
+    expect(contentItem.find('#fetchingMetrics').length).toBe(0)
   });
 
   it('should show primary chart', () => {

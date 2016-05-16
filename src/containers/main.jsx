@@ -10,6 +10,7 @@ import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
+import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
 import { filterAccountsByUserName } from '../util/helpers'
@@ -149,6 +150,9 @@ export class Main extends React.Component {
             showNotification={this.showNotification}/>
           : ''
         }
+
+        <ErrorModal showErrorDialog={this.props.showErrorDialog} uiActions={this.props.uiActions} />
+
         <ReactCSSTransitionGroup
           component="div"
           className="notification-transition"
@@ -208,6 +212,7 @@ function mapStateToProps(state) {
       state.visitors.get('fetching'),
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
+    showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
     username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart')

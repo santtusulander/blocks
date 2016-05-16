@@ -1,5 +1,7 @@
 var path = require('path');
-//
+
+const isProductionBuild = () => (process.argv.indexOf('--production-build') !== -1)
+
 module.exports = {
   entry: {
     app: [path.resolve(__dirname, '../src/app.jsx')]
@@ -7,7 +9,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
-    publicPath: 'http://localhost:3000/',
+    publicPath: isProductionBuild() ? process.env.PUBLIC_URL : `http://localhost:${process.env.PORT}/`,
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js'
   },
@@ -33,22 +35,22 @@ module.exports = {
       {
         test: /\.(jpg|jpeg|gif|png)$/,
         exclude: /node_modules/,
-        loader: 'file?name=src/assets/img/[name].[ext]'
+        loader: 'file?name=assets/img/[name].[ext]'
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
         exclude: /(node_modules|img|icons)/,
-        loader: 'file?name=src/assets/fonts/[name].[ext]'
+        loader: 'file?name=assets/fonts/[name].[ext]'
       },
       {
         test: /\.(svg|ico)$/,
         exclude: /(node_modules|fonts|img)/,
-        loader: 'file?name=src/assets/icons/[name].[ext]'
+        loader: 'file?name=assets/icons/[name].[ext]'
       },
       {
         test: /\.svg$/,
         exclude: /(node_modules|fonts|icons)/,
-        loader: 'file?name=src/assets/img/[name].[ext]'
+        loader: 'file?name=assets/img/[name].[ext]'
       },
       {
         test: require.resolve("react"),
