@@ -38,9 +38,10 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={createBrowserHistory()}>
+    <Router onUpdate={handleRouteChange} history={createBrowserHistory()}>
       {routes}
     </Router>
   </Provider>, document.getElementById('content')
