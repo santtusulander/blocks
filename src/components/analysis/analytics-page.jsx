@@ -40,10 +40,18 @@ export class AnalyticsPage extends React.Component {
   exportCSV() {
     switch(this.state.activeTab) {
       case 'traffic':
-        generateCSVFile(this.props.trafficByTime.toJS().map(traffic => {
-          traffic.timestamp = moment(traffic.timestamp).format()
-          return traffic
-        }), `Traffic - ${this.props.exportFilenamePart}`)
+        const processedData = this.props.trafficByTime
+          .filter(traffic => this.props.serviceTypes.includes(
+            traffic.get('service_type')
+          ))
+          .map(traffic => traffic.set(
+            'timestamp',
+            moment(traffic.get('timestamp')).format()
+          ))
+        generateCSVFile(
+          processedData.toJS(),
+          `Traffic - ${this.props.exportFilenamePart}`
+        )
         break
     }
   }
