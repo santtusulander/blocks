@@ -47,7 +47,7 @@ class ContentItemChart extends React.Component {
       }
       return points;
     }, [])
-    const differenceData = this.props.differenceData.toJS().reduce((points, data, i) => {
+    const differenceData = this.props.differenceData.reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
       if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
@@ -236,7 +236,7 @@ class ContentItemChart extends React.Component {
                   <g onMouseEnter={this.differenceHover(true)}
                     onMouseLeave={this.differenceHover(false)}>
                     {
-                      pie(Array(differenceData.size).fill(1)).map((arcs, i) => {
+                      pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
                         let data = differenceData[i]
                         let style = data < 0 ? 'below-avg' :
                           data === 0 ? 'avg' :

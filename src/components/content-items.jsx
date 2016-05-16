@@ -97,7 +97,7 @@ class ContentItems extends React.Component {
         item: item,
         metrics: metrics.find(metric => {
           return metric.get(type) === item.get('id')
-        }) || Immutable.Map()
+        }) || Immutable.Map({ totalTraffic: 0 })
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
