@@ -23,6 +23,7 @@ class PurgeModal extends React.Component {
     this.toggleNotification = this.toggleNotification.bind(this)
     this.validateEmail = this.validateEmail.bind(this)
     this.validatePurgeObjects = this.validatePurgeObjects.bind(this)
+    this.purgeObjInput = this.purgeObjInput.bind(this)
   }
   change(path) {
     return (e) => {
@@ -103,27 +104,27 @@ class PurgeModal extends React.Component {
     })
     this.props.changePurge(this.props.activePurge.set('feedback', feedback))
   }
+  purgeObjInput({title, help, placeholder}) {
+    return (
+      <div>
+        <Row>
+          <Col sm={6}>
+            <h3>{title}</h3>
+          </Col>
+          <Col sm={6} className="text-right">{help}</Col>
+        </Row>
+        <Input type="textarea" id="purge__objects"
+          bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
+          help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
+          placeholder={placeholder}
+          value={this.props.activePurge.get('objects').join(',\n')}
+          onChange={this.parsePurgeObjects}/>
+        <hr/>
+      </div>
+    )
+  }
   render() {
     const showPropertySelect = this.props.availableProperties && this.props.changeProperty
-    const PurgeObjInput = ({title, help, placeholder}) => {
-      return (
-        <div>
-          <Row>
-            <Col sm={6}>
-              <h3>{title}</h3>
-            </Col>
-            <Col sm={6} className="text-right">{help}</Col>
-          </Row>
-          <Input type="textarea" id="purge__objects"
-            bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
-            help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
-            placeholder={placeholder}
-            value={this.props.activePurge.get('objects').join(',\n')}
-            onChange={this.parsePurgeObjects}/>
-          <hr/>
-        </div>
-      )
-    }
     return (
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
         onHide={this.props.hideAction}>
@@ -167,12 +168,12 @@ class PurgeModal extends React.Component {
               {this.state.type && this.state.type !== 'hostname'
                 && this.state.type !== 'group' && <div>
 
-                {this.state.type === 'url' && <PurgeObjInput
+                {this.state.type === 'url' && <this.purgeObjInput
                   title="URLs to Purge"
                   help="Up to 100 urls, separated by comma"
                   placeholder="Enter URLs"/>}
 
-                {this.state.type === 'directory' && <PurgeObjInput
+                {this.state.type === 'directory' && <this.purgeObjInput
                   title="Directories to Purge"
                   help="Up to 100 directories, separated by comma"
                   placeholder="Enter directory paths"/>}
