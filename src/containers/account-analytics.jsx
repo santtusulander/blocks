@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Nav, NavItem } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -12,17 +11,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
 
-import PageContainer from '../components/layout/page-container'
-import Sidebar from '../components/layout/sidebar'
-import Content from '../components/layout/content'
-import Analyses from '../components/analysis/analyses'
-import AnalysisTraffic from '../components/analysis/traffic'
-import AnalysisVisitors from '../components/analysis/visitors'
-import AnalysisSPReport from '../components/analysis/sp-report'
-import AnalysisFileError from '../components/analysis/file-error'
-import AnalysisURLReport from '../components/analysis/url-report'
-import AnalysisStorageUsage from '../components/analysis/storage-usage'
-import AnalysisPlaybackDemo from '../components/analysis/playback-demo'
+import AnalyticsPage from '../components/analysis/analytics-page'
 import { filterAccountsByUserName } from '../util/helpers'
 
 export class AccountAnalytics extends React.Component {
@@ -30,16 +19,11 @@ export class AccountAnalytics extends React.Component {
     super(props);
 
     this.state = {
-      activeTab: 'traffic',
-      activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
       startDate: moment().utc().startOf('month')
     }
-
-    this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
-    this.changeActiveVideo = this.changeActiveVideo.bind(this)
   }
   componentWillMount() {
     this.fetchData()
@@ -93,11 +77,9 @@ export class AccountAnalytics extends React.Component {
       this.props.visitorsActions.fetchByOS(fetchOpts)
     ]).then(this.props.visitorsActions.finishFetching)
     Promise.all([
-      this.props.reportsActions.fetchURLMetrics()
+      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
+      this.props.reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(this.props.reportsActions.finishFetching)
-  }
-  changeTab(newTab) {
-    this.setState({activeTab: newTab})
   }
   changeDateRange(startDate, endDate) {
     const dateRange =
@@ -111,9 +93,6 @@ export class AccountAnalytics extends React.Component {
       endDate: endDate,
       startDate: startDate
     }, this.fetchData)
-  }
-  changeActiveVideo(video) {
-    this.setState({activeVideo: video})
   }
   render() {
     const filteredAccounts = filterAccountsByUserName(
@@ -130,86 +109,39 @@ export class AccountAnalytics extends React.Component {
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
-    const peakTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
-    const avgTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('average') : '0.0 Gbps'
-    const lowTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
+
     return (
-      <PageContainer hasSidebar={true} className="configuration-container">
-        <Sidebar>
-          <Analyses
-            endDate={this.state.endDate}
-            startDate={this.state.startDate}
-            changeDateRange={this.changeDateRange}
-            changeSPChartType={this.props.uiActions.changeSPChartType}
-            serviceTypes={this.props.serviceTypes}
-            spChartType={this.props.spChartType}
-            toggleServiceType={this.props.uiActions.toggleAnalysisServiceType}
-            activeTab={this.state.activeTab}
-            type="account"
-            name={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
-            navOptions={availableAccounts}
-            activeVideo={this.state.activeVideo}
-            changeVideo={this.changeActiveVideo}/>
-        </Sidebar>
-
-        <Content>
-          <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
-            <NavItem eventKey="traffic">Traffic</NavItem>
-            <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
-            <NavItem eventKey="file-error">File Error</NavItem>
-            <NavItem eventKey="url-report">URL Report</NavItem>
-            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
-            <NavItem eventKey="playback-demo">Playback Demo</NavItem>
-          </Nav>
-
-          <div className="container-fluid analysis-container">
-            {this.state.activeTab === 'traffic' ?
-              <AnalysisTraffic fetching={this.props.trafficFetching}
-                byTime={this.props.trafficByTime}
-                byCountry={this.props.trafficByCountry}
-                serviceTypes={this.props.serviceTypes}
-                totalEgress={this.props.totalEgress}
-                peakTraffic={!this.props.fetchingMetrics ? peakTraffic : null}
-                avgTraffic={!this.props.fetchingMetrics ? avgTraffic : null}
-                lowTraffic={!this.props.fetchingMetrics ? lowTraffic : null}
-                dateRange={this.state.dateRange}/>
-              : ''}
-            {this.state.activeTab === 'visitors' ?
-              <AnalysisVisitors fetching={this.props.visitorsFetching}
-                byTime={this.props.visitorsByTime}
-                byCountry={this.props.visitorsByCountry.get('countries')}
-                byBrowser={this.props.visitorsByBrowser.get('browsers')}
-                byOS={this.props.visitorsByOS.get('os')}/>
-              : ''}
-            {this.state.activeTab === 'sp-report' ?
-              <AnalysisSPReport fetching={this.props.trafficFetching}
-                serviceProviderStats={this.props.onOffNet}
-                serviceProviderStatsToday={this.props.onOffNetToday}
-                spChartType={this.props.spChartType}/>
-              : ''}
-            {this.state.activeTab === 'file-error' ?
-              <AnalysisFileError fetching={this.props.reportsFetching}/>
-              : ''}
-            {this.state.activeTab === 'url-report' ?
-              <AnalysisURLReport fetching={this.props.reportsFetching}
-                urls={this.props.urlMetrics}/>
-              : ''}
-            {this.state.activeTab === 'storage-usage' ?
-              <AnalysisStorageUsage fetching={this.props.trafficFetching}
-                storageStats={this.props.storageStats}/>
-              : ''}
-            {this.state.activeTab === 'playback-demo' ?
-              <AnalysisPlaybackDemo
-                activeVideo={this.state.activeVideo}/>
-              : ''}
-          </div>
-        </Content>
-      </PageContainer>
-    );
+      <AnalyticsPage
+        activeName={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
+        changeDateRange={this.changeDateRange}
+        changeSPChartType={this.props.uiActions.changeSPChartType}
+        dateRange={this.state.dateRange}
+        endDate={this.state.endDate}
+        fetchingMetrics={this.props.fetchingMetrics}
+        fileErrorSummary={this.props.fileErrorSummary}
+        fileErrorURLs={this.props.fileErrorURLs}
+        metrics={metrics}
+        onOffNet={this.props.onOffNet}
+        onOffNetToday={this.props.onOffNetToday}
+        reportsFetching={this.props.reportsFetching}
+        serviceTypes={this.props.serviceTypes}
+        siblings={availableAccounts}
+        spChartType={this.props.spChartType}
+        startDate={this.state.startDate}
+        storageStats={this.props.storageStats}
+        toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+        totalEgress={this.props.totalEgress}
+        trafficByCountry={this.props.trafficByCountry}
+        trafficByTime={this.props.trafficByTime}
+        trafficFetching={this.props.trafficFetching}
+        type="account"
+        urlMetrics={this.props.urlMetrics}
+        visitorsByBrowser={this.props.visitorsByBrowser}
+        visitorsByCountry={this.props.visitorsByCountry}
+        visitorsByOS={this.props.visitorsByOS}
+        visitorsByTime={this.props.visitorsByTime}
+        visitorsFetching={this.props.visitorsFetching}/>
+    )
   }
 }
 
@@ -219,6 +151,8 @@ AccountAnalytics.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   fetchingMetrics: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
@@ -250,6 +184,8 @@ function mapStateToProps(state) {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
+    fileErrorSummary: state.reports.get('fileErrorSummary'),
+    fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('accountMetrics'),
     totalEgress: state.traffic.get('totalEgress'),
     serviceTypes: state.ui.get('analysisServiceTypes'),

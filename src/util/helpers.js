@@ -71,3 +71,24 @@ export function matchesRegexp(string, pattern){
 export function isSafari() {
   return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
+
+/**
+ * Removes properties from the given object.
+ * This method is used for removing valid attributes from component props prior to rendering.
+ *
+ * @param {Object} object
+ * @param {Array} remove
+ * @returns {Object}
+ */
+export function removeProps(object, remove) {
+  const result = {}
+
+  for (const property in object) {
+    if (object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
+      result[property] = object[property];
+    }
+  }
+
+  return result
+}
+

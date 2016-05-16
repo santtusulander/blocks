@@ -51,6 +51,7 @@
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
 @import 'components/datepicker';
+@import 'components/error-modal';
 @import 'components/footer';
 @import 'components/header';
 @import 'components/input-connector';
@@ -66,6 +67,7 @@
 @import 'components/analysis/stacked';
 @import 'components/analysis/playback-demo';
 @import 'components/analysis/horizontal-bar';
+@import 'components/analysis/file-error';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
@@ -93,3 +95,6 @@
 // ==========
 
 @import 'containers/styleguide';
+
+// Downtime page
+@import 'downtime';

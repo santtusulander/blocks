@@ -13,10 +13,12 @@ function routeMetrics(req, res) {
 
   let params = req.query;
   let errors = validator.validate(params, {
-    start   : {required: true, type: 'Timestamp'},
-    end     : {required: false, type: 'Timestamp'},
-    account : {required: false, type: 'ID'},
-    group   : {required: false, type: 'ID'}
+    start       : {required: true, type: 'Timestamp'},
+    end         : {required: false, type: 'Timestamp'},
+    account     : {required: false, type: 'ID'},
+    group       : {required: false, type: 'ID'},
+    account_min : {required: false, type: 'ID'},
+    account_max : {required: false, type: 'ID'}
   });
 
   if (errors) {
@@ -24,10 +26,12 @@ function routeMetrics(req, res) {
   }
 
   let options = {
-    start   : params.start,
-    end     : params.end,
-    account : params.account,
-    group   : params.group
+    start       : params.start,
+    end         : params.end,
+    account     : params.account,
+    group       : params.group,
+    account_min : params.account_min,
+    account_max : params.account_max
   };
 
   db.getMetrics(options).spread((trafficData, historicalTrafficData, aggregateData) => {

@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import {analyticsBase} from '../util'
+import { analyticsBase, qsBuilder } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -23,33 +23,6 @@ const emptyTraffic = Immutable.Map({
   storage: Immutable.List(),
   totalEgress: 0
 })
-
-const qsBuilder = ({
-  account,
-  group,
-  property,
-  startDate,
-  endDate,
-  granularity
-}) => {
-  let qs = `?account=${account}`
-  if(group) {
-    qs += `&group=${group}`
-  }
-  if(property) {
-    qs += `&property=${property}`
-  }
-  if(startDate) {
-    qs += `&start=${startDate}`
-  }
-  if(endDate) {
-    qs += `&end=${endDate}`
-  }
-  if(granularity) {
-    qs += `&granularity=${granularity}`
-  }
-  return qs
-}
 
 // REDUCERS
 
@@ -148,7 +121,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/time${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -157,7 +130,7 @@ export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
 })
 
 export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/country${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -166,7 +139,7 @@ export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) =>
 })
 
 export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/total${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/total${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -175,7 +148,7 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -184,7 +157,7 @@ export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => 
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
