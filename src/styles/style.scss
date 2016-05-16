@@ -51,6 +51,7 @@
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
 @import 'components/datepicker';
+@import 'components/error-modal';
 @import 'components/footer';
 @import 'components/header';
 @import 'components/input-connector';
@@ -94,3 +95,6 @@
 // ==========
 
 @import 'containers/styleguide';
+
+// Downtime page
+@import 'downtime';
