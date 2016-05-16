@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
@@ -27,6 +28,10 @@ export class GroupAnalytics extends React.Component {
   }
   componentWillMount() {
     this.props.groupActions.fetchGroups(
+      this.props.params.brand,
+      this.props.params.account
+    )
+    this.props.accountActions.fetchAccount(
       this.props.params.brand,
       this.props.params.account
     )
@@ -111,14 +116,17 @@ export class GroupAnalytics extends React.Component {
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics = this.props.metrics.find(metric => metric.get('group') + "" === this.props.params.group) || Immutable.Map()
+    const activeAccountName = this.props.activeAccount ? this.props.activeAccount.get('name') : ''
+    const activeGroupName = this.props.activeGroup ? this.props.activeGroup.get('name') : ''
 
     return (
       <AnalyticsPage
-        activeName={this.props.activeGroup ? this.props.activeGroup.get('name') : ''}
+        activeName={activeGroupName}
         changeDateRange={this.changeDateRange}
         changeSPChartType={this.props.uiActions.changeSPChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
+        exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}
@@ -149,6 +157,8 @@ export class GroupAnalytics extends React.Component {
 
 GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
@@ -182,6 +192,7 @@ GroupAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     groups: state.group.get('allGroups'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
@@ -209,6 +220,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch),

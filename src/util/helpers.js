@@ -1,4 +1,6 @@
 import numeral from 'numeral'
+import Papa from 'papaparse'
+import download from 'downloadjs'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -92,3 +94,7 @@ export function removeProps(object, remove) {
   return result
 }
 
+export function generateCSVFile(data, filename) {
+  const csv = Papa.unparse(data)
+  download(csv, filename+'.csv', 'text/csv')
+}

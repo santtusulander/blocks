@@ -14,6 +14,7 @@ import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
 import AnalysisPlaybackDemo from './playback-demo'
+import { generateCSVFile } from '../../util/helpers'
 
 export class AnalyticsPage extends React.Component {
   constructor(props) {
@@ -37,7 +38,14 @@ export class AnalyticsPage extends React.Component {
     this.setState({activeVideo: video})
   }
   exportCSV() {
-    // export the csv based on this.state.activeTab
+    switch(this.state.activeTab) {
+      case 'traffic':
+        generateCSVFile(this.props.trafficByTime.toJS().map(traffic => {
+          traffic.timestamp = moment(traffic.timestamp).format()
+          return traffic
+        }), `Traffic - ${this.props.exportFilenamePart}`)
+        break
+    }
   }
   exportEmail() {
     // show the send email modal
@@ -142,6 +150,7 @@ AnalyticsPage.propTypes = {
   changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
+  exportFilenamePart: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
