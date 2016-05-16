@@ -28,8 +28,7 @@ ContentItem.displayName = 'ContentItem'
 ContentItem.propTypes = {
   deleteItem: React.PropTypes.func,
   isChart: React.PropTypes.bool,
-  itemProps: React.PropTypes.object,
-  scaledWidth: React.PropTypes.number
+  itemProps: React.PropTypes.object
 }
 
 module.exports = ContentItem

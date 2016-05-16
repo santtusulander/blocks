@@ -80,7 +80,7 @@ class ContentItems extends React.Component {
       viewingChart,
       createNewItem } = this.props
     if(!fetchingMetrics) {
-      const trafficTotals = this.props.contentItems.map((item, i) => metrics.getIn([i, 'totalTraffic'], 0))
+      const trafficTotals = this.props.contentItems.map((account) => metrics.getIn([account.get('id'), 'totalTraffic'], 0))
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
     }
