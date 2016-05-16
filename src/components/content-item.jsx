@@ -6,16 +6,14 @@ import ContentItemChart from './content-item-chart'
 const ContentItem = ({
   deleteItem,
   isChart,
-  itemProps,
-  scaledWidth
+  itemProps
 }) => {
   if(isChart) {
     return (
       <ContentItemChart
         {...itemProps}
         delete={deleteItem}
-        barWidth="1"
-        barMaxHeight={(scaledWidth / 7).toString()} />
+        barWidth="1" />
     )
   }
   else {
@@ -30,8 +28,7 @@ ContentItem.displayName = 'ContentItem'
 ContentItem.propTypes = {
   deleteItem: React.PropTypes.func,
   isChart: React.PropTypes.bool,
-  itemProps: React.PropTypes.object,
-  scaledWidth: React.PropTypes.number
+  itemProps: React.PropTypes.object
 }
 
 module.exports = ContentItem

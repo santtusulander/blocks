@@ -74,7 +74,6 @@ export class Accounts extends React.Component {
     const analyticsURLBuilder = (accountID) => `/content/analytics/account/${brand}/${accountID}`
     return (
       <ContentItems
-        account="3"
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         className="groups-container"
