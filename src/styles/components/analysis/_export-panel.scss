@@ -18,6 +18,7 @@
 
   h4 {
     text-transform: uppercase;
+    margin: 0;
   }
 
   .export-panel-tabs {
@@ -43,7 +44,7 @@
   }
 
   .file-types {
-    margin: ($bar-height / 2) 0;
+    margin: ($bar-height / 4) 0 ($bar-height / 2);
 
     .form-group {
       background-color: rgba($black, 0.1);
@@ -51,6 +52,56 @@
 
       &:nth-of-type(odd) {
         background-color: rgba($black, 0.2);
+      }
+    }
+
+    .radio {
+
+      input {
+        display: none;
+
+        + span::before {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          margin: -2px 20px 2px 0;
+          vertical-align: middle;
+          cursor: pointer;
+          border-radius: 2px;
+          content: '';
+
+          @include md {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+          }
+
+          .dark-theme &,
+          .light-theme .sidebar-layout &,
+          .light-theme .configuration-sidebar & {
+            background: rgba($black, 0.2);
+          }
+
+          .light-theme & {
+            background: $white;
+          }
+        }
+
+        &:checked + span::after {
+          position: relative;
+        }
+
+        .dark-theme &:checked + span::before,
+        .light-theme &:checked + span::before,
+        .light-theme .modal .configuration-sidebar &:checked + span::before {
+          background: $pale-blue url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background-size: 17px 16px;
+        }
+
+        .light-theme .modal &:checked + span::before {
+          background: rgba($black, 0.2) url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background-size: 17px 16px;
+        }
       }
     }
   }
