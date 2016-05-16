@@ -34,9 +34,9 @@ class AnalysisStacked extends React.Component {
       }
       if(d) {
         this.setState({
-          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d.total).format('0,0')}`,
+          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d.bytes).format('0,0')}`,
           tooltipX: xScale(d.timestamp),
-          tooltipY: yScale(d.total)
+          tooltipY: yScale(d.bytes)
         })
       }
     }
@@ -47,15 +47,25 @@ class AnalysisStacked extends React.Component {
     })
   }
   render() {
-    if(!this.props.width || !this.props.data) {
+    if(!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
     }
 
-    const yExtent = this.props.data && this.props.data.length ?
-      d3.extent(this.props.data, d => d.total)
+    const totals = this.props.dataSets.reduce((total, dataSet) => {
+      return dataSet.map((datapoint, i) => {
+        const bytes = total[i] ? total[i].bytes : 0
+        return {
+          bytes: datapoint.bytes + bytes,
+          timestamp: datapoint.timestamp
+        }
+      })
+    }, [])
+
+    const yExtent = totals && totals.length ?
+      d3.extent(totals, d => d.bytes)
       : [0,0]
-    const xExtent =  this.props.data && this.props.data.length ?
-      d3.extent(this.props.data, d => d.timestamp)
+    const xExtent =  totals && totals.length ?
+      d3.extent(totals, d => d.timestamp)
       : [new Date(), new Date()]
 
     const yScale = d3.scale.linear()
@@ -73,26 +83,33 @@ class AnalysisStacked extends React.Component {
       ])
       .nice(d3.time.day, 1);
 
-    let className = 'analysis-by-time'
+    let className = 'analysis-by-time analysis-stacked'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
+    let columnHeights = []
     return (
       <div className={className}>
         <svg
+          viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
           ref='chart'
-          onMouseMove={this.moveMouse(xScale, yScale, this.props.data)}
+          onMouseMove={this.moveMouse(xScale, yScale, totals)}
           onMouseOut={this.deactivateTooltip}>
-          {this.props.data ? this.props.data.map((day, i) => {
-            return (
-              <line key={i}
-                x1={xScale(day.timestamp)}
-                x2={xScale(day.timestamp)}
-                y1={yScale(day.total)}
-                y2={yScale(0)}/>
-            )
+          {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
+            return dataset.map((day, i) => {
+              const newTotal = columnHeights[i] ? columnHeights[i] + day.bytes : day.bytes
+              const line = (
+                <line key={i} className={`line-${dataSetIndex}`}
+                  x1={xScale(day.timestamp)}
+                  x2={xScale(day.timestamp)}
+                  y1={yScale(columnHeights[i] || 0)}
+                  y2={yScale(newTotal)}/>
+              )
+              columnHeights[i] = newTotal
+              return line
+            })
           }) : null}
           {this.state.tooltipText ?
             <g>
@@ -118,7 +135,7 @@ class AnalysisStacked extends React.Component {
               axes.push(
                 <g key={i}>
                   <text x={this.props.padding} y={yScale(tick)}>
-                    {numeral(tick).format('0a')}
+                    {numeral(tick).format('0 a')}
                   </text>
                 </g>
               );
@@ -138,7 +155,7 @@ class AnalysisStacked extends React.Component {
 AnalysisStacked.displayName = 'AnalysisStacked'
 AnalysisStacked.propTypes = {
   className: React.PropTypes.string,
-  data: React.PropTypes.array,
+  dataSets: React.PropTypes.array,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   width: React.PropTypes.number

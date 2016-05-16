@@ -12,8 +12,21 @@
       padding: $md-btn-height / 2;
     }
 
+    @include print {
+      padding: 0;
+    }
+
+    &.wide {
+      width: 100%;
+      max-width: 900px;
+    }
+
     .dark-theme & {
       background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
     }
 
     h4 {
@@ -24,14 +37,23 @@
       @include md {
         font-size: $md-font-size-sm;
       }
+
+      @include print {
+        font-size: $print-font-size;
+      }
     }
 
     p {
+      margin-bottom: 5px;
       font-size: 40px;
       font-weight: bold;
 
       @include sm {
         font-size: 32px;
+      }
+
+      @include print {
+        font-size: $print-font-size * 2;
       }
     }
   }
@@ -43,14 +65,37 @@
     @include md {
       margin-right: $md-btn-height;
     }
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 
 .table-analysis {
 
+  @include print {
+    // scss-lint:disable ImportantRule
+    // Need to override default styles
+    th,
+    td {
+      width: auto !important;
+    }
+  }
+
   th:not(:first-child):not(.text-center),
   td:not(:first-child) {
     text-align: right;
+
+    .active {
+      padding-right: $btn-height / 2;
+      text-indent: -$btn-height / 2;
+
+      @include md {
+        padding-right: $md-btn-height / 2;
+        text-indent: -$md-btn-height / 2;
+      }
+    }
   }
 
   svg {
@@ -74,6 +119,7 @@
   .dark-theme &,
   .light-theme & {
     color: $pale-blue;
+    stroke: $pale-blue;
   }
 }
 
@@ -82,5 +128,6 @@
   .dark-theme &,
   .light-theme & {
     color: $yellow;
+    stroke: $yellow;
   }
 }

@@ -10,8 +10,10 @@ import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
+import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
+import { filterAccountsByUserName } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -28,6 +30,9 @@ export class Main extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
+  }
+  componentWillMount() {
+    this.props.userActions.checkToken()
   }
   activatePurge(property) {
     return e => {
@@ -110,11 +115,15 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
+    const filteredAccounts = filterAccountsByUserName(
+      this.props.accounts,
+      this.props.username
+    )
     return (
       <div className={classNames}>
         {this.props.location.pathname !== '/login' ?
           <Header
-            accounts={this.props.accounts}
+            accounts={filteredAccounts}
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
@@ -141,6 +150,9 @@ export class Main extends React.Component {
             showNotification={this.showNotification}/>
           : ''
         }
+
+        <ErrorModal showErrorDialog={this.props.showErrorDialog} uiActions={this.props.uiActions} />
+
         <ReactCSSTransitionGroup
           component="div"
           className="notification-transition"
@@ -180,6 +192,7 @@ Main.propTypes = {
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
+  username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 
@@ -199,7 +212,9 @@ function mapStateToProps(state) {
       state.visitors.get('fetching'),
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
+    showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
+    username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart')
   };
 }

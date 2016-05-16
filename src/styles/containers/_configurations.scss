@@ -9,6 +9,14 @@
     a {
       margin-left: 20px;
       text-transform: uppercase;
+
+      @include print {
+        // scss-lint:disable ImportantRule
+        // Need to override Bootstrap link href for links
+        &::after {
+          content: '' !important;
+        }
+      }
     }
   }
 

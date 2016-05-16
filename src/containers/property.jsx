@@ -39,6 +39,7 @@ export class Property extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    this.props.visitorsActions.visitorsReset()
     this.fetchData(this.props.location.query.name)
   }
   componentDidMount() {
@@ -77,8 +78,9 @@ export class Property extends React.Component {
         account: this.props.params.account,
         group: this.props.params.group,
         property: property,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X'),
+        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('day').format('X'),
+        granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
       })
@@ -148,6 +150,21 @@ export class Property extends React.Component {
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
+    const policyPath = Immutable.List([
+      'default_policy', 'policy_rules'])
+    let controlIndex = activeConfig.getIn(policyPath)
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          return policy.get('set').has('cache_control')
+        }
+      })
+    let nameIndex = activeConfig.getIn(policyPath)
+      .findIndex(policy => {
+        if(policy.has('set')) {
+          return policy.get('set').has('cache_name')
+        }
+      })
     return (
       <PageContainer>
         <Content>
@@ -192,7 +209,7 @@ export class Property extends React.Component {
                   {activeConfig.get('edge_configuration').get('published_name')}
                 </h3>
               </Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 Configuration Version
                 <h3>{activeConfig.get('config_name')}</h3>
               </Col>
@@ -204,11 +221,16 @@ export class Property extends React.Component {
                   ).format('M/D/YYYY, h:mma')}
                 </h3>
               </Col>
+              <Col xs={1}>
+                Trial
+                <h3>{isTrial ? 'TRUE' : 'FALSE'}</h3>
+              </Col>
             </Row>
 
-            <Row className="no-end-gutters property-content">
-              <Col xs={6} className="property-analytics-summary">
-                <h3 className="has-btn">
+            {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
+              <Row className="no-end-gutters property-content">
+              <Col xs={6} className="property-analytics-summary">*/}
+                <h3 className="has-btn extra-margin-top">
                   Traffic Summary
                   <span className="heading-suffix"> (last 28 days)</span>
                   <Link className="btn btn-primary btn-icon pull-right"
@@ -217,56 +239,66 @@ export class Property extends React.Component {
                   </Link>
                 </h3>
 
-                <div className="extra-margin-top" ref="byTimeHolder">
-                  <AnalysisByTime axes={false} padding={0}
-                    className="bg-transparent"
+                <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
+                  <AnalysisByTime axes={true} padding={30}
                     primaryData={metrics_traffic.reverse()}
                     dataKey='bytes'
                     width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 3} />
+                    height={this.state.byTimeWidth / 2.5}
+                    xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+                      : this.state.byTimeWidth > 600 ? 2 : 3}
+                    yAxisFormat="0 b"/>
                 </div>
 
-                <Row className="extra-margin-top no-gutters">
-                  <Col xs={7}>
-                    <Row>
-                      <Col xs={6}>
-                        Unique visitors
-                        <h2>{numeral(uniq_vis).format('0,0')}</h2>
-                      </Col>
-                      <Col xs={6}>
-                        Bandwidth
-                        <h2>
-                          {avg_transfer_rate[0]}
-                          <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
-                        </h2>
-                      </Col>
-                    </Row>
-                    <Row className="extra-margin-top">
-                      <Col xs={6}>
-                        Cache Hit Rate
-                        <h2>{avg_cache_hit_rate}
-                          <span className="heading-suffix"> %</span>
-                        </h2>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col xs={5}>
-                    Top 3 Countries by Visitors
-                    {this.props.fetching ?
-                      <p>Loading...</p> :
-                      this.props.visitorsByCountry.get('countries').size ?
-                        this.props.visitorsByCountry.get('countries').map((country, i) => {
-                        return (
-                          <h2 key={i}>
-                            {numeral(country.get('percent_total')).format('0.00')}
-                            <span className="heading-suffix"> %</span>
-                            <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                {metrics_traffic && metrics_traffic.length ?
+                  <Row className="extra-margin-top no-gutters">
+                    <Col xs={7}>
+                      <Row>
+                        <Col xs={6}>
+                          Unique visitors
+                          {this.props.fetching || this.props.visitorsFetching ?
+                            <p>Loading...</p> :
+                            <h2>{numeral(uniq_vis).format('0,0')}</h2>
+                          }
+                        </Col>
+                        <Col xs={6}>
+                          Bandwidth
+                          <h2>
+                            {avg_transfer_rate[0]}
+                            <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
                           </h2>
-                        )
-                      }) : <h2>0 %</h2>
-                    }
-                  </Col>
-                </Row>
+                        </Col>
+                      </Row>
+                      <Row className="extra-margin-top">
+                        <Col xs={6}>
+                          Cache Hit Rate
+                          <h2>{avg_cache_hit_rate}
+                            <span className="heading-suffix"> %</span>
+                          </h2>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col xs={5}>
+                      Top 3 Countries by Visitors
+                      {this.props.fetching || this.props.visitorsFetching ?
+                        <p>Loading...</p> :
+                        this.props.visitorsByCountry.get('countries').size ?
+                          this.props.visitorsByCountry.get('countries').map((country, i) => {
+                            return (
+                              <h2 key={i}>
+                                {numeral(country.get('percent_total')).format('0.00')}
+                                <span className="heading-suffix"> %</span>
+                                <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
+                              </h2>
+                            )
+                          }
+                        ) : <h2>0 %</h2>
+                      }
+                    </Col>
+                  </Row>
+                  : null
+                }
+              {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
               </Col>
 
               <div className="content-separator"></div>
@@ -285,19 +317,28 @@ export class Property extends React.Component {
                     <tr>
                       <td>Honor Origin Cache Control</td>
                       <td>
-                        <b className="text-green">On</b>
+                        {activeConfig.getIn(policyPaths.ignore_case) ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                     <tr>
                       <td>Ignore case from origin</td>
                       <td>
-                        <b className="text-orange">Off</b>
+                        {activeConfig.getIn(policyPaths.honor_etags) === "strong" ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                     <tr>
                       <td>Enable e-Tag support</td>
                       <td>
-                        <b className="text-green">On</b>
+                        {activeConfig.getIn(policyPaths.honor_origin_cache_policies) ?
+                          <b className="text-green">On</b> :
+                          <b className="text-orange">Off</b>
+                        }
                       </td>
                     </tr>
                   </tbody>
@@ -308,41 +349,26 @@ export class Property extends React.Component {
                 <Table striped={true}>
                   <thead>
                     <tr>
-                      <th>TYPE</th>
-                      <th>PRIORITY</th>
+                      <th>RULE TYPE</th>
                       <th>TTL VALUE</th>
                       <th>RULE</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Default</td>
-                      <td>0</td>
-                      <td>no-store</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
                       <td>Error Response</td>
-                      <td>1</td>
                       <td>10 sec</td>
                       <td>-</td>
                     </tr>
                     <tr>
-                      <td>United Kingdom</td>
-                      <td>0</td>
+                      <td>Redirect</td>
                       <td>no-store</td>
                       <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Redirect</td>
-                      <td>2</td>
-                      <td>1 day</td>
-                      <td>gif</td>
                     </tr>
                   </tbody>
                 </Table>
               </Col>
-            </Row>
+            </Row>*/}
           </div>
         </Content>
         {this.state.purgeActive ? <PurgeModal

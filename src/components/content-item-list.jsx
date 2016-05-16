@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -52,8 +53,7 @@ class ContentItemList extends React.Component {
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
               <Link to={this.props.configurationLink}
-                className="btn btn-sm edit-content-item btn-primary btn-icon
-                btn-round">
+                className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
                 <IconConfiguration/>
               </Link> : ''
             }
@@ -66,7 +66,7 @@ class ContentItemList extends React.Component {
 
         <Link className="content-item-list-link" to={this.props.linkTo}>
           <div className="pull-right">
-            <div className="content-item-list-section section-sm">
+            <div className="content-item-list-section section-sm text-sm">
               <p>Peak <b className="pull-right">{this.props.maxTransfer}</b></p>
               <p>Lowest <b className="pull-right">{this.props.minTransfer}</b></p>
               <p>Average <b className="pull-right">{this.props.avgTransfer}</b></p>
@@ -75,15 +75,16 @@ class ContentItemList extends React.Component {
             <div className="content-item-list-section section-lg">
               <Row>
                 <Col xs={6}>
-                  <h1>{this.props.cacheHitRate}<span className="heading-suffix"> %</span></h1>
-                  <p>Avg. Cache Hit Rate</p>
+                  <h1>{this.props.cacheHitRate || 0}
+                    <span className="heading-suffix"> %</span></h1>
+                  <p className="text-sm">Avg. Cache Hit Rate</p>
                 </Col>
                 <Col xs={6}>
                   <h1>
                     {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0}
                     <span className="heading-suffix"> {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}</span>
                   </h1>
-                  <p>Avg. TTFB</p>
+                  <p className="text-sm">Avg. TTFB</p>
                 </Col>
               </Row>
             </div>
@@ -99,7 +100,7 @@ class ContentItemList extends React.Component {
               {!this.props.fetchingMetrics ?
                 <AnalysisByTime axes={false} padding={0} className="bg-transparent"
                   dataKey="bytes"
-                  primaryData={this.props.primaryData}
+                  primaryData={this.props.primaryData.toJS()}
                   width={this.state.byTimeWidth}
                   height={this.state.byTimeHeight} />
               : ''}
@@ -126,9 +127,12 @@ ContentItemList.propTypes = {
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
-  primaryData: React.PropTypes.array,
+  primaryData: React.PropTypes.instanceOf(Immutable.List),
   timeToFirstByte: React.PropTypes.string,
   toggleActive: React.PropTypes.func
+}
+ContentItemList.defaultProps = {
+  primaryData: Immutable.List()
 }
 
 module.exports = ContentItemList

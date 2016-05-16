@@ -41,7 +41,6 @@ class QueryString extends React.Component {
       <div>
         <Modal.Header>
           <h1>Query String</h1>
-          <p>Lorem ipsum dolor sit amet</p>
         </Modal.Header>
         <Modal.Body>
 

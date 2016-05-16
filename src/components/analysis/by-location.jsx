@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux'
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
 
-export class AnalysisByLocation extends React.Component {
+class AnalysisByLocation extends React.Component {
   constructor(props) {
     super(props)
 
@@ -28,8 +28,10 @@ export class AnalysisByLocation extends React.Component {
     // this.zoomOut = this.zoomOut.bind(this)
   }
   componentWillMount() {
-    this.props.topoActions.startFetching()
-    this.props.topoActions.fetchCountries()
+    if(this.props.topoActions) {
+      this.props.topoActions.startFetching()
+      this.props.topoActions.fetchCountries()
+    }
   }
   // selectCountry(country, path) {
   //   const id = country.id.toLowerCase()
@@ -108,8 +110,8 @@ export class AnalysisByLocation extends React.Component {
     }
   }
   render() {
-    if(!this.props.width || !this.props.countries.size || this.props.fetching
-      || !this.props.countryData) {
+    if(!this.props.width || !this.props.countries || !this.props.countries.size
+      || this.props.fetching || !this.props.countryData) {
       return <div>Loading...</div>
     }
 
@@ -164,6 +166,7 @@ export class AnalysisByLocation extends React.Component {
       <div className="analysis-by-location">
         <div className="chart" ref="chart">
           <svg
+            viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
             width={this.props.width}
             height={this.props.height}
             onMouseMove={this.moveMouse(null, null)}
@@ -182,15 +185,18 @@ export class AnalysisByLocation extends React.Component {
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              let trending = '+0%'
+              let label = '0'
               if(this.props.countryData.get(dataIndex)) {
-                trending = numeral(
-                  this.props.countryData.get(dataIndex).get('percent_change') || 0
-                ).format('+0%')
+                label = this.props.tooltipCustomFormat ?
+                  this.props.tooltipCustomFormat(
+                    this.props.countryData.get(dataIndex).get(this.props.dataKey) || 0
+                  ) : numeral(
+                    this.props.countryData.get(dataIndex).get(this.props.dataKey) || 0
+                  ).format('0,0')
               }
               return (
                 <path key={i} d={path(country)}
-                  onMouseMove={this.moveMouse(country.id, trending)}
+                  onMouseMove={this.moveMouse(country.id, label)}
                   className={classes}
                   style={pathStyle}/>
               )
@@ -263,6 +269,7 @@ AnalysisByLocation.propTypes = {
   stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
   timelineKey: React.PropTypes.string,
+  tooltipCustomFormat: React.PropTypes.func,
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
 }
@@ -284,4 +291,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalysisByLocation);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(AnalysisByLocation);

@@ -26,17 +26,9 @@
     @include sm {
       padding: ($md-bar-height / 2);
     }
-  }
-}
 
-.light-theme .chart-view .body-content {
-  min-height: calc(100vh - #{$header-total-height} - #{$page-header-height} - #{$footer-height});
-  background-attachment: fixed;
-  background-image: linear-gradient(rgba($pale-blue, 0.5), rgba($purple, 0.5)),
-    linear-gradient(to top right, $ericsson-dark-blue, $pale-blue);
-  background-size: 100%;
-
-  @include md {
-    min-height: calc(100vh - #{$md-header-total-height} - #{$md-page-header-height} - #{$footer-height});
+    @include print {
+      padding: 0;
+    }
   }
 }

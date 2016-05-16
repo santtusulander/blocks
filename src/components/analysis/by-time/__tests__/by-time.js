@@ -12,7 +12,13 @@ const numeral = require('numeral')
 const momentFormatMock = jest.genMockFunction()
 const numeralFormatMock = jest.genMockFunction()
 
-moment.mockReturnValue({format:momentFormatMock})
+moment.mockReturnValue({
+  format: momentFormatMock,
+  date: jest.genMockFunction()
+})
+moment.utc.mockReturnValue({
+  format: momentFormatMock
+})
 numeral.mockReturnValue({format:numeralFormatMock})
 
 const fakeData = [
@@ -73,9 +79,11 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime />
     );
-    byTime.state.tooltipText = "foo"
+    byTime.state.primaryTooltipText = "foo"
+    byTime.state.secondaryTooltipText = "bar"
     byTime.deactivateTooltip()
-    expect(byTime.state.tooltipText).toBe(null);
+    expect(byTime.state.primaryTooltipText).toBe(null);
+    expect(byTime.state.secondaryTooltipText).toBe(null);
   });
 
   it('should have a data line and area', () => {
@@ -94,10 +102,11 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
-    expect(texts[0].getAttribute('x')).toBe('20')
+    expect(texts[0].getAttribute('x')).toBe('30')
     expect(texts[0].getAttribute('y')).toBe('190')
     expect(momentFormatMock.mock.calls[0][0]).toBe('D')
   });
@@ -108,13 +117,14 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={true}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts[2].getAttribute('y')).toBe('190')
-    expect(numeral.mock.calls.length).toBe(4)
+    expect(numeral.mock.calls.length).toBe(8)
     expect(numeral.mock.calls[0]).toEqual([1000])
-    expect(numeralFormatMock.mock.calls[0][0]).toBe('0a')
+    expect(numeralFormatMock.mock.calls[0][0]).toBe('0 a')
   });
 
   it('should have ability to turn axes off', () => {
@@ -123,11 +133,22 @@ describe('AnalysisByTime', () => {
     let byTime = TestUtils.renderIntoDocument(
       <AnalysisByTime width={400} height={200} padding={10} axes={false}
         primaryData={fakeData}
+        secondaryData={fakeData}
         dataKey="bytes_out"/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
     expect(texts.length).toBe(0)
     expect(moment.mock.calls.length).toBe(0)
     expect(numeral.mock.calls.length).toBe(0)
+  });
+
+  it('should show no data if the data is empty', () => {
+    let byTime = TestUtils.renderIntoDocument(
+      <AnalysisByTime width={400} height={200}
+        primaryData={[]}
+        secondaryData={null}/>
+    );
+    let div = TestUtils.findRenderedDOMComponentWithTag(byTime, 'div')
+    expect(div.textContent).toContain('No data found.');
   });
 })

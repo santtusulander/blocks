@@ -18,6 +18,11 @@
       top: 15px;
       left: ($md-bar-height / 2);
     }
+
+    @include print {
+      position: relative;
+      left: 0;
+    }
   }
 
   > li {
@@ -31,6 +36,11 @@
       @include md {
         height: $md-bar-height;
         line-height: $md-bar-height;
+      }
+
+      @include print {
+        height: auto;
+        line-height: 1;
       }
     }
 
@@ -47,6 +57,10 @@
         height: $btn-sm-height / 2;
         margin-right: 15px;
         margin-left: $md-btn-sm-height / 2 - 15;
+      }
+
+      @include print {
+        display: none;
       }
 
       .dark-theme &,
@@ -97,7 +111,7 @@
       }
 
       .light-theme & {
-        color: rgba($pale-blue, 0.5);
+        color: $lt-text-color;
       }
     }
 
@@ -110,6 +124,14 @@
   a {
     text-decoration: none;
 
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
+    }
+
     .dark-theme &,
     .light-theme .header & {
       color: $dt-text-color;
@@ -120,10 +142,10 @@
     }
 
     .light-theme & {
-      color: rgba($pale-blue, 0.5);
+      color: $pale-blue, 0.5;
 
       &:hover {
-        color: $pale-blue;
+        color: $lt-text-color;
       }
     }
   }
@@ -136,7 +158,7 @@
     }
 
     .light-theme & {
-      color: $pale-blue;
+      color: $lt-text-color;
     }
   }
 }

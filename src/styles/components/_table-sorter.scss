@@ -3,15 +3,33 @@
 
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
-.table-sorter {
+.table-sorter > a {
+  position: relative;
+  display: block;
+  text-decoration: none;
 
-  a {
-    .main-container.dark-theme .content-container & {
-      color: $dt-text-color;
-    }
+  .dark-theme & {
+    color: $dt-text-color;
 
-    .main-container.light-theme .content-container & {
-      color: $lt-text-color;
+    &:hover {
+      color: $pale-blue;
+      text-decoration: none;
     }
+  }
+
+  .light-theme & {
+    color: $white;
+
+    &:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+  }
+
+  .caret {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
   }
 }

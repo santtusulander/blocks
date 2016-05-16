@@ -14,6 +14,10 @@
     height: $md-content-item-list-height;
   }
 
+  @include print {
+    border: 1px solid $silver-20;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.2);
   }
@@ -28,6 +32,18 @@
     height: 100%;
     color: inherit;
     text-decoration: inherit;
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
+
+      > .pull-right {
+        float: none !important;
+      }
+    }
   }
 
   .content-item-list-section {
@@ -63,33 +79,51 @@
       width: 450px;
 
       @include md {
-        width: 340px;
+        width: 330px;
       }
 
       @include sm {
         width: 280px;
       }
+
+      @include print {
+        width: 35%;
+      }
     }
 
     &.section-sm {
       width: 250px;
-      padding-top: 48px;
+      padding-top: 56px;
 
       @include md {
-        width: 200px;
-        padding-top: 26px;
+        width: 190px;
+        padding-top: 33px;
       }
 
       @include sm {
-        width: 180px;
+        width: 160px;
+      }
+
+      @include print {
+        width: 30%;
       }
 
       .dark-theme & {
         border-right: 1px solid rgba($black, 0.2);
+
+        @include print {
+          border-right: 1px solid $silver-20;
+          border-left: 1px solid $silver-20;
+        }
       }
 
       .light-theme & {
         border-right: 1px solid $silver-20;
+
+        @include print {
+          border-right: 1px solid $silver-20;
+          border-left: 1px solid $silver-20;
+        }
       }
     }
   }
@@ -102,6 +136,10 @@
 
     @include md {
       font-size: 24px;
+    }
+
+    @include sm {
+      font-size: 20px;
     }
   }
 
@@ -133,6 +171,10 @@
       right: 15px;
       bottom: 15px;
     }
+
+    @include print {
+      display: none;
+    }
   }
 
   .content-item-list-chart {
@@ -141,11 +183,22 @@
 
     @include md {
       height: $md-content-item-list-height;
-      margin: 0 540px 0 340px;
+      margin: 0 520px 0 330px;
     }
 
     @include sm {
-      margin: 0 460px 0 280px;
+      margin: 0 440px 0 280px;
+    }
+
+    @include print {
+      position: absolute;
+      width: 100%;
+      margin: 0;
+    }
+
+    .light-theme & {
+      border-right: 1px solid $silver-20;
+      border-left: 1px solid $silver-20;
     }
 
     svg {

@@ -1,11 +1,7 @@
 import React from 'react'
-import d3 from 'd3'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
-import { Link } from 'react-router'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -13,54 +9,21 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
-import AddHost from '../components/add-host'
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
-import ContentItemList from '../components/content-item-list'
-import ContentItemChart from '../components/content-item-chart'
-import Select from '../components/select'
-import IconAdd from '../components/icons/icon-add.jsx'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconItemList from '../components/icons/icon-item-list.jsx'
-import IconItemChart from '../components/icons/icon-item-chart.jsx'
+
+import ContentItems from '../components/content-items'
 
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createNewHost = this.createNewHost.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.toggleAddHost = this.toggleAddHost.bind(this)
-    this.state = {
-      activeFilter: 'traffic_high_to_low',
-      addHost: false
-    }
+    this.sortItems = this.sortItems.bind(this)
+    this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHosts(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.groupActions.fetchGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-    this.props.metricsActions.startHostFetching()
-    this.props.metricsActions.fetchHostMetrics({
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-      endDate: moment.utc().endOf('hour').format('X')
-    })
+    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+      this.props.fetchData()
+    }
   }
   createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
@@ -70,7 +33,6 @@ export class Hosts extends React.Component {
       id,
       deploymentMode
     )
-    this.toggleAddHost()
   }
   deleteHost(id) {
     this.props.hostActions.deleteHost(
@@ -80,199 +42,95 @@ export class Hosts extends React.Component {
       id
     )
   }
-  toggleAddHost() {
-    this.setState({
-      addHost: !this.state.addHost
-    })
-  }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-    }
+  sortItems(valuePath, direction) {
+    this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    let trafficMin = 0
-    let trafficMax = 0
-    if(!this.props.fetchingMetrics) {
-      const trafficTotals = this.props.hosts.map((host, i) => {
-        return this.props.metrics.has(i) ?
-          this.props.metrics.get(i).get('totalTraffic') : 0
+    const { brand, account, group } = this.props.params
+    const { activeAccount, activeGroup } = this.props
+    const properties = this.props.hosts.map(host => {
+      return Immutable.Map({
+        id: host,
+        name: host
       })
-      trafficMin = Math.min(...trafficTotals)
-      trafficMax = Math.max(...trafficTotals)
+    })
+    const builtPath = `${brand}/${account}/${group}/property?name=`
+    const nextPageURLBuilder = (property) => {
+      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
+      return `/content/property/${builtPath}${encoded}`
     }
-    // If trafficMin === trafficMax, there's only one property or all properties
-    // have identical metrics. In that case the amoebas will all get the minimum
-    // size. Let's make trafficMin less than trafficMax and all amoebas will
-    // render with maximum size instead
-    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
-    const trafficScale = d3.scale.linear()
-      .domain([trafficMin, trafficMax])
-      .range([400, 500]);
+    const configURLBuilder = (property) => {
+      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
+      return `/content/configuration/${builtPath}${encoded}`
+    }
+    const analyticsURLBuilder = (...property) => {
+      if(property[0]) {
+        const encoded = encodeURIComponent(property[0]).replace(/\./g, "%2e")
+        return `/content/analytics/property/${builtPath}${encoded}`
+      }
+      return `/content/analytics/group/${brand}/${account}/${group}`
+    }
+    const breadcrumbs = [
+      {
+        label: activeAccount ? activeAccount.get('name') : 'Loading...',
+        url: `/content/groups/udn/${account}`
+      },
+      {
+        label: activeGroup ? activeGroup.get('name') : 'Loading...'
+      }
+    ]
     return (
-      <PageContainer className='hosts-container content-subcontainer'>
-        <Content>
-          <PageHeader>
-            <ButtonToolbar className="pull-right">
-              <Link className="btn btn-primary btn-icon"
-                to={`/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`}>
-                <IconChart />
-              </Link>
-
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.toggleAddHost}>
-                <IconAdd />
-              </Button>
-
-              <Select
-                onSelect={this.handleSelectChange()}
-                value={this.state.activeFilter}
-                options={[
-                  ['traffic_high_to_low', 'Traffic High to Low'],
-                  ['traffic_low_to_high', 'Traffic Low to High']]}/>
-
-              <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
-                (this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemChart/>
-              </Button>
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (!this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemList/>
-              </Button>
-            </ButtonToolbar>
-
-            <p>GROUP CONTENT SUMMARY</p>
-            <h1>
-              {this.props.activeGroup ?
-                this.props.activeGroup.get('name')
-                : 'Loading...'}
-            </h1>
-          </PageHeader>
-
-          <div className="container-fluid body-content">
-            <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
-              <li>
-                <Link to={`/content/groups/udn/${this.props.params.account}`}>
-                  {this.props.activeAccount ?
-                    this.props.activeAccount.get('name')
-                    : 'Loading...'}
-                </Link>
-              </li>
-                <li className="active">
-                {this.props.activeGroup ?
-                  this.props.activeGroup.get('name')
-                  : 'Loading...'}
-              </li>
-            </ol>
-
-            {this.props.fetching || this.props.fetchingMetrics  ?
-              <p className="fetching-info">Loading...</p> : (
-              this.props.hosts.size === 0 ?
-                <p className="fetching-info text-center">
-                  {this.props.activeGroup ?
-                    this.props.activeGroup.get('name') +
-                    ' does not contain any properties'
-                    : 'Loading...'}
-                <br/>
-                You can create new properties by clicking the Add New (+) button
-                </p>
-              :
-              <ReactCSSTransitionGroup
-                component="div"
-                className="content-transition"
-                transitionName="content-transition"
-                transitionEnterTimeout={400}
-                transitionLeaveTimeout={250}>
-                {this.props.viewingChart ?
-                  <div className="content-item-grid">
-                    {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
-                      const scaledWidth = trafficScale(metrics.get('totalTraffic') || 0)
-                      return (
-                        <ContentItemChart key={i} id={host}
-                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          name={host} description="Desc"
-                          delete={this.deleteHost}
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : []}
-                          differenceData={metrics.has('historical_variance') ? metrics.get('historical_variance').toJS() : []}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          fetchingMetrics={this.props.fetchingMetrics}
-                          barWidth="1"
-                          chartWidth={scaledWidth.toString()}
-                          barMaxHeight={(scaledWidth / 7).toString()} />
-                      )
-                    })}
-                  </div> :
-                  <div className="content-item-lists" key="lists">
-                    {this.props.hosts.map((host, i) => {
-                      const metrics = this.props.metrics.find(metric => metric.get('property') === host) || Immutable.Map()
-                      return (
-                        <ContentItemList key={i} id={host}
-                          linkTo={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          configurationLink={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          analyticsLink={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`}
-                          name={host} description="Desc"
-                          primaryData={metrics.has('traffic') ? metrics.get('traffic').toJS().reverse() : []}
-                          secondaryData={metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS().reverse() : []}
-                          cacheHitRate={metrics.get('avg_cache_hit_rate')}
-                          timeToFirstByte={metrics.get('avg_ttfb')}
-                          maxTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('peak') : '0.0 Gbps'}
-                          minTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'}
-                          avgTransfer={metrics.has('transfer_rates') ? metrics.get('transfer_rates').get('average') : '0.0 Gbps'}
-                          fetchingMetrics={this.props.fetchingMetrics}/>
-                      )
-                    })}
-                  </div>
-                }
-              </ReactCSSTransitionGroup>
-            )}
-
-            {this.state.addHost ?
-              <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.toggleAddHost}>
-                <Modal.Header>
-                  <h1>Add Property</h1>
-                  <p>Lorem ipsum dolor</p>
-                </Modal.Header>
-                <Modal.Body>
-                  <AddHost createHost={this.createNewHost}
-                    cancelChanges={this.toggleAddHost}/>
-                </Modal.Body>
-              </Modal> : null
-            }
-          </div>
-        </Content>
-      </PageContainer>
-    );
+      <ContentItems
+        activeAccount={this.props.activeAccount}
+        activeGroup={activeGroup}
+        analyticsURLBuilder={analyticsURLBuilder}
+        brand={brand}
+        breadcrumbs={breadcrumbs}
+        className="hosts-container"
+        configURLBuilder={configURLBuilder}
+        contentItems={properties}
+        createNewItem={this.createNewHost}
+        deleteItem={this.deleteHost}
+        fetching={this.props.fetching}
+        fetchingMetrics={this.props.fetchingMetrics}
+        group={group}
+        headerText={{ summary: 'GROUP CONTENT SUMMARY', label: breadcrumbs[1].label }}
+        ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : 'Loading...'}
+        metrics={this.props.metrics}
+        nextPageURLBuilder={nextPageURLBuilder}
+        showAnalyticsLink={true}
+        sortDirection={this.props.sortDirection}
+        sortItems={this.sortItems}
+        sortValuePath={this.props.sortValuePath}
+        toggleChartView={this.props.uiActions.toggleChartView}
+        type='property'
+        viewingChart={this.props.viewingChart}/>
+    )
   }
 }
 
 Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
-  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  sortDirection: React.PropTypes.number,
+  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
   viewingChart: React.PropTypes.bool
+}
+Hosts.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  hosts: Immutable.List(),
+  metrics: Immutable.List(),
+  sortValuePath: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -283,16 +141,34 @@ function mapStateToProps(state) {
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
     metrics: state.metrics.get('hostMetrics'),
+    sortDirection: state.ui.get('contentItemSortDirection'),
+    sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart')
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const {brand, account, group} = ownProps.params
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const hostActions = bindActionCreators(hostActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const fetchData = () => {
+    hostActions.startFetching()
+    accountActions.fetchAccount(brand, account)
+    groupActions.fetchGroup(brand, account, group)
+    hostActions.fetchHosts(brand, account, group)
+    metricsActions.startHostFetching()
+    metricsActions.fetchHostMetrics({
+      account: account,
+      group: group,
+      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+      endDate: moment.utc().endOf('hour').format('X')
+    })
+  }
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    fetchData: fetchData,
+    hostActions: hostActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

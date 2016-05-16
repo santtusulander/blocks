@@ -12,6 +12,10 @@
     @include md {
       margin: -40px;
     }
+
+    @include print {
+      margin: -110px;
+    }
   }
 }
 
@@ -25,11 +29,11 @@
     transform: scale(0.75);
   }
 
-  &:hover {
+  @include print {
+    transform: scale(0.5);
+  }
 
-    .glow {
-      opacity: 0.2;
-    }
+  &:hover {
 
     .content-item-toolbar .invisible {
       opacity: 1;
@@ -44,6 +48,14 @@
     height: 100%;
     color: inherit;
     border-radius: 50%;
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
+    }
   }
 
   .circle-base {
@@ -52,12 +64,32 @@
     left: 50%;
     border-radius: 50%;
 
-    .dark-theme & {
-      background-color: $black;
+    @include print {
+      overflow: hidden;
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 200px solid $white;
+        content: '';
+      }
+
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 10px solid transparent;
+        border-radius: 50%;
+        content: '';
+      }
     }
 
+    .dark-theme &,
     .light-theme & {
-      background-color: $pale-blue;
+      background-color: $black;
     }
   }
 
@@ -69,15 +101,12 @@
     opacity: 0.3;
     transition: opacity 250ms;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center center;
       background-size: 100%;
       border-color: $black;
-    }
-
-    .light-theme & {
-      border-color: rgba($white, 0.75);
     }
   }
 
@@ -86,11 +115,26 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    opacity: 0.1;
-    transition: opacity 250ms;
+    transition: opacity 250ms, background 250ms;
+
+    @include print {
+      opacity: 0.1;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 200px solid$pale-blue;
+        border-radius: 50%;
+        content: '';
+      }
+    }
 
     .dark-theme & {
       background-color: $pale-blue;
+      opacity: 0.1;
     }
 
     .light-theme & {
@@ -115,47 +159,41 @@
     .light-theme & {
 
       .below-avg {
-        fill: $green;
-        stroke: $green;
-      }
-
-      .above-avg {
         fill: $purple;
         stroke: $purple;
       }
-    }
 
-    .dark-theme & .avg {
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
+      .avg {
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
 
-    .light-theme & .avg {
-      fill: rgba($white, 0.5);
-      stroke: rgba($white, 0.5);
+      .above-avg {
+        fill: $green;
+        stroke: $green;
+      }
     }
   }
 
   .primary-data .content-item-chart-line {
     stroke-width: 1.5;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme  & {
       stroke: $pale-blue;
       fill: $pale-blue;
-    }
-
-    .light-theme  & {
-      stroke: $white;
-      fill: $white;
     }
   }
 
   .secondary-data .content-item-chart-line {
     stroke: transparent;
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       fill: rgba($pale-blue, 0.2);
+    }
+
+    .light-theme & {
+      fill: $silver-40;
     }
   }
 
@@ -163,11 +201,13 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    overflow: hidden;
     text-align: center;
+    border-radius: 50%;
     transform: translate(-50%, -50%);
 
     .light-theme & {
-      color: $white;
+      color: $dt-text-color;
     }
 
     .content-item-text-bold {
@@ -186,10 +226,11 @@
 
   .content-item-traffic {
     position: absolute;
-    top: 11%;
-    width: 100%;
+    top: 10%;
+    left: 50%;
     font-size: 24px;
     line-height: 1em;
+    transform: translateX(-50%);
 
     .content-item-text-bold {
       margin-bottom: 4px;
@@ -199,12 +240,13 @@
   .content-item-text-centered {
     position: absolute;
     top: 51%;
-    width: 100%;
-    transform: translateY(-50%);
+    left: 50%;
+    width: 90%;
+    transform: translate(-50%, -50%);
   }
 
   .content-item-chart-name {
-    margin: 0 6% 8px;
+    margin-bottom: 8px;
     font-size: 36px;
     font-weight: 500;
     line-height: 1em;
@@ -214,7 +256,35 @@
   .content-item-toolbar {
     position: absolute;
     left: 50%;
-    margin-bottom: 8%;
+    margin-bottom: 7%;
     transform: translateX(-50%);
+  }
+}
+
+.difference-legend {
+  width: 10px;
+  height: 10px;
+  margin-top: 8px;
+
+  @include md {
+    margin-top: 6px;
+  }
+
+  &.below-avg {
+    background-color: $purple;
+  }
+
+  &.above-avg {
+    background-color: $green;
+  }
+
+  &.no-data {
+    background-color: $black;
+    border: 1px solid rgba($white, 0.2);
+  }
+
+  .dark-theme &.avg,
+  .light-theme &.avg {
+    background-color: $pale-blue;
   }
 }

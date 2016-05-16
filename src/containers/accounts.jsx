@@ -2,287 +2,95 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
-import { Link } from 'react-router'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
-import EditAccount from '../components/edit-account'
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
-import ContentItemList from '../components/content-item-list'
-import ContentItemChart from '../components/content-item-chart'
-import Select from '../components/select'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconItemList from '../components/icons/icon-item-list.jsx'
-import IconItemChart from '../components/icons/icon-item-chart.jsx'
 
-const fakeRecentData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 49405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 23456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 24675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 33456, requests: 456}
-]
+import { filterAccountsByUserName } from '../util/helpers'
 
-const fakeAverageData = [
-  {timestamp: new Date("2016-01-01T00:00:00"), bytes: 39405, requests: 943},
-  {timestamp: new Date("2016-01-02T00:00:00"), bytes: 34766, requests: 546},
-  {timestamp: new Date("2016-01-03T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-01-04T00:00:00"), bytes: 34336, requests: 345},
-  {timestamp: new Date("2016-01-05T00:00:00"), bytes: 33456, requests: 567},
-  {timestamp: new Date("2016-01-06T00:00:00"), bytes: 36756, requests: 244},
-  {timestamp: new Date("2016-01-07T00:00:00"), bytes: 35466, requests: 455},
-  {timestamp: new Date("2016-01-08T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-09T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-10T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-11T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-12T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-01-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-01-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-01-16T00:00:00"), bytes: 53456, requests: 456},
-  {timestamp: new Date("2016-01-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-01-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-01-20T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-01-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-01-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-01-23T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-01-24T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-01-25T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-01-26T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-01-27T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-28T00:00:00"), bytes: 33456, requests: 456},
-  {timestamp: new Date("2016-01-29T00:00:00"), bytes: 37454, requests: 544},
-  {timestamp: new Date("2016-01-30T00:00:00"), bytes: 33456, requests: 233},
-  {timestamp: new Date("2016-01-31T00:00:00"), bytes: 34675, requests: 435},
-  {timestamp: new Date("2016-02-01T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-02T00:00:00"), bytes: 44766, requests: 546},
-  {timestamp: new Date("2016-02-03T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-04T00:00:00"), bytes: 44336, requests: 345},
-  {timestamp: new Date("2016-02-05T00:00:00"), bytes: 43456, requests: 567},
-  {timestamp: new Date("2016-02-06T00:00:00"), bytes: 46756, requests: 244},
-  {timestamp: new Date("2016-02-07T00:00:00"), bytes: 45466, requests: 455},
-  {timestamp: new Date("2016-02-08T00:00:00"), bytes: 43456, requests: 233},
-  {timestamp: new Date("2016-02-09T00:00:00"), bytes: 47454, requests: 544},
-  {timestamp: new Date("2016-02-10T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-11T00:00:00"), bytes: 54675, requests: 435},
-  {timestamp: new Date("2016-02-12T00:00:00"), bytes: 54336, requests: 456},
-  {timestamp: new Date("2016-02-13T00:00:00"), bytes: 53456, requests: 567},
-  {timestamp: new Date("2016-02-14T00:00:00"), bytes: 56756, requests: 244},
-  {timestamp: new Date("2016-02-15T00:00:00"), bytes: 55466, requests: 455},
-  {timestamp: new Date("2016-02-16T00:00:00"), bytes: 43456, requests: 456},
-  {timestamp: new Date("2016-02-17T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-18T00:00:00"), bytes: 53456, requests: 233},
-  {timestamp: new Date("2016-02-19T00:00:00"), bytes: 57454, requests: 544},
-  {timestamp: new Date("2016-02-20T00:00:00"), bytes: 54766, requests: 546},
-  {timestamp: new Date("2016-02-21T00:00:00"), bytes: 44675, requests: 435},
-  {timestamp: new Date("2016-02-22T00:00:00"), bytes: 44336, requests: 456},
-  {timestamp: new Date("2016-02-23T00:00:00"), bytes: 23456, requests: 567},
-  {timestamp: new Date("2016-02-24T00:00:00"), bytes: 26756, requests: 244},
-  {timestamp: new Date("2016-02-25T00:00:00"), bytes: 25466, requests: 455},
-  {timestamp: new Date("2016-02-26T00:00:00"), bytes: 23456, requests: 456},
-  {timestamp: new Date("2016-02-27T00:00:00"), bytes: 27454, requests: 544},
-  {timestamp: new Date("2016-02-28T00:00:00"), bytes: 23456, requests: 456}
-]
+import ContentItems from '../components/content-items'
+// Not in 0.5 import EditAccount from '../components/edit-account'
+// Not in 0.5 import { Link } from 'react-router'
+// Not in 0.5 import IconChart from '../components/icons/icon-chart.jsx'
 
 export class Accounts extends React.Component {
   constructor(props) {
     super(props);
-
-    this.changeActiveAccountValue = this.changeActiveAccountValue.bind(this)
-    this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
-    this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
-    this.createNewAccount = this.createNewAccount.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.state = {
-      activeFilter: 'traffic_high_to_low'
-    }
+    // this.changeActiveAccountValue = this.changeActiveAccountValue.bind(this)
+    // this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
+    // this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
+    // this.createNewAccount = this.createNewAccount.bind(this)
+    this.deleteAccount = this.deleteAccount.bind(this)
+    this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.accountActions.startFetching()
-    this.props.accountActions.fetchAccounts(this.props.params.brand)
-  }
-  toggleActiveAccount(id) {
-    return () => {
-      if(this.props.activeAccount && this.props.activeAccount.get('account_id') === id){
-        this.props.accountActions.changeActiveAccount(null)
-      }
-      else {
-        this.props.accountActions.fetchAccount(this.props.params.brand, id)
-      }
+    if(this.props.accounts.isEmpty()) {
+      this.props.fetchData()
     }
   }
-  changeActiveAccountValue(valPath, value) {
-    this.props.accountActions.changeActiveAccount(
-      this.props.activeAccount.setIn(valPath, value)
-    )
-  }
-  saveActiveAccountChanges() {
-    this.props.accountActions.updateAccount(this.props.params.brand, this.props.activeAccount.toJS())
-  }
-  createNewAccount() {
-    this.props.accountActions.createAccount(this.props.params.brand)
-  }
+  // toggleActiveAccount(id) {
+  //   return () => {
+  //     if(this.props.activeAccount && this.props.activeAccount.get('account_id') === id){
+  //       this.props.accountActions.changeActiveAccount(null)
+  //     }
+  //     else {
+  //       this.props.accountActions.fetchAccount(this.props.params.brand, id)
+  //     }
+  //   }
+  // }
+  // changeActiveAccountValue(valPath, value) {
+  //   this.props.accountActions.changeActiveAccount(
+  //     this.props.activeAccount.setIn(valPath, value)
+  //   )
+  // }
+  // saveActiveAccountChanges() {
+  //   this.props.accountActions.updateAccount(this.props.params.brand, this.props.activeAccount.toJS())
+  // }
+  // createNewAccount() {
+  //   this.props.accountActions.createAccount(this.props.params.brand)
+  // }
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
   }
-  handleSelectChange() {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-    }
+  sortItems(valuePath, direction) {
+    this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    const activeAccount = this.props.activeAccount
+    const { brand } = this.props.params
+    const {
+      accounts,
+      username,
+      fetching,
+      fetchingMetrics,
+      metrics,
+      sortDirection,
+      sortValuePath,
+      viewingChart,
+      uiActions } = this.props
+    const filteredAccounts = filterAccountsByUserName(accounts, username)
+    const nextPageURLBuilder = (accountID) => `/content/groups/${brand}/${accountID}`
+    const analyticsURLBuilder = (accountID) => `/content/analytics/account/${brand}/${accountID}`
     return (
-      <PageContainer className='accounts-container content-subcontainer'>
-        <Content>
-          <PageHeader>
-            <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary" className="btn-icon">
-                <Link to={`/analysis/`}>
-                  <IconChart/>
-                </Link>
-              </Button>
-
-              <Select
-                onSelect={this.handleSelectChange()}
-                value={this.state.activeFilter}
-                options={[
-                  ['traffic_high_to_low', 'Traffic High to Low'],
-                  ['traffic_low_to_high', 'Traffic Low to High']]}/>
-
-              <Button bsStyle="primary" className={'btn-icon btn-round toggle-view' +
-                (this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemChart/>
-              </Button>
-              <Button bsStyle="primary" className={'btn-icon toggle-view' +
-                (!this.props.viewingChart ? ' hidden' : '')}
-                onClick={this.props.uiActions.toggleChartView}>
-                <IconItemList/>
-              </Button>
-            </ButtonToolbar>
-
-            <p>BRAND CONTENT SUMMARY</p>
-            <h1>Accounts</h1>
-          </PageHeader>
-
-          <div className="container-fluid body-content">
-            {this.props.fetching ? <p>Loading...</p> : (
-              <ReactCSSTransitionGroup
-                component="div"
-                className="content-transition"
-                transitionName="content-transition"
-                transitionEnterTimeout={400}
-                transitionLeaveTimeout={500}>
-                {this.props.viewingChart ?
-                  <div className="content-item-grid" key="grid">
-                    {this.props.accounts.map((account, i) =>
-                      <ContentItemChart key={i} id={account.get('id')}
-                        linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
-                        name={account.get('name')} description="Desc"
-                        delete={this.deleteAccount}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}
-                        barWidth="1"
-                        chartWidth="560"
-                        barMaxHeight="80" />
-                    )}
-                  </div> :
-                  <div className="content-item-lists" key="lists">
-                    {this.props.accounts.map((account, i) =>
-                      <ContentItemList key={i} id={account.get('id')}
-                        linkTo={`/content/groups/${this.props.params.brand}/${account.get('id')}`}
-                        name={account.get('name')} description="Desc"
-                        toggleActive={this.toggleActiveAccount(account)}
-                        delete={this.deleteAccount}
-                        primaryData={fakeRecentData}
-                        secondaryData={fakeAverageData}/>
-                    )}
-                  </div>
-                }
-              </ReactCSSTransitionGroup>
-            )}
-
-            {activeAccount ?
-              <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.toggleActiveAccount(activeAccount.get('account_id'))}>
-                <Modal.Header>
-                  <h1>Edit Account</h1>
-                  <p>Lorem ipsum dolor</p>
-                </Modal.Header>
-                <Modal.Body>
-                  <EditAccount account={activeAccount}
-                    changeValue={this.changeActiveAccountValue}
-                    saveChanges={this.saveActiveAccountChanges}
-                    cancelChanges={this.toggleActiveAccount(activeAccount.get('account_id'))}/>
-                </Modal.Body>
-              </Modal> : null
-            }
-          </div>
-        </Content>
-      </PageContainer>
-    );
+      <ContentItems
+        analyticsURLBuilder={analyticsURLBuilder}
+        brand={brand}
+        className="groups-container"
+        contentItems={filteredAccounts}
+        deleteItem={this.deleteGroup}
+        fetching={fetching}
+        fetchingMetrics={fetchingMetrics}
+        headerText={{ summary: 'BRAND CONTENT SUMMARY', label: 'Accounts' }}
+        metrics={metrics}
+        nextPageURLBuilder={nextPageURLBuilder}
+        sortDirection={sortDirection}
+        sortItems={this.sortItems}
+        sortValuePath={sortValuePath}
+        toggleChartView={uiActions.toggleChartView}
+        type='account'
+        viewingChart={viewingChart}/>
+    )
   }
 }
 
@@ -291,10 +99,22 @@ Accounts.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
+  fetchingMetrics: React.PropTypes.bool,
+  metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  sortDirection: React.PropTypes.number,
+  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
+  username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
+}
+Accounts.defaultProps = {
+  accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  metrics: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -302,13 +122,30 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     accounts: state.account.get('allAccounts'),
     fetching: state.account.get('fetching'),
-    viewingChart: state.ui.get('viewingChart')
+    fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
+    metrics: state.metrics.get('accountMetrics'),
+    sortDirection: state.ui.get('contentItemSortDirection'),
+    sortValuePath: state.ui.get('contentItemSortValuePath'),
+    viewingChart: state.ui.get('viewingChart'),
+    username: state.user.get('username')
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    fetchData: () => {
+      accountActions.startFetching()
+      accountActions.fetchAccounts(ownProps.params.brand)
+      metricsActions.startAccountFetching()
+      metricsActions.fetchAccountMetrics({
+        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('hour').format('X')
+      })
+    },
+    accountActions: accountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

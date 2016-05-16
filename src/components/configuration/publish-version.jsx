@@ -18,12 +18,10 @@ class ConfigurationPublishVersion extends React.Component {
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges(this.state.publishTarget)
-    this.props.hideAction()
   }
   render() {
     return (
-      <form className="configuration-publish-version"
-        onSubmit={this.handleSave}>
+      <form className="configuration-publish-version">
 
         {/* Version Name */}
         <FormControls.Static label="Version Name"
@@ -47,8 +45,10 @@ class ConfigurationPublishVersion extends React.Component {
           <Button bsStyle="primary" onClick={this.props.hideAction}>
             Cancel
           </Button>
-          <Button type="submit" bsStyle="primary">
-            Publish
+          <Button bsStyle="primary"
+            onClick={this.handleSave}
+            disabled={this.props.publishing}>
+            {this.props.publishing ? 'PUBLISHING...' : 'PUBLISH'}
           </Button>
         </ButtonToolbar>
       </form>
@@ -59,6 +59,7 @@ class ConfigurationPublishVersion extends React.Component {
 ConfigurationPublishVersion.displayName = 'ConfigurationPublishVersion'
 ConfigurationPublishVersion.propTypes = {
   hideAction: React.PropTypes.func,
+  publishing: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   versionName: React.PropTypes.string
 }

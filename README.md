@@ -15,64 +15,61 @@ This project requires Node version 4.2.1 and npm version 2.14.7.
 
 Download at https://nodejs.org/en/download/
 
-### Ruby
-
-Install ruby as instructed for your platform
-https://www.ruby-lang.org/en/documentation/installation/
-
-### Gulp
-
-``` shell
-$ npm install -g gulp
-
-// If you get an error message, you will likely need to use the 'sudo' command.
-$ sudo npm install -g gulp
-```
-
-### Sass
-
-``` shell
-$ gem install sass scss_lint
-
-// If you get an error message, you will likely need to use the 'sudo' command.
-$ sudo gem install sass
-```
-
 ### Install the project
 
 1. Clone the repo
-   ``` shell
+   ```shell
    $ git clone git@github.com:VidScale/udnportal.git
    ```
 
 2. Navigate to the cloned directory
-   ``` shell
+   ```shell
    $ cd udnportal/
    ```
 
 3. Install dependencies
-   ``` shell
+   ```shell
    $ npm install
    ```
 
 ## Running the application
 
 ### Development mode
+1. Rename .env.example to .env and configure settings
 
-1. Run Gulp
-   ``` shell
-   $ gulp
+2. Run dev server
+   ```shell
+   $ npm start
    ```
 
-2. Navigate to http://localhost:3000/webpack-dev-server/
+3. Navigate to http://localhost:3000/webpack-dev-server/
 
 ### Building for deployment
 
 ```shell
-$ gulp build
+$ npm run dist
 ```
 
 ### Testing
 ```shell
 $ npm test
+```
+
+### Component Lib
+1. Run server
+   ```shell
+   $ npm run storybook
+   ```
+
+2. Navigate to http://localhost:9001/
+
+### Linting
+Lint JS-files:
+```shell
+$ npm run lint:js
+```
+
+Lint styles:
+```shell
+$ npm run lint:styles
 ```

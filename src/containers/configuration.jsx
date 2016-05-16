@@ -141,7 +141,17 @@ export class Configuration extends React.Component {
       this.props.params.group,
       this.props.location.query.name,
       newHost.toJS()
-    )
+    ).then((action) => {
+      if(action.error) {
+        this.togglePublishModal()
+        this.showNotification('Publishing configurations failed: ' +
+          action.payload.status + ' ' +
+          action.payload.statusText)
+      } else {
+        this.togglePublishModal()
+        this.showNotification('Configurations succesfully published')
+      }
+    })
   }
   togglePublishModal() {
     this.setState({showPublishModal: !this.state.showPublishModal})
@@ -302,7 +312,8 @@ export class Configuration extends React.Component {
               <ConfigurationPublishVersion
                 hideAction={this.togglePublishModal}
                 saveChanges={this.changeActiveVersionEnvironment}
-                versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}/>
+                versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}
+                publishing={this.props.fetching}/>
             </Modal.Body>
           </Modal>
           : ''}

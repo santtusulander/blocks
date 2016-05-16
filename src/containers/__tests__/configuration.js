@@ -475,10 +475,12 @@ describe('Configuration', () => {
 
   it("should change a version's deployment_status", () => {
     const hostActions = hostActionsMaker()
+    const uiActions = uiActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
         activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams} location={fakeLocation}
+        uiActions={uiActions}/>
     );
     config.changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')

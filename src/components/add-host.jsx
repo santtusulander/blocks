@@ -32,17 +32,16 @@ class AddHost extends React.Component {
       <form onSubmit={this.createHost}>
         <Input type="text" label="New Host Name" id="new_host_name"
           ref="new_host_name"/>
-        <Input label="Deployment Mode">
-          <Input type="radio"
-            label="Trial"
-            onChange={this.setDeploymentMode('trial')}
-            checked={this.state.deploymentMode === 'trial'}/>
-          <Input type="radio"
-            label="Production"
-            onChange={this.setDeploymentMode('production')}
-            checked={this.state.deploymentMode === 'production'}/>
-        </Input>
-        <ButtonToolbar>
+        <label>Deployment Mode</label>
+        <Input type="radio"
+          label="Trial"
+          onChange={this.setDeploymentMode('trial')}
+          checked={this.state.deploymentMode === 'trial'}/>
+        <Input type="radio"
+          label="Production"
+          onChange={this.setDeploymentMode('production')}
+          checked={this.state.deploymentMode === 'production'}/>
+        <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.cancelChanges}>Cancel</Button>
           <Button type="submit" bsStyle="primary">Save</Button>
         </ButtonToolbar>

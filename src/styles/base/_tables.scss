@@ -5,6 +5,10 @@
 // Need to override BootStrap
 .table {
 
+  @include print {
+    page-break-inside: avoid;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.1);
 
@@ -14,10 +18,14 @@
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.5);
+    background-color: $white;
 
     &.table-striped > tbody > tr:nth-of-type(odd) {
       background-color: $white;
+    }
+
+    &.table-striped > tbody > tr:nth-of-type(even) {
+      background-color: rgba($silver-20, 0.5);
     }
   }
 
@@ -29,12 +37,22 @@
 
       > th,
       > td {
+        position: relative;
         padding: 5px ($btn-height / 2);
         vertical-align: middle;
         border: 0;
 
         @include md {
           padding: 5px ($md-btn-height / 2);
+        }
+
+        @include print {
+          // scss-lint:disable ImportantRule
+          // Need to override table styles
+          height: auto !important;
+          padding: 5px 10px 5px 0;
+          border: 0 !important;
+          border-bottom: 1px solid $silver-40 !important;
         }
       }
 
@@ -57,9 +75,12 @@
 
         &:not(:last-child) {
 
-          .dark-theme &,
-          .light-theme & {
+          .dark-theme & {
             border-right: 1px solid rgba($black, 0.2);
+          }
+
+          .light-theme & {
+            border-right: 1px solid $silver-20;
           }
         }
       }
@@ -84,7 +105,8 @@
     }
 
     .light-theme & {
-      background-color: $silver-80;
+      color: $white;
+      background-color: $pale-blue;
     }
   }
 
@@ -94,6 +116,18 @@
 
   &.unstyled {
     background-color: transparent;
+
+    > thead,
+    > tbody,
+    > tfoot {
+
+      > tr {
+
+        > td:not(:last-child) {
+          border: 0;
+        }
+      }
+    }
   }
 
   &.no-padding {
@@ -123,6 +157,34 @@
 
     @include sm {
       margin-top: $sm-bar-height;
+    }
+  }
+}
+
+.table-percentage-line {
+  position: absolute;
+  right: $btn-height / 3;
+  bottom: 20%;
+  left: $btn-height / 3;
+  height: 5px;
+
+  @include md {
+    right: $md-btn-height / 3;
+    left: $md-btn-height / 3;
+  }
+
+  .dark-theme &,
+  .light-theme & {
+    background: rgba($black, 0.2);
+  }
+
+  .line {
+    display: block;
+    height: 100%;
+
+    .dark-theme &,
+    .light-theme & {
+      background: $pale-blue;
     }
   }
 }

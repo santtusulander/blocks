@@ -26,7 +26,8 @@ function visitorsActionsMaker() {
   return {
     startFetching: jest.genMockFunction(),
     fetchByCountry: jest.genMockFunction(),
-    finishFetching: jest.genMockFunction()
+    finishFetching: jest.genMockFunction(),
+    visitorsReset: jest.genMockFunction()
   }
 }
 

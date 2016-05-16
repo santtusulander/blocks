@@ -19,12 +19,9 @@
     + li {
       border-top: 1px solid;
 
-      .dark-theme & {
-        border-color: rgba($pale-blue, 0.2);
-      }
-
+      .dark-theme &,
       .light-theme & {
-        border-color: rgba($white, 0.2);
+        border-color: rgba($pale-blue, 0.2);
       }
     }
 
@@ -60,17 +57,9 @@
 
   &.active {
 
-    .dark-theme & {
-      background-color: $pale-blue;
-    }
-
+    .dark-theme &,
     .light-theme & {
-
-      &,
-      &:hover {
-        color: $pale-blue;
-        background-color: $white;
-      }
+      background-color: $pale-blue;
     }
   }
 
@@ -113,12 +102,9 @@
       margin-left: 11px;
     }
 
-    .dark-theme & {
-      border-left-color: $dt-text-color;
-    }
-
+    .dark-theme &,
     .light-theme & {
-      border-left-color: $white;
+      border-left-color: $dt-text-color;
     }
   }
 }

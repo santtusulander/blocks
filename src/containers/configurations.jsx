@@ -24,13 +24,16 @@ export class Configurations extends React.Component {
       activePurge: null,
       activeFilter: 'all',
       sortBy: 'last_edited',
-      sortDir: -1
+      sortDir: -1,
+      sortFunc: ''
     }
 
     this.activatePurge = this.activatePurge.bind(this)
     this.changeSort = this.changeSort.bind(this)
+    this.sortedData = this.sortedData.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.saveActivePurge = this.saveActivePurge.bind(this)
+    this.getPropertyParents = this.getPropertyParents.bind(this)
   }
   activatePurge(property) {
     return e => {
@@ -41,11 +44,38 @@ export class Configurations extends React.Component {
       this.props.purgeActions.resetActivePurge()
     }
   }
-  changeSort(column, direction) {
+  changeSort(column, direction, sortFunc) {
     this.setState({
       sortBy: column,
-      sortDir: direction
+      sortDir: direction,
+      sortFunc: sortFunc
     })
+  }
+  sortedData(data, sortBy, sortDir) {
+    let sortFunc = ''
+    if(this.state.sortFunc === 'parents') {
+      sortFunc = data.sort((a, b) => {
+        sortBy = sortBy.toString().split(',')
+        if(this.getPropertyParents(a) < this.getPropertyParents(b)) {
+          return -1 * sortDir
+        }
+        else if(this.getPropertyParents(a) > this.getPropertyParents(b)) {
+          return 1 * sortDir
+        }
+        return 0
+      })
+    } else {
+      sortFunc = data.sort((a, b) => {
+        if(a.get(sortBy) < b.get(sortBy)) {
+          return -1 * sortDir
+        }
+        else if(a.get(sortBy) > b.get(sortBy)) {
+          return 1 * sortDir
+        }
+        return 0
+      })
+    }
+    return sortFunc
   }
   handleSelectChange() {
     return value => {
@@ -66,36 +96,37 @@ export class Configurations extends React.Component {
       ).then(() => this.setState({activePurge: null}))
     }
   }
+  getPropertyParents(property) {
+    const propertyAccount = this.props.accounts.find(account => {
+      return account.get('account_id') == property.get('account_id')
+    })
+    const propertyGroup = this.props.groups.find(group => {
+      return group.get('group_id') == property.get('group_id')
+    })
+    let parents = (propertyAccount ? propertyAccount.get('name') : '')
+    parents = parents + ' / '
+    parents = parents + (propertyGroup ? propertyGroup.get('name') : '')
+    return parents
+  }
   render() {
     if(this.props.fetching) {
       return <p>Loading...</p>
     }
-    const ConfigSorter = ({column, children, reversed}) => <TableSorter
-        column={column}
-        reversed={reversed}
-        activateSort={this.changeSort}
-        activeColumn={this.state.sortBy}
-        activeDirection={this.state.sortDir}>
-        {children}
-      </TableSorter>
-    const sortedProperties = this.props.properties.sort((a, b) => {
-      if(a.get(this.state.sortBy) < b.get(this.state.sortBy)) {
-        return -1 * this.state.sortDir
-      }
-      else if(a.get(this.state.sortBy) > b.get(this.state.sortBy)) {
-        return 1 * this.state.sortDir
-      }
-      return 0
-    })
+    const sorterProps = {
+      activateSort: this.changeSort,
+      activeColumn: this.state.sortBy,
+      activeDirection: this.state.sortDir
+    }
+    const sortedProperties = this.sortedData(this.props.properties, this.state.sortBy, this.state.sortDir)
     return (
       <PageContainer className="configurations-container">
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
-              <Input className="search" type="text" placeholder="Search" />
               <Button bsStyle="primary" className="btn-icon add-btn">
                 <IconAdd width="30" height="30" />
               </Button>
+              <Input className="search" type="text" placeholder="Search" />
               <Select onSelect={this.handleSelectChange()}
                 value={this.state.activeFilter}
                 options={[
@@ -112,35 +143,29 @@ export class Configurations extends React.Component {
             <Table striped={true}>
               <thead>
                 <tr>
-                  <ConfigSorter column="property">
+                  <TableSorter {...sorterProps} column="property">
                     Hostname
-                  </ConfigSorter>
-                  <ConfigSorter column="last_edited" reversed={true}>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="last_edited" reversed={true}>
                     Last Edited
-                  </ConfigSorter>
-                  <th>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="last_editor">
                     By
-                  </th>
-                  <ConfigSorter column="status">
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="status">
                     Status
-                  </ConfigSorter>
-                  <th>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="active_version">
                     Active Version
-                  </th>
-                  <th>
-                    Belongs To
-                  </th>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="parents" sortFunc="parents">
+                    Belongs to
+                  </TableSorter>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {sortedProperties.map((property, i) => {
-                  const propertyAccount = this.props.accounts.find(account => {
-                    return account.get('account_id') == property.get('account_id')
-                  })
-                  const propertyGroup = this.props.groups.find(group => {
-                    return group.get('group_id') == property.get('group_id')
-                  })
                   return (
                     <tr key={i}>
                       <td>{property.get('property')}</td>
@@ -151,11 +176,7 @@ export class Configurations extends React.Component {
                       <td>{property.get('last_editor')}</td>
                       <td>{property.get('status')}</td>
                       <td>{property.get('active_version')}</td>
-                      <td>
-                        {propertyAccount ? propertyAccount.get('name') : ''}
-                        &nbsp;/&nbsp;
-                        {propertyGroup ? propertyGroup.get('name') : ''}
-                      </td>
+                      <td>{this.getPropertyParents(property)}</td>
                       <td>
                         {property.get('status') === 'production' ?
                           <a href="#" onClick={this.activatePurge(property.get('property'))}>

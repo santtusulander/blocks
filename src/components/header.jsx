@@ -55,9 +55,6 @@ class Header extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
-    const firstAccount = this.props.accounts && this.props.accounts.get(0) ?
-      this.props.accounts.get(0).get('id')
-      : 1
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
@@ -88,7 +85,7 @@ class Header extends React.Component {
         {showBreadcrumbs ?
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
             <li className="breadcrumb-back">
-              <Link to={`/content/groups/udn/${firstAccount}`} />
+              <Link to={`/content/accounts/udn`} />
             </li>
             <li>
               <Link to={`/content/groups/udn/${this.props.params.account}`}>
@@ -122,7 +119,7 @@ class Header extends React.Component {
         <div>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">Ericsson</a>
+              <Link to={`/content/accounts/udn`}>Ericsson</Link>
             </Navbar.Brand>
           </Navbar.Header>
           <Nav className="main-nav">
@@ -131,12 +128,12 @@ class Header extends React.Component {
                 open={this.state.accountMenuOpen}
                 onToggle={this.toggleAccountMenu}>
                 <Link className={'main-nav-link' + contentActive}
-                  to={`/content/groups/udn/${firstAccount}`}
+                  to={`/content/accounts/udn`}
                   activeClassName="active">
                   Content
                 </Link>
                 <Dropdown.Toggle bsStyle='link'/>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="dropdown-account-menu">
                   {this.props.accounts ? this.props.accounts.map((account, i) => {
                     return (
                       <li key={i}
@@ -187,22 +184,13 @@ class Header extends React.Component {
           </Nav>
           <Nav pullRight={true}>
             <li>
-              <Dropdown id="alert-menu">
-                <Dropdown.Toggle className="btn-header btn-tertiary btn-icon btn-round
-                  btn-alerts" noCaret={true}>
-                  <IconAlerts />
-                  <span className="btn-alerts-indicator" />
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <MenuItem eventKey="1">Alert 1</MenuItem>
-                  <MenuItem eventKey="2">Alert 2</MenuItem>
-                  <MenuItem eventKey="3">Alert 3</MenuItem>
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
+                <IconAlerts />
+                <span className="btn-alerts-indicator" />
+              </Button>
             </li>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon
-                btn-round">?</Button>
+              <Button className="btn-header btn-tertiary btn-icon btn-round">?</Button>
             </li>
             <li>
               <Input className="header-search-input"
@@ -218,18 +206,18 @@ class Header extends React.Component {
                   <li className="dropdown-user-menu-container">
                     <ul>
                       <MenuItem header={true} className="dropdown-main-header">
-                        <div className="user-menu-item">Username</div>
+                        <div className="user-menu-item">test</div>
                       </MenuItem>
                       <MenuItem eventKey="1">
                         <div className="user-menu-item">
                           <div className="helper-header">Company</div>
-                          Disney Studios
+                          Ericsson
                         </div>
                       </MenuItem>
                       <MenuItem eventKey="2">
                         <div className="user-menu-item">
                           <div className="helper-header">Role</div>
-                          Admin
+                          UDN Admin
                         </div>
                       </MenuItem>
                       <li className="menu-item-theme">

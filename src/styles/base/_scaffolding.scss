@@ -5,11 +5,18 @@ html,
 body {
   min-width: 1024px;
   min-height: 100%;
+
+  @include print {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
 }
 
 body {
   font-family: 'Roboto', Helvetica, Arial;
   font-size: $font-size;
+  transition: color 250ms, background 250ms;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 
@@ -21,26 +28,29 @@ body {
     font-size: $sm-font-size;
   }
 
+  @include print {
+    font-size: $print-font-size;
+  }
+
   &.dark-theme {
     color: $dt-text-color;
     background-attachment: fixed;
     background-color: $black;
-    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)),
-      linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.2)), linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.25));
     background-size: 100%;
-
-    a {
-      color: $pale-blue;
-    }
   }
 
   &.light-theme {
     color: $lt-text-color;
     background-color: $silver-20;
+  }
+}
 
-    a {
-      color: $pale-blue;
-    }
+a {
+
+  .dark-theme &,
+  .light-theme & {
+    color: $pale-blue;
   }
 }
 

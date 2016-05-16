@@ -2,7 +2,14 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+// This component has a child that connects to redux, so mock that
+const reactRedux = require('react-redux')
+reactRedux.connect = jest.genMockFunction()
+reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
+
 jest.dontMock('../traffic.jsx')
+jest.dontMock('../../table-sorter.jsx')
+
 const AnalysisTraffic = require('../traffic.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
@@ -27,10 +34,10 @@ const fakeCountryData = Immutable.fromJS([
     detail:[
       {
         bytes:60722,
-        timestamp:1456819200
+        timestamp:new Date("2016-01-01 00:00:00")
       },{
         bytes:60722,
-        timestamp:1456822800
+        timestamp:new Date("2016-01-02 00:00:00")
       }
     ]
   },{
@@ -43,10 +50,10 @@ const fakeCountryData = Immutable.fromJS([
     detail:[
       {
         bytes:3807,
-        timestamp:1456819200
+        timestamp:new Date("2016-01-01 00:00:00")
       },{
         bytes:60722,
-        timestamp:1456822800
+        timestamp:new Date("2016-01-02 00:00:00")
       }
     ]
   }
@@ -59,7 +66,8 @@ describe('AnalysisTraffic', () => {
         fetching={true}
         byTime={Immutable.List()}
         byCountry={Immutable.List()}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        dateRange='foo'/>
     );
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });
@@ -67,12 +75,13 @@ describe('AnalysisTraffic', () => {
   it('should show data rows in table', () => {
     let traffic = TestUtils.renderIntoDocument(
       <AnalysisTraffic
-        fetching={true}
+        fetching={false}
         byTime={Immutable.List()}
         byCountry={fakeCountryData}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        dateRange='foo'/>
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
-    expect(tds.length).toBe(10);
+    expect(tds.length).toBe(6);
   });
 })
