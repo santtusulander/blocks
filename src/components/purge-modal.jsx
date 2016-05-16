@@ -164,7 +164,8 @@ class PurgeModal extends React.Component {
                 onSelect={type => this.setState({type: type})}/>
               <hr/>
 
-              {this.state.type && <div>
+              {this.state.type && this.state.type !== 'hostname'
+                && this.state.type !== 'group' && <div>
 
                 {this.state.type === 'url' && <PurgeObjInput
                   title="URLs to Purge"
@@ -217,19 +218,27 @@ class PurgeModal extends React.Component {
                   placeholder="A note about the purge"
                   value={this.props.activePurge.get('note')}
                   onChange={this.change(['note'])}/>
+
+                {/* Action buttons */}
+                <ButtonToolbar className="text-right">
+                  <Button bsStyle="primary" onClick={this.props.hideAction}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" bsStyle="primary"
+                    disabled={this.state.purgeObjectsError || this.state.purgeEmailError
+                      ? true : false}>
+                    Purge
+                  </Button>
+                </ButtonToolbar>
               </div>}
 
-              {/* Action buttons */}
-              <ButtonToolbar className="text-right">
-                <Button bsStyle="primary" onClick={this.props.hideAction}>
-                  Cancel
-                </Button>
-                <Button type="submit" bsStyle="primary"
-                  disabled={this.state.purgeObjectsError || this.state.purgeEmailError
-                    ? true : false}>
-                  Purge
-                </Button>
-              </ButtonToolbar>
+              {this.state.type === 'hostname' && <div>
+                Purge by hostname will be supported in a future version.
+              </div>}
+
+              {this.state.type === 'group' && <div>
+                Purge entire group will be supported in a future version.
+              </div>}
 
             </form>
             : 'Loading...'
