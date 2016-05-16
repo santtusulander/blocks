@@ -1,9 +1,10 @@
-var path              = require('path');
-var webpack           = require('webpack');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var helpers           = require('./helpers');
+var path                  = require('path');
+var webpack               = require('webpack');
+var CopyWebpackPlugin     = require('copy-webpack-plugin');
+var ExtractTextPlugin     = require("extract-text-webpack-plugin");
+var HtmlWebpackPlugin     = require('html-webpack-plugin');
+var WebpackNotifierPlugin = require('webpack-notifier');
+var helpers               = require('./helpers');
 
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
@@ -38,8 +39,11 @@ var development = Object.assign({}, {
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'},
-    ])
+      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
+    ]),
+    new WebpackNotifierPlugin({
+      title: `UDN portal v.${require('../package.json').version}`
+    })
   ]
 }, require('./config'));
 
