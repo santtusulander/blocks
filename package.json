@@ -5,7 +5,7 @@
   "main": "dist/js/app.js",
   "author": "Idean",
   "devDependencies": {
-    "@kadira/storybook": "^1.19.0",
+    "@kadira/storybook": "^1.26.0",
     "autoprefixer-loader": "^3.2.0",
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
@@ -72,7 +72,7 @@
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
     "test:watch": "jest --watch",
-    "storybook": "start-storybook -p 9001"
+    "storybook": "start-storybook -p 9001 -s './dist'"
   },
   "jest": {
     "collectCoverage": true,
