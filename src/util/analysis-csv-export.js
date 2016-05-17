@@ -47,9 +47,8 @@ export function createCSVExporters(filenamePart) {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
       generate('File Errors', data)
     },
-    urlReport: (urlMetrics, serviceTypes) => {
-      const data = urlMetrics.filter(filterByServiceType(serviceTypes))
-      generate('URL Report', data)
+    urlReport: urlMetrics => {
+      generate('URL Report', urlMetrics)
     },
     storageUsage: storageStats => {
       const data = storageStats.map(mapTimestamps)

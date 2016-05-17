@@ -61,7 +61,7 @@ export class AnalyticsPage extends React.Component {
         exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
         break
       case 'url-report':
-        exporters.urlReport(this.props.urlMetrics, this.props.serviceTypes)
+        exporters.urlReport(this.props.urlMetrics)
         break
       case 'storage-usage':
         exporters.storageUsage(this.props.storageStats)
