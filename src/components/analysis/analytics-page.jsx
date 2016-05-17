@@ -14,7 +14,9 @@ import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
 import AnalysisPlaybackDemo from './playback-demo'
-import { generateCSVFile } from '../../util/helpers'
+import { createCSVExporters } from '../../util/analysis-csv-export'
+
+let exporters = createCSVExporters('')
 
 export class AnalyticsPage extends React.Component {
   constructor(props) {
@@ -30,6 +32,13 @@ export class AnalyticsPage extends React.Component {
     this.exportCSV = this.exportCSV.bind(this)
     this.exportEmail = this.exportEmail.bind(this)
     this.exportPDF = this.exportPDF.bind(this)
+
+    exporters = createCSVExporters(props.exportFilenamePart)
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.exportFilenamePart !== this.props.exportFilenamePart) {
+      exporters = createCSVExporters(nextProps.exportFilenamePart)
+    }
   }
   changeTab(newTab) {
     this.setState({activeTab: newTab})
@@ -38,76 +47,24 @@ export class AnalyticsPage extends React.Component {
     this.setState({activeVideo: video})
   }
   exportCSV() {
-    let processedData
     switch(this.state.activeTab) {
       case 'traffic':
-        processedData = this.props.trafficByTime
-          .filter(item => this.props.serviceTypes.includes(
-            item.get('service_type')
-          ))
-          .map(item => item.set(
-            'timestamp',
-            moment(item.get('timestamp')).format()
-          ))
-        generateCSVFile(
-          processedData.toJS(),
-          `Traffic - ${this.props.exportFilenamePart}`
-        )
+        exporters.traffic(this.props.trafficByTime, this.props.serviceTypes)
         break
       case 'visitors':
-        processedData = this.props.visitorsByTime
-          .map(item => item.set(
-            'timestamp',
-            moment(item.get('timestamp')).format()
-          ))
-        generateCSVFile(
-          processedData.toJS(),
-          `Visitors - ${this.props.exportFilenamePart}`
-        )
+        exporters.visitors(this.props.visitorsByTime)
         break
       case 'sp-report':
-        processedData = this.props.onOffNet.get('detail')
-          .map(item => Immutable.Map({
-            timestamp: moment(item.get('timestamp')).format(),
-            on_net: item.getIn(['net_on', 'bytes']),
-            off_net: item.getIn(['net_off', 'bytes']),
-            total: item.get('total')
-          }))
-        generateCSVFile(
-          processedData.toJS(),
-          `Service Provider - ${this.props.exportFilenamePart}`
-        )
+        exporters.serviceProviders(this.props.onOffNet.get('detail'))
         break
       case 'file-error':
-        processedData = this.props.fileErrorURLs
-          .filter(item => this.props.serviceTypes.includes(
-            item.get('service_type')
-          ))
-        generateCSVFile(
-          processedData.toJS(),
-          `File Errors - ${this.props.exportFilenamePart}`
-        )
+        exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
         break
       case 'url-report':
-        processedData = this.props.urlMetrics
-          .filter(item => this.props.serviceTypes.includes(
-            item.get('service_type')
-          ))
-        generateCSVFile(
-          processedData.toJS(),
-          `URL Report - ${this.props.exportFilenamePart}`
-        )
+        exporters.urlReport(this.props.urlMetrics, this.props.serviceTypes)
         break
       case 'storage-usage':
-        processedData = this.props.storageStats
-          .map(item => item.set(
-            'timestamp',
-            moment(item.get('timestamp')).format()
-          ))
-        generateCSVFile(
-          processedData.toJS(),
-          `Storage Usage - ${this.props.exportFilenamePart}`
-        )
+        exporters.storageUsage(this.props.storageStats)
         break
     }
   }
