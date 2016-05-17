@@ -82,7 +82,7 @@ export class AnalyticsPage extends React.Component {
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
-            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
+            {/* Not in 0.0.52 <NavItem eventKey="storage-usage">Storage Usage</NavItem>*/}
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 

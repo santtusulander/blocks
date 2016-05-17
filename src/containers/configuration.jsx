@@ -186,70 +186,70 @@ export class Configuration extends React.Component {
         </Sidebar>
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
-
-          <PageHeader>
-            <ButtonToolbar className="pull-right">
-              {activeEnvironment === 2 ||
-                activeEnvironment === 1 ||
-                !activeEnvironment ?
-                <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                  Publish
+          <div className="configuration-header">
+            <PageHeader>
+              <ButtonToolbar className="pull-right">
+                {activeEnvironment === 2 ||
+                  activeEnvironment === 1 ||
+                  !activeEnvironment ?
+                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                    Publish
+                  </Button>
+                  : ''
+                }
+                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                  Copy
                 </Button>
-                : ''
-              }
-              <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                Copy
-              </Button>
-              {activeEnvironment === 2 || activeEnvironment === 3 ?
-                <Button bsStyle="primary"
-                  onClick={() => this.changeActiveVersionEnvironment(1)}>
-                  Retire
-                </Button>
-                : ''
-              }
-            </ButtonToolbar>
+                {activeEnvironment === 2 || activeEnvironment === 3 ?
+                  <Button bsStyle="primary"
+                    onClick={() => this.changeActiveVersionEnvironment(1)}>
+                    Retire
+                  </Button>
+                  : ''
+                }
+              </ButtonToolbar>
 
-            <h1>{activeConfig.get('config_name') || activeConfig.get('config_id')}</h1>
-            <p className="text-sm">
-              <span className="right-separator">
-                {activeConfig.get('edge_configuration').get('origin_host_name')}
-              </span>
-              <span className="right-separator">
-                {deployMoment.format('MMM, D YYYY')}
-              </span>
-              <span className="right-separator">
-                {deployMoment.format('H:MMa')}
-              </span>
-              {activeConfig.get('configuration_status').get('last_edited_by')}
-            </p>
-          </PageHeader>
+              <h1>{activeConfig.get('config_name') || activeConfig.get('config_id')}</h1>
+              <p className="text-sm">
+                <span className="right-separator">
+                  {activeConfig.get('edge_configuration').get('origin_host_name')}
+                </span>
+                <span className="right-separator">
+                  {deployMoment.format('MMM, D YYYY')}
+                </span>
+                <span className="right-separator">
+                  {deployMoment.format('H:MMa')}
+                </span>
+                {activeConfig.get('configuration_status').get('last_edited_by')}
+              </p>
+            </PageHeader>
 
-          <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-            onSelect={this.activateTab}>
-            <NavItem eventKey={'details'}>
-              Hostname
-            </NavItem>
-            <NavItem eventKey={'defaults'}>
-              Defaults
-            </NavItem>
-            <NavItem eventKey={'policies'}>
-              Policies
-            </NavItem>
-            <NavItem eventKey={'performance'}>
-              Performance
-            </NavItem>
-            <NavItem eventKey={'security'}>
-              Security
-            </NavItem>
-            <NavItem eventKey={'certificates'}>
-              Certificates
-            </NavItem>
-            <NavItem eventKey={'change-log'}>
-              Change Log
-            </NavItem>
-          </Nav>
-
-          <div className="container-fluid content-container">
+            <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+              onSelect={this.activateTab}>
+              <NavItem eventKey={'details'}>
+                Hostname
+              </NavItem>
+              <NavItem eventKey={'defaults'}>
+                Defaults
+              </NavItem>
+              <NavItem eventKey={'policies'}>
+                Policies
+              </NavItem>
+              <NavItem eventKey={'performance'}>
+                Performance
+              </NavItem>
+              <NavItem eventKey={'security'}>
+                Security
+              </NavItem>
+              <NavItem eventKey={'certificates'}>
+                Certificates
+              </NavItem>
+              <NavItem eventKey={'change-log'}>
+                Change Log
+              </NavItem>
+            </Nav>
+          </div>
+          <div className="container-fluid content-container" style={{ padding: '320px 80px 80px 80px'}}>
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}

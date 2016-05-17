@@ -136,6 +136,9 @@
 
 .nav-tabs {
   border-bottom: 5px solid;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
 
   @include print {
     display: none;

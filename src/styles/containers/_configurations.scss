@@ -1,6 +1,21 @@
 // Configurations
 // ==============
 
+.configuration-header {
+  width: calc(100% - #{$sidebar-width});
+
+  @include md {
+    width: calc(100% - #{$md-sidebar-width});
+  }
+
+  @include sm {
+    width: calc(100% - #{$sm-sidebar-width});
+  }
+
+  position: fixed;
+  z-index: 5;
+}
+
 .configurations-container {
 
   td:last-child {
