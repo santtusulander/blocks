@@ -38,19 +38,75 @@ export class AnalyticsPage extends React.Component {
     this.setState({activeVideo: video})
   }
   exportCSV() {
+    let processedData
     switch(this.state.activeTab) {
       case 'traffic':
-        const processedData = this.props.trafficByTime
-          .filter(traffic => this.props.serviceTypes.includes(
-            traffic.get('service_type')
+        processedData = this.props.trafficByTime
+          .filter(item => this.props.serviceTypes.includes(
+            item.get('service_type')
           ))
-          .map(traffic => traffic.set(
+          .map(item => item.set(
             'timestamp',
-            moment(traffic.get('timestamp')).format()
+            moment(item.get('timestamp')).format()
           ))
         generateCSVFile(
           processedData.toJS(),
           `Traffic - ${this.props.exportFilenamePart}`
+        )
+        break
+      case 'visitors':
+        processedData = this.props.visitorsByTime
+          .map(item => item.set(
+            'timestamp',
+            moment(item.get('timestamp')).format()
+          ))
+        generateCSVFile(
+          processedData.toJS(),
+          `Visitors - ${this.props.exportFilenamePart}`
+        )
+        break
+      case 'sp-report':
+        processedData = this.props.onOffNet.get('detail')
+          .map(item => Immutable.Map({
+            timestamp: moment(item.get('timestamp')).format(),
+            on_net: item.getIn(['net_on', 'bytes']),
+            off_net: item.getIn(['net_off', 'bytes']),
+            total: item.get('total')
+          }))
+        generateCSVFile(
+          processedData.toJS(),
+          `Service Provider - ${this.props.exportFilenamePart}`
+        )
+        break
+      case 'file-error':
+        processedData = this.props.fileErrorURLs
+          .filter(item => this.props.serviceTypes.includes(
+            item.get('service_type')
+          ))
+        generateCSVFile(
+          processedData.toJS(),
+          `File Errors - ${this.props.exportFilenamePart}`
+        )
+        break
+      case 'url-report':
+        processedData = this.props.urlMetrics
+          .filter(item => this.props.serviceTypes.includes(
+            item.get('service_type')
+          ))
+        generateCSVFile(
+          processedData.toJS(),
+          `URL Report - ${this.props.exportFilenamePart}`
+        )
+        break
+      case 'storage-usage':
+        processedData = this.props.storageStats
+          .map(item => item.set(
+            'timestamp',
+            moment(item.get('timestamp')).format()
+          ))
+        generateCSVFile(
+          processedData.toJS(),
+          `Storage Usage - ${this.props.exportFilenamePart}`
         )
         break
     }
