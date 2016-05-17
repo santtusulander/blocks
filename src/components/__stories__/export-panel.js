@@ -12,8 +12,19 @@ storiesOf('ExportPanel', module)
     </ThemeWrap>
   ))
   .add('Download (dark)', () => (
-      <ExportPanel activeTab={1} />
+      <ExportPanel
+          activeTab={1}
+          onDownload={ action('onDownload') }
+          onCancel={ action('onCancel') }
+          onSend={ action('onSend') }
+
+      />
   ))
   .add('Email (dark)', () => (
-      <ExportPanel activeTab={2}/>
+      <ExportPanel
+          activeTab={2}
+          onDownload={ action('onDownload') }
+          onCancel={ action('onCancel') }
+          onSend={ action('onSend') }
+      />
   ))
