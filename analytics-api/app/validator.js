@@ -40,6 +40,19 @@ class Validator {
       number: {
         validator : /^\d+$/,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid number. Value received: ${value}`
+      },
+      // NOTE: The sort_by validator is unusually specific. It's only used for the traffic/urls endpoint.
+      sort_by: {
+        validator : /^(?:url|bytes|requests)$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid field to sort by ("url", "bytes", or "requests"). Value received: ${value}`
+      },
+      sort_dir: {
+        validator : /^(?:desc|asc)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid sort direction ("asc" or "desc"). Value received: ${value}`
+      },
+      status_codes: {
+        validator : /^(?:[1-5][0-9x]{2},)*?(?:[1-5][0-9x]{2})$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid comma separated list of HTTP status codes (e.g. '404', '404,500', '304,4xx,500'). Notice there are no spaces, and you can use 'xx' as a wildcard to get all status codes of a type (e.g. '4xx', '5xx', etc). Value received: ${value}`
       }
     };
   }
