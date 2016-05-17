@@ -72,7 +72,7 @@
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
     "test:watch": "jest --watch",
-    "storybook": "start-storybook -p 9001 -s './dist'"
+    "storybook": "start-storybook -p 9001"
   },
   "jest": {
     "collectCoverage": true,

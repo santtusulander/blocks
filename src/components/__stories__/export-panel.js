@@ -7,7 +7,7 @@ const ExportPanel = require('../export-panel.jsx');
 
 storiesOf('ExportPanel', module)
   .addDecorator((story) => (
-    <ThemeWrap theme='dark'>
+    <ThemeWrap >
       {story()}
     </ThemeWrap>
   ))
