@@ -11,13 +11,13 @@ const {
   finishFetch
 } = require('../reports.js');
 
-describe('Account Module', () => {
+describe('Reports Module', () => {
 
   it('should handle fetch url metrics success', () => {
     const state = Immutable.fromJS({
       urlMetrics: [1]
     });
-    const newState = fetchUrlMetricsSuccess(state, {payload: [2]});
+    const newState = fetchUrlMetricsSuccess(state, {payload: {data: [2]}});
     expect(newState.get('urlMetrics').get(0)).toBe(2);
     expect(newState.get('fetching')).toBeFalsy();
   });
@@ -26,7 +26,7 @@ describe('Account Module', () => {
     const state = Immutable.fromJS({
       urlMetrics: [1]
     });
-    const newState = fetchUrlMetricsFailure(state, {payload: [2]});
+    const newState = fetchUrlMetricsFailure(state, {payload: {data: [2]}});
     expect(newState.get('urlMetrics').size).toBe(0);
     expect(newState.get('fetching')).toBeFalsy();
   });
