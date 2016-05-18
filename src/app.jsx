@@ -10,6 +10,7 @@ import axios from 'axios'
 
 import routes from './routes'
 import * as reducers from './redux/modules'
+import { LogPageView } from './util/google-analytics'
 
 import './styles/style.scss'
 
@@ -40,7 +41,7 @@ axios.interceptors.response.use(function (response) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={createBrowserHistory()}>
+    <Router onUpdate={LogPageView} history={createBrowserHistory()}>
       {routes}
     </Router>
   </Provider>, document.getElementById('content')

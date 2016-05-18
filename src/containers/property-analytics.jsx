@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as trafficActionCreators from '../redux/modules/traffic'
@@ -27,6 +29,15 @@ export class PropertyAnalytics extends React.Component {
   }
   componentWillMount() {
     this.props.hostActions.fetchHosts(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group
+    )
+    this.props.accountActions.fetchAccount(
+      this.props.params.brand,
+      this.props.params.account
+    )
+    this.props.groupActions.fetchGroup(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group
@@ -102,24 +113,28 @@ export class PropertyAnalytics extends React.Component {
     }, this.fetchData)
   }
   render() {
+    const propertyName = this.props.location.query.name
     const availableHosts = this.props.hosts.map(host => {
       return {
-        active: host === this.props.location.query.name,
+        active: host === propertyName,
         link: `/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`,
         name: host
       }
     })
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
-    const metrics = this.props.metrics.find(metric => metric.get('property') + "" === this.props.location.query.name) || Immutable.Map()
+    const metrics = this.props.metrics.find(metric => metric.get('property') + "" === propertyName) || Immutable.Map()
+    const activeAccountName = this.props.activeAccount ? this.props.activeAccount.get('name') : ''
+    const activeGroupName = this.props.activeGroup ? this.props.activeGroup.get('name') : ''
 
     return (
       <AnalyticsPage
-        activeName={this.props.location.query.name}
+        activeName={propertyName}
         changeDateRange={this.changeDateRange}
         changeSPChartType={this.props.uiActions.changeSPChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
+        exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${propertyName} - ${moment().format()}`}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}
@@ -150,9 +165,13 @@ export class PropertyAnalytics extends React.Component {
 
 PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
@@ -183,6 +202,8 @@ PropertyAnalytics.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     hosts: state.host.get('allHosts'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
@@ -209,6 +230,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch),
