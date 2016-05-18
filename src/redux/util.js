@@ -31,40 +31,17 @@ export function mapReducers(next, err) {
   return {next, throw: err}
 }
 
-export function qsBuilder({
-  account,
-  group,
-  property,
-  startDate,
-  endDate,
-  granularity,
-  aggregate_granularity,
-  max_countries
-}) {
-  let qs = []
-  if(account) {
-    qs.push(`account=${account}`)
-  }
-  if(group) {
-    qs.push(`group=${group}`)
-  }
-  if(property) {
-    qs.push(`property=${property}`)
-  }
-  if(startDate) {
-    qs.push(`start=${startDate}`)
-  }
-  if(endDate) {
-    qs.push(`end=${endDate}`)
-  }
-  if(granularity) {
-    qs.push(`granularity=${granularity}`)
-  }
-  if(aggregate_granularity) {
-    qs.push(`aggregate_granularity=${aggregate_granularity}`)
-  }
-  if(max_countries) {
-    qs.push(`max_countries=${max_countries}`)
-  }
+export function qsBuilder(params) {
+  console.log(params)
+  const qs = Object.keys(params).map(key => {
+    let param = key
+    if(key == 'startDate') {
+      param = 'start'
+    }
+    else if(key == 'endDate') {
+      param = 'end'
+    }
+    return `${param}=${params[key]}`
+  })
   return qs.length ? '?'+qs.join('&') : ''
 }

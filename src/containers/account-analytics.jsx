@@ -39,7 +39,6 @@ export class AccountAnalytics extends React.Component {
     }
     const fetchOpts = {
       account: account,
-      group: this.props.params.group,
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X')
     }
