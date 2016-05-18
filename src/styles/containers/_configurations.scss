@@ -12,8 +12,26 @@
     width: calc(100% - #{$sm-sidebar-width});
   }
 
+  .dark-theme & {
+    .nav-tabs {
+      background-color: rgb(1, 64, 82);
+    }
+    .page-header-layout {
+      background-color: rgb(1, 51, 66);
+    }
+  }
+
   position: fixed;
   z-index: 5;
+}
+
+.configuration-container {
+  padding-top: calc(#{$page-header-height} + #{$bar-height} + #{$bar-height}) !important;
+
+  @include md {
+    padding-top: calc(#{$md-page-header-height} + #{$md-bar-height} + #{$md-bar-height}) !important;
+  }
+
 }
 
 .configurations-container {

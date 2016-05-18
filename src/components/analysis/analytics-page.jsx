@@ -76,7 +76,7 @@ export class AnalyticsPage extends React.Component {
         </Sidebar>
 
         <Content>
-          <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
+          <Nav bsStyle="tabs" className="analysis-nav" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>

@@ -1,8 +1,22 @@
 // Analysis
 // ========
 
+.analysis-nav {
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+
+  .dark-theme & {
+    background-color: rgb(1, 64, 82) !important;
+  }
+}
+
 .analysis-container {
-  padding: 160px 80px 80px 80px !important;
+  padding-top: calc(#{$bar-height} + #{$bar-height}) !important;
+
+  @include md {
+    padding-top: calc(#{$md-bar-height} + #{$md-bar-height}) !important;
+  }
 
   .analysis-data-box {
     width: 40%;

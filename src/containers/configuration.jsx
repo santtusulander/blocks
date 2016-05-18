@@ -172,7 +172,7 @@ export class Configuration extends React.Component {
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (
-      <PageContainer hasSidebar={true} className="configuration-container">
+      <PageContainer hasSidebar={true}>
         <Sidebar>
           <ConfigurationVersions
             fetching={this.props.fetching}
@@ -249,7 +249,7 @@ export class Configuration extends React.Component {
               </NavItem>
             </Nav>
           </div>
-          <div className="container-fluid content-container" style={{ padding: '320px 80px 80px 80px'}}>
+          <div className="container-fluid content-container configuration-container">
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}
