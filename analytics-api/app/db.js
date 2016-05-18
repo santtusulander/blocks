@@ -96,7 +96,8 @@ class AnalyticsDB {
       property     : null,
       service_type : null,
       dimension    : 'global',
-      granularity  : 'hour'
+      granularity  : 'hour',
+      sort_dir     : 'DESC'
     }
 
     // Remove any properties that have undefined values
@@ -532,7 +533,8 @@ class AnalyticsDB {
   }
 
   /**
-   * Get unique visitor totals for a property, group, or account.
+   * Get response error and traffic information for a property, group, or account
+   * broken down by status code and URL.
    *
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
@@ -580,6 +582,68 @@ class AnalyticsDB {
         service_type,
         status_code
       ORDER BY bytes DESC;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+
+  }
+
+  /**
+   * Get traffic information for an account, group, or property broken down by URL.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getTrafficByUrl(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    if (optionsFinal.status_codes) {
+      let statusCodeConditions = [];
+      optionsFinal.status_codes.forEach((code) => {
+        if (code.indexOf('xx') === 1) {
+          statusCodeConditions.push(`status_code LIKE '${code.charAt(0)}%'`);
+        } else {
+          statusCodeConditions.push(`status_code = ${code}`);
+        }
+      });
+      conditions.push(`AND (${statusCodeConditions.join(' OR ')})`);
+    }
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    let queryParameterized = `
+      SELECT
+        url_path AS url,
+        sum(bytes) AS bytes,
+        sum(requests) AS requests
+      FROM url_property_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        url_path
+      ORDER BY ${optionsFinal.sort_by || 'bytes'} ${optionsFinal.sort_dir.toUpperCase()}
+      LIMIT ${optionsFinal.limit || 1000};
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
