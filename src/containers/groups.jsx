@@ -42,7 +42,6 @@ export class Groups extends React.Component {
       return groupID[0] ? `/content/analytics/group/${builtPath}/${groupID[0]}`
         : `/content/analytics/account/${brand}/${account}`
     }
-    const configURLBuilder = (groupID) => `/content/analytics/group/${builtPath}/${groupID}`
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
       <ContentItems
@@ -52,7 +51,6 @@ export class Groups extends React.Component {
         brand={brand}
         breadcrumbs={breadcrumbs}
         className="groups-container"
-        configURLBuilder={configURLBuilder}
         contentItems={this.props.groups}
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}

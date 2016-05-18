@@ -59,10 +59,7 @@ class ConfigurationDefaults extends React.Component {
   }
   handleEtagChange(path) {
     return value => {
-      if(value.target) {
-        value = value.target.value
-      }
-      this.props.changeValue(path, value ? 'strong' : 'weak')
+      this.props.changeValue(path, value)
     }
   }
   changeTTLUnit(path) {
@@ -135,9 +132,14 @@ class ConfigurationDefaults extends React.Component {
           <Col lg={4} xs={6} className="toggle-label">
             Enable e-Tag support
           </Col>
-          <Col lg={8} xs={6}>
-            <Toggle value={config.getIn(policyPaths.honor_etags) === "strong"}
-              changeValue={this.handleEtagChange(policyPaths.honor_etags)}/>
+          <Col lg={5} xs={6}>
+            <Select className="input-select"
+              onSelect={this.handleEtagChange(policyPaths.honor_etags)}
+              value={config.getIn(policyPaths.honor_etags)}
+              options={[
+                ['strong', 'Strong'],
+                ['weak', 'Weak'],
+                ['false', 'False']]}/>
           </Col>
         </Row>
 

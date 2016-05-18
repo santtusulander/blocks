@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.53.1",
+  "version": "0.53.2",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -50,6 +50,7 @@
     "classnames": "^2.2.5",
     "d3": "^3.5.14",
     "dotenv": "^2.0.0",
+    "downloadjs": "^1.4.2",
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
