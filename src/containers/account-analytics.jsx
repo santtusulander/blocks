@@ -109,14 +109,16 @@ export class AccountAnalytics extends React.Component {
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
+    const activeName = this.props.activeAccount ? this.props.activeAccount.get('name') : ''
 
     return (
       <AnalyticsPage
-        activeName={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
+        activeName={activeName}
         changeDateRange={this.changeDateRange}
         changeSPChartType={this.props.uiActions.changeSPChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
+        exportFilenamePart={`${activeName} - ${moment().format()}`}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}

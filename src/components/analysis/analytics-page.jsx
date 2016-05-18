@@ -14,6 +14,9 @@ import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
 import AnalysisPlaybackDemo from './playback-demo'
+import { createCSVExporters } from '../../util/analysis-csv-export'
+
+let exporters = createCSVExporters('')
 
 export class AnalyticsPage extends React.Component {
   constructor(props) {
@@ -29,6 +32,13 @@ export class AnalyticsPage extends React.Component {
     this.exportCSV = this.exportCSV.bind(this)
     this.exportEmail = this.exportEmail.bind(this)
     this.exportPDF = this.exportPDF.bind(this)
+
+    exporters = createCSVExporters(props.exportFilenamePart)
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.exportFilenamePart !== this.props.exportFilenamePart) {
+      exporters = createCSVExporters(nextProps.exportFilenamePart)
+    }
   }
   changeTab(newTab) {
     this.setState({activeTab: newTab})
@@ -37,7 +47,26 @@ export class AnalyticsPage extends React.Component {
     this.setState({activeVideo: video})
   }
   exportCSV() {
-    // export the csv based on this.state.activeTab
+    switch(this.state.activeTab) {
+      case 'traffic':
+        exporters.traffic(this.props.trafficByTime, this.props.serviceTypes)
+        break
+      case 'visitors':
+        exporters.visitors(this.props.visitorsByTime)
+        break
+      case 'sp-report':
+        exporters.serviceProviders(this.props.onOffNet.get('detail'))
+        break
+      case 'file-error':
+        exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
+        break
+      case 'url-report':
+        exporters.urlReport(this.props.urlMetrics, this.props.serviceTypes)
+        break
+      case 'storage-usage':
+        exporters.storageUsage(this.props.storageStats)
+        break
+    }
   }
   exportEmail() {
     // show the send email modal
@@ -76,13 +105,13 @@ export class AnalyticsPage extends React.Component {
         </Sidebar>
 
         <Content>
-          <Nav bsStyle="tabs" activeKey={this.state.activeTab} onSelect={this.changeTab}>
+          <Nav bsStyle="tabs" className="analysis-nav" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
-            <NavItem eventKey="storage-usage">Storage Usage</NavItem>
+            {/* Not in 0.0.52 <NavItem eventKey="storage-usage">Storage Usage</NavItem>*/}
             <NavItem eventKey="playback-demo">Playback Demo</NavItem>
           </Nav>
 
@@ -142,6 +171,7 @@ AnalyticsPage.propTypes = {
   changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
+  exportFilenamePart: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
