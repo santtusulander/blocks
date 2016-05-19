@@ -36,7 +36,7 @@ export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportPa
     .then(parseResponseData)
   */
 
-  return Promise.resolve( { foo: 'bar' })
+  return Promise.resolve(exportParams)
     .then( (res) => {
       console.log('ACTION: exportDownloadFile() -- params:', exportParams)
       return res;
@@ -49,7 +49,7 @@ export const exportsSendEmail = createAction(EXPORTS_SEND_EMAIL, (exportParams) 
   //
   */
 
-  return Promise.resolve( { foo: 'bar' })
+  return Promise.resolve(exportParams)
     .then( (res) => {
       console.log('ACTION: exportSendEmail() -- params:', exportParams)
       return res;

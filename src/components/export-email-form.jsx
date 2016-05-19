@@ -9,6 +9,7 @@ import {
 
   } from 'react-bootstrap'
 
+import Immutable from 'immutable'
 
 const frequencyOptions = [
     {label: 'One-time, send now', value: 'one-time'},
@@ -34,7 +35,8 @@ class ExportEmailForm extends React.Component {
   }
   onSubmit(e) {
     e.preventDefault()
-    this.props.onSend()
+
+    this.props.onSend( this.props.formValues )
   }
   onCancel(e) {
     this.props.onCancel()
@@ -94,6 +96,11 @@ ExportEmailForm.displayName = 'ExportEmailForm'
 ExportEmailForm.propTypes = {
   onSend: React.PropTypes.func,
   onCancel: React.PropTypes.func,
+  formValues: React.PropTypes.instanceOf(Immutable.Map)
+}
+
+ExportEmailForm.defaultProps = {
+  formValues: Immutable.Map()
 }
 
 module.exports = ExportEmailForm

@@ -112,8 +112,14 @@ export class AnalyticsPage extends React.Component {
     this.hideExportPanel();
   }
 
-  onSend(){
-    console.log('--- send EMAIL ---')
+  onSend( formValues ){
+    this.props.exportsActions.exportsSendEmail({
+      formValues: formValues,
+      reportType: this.state.activeTab,
+      startDate:  this.props.startDate,
+      endDate:    this.props.endDate
+    })
+
     this.hideExportPanel();
   }
 
