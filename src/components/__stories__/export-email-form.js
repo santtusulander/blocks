@@ -14,5 +14,5 @@ storiesOf('ExportEmailForm', module)
     </ThemeWrap>
   ))
   .add('ExportEmailForm', () => (
-      <ExportEmailForm  onSend={ action('onSend') } onCancel={ action('onCancel')}  />
+      <ExportEmailForm  onSend={ action('onSend') } onCancel={ action('onCancel')}  changeValue={ action('changeValue') } />
   ))

@@ -3,7 +3,9 @@ import Immutable from 'immutable';
 import { storiesOf, action } from '@kadira/storybook';
 
 const ThemeWrap = require('./theme-wrap.jsx');
-const ExportPanel = require('../export-panel.jsx');
+//const ExportPanel = require('../export-panel.jsx');
+
+import { ExportPanel } from '../export-panel.jsx'
 
 storiesOf('ExportPanel', module)
   .addDecorator((story) => (
@@ -13,16 +15,17 @@ storiesOf('ExportPanel', module)
   ))
   .add('Download (dark)', () => (
       <ExportPanel
-          activeTab={1}
+          show={true}
+          exportType={ 'export_pdf' }
           onDownload={ action('onDownload') }
           onCancel={ action('onCancel') }
           onSend={ action('onSend') }
-
       />
   ))
   .add('Email (dark)', () => (
       <ExportPanel
-          activeTab={2}
+          show={true}
+          exportType={ 'export_email' }
           onDownload={ action('onDownload') }
           onCancel={ action('onCancel') }
           onSend={ action('onSend') }

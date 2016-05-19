@@ -22,12 +22,22 @@ class ExportEmailForm extends React.Component {
   constructor(props){
     super(props);
 
+    this.onCancel = this.onCancel.bind(this);
+    this.changeValue = this.changeValue.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit(e){
-    e.preventD
-    this.props.onSend();
+  changeValue(valPath) {
+    return (e) => {
+      this.props.changeValue(valPath, e.target.value)
+    }
+  }
+  onSubmit(e) {
+    e.preventDefault()
+    this.props.onSend()
+  }
+  onCancel(e) {
+    this.props.onCancel()
   }
 
   render(){
@@ -35,39 +45,44 @@ class ExportEmailForm extends React.Component {
       <form className='ExportEmailForm' onSubmit={this.onSubmit}>
 
         <Input
-          type="email"
+          type="text"
           label="Recipients"
           placeholder="Enter recipients"
           addonBefore="To"
+          onChange={this.changeValue(['to'])}
         />
 
         <Input
-          type="email"
+          type="text"
           addonBefore="Cc"
           placeholder="Enter text"
+          onChange={this.changeValue(['cc'])}
         />
 
         <Input
           type='text'
           label='Subject'
           placeholder='Trafic overview report'
+          onChange={this.changeValue(['subject'])}
         />
 
         <Input
           type='textarea'
           label='Message'
           placeholder=''
+          onChange={this.changeValue(['message'])}
         />
 
-        <FormGroup controlId="frequencySelect">
+      {/*<FormGroup controlId="frequencySelect">
           <ControlLabel>Email frequency</ControlLabel>
           <FormControl componentClass="select" placeholder="select">
             { frequencyOptions }
           </FormControl>
         </FormGroup>
+      */}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={this.props.onCancel}>Cancel</Button>
+          <Button bsStyle="primary" className="btn-outline" onClick={this.onCancel}>Cancel</Button>
           <Button type="submit" bsStyle="primary">Send</Button>
         </ButtonToolbar>
 

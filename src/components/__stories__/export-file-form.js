@@ -1,11 +1,12 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { storiesOf, action } from '@kadira/storybook';
+import { ExportFileForm, EXPORT_TYPE_PDF, EXPORT_TYPE_CSV } from '../export-file-form.jsx'
 
 const ThemeWrap = require('./theme-wrap.jsx');
-const ExportPdfForm = require('../export-pdf-form.jsx');
 
-storiesOf('ExportPdfForm', module)
+
+storiesOf('ExportFileForm', module)
   .addDecorator((story) => (
     <ThemeWrap >
       <div style={ {width: '70%', padding: '3%', border: '1px solid #ccc'} }>
@@ -13,6 +14,6 @@ storiesOf('ExportPdfForm', module)
       </div>
     </ThemeWrap>
   ))
-  .add('ExportPdfForm', () => (
-      <ExportPdfForm  onDownload={ action('onSend') } onCancel={ action('onCancel')}  />
+  .add('ExportFileForm', () => (
+      <ExportFileForm fileType={ EXPORT_TYPE_PDF } onChange={ action('change') } onDownload={ action('onDownload') } onCancel={ action('onCancel')}  />
   ))
