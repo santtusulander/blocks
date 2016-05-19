@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import {urlBase, mapReducers} from '../util'
 
 const GROUP_CREATED = 'GROUP_CREATED'
 const GROUP_DELETED = 'GROUP_DELETED'
@@ -21,80 +21,89 @@ const emptyGroups = Immutable.Map({
 
 // REDUCERS
 
+export function createSuccess(state, action) {
+  const newGroup = Immutable.fromJS(action.payload)
+  return state.merge({
+    activeGroup: newGroup,
+    allGroups: state.get('allGroups').push(newGroup.get('group_id'))
+  })
+}
+
+export function deleteSuccess(state, action) {
+  let newAllGroups = state.get('allGroups')
+    .filterNot(group => {
+      return group === action.payload.id
+    })
+  return state.merge({
+    allGroups: newAllGroups,
+    fetching: false
+  })
+}
+
+export function deleteFailure(state, action) {
+  return state.merge({
+    activeGroup: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    activeGroup: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    activeGroup: null,
+    fetching: false
+  })
+}
+
+export function fetchAllSuccess(state, action) {
+  return state.merge({
+    allGroups: Immutable.fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchAllFailure(state) {
+  return state.merge({
+    allGroups: Immutable.List(),
+    fetching: false
+  })
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function updateSuccess(state) {
+  return state.merge({
+    activeGroup: null,
+    fetching: false
+  })
+}
+
+export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function changeActive(state, action) {
+  return state.set('activeGroup', action.payload)
+}
+
 export default handleActions({
-  GROUP_CREATED: {
-    next(state, action) {
-      const newGroup = Immutable.fromJS(action.payload)
-      return state.merge({
-        activeGroup: newGroup,
-        allGroups: state.get('allGroups').push(newGroup.get('group_id'))
-      })
-    }
-  },
-  GROUP_DELETED: {
-    next(state, action) {
-      let newAllGroups = state.get('allGroups')
-        .filterNot(group => {
-          return group === action.payload.id
-        })
-      return state.merge({
-        allGroups: newAllGroups,
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
-    }
-  },
-  GROUP_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        activeGroup: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        activeGroup: null,
-        fetching: false
-      })
-    }
-  },
-  GROUP_FETCHED_ALL: {
-    next(state, action) {
-      return state.merge({
-        allGroups: Immutable.fromJS(action.payload.data),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        allGroups: Immutable.List(),
-        fetching: false
-      })
-    }
-  },
-  GROUP_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  GROUP_UPDATED: {
-    next(state) {
-      return state.merge({
-        activeGroup: null,
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
-    }
-  },
-  ACTIVE_GROUP_CHANGED: (state, action) => {
-    return state.set('activeGroup', action.payload)
-  }
+  GROUP_CREATED: createSuccess,
+  GROUP_DELETED: mapReducers(deleteSuccess, deleteFailure),
+  GROUP_FETCHED: mapReducers(fetchSuccess, fetchFailure),
+  GROUP_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  GROUP_START_FETCH: startFetch,
+  GROUP_UPDATED: mapReducers(updateSuccess, updateFailure),
+  ACTIVE_GROUP_CHANGED: changeActive
 }, emptyGroups)
 
 // ACTIONS

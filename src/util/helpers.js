@@ -51,11 +51,8 @@ export function filterAccountsByUserName(accounts, username) {
     else if(account.get('id') < 20000) {
       return username === 'UDNtest'
     }
-    else if(account.get('id') < 40000) {
-      return username === 'UDNstag'
-    }
     else {
-      return username === 'UDNprod'
+      return username === 'UDNprod' || username === 'UDNstag'
     }
   })
 }
