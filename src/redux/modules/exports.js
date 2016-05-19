@@ -1,0 +1,67 @@
+import {createAction} from 'redux-actions'
+import axios from 'axios'
+import {handleActions} from 'redux-actions'
+import Immutable from 'immutable'
+
+//import { urlBase, mapReducers, parseResponseData } from '../util'
+
+const EXPORTS_SHOW_DIALOG = 'EXPORTS_SHOW_DIALOG'
+const EXPORTS_HIDE_DIALOG = 'EXPORTS_HIDE_DIALOG'
+const EXPORTS_DOWNLOAD_FILE = 'EXPORTS_DOWNLOAD_FILE'
+
+const defaultState = Immutable.Map({
+    dialogVisible: false,
+    exportType: 'export_pdf',
+});
+
+
+// ACTIONS
+export const exportsShowDialog = createAction(EXPORTS_SHOW_DIALOG); /* (payload) => {
+//  return payload;
+})
+*/
+export const exportsHideDialog = createAction(EXPORTS_HIDE_DIALOG, (payload) => {
+
+})
+
+export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportParams) => {
+
+  /* TODO: Make API call similar to this
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+  */
+
+  return Promise.resolve( { foo: 'bar' })
+    .then( (res) => {
+      console.log('ACTION: exportDownloadFile() -- params:', exportParams)
+      return res;
+    });
+})
+
+//REDUCERS
+export function showDialog(state, action) {
+  let payload = Immutable.fromJS(action.payload)
+  payload = payload.set('dialogVisible', true)
+
+  return state.merge( payload );
+}
+
+export function hideDialog(state, action) {
+  return state.set('dialogVisible',false)
+}
+
+export function downloadFile(state, action) {
+  console.log( 'REDUCER: downloadFile() -- action:', action);
+
+  return state
+}
+
+export default handleActions({
+    EXPORTS_SHOW_DIALOG: showDialog,
+    EXPORTS_HIDE_DIALOG: hideDialog,
+    EXPORTS_DOWNLOAD_FILE: downloadFile,
+}, defaultState )
