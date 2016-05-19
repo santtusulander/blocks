@@ -31,20 +31,7 @@ export class PropertyAnalytics extends React.Component {
   }
 
   componentWillMount() {
-    this.props.hostActions.fetchHosts(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      this.props.params.account
-    )
-    this.props.groupActions.fetchGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group
-    )
+    this.props.fetchInit()
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
@@ -53,54 +40,11 @@ export class PropertyAnalytics extends React.Component {
     }
   }
   fetchData(property) {
-    if(!property) {
-      property = this.props.location.query.name
-    }
-    const fetchOpts = {
-      account: this.props.params.account,
-      group: this.props.params.group,
-      property: property,
-      startDate: this.state.startDate.format('X'),
-      endDate: this.state.endDate.format('X')
-    }
-    const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-    this.props.trafficActions.startFetching()
-    this.props.visitorsActions.startFetching()
-    this.props.reportsActions.startFetching()
-    this.props.metricsActions.startHostFetching()
-    Promise.all([
-      this.props.metricsActions.fetchHostMetrics({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        startDate: this.state.startDate.format('X'),
-        endDate: this.state.endDate.format('X')
-      })
-    ]).then(this.props.metricsActions.finishFetching)
-    Promise.all([
-      this.props.trafficActions.fetchByTime(fetchOpts),
-      this.props.trafficActions.fetchByCountry(fetchOpts),
-      this.props.trafficActions.fetchTotalEgress(fetchOpts),
-      this.props.trafficActions.fetchOnOffNet(onOffOpts),
-      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
-      this.props.trafficActions.fetchStorage()
-    ]).then(this.props.trafficActions.finishFetching)
-    Promise.all([
-      this.props.visitorsActions.fetchByTime(fetchOpts),
-      this.props.visitorsActions.fetchByCountry(fetchOpts),
-      this.props.visitorsActions.fetchByBrowser(fetchOpts),
-      this.props.visitorsActions.fetchByOS(fetchOpts)
-    ]).then(this.props.visitorsActions.finishFetching)
-    Promise.all([
-      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
-      this.props.reportsActions.fetchURLMetrics()
-    ]).then(this.props.reportsActions.finishFetching)
-  }
-  changeTab(newTab) {
-    this.setState({activeTab: newTab})
+    this.props.fetchData(
+      property || this.props.location.query.name,
+      this.state.startDate,
+      this.state.endDate
+    )
   }
 
   changeDateRange(startDate, endDate) {
@@ -169,34 +113,29 @@ export class PropertyAnalytics extends React.Component {
 
 PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
-  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
+  fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
-  groupActions: React.PropTypes.object,
-  hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
-  reportsActions: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
-  trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   urlMetrics: React.PropTypes.instanceOf(Immutable.List),
-  visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
@@ -232,16 +171,72 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const hostActions = bindActionCreators(hostActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const reportsActions = bindActionCreators(reportsActionCreators, dispatch)
+  const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
+  const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
+
+  function fetchData(property, start, end) {
+    const {account, group} = ownProps.params
+    const fetchOpts = {
+      account: account,
+      group: group,
+      property: property,
+      startDate: start.format('X'),
+      endDate: end.format('X')
+    }
+    const onOffOpts = Object.assign({}, fetchOpts)
+    onOffOpts.granularity = 'day'
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
+    trafficActions.startFetching()
+    visitorsActions.startFetching()
+    reportsActions.startFetching()
+    metricsActions.startHostFetching()
+    Promise.all([
+      metricsActions.fetchHostMetrics({
+        account: account,
+        group: group,
+        startDate: start.format('X'),
+        endDate: end.format('X')
+      })
+    ]).then(metricsActions.finishFetching)
+    Promise.all([
+      trafficActions.fetchByTime(fetchOpts),
+      trafficActions.fetchByCountry(fetchOpts),
+      trafficActions.fetchTotalEgress(fetchOpts),
+      trafficActions.fetchOnOffNet(onOffOpts),
+      trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      trafficActions.fetchStorage()
+    ]).then(trafficActions.finishFetching)
+    Promise.all([
+      visitorsActions.fetchByTime(fetchOpts),
+      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByBrowser(fetchOpts),
+      visitorsActions.fetchByOS(fetchOpts)
+    ]).then(visitorsActions.finishFetching)
+    Promise.all([
+      reportsActions.fetchFileErrorsMetrics(fetchOpts),
+      reportsActions.fetchURLMetrics(fetchOpts)
+    ]).then(reportsActions.finishFetching)
+  }
+
+  function fetchInit() {
+    const {brand, account, group} = ownProps.params
+    hostActions.fetchHosts(brand, account, group)
+    accountActions.fetchAccount(brand, account)
+    groupActions.fetchGroup(brand, account, group)
+  }
+
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
-    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
+    fetchData: fetchData,
+    fetchInit: fetchInit,
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 
