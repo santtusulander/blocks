@@ -204,7 +204,7 @@ class AnalysisVisitors extends React.Component {
           <thead>
             <tr>
               <TableSorter {...browserSorterProps} column="name">
-                Country
+                Browser
               </TableSorter>
               <TableSorter {...browserSorterProps} column="total">
                 Total Visitors

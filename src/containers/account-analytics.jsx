@@ -30,56 +30,15 @@ export class AccountAnalytics extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.account !== this.props.params.account) {
-      this.fetchData(nextProps.params.account)
+      this.props.fetchData(nextProps.params.account)
     }
   }
   fetchData(account) {
-    if(!account) {
-      account = this.props.params.account
-    }
-    const fetchOpts = {
-      account: account,
-      group: this.props.params.group,
-      startDate: this.state.startDate.format('X'),
-      endDate: this.state.endDate.format('X')
-    }
-    const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-    this.props.trafficActions.startFetching()
-    this.props.visitorsActions.startFetching()
-    this.props.reportsActions.startFetching()
-    this.props.accountActions.fetchAccount(
-      this.props.params.brand,
-      account
+    this.props.fetchData(
+      account || this.props.params.account,
+      this.state.startDate,
+      this.state.endDate
     )
-    this.props.metricsActions.startAccountFetching()
-    Promise.all([
-      this.props.metricsActions.fetchAccountMetrics({
-        startDate: this.state.startDate.format('X'),
-        endDate: this.state.endDate.format('X')
-      })
-    ]).then(this.props.metricsActions.finishFetching)
-    Promise.all([
-      this.props.trafficActions.fetchByTime(fetchOpts),
-      this.props.trafficActions.fetchByCountry(fetchOpts),
-      this.props.trafficActions.fetchTotalEgress(fetchOpts),
-      this.props.trafficActions.fetchOnOffNet(onOffOpts),
-      this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
-      this.props.trafficActions.fetchStorage()
-    ]).then(this.props.trafficActions.finishFetching)
-    Promise.all([
-      this.props.visitorsActions.fetchByTime(fetchOpts),
-      this.props.visitorsActions.fetchByCountry(fetchOpts),
-      this.props.visitorsActions.fetchByBrowser(fetchOpts),
-      this.props.visitorsActions.fetchByOS(fetchOpts)
-    ]).then(this.props.visitorsActions.finishFetching)
-    Promise.all([
-      this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts),
-      this.props.reportsActions.fetchURLMetrics(fetchOpts)
-    ]).then(this.props.reportsActions.finishFetching)
   }
   changeDateRange(startDate, endDate) {
     const dateRange =
@@ -109,14 +68,16 @@ export class AccountAnalytics extends React.Component {
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
+    const activeName = this.props.activeAccount ? this.props.activeAccount.get('name') : ''
 
     return (
       <AnalyticsPage
-        activeName={this.props.activeAccount ? this.props.activeAccount.get('name') : ''}
+        activeName={activeName}
         changeDateRange={this.changeDateRange}
         changeSPChartType={this.props.uiActions.changeSPChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
+        exportFilenamePart={`${activeName} - ${moment().format()}`}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}
@@ -147,31 +108,27 @@ export class AccountAnalytics extends React.Component {
 
 AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
-  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  fetchData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
-  reportsActions: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   spChartType: React.PropTypes.string,
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
-  trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   urlMetrics: React.PropTypes.instanceOf(Immutable.List),
   username: React.PropTypes.string,
-  visitorsActions: React.PropTypes.object,
   visitorsByBrowser: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
@@ -207,14 +164,61 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const reportsActions = bindActionCreators(reportsActionCreators, dispatch)
+  const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
+  const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
+
+  function fetchData (account, start, end) {
+    const fetchOpts = {
+      account: account,
+      startDate: start.format('X'),
+      endDate: end.format('X')
+    }
+    const onOffOpts = Object.assign({}, fetchOpts)
+    onOffOpts.granularity = 'day'
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
+    trafficActions.startFetching()
+    visitorsActions.startFetching()
+    reportsActions.startFetching()
+    accountActions.fetchAccount(
+      ownProps.params.brand,
+      account
+    )
+    metricsActions.startAccountFetching()
+    Promise.all([
+      metricsActions.fetchAccountMetrics({
+        startDate: start.format('X'),
+        endDate: end.format('X')
+      })
+    ]).then(metricsActions.finishFetching)
+    Promise.all([
+      trafficActions.fetchByTime(fetchOpts),
+      trafficActions.fetchByCountry(fetchOpts),
+      trafficActions.fetchTotalEgress(fetchOpts),
+      trafficActions.fetchOnOffNet(onOffOpts),
+      trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      trafficActions.fetchStorage()
+    ]).then(trafficActions.finishFetching)
+    Promise.all([
+      visitorsActions.fetchByTime(fetchOpts),
+      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByBrowser(fetchOpts),
+      visitorsActions.fetchByOS(fetchOpts)
+    ]).then(visitorsActions.finishFetching)
+    Promise.all([
+      reportsActions.fetchFileErrorsMetrics(fetchOpts),
+      reportsActions.fetchURLMetrics(fetchOpts)
+    ]).then(reportsActions.finishFetching)
+  }
+
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
-    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
+    fetchData: fetchData,
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

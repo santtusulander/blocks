@@ -3,12 +3,12 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import {urlBase, mapReducers} from '../util'
 
 const CONTENT_FETCHED = 'CONTENT_FETCHED'
 const CONTENT_START_FETCH = 'CONTENT_START_FETCH'
 
-const emptyContent = Immutable.Map({
+export const emptyContent = Immutable.Map({
   accounts: Immutable.fromJS([
     {"account_id": 1, "name": "Disney"},
     {"account_id": 2, "name": "Some other company"}
@@ -46,23 +46,26 @@ const emptyContent = Immutable.Map({
 
 // REDUCERS
 
+export function fetchSuccess(state, action) {
+  return state.merge({
+    accounts: Immutable.fromJS(action.payload.accounts),
+    fetching: false,
+    groups: Immutable.fromJS(action.payload.groups),
+    properties: Immutable.fromJS(action.payload.properties)
+  })
+}
+
+export function fetchFailed() {
+  return emptyContent
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
 export default handleActions({
-  CONTENT_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        accounts: Immutable.fromJS(action.payload.accounts),
-        fetching: false,
-        groups: Immutable.fromJS(action.payload.groups),
-        properties: Immutable.fromJS(action.payload.properties)
-      })
-    },
-    throw() {
-      return emptyContent
-    }
-  },
-  CONTENT_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  }
+  CONTENT_FETCHED: mapReducers(fetchSuccess, fetchFailed),
+  CONTENT_START_FETCH: startFetch
 }, emptyContent)
 
 // ACTIONS

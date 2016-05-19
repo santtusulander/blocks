@@ -18,7 +18,7 @@ const emptyReports = Immutable.Map({
 
 export function fetchUrlMetricsSuccess(state, action) {
   return state.merge({
-    urlMetrics: Immutable.fromJS(action.payload)
+    urlMetrics: Immutable.fromJS(action.payload.data)
   })
 }
 
@@ -66,24 +66,9 @@ export default handleActions({
 
 // ACTIONS
 
-export const fetchURLMetrics = createAction(REPORTS_URL_METRICS_FETCHED, () => {
-  return Promise.resolve([
-    {
-      url: 'www.abc.com',
-      bytes: 1000,
-      requests: 287536
-    },
-    {
-      url: 'www.sirut.com/ksdjg/sefksgh/ksjehfsdg.jpg',
-      bytes: 2000,
-      requests: 467567
-    },
-    {
-      url: 'www.rtytyu.com/dfgfghfgh/sdf/dfgdr.mp4',
-      bytes: 3000,
-      requests: 343456
-    }
-  ])
+export const fetchURLMetrics = createAction(REPORTS_URL_METRICS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/urls${qsBuilder(opts)}`)
+    .then(parseResponseData);
 })
 
 export const fetchFileErrorsMetrics = createAction(REPORTS_FILE_ERROR_METRICS_FETCHED, opts => {

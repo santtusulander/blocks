@@ -6,7 +6,7 @@
 This is a portal for administering the Ericsson UDN.
 
 ## Development Requirements
-This project requires the use of Node, Ruby, Gulp, and Sass.
+This project requires the use of Node and Sass.
 
 ## Installation
 

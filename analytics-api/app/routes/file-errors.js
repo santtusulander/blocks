@@ -13,11 +13,12 @@ function routeFileErrors(req, res) {
 
   let params = req.query;
   let errors = validator.validate(params, {
-    start    : {required: true, type: 'Timestamp'},
-    end      : {required: false, type: 'Timestamp'},
-    account  : {required: true, type: 'ID'},
-    group    : {required: false, type: 'ID'},
-    property : {required: false, type: 'Property'}
+    start        : {required: true, type: 'Timestamp'},
+    end          : {required: false, type: 'Timestamp'},
+    account      : {required: true, type: 'ID'},
+    group        : {required: false, type: 'ID'},
+    property     : {required: false, type: 'Property'},
+    service_type : {required: false, type: 'Service'}
   });
 
   if (errors) {

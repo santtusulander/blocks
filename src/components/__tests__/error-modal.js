@@ -44,12 +44,12 @@ describe('ErrorModal', () => {
 
   it('should call reloadPage', () => {
 
-    const modal = shallow(<ErrorModal />)
-    let btns = modal.find('Button');
 
     //should call reload
     ErrorModal.prototype.reloadPage = jest.genMockFunction()
+    const modal = shallow(<ErrorModal />)
 
+    let btns = modal.find('Button');
     btns.last().simulate('click');
     expect(ErrorModal.prototype.reloadPage.mock.calls.length).toBe(1);
 
