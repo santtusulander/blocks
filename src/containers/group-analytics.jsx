@@ -21,11 +21,13 @@ export class GroupAnalytics extends React.Component {
     this.state = {
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
 
     this.changeDateRange = this.changeDateRange.bind(this)
   }
+
   componentWillMount() {
     this.props.groupActions.fetchGroups(
       this.props.params.brand,
@@ -92,6 +94,7 @@ export class GroupAnalytics extends React.Component {
       this.props.reportsActions.fetchURLMetrics()
     ]).then(this.props.reportsActions.finishFetching)
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -105,6 +108,7 @@ export class GroupAnalytics extends React.Component {
       startDate: startDate
     }, this.fetchData)
   }
+
   render() {
     const availableGroups = this.props.groups.map(group => {
       return {
@@ -121,36 +125,36 @@ export class GroupAnalytics extends React.Component {
 
     return (
       <AnalyticsPage
-        activeName={activeGroupName}
-        changeDateRange={this.changeDateRange}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
-        dateRange={this.state.dateRange}
-        endDate={this.state.endDate}
-        exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
-        fetchingMetrics={this.props.fetchingMetrics}
-        fileErrorSummary={this.props.fileErrorSummary}
-        fileErrorURLs={this.props.fileErrorURLs}
-        metrics={metrics}
-        onOffNet={this.props.onOffNet}
-        onOffNetToday={this.props.onOffNetToday}
-        reportsFetching={this.props.reportsFetching}
-        serviceTypes={this.props.serviceTypes}
-        siblings={availableGroups}
-        spChartType={this.props.spChartType}
-        startDate={this.state.startDate}
-        storageStats={this.props.storageStats}
-        toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
-        totalEgress={this.props.totalEgress}
-        trafficByCountry={this.props.trafficByCountry}
-        trafficByTime={this.props.trafficByTime}
-        trafficFetching={this.props.trafficFetching}
-        type="group"
-        urlMetrics={this.props.urlMetrics}
-        visitorsByBrowser={this.props.visitorsByBrowser}
-        visitorsByCountry={this.props.visitorsByCountry}
-        visitorsByOS={this.props.visitorsByOS}
-        visitorsByTime={this.props.visitorsByTime}
-        visitorsFetching={this.props.visitorsFetching}/>
+      activeName={activeGroupName}
+      changeDateRange={this.changeDateRange}
+      changeSPChartType={this.props.uiActions.changeSPChartType}
+      dateRange={this.state.dateRange}
+      endDate={this.state.endDate}
+      exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
+      fetchingMetrics={this.props.fetchingMetrics}
+      fileErrorSummary={this.props.fileErrorSummary}
+      fileErrorURLs={this.props.fileErrorURLs}
+      metrics={metrics}
+      onOffNet={this.props.onOffNet}
+      onOffNetToday={this.props.onOffNetToday}
+      reportsFetching={this.props.reportsFetching}
+      serviceTypes={this.props.serviceTypes}
+      siblings={availableGroups}
+      spChartType={this.props.spChartType}
+      startDate={this.state.startDate}
+      storageStats={this.props.storageStats}
+      toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+      totalEgress={this.props.totalEgress}
+      trafficByCountry={this.props.trafficByCountry}
+      trafficByTime={this.props.trafficByTime}
+      trafficFetching={this.props.trafficFetching}
+      type="group"
+      urlMetrics={this.props.urlMetrics}
+      visitorsByBrowser={this.props.visitorsByBrowser}
+      visitorsByCountry={this.props.visitorsByCountry}
+      visitorsByOS={this.props.visitorsByOS}
+      visitorsByTime={this.props.visitorsByTime}
+      visitorsFetching={this.props.visitorsFetching}/>
     )
   }
 }

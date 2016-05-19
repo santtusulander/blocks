@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -11,7 +12,10 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
 
+import * as exportsActionCreators from '../redux/modules/exports';
+
 import AnalyticsPage from '../components/analysis/analytics-page'
+
 import { filterAccountsByUserName } from '../util/helpers'
 
 export class AccountAnalytics extends React.Component {
@@ -21,8 +25,11 @@ export class AccountAnalytics extends React.Component {
     this.state = {
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
+
+    //this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
@@ -81,6 +88,7 @@ export class AccountAnalytics extends React.Component {
       this.props.reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(this.props.reportsActions.finishFetching)
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -105,6 +113,7 @@ export class AccountAnalytics extends React.Component {
         link: `/content/analytics/account/${this.props.params.brand}/${account.get('id')}`,
         name: account.get('name')
       }
+
     })
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
@@ -142,8 +151,12 @@ export class AccountAnalytics extends React.Component {
         visitorsByCountry={this.props.visitorsByCountry}
         visitorsByOS={this.props.visitorsByOS}
         visitorsByTime={this.props.visitorsByTime}
-        visitorsFetching={this.props.visitorsFetching}/>
-    )
+        visitorsFetching={this.props.visitorsFetching}
+
+        exportsActions={this.props.exportsActions}
+        exportsDialogState={this.props.exportsDialogState}
+      />
+    );
   }
 }
 
@@ -178,7 +191,8 @@ AccountAnalytics.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
-  visitorsFetching: React.PropTypes.bool
+  visitorsFetching: React.PropTypes.bool,
+
 }
 
 function mapStateToProps(state) {
@@ -205,7 +219,9 @@ function mapStateToProps(state) {
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsByOS: state.visitors.get('byOS'),
     visitorsByTime: state.visitors.get('byTime'),
-    visitorsFetching: state.visitors.get('fetching')
+    visitorsFetching: state.visitors.get('fetching'),
+
+    exportsDialogState: state.exports.toObject(),
   };
 }
 
@@ -216,7 +232,9 @@ function mapDispatchToProps(dispatch) {
     reportsActions: bindActionCreators(reportsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
+    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch),
+
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
   };
 }
 

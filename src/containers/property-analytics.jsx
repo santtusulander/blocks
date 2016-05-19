@@ -20,6 +20,8 @@ export class PropertyAnalytics extends React.Component {
     super(props);
 
     this.state = {
+      activeTab: 'traffic',
+      activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
       startDate: moment().utc().startOf('month')
@@ -27,6 +29,7 @@ export class PropertyAnalytics extends React.Component {
 
     this.changeDateRange = this.changeDateRange.bind(this)
   }
+
   componentWillMount() {
     this.props.hostActions.fetchHosts(
       this.props.params.brand,
@@ -99,6 +102,7 @@ export class PropertyAnalytics extends React.Component {
   changeTab(newTab) {
     this.setState({activeTab: newTab})
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
