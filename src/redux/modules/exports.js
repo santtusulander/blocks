@@ -8,6 +8,7 @@ import Immutable from 'immutable'
 const EXPORTS_SHOW_DIALOG = 'EXPORTS_SHOW_DIALOG'
 const EXPORTS_HIDE_DIALOG = 'EXPORTS_HIDE_DIALOG'
 const EXPORTS_DOWNLOAD_FILE = 'EXPORTS_DOWNLOAD_FILE'
+const EXPORTS_SEND_EMAIL = 'EXPORTS_SEND_EMAIL'
 
 const defaultState = Immutable.Map({
     dialogVisible: false,
@@ -42,6 +43,21 @@ export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportPa
     });
 })
 
+export const exportsSendEmail = createAction(EXPORTS_SEND_EMAIL, (exportParams) => {
+
+  /* TODO: Make API call
+  //
+  */
+
+  return Promise.resolve( { foo: 'bar' })
+    .then( (res) => {
+      console.log('ACTION: exportSendEmail() -- params:', exportParams)
+      return res;
+    });
+
+})
+
+
 //REDUCERS
 export function showDialog(state, action) {
   let payload = Immutable.fromJS(action.payload)
@@ -55,7 +71,13 @@ export function hideDialog(state, action) {
 }
 
 export function downloadFile(state, action) {
-  console.log( 'REDUCER: downloadFile() -- action:', action);
+  console.log( 'REDUCER: downloadFile() -- action:', action)
+
+  return state
+}
+
+export function sendEmail(state, action) {
+  console.log( 'REDUCER: sendEmail() -- action:', action)
 
   return state
 }
@@ -64,4 +86,5 @@ export default handleActions({
     EXPORTS_SHOW_DIALOG: showDialog,
     EXPORTS_HIDE_DIALOG: hideDialog,
     EXPORTS_DOWNLOAD_FILE: downloadFile,
+    EXPORTS_SEND_EMAIL: sendEmail,
 }, defaultState )
