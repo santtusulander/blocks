@@ -20,4 +20,11 @@ describe('Exports Module', () => {
     expect(newState.get('dialogVisible')).toBe(false);
   });
 
+  it('should download', ()=> {
+
+  });
+  
+  it('should send email', ()=> {
+
+  });
 });
