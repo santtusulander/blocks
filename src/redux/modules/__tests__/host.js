@@ -17,7 +17,6 @@ const {
 } = require('../host.js');
 
 describe('Host Module', () => {
-
   it('should handle create host success', () => {
     const state = Immutable.fromJS({
       allHosts: []
@@ -50,11 +49,27 @@ describe('Host Module', () => {
 
   it('should handle fetch host success', () => {
     const state = Immutable.fromJS({
-      activeHost: {id: 1}
+      activeHost: null
     });
-    const newState = fetchSuccess(state, {payload: {id: 2}});
-    expect(newState.get('activeHost').get('id')).toBe(2);
-    expect(newState.get('fetching')).toBeFalsy();
+    const payload = { payload: { services: [{ configurations: [{ config_id: 1 }] }] } }
+    const newState = fetchSuccess(state, payload);
+    const expectedState = Immutable.fromJS({
+      fetching: false,
+      activeHost: {
+        services: [
+          {
+            active_configurations: [{ config_id: 1 }],
+            configurations: [{
+              config_id: 1,
+              default_policy: {policy_rules:[]},
+              request_policy: {policy_rules:[]},
+              response_policy: {policy_rules:[]}
+            }]
+          }
+        ]
+      }
+    })
+    expect(Immutable.is(expectedState, newState)).toBeTruthy();
   });
 
   it('should handle fetch host failure', () => {

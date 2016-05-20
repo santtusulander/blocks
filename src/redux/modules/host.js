@@ -67,8 +67,27 @@ export function deleteFailure(state, action) {
 }
 
 export function fetchSuccess(state, action) {
+  let host = action.payload
+  host.services[0].configurations = host.services[0].configurations.map(config => {
+    if(!config.default_policy || !config.default_policy.policy_rules) {
+      config.default_policy = {policy_rules:[]}
+    }
+    if(!config.request_policy || !config.request_policy.policy_rules) {
+      config.request_policy = {policy_rules:[]}
+    }
+    if(!config.response_policy || !config.response_policy.policy_rules) {
+      config.response_policy = {policy_rules:[]}
+    }
+    return config;
+  })
+  if(!host.services[0].active_configurations ||
+     !host.services[0].active_configurations.length) {
+    host.services[0].active_configurations = [{
+      config_id: host.services[0].configurations[0].config_id
+    }]
+  }
   return state.merge({
-    activeHost: Immutable.fromJS(action.payload),
+    activeHost: Immutable.fromJS(host),
     fetching: false
   })
 }
