@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import {urlBase, mapReducers} from '../util'
 
 const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'
@@ -40,98 +40,89 @@ const defaultPolicy = {policy_rules: [
 
 // REDUCERS
 
+export function createSuccess(state, action) {
+  const newHost = Immutable.fromJS(action.payload)
+  return state.merge({
+    activeHost: newHost,
+    allHosts: state.get('allHosts').push(newHost.get('host_id'))
+  })
+}
+
+export function deleteSuccess(state, action) {
+  let newAllHosts = state.get('allHosts')
+    .filterNot(group => {
+      return group === action.payload.id
+    })
+  return state.merge({
+    allHosts: newAllHosts,
+    fetching: false
+  })
+}
+
+export function deleteFailure(state, action) {
+  return state.merge({
+    activeHost: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    activeHost: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    activeHost: null,
+    fetching: false
+  })
+}
+
+export function fetchAllSuccess(state, action) {
+  return state.merge({
+    allHosts: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchAllFailure(state) {
+  return state.merge({
+    allHosts: Immutable.List(),
+    fetching: false
+  })
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function updateSuccess(state) {
+  return state.merge({
+    activeHost: null,
+    fetching: false
+  })
+}
+
+export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function changeActive(state, action) {
+  return state.set('activeHost', action.payload)
+}
+
 export default handleActions({
-  HOST_CREATED: {
-    next(state, action) {
-      return state.merge({
-        activeHost: null,
-        allHosts: state.get('allHosts').push(action.payload)
-      })
-    }
-  },
-  HOST_DELETED: {
-    next(state, action) {
-      let newAllHosts = state.get('allHosts')
-        .filterNot(host => {
-          return host === action.payload.id
-        })
-      return state.merge({
-        allHosts: newAllHosts,
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
-    }
-  },
-  HOST_FETCHED: {
-    next(state, action) {
-      let host = action.payload
-      host.services[0].configurations = host.services[0].configurations.map(config => {
-        if(!config.default_policy || !config.default_policy.policy_rules) {
-          config.default_policy = {policy_rules:[]}
-        }
-        if(!config.request_policy || !config.request_policy.policy_rules) {
-          config.request_policy = {policy_rules:[]}
-        }
-        if(!config.response_policy || !config.response_policy.policy_rules) {
-          config.response_policy = {policy_rules:[]}
-        }
-        return config;
-      })
-      if(!host.services[0].active_configurations ||
-         !host.services[0].active_configurations.length) {
-        host.services[0].active_configurations = [{
-          config_id: host.services[0].configurations[0].config_id
-        }]
-      }
-      return state.merge({
-        activeHost: Immutable.fromJS(host),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        activeHost: null,
-        fetching: false
-      })
-    }
-  },
-  HOST_FETCHED_ALL: {
-    next(state, action) {
-      return state.merge({
-        allHosts: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        allHosts: Immutable.List(),
-        fetching: false
-      })
-    }
-  },
-  HOST_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  HOST_UPDATED: {
-    next(state, action) {
-      return state.merge({
-        activeHost: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        fetching: false
-      })
-    }
-  },
-  ACTIVE_HOST_CHANGED: (state, action) => {
-    return state.set('activeHost', action.payload)
-  }
+  HOST_CREATED: createSuccess,
+  HOST_DELETED: mapReducers(deleteSuccess, deleteFailure),
+  HOST_FETCHED: mapReducers(fetchSuccess, fetchFailure),
+  HOST_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  HOST_START_FETCH: startFetch,
+  HOST_UPDATED: mapReducers(updateSuccess, updateFailure),
+  ACTIVE_HOST_CHANGED: changeActive
 }, emptyHosts)
 
 // ACTIONS

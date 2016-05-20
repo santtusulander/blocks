@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import {urlBase, mapReducers} from '../util'
 
 const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'
@@ -12,13 +12,13 @@ const PURGE_START_FETCH = 'PURGE_START_FETCH'
 const PURGE_RESET_ACTIVE = 'PURGE_RESET_ACTIVE'
 const PURGE_UPDATE_ACTIVE = 'PURGE_UPDATE_ACTIVE'
 
-const emptyPurges = Immutable.Map({
+export const emptyPurges = Immutable.Map({
   activePurge: null,
   fetching: false,
   allPurges: Immutable.List()
 })
 
-const emptyPurge = Immutable.fromJS({
+export const emptyPurge = Immutable.fromJS({
   action: 'purge',
   objects: [],
   note: '',
@@ -27,63 +27,72 @@ const emptyPurge = Immutable.fromJS({
 
 // REDUCERS
 
-export default handleActions({
-  PURGE_CREATED: {
-    next(state, action) {
-      if(action.payload instanceof Error) {
-        return state.merge({
-          fetching: false
-        })
-      }
-      return state.merge({
-        activePurge: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        activePurge: null,
-        fetching: false
-      })
-    }
-  },
-  PURGE_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        activePurge: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        activePurge: null,
-        fetching: false
-      })
-    }
-  },
-  PURGE_FETCHED_ALL: {
-    next(state, action) {
-      return state.merge({
-        allPurges: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        allPurges: Immutable.List(),
-        fetching: false
-      })
-    }
-  },
-  PURGE_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  PURGE_RESET_ACTIVE: (state) => {
-    return state.set('activePurge', emptyPurge)
-  },
-  PURGE_UPDATE_ACTIVE: (state, action) => {
-    return state.set('activePurge', action.payload)
+export function createRequestSuccess(state, action) {
+  if(action.payload instanceof Error) {
+    return state.merge({
+      fetching: false
+    })
   }
+  return state.merge({
+    activePurge: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function createFailure(state) {
+  return state.merge({
+    activePurge: null,
+    fetching: false
+  })
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    activePurge: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    activePurge: null,
+    fetching: false
+  })
+}
+
+export function fetchAllSuccess(state, action) {
+  return state.merge({
+    allPurges: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchAllFailure(state) {
+  return state.merge({
+    allPurges: Immutable.List(),
+    fetching: false
+  })
+}
+
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function resetActive(state) {
+  return state.set('activePurge', emptyPurge)
+}
+
+export function updateActive(state, action) {
+  return state.set('activePurge', action.payload)
+}
+
+export default handleActions({
+  PURGE_CREATED: mapReducers(createRequestSuccess, createFailure),
+  PURGE_FETCHED: mapReducers(fetchAllSuccess, fetchFailure),
+  PURGE_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  PURGE_START_FETCH: startFetch,
+  PURGE_RESET_ACTIVE: resetActive,
+  PURGE_UPDATE_ACTIVE: updateActive
 }, emptyPurges)
 
 // ACTIONS
