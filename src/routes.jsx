@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
 import AccountAnalytics from './containers/account-analytics'
+import AccountManagement from './containers/account-management'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
@@ -90,5 +91,6 @@ module.exports = (
     </Route>
     <Route path="/security" component={Security}/>
     <Route path="/services" component={Services}/>
+    <Route path="/account-management" component={AccountManagement}/>
   </Route>
 );
