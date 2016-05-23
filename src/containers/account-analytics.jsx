@@ -81,39 +81,38 @@ export class AccountAnalytics extends React.Component {
 
     return (
       <AnalyticsPage
-        activeName={activeName}
-        changeDateRange={this.changeDateRange}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
-        dateRange={this.state.dateRange}
-        endDate={this.state.endDate}
-        exportFilenamePart={`${activeName} - ${moment().format()}`}
-        fetchingMetrics={this.props.fetchingMetrics}
-        fileErrorSummary={this.props.fileErrorSummary}
-        fileErrorURLs={this.props.fileErrorURLs}
-        metrics={metrics}
-        onOffNet={this.props.onOffNet}
-        onOffNetToday={this.props.onOffNetToday}
-        reportsFetching={this.props.reportsFetching}
-        serviceTypes={this.props.serviceTypes}
-        siblings={availableAccounts}
-        spChartType={this.props.spChartType}
-        startDate={this.state.startDate}
-        storageStats={this.props.storageStats}
-        toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
-        totalEgress={this.props.totalEgress}
-        trafficByCountry={this.props.trafficByCountry}
-        trafficByTime={this.props.trafficByTime}
-        trafficFetching={this.props.trafficFetching}
-        type="account"
-        urlMetrics={this.props.urlMetrics}
-        visitorsByBrowser={this.props.visitorsByBrowser}
-        visitorsByCountry={this.props.visitorsByCountry}
-        visitorsByOS={this.props.visitorsByOS}
-        visitorsByTime={this.props.visitorsByTime}
-        visitorsFetching={this.props.visitorsFetching}
-
-        exportsActions={this.props.exportsActions}
-        exportsDialogState={this.props.exportsDialogState}
+          activeName={activeName}
+          changeDateRange={this.changeDateRange}
+          changeSPChartType={this.props.uiActions.changeSPChartType}
+          dateRange={this.state.dateRange}
+          endDate={this.state.endDate}
+          exportFilenamePart={`${activeName} - ${moment().format()}`}
+          exportsActions={this.props.exportsActions}
+          exportsDialogState={this.props.exportsDialogState}
+          fetchingMetrics={this.props.fetchingMetrics}
+          fileErrorSummary={this.props.fileErrorSummary}
+          fileErrorURLs={this.props.fileErrorURLs}
+          metrics={metrics}
+          onOffNet={this.props.onOffNet}
+          onOffNetToday={this.props.onOffNetToday}
+          reportsFetching={this.props.reportsFetching}
+          serviceTypes={this.props.serviceTypes}
+          siblings={availableAccounts}
+          spChartType={this.props.spChartType}
+          startDate={this.state.startDate}
+          storageStats={this.props.storageStats}
+          toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+          totalEgress={this.props.totalEgress}
+          trafficByCountry={this.props.trafficByCountry}
+          trafficByTime={this.props.trafficByTime}
+          trafficFetching={this.props.trafficFetching}
+          type="account"
+          urlMetrics={this.props.urlMetrics}
+          visitorsByBrowser={this.props.visitorsByBrowser}
+          visitorsByCountry={this.props.visitorsByCountry}
+          visitorsByOS={this.props.visitorsByOS}
+          visitorsByTime={this.props.visitorsByTime}
+          visitorsFetching={this.props.visitorsFetching}
       />
     );
   }
@@ -154,6 +153,7 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
+    exportsDialogState: state.exports.toObject(),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
@@ -174,9 +174,7 @@ function mapStateToProps(state) {
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsByOS: state.visitors.get('byOS'),
     visitorsByTime: state.visitors.get('byTime'),
-    visitorsFetching: state.visitors.get('fetching'),
-
-    exportsDialogState: state.exports.toObject(),
+    visitorsFetching: state.visitors.get('fetching')
   };
 }
 
@@ -234,14 +232,13 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
+    fetchData: fetchData,
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch),
-
-    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
-    fetchData: fetchData,
   };
 }
 

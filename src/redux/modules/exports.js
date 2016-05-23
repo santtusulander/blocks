@@ -1,5 +1,4 @@
 import {createAction} from 'redux-actions'
-import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
@@ -11,19 +10,14 @@ const EXPORTS_DOWNLOAD_FILE = 'EXPORTS_DOWNLOAD_FILE'
 const EXPORTS_SEND_EMAIL = 'EXPORTS_SEND_EMAIL'
 
 const defaultState = Immutable.Map({
-    dialogVisible: false,
-    exportType: 'export_pdf',
+  dialogVisible: false,
+  exportType: 'export_pdf'
 });
 
 
 // ACTIONS
-export const exportsShowDialog = createAction(EXPORTS_SHOW_DIALOG); /* (payload) => {
-//  return payload;
-})
-*/
-export const exportsHideDialog = createAction(EXPORTS_HIDE_DIALOG, (payload) => {
-
-})
+export const exportsShowDialog = createAction(EXPORTS_SHOW_DIALOG)
+export const exportsHideDialog = createAction(EXPORTS_HIDE_DIALOG);
 
 export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportParams) => {
 
@@ -83,8 +77,8 @@ export function sendEmail(state, action) {
 }
 
 export default handleActions({
-    EXPORTS_SHOW_DIALOG: showDialog,
-    EXPORTS_HIDE_DIALOG: hideDialog,
-    EXPORTS_DOWNLOAD_FILE: downloadFile,
-    EXPORTS_SEND_EMAIL: sendEmail,
+  EXPORTS_SHOW_DIALOG: showDialog,
+  EXPORTS_HIDE_DIALOG: hideDialog,
+  EXPORTS_DOWNLOAD_FILE: downloadFile,
+  EXPORTS_SEND_EMAIL: sendEmail
 }, defaultState )

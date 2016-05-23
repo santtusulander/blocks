@@ -36,9 +36,6 @@ export class AnalyticsPage extends React.Component {
     this.onDownload = this.onDownload.bind(this)
     this.onSend = this.onSend.bind(this)
 
-    //this.exportEmail = this.exportEmail.bind(this)
-    //this.exportPDF = this.exportPDF.bind(this)
-
     this.showExportPanel = this.showExportPanel.bind(this);
     this.hideExportPanel = this.hideExportPanel.bind(this);
 
@@ -131,7 +128,6 @@ export class AnalyticsPage extends React.Component {
       metrics.get('transfer_rates').get('average') : '0.0 Gbps'
     const lowTraffic = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
-    console.log(this.props);
 
     return (
 
@@ -233,6 +229,7 @@ AnalyticsPage.propTypes = {
   changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
+  exportsDialogState: React.PropTypes.instanceOf(Object),
   exportFilenamePart: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
@@ -257,12 +254,11 @@ AnalyticsPage.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
-  visitorsFetching: React.PropTypes.bool,
-
-  exportsDialogState: React.PropTypes.instanceOf(Object),
+  visitorsFetching: React.PropTypes.bool
 }
 
 AnalyticsPage.defaultProps = {
+  exportsDialogState: {},
   exportFilenamePart: '',
   fileErrorSummary: Immutable.Map(),
   fileErrorURLs: Immutable.List(),
@@ -278,9 +274,7 @@ AnalyticsPage.defaultProps = {
   visitorsByBrowser: Immutable.Map(),
   visitorsByCountry: Immutable.Map(),
   visitorsByOS: Immutable.Map(),
-  visitorsByTime: Immutable.List(),
-
-  exportsDialogState: {},
+  visitorsByTime: Immutable.List()
 }
 
 module.exports = AnalyticsPage

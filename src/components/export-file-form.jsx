@@ -24,14 +24,22 @@ export class ExportFileForm extends React.Component {
     this.state = {
       fileType: props.fileType
     }
+
+    this.onCancel = this.onCancel.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onDownload = this.onDownload.bind(this)
   }
 
   onChange( val ){
-    this.setState({fileType: val})
+    return () => {
+      this.setState({fileType: val})
+    }
   }
 
-  onDownload(){
-    this.props.onDownload(this.state.fileType);
+  onDownload( fileType ){
+    return () => {
+      this.props.onDownload(fileType);
+    }
   }
 
   onCancel(){
@@ -53,13 +61,13 @@ export class ExportFileForm extends React.Component {
               label={fileType.label}
               checked={fileType.value == this.state.fileType}
               className="export-input-list-item"
-              onChange={ () => this.onChange(fileType.value) }
+              onChange={ this.onChange(fileType.value) }
               />
             ))}
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={ () => this.onCancel() }>Cancel</Button>
+          <Button bsStyle="primary" className="btn-outline" onClick={ this.onCancel }>Cancel</Button>
           <Button type="submit" bsStyle="primary" onClick={ () => this.onDownload(this.state.fileType) } >Download</Button>
         </ButtonToolbar>
 

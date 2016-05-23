@@ -20,8 +20,6 @@ export class PropertyAnalytics extends React.Component {
     super(props);
 
     this.state = {
-      activeTab: 'traffic',
-      activeVideo: '/elephant/169ar/elephant_master.m3u8',
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
       startDate: moment().utc().startOf('month')

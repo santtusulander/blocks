@@ -75,7 +75,8 @@ class ExportEmailForm extends React.Component {
           onChange={this.changeValue(['message'])}
         />
 
-      {/*<FormGroup controlId="frequencySelect">
+      {/* This needs
+      <FormGroup controlId="frequencySelect">
           <ControlLabel>Email frequency</ControlLabel>
           <FormControl componentClass="select" placeholder="select">
             { frequencyOptions }
@@ -94,9 +95,9 @@ class ExportEmailForm extends React.Component {
 }
 ExportEmailForm.displayName = 'ExportEmailForm'
 ExportEmailForm.propTypes = {
+  formValues: React.PropTypes.instanceOf(Immutable.Map),
   onSend: React.PropTypes.func,
-  onCancel: React.PropTypes.func,
-  formValues: React.PropTypes.instanceOf(Immutable.Map)
+  onCancel: React.PropTypes.func
 }
 
 ExportEmailForm.defaultProps = {

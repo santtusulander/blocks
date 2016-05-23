@@ -369,19 +369,12 @@ Analyses.propTypes = {
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
-
-
-  showExportPanel: React.PropTypes.func,
-  /*exportCSV: React.PropTypes.func,
-  exportEmail: React.PropTypes.func,
-  exportPDF: React.PropTypes.func,
-  */
-
   fetching: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  showExportPanel: React.PropTypes.func,
   spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
