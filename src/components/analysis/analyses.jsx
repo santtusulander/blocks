@@ -8,6 +8,7 @@ import { Link } from 'react-router'
 import Select from '../../components/select'
 import IconSelectCaret from '../../components/icons/icon-select-caret.jsx'
 
+
 export class Analyses extends React.Component {
   constructor(props) {
     super(props)
@@ -32,6 +33,9 @@ export class Analyses extends React.Component {
     this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
+
+    this.handleExport = this.handleExport.bind(this);
+
   }
   componentWillMount() {
     this.setState({
@@ -111,10 +115,16 @@ export class Analyses extends React.Component {
   toggleNavMenu() {
     this.setState({navMenuOpen: !this.state.navMenuOpen})
   }
+
+  handleExport( exportType ){
+    this.props.showExportPanel( exportType );
+  }
+
   render() {
     const type = this.props.type ? this.props.type.toUpperCase() : ''
     return (
       <div className="analyses">
+
         <div className="sidebar-header">
           {this.props.activeTab === 'file-error' ?
             <p className="text-sm">FILE ERROR</p> :
@@ -141,26 +151,23 @@ export class Analyses extends React.Component {
               }) : ''}
             </Dropdown.Menu>
           </Dropdown>
-          <div className="sidebar-actions">
-            <Dropdown id="export-menu"
-              className="dropdown-select btn-block">
-              <Dropdown.Toggle bsStyle="default" noCaret={true}>
-                <IconSelectCaret/>
-                Export
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <MenuItem onSelect={this.props.exportCSV}>
-                  Download CSV
-                </MenuItem>
-                <MenuItem onSelect={this.props.exportPDF}>
-                  Download PDF
-                </MenuItem>
-                <MenuItem onSelect={this.props.exportEmail}>
-                  Send Email
-                </MenuItem>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+
+          {this.props.activeTab !== 'playback-demo' ?
+            <div className="sidebar-actions">
+              <div className="form-group">
+                <Select className="btn-block"
+                        onSelect={ this.handleExport }
+                        value=""
+                        options={[
+                          ['', 'Export report'],
+                          ['export_pdf', 'Download PDF'],
+                          ['export_csv', 'Download CSV'],
+                          ['export_email', 'Send Email']
+
+                        ]}/>
+              </div>
+            </div>
+          : null}
         </div>
         {this.props.activeTab !== 'playback-demo' ?
           <div>
@@ -362,14 +369,12 @@ Analyses.propTypes = {
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
-  exportCSV: React.PropTypes.func,
-  exportEmail: React.PropTypes.func,
-  exportPDF: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  showExportPanel: React.PropTypes.func,
   spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
