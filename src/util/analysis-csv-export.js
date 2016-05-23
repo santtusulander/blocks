@@ -1,0 +1,58 @@
+import Papa from 'papaparse'
+import download from 'downloadjs'
+import moment from 'moment'
+import Immutable from 'immutable'
+
+function filterByServiceType(serviceTypes) {
+  return item => serviceTypes.includes(
+    item.get('service_type')
+  )
+}
+
+function mapTimestamps(item) {
+  return item.set('timestamp', moment(item.get('timestamp')).format())
+}
+
+export function createCSVExporters(filenamePart) {
+  function generate(name, data) {
+    download(
+      Papa.unparse(data.toJS()),
+      `${name} - ${filenamePart}.csv`,
+      'text/csv'
+    )
+  }
+
+  return {
+    traffic: (traffic, serviceTypes) => {
+      const data = traffic
+        .filter(filterByServiceType(serviceTypes))
+        .map(mapTimestamps)
+      generate('Traffic', data)
+    },
+    visitors: visitors => {
+      const data = visitors.map(mapTimestamps)
+      generate('Visitors', data)
+    },
+    serviceProviders: onOffNet => {
+      const data = onOffNet
+        .map(item => Immutable.Map({
+          timestamp: moment(item.get('timestamp')).format(),
+          on_net: item.getIn(['net_on', 'bytes']),
+          off_net: item.getIn(['net_off', 'bytes']),
+          total: item.get('total')
+        }))
+      generate('Service Provider', data)
+    },
+    fileError: (fileErrorURLs, serviceTypes) => {
+      const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
+      generate('File Errors', data)
+    },
+    urlReport: urlMetrics => {
+      generate('URL Report', urlMetrics)
+    },
+    storageUsage: storageStats => {
+      const data = storageStats.map(mapTimestamps)
+      generate('Storage Usage', data)
+    }
+  }
+}
