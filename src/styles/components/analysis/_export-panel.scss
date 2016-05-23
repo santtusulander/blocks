@@ -1,0 +1,108 @@
+// Export Sidebar
+// =====================
+
+.modal-dialog.export-sidebar {
+  @extend .modal-dialog.configuration-sidebar;
+
+  .modal-body {
+    padding: 0 $bar-height !important;
+
+    @include md {
+      padding: 0 $md-bar-height !important;
+    }
+
+    @include sm {
+      padding: 0 ($md-bar-height / 2) !important;
+    }
+  }
+
+  h4 {
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .export-panel-tabs {
+    .nav-tabs {
+      margin: 0 ($bar-height *-1) ($bar-height / 2) ($bar-height *-1);
+
+      @include md {
+        margin: 0 ($md-bar-height *-1) ($md-bar-height / 2) ($md-bar-height *-1);
+      }
+
+      @include sm {
+        margin: 0 (($md-bar-height / 2) *-1) (($md-bar-height / 2) / 2) (($md-bar-height / 2) *-1);
+      }
+
+      > li {
+        width: 50%;
+
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .file-types {
+    margin: ($bar-height / 4) 0 ($bar-height / 2);
+
+    .form-group {
+      background-color: rgba($black, 0.1);
+      padding: 15px;
+
+      &:nth-of-type(odd) {
+        background-color: rgba($black, 0.2);
+      }
+    }
+
+    .radio {
+
+      input {
+        display: none;
+
+        + span::before {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          margin: -2px 20px 2px 0;
+          vertical-align: middle;
+          cursor: pointer;
+          border-radius: 2px;
+          content: '';
+
+          @include md {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+          }
+
+          .dark-theme &,
+          .light-theme .sidebar-layout &,
+          .light-theme .configuration-sidebar & {
+            background: rgba($black, 0.2);
+          }
+
+          .light-theme & {
+            background: $white;
+          }
+        }
+
+        &:checked + span::after {
+          position: relative;
+        }
+
+        .dark-theme &:checked + span::before,
+        .light-theme &:checked + span::before,
+        .light-theme .modal .configuration-sidebar &:checked + span::before {
+          background: $pale-blue url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background-size: 17px 16px;
+        }
+
+        .light-theme .modal &:checked + span::before {
+          background: rgba($black, 0.2) url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background-size: 17px 16px;
+        }
+      }
+    }
+  }
+}
