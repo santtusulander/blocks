@@ -1,12 +1,11 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Col, Dropdown, MenuItem, Input, Row } from 'react-bootstrap'
+import { Col, Dropdown, Input, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import { Link } from 'react-router'
 
 import Select from '../../components/select'
-import IconSelectCaret from '../../components/icons/icon-select-caret.jsx'
 
 
 export class Analyses extends React.Component {
@@ -77,16 +76,21 @@ export class Analyses extends React.Component {
   }
   handleTimespanChange(value) {
     let startDate = this.props.startDate
+    let endDate = moment().utc().endOf('day')
     if(value === 'month_to_date') {
       startDate = moment().utc().startOf('month')
-    }
-    else if(value === 'week_to_date') {
-      startDate = moment().utc().startOf('week')
     }
     else if(value === 'today') {
       startDate = moment().utc().startOf('day')
     }
-    const endDate = moment().utc().endOf('day')
+    else if(value === 'yesterday') {
+      startDate = moment().utc().startOf('day').subtract(1, 'day')
+      endDate = moment().utc().endOf('day').subtract(1, 'day')
+    }
+    else if(value === 'last_month') {
+      startDate = moment().utc().startOf('month').subtract(1, 'month')
+      endDate = moment().utc().endOf('month').subtract(1, 'month')
+    }
     this.props.changeDateRange(startDate, endDate)
     this.setState({
       activeDateRange: value,
@@ -156,7 +160,7 @@ export class Analyses extends React.Component {
             <div className="sidebar-actions">
               <div className="form-group">
                 <Select className="btn-block"
-                        onSelect={ this.handleExport }
+                        onSelect={this.handleExport}
                         value=""
                         options={[
                           ['', 'Export report'],
@@ -180,9 +184,10 @@ export class Analyses extends React.Component {
                   onSelect={this.handleTimespanChange}
                   value={this.state.activeDateRange}
                   options={[
-                    ['month_to_date', 'Month to Date'],
-                    ['week_to_date', 'Week to Date'],
+                    ['month_to_date', 'This Month'],
+                    ['last_month', 'Last Month'],
                     ['today', 'Today'],
+                    ['yesterday', 'Yesterday'],
                     ['custom_timerange', 'Custom Date Range']]}/>
               </div>
               {this.state.activeDateRange === 'custom_timerange' ?
