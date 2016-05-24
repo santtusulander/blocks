@@ -49,6 +49,10 @@ class ContentItems extends React.Component {
     this.toggleAddItem = this.toggleAddItem.bind(this)
     this.createNewItem = this.createNewItem.bind(this)
   }
+  getMetrics(item) {
+    return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
+      null, Immutable.Map({ totalTraffic: 0 }))
+  }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
     if(sortOption) {
@@ -68,19 +72,28 @@ class ContentItems extends React.Component {
     const {
       sortValuePath,
       sortDirection,
-      metrics,
       headerText,
       ifNoContent,
       activeGroup,
       activeAccount,
-      type,
       analyticsURLBuilder,
       fetchingMetrics,
       showAnalyticsLink,
       viewingChart,
       createNewItem } = this.props
-    if(!fetchingMetrics) {
-      const trafficTotals = this.props.contentItems.map((account) => metrics.getIn([account.get('id'), 'totalTraffic'], 0))
+    let trafficTotals = Immutable.List()
+    const contentItems = this.props.contentItems.map(item => {
+      const itemMetrics = this.getMetrics(item)
+      if(!fetchingMetrics) {
+        trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
+      }
+      return Immutable.Map({
+        item: item,
+        metrics: itemMetrics
+      })
+    })
+    .sort(sortContent(sortValuePath, sortDirection))
+    if(!fetchingMetrics){
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
     }
@@ -92,15 +105,6 @@ class ContentItems extends React.Component {
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
       .range([rangeMin, rangeMax]);
-    const contentItems = this.props.contentItems.map(item => {
-      return Immutable.Map({
-        item: item,
-        metrics: metrics.find(metric => {
-          return metric.get(type) === item.get('id')
-        }) || Immutable.Map({ totalTraffic: 0 })
-      })
-    })
-    .sort(sortContent(sortValuePath, sortDirection))
     const foundSort = sortOptions.find(opt => {
       return Immutable.is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
