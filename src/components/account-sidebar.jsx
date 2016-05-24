@@ -9,7 +9,7 @@ const AccountSidebar = props => {
   return (
     <Sidebar>
       <div className="configuration-versions">
-        <div className="accounts sidebar-header">
+        <div className="accounts-sidebar-header">
           <Button bsStyle="primary" onClick={addAccount}>
             New Account
           </Button>

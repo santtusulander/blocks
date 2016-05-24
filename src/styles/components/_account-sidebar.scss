@@ -1,5 +1,5 @@
 
-.accounts.sidebar-header {
+.accounts-sidebar-header {
   min-height: 0px;
   padding: ($bar-height / 4) ($bar-height / 2) ($bar-height / 4);
 
@@ -9,5 +9,18 @@
 
   @include sm {
     padding: ($sm-bar-height / 4) ($md-bar-height / 3) ($md-bar-height / 4);
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+
+  h3,
+  p {
+    margin-bottom: 2px;
+  }
+
+  button {
+    width: 100%
   }
 }
