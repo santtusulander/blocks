@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import Immutable from 'immutable'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -44,17 +45,19 @@ export function filterAccountsByUserName(accounts, username) {
   if(username === 'test') {
     return accounts
   }
-  return accounts.filter(account => {
-    if(account.get('id') < 10000) {
-      return username === 'UDNdev'
-    }
-    else if(account.get('id') < 20000) {
-      return username === 'UDNtest'
-    }
-    else {
-      return username === 'UDNprod' || username === 'UDNstag'
-    }
-  })
+  return
+    Immutable.fromJS( accounts.toJS().filter(account => {
+      if (account.id < 10000) {
+        return username === 'UDNdev'
+      }
+      else if (account.id < 20000) {
+        return username === 'UDNtest'
+      }
+      else {
+        return username === 'UDNprod' || username === 'UDNstag'
+      }
+    })
+  )
 }
 
 export function matchesRegexp(string, pattern){
