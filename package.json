@@ -1,11 +1,11 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.53.4",
+  "version": "0.53.5",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
   "devDependencies": {
-    "@kadira/storybook": "^1.19.0",
+    "@kadira/storybook": "^1.26.0",
     "autoprefixer-loader": "^3.2.0",
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",

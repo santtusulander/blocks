@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -11,7 +12,10 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
 
+import * as exportsActionCreators from '../redux/modules/exports';
+
 import AnalyticsPage from '../components/analysis/analytics-page'
+
 import { filterAccountsByUserName } from '../util/helpers'
 
 export class AccountAnalytics extends React.Component {
@@ -21,8 +25,11 @@ export class AccountAnalytics extends React.Component {
     this.state = {
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
+
+    //this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
@@ -40,6 +47,7 @@ export class AccountAnalytics extends React.Component {
       this.state.endDate
     )
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -64,6 +72,7 @@ export class AccountAnalytics extends React.Component {
         link: `/content/analytics/account/${this.props.params.brand}/${account.get('id')}`,
         name: account.get('name')
       }
+
     })
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
@@ -72,37 +81,40 @@ export class AccountAnalytics extends React.Component {
 
     return (
       <AnalyticsPage
-        activeName={activeName}
-        changeDateRange={this.changeDateRange}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
-        dateRange={this.state.dateRange}
-        endDate={this.state.endDate}
-        exportFilenamePart={`${activeName} - ${moment().format()}`}
-        fetchingMetrics={this.props.fetchingMetrics}
-        fileErrorSummary={this.props.fileErrorSummary}
-        fileErrorURLs={this.props.fileErrorURLs}
-        metrics={metrics}
-        onOffNet={this.props.onOffNet}
-        onOffNetToday={this.props.onOffNetToday}
-        reportsFetching={this.props.reportsFetching}
-        serviceTypes={this.props.serviceTypes}
-        siblings={availableAccounts}
-        spChartType={this.props.spChartType}
-        startDate={this.state.startDate}
-        storageStats={this.props.storageStats}
-        toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
-        totalEgress={this.props.totalEgress}
-        trafficByCountry={this.props.trafficByCountry}
-        trafficByTime={this.props.trafficByTime}
-        trafficFetching={this.props.trafficFetching}
-        type="account"
-        urlMetrics={this.props.urlMetrics}
-        visitorsByBrowser={this.props.visitorsByBrowser}
-        visitorsByCountry={this.props.visitorsByCountry}
-        visitorsByOS={this.props.visitorsByOS}
-        visitorsByTime={this.props.visitorsByTime}
-        visitorsFetching={this.props.visitorsFetching}/>
-    )
+          activeName={activeName}
+          changeDateRange={this.changeDateRange}
+          changeSPChartType={this.props.uiActions.changeSPChartType}
+          dateRange={this.state.dateRange}
+          endDate={this.state.endDate}
+          exportFilenamePart={`${activeName} - ${moment().format()}`}
+          exportsActions={this.props.exportsActions}
+          exportsDialogState={this.props.exportsDialogState}
+          fetchingMetrics={this.props.fetchingMetrics}
+          fileErrorSummary={this.props.fileErrorSummary}
+          fileErrorURLs={this.props.fileErrorURLs}
+          metrics={metrics}
+          onOffNet={this.props.onOffNet}
+          onOffNetToday={this.props.onOffNetToday}
+          reportsFetching={this.props.reportsFetching}
+          serviceTypes={this.props.serviceTypes}
+          siblings={availableAccounts}
+          spChartType={this.props.spChartType}
+          startDate={this.state.startDate}
+          storageStats={this.props.storageStats}
+          toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+          totalEgress={this.props.totalEgress}
+          trafficByCountry={this.props.trafficByCountry}
+          trafficByTime={this.props.trafficByTime}
+          trafficFetching={this.props.trafficFetching}
+          type="account"
+          urlMetrics={this.props.urlMetrics}
+          visitorsByBrowser={this.props.visitorsByBrowser}
+          visitorsByCountry={this.props.visitorsByCountry}
+          visitorsByOS={this.props.visitorsByOS}
+          visitorsByTime={this.props.visitorsByTime}
+          visitorsFetching={this.props.visitorsFetching}
+      />
+    );
   }
 }
 
@@ -133,13 +145,15 @@ AccountAnalytics.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
-  visitorsFetching: React.PropTypes.bool
+  visitorsFetching: React.PropTypes.bool,
+
 }
 
 function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
+    exportsDialogState: state.exports.toObject(),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
@@ -217,8 +231,14 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
+    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch),
   };
 }
 

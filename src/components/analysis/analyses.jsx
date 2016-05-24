@@ -1,12 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Col, Dropdown, MenuItem, Input, Row } from 'react-bootstrap'
+import { Col, Dropdown, Input, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import { Link } from 'react-router'
 
 import Select from '../../components/select'
-import IconSelectCaret from '../../components/icons/icon-select-caret.jsx'
+
 
 export class Analyses extends React.Component {
   constructor(props) {
@@ -32,6 +32,9 @@ export class Analyses extends React.Component {
     this.handleChartTypeChange = this.handleChartTypeChange.bind(this)
     this.toggleNavMenu = this.toggleNavMenu.bind(this)
     this.toggleServiceType = this.toggleServiceType.bind(this)
+
+    this.handleExport = this.handleExport.bind(this);
+
   }
   componentWillMount() {
     this.setState({
@@ -73,16 +76,21 @@ export class Analyses extends React.Component {
   }
   handleTimespanChange(value) {
     let startDate = this.props.startDate
+    let endDate = moment().utc().endOf('day')
     if(value === 'month_to_date') {
       startDate = moment().utc().startOf('month')
-    }
-    else if(value === 'week_to_date') {
-      startDate = moment().utc().startOf('week')
     }
     else if(value === 'today') {
       startDate = moment().utc().startOf('day')
     }
-    const endDate = moment().utc().endOf('day')
+    else if(value === 'yesterday') {
+      startDate = moment().utc().startOf('day').subtract(1, 'day')
+      endDate = moment().utc().endOf('day').subtract(1, 'day')
+    }
+    else if(value === 'last_month') {
+      startDate = moment().utc().startOf('month').subtract(1, 'month')
+      endDate = moment().utc().endOf('month').subtract(1, 'month')
+    }
     this.props.changeDateRange(startDate, endDate)
     this.setState({
       activeDateRange: value,
@@ -111,10 +119,16 @@ export class Analyses extends React.Component {
   toggleNavMenu() {
     this.setState({navMenuOpen: !this.state.navMenuOpen})
   }
+
+  handleExport( exportType ){
+    this.props.showExportPanel( exportType );
+  }
+
   render() {
     const type = this.props.type ? this.props.type.toUpperCase() : ''
     return (
       <div className="analyses">
+
         <div className="sidebar-header">
           {this.props.activeTab === 'file-error' ?
             <p className="text-sm">FILE ERROR</p> :
@@ -141,26 +155,23 @@ export class Analyses extends React.Component {
               }) : ''}
             </Dropdown.Menu>
           </Dropdown>
-          <div className="sidebar-actions">
-            <Dropdown id="export-menu"
-              className="dropdown-select btn-block">
-              <Dropdown.Toggle bsStyle="default" noCaret={true}>
-                <IconSelectCaret/>
-                Export
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <MenuItem onSelect={this.props.exportCSV}>
-                  Download CSV
-                </MenuItem>
-                <MenuItem onSelect={this.props.exportPDF}>
-                  Download PDF
-                </MenuItem>
-                <MenuItem onSelect={this.props.exportEmail}>
-                  Send Email
-                </MenuItem>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+
+          {this.props.activeTab !== 'playback-demo' ?
+            <div className="sidebar-actions">
+              <div className="form-group">
+                <Select className="btn-block"
+                        onSelect={this.handleExport}
+                        value=""
+                        options={[
+                          ['', 'Export report'],
+                          ['export_pdf', 'Download PDF'],
+                          ['export_csv', 'Download CSV'],
+                          ['export_email', 'Send Email']
+
+                        ]}/>
+              </div>
+            </div>
+          : null}
         </div>
         {this.props.activeTab !== 'playback-demo' ?
           <div>
@@ -173,9 +184,10 @@ export class Analyses extends React.Component {
                   onSelect={this.handleTimespanChange}
                   value={this.state.activeDateRange}
                   options={[
-                    ['month_to_date', 'Month to Date'],
-                    ['week_to_date', 'Week to Date'],
+                    ['month_to_date', 'This Month'],
+                    ['last_month', 'Last Month'],
                     ['today', 'Today'],
+                    ['yesterday', 'Yesterday'],
                     ['custom_timerange', 'Custom Date Range']]}/>
               </div>
               {this.state.activeDateRange === 'custom_timerange' ?
@@ -362,14 +374,12 @@ Analyses.propTypes = {
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
-  exportCSV: React.PropTypes.func,
-  exportEmail: React.PropTypes.func,
-  exportPDF: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  showExportPanel: React.PropTypes.func,
   spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
