@@ -7,11 +7,15 @@ import * as accountActionCreators from '../redux/modules/account'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
+import Sidebar from '../components/layout/sidebar'
 
 export class AccountManagement extends React.Component {
   render() {
     return (
-      <PageContainer>
+      <PageContainer hasSidebar={true}>
+        <Sidebar>
+          Account list here
+        </Sidebar>
         <Content>
           <div className="container-fluid">
             <h1>Account management</h1>
