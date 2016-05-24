@@ -24,7 +24,7 @@ class ContentItemChart extends React.Component {
     }
   }
 
-  groupData(rawData, groupSize) {
+  groupData(rawData, groupSize, key) {
 
     let groupedData = 0;
 
@@ -35,37 +35,20 @@ class ContentItemChart extends React.Component {
         groupedData = 0
       }
 
-      //should this be parsed? Is it possible that data.bytes has NaN -values?
-      groupedData += data.bytes;
+      //should this be parsed? Is it possible that data has NaN -values?
+      if (key) {
+        groupedData += data[key];
+      } else if (data !== null) {
+        groupedData += data;
+      } else {
+        groupedData = null;
+      }
 
       //if last group -> push
       if (i === rawData.size - 1) {
         points.push(groupedData);
       }
 
-
-      return points;
-    }, [])
-  }
-
-  groupDifferenceData(rawData, groupSize) {
-    let groupedData = 0;
-
-    return rawData.reduce((points, data, i) => {
-
-
-      if(!(i % groupSize || i === 0) ) {
-        points.push(groupedData)
-        groupedData = 0
-      }
-
-      if (data == null) groupedData = null;
-      else groupedData += data;
-
-      //if last group -> push
-      if (i === rawData.size - 1) {
-        points.push(groupedData);
-      }
 
       return points;
     }, [])
@@ -76,23 +59,9 @@ class ContentItemChart extends React.Component {
       return <div id="fetchingMetrics">Loading...</div>
     }
 
-    const primaryData = this.groupData(this.props.primaryData.toJS(), 3);
-    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3);
-    const differenceData = this.groupDifferenceData(this.props.differenceData, 24);
-
-    /*const differenceData2 = this.props.differenceData.reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 24)) {
-        points.push(data ? data : data === 0 ? 0 : null)
-      } else {
-        points[points.length-1] = data ? points[points.length-1] + data : data === 0 ? 0 : null
-      }
-      return points;
-    }, [])
-
-    console.log('data1:', differenceData);
-    console.log('data2:', differenceData2);
-    */
+    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bytes');
+    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bytes');
+    const differenceData = this.groupData(this.props.differenceData.toJS(), 24);
 
     const primaryMax = d3.max(primaryData, d => {
       return d || 0

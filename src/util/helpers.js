@@ -45,19 +45,17 @@ export function filterAccountsByUserName(accounts, username) {
   if(username === 'test') {
     return accounts
   }
-  return
-    Immutable.fromJS( accounts.toJS().filter(account => {
-      if (account.id < 10000) {
-        return username === 'UDNdev'
-      }
-      else if (account.id < 20000) {
-        return username === 'UDNtest'
-      }
-      else {
-        return username === 'UDNprod' || username === 'UDNstag'
-      }
-    })
-  )
+  return Immutable.fromJS(accounts.toJS().filter(account => {
+    if (account.id < 10000) {
+      return username === 'UDNdev'
+    }
+    else if (account.id < 20000) {
+      return username === 'UDNtest'
+    }
+    else {
+      return username === 'UDNprod' || username === 'UDNstag'
+    }
+  }));
 }
 
 export function matchesRegexp(string, pattern){
