@@ -23,31 +23,64 @@ class ContentItemChart extends React.Component {
       this.setState({ showDiffLegend: hover })
     }
   }
+
+  groupData(rawData, groupSize) {
+
+    let groupedData = 0;
+
+    return rawData.reduce((points, data, i) => {
+
+      if(!(i % groupSize || i === 0) ) {
+        points.push(groupedData)
+        groupedData = 0
+      }
+
+      //should this be parsed? Is it possible that data.bytes has NaN -values?
+      groupedData += data.bytes;
+
+      //if last group -> push
+      if (i === rawData.size - 1) {
+        points.push(groupedData);
+      }
+
+
+      return points;
+    }, [])
+  }
+
+  groupDifferenceData(rawData, groupSize) {
+    let groupedData = 0;
+
+    return rawData.reduce((points, data, i) => {
+
+
+      if(!(i % groupSize || i === 0) ) {
+        points.push(groupedData)
+        groupedData = 0
+      }
+
+      if (data == null) groupedData = null;
+      else groupedData += data;
+
+      //if last group -> push
+      if (i === rawData.size - 1) {
+        points.push(groupedData);
+      }
+
+      return points;
+    }, [])
+  }
+
   render() {
     if (this.props.fetchingMetrics) {
       return <div id="fetchingMetrics">Loading...</div>
     }
-    const primaryData = this.props.primaryData.toJS().reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
-        points.push(data.bytes || 0)
-      } else {
-        points[points.length-1] =
-          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
-      }
-      return points;
-    }, [])
-    const secondaryData = this.props.secondaryData.toJS().reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
-        points.push(data.bytes || 0)
-      } else {
-        points[points.length-1] =
-          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
-      }
-      return points;
-    }, [])
-    const differenceData = this.props.differenceData.reduce((points, data, i) => {
+
+    const primaryData = this.groupData(this.props.primaryData.toJS(), 3);
+    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3);
+    const differenceData = this.groupDifferenceData(this.props.differenceData, 24);
+
+    /*const differenceData2 = this.props.differenceData.reduce((points, data, i) => {
       // Group data into chunks of 3 as one data point in the chart = 3 hours
       if(!(i % 24)) {
         points.push(data ? data : data === 0 ? 0 : null)
@@ -56,6 +89,11 @@ class ContentItemChart extends React.Component {
       }
       return points;
     }, [])
+
+    console.log('data1:', differenceData);
+    console.log('data2:', differenceData2);
+    */
+
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
     })
