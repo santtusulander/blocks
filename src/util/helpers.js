@@ -44,7 +44,13 @@ export function formatBitsPerSecond(bits_per_second) {
 export function filterAccountsByUserName(accounts, username) {
   if(username === 'test') {
     return accounts
+
+    //UNCOMMENT FOR TESTing -- return only limited accounts
+    /*return Immutable.fromJS(accounts.toJS().filter( (account) => {
+      return account.id === 4 || account.id === 1
+    }))*/
   }
+
   return Immutable.fromJS(accounts.toJS().filter(account => {
     if (account.id < 10000) {
       return username === 'UDNdev'
@@ -56,6 +62,14 @@ export function filterAccountsByUserName(accounts, username) {
       return username === 'UDNprod' || username === 'UDNstag'
     }
   }));
+}
+
+export function filterMetricsByAccounts(metrics, accounts){
+  return metrics.filter( (metric) => {
+    return accounts.find( (account) => {
+      return account.get('id') === metric.get('account')
+    });
+  });
 }
 
 export function matchesRegexp(string, pattern){

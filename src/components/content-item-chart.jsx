@@ -23,34 +23,26 @@ class ContentItemChart extends React.Component {
       this.setState({ showDiffLegend: hover })
     }
   }
-
+  
   groupData(rawData, groupSize, key) {
+    return rawData.reduce( (points, data, i) => {
 
-    let groupedData = 0;
+      let val
 
-    return rawData.reduce((points, data, i) => {
-
-      if(!(i % groupSize || i === 0) ) {
-        points.push(groupedData)
-        groupedData = 0
-      }
-
-      //should this be parsed? Is it possible that data has NaN -values?
       if (key) {
-        groupedData += data[key];
-      } else if (data !== null) {
-        groupedData += data;
+        val = data[key] || 0
       } else {
-        groupedData = null;
+        val = data || 0
       }
 
-      //if last group -> push
-      if (i === rawData.size - 1) {
-        points.push(groupedData);
+      if (!(i % groupSize)) {
+        points.push(val)
+      } else {
+        points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
       }
 
+      return points
 
-      return points;
     }, [])
   }
 
