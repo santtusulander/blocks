@@ -2,6 +2,10 @@ import React from 'react'
 import { Nav, NavItem } from 'react-bootstrap'
 
 import PageHeader from '../layout/page-header'
+import Brands from './system/brands'
+import DNS from './system/dns'
+import Roles from './system/roles'
+import Users from './system/users'
 
 class AccountManagementManageSystem extends React.Component {
   constructor(props) {
@@ -29,6 +33,20 @@ class AccountManagementManageSystem extends React.Component {
           <NavItem eventKey="dns">DNS</NavItem>
           <NavItem eventKey="roles">Roles</NavItem>
         </Nav>
+        <div className="tab-bodies">
+          {this.state.activeTab === 'users' &&
+            <Users/>
+          }
+          {this.state.activeTab === 'brands' &&
+            <Brands/>
+          }
+          {this.state.activeTab === 'dns' &&
+            <DNS/>
+          }
+          {this.state.activeTab === 'roles' &&
+            <Roles/>
+          }
+        </div>
       </div>
     )
   }

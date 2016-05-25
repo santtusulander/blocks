@@ -3,6 +3,9 @@ import { Nav, NavItem } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import PageHeader from '../layout/page-header'
+import Details from './account/details'
+import Groups from './account/groups'
+import Users from './account/users'
 
 class AccountManagementManageAccount extends React.Component {
   constructor(props) {
@@ -32,6 +35,23 @@ class AccountManagementManageAccount extends React.Component {
           <NavItem eventKey="groups">Groups</NavItem>
           <NavItem eventKey="users">Users</NavItem>
         </Nav>
+        <div className="tab-bodies">
+          {this.state.activeTab === 'details' &&
+            <Details
+              account={this.props.account}
+              isAdmin={this.props.isAdmin}/>
+          }
+          {this.state.activeTab === 'groups' &&
+            <Groups
+              account={this.props.account}
+              isAdmin={this.props.isAdmin}/>
+          }
+          {this.state.activeTab === 'users' &&
+            <Users
+              account={this.props.account}
+              isAdmin={this.props.isAdmin}/>
+          }
+        </div>
       </div>
     );
   }
@@ -39,7 +59,8 @@ class AccountManagementManageAccount extends React.Component {
 
 AccountManagementManageAccount.displayName = 'AccountManagementManageAccount'
 AccountManagementManageAccount.propTypes = {
-  account: React.PropTypes.instanceOf(Immutable.Map)
+  account: React.PropTypes.instanceOf(Immutable.Map),
+  isAdmin: React.PropTypes.bool
 }
 
 module.exports = AccountManagementManageAccount

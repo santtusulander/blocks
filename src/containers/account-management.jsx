@@ -20,7 +20,6 @@ export class AccountManagement extends React.Component {
     }
 
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
-
   }
 
   componentWillMount() {
