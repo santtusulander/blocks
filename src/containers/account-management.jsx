@@ -38,23 +38,19 @@ export class AccountManagement extends React.Component {
     const {account} = this.props.params
     const isAdmin = !account
     return (
-      <PageContainer hasSidebar={isAdmin}>
+      <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
           <Sidebar>
             Account list here
           </Sidebar>
           <Content>
-            <div className="container-fluid">
-              {this.state.activeAccount && <ManageAccount
-                account={this.props.activeAccount}/>}
-              {!this.state.activeAccount && <ManageSystem/>}
-            </div>
+            {this.state.activeAccount && <ManageAccount
+              account={this.props.activeAccount}/>}
+            {!this.state.activeAccount && <ManageSystem/>}
           </Content>
         </div>}
         {!isAdmin && <Content>
-          <div className="container-fluid">
-            <ManageAccount account={this.props.activeAccount}/>
-          </div>
+          <ManageAccount account={this.props.activeAccount}/>
         </Content>}
       </PageContainer>
     )

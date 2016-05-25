@@ -1,0 +1,12 @@
+.account-management {
+  .page-header-layout {
+    min-height: $page-header-height - 20;
+
+    @include md {
+      min-height: $md-page-header-height - 20;
+    }
+  }
+  .nav-tabs a {
+    padding: 0 60px;
+  }
+}
