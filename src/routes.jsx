@@ -91,6 +91,8 @@ module.exports = (
     </Route>
     <Route path="/security" component={Security}/>
     <Route path="/services" component={Services}/>
+    {/* TODO: This is temporary until the user api is managing permissions */}
+    <Route path="/account-management/:account" component={AccountManagement}/>
     <Route path="/account-management" component={AccountManagement}/>
   </Route>
 );

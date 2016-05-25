@@ -8,19 +8,54 @@ import * as accountActionCreators from '../redux/modules/account'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import Sidebar from '../components/layout/sidebar'
+import ManageAccount from '../components/account-management/manage-account'
+import ManageSystem from '../components/account-management/manage-system'
 
 export class AccountManagement extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      activeAccount: props.params.account || null
+    }
+
+    this.changeActiveAccount = this.changeActiveAccount.bind(this)
+
+  }
+
+  componentWillMount() {
+    if(this.state.activeAccount) {
+      this.props.accountActions.fetchAccount('udn', this.state.activeAccount)
+    }
+  }
+
+  changeActiveAccount(account) {
+    this.setState({activeAccount: account})
+    this.props.accountActions.fetchAccount('udn', account)
+  }
+
   render() {
+    const {account} = this.props.params
+    const isAdmin = !account
     return (
-      <PageContainer hasSidebar={true}>
-        <Sidebar>
-          Account list here
-        </Sidebar>
-        <Content>
+      <PageContainer hasSidebar={isAdmin}>
+        {isAdmin && <div>
+          <Sidebar>
+            Account list here
+          </Sidebar>
+          <Content>
+            <div className="container-fluid">
+              {this.state.activeAccount && <ManageAccount
+                account={this.props.activeAccount}/>}
+              {!this.state.activeAccount && <ManageSystem/>}
+            </div>
+          </Content>
+        </div>}
+        {!isAdmin && <Content>
           <div className="container-fluid">
-            <h1>Account management</h1>
+            <ManageAccount account={this.props.activeAccount}/>
           </div>
-        </Content>
+        </Content>}
       </PageContainer>
     )
   }
@@ -28,8 +63,10 @@ export class AccountManagement extends React.Component {
 
 AccountManagement.displayName = 'AccountManagement'
 AccountManagement.propTypes = {
+  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map)
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  params: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
