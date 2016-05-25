@@ -4,13 +4,13 @@ import { ButtonWrapper as Button } from '../components/button.js'
 import Sidebar from '../components/layout/sidebar.jsx'
 import { SidebarLinks } from './sidebar-links.jsx'
 
-const AccountSidebar = props => {
+export const AccountSidebar = props => {
   const { accounts, activate, addAccount } = props
   return (
     <Sidebar>
       <div className="configuration-versions">
         <div className="accounts-sidebar-header">
-          <Button bsStyle="primary" onClick={addAccount}>
+          <Button id="add" bsStyle="primary" onClick={addAccount}>
             New Account
           </Button>
         </div>
@@ -33,4 +33,4 @@ AccountSidebar.propTypes = {
   addAccount: PropTypes.func
 }
 
-module.exports = AccountSidebar
+//export default AccountSidebar

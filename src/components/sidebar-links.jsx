@@ -6,7 +6,7 @@ export const SidebarLinks = props => {
   const id = `${tag}_id`
   return (
     <ul className="version-list">
-      {items[0] ? items.map((item, index) =>
+      {items && items[0] ? items.map((item, index) =>
           <SidebarLink key={index}
             activate={() => activate(item.get(id))}
             active={item.get('active')}
