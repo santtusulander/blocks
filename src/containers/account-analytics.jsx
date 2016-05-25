@@ -145,8 +145,7 @@ AccountAnalytics.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByOS: React.PropTypes.instanceOf(Immutable.Map),
   visitorsByTime: React.PropTypes.instanceOf(Immutable.List),
-  visitorsFetching: React.PropTypes.bool,
-
+  visitorsFetching: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
@@ -231,14 +230,9 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
     exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
-    reportsActions: bindActionCreators(reportsActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

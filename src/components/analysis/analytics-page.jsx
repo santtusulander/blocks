@@ -77,7 +77,7 @@ export class AnalyticsPage extends React.Component {
   }
   showExportPanel( exportType ){
     this.props.exportsActions.exportsShowDialog({
-        exportType: exportType,
+      exportType: exportType
     });
   }
 
@@ -134,13 +134,12 @@ export class AnalyticsPage extends React.Component {
       <PageContainer hasSidebar={true} className="analytics-page">
 
         <ExportPanel
-            show={ this.props.exportsDialogState.dialogVisible }
-            exportType={ this.props.exportsDialogState.exportType }
-            onDownload={ this.onDownload }
-            onSend={ this.onSend }
-            onCancel={ this.hideExportPanel }
-            showExportPanel={ this.showExportPanel }
-        />
+          show={this.props.exportsDialogState.dialogVisible}
+          exportType={this.props.exportsDialogState.exportType}
+          onDownload={this.onDownload}
+          onSend={this.onSend}
+          onCancel={this.hideExportPanel}
+          showExportPanel={this.showExportPanel}/>
 
         <Sidebar>
           <Analyses
@@ -157,7 +156,7 @@ export class AnalyticsPage extends React.Component {
             navOptions={this.props.siblings}
             activeVideo={this.state.activeVideo}
             changeVideo={this.changeActiveVideo}
-            showExportPanel={ this.showExportPanel }
+            showExportPanel={this.showExportPanel}
           />
 
         </Sidebar>
@@ -229,8 +228,9 @@ AnalyticsPage.propTypes = {
   changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
-  exportsDialogState: React.PropTypes.instanceOf(Object),
   exportFilenamePart: React.PropTypes.string,
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.instanceOf(Object),
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
