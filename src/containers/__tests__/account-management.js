@@ -6,10 +6,18 @@ const {AccountManagement} = require('../account-management.jsx')
 
 const fakeParams = {account: 1}
 
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.genMockFunction()
+  }
+}
+
 describe('AccountManagement', () => {
   it('should exist', () => {
     let accountManagement = TestUtils.renderIntoDocument(
-      <AccountManagement params={fakeParams}/>
+      <AccountManagement
+        accountActions={accountActionsMaker()}
+        params={fakeParams}/>
     );
     expect(TestUtils.isCompositeComponent(accountManagement)).toBeTruthy();
   });
