@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { List } from 'immutable'
 
 import { ButtonWrapper as Button } from '../components/button.js'
 import Sidebar from '../components/layout/sidebar.jsx'
@@ -28,7 +29,7 @@ export const AccountSidebar = props => {
 }
 
 AccountSidebar.propTypes = {
-  accounts: PropTypes.array,
+  accounts: PropTypes.instanceOf(List),
   activate: PropTypes.func,
   addAccount: PropTypes.func
 }
