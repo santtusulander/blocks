@@ -17,11 +17,18 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
+    preLoaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'source-map'
+      }
+    ],
     loaders: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'react-hot!babel-loader'
+        loader: 'react-hot!babel-loader?cacheDirectory'
       },
       {
         test: /\.scss$/,

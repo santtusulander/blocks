@@ -15,10 +15,12 @@ class Header extends React.Component {
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
     this.toggleAccountMenu = this.toggleAccountMenu.bind(this)
+    this.toggleUserMenu = this.toggleUserMenu.bind(this)
 
     this.state = {
       animatingGradient: false,
-      accountMenuOpen: false
+      accountMenuOpen: false,
+      userMenuOpen: false
     }
   }
   componentDidMount() {
@@ -49,6 +51,9 @@ class Header extends React.Component {
   }
   toggleAccountMenu() {
     this.setState({accountMenuOpen: !this.state.accountMenuOpen})
+  }
+  toggleUserMenu() {
+    this.setState({userMenuOpen: !this.state.userMenuOpen})
   }
   render() {
     let className = 'header'
@@ -197,7 +202,9 @@ class Header extends React.Component {
                 type="text" placeholder="Search" />
             </li>
             <li>
-              <Dropdown id="user-menu" pullRight={true}>
+              <Dropdown id="user-menu" pullRight={true}
+                open={this.state.userMenuOpen}
+                onToggle={this.toggleUserMenu}>
                 <Dropdown.Toggle bsStyle="primary"
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
@@ -233,9 +240,15 @@ class Header extends React.Component {
                           </div>
                         </div>
                       </li>
-                      <MenuItem eventKey="4">
-                        <div className="user-menu-item">Account Management</div>
-                      </MenuItem>
+                      <li>
+                        <Link
+                          to={`/account-management`} activeClassName="active"
+                          onClick={this.toggleUserMenu}>
+                          <div className="user-menu-item">
+                            Account Management
+                          </div>
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   <li className="bottom-item" eventKey="5">
