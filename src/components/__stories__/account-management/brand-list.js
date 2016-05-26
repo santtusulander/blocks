@@ -11,7 +11,7 @@ import {
 
 const brandList = [
   {id: 1, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
-  {id: 2, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
+  {id: 2, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: [{accountName: 'Account Name #2'},{accountName: 'Account Name #3'}] },
   {id: 3, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
   {id: 4, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'}
 ]

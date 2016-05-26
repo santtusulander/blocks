@@ -1,19 +1,13 @@
-import React from 'react';
+import React from 'react'
+import { ButtonWrapper } from '../button.js'
 
-import IconTrash from '../icons/icon-trash.jsx';
-import IconAdd from '../icons/icon-add.jsx';
+import ActionLinks from './action-links.jsx'
+import AccountManagementHeader from './account-management-header.jsx'
 
-const AVAILABILITY_SHARED = 'Shared';
-const AVAILABILITY_PRIVATE = 'Private';
+import './brand-list.scss';
 
-const ActionLinks = (props) => {
-  return (
-    <div className='actionLinks'>
-      <a onClick={ props.onEdit } >Edit</a>
-      <a onClick={ props.onDelete } ><IconTrash /></a>
-    </div>
-  )
-}
+const AVAILABILITY_SHARED = 'Shared'
+const AVAILABILITY_PRIVATE = 'Private'
 
 const BrandListRow = (props) => {
   return (
@@ -32,7 +26,7 @@ const BrandListRow = (props) => {
         {props.lastEdited}
       </td>
       <td>
-        {props.usedBy}
+        <BrandlistUsedBy fieldVal={props.usedBy} />
       </td>
       <td>
         <ActionLinks onEdit={ () => props.onEdit(props.id) } onDelete={ () => props.onDelete(props.id) }  />
@@ -46,7 +40,28 @@ BrandListRow.propTypes = {
   brand: React.PropTypes.string,
   availability: React.PropTypes.string,
   last_edited: React.PropTypes.string,
-  usedBy: React.PropTypes.string,
+  usedBy: React.PropTypes.string
+}
+
+const BrandlistUsedBy = (props) => {
+  let content
+
+  if ( Array.isArray(props.fieldVal) ) {
+    content = props.fieldVal.map( ( item ) => {
+      return (
+        <a>{item.accountName}</a>
+      )
+    });
+
+  } else {
+    content = props.fieldVal
+  }
+
+  return (
+    <span>
+      { content }
+    </span>
+  )
 }
 
 const BrandList = (props) => {
@@ -58,9 +73,9 @@ const BrandList = (props) => {
   });
 
   return (
-    <div clasName='brandList'>
+    <div className='brandList'>
 
-      <h3>{props.brands.length} brands <a onClick={props.onAdd}><IconAdd /></a></h3>
+      <AccountManagementHeader title={ `${props.brands.length} Brands` } />
 
       <table className="table table-striped table-analysis">
 
@@ -84,7 +99,6 @@ const BrandList = (props) => {
 }
 
 module.exports = {
-  ActionLinks,
   BrandList,
   BrandListRow,
   AVAILABILITY_SHARED,
