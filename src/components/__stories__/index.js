@@ -6,3 +6,4 @@ import './export-file-form';
 
 //account management
 import './account-management/brand-list'
+import './account-management/roles-tab'

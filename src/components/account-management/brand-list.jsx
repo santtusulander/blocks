@@ -78,8 +78,7 @@ const BrandList = (props) => {
 
       <AccountManagementHeader title={ `${props.brands.length} Brands` } />
 
-      <table className="table table-striped table-analysis">
-
+      <table className="table table-striped">
         <thead>
           <tr>
             <th>Brand</th>
