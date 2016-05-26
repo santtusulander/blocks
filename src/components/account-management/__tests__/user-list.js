@@ -1,9 +1,9 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import { fromJS, List } from 'immutable'
-import { storiesOf, action } from '@kadira/storybook'
 
-const ThemeWrap = require('../theme-wrap.jsx');
-const UserList = require('../../account-management/user-list.jsx').UserList
+jest.dontMock('../user-list.jsx')
+const UserList = require('../user-list.jsx').UserList
 
 const fakeUsers = fromJS([
   {id: 1, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
@@ -13,21 +13,22 @@ const fakeUsers = fromJS([
   {id: 5, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
   {id: 6, name: 'Firstname Lastname', role: 'UDN Viewer', email: 'firstname.lastname@company.com'}
 ])
-storiesOf('UserList', module)
-  .addDecorator((story) => (
-    <ThemeWrap>
-      {story()}
-    </ThemeWrap>
-  ))
-  .add('Default', () => (
-    <UserList
-      users={fakeUsers}
-      deleteUser={action('delete user')}
-      editUser={action('edit user')}/>
-  ))
-  .add('Empty', () => (
-    <UserList
-      users={List()}
-      deleteUser={action('delete user')}
-      editUser={action('edit user')}/>
-  ))
+
+describe('UserList', () => {
+
+  it('should exist', () => {
+    const list = shallow(<UserList/>)
+    expect(list.length).toBe(1)
+  })
+
+  it('should show empty message', () => {
+    const list = shallow(<UserList users={List()}/>)
+    expect(list.find('#empty-msg').length).toBe(1)
+  })
+
+  it('should list users', () => {
+    const list = shallow(<UserList users={fakeUsers}/>)
+    expect(list.find('tbody tr').length).toBe(6)
+  })
+
+})

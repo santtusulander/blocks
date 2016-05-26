@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { List } from 'immutable'
 
 import { ActionLinks } from './action-links.jsx'
 
@@ -15,19 +16,21 @@ export const UserList = props => {
         </tr>
       </thead>
       <tbody>
-        {users.map((user, index) => {
+        {!users.isEmpty() ? users.map((user, index) => {
           const id = user.id
           return (
             <tr key={index}>
-              <td>{user.name}</td>
-              <td>{user.role}</td>
-              <td>{user.email}</td>
+              <td>{user.get('name')}</td>
+              <td>{user.get('role')}</td>
+              <td>{user.get('email')}</td>
               <td>
-                <ActionLinks edit={() => editUser(id)} delete={() => deleteUser(id)}/>
+                <ActionLinks
+                  onEdit={() => editUser(id)}
+                  onDelete={() => deleteUser(id)}/>
               </td>
             </tr>
           )
-        })}
+        }) : <tr id="empty-msg"><td colSpan="4">No users</td></tr>}
       </tbody>
     </table>
   )
@@ -36,9 +39,9 @@ export const UserList = props => {
 UserList.propTypes = {
   deleteUser: PropTypes.func,
   editUser: PropTypes.func,
-  users: PropTypes.array
+  users: PropTypes.instanceOf(List)
 }
 UserList.defaultProps = {
-  users: []
+  users: List()
 }
 

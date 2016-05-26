@@ -3,15 +3,15 @@ import IconTrash from '../icons/icon-trash.jsx'
 
 export const ActionLinks = props =>
   <div className="cell-text-center">
-    <a className="edit-user-link" onClick={props.edit}>
+    <a className="edit-link" onClick={props.onEdit}>
       EDIT
     </a>
-    <a onClick={props.delete}>
-      <IconTrash className="delete-user-icon"/>
+    <a id="delete" onClick={props.onDelete}>
+      <IconTrash className="delete-icon"/>
     </a>
   </div>
 
 ActionLinks.propTypes = {
-  delete: PropTypes.func,
-  edit: PropTypes.func
+  onDelete: PropTypes.func,
+  onEdit: PropTypes.func
 }

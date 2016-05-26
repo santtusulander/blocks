@@ -1,0 +1,16 @@
+.cell-text-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.delete-icon {
+  margin-left: 5px;
+  fill: $pale-blue !important;
+  stroke: $pale-blue !important;
+  cursor: pointer;
+}
+
+.edit-link {
+  margin-right: 5px;
+  cursor: pointer;
+}
