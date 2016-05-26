@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox } from 'react-bootstrap'
+import { Input } from 'react-bootstrap'
 import { ButtonWrapper } from '../button.js'
 
 import AccountManagementHeader from './account-management-header.jsx'
@@ -8,20 +8,26 @@ import './roles-tab.scss';
 
 const RolesTabRow = (props) => {
   return (
-    <tr className='RolesTabRow'>
+    <tr className='rolesTabRow'>
         <td>
           {props.roleName}
         </td>
         <td>
-          < label='aaa'/>
+          <div className='checkbox-container'>
+            <Input type='checkbox' label=' ' />
+          </div>
         </td>
 
         <td>
-          <Checkbox />
+          <div className='checkbox-container'>
+            <Input type='checkbox' label=' ' />
+          </div>
         </td>
 
         <td>
-            <Checkbox />
+          <div className='checkbox-container'>
+            <Input type='checkbox' label=' ' />
+          </div>
         </td>
     </tr>
   )
@@ -45,9 +51,9 @@ const RolesTab = (props) => {
         <thead>
           <tr>
             <th>Role</th>
-            <th>Udn</th>
-            <th>Content Provider</th>
-            <th>Service Provider</th>
+            <th className='checkbox-container'>Udn</th>
+            <th className='checkbox-container'>Content Provider</th>
+            <th className='checkbox-container'>Service Provider</th>
           </tr>
         </thead>
 
