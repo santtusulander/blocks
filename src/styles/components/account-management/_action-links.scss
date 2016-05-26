@@ -1,0 +1,22 @@
+.cell-text-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.action-links {
+  .btn-primary {
+    background-color: transparent;
+    margin-left: 5px;
+  }
+}
+
+.delete-icon {
+  fill: $pale-blue !important;
+  stroke: $pale-blue !important;
+  cursor: pointer;
+}
+
+.action-link-edit {
+  margin-right: 5px;
+  cursor: pointer;
+}
