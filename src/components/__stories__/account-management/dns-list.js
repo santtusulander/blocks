@@ -6,13 +6,13 @@ const ThemeWrap = require('../theme-wrap.jsx');
 const DNSList = require('../../account-management/dns-list.jsx').DNSList
 
 const fakeRecords = fromJS([
-  {id: 1, hostName: 'aaa.com', recordType: 'Firstname Lastname', address: 'UDN Superuser', TTL: 'firstname.lastname@company.com'},
-  {id: 1, hostName: 'aaa.com', recordType: 'Firstname Lastname', address: 'UDN Superuser', TTL: 'firstname.lastname@company.com'},
-  {id: 1, hostName: 'aaa.com', recordType: 'Firstname Lastname', address: 'UDN Superuser', TTL: 'firstname.lastname@company.com'},
-  {id: 1, hostName: 'aaa.com', recordType: 'Firstname Lastname', address: 'UDN Superuser', TTL: 'firstname.lastname@company.com'},
-  {id: 1, hostName: 'aaa.com', recordType: 'Firstname Lastname', address: 'UDN Superuser', TTL: 'firstname.lastname@company.com'}
+  {id: 1, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
+  {id: 2, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
+  {id: 3, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
+  {id: 4, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
+  {id: 5, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'}
 ])
-storiesOf('UserList', module)
+storiesOf('DNSList', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
@@ -21,12 +21,12 @@ storiesOf('UserList', module)
   .add('Default', () => (
     <DNSList
       records={fakeRecords}
-      deleteUser={action('delete user')}
-      editUser={action('edit user')}/>
+      deleteRecord={action('delete record')}
+      editRecord={action('edit record')}/>
   ))
   .add('Empty', () => (
     <DNSList
-      users={List()}
-      deleteUser={action('delete user')}
-      editUser={action('edit user')}/>
+      records={List()}
+      deleteRecord={action('delete record')}
+      editRecord={action('edit record')}/>
   ))

@@ -6,4 +6,5 @@ import './export-file-form';
 
 //account management
 import './account-management/user-list'
+import './account-management/dns-list'
 

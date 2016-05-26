@@ -7,7 +7,7 @@ import AccountManagementHeader from './account-management-header.jsx'
 export const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props
   return (
-    <div className='brandList'>
+    <div>
       <AccountManagementHeader title={`${users.size} Users`} onAdd={addUser}/>
       <table className="table table-striped cell-text-left">
         <thead >
