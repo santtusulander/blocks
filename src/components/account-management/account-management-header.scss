@@ -1,11 +1,10 @@
 @import '../../styles/base/colors';
 
 .accountManagementHeader {
-  margin-bottom: 40px;
-  clear: both;
 
   .btn-add-new {
     float: right;
+    margin-bottom: 20px;
   }
 
   .dark-theme & {
