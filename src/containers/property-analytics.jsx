@@ -27,6 +27,7 @@ export class PropertyAnalytics extends React.Component {
 
     this.changeDateRange = this.changeDateRange.bind(this)
   }
+
   componentWillMount() {
     this.props.fetchInit()
     this.fetchData()
@@ -43,6 +44,7 @@ export class PropertyAnalytics extends React.Component {
       this.state.endDate
     )
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :

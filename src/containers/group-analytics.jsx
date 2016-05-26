@@ -21,11 +21,13 @@ export class GroupAnalytics extends React.Component {
     this.state = {
       dateRange: 'month to date',
       endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('month')
+      startDate: moment().utc().startOf('month'),
+      showExportPanel: false
     }
 
     this.changeDateRange = this.changeDateRange.bind(this)
   }
+
   componentWillMount() {
     this.props.fetchInit()
     this.fetchData()
@@ -42,6 +44,7 @@ export class GroupAnalytics extends React.Component {
       this.state.endDate
     )
   }
+
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -55,6 +58,7 @@ export class GroupAnalytics extends React.Component {
       startDate: startDate
     }, this.fetchData)
   }
+
   render() {
     const availableGroups = this.props.groups.map(group => {
       return {
@@ -100,7 +104,8 @@ export class GroupAnalytics extends React.Component {
         visitorsByCountry={this.props.visitorsByCountry}
         visitorsByOS={this.props.visitorsByOS}
         visitorsByTime={this.props.visitorsByTime}
-        visitorsFetching={this.props.visitorsFetching}/>
+        visitorsFetching={this.props.visitorsFetching}
+      />
     )
   }
 }

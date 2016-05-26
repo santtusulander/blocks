@@ -16,6 +16,8 @@ import AnalysisStorageUsage from './storage-usage'
 import AnalysisPlaybackDemo from './playback-demo'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 
+import { ExportPanel }from '../export-panel'
+
 let exporters = createCSVExporters('')
 
 export class AnalyticsPage extends React.Component {
@@ -29,9 +31,13 @@ export class AnalyticsPage extends React.Component {
 
     this.changeTab = this.changeTab.bind(this)
     this.changeActiveVideo = this.changeActiveVideo.bind(this)
+
     this.exportCSV = this.exportCSV.bind(this)
-    this.exportEmail = this.exportEmail.bind(this)
-    this.exportPDF = this.exportPDF.bind(this)
+    this.onDownload = this.onDownload.bind(this)
+    this.onSend = this.onSend.bind(this)
+
+    this.showExportPanel = this.showExportPanel.bind(this);
+    this.hideExportPanel = this.hideExportPanel.bind(this);
 
     exporters = createCSVExporters(props.exportFilenamePart)
   }
@@ -46,6 +52,7 @@ export class AnalyticsPage extends React.Component {
   changeActiveVideo(video) {
     this.setState({activeVideo: video})
   }
+
   exportCSV() {
     switch(this.state.activeTab) {
       case 'traffic':
@@ -68,12 +75,51 @@ export class AnalyticsPage extends React.Component {
         break
     }
   }
-  exportEmail() {
-    // show the send email modal
+  showExportPanel( exportType ){
+    this.props.exportsActions.exportsShowDialog({
+      exportType: exportType
+    });
   }
-  exportPDF() {
-    // export the pdf based on this.state.activeTab
+
+  hideExportPanel(){
+    this.props.exportsActions.exportsHideDialog();
   }
+
+  onDownload( fileType ) {
+
+    switch( fileType ) {
+      case 'export_pdf':
+
+        this.props.exportsActions.exportsDownloadFile({
+          exportType: fileType,
+          reportType: this.state.activeTab,
+          startDate:  this.props.startDate,
+          endDate:    this.props.endDate
+        })
+
+        break;
+      case 'export_csv':
+        this.exportCSV();
+        break;
+      default:
+        console.log('--- Download file type: DEFAULT ---')
+        break;
+    }
+
+    this.hideExportPanel();
+  }
+
+  onSend( formValues ){
+    this.props.exportsActions.exportsSendEmail({
+      formValues: formValues,
+      reportType: this.state.activeTab,
+      startDate:  this.props.startDate,
+      endDate:    this.props.endDate
+    })
+
+    this.hideExportPanel();
+  }
+
   render() {
     const metrics = this.props.metrics
     const peakTraffic = metrics.has('transfer_rates') ?
@@ -82,8 +128,19 @@ export class AnalyticsPage extends React.Component {
       metrics.get('transfer_rates').get('average') : '0.0 Gbps'
     const lowTraffic = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
+
     return (
+
       <PageContainer hasSidebar={true} className="analytics-page">
+
+        <ExportPanel
+          show={this.props.exportsDialogState.dialogVisible}
+          exportType={this.props.exportsDialogState.exportType}
+          onDownload={this.onDownload}
+          onSend={this.onSend}
+          onCancel={this.hideExportPanel}
+          showExportPanel={this.showExportPanel}/>
+
         <Sidebar>
           <Analyses
             endDate={this.props.endDate}
@@ -99,9 +156,9 @@ export class AnalyticsPage extends React.Component {
             navOptions={this.props.siblings}
             activeVideo={this.state.activeVideo}
             changeVideo={this.changeActiveVideo}
-            exportCSV={this.exportCSV}
-            exportEmail={this.exportEmail}
-            exportPDF={this.exportPDF}/>
+            showExportPanel={this.showExportPanel}
+          />
+
         </Sidebar>
 
         <Content>
@@ -172,6 +229,8 @@ AnalyticsPage.propTypes = {
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
   exportFilenamePart: React.PropTypes.string,
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.instanceOf(Object),
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
@@ -199,6 +258,8 @@ AnalyticsPage.propTypes = {
 }
 
 AnalyticsPage.defaultProps = {
+  exportsDialogState: {},
+  exportFilenamePart: '',
   fileErrorSummary: Immutable.Map(),
   fileErrorURLs: Immutable.List(),
   metrics: Immutable.Map(),
