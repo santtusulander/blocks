@@ -22,12 +22,14 @@ storiesOf('UserList', module)
   .add('Default', () => (
     <UserList
       users={fakeUsers}
+      addUser={action('add user')}
       deleteUser={action('delete user')}
       editUser={action('edit user')}/>
   ))
   .add('Empty', () => (
     <UserList
       users={List()}
+      addUser={action('add user')}
       deleteUser={action('delete user')}
       editUser={action('edit user')}/>
   ))

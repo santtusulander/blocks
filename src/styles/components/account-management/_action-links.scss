@@ -3,14 +3,20 @@
   vertical-align: middle;
 }
 
+.action-links {
+  .btn-primary {
+    background-color: transparent;
+    margin-left: 5px;
+  }
+}
+
 .delete-icon {
-  margin-left: 5px;
   fill: $pale-blue !important;
   stroke: $pale-blue !important;
   cursor: pointer;
 }
 
-.edit-link {
+.action-link-edit {
   margin-right: 5px;
   cursor: pointer;
 }

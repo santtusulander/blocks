@@ -1,17 +1,17 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
+
+import { ButtonWrapper as Button } from '../button.js'
 import IconTrash from '../icons/icon-trash.jsx'
 
-export const ActionLinks = props =>
-  <div className="cell-text-center">
-    <a className="edit-link" onClick={props.onEdit}>
-      EDIT
-    </a>
-    <a id="delete" onClick={props.onDelete}>
-      <IconTrash className="delete-icon"/>
-    </a>
-  </div>
+const ActionLinks = props =>
+    <div className='action-links cell-text-center'>
+      <a className='action-link-edit' onClick={props.onEdit}>EDIT</a>
+      <Button bsStyle='primary' icon={true} onClick={props.onDelete}><IconTrash /></Button>
+    </div>
 
 ActionLinks.propTypes = {
   onDelete: PropTypes.func,
   onEdit: PropTypes.func
 }
+
+export default ActionLinks
