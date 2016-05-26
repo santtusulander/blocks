@@ -36,6 +36,14 @@ const RolesTabRow = (props) => {
 
 const RolesTab = (props) => {
 
+  if (!props.roles || props.roles.length == 0) {
+    return (
+      <div>
+        <p>No roles found</p>
+      </div>
+    )
+  }
+
   const tableRows = props.roles.map( (role, i) => {
     return (
       <RolesTabRow key={i} { ... role } onEdit={props.onEdit} onDelete={props.onDelete}  />
