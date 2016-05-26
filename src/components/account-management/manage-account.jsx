@@ -42,8 +42,7 @@ class AccountManagementManageAccount extends React.Component {
               isAdmin={this.props.isAdmin}/>
           }
           {this.state.activeTab === 'groups' &&
-            <Groups
-              groups={this.props.groups}/>
+            <Groups groups={this.props.groups}/>
           }
           {this.state.activeTab === 'users' &&
             <Users
