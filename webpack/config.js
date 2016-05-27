@@ -1,4 +1,5 @@
 var path = require('path');
+var ExtractTextPlugin    = require('extract-text-webpack-plugin');
 
 const isProductionBuild = () => (process.argv.indexOf('--production-build') !== -1)
 
@@ -32,12 +33,18 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: [
-          'style',
-          'css?sourceMap',
-          "autoprefixer?{browsers:['last 2 version', 'IE 9']}",
-          'sass?sourceMap'
-        ]
+        loader:
+          isProductionBuild() ?
+            ExtractTextPlugin.extract(
+              'style',
+              [
+                'css?sourceMap',
+                "autoprefixer?{browsers:['last 2 version', 'IE 9']}",
+                'sass?sourceMap'
+              ]
+            )
+          :
+            "style!css?sourceMap!autoprefixer?{browsers:['last 2 version', 'IE 9']}!sass?sourceMap"
       },
       {
         test: /\.(jpg|jpeg|gif|png)$/,

@@ -23,39 +23,38 @@ class ContentItemChart extends React.Component {
       this.setState({ showDiffLegend: hover })
     }
   }
+  
+  groupData(rawData, groupSize, key) {
+    return rawData.reduce( (points, data, i) => {
+
+      let val
+
+      if (key) {
+        val = data[key] || 0
+      } else {
+        val = data || 0
+      }
+
+      if (!(i % groupSize)) {
+        points.push(val)
+      } else {
+        points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
+      }
+
+      return points
+
+    }, [])
+  }
+
   render() {
     if (this.props.fetchingMetrics) {
       return <div id="fetchingMetrics">Loading...</div>
     }
-    const primaryData = this.props.primaryData.toJS().reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
-        points.push(data.bytes || 0)
-      } else {
-        points[points.length-1] =
-          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
-      }
-      return points;
-    }, [])
-    const secondaryData = this.props.secondaryData.toJS().reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 3)) {
-        points.push(data.bytes || 0)
-      } else {
-        points[points.length-1] =
-          parseInt(points[points.length-1]) + parseInt(data.bytes || 0)
-      }
-      return points;
-    }, [])
-    const differenceData = this.props.differenceData.reduce((points, data, i) => {
-      // Group data into chunks of 3 as one data point in the chart = 3 hours
-      if(!(i % 24)) {
-        points.push(data ? data : data === 0 ? 0 : null)
-      } else {
-        points[points.length-1] = data ? points[points.length-1] + data : data === 0 ? 0 : null
-      }
-      return points;
-    }, [])
+
+    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bytes');
+    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bytes');
+    const differenceData = this.groupData(this.props.differenceData.toJS(), 24);
+
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
     })

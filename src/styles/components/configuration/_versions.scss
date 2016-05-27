@@ -49,6 +49,7 @@
   min-height: $bar-height;
   padding: 11px 10px 11px $bar-height;
   text-decoration: none;
+  cursor: pointer;
 
   @include md {
     min-height: $md-bar-height;
