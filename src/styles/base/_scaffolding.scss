@@ -47,10 +47,16 @@ body {
 }
 
 a {
-
   .dark-theme &,
   .light-theme & {
     color: $pale-blue;
+  }
+}
+
+.btn-link svg{
+  .dark-theme &,
+  .light-theme & {
+    fill: $pale-blue;
   }
 }
 

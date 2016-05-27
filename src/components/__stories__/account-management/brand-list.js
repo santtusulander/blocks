@@ -1,29 +1,28 @@
-import React from 'react'
+import React from 'react';
+import Immutable from 'immutable';
+import { storiesOf, action } from '@kadira/storybook';
+
+import ThemeWrap from '../theme-wrap.jsx'
 import {
   BrandList,
   AVAILABILITY_PRIVATE,
   AVAILABILITY_SHARED,
-  }  from '../brand-list.jsx'
+  } from '../../account-management/brand-list.jsx'
 
-const fakeBrands = [
+const brandList = [
   {id: 1, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
   {id: 2, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: [{accountName: 'Account Name #2'},{accountName: 'Account Name #3'}] },
   {id: 3, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
   {id: 4, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'}
 ]
 
+storiesOf('AccountManagement', module)
+  .addDecorator((story) => (
+    <ThemeWrap >
+      {story()}
+    </ThemeWrap>
+  ))
+  .add('BrandList', () => (
 
-class AccountManagementSystemBrands extends React.Component {
-  render() {
-    return (
-      <div className="account-management-system-brands">
-        <BrandList brands={fakeBrands} />
-      </div>
-    )
-  }
-}
-
-AccountManagementSystemBrands.displayName = 'AccountManagementSystemBrands'
-AccountManagementSystemBrands.propTypes = {}
-
-module.exports = AccountManagementSystemBrands
+    <BrandList brands={brandList} onAdd={ action('onAdd') } onEdit={ action('onEdit') } onDelete={ action('onDelete') } />
+  ))

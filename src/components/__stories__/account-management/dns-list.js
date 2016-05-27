@@ -64,7 +64,7 @@ storiesOf('DNSList', module)
       changeRecordType={action('change record type')}
       onAddEntry={action('add entry')}/>
   ))
-  .add('Empty', () => (
+  .add('DNSList (empty)', () => (
     <DNSList
       entries={List()}
       editSOA={(action('edit SOA'))}

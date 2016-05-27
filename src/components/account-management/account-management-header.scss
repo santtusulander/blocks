@@ -1,0 +1,15 @@
+@import '../../styles/base/colors';
+
+.accountManagementHeader {
+
+  .btn-add-new {
+    float: right;
+    margin-bottom: 20px;
+  }
+
+  .dark-theme & {
+    .btn-add-new {
+      background-color: $btn-success-bg !important;
+    }
+  }
+}

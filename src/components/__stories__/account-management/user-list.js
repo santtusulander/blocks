@@ -13,20 +13,20 @@ const fakeUsers = fromJS([
   {id: 5, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
   {id: 6, name: 'Firstname Lastname', role: 'UDN Viewer', email: 'firstname.lastname@company.com'}
 ])
-storiesOf('UserList', module)
+storiesOf('AccountManagement', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
     </ThemeWrap>
   ))
-  .add('Default', () => (
+  .add('UserList (Default)', () => (
     <UserList
       users={fakeUsers}
       addUser={action('add user')}
       deleteUser={action('delete user')}
       editUser={action('edit user')}/>
   ))
-  .add('Empty', () => (
+  .add('UserList (Empty)', () => (
     <UserList
       users={List()}
       addUser={action('add user')}
