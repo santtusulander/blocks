@@ -52,4 +52,8 @@ Select.propTypes = {
   value: React.PropTypes.string
 };
 
+Select.defaultProps = {
+  options: []
+}
+
 module.exports = Select

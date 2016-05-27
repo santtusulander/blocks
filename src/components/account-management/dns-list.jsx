@@ -1,21 +1,50 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import IconAdd from '../icons/icon-add.jsx'
 import { ButtonWrapper as Button } from '../button.js'
-
 import ActionLinks from './action-links.jsx'
+import IconAdd from '../icons/icon-add.jsx'
+import Select from '../select.jsx'
+import recordTypes from '../../constants/dns-record-types.js'
 
 export const DNSList = props => {
-  const { records, editRecord, deleteRecord, editSOA, onAdd } = props
+  const {
+    domains,
+    entries,
+    editEntry,
+    deleteEntry,
+    editSOA,
+    onAddDomain,
+    onAddEntry,
+    activeDomain,
+    changeRecordType,
+    recordType } = props
   return (
     <div>
+      <div className="account-management-header">
+        Select Domain
+        <Select
+          value={activeDomain && activeDomain.id}
+          className='dns-dropdowns'
+          onSelect={type => changeRecordType(type)}
+          options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
+        <Button bsStyle="primary" onClick={onAddDomain}>
+          ADD DOMAIN
+        </Button>
+      </div>
       <h3 className="account-management-header">
-        <span>{`DNS: what.is.this: ${records.size} resource records `}</span>
-        <a onClick={() => editSOA(1)}>Edit SOA</a>
-        <Button bsStyle="primary" icon={true} addNew={true} onClick={onAdd}>
+        <span>{activeDomain ? `DNS: ${activeDomain.name}: ${entries.size} resource entries ` : 'No active Domain'}</span>
+        {activeDomain ? <a onClick={() => editSOA(activeDomain.id)}>Edit SOA</a> : null}
+        <div className='dns-filter-wrapper'>
+        <Select
+          value={recordType}
+          className='dns-dropdowns'
+          onSelect={type => changeRecordType(type)}
+          options={recordTypes.map(type => [type, type])}/>
+        <Button bsStyle="primary" icon={true} addNew={true} onClick={onAddEntry}>
           <IconAdd/>
         </Button>
+        </div>
       </h3>
       <table className="table table-striped cell-text-left">
         <thead >
@@ -28,7 +57,7 @@ export const DNSList = props => {
           </tr>
         </thead>
         <tbody>
-          {!records.isEmpty() ? records.map((record, index) => {
+          {!entries.isEmpty() ? entries.map((record, index) => {
             const id = record.get('id')
             return (
               <tr key={index}>
@@ -38,12 +67,12 @@ export const DNSList = props => {
                 <td>{record.get('ttl')}</td>
                 <td>
                   <ActionLinks
-                    onEdit={() => editRecord(id)}
-                    onDelete={() => deleteRecord(id)}/>
+                    onEdit={() => editEntry(id)}
+                    onDelete={() => deleteEntry(id)}/>
                 </td>
               </tr>
             )
-          }) : <tr id="empty-msg"><td colSpan="4">No users</td></tr>}
+          }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
         </tbody>
       </table>
     </div>
@@ -51,11 +80,16 @@ export const DNSList = props => {
 }
 
 DNSList.propTypes = {
-  deleteRecord: PropTypes.func,
-  editRecord: PropTypes.func,
+  activeDomain: PropTypes.object,
+  changeRecordType: PropTypes.func,
+  deleteEntry: PropTypes.func,
+  domains: PropTypes.instanceOf(List),
+  editEntry: PropTypes.func,
   editSOA: PropTypes.func,
-  onAdd: PropTypes.func,
-  records: PropTypes.instanceOf(List)
+  entries: PropTypes.instanceOf(List),
+  onAddDomain: PropTypes.func,
+  onAddEntry: PropTypes.func,
+  recordType: PropTypes.string
 }
 DNSList.defaultProps = {
   users: List()
