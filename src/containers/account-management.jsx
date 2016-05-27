@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -24,13 +25,13 @@ export class AccountManagement extends React.Component {
 
   componentWillMount() {
     if(this.state.activeAccount) {
-      this.props.accountActions.fetchAccount('udn', this.state.activeAccount)
+      this.props.fetchAccountData(this.state.activeAccount)
     }
   }
 
   changeActiveAccount(account) {
     this.setState({activeAccount: account})
-    this.props.accountActions.fetchAccount('udn', account)
+    this.props.fetchAccountData(account)
   }
 
   render() {
@@ -49,7 +50,9 @@ export class AccountManagement extends React.Component {
           </Content>
         </div>}
         {!isAdmin && <Content>
-          <ManageAccount account={this.props.activeAccount}/>
+          <ManageAccount
+            account={this.props.activeAccount}
+            groups={this.props.groups}/>
         </Content>}
       </PageContainer>
     )
@@ -58,24 +61,32 @@ export class AccountManagement extends React.Component {
 
 AccountManagement.displayName = 'AccountManagement'
 AccountManagement.propTypes = {
-  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  fetchAccountData: React.PropTypes.func,
+  groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount')
+    activeAccount: state.account.get('activeAccount'),
+    groups: state.group.get('allGroups')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+
+  function fetchAccountData(account) {
+    accountActions.fetchAccount('udn', account)
+    groupActions.fetchGroups('udn', account)
+  }
 
   return {
-    accountActions: accountActions
+    fetchAccountData: fetchAccountData
   };
 }
 
