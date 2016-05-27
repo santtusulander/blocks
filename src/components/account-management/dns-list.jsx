@@ -7,7 +7,7 @@ import IconAdd from '../icons/icon-add.jsx'
 import Select from '../select.jsx'
 import recordTypes from '../../constants/dns-record-types.js'
 
-export const DNSList = props => {
+const DNSList = props => {
   const {
     domains,
     entries,
@@ -94,4 +94,6 @@ DNSList.propTypes = {
 DNSList.defaultProps = {
   users: List()
 }
+
+export default DNSList
 

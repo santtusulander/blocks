@@ -3,7 +3,7 @@ import { fromJS, List } from 'immutable'
 import { storiesOf, action } from '@kadira/storybook'
 
 const ThemeWrap = require('../theme-wrap.jsx');
-const UserList = require('../../account-management/user-list.jsx').UserList
+const UserList = require('../../account-management/user-list.jsx')
 
 const fakeUsers = fromJS([
   {id: 1, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
