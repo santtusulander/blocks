@@ -17,7 +17,7 @@ const RolesList = [
 
 ]
 
-storiesOf('Account Management', module)
+storiesOf('AccountManagement', module)
   .addDecorator((story) => (
     <ThemeWrap >
       {story()}

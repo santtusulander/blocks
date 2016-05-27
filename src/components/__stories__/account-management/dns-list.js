@@ -12,19 +12,19 @@ const fakeRecords = fromJS([
   {id: 4, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
   {id: 5, hostName: 'aaa.com', type: 'Firstname Lastname', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'}
 ])
-storiesOf('DNSList', module)
+storiesOf('AccountManagement', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
     </ThemeWrap>
   ))
-  .add('Default', () => (
+  .add('DNSList', () => (
     <DNSList
       records={fakeRecords}
       deleteRecord={action('delete record')}
       editRecord={action('edit record')}/>
   ))
-  .add('Empty', () => (
+  .add('DNSList (empty)', () => (
     <DNSList
       records={List()}
       deleteRecord={action('delete record')}
