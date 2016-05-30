@@ -3,7 +3,7 @@ import { fromJS, List } from 'immutable'
 import { storiesOf, action } from '@kadira/storybook'
 
 const ThemeWrap = require('../theme-wrap.jsx');
-const DNSList = require('../../account-management/dns-list.jsx')
+import DNSList  from '../../account-management/dns-list.jsx';
 
 const fakeEntries = fromJS([
   {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},

@@ -1,10 +1,8 @@
 import React from 'react'
 import { Modal, Input, ButtonToolbar, Button, Label } from 'react-bootstrap'
-
 import {reduxForm} from 'redux-form'
 
 import recordTypes from '../../constants/dns-record-types.js'
-import Select from '../select.jsx'
 
 import './dns-edit-form.scss'
 
@@ -71,20 +69,20 @@ const DnsEditForm = (props) => {
 
           <Input
             { ...targetValue }
-          type="text"
-          label="Target Value"
-          placeholder="Enter Target Value"
+            type="text"
+            label="Target Value"
+            placeholder="Enter Target Value"
           />
 
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
 
           <Input
             { ...ttl }
-          type="text"
-          label="TTL Value"
-          placeholder="Enter TTL Value"
-          className='input-narrow'
-          addonAfter='seconds'
+            type="text"
+            label="TTL Value"
+            placeholder="Enter TTL Value"
+            className='input-narrow'
+            addonAfter='seconds'
           />
 
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
