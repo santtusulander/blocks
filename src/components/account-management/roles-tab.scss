@@ -1,4 +1,6 @@
 @import '../../styles/base/colors';
+@import '../../styles/base/variables';
+@import '../../styles/components/configuration/sidebar';
 
 .rolesTab {
   .checkbox-container {
@@ -11,4 +13,8 @@
       margin-top: 4px;
     }
   }
+}
+
+.roles-add-new-form {
+  @extend .modal-dialog.configuration-sidebar;
 }
