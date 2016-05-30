@@ -18,6 +18,7 @@ const DNSList = props => {
     onAddEntry,
     activeDomain,
     changeRecordType,
+    changeActiveDomain,
     recordType } = props
   return (
     <div>
@@ -26,14 +27,16 @@ const DNSList = props => {
         <Select
           value={activeDomain && activeDomain.id}
           className='dns-dropdowns'
-          onSelect={type => changeRecordType(type)}
+          onSelect={type => changeActiveDomain(type)}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
         <Button bsStyle="primary" onClick={onAddDomain}>
           ADD DOMAIN
         </Button>
       </div>
       <h3 className="account-management-header">
-        <span>{activeDomain ? `DNS: ${activeDomain.name}: ${entries.size} resource entries ` : 'No active Domain'}</span>
+        <span>{activeDomain ?
+          `DNS: ${activeDomain.name}: ${entries.size} resource entries ` :
+          'No active Domain'}</span>
         {activeDomain ? <a onClick={() => editSOA(activeDomain.id)}>Edit SOA</a> : null}
         <div className='dns-filter-wrapper'>
         <Select
@@ -81,6 +84,7 @@ const DNSList = props => {
 
 DNSList.propTypes = {
   activeDomain: PropTypes.object,
+  changeActiveDomain: PropTypes.func,
   changeRecordType: PropTypes.func,
   deleteEntry: PropTypes.func,
   domains: PropTypes.instanceOf(List),

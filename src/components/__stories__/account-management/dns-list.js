@@ -2,8 +2,9 @@ import React from 'react'
 import { fromJS, List } from 'immutable'
 import { storiesOf, action } from '@kadira/storybook'
 
+import DNSList from '../../account-management/dns-list.jsx'
+
 const ThemeWrap = require('../theme-wrap.jsx');
-const DNSList = require('../../account-management/dns-list.jsx')
 
 const fakeEntries = fromJS([
   {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
@@ -31,6 +32,7 @@ storiesOf('DNSList', module)
   ))
   .add('with no record type', () => (
     <DNSList
+      activeDomain={activeDomain}
       domains={fakeDomains}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
@@ -42,7 +44,7 @@ storiesOf('DNSList', module)
   ))
   .add('with no active domain', () => (
     <DNSList
-      domains={fromJS([])}
+      domains={fakeDomains}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
       entries={fakeEntries}
