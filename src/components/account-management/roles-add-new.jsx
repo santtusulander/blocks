@@ -7,7 +7,7 @@ const RolesAddNew = (props) => {
     <Modal
       show={props.show}
       onHide={props.onCancel}
-      dialogClassName="roles-add-new"
+      dialogClassName="roles-add-new-form"
     >
 
       <Modal.Header>
