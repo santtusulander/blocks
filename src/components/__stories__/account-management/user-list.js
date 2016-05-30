@@ -2,8 +2,9 @@ import React from 'react'
 import { fromJS, List } from 'immutable'
 import { storiesOf, action } from '@kadira/storybook'
 
+import UserList from '../../account-management/user-list.jsx'
+
 const ThemeWrap = require('../theme-wrap.jsx');
-const UserList = require('../../account-management/user-list.jsx')
 
 const fakeUsers = fromJS([
   {id: 1, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
@@ -13,7 +14,7 @@ const fakeUsers = fromJS([
   {id: 5, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},
   {id: 6, name: 'Firstname Lastname', role: 'UDN Viewer', email: 'firstname.lastname@company.com'}
 ])
-storiesOf('AccountManagement', module)
+storiesOf('UserList', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
