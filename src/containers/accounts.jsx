@@ -8,7 +8,7 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterAccountsByUserName } from '../util/helpers'
+import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content-items'
 // Not in 0.5 import EditAccount from '../components/edit-account'
@@ -69,7 +69,10 @@ export class Accounts extends React.Component {
       sortValuePath,
       viewingChart,
       uiActions } = this.props
+
     const filteredAccounts = filterAccountsByUserName(accounts, username)
+    const filteredMetrics = filterMetricsByAccounts(metrics, filteredAccounts)
+
     const nextPageURLBuilder = (accountID) => `/content/groups/${brand}/${accountID}`
     const analyticsURLBuilder = (accountID) => `/content/analytics/account/${brand}/${accountID}`
     return (
@@ -82,7 +85,7 @@ export class Accounts extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: 'BRAND CONTENT SUMMARY', label: 'Accounts' }}
-        metrics={metrics}
+        metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
