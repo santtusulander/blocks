@@ -1,0 +1,10 @@
+.soa-form-sidebar {
+  @extend .configuration-sidebar;
+}
+
+.soa-form-input {
+  width: 60%;
+  &.refresh-input {
+    width: 10%;
+  }
+}

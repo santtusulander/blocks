@@ -33,6 +33,7 @@ storiesOf('DNSList', module)
   .add('with no record type', () => (
     <DNSList
       activeDomain={activeDomain}
+      changeActiveDomain={action('changed active domain')}
       domains={fakeDomains}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
@@ -44,6 +45,7 @@ storiesOf('DNSList', module)
   ))
   .add('with no active domain', () => (
     <DNSList
+      changeActiveDomain={action('changed active domain')}
       domains={fakeDomains}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
@@ -55,6 +57,7 @@ storiesOf('DNSList', module)
   ))
   .add('with record type and active domain', () => (
     <DNSList
+      changeActiveDomain={action('changed active domain')}
       activeDomain={activeDomain}
       editSOA={(action('edit SOA'))}
       domains={fakeDomains}
@@ -68,6 +71,8 @@ storiesOf('DNSList', module)
   ))
   .add('DNSList (empty)', () => (
     <DNSList
+      onAddDomain={action('add domain')}
+      changeActiveDomain={action('changed active domain')}
       entries={List()}
       editSOA={(action('edit SOA'))}
       deleteEntry={action('delete record')}

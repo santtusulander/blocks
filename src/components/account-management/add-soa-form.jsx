@@ -43,34 +43,39 @@ const SOAForm = props => {
     }
   } = props
   return (
-    <Modal show={true} dialogClassName="configuration-sidebar">
+    <Modal show={true} dialogClassName="soa-form-sidebar">
       <Modal.Header>
         <h1>SOA Record</h1>
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={e => { e.preventDefault(); onSave() }}>
           <Input type="text"
+            className="soa-form-input"
             label="Domain Name"
             id="domain_name"
             { ...domainName }
             />
           {domainName.touched && domainName.error && <div>{domainName.error}</div>}
           <Input type="text"
+            className="soa-form-input"
             label="Primary Nameserver"
             id="primary_nameserver"
             { ...nameServer }/>
           {nameServer.touched && nameServer.error && <div>{nameServer.error}</div>}
           <Input type="text"
+            className="soa-form-input"
             label="Responsible Person Mailbox"
             id="responsible_person_mailbox"
             { ...personResponsible }/>
           {personResponsible.touched && personResponsible.error && <div>{personResponsible.error}</div>}
           <Input type="text"
+            className="soa-form-input"
             label="Serial # of Zone"
             id="zone_serial_number"
             { ...zoneSerialNumber }/>
           {zoneSerialNumber.touched && zoneSerialNumber.error && <div>{zoneSerialNumber.error}</div>}
           <Input type="text"
+            className="soa-form-input refresh-input"
             label="Refresh"
             id="refresh"
             { ...refresh }/>

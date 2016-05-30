@@ -20,6 +20,10 @@ const DNSList = props => {
     changeRecordType,
     changeActiveDomain,
     recordType } = props
+  const recordTypeOptions = [
+    ...recordTypes.map(type => [type, type]),
+    ['ALL', 'All Record Types']
+  ]
   return (
     <div>
       <div className="account-management-header">
@@ -40,10 +44,10 @@ const DNSList = props => {
         {activeDomain ? <a onClick={() => editSOA(activeDomain.id)}>Edit SOA</a> : null}
         <div className='dns-filter-wrapper'>
         <Select
-          value={recordType}
+          value={recordType || 'ALL'}
           className='dns-dropdowns'
           onSelect={type => changeRecordType(type)}
-          options={recordTypes.map(type => [type, type])}/>
+          options={recordTypeOptions}/>
         <Button bsStyle="primary" icon={true} addNew={true} onClick={onAddEntry}>
           <IconAdd/>
         </Button>
