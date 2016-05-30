@@ -11,6 +11,7 @@ const validate = values => {
     domainName,
     nameServer,
     personResponsible,
+    refresh,
     zoneSerialNumber } = values
   if (!domainName) {
     errors.domainName = 'Required'
@@ -26,6 +27,12 @@ const validate = values => {
   }
   if (!zoneSerialNumber) {
     errors.zoneSerialNumber = 'Required'
+  }
+  if (!refresh) {
+    errors.refresh = 'Required'
+  }
+  else if(!/^[0-9]{1,10}$/i.test(refresh)) {
+    errors.refresh = 'Invalid input'
   }
   return errors
 }
@@ -55,31 +62,31 @@ const SOAForm = props => {
             id="domain_name"
             { ...domainName }
             />
-          {domainName.touched && domainName.error && <div>{domainName.error}</div>}
+          {domainName.touched && domainName.error && <div className="error-msg">{domainName.error}</div>}
           <Input type="text"
             className="soa-form-input"
             label="Primary Nameserver"
             id="primary_nameserver"
             { ...nameServer }/>
-          {nameServer.touched && nameServer.error && <div>{nameServer.error}</div>}
+          {nameServer.touched && nameServer.error && <div className="error-msg">{nameServer.error}</div>}
           <Input type="text"
             className="soa-form-input"
             label="Responsible Person Mailbox"
             id="responsible_person_mailbox"
             { ...personResponsible }/>
-          {personResponsible.touched && personResponsible.error && <div>{personResponsible.error}</div>}
+          {personResponsible.touched && personResponsible.error && <div className="error-msg">{personResponsible.error}</div>}
           <Input type="text"
             className="soa-form-input"
             label="Serial # of Zone"
             id="zone_serial_number"
             { ...zoneSerialNumber }/>
-          {zoneSerialNumber.touched && zoneSerialNumber.error && <div>{zoneSerialNumber.error}</div>}
+          {zoneSerialNumber.touched && zoneSerialNumber.error && <div className="error-msg">{zoneSerialNumber.error}</div>}
           <Input type="text"
             className="soa-form-input refresh-input"
             label="Refresh"
             id="refresh"
             { ...refresh }/>
-          {refresh.touched && refresh.error && <div>{refresh.error}</div>}
+          {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary"
               outLine={true}
