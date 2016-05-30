@@ -5,6 +5,11 @@
 .dns-edit-form {
   @extend .modal-dialog.configuration-sidebar;
 
+  .error-msg {
+    color: $red;
+    margin-bottom: 10px;
+  }
+
   .input-group-addon {
     padding-left: 10px;
     width: auto;
