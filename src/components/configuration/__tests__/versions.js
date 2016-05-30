@@ -1,10 +1,9 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.dontMock('../versions.jsx')
 const ConfigurationVersions = require('../versions.jsx')
-const ConfigurationVersion = require('../version.jsx')
 
 const fakeConfigs = Immutable.fromJS([
   {config_id: 1, configuration_status: {deployment_status: 2}},
@@ -205,39 +204,28 @@ const fakeHost = Immutable.fromJS({
 
 describe('ConfigurationVersions', () => {
   it('should exist', () => {
-    let versions = TestUtils.renderIntoDocument(
-      <ConfigurationVersions fetching={true} />
-    );
-    expect(TestUtils.isCompositeComponent(versions)).toBeTruthy();
+    let versions = shallow(<ConfigurationVersions fetching={true} />);
+    expect(versions.length).toBe(1);
   });
 
-  it('should activate a verson', () => {
-    let activate = jest.genMockFunction()
-    let versions = TestUtils.renderIntoDocument(
-      <ConfigurationVersions configurations={fakeConfigs} activate={activate}/>
-    )
-    versions.activate(1)()
-    expect(activate.mock.calls[0][0]).toEqual(1)
-  })
-
   it('should display configurations', () => {
-    let versions = TestUtils.renderIntoDocument(
-      <ConfigurationVersions configurations={fakeConfigs}
+    const versions = shallow(
+      <ConfigurationVersions
+        configurations={fakeConfigs}
         activeHost={fakeHost}/>
     )
-    let versionComponents = TestUtils.scryRenderedComponentsWithType(versions,
-      ConfigurationVersion)
-    expect(versionComponents.length).toBe(3)
+    expect(versions.find('SidebarLinks').length).toBe(3)
   })
 
   it('should add a verson', () => {
-    let addVersion = jest.genMockFunction()
-    let versions = TestUtils.renderIntoDocument(
-      <ConfigurationVersions configurations={fakeConfigs} addVersion={addVersion}
+    const addVersion = jest.genMockFunction()
+    let versions = shallow(
+      <ConfigurationVersions
+        configurations={fakeConfigs}
+        addVersion={addVersion}
         activeHost={fakeHost}/>
     )
-    let button = TestUtils.findRenderedDOMComponentWithClass(versions, 'add-btn');
-    TestUtils.Simulate.click(button);
-    expect(addVersion.mock.calls.length).toEqual(1)
+    versions.find('.add-btn').simulate('click')
+    expect(addVersion.mock.calls[0]).toBeDefined()
   })
 })

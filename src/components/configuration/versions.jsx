@@ -2,31 +2,12 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
-import IconAdd from '../../components/icons/icon-add.jsx'
-import IconDelete from '../../components/icons/icon-delete.jsx'
-import Version from './version'
-
-function versionFactory(configuration, i) {
-  const id = configuration.get('config_id')
-  return (
-    <Version key={i}
-      activate={this.activate(id)}
-      active={configuration.get('active')}
-      label={configuration.get('config_name') || id}/>
-  )
-}
+import IconAdd from '../icons/icon-add.jsx'
+import IconDelete from '../icons/icon-delete.jsx'
+import { SidebarLinks } from '../sidebar-links'
 
 export class ConfigurationVersions extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.activate = this.activate.bind(this)
-  }
-  activate(id) {
-    return () => {
-      this.props.activate(id)
-    }
-  }
   render() {
     if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
       || (!this.props.activeHost || !this.props.activeHost.size)) {
@@ -75,30 +56,27 @@ export class ConfigurationVersions extends React.Component {
         <div className="sidebar-section-header">
           PRODUCTION
         </div>
-        <ul className="version-list">
-          {configs.production.length ?
-            configs.production.map(versionFactory.bind(this)) :
-            <li className="empty-msg">None in production</li>
-          }
-        </ul>
+          <SidebarLinks
+            activate={this.props.activate}
+            emptyMsg="None in production."
+            items={configs.production}
+            tag={'config'}/>
         <div className="sidebar-section-header">
           STAGING
         </div>
-        <ul className="version-list">
-          {configs.staging.length ?
-            configs.staging.map(versionFactory.bind(this)) :
-            <li className="empty-msg">None in staging</li>
-          }
-        </ul>
+        <SidebarLinks
+            activate={this.props.activate}
+            emptyMsg="None in staging."
+            items={configs.staging}
+            tag={'config'}/>
         <div className="sidebar-section-header">
           IN PROCESS
         </div>
-        <ul className="version-list">
-          {configs.inprocess.length ?
-            configs.inprocess.map(versionFactory.bind(this)) :
-            <li className="empty-msg">None in process</li>
-          }
-        </ul>
+        <SidebarLinks
+          activate={this.props.activate}
+          emptyMsg="None in process."
+          items={configs.inprocess}
+          tag={'config'}/>
       </div>
     );
   }
