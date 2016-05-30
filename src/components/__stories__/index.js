@@ -1,10 +1,10 @@
-import './account-sidebar';
 import './add-host';
 import './confirmation';
 import './export-panel';
 import './export-email-form';
 import './export-file-form';
 
+import './account-management/sidebar';
 import './account-management/user-list'
 import './account-management/dns-edit-form'
 import './account-management/dns-list'
