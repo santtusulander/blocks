@@ -7,7 +7,6 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as dnsActionCreators from '../redux/modules/dns'
 
-
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import Sidebar from '../components/layout/sidebar'
@@ -34,7 +33,7 @@ export class AccountManagement extends React.Component {
   }
 
   editSOARecord() {
-    const { SOAformData, dnsData } = this.props
+    const { SOAformData, dnsData, dnsActions } = this.props
     const activeDomain = dnsData.get('activeDomain')
     let data = {}
     for(const field in SOAformData) {
@@ -42,7 +41,7 @@ export class AccountManagement extends React.Component {
         data[field] = SOAformData[field].value
       }
     }
-    this.props.dnsActions.editSOA({id: activeDomain.get('id'), data})
+    dnsActions.editSOA({ id: activeDomain.get('id'), data })
     this.toggleModal()
   }
 
@@ -58,7 +57,9 @@ export class AccountManagement extends React.Component {
   render() {
     const {
       params: { account },
-      dnsData
+      dnsData,
+      dnsActions,
+      activeRecordType
     } = this.props
     const isAdmin = !account
     return (
@@ -75,8 +76,11 @@ export class AccountManagement extends React.Component {
                 editSOA={this.editSOARecord}
                 modalActive={this.state.modalVisible}
                 hideModal={this.toggleModal}
+                changeActiveDomain={dnsActions.changeActiveDomain}
                 activeDomain={dnsData.get('activeDomain')}
                 domains={dnsData.get('domains')}
+                changeRecordType={dnsActions.changeActiveRecordType}
+                activeRecordType={activeRecordType}
                 />}
           </Content>
         </div>}
@@ -94,11 +98,13 @@ AccountManagement.displayName = 'AccountManagement'
 AccountManagement.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeRecordType: React.PropTypes.string,
   dnsActions: React.PropTypes.object,
   dnsData: React.PropTypes.instanceOf(Immutable.Map),
   fetchAccountData: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object
+
 }
 
 function mapStateToProps(state) {
@@ -107,7 +113,8 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     groups: state.group.get('allGroups'),
     SOAformData: state.form.addSOAForm,
-    dnsData: state.dns
+    dnsData: state.dns,
+    activeRecordType: state.dns.get('activeRecordType')
   };
 }
 

@@ -6,9 +6,10 @@ import { fromJS } from 'immutable'
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_CREATED = 'DOMAIN_CREATED'
 const CHANGE_ACTIVE_DOMAIN = 'CHANGE_ACTIVE_DOMAIN'
+const CHANGE_ACTIVE_RECORD_TYPE = 'CHANGE_ACTIVE_RECORD_TYPE'
 
 export const initialState = fromJS({
-  activeRecordType: 'AAAA',
+  activeRecordType: null,
   activeDomain: { id: 1, name: 'kung-fu.com' },
   domains: [
     {
@@ -62,21 +63,29 @@ export function createSuccess(state, action) {
   })
 }
 
-export function changeActive(state, action) {
+export function activeDomainChange(state, action) {
   return state.merge({
-    SOARecord: action.payload
+    activeDomain: action.payload
+  })
+}
+
+export function activeRecordTypeChange(state, action) {
+  return state.merge({
+    activeRecordType: action.payload
   })
 }
 
 export default handleActions({
   SOA_RECORD_EDITED: editSOARecord,
   DOMAIN_CREATED: createSuccess,
-  CHANGE_ACTIVE_DOMAIN: changeActive
+  CHANGE_ACTIVE_DOMAIN: activeDomainChange,
+  CHANGE_ACTIVE_RECORD_TYPE: activeRecordTypeChange
 }, initialState)
 
 // ACTIONS
 
-export const editSOA = createAction(SOA_RECORD_EDITED, data => data)
-export const createDomain = createAction(DOMAIN_CREATED, data => data)
-export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN, data => data)
+export const editSOA = createAction(SOA_RECORD_EDITED)
+export const createDomain = createAction(DOMAIN_CREATED)
+export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
+export const changeActiveRecordType = createAction(CHANGE_ACTIVE_RECORD_TYPE)
 

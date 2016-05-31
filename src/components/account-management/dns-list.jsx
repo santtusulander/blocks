@@ -25,9 +25,10 @@ const DNSList = props => {
   const entries = domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
     .get('subDomains')
+    .filter(entry => !activeRecordType || entry.get('type') === activeRecordType)
   const recordTypeOptions = [
     ...recordTypes.map(type => [type, type]),
-    ['ALL', 'All Record Types']
+    [null, 'All Record Types']
   ]
   return (
     <div>
@@ -36,7 +37,7 @@ const DNSList = props => {
         <Select
           value={activeDomain && activeDomain.get('id')}
           className='dns-dropdowns'
-          onSelect={type => changeActiveDomain(type)}
+          onSelect={id => changeActiveDomain(id)}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
         <Button bsStyle="primary" onClick={onAddDomain}>
           ADD DOMAIN
@@ -51,7 +52,7 @@ const DNSList = props => {
         {activeDomain ? <a onClick={hideModal}>Edit SOA</a> : null}
         <div className='dns-filter-wrapper'>
           <Select
-            value={activeRecordType || 'ALL'}
+            value={activeRecordType || null}
             className='dns-dropdowns'
             onSelect={type => changeRecordType(type)}
             options={recordTypeOptions}/>

@@ -46,7 +46,9 @@ class AccountManagementManageSystem extends React.Component {
               modalActive={this.props.modalActive}
               hideModal={this.props.hideModal}
               domains={this.props.domains}
-              activeDomain={this.props.activeDomain}/>
+              activeDomain={this.props.activeDomain}
+              changeRecordType={this.props.changeRecordType}
+              activeRecordType={this.props.activeRecordType}/>
           }
           {this.state.activeTab === 'roles' &&
             <Roles/>

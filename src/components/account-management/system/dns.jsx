@@ -30,11 +30,11 @@ const AccountManagementSystemDNS = props => {
         activeDomain={props.activeDomain}
         editSOA={props.editSOA}
         domains={props.domains}
-        activeRecordType={'AAAA'}
+        activeRecordType={props.activeRecordType}
         onAddDomain={() => console.log('add domain')}
         deleteEntry={() => console.log('delete entry')}
         editEntry={() => console.log('edit entry')}
-        changeRecordType={() => console.log('change record type')}
+        changeRecordType={props.changeRecordType}
         onAddEntry={() => console.log('add entry')}/>
     </div>
   )
