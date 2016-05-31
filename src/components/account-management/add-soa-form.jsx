@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
+import { is } from 'immutable'
 
 import { ButtonWrapper as Button } from '../button.js'
 
@@ -27,6 +28,9 @@ const validate = values => {
   }
   if (!zoneSerialNumber) {
     errors.zoneSerialNumber = 'Required'
+  }
+  else if(!/^[0-9]{1,20}$/i.test(zoneSerialNumber)) {
+    errors.zoneSerialNumber = 'Invalid input'
   }
   if (!refresh) {
     errors.refresh = 'Required'
@@ -116,4 +120,11 @@ export default reduxForm({
   fields: ['domainName', 'nameServer', 'personResponsible', 'zoneSerialNumber', 'refresh'],
   form: 'addSOAForm',
   validate
+}, state => {
+  const activeDomainId = state.dns.get('activeDomain').get('id')
+  const initialValues = state.dns
+      .get('domains')
+      .find(domain => is(activeDomainId, domain.get('id')))
+      .get('SOARecord').toJS()
+  return { initialValues }
 })(SOAForm)

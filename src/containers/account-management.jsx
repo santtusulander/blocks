@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
+import * as dnsActionCreators from '../redux/modules/dns'
+
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -17,9 +19,11 @@ export class AccountManagement extends React.Component {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null
+      activeAccount: props.params.account || null,
+      modalVisible: false
     }
-
+    this.toggleModal = this.toggleModal.bind(this)
+    this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
   }
 
@@ -29,13 +33,33 @@ export class AccountManagement extends React.Component {
     }
   }
 
+  editSOARecord() {
+    const { SOAformData, dnsData } = this.props
+    const activeDomain = dnsData.get('activeDomain')
+    let data = {}
+    for(const field in SOAformData) {
+      if(SOAformData[field] instanceof Object) {
+        data[field] = SOAformData[field].value
+      }
+    }
+    this.props.dnsActions.editSOA({id: activeDomain.get('id'), data})
+    this.toggleModal()
+  }
+
+  toggleModal() {
+    this.setState({ modalVisible: !this.state.modalVisible })
+  }
+
   changeActiveAccount(account) {
     this.setState({activeAccount: account})
     this.props.fetchAccountData(account)
   }
 
   render() {
-    const {account} = this.props.params
+    const {
+      params: { account },
+      dnsData
+    } = this.props
     const isAdmin = !account
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
@@ -46,7 +70,14 @@ export class AccountManagement extends React.Component {
           <Content>
             {this.state.activeAccount && <ManageAccount
               account={this.props.activeAccount}/>}
-            {!this.state.activeAccount && <ManageSystem/>}
+            {!this.state.activeAccount &&
+              <ManageSystem
+                editSOA={this.editSOARecord}
+                modalActive={this.state.modalVisible}
+                hideModal={this.toggleModal}
+                activeDomain={dnsData.get('activeDomain')}
+                domains={dnsData.get('domains')}
+                />}
           </Content>
         </div>}
         {!isAdmin && <Content>
@@ -63,6 +94,8 @@ AccountManagement.displayName = 'AccountManagement'
 AccountManagement.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  dnsActions: React.PropTypes.object,
+  dnsData: React.PropTypes.instanceOf(Immutable.Map),
   fetchAccountData: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object
@@ -72,11 +105,14 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
-    groups: state.group.get('allGroups')
+    groups: state.group.get('allGroups'),
+    SOAformData: state.form.addSOAForm,
+    dnsData: state.dns
   };
 }
 
 function mapDispatchToProps(dispatch) {
+  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
 
@@ -86,6 +122,7 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
+    dnsActions: dnsActions,
     fetchAccountData: fetchAccountData
   };
 }

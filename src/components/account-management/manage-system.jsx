@@ -41,7 +41,12 @@ class AccountManagementManageSystem extends React.Component {
             <Brands/>
           }
           {this.state.activeTab === 'dns' &&
-            <DNS/>
+            <DNS
+              editSOA={this.props.editSOA}
+              modalActive={this.props.modalActive}
+              hideModal={this.props.hideModal}
+              domains={this.props.domains}
+              activeDomain={this.props.activeDomain}/>
           }
           {this.state.activeTab === 'roles' &&
             <Roles/>
