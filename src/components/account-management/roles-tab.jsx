@@ -3,7 +3,7 @@ import { Input } from 'react-bootstrap'
 import { ButtonWrapper } from '../button.js'
 
 import AccountManagementHeader from './account-management-header.jsx'
-import RolesAddNew from './roles-add-new.jsx'
+import RolesEditForm from './roles-edit-form.jsx'
 
 import './roles-tab.scss';
 
@@ -72,7 +72,7 @@ const RolesTab = (props) => {
 
       </table>
 
-      <RolesAddNew show={props.showAddNewDialog} onCancel={props.onCancel} onSave={props.onSave}/>
+      <RolesEditForm show={props.showAddNewDialog} onCancel={props.onCancel} onSave={props.onSave}/>
 
     </div>
   )
