@@ -45,7 +45,7 @@ export function filterAccountsByUserName(accounts, username) {
   if(username === 'test') {
     return accounts
 
-    //UNCOMMENT FOR TESTing -- return only limited accounts
+    //UNCOMMENT FOR TESTing -- return only limited accounts
     /*return Immutable.fromJS(accounts.toJS().filter( (account) => {
       return account.id === 4 || account.id === 1
     }))*/
@@ -59,7 +59,7 @@ export function filterAccountsByUserName(accounts, username) {
       return username === 'UDNtest'
     }
     else {
-      return username === 'UDNprod' || username === 'UDNstag'
+      return username === 'UDNprod' || username === 'UDNstag' || username === 'diomedes'
     }
   }));
 }
