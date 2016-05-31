@@ -1,7 +1,6 @@
 import React from 'react'
 
 import RolesTab from '../roles-tab.jsx'
-import RolesAddNew from '../roles-add-new.jsx'
 
 const ROLE_UDN = 'role-udn'
 const ROLE_CONTENT_PROVIDER = 'role-content-provider'
@@ -38,12 +37,10 @@ class AccountManagementSystemRoles extends React.Component {
     this.hideAddNewRoleDialog();
   }
 
-
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesTab roles={fakeRoles} onAdd={this.showAddNewRoleDialog} />
-        <RolesAddNew show={this.state.showAddNewDialog} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole}/>
+        <RolesTab roles={fakeRoles} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole} onAdd={this.showAddNewRoleDialog} showAddNewDialog={this.state.showAddNewDialog} />
       </div>
     )
   }
