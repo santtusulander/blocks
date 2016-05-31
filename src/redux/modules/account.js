@@ -3,6 +3,8 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
+import { Promise } from 'bluebird';
+
 import { urlBase, mapReducers, parseResponseData } from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
@@ -121,8 +123,16 @@ export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
 })
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
-  .then(parseResponseData);
+  /*return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
+  .then(parseResponseData);*/
+
+  /* TODO: remove - test only */
+  const accountData = Immutable.fromJS({
+    accountName: 'testAccount'
+
+  })
+
+  return Promise.resolve( accountData )
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
