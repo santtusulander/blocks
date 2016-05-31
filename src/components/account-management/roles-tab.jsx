@@ -1,33 +1,39 @@
 import React from 'react'
 import { Input } from 'react-bootstrap'
-import { ButtonWrapper } from '../button.js'
+
+
 
 import AccountManagementHeader from './account-management-header.jsx'
 import RolesEditForm from './roles-edit-form.jsx'
 
+import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../constants/roles.js'
+
 import './roles-tab.scss';
 
 const RolesTabRow = (props) => {
+
+  const { role } = props
+
   return (
     <tr className='rolesTabRow'>
         <td>
-          {props.roleName}
+          { role.get('roleName') }
         </td>
         <td>
           <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' />
+            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_UDN ) } />
           </div>
         </td>
 
         <td>
           <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' />
+            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_CONTENT_PROVIDER ) } />
           </div>
         </td>
 
         <td>
           <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' />
+            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_SERVICE_PROVIDER ) } />
           </div>
         </td>
     </tr>
@@ -47,14 +53,14 @@ const RolesTab = (props) => {
 
   const tableRows = props.roles.map( (role, i) => {
     return (
-      <RolesTabRow key={i} { ... role } onEdit={props.onEdit} onDelete={props.onDelete}  />
+      <RolesTabRow key={i} { ... role } role={ role } onEdit={props.onEdit} onDelete={props.onDelete}  />
     );
   });
 
   return (
     <div className='rolesTab'>
 
-      <AccountManagementHeader title={ `${props.roles.length} Roles` } onAdd={props.onAdd}/>
+      <AccountManagementHeader title={ `${props.roles.count() } Roles` } onAdd={props.onAdd}/>
 
       <table className="table table-striped">
         <thead>

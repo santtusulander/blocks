@@ -16,7 +16,6 @@ const reducers = {
 const reducer = combineReducers(reducers);
 const store = createStore(reducer);
 
-
 storiesOf('AccountManagement', module)
   .addDecorator((story) => (
     <ThemeWrap >
