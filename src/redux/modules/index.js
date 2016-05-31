@@ -12,3 +12,9 @@ export const metrics = require('./metrics').default;
 export const reports = require('./reports').default;
 
 export const exports = require('./exports').default;
+
+//Account Management
+export const dns = require('./dns').default;
+
+//redux-form
+export const form = require('redux-form').reducer;
