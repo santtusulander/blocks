@@ -57,10 +57,8 @@ export class AccountManagement extends React.Component {
     return this.props.groupActions.updateGroup(
       'udn',
       this.props.activeAccount.get('id'),
-      {
-        id: groupId,
-        name: name
-      }
+      groupId,
+      {name: name}
     )
   }
 

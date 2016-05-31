@@ -22,10 +22,10 @@ describe('Group Module', () => {
     const state = Immutable.fromJS({
       allGroups: []
     });
-    const newState = createSuccess(state, {payload: {group_id: 1}});
+    const newState = createSuccess(state, {payload: {id: 1}});
     const expectedState = Immutable.fromJS({
       allGroups: [1],
-      activeGroup: {group_id: 1}
+      activeGroup: {id: 1}
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });

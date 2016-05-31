@@ -34,7 +34,10 @@ class AccountManagementAccountGroups extends React.Component {
     window.removeEventListener('click', this.cancelAdding)
   }
   cancelAdding() {
-    this.setState({adding: false})
+    this.setState({
+      adding: false,
+      editing: null
+    })
   }
   addGroup(e) {
     e.stopPropagation()
@@ -52,11 +55,12 @@ class AccountManagementAccountGroups extends React.Component {
   editGroup(group) {
     return (e) => {
       e.preventDefault()
+      e.stopPropagation()
       this.setState({editing: group})
     }
   }
   saveEditedGroup(group) {
-    return (name) => this.props.editGroup(group, name)
+    return name => this.props.editGroup(group, name).then(this.cancelAdding)
   }
   saveNewGroup(name) {
     this.props.addGroup(name).then(this.cancelAdding)
@@ -112,6 +116,13 @@ class AccountManagementAccountGroups extends React.Component {
           <tbody>
             {this.state.adding && <EditGroup save={this.saveNewGroup}/>}
             {sortedGroups.map((group, i) => {
+              if(group.get('id') === this.state.editing) {
+                return (
+                  <EditGroup key={i}
+                    name={group.get('name')}
+                    save={this.saveEditedGroup(group.get('id'))}/>
+                )
+              }
               return (
                 <tr key={i}>
                   <td>{group.get('name')}</td>

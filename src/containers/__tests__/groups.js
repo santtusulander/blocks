@@ -160,7 +160,7 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id:1})}
+  //       activeGroup={Immutable.Map({id:1})}
   //       params={urlParams}/>
   //   )
   //   groups.toggleActiveGroup(1)()
@@ -174,12 +174,12 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
   //       params={urlParams}/>
   //   )
   //   groups.changeActiveGroupValue(['name'], 'bbb')
   //   expect(groupActions.changeActiveGroup.mock.calls[0][0].toJS()).toEqual({
-  //     group_id: 1,
+  //     id: 1,
   //     name: 'bbb'
   //   })
   // })
@@ -191,12 +191,11 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
   //       params={urlParams}/>
   //   )
   //   groups.saveActiveGroupChanges()
-  //   expect(groupActions.updateGroup.mock.calls[0][2]).toEqual({
-  //     group_id: 1,
+  //   expect(groupActions.updateGroup.mock.calls[0][3]).toEqual({
   //     name: 'aaa'
   //   })
   // })
