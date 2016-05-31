@@ -1,5 +1,33 @@
 .account-management-account-groups {
-  th:last-child {
+  th:last-child,
+  td:last-child {
     width: 120px;
+    text-align: center;
+  }
+
+  .edit-row {
+    background-color: $pale-blue !important;
+
+    .form-group {
+      padding-bottom: 0;
+    }
+
+    input {
+      max-width: initial;
+      height: auto;
+      padding: 5px 0;
+      background-color: $pale-blue;
+      color: $white;
+
+      &::placeholder {
+        color: rgba($white, 0.8);
+      }
+    }
+
+    button,
+    button:hover {
+      color: $white;
+      background-color: rgba($black, 0.2);
+    }
   }
 }
