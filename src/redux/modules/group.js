@@ -25,14 +25,14 @@ export function createSuccess(state, action) {
   const newGroup = Immutable.fromJS(action.payload)
   return state.merge({
     activeGroup: newGroup,
-    allGroups: state.get('allGroups').push(newGroup.get('group_id'))
+    allGroups: state.get('allGroups').push(newGroup)
   })
 }
 
 export function deleteSuccess(state, action) {
   let newAllGroups = state.get('allGroups')
     .filterNot(group => {
-      return group === action.payload.id
+      return group.get('id') === action.payload.id
     })
   return state.merge({
     allGroups: newAllGroups,
@@ -109,6 +109,7 @@ export default handleActions({
 // ACTIONS
 
 export const createGroup = createAction(GROUP_CREATED, (brand, account, name) => {
+  console.log(brand, account, name)
   return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`, {name: name}, {
     headers: {
       'Content-Type': 'application/json'

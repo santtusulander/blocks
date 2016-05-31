@@ -21,6 +21,9 @@ export class AccountManagement extends React.Component {
     }
 
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
+    this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
+    this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
+    this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
   }
 
   componentWillMount() {
@@ -34,6 +37,33 @@ export class AccountManagement extends React.Component {
     this.props.fetchAccountData(account)
   }
 
+  addGroupToActiveAccount(name) {
+    return this.props.groupActions.createGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      name
+    )
+  }
+
+  deleteGroupFromActiveAccount(groupId) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      groupId
+    )
+  }
+
+  editGroupInActiveAccount(groupId, name) {
+    return this.props.groupActions.updateGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      {
+        id: groupId,
+        name: name
+      }
+    )
+  }
+
   render() {
     const {account} = this.props.params
     const isAdmin = !account
@@ -45,13 +75,20 @@ export class AccountManagement extends React.Component {
           </Sidebar>
           <Content>
             {this.state.activeAccount && <ManageAccount
-              account={this.props.activeAccount}/>}
+              account={this.props.activeAccount}
+              addGroup={this.addGroupToActiveAccount}
+              deleteGroup={this.deleteGroupFromActiveAccount}
+              editGroup={this.editGroupInActiveAccount}
+              groups={this.props.groups}/>}
             {!this.state.activeAccount && <ManageSystem/>}
           </Content>
         </div>}
         {!isAdmin && <Content>
           <ManageAccount
             account={this.props.activeAccount}
+            addGroup={this.addGroupToActiveAccount}
+            deleteGroup={this.deleteGroupFromActiveAccount}
+            editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
         </Content>}
       </PageContainer>
@@ -64,6 +101,7 @@ AccountManagement.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   fetchAccountData: React.PropTypes.func,
+  groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object
 }
@@ -86,7 +124,8 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
-    fetchAccountData: fetchAccountData
+    fetchAccountData: fetchAccountData,
+    groupActions: groupActions
   };
 }
 
