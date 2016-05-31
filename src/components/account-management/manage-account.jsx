@@ -42,7 +42,11 @@ class AccountManagementManageAccount extends React.Component {
               isAdmin={this.props.isAdmin}/>
           }
           {this.state.activeTab === 'groups' &&
-            <Groups groups={this.props.groups}/>
+            <Groups
+              addGroup={this.props.addGroup}
+              deleteGroup={this.props.deleteGroup}
+              editGroup={this.props.editGroup}
+              groups={this.props.groups}/>
           }
           {this.state.activeTab === 'users' &&
             <Users
@@ -58,6 +62,9 @@ class AccountManagementManageAccount extends React.Component {
 AccountManagementManageAccount.displayName = 'AccountManagementManageAccount'
 AccountManagementManageAccount.propTypes = {
   account: React.PropTypes.instanceOf(Immutable.Map),
+  addGroup: React.PropTypes.func,
+  deleteGroup: React.PropTypes.func,
+  editGroup: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   isAdmin: React.PropTypes.bool
 }
