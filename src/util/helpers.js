@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import Immutable from 'immutable'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -43,18 +44,32 @@ export function formatBitsPerSecond(bits_per_second) {
 export function filterAccountsByUserName(accounts, username) {
   if(username === 'test') {
     return accounts
+
+    //UNCOMMENT FOR TESTing -- return only limited accounts
+    /*return Immutable.fromJS(accounts.toJS().filter( (account) => {
+      return account.id === 4 || account.id === 1
+    }))*/
   }
-  return accounts.filter(account => {
-    if(account.get('id') < 10000) {
+
+  return Immutable.fromJS(accounts.toJS().filter(account => {
+    if (account.id < 10000) {
       return username === 'UDNdev'
     }
-    else if(account.get('id') < 20000) {
+    else if (account.id < 20000) {
       return username === 'UDNtest'
     }
     else {
-      return username === 'UDNprod' || username === 'UDNstag'
+      return username === 'UDNprod' || username === 'UDNstag' || username === 'diomedes'
     }
-  })
+  }));
+}
+
+export function filterMetricsByAccounts(metrics, accounts){
+  return metrics.filter( (metric) => {
+    return accounts.find( (account) => {
+      return account.get('id') === metric.get('account')
+    });
+  });
 }
 
 export function matchesRegexp(string, pattern){

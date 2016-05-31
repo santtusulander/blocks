@@ -22,20 +22,20 @@ describe('Group Module', () => {
     const state = Immutable.fromJS({
       allGroups: []
     });
-    const newState = createSuccess(state, {payload: {group_id: 1}});
+    const newState = createSuccess(state, {payload: {id: 1}});
     const expectedState = Immutable.fromJS({
-      allGroups: [1],
-      activeGroup: {group_id: 1}
+      allGroups: [{id: 1}],
+      activeGroup: {id: 1}
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });
 
   it('should handle delete group success', () => {
     const state = Immutable.fromJS({
-      allGroups: [1]
+      allGroups: [{id: 1}]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
-    expect(newState.get('allGroups')).not.toContain(1);
+    expect(newState.get('allGroups').size).toBe(0);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
@@ -94,11 +94,14 @@ describe('Group Module', () => {
 
   it('should handle update success', () => {
     const state = Immutable.fromJS({
-      activeGroup: 'something'
-    });
-    const newState = updateSuccess(state);
-    expect(newState.get('activeGroup')).toBe(null);
-    expect(newState.get('fetching')).toBeFalsy();
+      activeGroup: 'something',
+      allGroups: [{id: 1, name: 'old'}]
+    })
+    const newPayload = {id: 1, name: 'new'}
+    const newState = updateSuccess(state, {payload: newPayload})
+    expect(Immutable.is(newState.get('activeGroup'), Immutable.fromJS(newPayload))).toBeTruthy()
+    expect(newState.getIn(['allGroups', 0, 'name'])).toBe('new')
+    expect(newState.get('fetching')).toBeFalsy()
   });
 
   it('should handle update failure', () => {
