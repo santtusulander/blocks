@@ -7,7 +7,7 @@ const AccountManagementFormContainer = (props) => {
   return (
     <Modal show={props.show}
            onHide={props.onCancel}
-           dialogClassName="export-sidebar">
+           dialogClassName="account-form-container">
 
       <Modal.Header>
         <h1>{props.title}</h1>

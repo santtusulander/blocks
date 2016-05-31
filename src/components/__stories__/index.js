@@ -13,5 +13,6 @@ import './account-management/dns-edit-form'
 import './account-management/dns-list'
 import './account-management/brand-list'
 import './account-management/roles-tab'
+import './account-management/new-account-form'
 
 import './content-item-chart'

@@ -4,60 +4,79 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import Select from '../../components/select'
+import { reduxForm } from 'redux-form'
+import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../constants/account-management-options'
 
-export class NewAccountForm extends React.Component {
-  constructor(props) {
-    super(props);
+const accountTypeOptions = ACCOUNT_TYPES.map((e, i) => {
+  return <option key={i} value={e.value}>{e.label}</option>;
+});
 
-    this.state = {}
+let errors = {}
 
-    this.onCancel = this.onCancel.bind(this)
-    this.onAdd    = this.onAdd.bind(this)
-  }
+const validate = (values) => {
+  errors = {}
 
-  onCancel() {
-    this.props.onCancel();
-  }
+  const { accountName, accountBrand, serviceType } = values
 
-  onAdd(e) {
-    e.preventDefault()
-    console.log('adding new...')
-  }
+  if(!accountName || accountName.length === 0) errors.accountName = 'Account name is required'
+  if(!accountBrand || accountBrand.length === 0) errors.accountBrand = 'Account brand is required'
+  if(!serviceType) errors.serviceType = 'Service type is required'
 
-  render() {
-    return (
-      <form onSubmit={ this.onAdd } className='new-account-form'>
-
-        <div className="form-group">
-          <Input type="text" label="Account name"/>
-        </div>
-
-        <div className="form-group">
-          <Input type="text" label="Brand"/>
-        </div>
-
-
-        <div className="form-group">
-          <label>Account type</label>
-          <Select label="Account type" className="btn-block"
-                  onSelect={() => {}}
-                  value=""
-                  options={[
-                  ['', 'Account type'],
-                  ['content_provide', 'Content provider']
-                ]}
-          />
-        </div>
-
-        <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={ this.onCancel }>Cancel</Button>
-          <Button type="submit" bsStyle="primary">Add</Button>
-        </ButtonToolbar>
-
-      </form>
-    )
-  }
+  return errors;
 }
 
-export default NewAccountForm
+const NewAccountForm = (props) => {
+
+  const { fields: { accountName, accountBrand, serviceType } } = props
+
+  return (
+    <form onSubmit={ (e) => { e.preventDefault(); return props.onSave()} } className='new-account-form'>
+
+      <Input
+        {...accountName}
+        type="text"
+        label="Account name"
+        groupClassName="border-bottom"/>
+      {accountName.touched && accountName.error && <div className='error-msg'>{accountName.error}</div>}
+
+      <Input
+        {...accountBrand}
+        type="text"
+        label="Brand"
+        groupClassName="border-bottom"/>
+      {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
+
+      <Input
+        type="select"
+        label="Account type"
+        placeholder="Select account type"
+        groupClassName="btn-block border-bottom">
+        {accountTypeOptions}
+      </Input>
+
+      <label>Service type</label>
+      {SERVICE_TYPES.map((e, i) => {
+        return <Input {...serviceType} value={e} key={i} type="radio" label={e}/>
+      })
+      }
+
+      <ButtonToolbar className="text-right">
+        <Button bsStyle="primary" className="btn-outline" onClick={ props.onCancel }>Cancel</Button>
+        <Button disabled={ !!Object.keys(errors).length } bsStyle="primary" onClick={props.onSave}>Add</Button>
+      </ButtonToolbar>
+
+    </form>
+  )
+}
+
+NewAccountForm.propTypes = {
+  fields: React.PropTypes.object,
+  onCancel: React.PropTypes.func,
+  onSave: React.PropTypes.func
+}
+
+export default reduxForm({
+  fields: ['accountName', 'accountBrand', 'serviceType'],
+  form: 'new-account',
+  validate
+})(NewAccountForm)
