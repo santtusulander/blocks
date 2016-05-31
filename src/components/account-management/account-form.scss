@@ -1,0 +1,27 @@
+@import '../../styles/base/colors';
+@import '../../styles/base/variables';
+@import '../../styles/components/configuration/sidebar';
+
+// Account form container
+// =====================
+
+.modal-dialog.account-form-container {
+  @extend .modal-dialog.configuration-sidebar;
+
+  .modal-body {
+    padding: 0 $bar-height !important;
+
+    @include md {
+      padding: 0 $md-bar-height !important;
+    }
+
+    @include sm {
+      padding: 0 ($md-bar-height / 2) !important;
+    }
+  }
+
+  h4 {
+    text-transform: uppercase;
+    margin: 0;
+  }
+}

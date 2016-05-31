@@ -11,22 +11,57 @@ import Content from '../components/layout/content'
 import AccountManagementSidebar from '../components/account-management/account-management-sidebar'
 import ManageAccount from '../components/account-management/manage-account'
 import ManageSystem from '../components/account-management/manage-system'
+import AccountManagementFormContainer from '../components/account-management/form-container'
+import NewAccountForm from '../components/account-management/new-account-form'
 
 export class AccountManagement extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null
+      activeAccount: props.params.account || null,
+      showFormContainer: false,
+      activeForm: {}
     }
 
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
+    this.showFormContainer   = this.showFormContainer.bind(this)
+    this.hideFormContainer   = this.hideFormContainer.bind(this)
+    this.setActiveForm       = this.setActiveForm.bind(this)
   }
 
   componentWillMount() {
     if(this.state.activeAccount) {
       this.props.fetchAccountData(this.state.activeAccount)
     }
+  }
+
+  showFormContainer() {
+    this.setState({ showFormContainer: true })
+  }
+
+  hideFormContainer() {
+    this.setState({
+      showFormContainer: false,
+      activeForm: {}
+    })
+  }
+
+  setActiveForm(id) {
+    let form = {};
+    switch(id) {
+      case 'new-account':
+        form = {
+          content: <NewAccountForm onCancel={this.hideFormContainer} />,
+          title: 'New account',
+          subtitle: 'Lorem ipsum dolor'
+        }
+        break;
+    }
+    this.setState({
+      showFormContainer: true,
+      activeForm: form
+    })
   }
 
   changeActiveAccount(account) {
@@ -37,6 +72,7 @@ export class AccountManagement extends React.Component {
   render() {
     const { account } = this.props.params
     const { accounts } = this.props
+    const { showFormContainer, activeForm } = this.state
     const isAdmin = !account
 
     return (
@@ -45,7 +81,7 @@ export class AccountManagement extends React.Component {
           <AccountManagementSidebar
             accounts={accounts}
             activate={this.changeActiveAccount}
-            addAccount={() => {console.log('adding account...');}}
+            addAccount={() => this.setActiveForm('new-account')}
           />
           <Content>
             {this.state.activeAccount && <ManageAccount
@@ -58,6 +94,15 @@ export class AccountManagement extends React.Component {
             account={this.props.activeAccount}
             groups={this.props.groups}/>
         </Content>}
+
+        <AccountManagementFormContainer
+          show={showFormContainer}
+          onCancel={this.hideFormContainer}
+          title={activeForm.title}
+          subtitle={activeForm.subtitle}>
+          {activeForm.content}
+        </AccountManagementFormContainer>
+
       </PageContainer>
     )
   }
