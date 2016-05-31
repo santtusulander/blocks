@@ -103,7 +103,8 @@ AccountManagement.propTypes = {
   dnsData: React.PropTypes.instanceOf(Immutable.Map),
   fetchAccountData: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  SOAformData: React.PropTypes.object
 
 }
 
