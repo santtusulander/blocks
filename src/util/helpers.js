@@ -52,7 +52,7 @@ export function filterAccountsByUserName(accounts, username) {
       return username === 'UDNtest'
     }
     else {
-      return username === 'UDNprod' || username === 'UDNstag'
+      return username === 'UDNprod' || username === 'UDNstag' || username === 'diomedes'
     }
   })
 }
