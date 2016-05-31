@@ -21,9 +21,15 @@ export class AccountManagement extends React.Component {
       activeAccount: props.params.account || null,
       modalVisible: false
     }
+
     this.toggleModal = this.toggleModal.bind(this)
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
+
+
+    this.dnsEditToggle = this.dnsEditToggle.bind(this)
+    this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
+    this.dnsEditOnCancel = this.dnsEditOnCancel.bind(this)
   }
 
   componentWillMount() {
@@ -54,6 +60,20 @@ export class AccountManagement extends React.Component {
     this.props.fetchAccountData(account)
   }
 
+  dnsEditToggle(){
+    this.setState({ dnsEditShow: !this.state.dnsEditShow })
+  }
+
+  dnsEditOnSave(){
+    console.log('dnsEditOnSave()');
+    this.dnsEditToggle();
+  }
+
+  dnsEditOnCancel(){
+    console.log('dnsEditOnCancel()');
+    this.dnsEditToggle();
+  }
+
   render() {
     const {
       params: { account },
@@ -69,8 +89,11 @@ export class AccountManagement extends React.Component {
             Account list here
           </Sidebar>
           <Content>
-            {this.state.activeAccount && <ManageAccount
-              account={this.props.activeAccount}/>}
+            { this.state.activeAccount &&
+              <ManageAccount
+                account={this.props.activeAccount}
+              />
+            }
             {!this.state.activeAccount &&
               <ManageSystem
                 editSOA={this.editSOARecord}
@@ -81,7 +104,13 @@ export class AccountManagement extends React.Component {
                 domains={dnsData.get('domains')}
                 changeRecordType={dnsActions.changeActiveRecordType}
                 activeRecordType={activeRecordType}
-                />}
+
+                dnsEditShow={ this.state.dnsEditShow }
+                dnsEditToggle={ this.dnsEditToggle }
+                dnsEditOnSave={ this.dnsEditOnSave }
+                dnsEditOnCancel={ this.dnsEditOnCancel }
+
+              />}
           </Content>
         </div>}
         {!isAdmin && <Content>

@@ -5,6 +5,8 @@ import { ButtonWrapper as Button } from '../button.js'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
 import AddSOAForm from './add-soa-form.jsx'
+import DnsEditForm from './dns-edit-form.jsx'
+
 import Select from '../select.jsx'
 import recordTypes from '../../constants/dns-record-types.js'
 
@@ -21,7 +23,9 @@ const DNSList = props => {
     activeDomain,
     changeRecordType,
     changeActiveDomain,
-    activeRecordType } = props
+    activeRecordType
+  } = props
+
   const entries = domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
     .get('subDomains')
@@ -39,7 +43,7 @@ const DNSList = props => {
           className='dns-dropdowns'
           onSelect={id => changeActiveDomain(id)}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-        <Button bsStyle="primary" onClick={onAddDomain}>
+        <Button bsStyle="primary" onClick={ props.dnsEditToggle }>
           ADD DOMAIN
         </Button>
       </div>
@@ -56,7 +60,7 @@ const DNSList = props => {
             className='dns-dropdowns'
             onSelect={type => changeRecordType(type)}
             options={recordTypeOptions}/>
-          <Button bsStyle="primary" icon={true} addNew={true} onClick={onAddEntry}>
+          <Button bsStyle="primary" icon={true} addNew={true} onClick={ props.dnsEditToggle } >
             <IconAdd/>
           </Button>
         </div>
@@ -82,7 +86,7 @@ const DNSList = props => {
                 <td>{record.get('ttl')}</td>
                 <td>
                   <ActionLinks
-                    onEdit={() => editEntry(id)}
+                    onEdit={ () => props.dnsEditToggle(id) }
                     onDelete={() => deleteEntry(id)}/>
                 </td>
               </tr>
@@ -90,11 +94,21 @@ const DNSList = props => {
           }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
         </tbody>
       </table>
+
+      <DnsEditForm
+        show={ props.dnsEditShow }
+        edit={ true }
+        domain='foobar.com'
+        onSave={props.dnsEditOnSave }
+        onCancel={ props.dnsEditOnCancel }
+      />
+
       {modalActive &&
         <AddSOAForm
           domainName={activeDomain.get('name')}
           onHide={hideModal}
-          onSave={editSOA}/>}
+          onSave={editSOA}/>
+        }
     </div>
   )
 }

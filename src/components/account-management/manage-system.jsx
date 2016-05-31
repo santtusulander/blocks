@@ -48,7 +48,10 @@ class AccountManagementManageSystem extends React.Component {
               domains={this.props.domains}
               activeDomain={this.props.activeDomain}
               changeRecordType={this.props.changeRecordType}
-              activeRecordType={this.props.activeRecordType}/>
+              activeRecordType={this.props.activeRecordType}
+
+              {...this.props}
+            />
           }
           {this.state.activeTab === 'roles' &&
             <Roles/>
