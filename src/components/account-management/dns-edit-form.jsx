@@ -89,7 +89,7 @@ const DnsEditForm = (props) => {
 
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-            <Button disabled={ Object.keys(errors).length } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
+            <Button disabled={ Object.keys(errors).length !== 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
           </ButtonToolbar>
         </form>
       </Modal.Body>
