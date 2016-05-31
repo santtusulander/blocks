@@ -34,6 +34,7 @@ const DNSList = props => {
     ...recordTypes.map(type => [type, type]),
     [null, 'All Record Types']
   ]
+
   return (
     <div>
       <div className="account-management-header">
@@ -96,6 +97,8 @@ const DNSList = props => {
       </table>
 
       <DnsEditForm
+        { ...props.dnsInitialValues }
+
         show={ props.dnsEditShow }
         edit={ true }
         domain='foobar.com'
@@ -105,6 +108,9 @@ const DNSList = props => {
 
       {modalActive &&
         <AddSOAForm
+
+          { ...props.soaInitialValues }
+
           domainName={activeDomain.get('name')}
           onHide={hideModal}
           onSave={editSOA}/>

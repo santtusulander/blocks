@@ -82,6 +82,27 @@ export class AccountManagement extends React.Component {
       activeRecordType
     } = this.props
     const isAdmin = !account
+
+    /* TODO: remove - TEST ONLY */
+    const dnsInitialValues = {
+      initialValues: {
+        recordType: 'MX',
+        recordName: 'mikkotest',
+        targetValue: '11.22.33.44',
+        ttl: '3600'
+      }
+    }
+
+    const soaInitialValues = {
+      initialValues: {
+        domainName: 'foobar,com',
+        nameServer: 'ns1.foobar.com',
+        personResponsible: 'john@foobar.com',
+        zoneSerialNumber: '12345',
+        refresh: '3600'
+      }
+    }
+
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
@@ -110,6 +131,9 @@ export class AccountManagement extends React.Component {
                 dnsEditOnSave={ this.dnsEditOnSave }
                 dnsEditOnCancel={ this.dnsEditOnCancel }
 
+                dnsInitialValues = { dnsInitialValues }
+
+                soaInitialValues = { soaInitialValues }
               />}
           </Content>
         </div>}

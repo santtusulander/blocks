@@ -120,11 +120,11 @@ export default reduxForm({
   fields: ['domainName', 'nameServer', 'personResponsible', 'zoneSerialNumber', 'refresh'],
   form: 'addSOAForm',
   validate
-}, state => {
+} /*, state => {
   const activeDomainId = state.dns.get('activeDomain').get('id')
   const initialValues = state.dns
       .get('domains')
       .find(domain => is(activeDomainId, domain.get('id')))
       .get('SOARecord').toJS()
   return { initialValues }
-})(SOAForm)
+}*/ )(SOAForm)

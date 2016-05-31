@@ -26,77 +26,77 @@ const validate = values => {
 }
 
 const DnsEditForm = (props) => {
+    const title = props.edit ? 'Edit DNS Record' : 'New DNS Record'
+    const actionButtonTitle = props.edit ? 'Save' : 'Add'
 
-  const title = props.edit ? 'Edit DNS Record' : 'New DNS Record'
-  const actionButtonTitle = props.edit ? 'Save' : 'Add'
+    const { fields: { recordType, recordName, targetValue, ttl} } = props
 
-  const { fields: { recordType, recordName, targetValue, ttl} } = props
-
-  return (
-    <Modal
+    return (
+      <Modal
       show={props.show}
       onHide={props.onCancel}
       dialogClassName="dns-edit-form"
-    >
+      >
 
-      <Modal.Header>
-        <h1>{ title }</h1>
-        <p>Lorem ipsum dolor</p>
-      </Modal.Header>
+        <Modal.Header>
+          <h1>{ title }</h1>
+          <p>Lorem ipsum dolor</p>
+        </Modal.Header>
 
-      <Modal.Body>
-        <form>
+        <Modal.Body>
+          <form>
 
-          <Input
+            <Input
             { ...recordType }
             type="select"
             label="Select Record Type"
             placeholder="Select"
-          >
+            >
             { recordTypeOptions }
-          </Input>
+            </Input>
 
-          <Input
+            <Input
             { ...recordName }
             type="text"
             label="Record Name"
             placeholder="Enter Record Name"
             addonAfter={ `.${props.domain}` }
             className='input-narrow'
-          />
+            />
 
           {recordName.touched && recordName.error && <div className='error-msg'>{recordName.error}</div>}
 
-          <Input
+            <Input
             { ...targetValue }
             type="text"
             label="Target Value"
             placeholder="Enter Target Value"
-          />
+            />
 
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
 
-          <Input
+            <Input
             { ...ttl }
             type="text"
             label="TTL Value"
             placeholder="Enter TTL Value"
             className='input-narrow'
             addonAfter='seconds'
-          />
+            />
 
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
 
-          <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-            <Button disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
-          </ButtonToolbar>
-        </form>
-      </Modal.Body>
+            <ButtonToolbar className="text-right extra-margin-top">
+              <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+              <Button disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
+            </ButtonToolbar>
+          </form>
+        </Modal.Body>
 
-    </Modal>
-  )
+      </Modal>
+    )
 }
+
 
 DnsEditForm.propTypes = {
   edit: React.PropTypes.bool,
