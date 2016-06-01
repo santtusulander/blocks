@@ -63,7 +63,6 @@ const AccountManagementAccountDetails = (props) => {
       <h2>Details</h2>
 
       <form className='form-horizontal'>
-
         <Input
           { ...accountName }
           type="select"
@@ -91,25 +90,25 @@ const AccountManagementAccountDetails = (props) => {
           { accountTypeOptions }
         </Input>
 
-        <div className='form-group'>
+        <div className='form-group checkbox-group'>
           <label className='control-label'>Services</label>
 
-          <div className='checkbox-group'>
-          {
-            servicesOptions.map( (option, index) => {
-              return (
-                <div  key={index} className='checkbox-div'>
-                  <Input
-                    value={option}
-                    type='checkbox'
-                    label={ option }
-                    onChange={ e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value)) }
-                  />
-                </div>
-              )
-            })
-          }
-          </div>
+            <div className='checkbox-container'>
+            {
+              servicesOptions.map( (option, index) => {
+                return (
+                  <div key={index} className='checkbox-div'>
+                    <Input
+                      value={option}
+                      type='checkbox'
+                      label={ option }
+                      onChange={ e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value)) }
+                    />
+                  </div>
+                )
+              })
+            }
+            </div>
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
