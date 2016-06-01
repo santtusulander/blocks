@@ -74,6 +74,7 @@
   "scripts": {
     "start": "node dev-server.js",
     "dist": "webpack -p --progress --config webpack/production.js --production-build",
+    "e2e": "./node_modules/.bin/nightwatch; exit 0;",
     "lint:js": "eslint src/",
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
