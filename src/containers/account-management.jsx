@@ -92,7 +92,7 @@ export class AccountManagement extends Component {
       editSOA: this.editSOARecord,
       modalActive: this.state.modalVisible,
       hideModal: this.toggleModal,
-      changeActiveDomain: dnsActions.changeActiveDomain,
+      //changeActiveDomain: dnsActions.changeActiveDomain,
       activeDomain: activeDomain,
       domains: dnsData.get('domains'),
       changeRecordType: dnsActions.changeActiveRecordType,
