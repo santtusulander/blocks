@@ -3,8 +3,6 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import { Promise } from 'bluebird';
-
 import { urlBase, mapReducers, parseResponseData } from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'

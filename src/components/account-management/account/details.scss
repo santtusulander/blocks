@@ -1,0 +1,28 @@
+@import '../../../styles/base/variables';
+@import '../../../../vendor/bootstrap/stylesheets/bootstrap/mixins';
+@import '../../../../vendor/bootstrap/stylesheets/bootstrap/variables';
+
+.account-management-account-details {
+  label.control-label {
+    display: inline-block;
+
+    @include md {
+      width: $md-sidebar-width;
+    }
+
+    @include sm {
+      width: $sm-sidebar-width;
+    }
+  }
+
+  .form-group {
+    margin-left: inherit;
+    margin-right: inherit;
+  }
+
+  select, .checkbox-group {
+    display: block;
+    //display: block;
+    float: left;
+  }
+}
