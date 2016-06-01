@@ -79,7 +79,7 @@
     "storybook": "start-storybook -p 9001"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
     "testPathDirs": [
       "src"
     ],
