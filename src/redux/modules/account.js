@@ -123,14 +123,8 @@ export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
 })
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
-  /*return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
-  .then(parseResponseData);*/
-
-  /* TODO: remove - test only */
-  const accountData = Immutable.fromJS({
-    accountName: 'testAccount'
-
-  })
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`)
+  .then(parseResponseData);
 
   return Promise.resolve( accountData )
 })

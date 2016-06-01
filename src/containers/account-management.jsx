@@ -25,6 +25,9 @@ export class AccountManagement extends Component {
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
     this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
+    this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
+    this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
+    this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
   }
 
   componentWillMount() {
@@ -57,7 +60,32 @@ export class AccountManagement extends Component {
   }
 
   dnsEditOnSave(){
-    console.log('dnsEditOnSave()');
+    console.log('dnsEditOnSave()')
+  }
+
+  addGroupToActiveAccount(name) {
+    return this.props.groupActions.createGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      name
+    )
+  }
+
+  deleteGroupFromActiveAccount(groupId) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      groupId
+    )
+  }
+
+  editGroupInActiveAccount(groupId, name) {
+    return this.props.groupActions.updateGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      groupId,
+      {name: name}
+    )
   }
 
   render() {
@@ -87,7 +115,6 @@ export class AccountManagement extends Component {
           .find(domain => is(activeDomain.get('id'), domain.get('id')))
           .get('SOARecord').toJS()
     }
-
     const dnsListProps = {
       editSOA: this.editSOARecord,
       modalActive: this.state.modalVisible,
@@ -110,14 +137,25 @@ export class AccountManagement extends Component {
             Account list here
           </Sidebar>
           <Content>
-            {this.state.activeAccount ?
-              <ManageAccount account={this.props.activeAccount}/> :
-              <ManageSystem dnsList={dnsListProps}/>}
+
+            {this.state.activeAccount && <ManageAccount
+              account={this.props.activeAccount}
+              addGroup={this.addGroupToActiveAccount}
+              deleteGroup={this.deleteGroupFromActiveAccount}
+              editGroup={this.editGroupInActiveAccount}
+              groups={this.props.groups}/>
+            }
+
+            {!this.state.activeAccount && <ManageSystem dnsList={dnsListProps}/> }
+
           </Content>
         </div>}
         {!isAdmin && <Content>
           <ManageAccount
             account={this.props.activeAccount}
+            addGroup={this.addGroupToActiveAccount}
+            deleteGroup={this.deleteGroupFromActiveAccount}
+            editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
         </Content>}
       </PageContainer>
@@ -134,11 +172,11 @@ AccountManagement.propTypes = {
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   fetchAccountData: PropTypes.func,
+  groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func
-
 }
 
 function mapStateToProps(state) {
@@ -167,7 +205,8 @@ function mapDispatchToProps(dispatch) {
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
-    fetchAccountData: fetchAccountData
+    fetchAccountData: fetchAccountData,
+    groupActions: groupActions
   };
 }
 
