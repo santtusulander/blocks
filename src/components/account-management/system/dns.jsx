@@ -25,18 +25,10 @@ const AccountManagementSystemDNS = props => {
   return (
     <div className="account-management-system-dns">
       <DNSList
-        hideModal={props.hideModal}
-        modalActive={props.modalActive}
-        activeDomain={props.activeDomain}
-        editSOA={props.editSOA}
-        domains={props.domains}
-        activeRecordType={props.activeRecordType}
         onAddDomain={() => console.log('add domain')}
-
-        changeRecordType={props.changeRecordType}
         changeActiveDomain={() => console.log('change active domain')}
         onAddEntry={() => console.log('add entry')}
-
+        deleteEntry={() => console.log('delete entry')}
         {...props}
       />
     </div>

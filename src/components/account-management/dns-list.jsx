@@ -4,11 +4,14 @@ import { List, Map, is } from 'immutable'
 import { ButtonWrapper as Button } from '../button.js'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
-import AddSOAForm from './add-soa-form.jsx'
+import SoaEditForm from './dns-soa-form.jsx'
 import DnsEditForm from './dns-edit-form.jsx'
 
 import Select from '../select.jsx'
 import recordTypes from '../../constants/dns-record-types.js'
+
+const EDIT_SOA = 'SoaEditFrom'
+const EDIT_DNS = 'DnsEditFrom'
 
 const DNSList = props => {
   const {
@@ -16,16 +19,15 @@ const DNSList = props => {
     editEntry,
     deleteEntry,
     editSOA,
-    hideModal,
-    modalActive,
     onAddDomain,
     onAddEntry,
     activeDomain,
     changeRecordType,
     changeActiveDomain,
-    activeRecordType
+    activeRecordType,
+    toggleModal,
+    accountManagementModal
   } = props
-
   const entries = domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
     .get('subDomains')
@@ -34,7 +36,6 @@ const DNSList = props => {
     ...recordTypes.map(type => [type, type]),
     [null, 'All Record Types']
   ]
-
   return (
     <div>
       <div className="account-management-header">
@@ -54,14 +55,14 @@ const DNSList = props => {
             `DNS: ${activeDomain.get('name')}: ${entries.size} resource entries ` :
             'No active Domain'}
         </span>
-        {activeDomain ? <a onClick={hideModal}>Edit SOA</a> : null}
+        {activeDomain && <a onClick={() => toggleModal(EDIT_SOA)}>Edit SOA</a>}
         <div className='dns-filter-wrapper'>
           <Select
             value={activeRecordType || null}
             className='dns-dropdowns'
             onSelect={type => changeRecordType(type)}
             options={recordTypeOptions}/>
-          <Button bsStyle="primary" icon={true} addNew={true} onClick={ props.dnsEditToggle } >
+          <Button bsStyle="primary" icon={true} addNew={true} onClick={() => toggleModal(EDIT_DNS)} >
             <IconAdd/>
           </Button>
         </div>
@@ -87,7 +88,7 @@ const DNSList = props => {
                 <td>{record.get('ttl')}</td>
                 <td>
                   <ActionLinks
-                    onEdit={ () => props.dnsEditToggle(id) }
+                    onEdit={ () => toggleModal(EDIT_DNS) }
                     onDelete={() => deleteEntry(id)}/>
                 </td>
               </tr>
@@ -98,23 +99,18 @@ const DNSList = props => {
 
       <DnsEditForm
         { ...props.dnsInitialValues }
-
-        show={ props.dnsEditShow }
+        show={accountManagementModal === EDIT_DNS}
         edit={ true }
         domain='foobar.com'
-        onSave={props.dnsEditOnSave }
-        onCancel={ props.dnsEditOnCancel }
+        onSave={props.dnsEditOnSave}
+        onCancel={() => toggleModal(null)}
       />
-
-      {modalActive &&
-        <AddSOAForm
-
-          { ...props.soaInitialValues }
-
-          domainName={activeDomain.get('name')}
-          onHide={hideModal}
-          onSave={editSOA}/>
-        }
+      {accountManagementModal === EDIT_SOA &&
+        <SoaEditForm
+          {...props.soaInitialValues}
+          onCancel={() => toggleModal(null)}
+          activeDomain={activeDomain}
+          onSave={editSOA}/>}
     </div>
   )
 }

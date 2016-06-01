@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
-import { is } from 'immutable'
+import { Map } from 'immutable'
 
 import { ButtonWrapper as Button } from '../button.js'
 
@@ -41,10 +41,11 @@ const validate = values => {
   return errors
 }
 
-const SOAForm = props => {
+const SoaEditForm = props => {
   const {
-    onHide,
+    onCancel,
     onSave,
+    activeDomain,
     fields: {
       domainName,
       nameServer,
@@ -57,9 +58,10 @@ const SOAForm = props => {
     <Modal show={true} dialogClassName="soa-form-sidebar">
       <Modal.Header>
         <h1>SOA Record</h1>
+        <p>{activeDomain.get('name')}</p>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={e => { e.preventDefault(); onSave() }}>
+        <form>
           <Input type="text"
             className="soa-form-input"
             label="Domain Name"
@@ -94,7 +96,7 @@ const SOAForm = props => {
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary"
               outLine={true}
-              onClick={onHide}>
+              onClick={onCancel}>
               Cancel
             </Button>
             <Button bsStyle="primary"
@@ -109,22 +111,16 @@ const SOAForm = props => {
   )
 }
 
-SOAForm.propTypes = {
-  fields: React.PropTypes.object,
-  onHide: PropTypes.func,
+SoaEditForm.propTypes = {
+  activeDomain: PropTypes.instanceOf(Map),
+  fields: PropTypes.object,
+  initialValues: PropTypes.object,
+  onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
 
-
 export default reduxForm({
   fields: ['domainName', 'nameServer', 'personResponsible', 'zoneSerialNumber', 'refresh'],
-  form: 'addSOAForm',
+  form: 'soaEditForm',
   validate
-} /*, state => {
-  const activeDomainId = state.dns.get('activeDomain').get('id')
-  const initialValues = state.dns
-      .get('domains')
-      .find(domain => is(activeDomainId, domain.get('id')))
-      .get('SOARecord').toJS()
-  return { initialValues }
-}*/ )(SOAForm)
+})(SoaEditForm)

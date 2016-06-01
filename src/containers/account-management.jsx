@@ -1,11 +1,12 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, { PropTypes, Component } from 'react'
+import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as dnsActionCreators from '../redux/modules/dns'
+import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -13,23 +14,17 @@ import Sidebar from '../components/layout/sidebar'
 import ManageAccount from '../components/account-management/manage-account'
 import ManageSystem from '../components/account-management/manage-system'
 
-export class AccountManagement extends React.Component {
+export class AccountManagement extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null,
-      modalVisible: false
+      activeAccount: props.params.account || null
     }
 
-    this.toggleModal = this.toggleModal.bind(this)
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
-
-
-    this.dnsEditToggle = this.dnsEditToggle.bind(this)
     this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
-    this.dnsEditOnCancel = this.dnsEditOnCancel.bind(this)
   }
 
   componentWillMount() {
@@ -39,20 +34,21 @@ export class AccountManagement extends React.Component {
   }
 
   editSOARecord() {
-    const { SOAformData, dnsData, dnsActions } = this.props
+    const {
+      soaFormData,
+      dnsData,
+      dnsActions,
+      toggleModal
+    } = this.props
     const activeDomain = dnsData.get('activeDomain')
     let data = {}
-    for(const field in SOAformData) {
-      if(SOAformData[field] instanceof Object) {
-        data[field] = SOAformData[field].value
+    for(const field in soaFormData) {
+      if(soaFormData[field] instanceof Object) {
+        data[field] = soaFormData[field].value
       }
     }
     dnsActions.editSOA({ id: activeDomain.get('id'), data })
-    this.toggleModal()
-  }
-
-  toggleModal() {
-    this.setState({ modalVisible: !this.state.modalVisible })
+    toggleModal(null)
   }
 
   changeActiveAccount(account) {
@@ -60,18 +56,8 @@ export class AccountManagement extends React.Component {
     this.props.fetchAccountData(account)
   }
 
-  dnsEditToggle(){
-    this.setState({ dnsEditShow: !this.state.dnsEditShow })
-  }
-
   dnsEditOnSave(){
     console.log('dnsEditOnSave()');
-    this.dnsEditToggle();
-  }
-
-  dnsEditOnCancel(){
-    console.log('dnsEditOnCancel()');
-    this.dnsEditToggle();
   }
 
   render() {
@@ -79,10 +65,12 @@ export class AccountManagement extends React.Component {
       params: { account },
       dnsData,
       dnsActions,
-      activeRecordType
+      activeRecordType,
+      accountManagementModal,
+      toggleModal
     } = this.props
     const isAdmin = !account
-
+    const activeDomain = dnsData.get('activeDomain')
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
       initialValues: {
@@ -92,17 +80,29 @@ export class AccountManagement extends React.Component {
         ttl: '3600'
       }
     }
-
-    const soaInitialValues = {
-      initialValues: {
-        domainName: 'foobar,com',
-        nameServer: 'ns1.foobar.com',
-        personResponsible: 'john@foobar.com',
-        zoneSerialNumber: '12345',
-        refresh: '3600'
-      }
+    const soaFormInitialValues = {
+      initialValues:
+        dnsData
+          .get('domains')
+          .find(domain => is(activeDomain.get('id'), domain.get('id')))
+          .get('SOARecord').toJS()
     }
 
+    const dnsListProps = {
+      editSOA: this.editSOARecord,
+      modalActive: this.state.modalVisible,
+      hideModal: this.toggleModal,
+      changeActiveDomain: dnsActions.changeActiveDomain,
+      activeDomain: activeDomain,
+      domains: dnsData.get('domains'),
+      changeRecordType: dnsActions.changeActiveRecordType,
+      activeRecordType: activeRecordType,
+      dnsEditOnSave: this.dnsEditOnSave,
+      accountManagementModal: accountManagementModal,
+      toggleModal: toggleModal,
+      dnsInitialValues :  dnsInitialValues,
+      soaInitialValues: soaFormInitialValues
+    }
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
@@ -110,31 +110,9 @@ export class AccountManagement extends React.Component {
             Account list here
           </Sidebar>
           <Content>
-            { this.state.activeAccount &&
-              <ManageAccount
-                account={this.props.activeAccount}
-              />
-            }
-            {!this.state.activeAccount &&
-              <ManageSystem
-                editSOA={this.editSOARecord}
-                modalActive={this.state.modalVisible}
-                hideModal={this.toggleModal}
-                changeActiveDomain={dnsActions.changeActiveDomain}
-                activeDomain={dnsData.get('activeDomain')}
-                domains={dnsData.get('domains')}
-                changeRecordType={dnsActions.changeActiveRecordType}
-                activeRecordType={activeRecordType}
-
-                dnsEditShow={ this.state.dnsEditShow }
-                dnsEditToggle={ this.dnsEditToggle }
-                dnsEditOnSave={ this.dnsEditOnSave }
-                dnsEditOnCancel={ this.dnsEditOnCancel }
-
-                dnsInitialValues = { dnsInitialValues }
-
-                soaInitialValues = { soaInitialValues }
-              />}
+            {this.state.activeAccount ?
+              <ManageAccount account={this.props.activeAccount}/> :
+              <ManageSystem dnsList={dnsListProps}/>}
           </Content>
         </div>}
         {!isAdmin && <Content>
@@ -149,26 +127,30 @@ export class AccountManagement extends React.Component {
 
 AccountManagement.displayName = 'AccountManagement'
 AccountManagement.propTypes = {
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeRecordType: React.PropTypes.string,
-  dnsActions: React.PropTypes.object,
-  dnsData: React.PropTypes.instanceOf(Immutable.Map),
-  fetchAccountData: React.PropTypes.func,
-  groups: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object,
-  SOAformData: React.PropTypes.object
+  accountManagementModal: PropTypes.string,
+  accounts: PropTypes.instanceOf(List),
+  activeAccount: PropTypes.instanceOf(Map),
+  activeRecordType: PropTypes.string,
+  dnsActions: PropTypes.object,
+  dnsData: PropTypes.instanceOf(Map),
+  fetchAccountData: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
+  params: PropTypes.object,
+  soaFormData: PropTypes.object,
+  toggleModal: PropTypes.func
 
 }
 
 function mapStateToProps(state) {
   return {
+    accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
-    groups: state.group.get('allGroups'),
-    SOAformData: state.form.addSOAForm,
+    activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
-    activeRecordType: state.dns.get('activeRecordType')
+    groups: state.group.get('allGroups'),
+    soaFormData: state.form.soaEditForm,
+    toggleModal: state.ui.get('toggleModal')
   };
 }
 
@@ -176,13 +158,14 @@ function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
-
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   function fetchAccountData(account) {
     accountActions.fetchAccount('udn', account)
     groupActions.fetchGroups('udn', account)
   }
 
   return {
+    toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     fetchAccountData: fetchAccountData
   };
