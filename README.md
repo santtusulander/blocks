@@ -50,9 +50,25 @@ Download at https://nodejs.org/en/download/
 $ npm run dist
 ```
 
-### Testing
+### Unit Testing
 ```shell
 $ npm test
+```
+
+### End to End Testing
+
+#### Installation
+
+1. Install Java for your system https://www.java.com/en/download/
+
+2. Download the selenium binaries
+```shell
+$ npm run-script e2e-setup
+```
+
+#### Running
+```shell
+$ npm run e2e
 ```
 
 ### Component Lib
