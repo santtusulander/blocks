@@ -25,14 +25,14 @@ export function createSuccess(state, action) {
   const newGroup = Immutable.fromJS(action.payload)
   return state.merge({
     activeGroup: newGroup,
-    allGroups: state.get('allGroups').push(newGroup.get('group_id'))
+    allGroups: state.get('allGroups').push(newGroup)
   })
 }
 
 export function deleteSuccess(state, action) {
-  let newAllGroups = state.get('allGroups')
+  const newAllGroups = state.get('allGroups')
     .filterNot(group => {
-      return group === action.payload.id
+      return group.get('id') === action.payload.id
     })
   return state.merge({
     allGroups: newAllGroups,
@@ -79,9 +79,14 @@ export function startFetch(state) {
   return state.set('fetching', true)
 }
 
-export function updateSuccess(state) {
+export function updateSuccess(state, action) {
+  const updatedGroup = Immutable.fromJS(action.payload)
+  const index = state.get('allGroups')
+    .findIndex(group => group.get('id') === action.payload.id)
+  const newAllGroups = state.get('allGroups').set(index, updatedGroup)
   return state.merge({
-    activeGroup: null,
+    activeGroup: updatedGroup,
+    allGroups: newAllGroups,
     fetching: false
   })
 }
@@ -146,15 +151,15 @@ export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
   });
 })
 
-export const updateGroup = createAction(GROUP_UPDATED, (brand, account, group) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group.group_id}`, group, {
+export const updateGroup = createAction(GROUP_UPDATED, (brand, account, id, group) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${id}`, group, {
     headers: {
       'Content-Type': 'application/json'
     }
   })
   .then((res) => {
     if(res) {
-      return group;
+      return res.data;
     }
   })
 })
