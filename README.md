@@ -50,9 +50,16 @@ Download at https://nodejs.org/en/download/
 $ npm run dist
 ```
 
-### Testing
+### Unit Testing
 ```shell
 $ npm test
+```
+
+### End to End Testing
+
+Installation:
+```shell
+$ npm run-script e2e-setup
 ```
 
 ### Component Lib

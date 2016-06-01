@@ -27,6 +27,7 @@
     "hls.js": "^0.5.20",
     "jasmine-reporters": "^2.1.1",
     "jest-cli": "^12.0.2",
+    "nightwatch": "^0.9.1",
     "node-sass": "^3.4.2",
     "papaparse": "^4.1.2",
     "preprocess": "^3.1.0",
@@ -38,6 +39,7 @@
     "require-dir": "^0.3.0",
     "sass-lint": "^1.7.0",
     "sass-loader": "^3.1.2",
+    "selenium-download": "^2.0.1",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.0",
     "underscore": "^1.8.3",
@@ -76,7 +78,8 @@
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
     "test:watch": "jest --watch",
-    "storybook": "start-storybook -p 9001"
+    "storybook": "start-storybook -p 9001",
+    "e2e-setup": "node selenium-download.js"
   },
   "jest": {
     "collectCoverage": true,

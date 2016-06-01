@@ -84,3 +84,6 @@ private.json
 
 # Test coverage reports
 /coverage/
+
+# Selenium binaries
+/bin/
