@@ -28,7 +28,7 @@ const DNSList = props => {
     toggleModal,
     accountManagementModal
   } = props
-  const entries = domains
+  const entries = activeDomain && domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
     .get('subDomains')
     .filter(entry => !activeRecordType || entry.get('type') === activeRecordType)
@@ -78,7 +78,7 @@ const DNSList = props => {
           </tr>
         </thead>
         <tbody>
-          {!entries.isEmpty() ? entries.map((record, index) => {
+          {entries && !entries.isEmpty() ? entries.map((record, index) => {
             const id = record.get('id')
             return (
               <tr key={index}>

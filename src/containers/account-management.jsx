@@ -127,7 +127,7 @@ export class AccountManagement extends Component {
       dnsEditOnSave: this.dnsEditOnSave,
       accountManagementModal: accountManagementModal,
       toggleModal: toggleModal,
-      dnsInitialValues :  dnsInitialValues,
+      dnsInitialValues : dnsInitialValues,
       soaInitialValues: soaFormInitialValues
     }
     return (
