@@ -96,6 +96,7 @@
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/immutable",
       "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/redux-form",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/d3",
       "<rootDir>/node_modules/axios",

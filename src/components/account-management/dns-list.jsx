@@ -9,9 +9,7 @@ import DnsEditForm from './dns-edit-form.jsx'
 
 import Select from '../select.jsx'
 import recordTypes from '../../constants/dns-record-types.js'
-
-const EDIT_SOA = 'SoaEditFrom'
-const EDIT_DNS = 'DnsEditFrom'
+import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals.js'
 
 const DNSList = props => {
   const {
@@ -42,24 +40,24 @@ const DNSList = props => {
         Select Domain
         <Select
           value={activeDomain && activeDomain.get('id')}
-          className='dns-dropdowns'
+          className="dns-dropdowns"
           onSelect={id => (changeActiveDomain(id))}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-        <Button bsStyle="primary" onClick={ props.dnsEditToggle }>
+        <Button id="add-domain" bsStyle="primary" onClick={ props.dnsEditToggle }>
           <strong>ADD DOMAIN</strong>
         </Button>
       </div>
       <h3 className="account-management-header">
-        <span>
+        <span id="domain-stats">
           {activeDomain ?
             `DNS: ${activeDomain.get('name')}: ${entries.size} resource entries ` :
             'No active Domain'}
         </span>
-        {activeDomain && <a onClick={() => toggleModal(EDIT_SOA)}>Edit SOA</a>}
+        {activeDomain && <a id="edit-soa" onClick={() => toggleModal(EDIT_SOA)}>Edit SOA</a>}
         <div className='dns-filter-wrapper'>
           <Select
             value={activeRecordType || null}
-            className='dns-dropdowns'
+            className="dns-dropdowns"
             onSelect={type => changeRecordType(type)}
             options={recordTypeOptions}/>
           <Button bsStyle="primary" icon={true} addNew={true} onClick={() => toggleModal(EDIT_DNS)} >
@@ -100,7 +98,7 @@ const DNSList = props => {
       <DnsEditForm
         { ...props.dnsInitialValues }
         show={accountManagementModal === EDIT_DNS}
-        edit={ true }
+        edit={true}
         domain='foobar.com'
         onSave={props.dnsEditOnSave}
         onCancel={() => toggleModal(null)}

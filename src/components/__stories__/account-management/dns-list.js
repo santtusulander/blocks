@@ -17,7 +17,7 @@ storiesOf('DNSList', module)
   .addDecorator((story) => (
     <ThemeWrap>
       <Provider store={store}>
-      {story()}
+        {story()}
       </Provider>
     </ThemeWrap>
   ))
