@@ -3,8 +3,6 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import { Promise } from 'bluebird';
-
 import {urlBase, mapReducers} from '../util'
 
 const GROUP_CREATED = 'GROUP_CREATED'
@@ -140,21 +138,12 @@ export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
-  /* return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
   .then((res) => {
     if(res) {
       return res.data;
     }
-  });*/
-  const groupsData = Immutable.fromJS(
-    [
-      { id: 1, groupName: 'test Group'},
-      { id: 2, groupName: 'test Group 2'},
-      { id: 4, groupName: 'test Group 3'}
-    ]
-  )
-
-  return Promise.resolve ( groupsData )
+  });
 })
 
 export const updateGroup = createAction(GROUP_UPDATED, (brand, account, group) => {
