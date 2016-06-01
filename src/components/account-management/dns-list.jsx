@@ -28,13 +28,13 @@ const DNSList = props => {
     toggleModal,
     accountManagementModal
   } = props
-  const entries = domains
+  const entries = activeDomain && domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
     .get('subDomains')
     .filter(entry => !activeRecordType || entry.get('type') === activeRecordType)
   const recordTypeOptions = [
-    ...recordTypes.map(type => [type, type]),
-    [null, 'All Record Types']
+    [null, 'All Record Types'],
+    ...recordTypes.map(type => [type, type])
   ]
   return (
     <div>
@@ -43,10 +43,10 @@ const DNSList = props => {
         <Select
           value={activeDomain && activeDomain.get('id')}
           className='dns-dropdowns'
-          onSelect={id => changeActiveDomain(id)}
+          onSelect={id => (changeActiveDomain(id))}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
         <Button bsStyle="primary" onClick={ props.dnsEditToggle }>
-          ADD DOMAIN
+          <strong>ADD DOMAIN</strong>
         </Button>
       </div>
       <h3 className="account-management-header">
@@ -78,7 +78,7 @@ const DNSList = props => {
           </tr>
         </thead>
         <tbody>
-          {!entries.isEmpty() ? entries.map((record, index) => {
+          {entries && !entries.isEmpty() ? entries.map((record, index) => {
             const id = record.get('id')
             return (
               <tr key={index}>
@@ -116,6 +116,7 @@ const DNSList = props => {
 }
 
 DNSList.propTypes = {
+  accountManagementModal: PropTypes.string,
   activeDomain: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   changeActiveDomain: PropTypes.func,
@@ -127,7 +128,8 @@ DNSList.propTypes = {
   hideModal: PropTypes.func,
   modalActive: PropTypes.bool,
   onAddDomain: PropTypes.func,
-  onAddEntry: PropTypes.func
+  onAddEntry: PropTypes.func,
+  toggleModal: PropTypes.func
 }
 
 export default DNSList

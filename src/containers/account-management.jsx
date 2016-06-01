@@ -60,8 +60,7 @@ export class AccountManagement extends Component {
   }
 
   dnsEditOnSave(){
-      console.log('dnsEditOnSave()')
-
+    console.log('dnsEditOnSave()')
   }
 
   addGroupToActiveAccount(name) {
@@ -119,12 +118,11 @@ export class AccountManagement extends Component {
           .find(domain => is(activeDomain.get('id'), domain.get('id')))
           .get('SOARecord').toJS()
     }
-
     const dnsListProps = {
       editSOA: this.editSOARecord,
       modalActive: this.state.modalVisible,
       hideModal: this.toggleModal,
-      changeActiveDomain: dnsActions.changeActiveDomain,
+      //changeActiveDomain: dnsActions.changeActiveDomain,
       activeDomain: activeDomain,
       domains: dnsData.get('domains'),
       changeRecordType: dnsActions.changeActiveRecordType,
@@ -132,7 +130,7 @@ export class AccountManagement extends Component {
       dnsEditOnSave: this.dnsEditOnSave,
       accountManagementModal: accountManagementModal,
       toggleModal: toggleModal,
-      dnsInitialValues :  dnsInitialValues,
+      dnsInitialValues : dnsInitialValues,
       soaInitialValues: soaFormInitialValues
     }
 

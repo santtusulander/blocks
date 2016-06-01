@@ -1,43 +1,35 @@
 import React from 'react'
-import { fromJS, List } from 'immutable'
+import { fromJS } from 'immutable'
 import { storiesOf, action } from '@kadira/storybook'
+import { reducer as formReducer } from 'redux-form'
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
 
 import DNSList from '../../account-management/dns-list.jsx'
 
+const stateReducer = combineReducers({ form: formReducer })
+const store = createStore(stateReducer)
+
 const ThemeWrap = require('../theme-wrap.jsx');
-
-const fakeEntries = fromJS([
-  {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-  {id: 2, hostName: 'aaa.com', type: 'AAAA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-  {id: 3, hostName: 'aaa.com', type: 'SOA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-  {id: 4, hostName: 'aaa.com', type: 'SOA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-  {id: 5, hostName: 'aaa.com', type: 'TXT', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'}
-])
-
-const fakeDomains = fromJS([
-  {id: 1, name: 'ccc.com'},
-  {id: 2, name: 'bbb.com'},
-  {id: 3, name: 'kung-fu.com'},
-  {id: 4, name: 'abba.com'},
-  {id: 5, name: 'aaa.com'}
-])
-
-const activeDomain = { name: 'kung-fu.com', id: 3 }
+const fakeData = require('../../../redux/modules/dns.js').initialState
 
 storiesOf('DNSList', module)
   .addDecorator((story) => (
     <ThemeWrap>
+      <Provider store={store}>
       {story()}
+      </Provider>
     </ThemeWrap>
   ))
   .add('with no record type', () => (
     <DNSList
-      activeDomain={activeDomain}
+      activeDomain={fakeData.get('activeDomain')}
       changeActiveDomain={action('changed active domain')}
-      domains={fakeDomains}
+      domains={fakeData.get('domains')}
+      activeRecordType={fakeData.get('activeRecordType')}
       editSOA={(action('edit SOA'))}
+      toggleModal={(action('togge modal'))}
       onAddDomain={action('add domain')}
-      entries={fakeEntries}
       deleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
@@ -46,10 +38,10 @@ storiesOf('DNSList', module)
   .add('with no active domain', () => (
     <DNSList
       changeActiveDomain={action('changed active domain')}
-      domains={fakeDomains}
+      activeRecordType={fakeData.get('activeRecordType')}
+      domains={fakeData.get('domains')}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
-      entries={fakeEntries}
       deleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
@@ -58,12 +50,11 @@ storiesOf('DNSList', module)
   .add('with record type and active domain', () => (
     <DNSList
       changeActiveDomain={action('changed active domain')}
-      activeDomain={activeDomain}
+      activeDomain={fakeData.get('activeDomain')}
       editSOA={(action('edit SOA'))}
-      domains={fakeDomains}
-      recordType={'AAAA'}
+      domains={fakeData.get('domains')}
+      activeRecordType={'AAAA'}
       onAddDomain={action('add domain')}
-      entries={fakeEntries}
       deleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
@@ -73,7 +64,7 @@ storiesOf('DNSList', module)
     <DNSList
       onAddDomain={action('add domain')}
       changeActiveDomain={action('changed active domain')}
-      entries={List()}
+      domains={fromJS([])}
       editSOA={(action('edit SOA'))}
       deleteEntry={action('delete record')}
       editEntry={action('edit record')}/>

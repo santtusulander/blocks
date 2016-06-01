@@ -26,7 +26,7 @@ const AccountManagementSystemDNS = props => {
     <div className="account-management-system-dns">
       <DNSList
         onAddDomain={() => console.log('add domain')}
-        changeActiveDomain={() => console.log('change active domain')}
+        changeActiveDomain={id => console.log('change active domain, id:', id)}
         onAddEntry={() => console.log('add entry')}
         deleteEntry={() => console.log('delete entry')}
         {...props}
