@@ -1,20 +1,23 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { shallow } from 'enzyme'
 
+import { EDIT_SOA, EDIT_DNS } from '../../../constants/account-management-modals.js'
+
 jest.dontMock('../dns-list.jsx')
-//const fakeData = require('../../../redux/modules/dns.js').initialState
-const DNSList = require('../dns-list.jsx')
-//const NO_ACTIVE_DOMAIN = 'No active domain.'
+jest.dontMock('../../../redux/modules/dns.js')
+const DNSList = require('../dns-list.jsx').DNSList
+const fakeData = require('../../../redux/modules/dns.js').initialState
+
+const NO_ACTIVE_DOMAIN = 'No active Domain'
 
 describe('DNSList', () => {
 
   it('should exist', () => {
-    //const list = shallow(<DNSList/>)
-    //expect(list.length).toBe(1)
+    const list = shallow(<DNSList/>)
+    expect(list.length).toBe(1)
   })
-})
- /* it('should show empty message for entries', () => {
+
+  it('should show empty message for entries', () => {
     const list = shallow(<DNSList/>)
     expect(list.find('#empty-msg').length).toBe(1)
   })
@@ -28,7 +31,6 @@ describe('DNSList', () => {
     const list = shallow(<DNSList
         activeDomain={fakeData.get('activeDomain')}
         domains={fakeData.get('domains')}/>)
-    list.find('#domain-stats').text()
     expect(list.find('#domain-stats').text()).not.toBe(NO_ACTIVE_DOMAIN)
   })
 
@@ -36,20 +38,20 @@ describe('DNSList', () => {
     const list = shallow(<DNSList
       accountManagementModal={EDIT_SOA}
       />)
-    expect(list.find('SoaEditForm').length).toBe(1)
+    expect(list.find('#soa-form').length).toBe(1)
   })
 
   it('should show DNS edit modal', () => {
     const list = shallow(<DNSList
       accountManagementModal={EDIT_DNS}
       />)
-    expect(list.find('DnsEditForm').length).toBe(1)
+    expect(list.find('#dns-form').prop('show')).toBeTruthy()
   })
 
   it('should not show modal', () => {
     const list = shallow(<DNSList accountManagementModal={null}/>)
-    expect(list.find('DnsEditForm').length).toBe(0)
-    expect(list.find('SoaEditForm').length).toBe(0)
+    expect(list.find('#dns-form').prop('show')).not.toBeTruthy()
+    expect(list.find('#soa-form').length).toBe(0)
   })
 
   it('should list entries', () => {
@@ -67,13 +69,19 @@ describe('DNSList', () => {
   })
 
   it('should handle click to edit SOA record', () => {
-    const editSOA = jest.genMockFunction()
+    const toggleModal = jest.genMockFunction()
     const list = shallow(<DNSList
       activeDomain={fakeData.get('activeDomain')}
       domains={fakeData.get('domains')}
-      editSOA={editSOA}/>)
+      toggleModal={() => toggleModal(EDIT_SOA)}/>)
     list.find('#edit-soa').simulate('click')
-    expect(editSOA.mock.calls.length).toBe(1)
+    expect(toggleModal.mock.calls[0][0]).toBe(EDIT_SOA)
+  })
+
+  it('should handle click to add DNS record', () => {
+    const toggleModal = jest.genMockFunction()
+    const list = shallow(<DNSList toggleModal={() => toggleModal(EDIT_DNS)}/>)
+    list.find('#add-dns-record').simulate('click')
+    expect(toggleModal.mock.calls[0][0]).toBe(EDIT_DNS)
   })
 })
-*/
