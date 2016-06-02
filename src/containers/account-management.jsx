@@ -97,8 +97,10 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal
     } = this.props
+
     const isAdmin = !account
     const activeDomain = dnsData.get('activeDomain')
+
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
       initialValues: {
@@ -108,6 +110,7 @@ export class AccountManagement extends Component {
         ttl: '3600'
       }
     }
+
     const soaFormInitialValues = {
       initialValues:
         dnsData
@@ -130,6 +133,7 @@ export class AccountManagement extends Component {
       dnsInitialValues : dnsInitialValues,
       soaInitialValues: soaFormInitialValues
     }
+
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
@@ -150,6 +154,7 @@ export class AccountManagement extends Component {
 
           </Content>
         </div>}
+
         {!isAdmin && <Content>
           <ManageAccount
             account={this.props.activeAccount}

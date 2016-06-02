@@ -6,6 +6,7 @@ import './export-email-form';
 import './export-file-form';
 
 //account management
+import './account-management/account-details'
 import './account-management/dns-soa-form'
 import './account-management/user-list'
 import './account-management/dns-edit-form'

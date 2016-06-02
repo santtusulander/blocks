@@ -23,11 +23,11 @@ export const initialState = fromJS({
         refresh: 123
       },
       subDomains: [
-        {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 2, hostName: 'bbb.com', type: 'AAAA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 3, hostName: 'vvv.com', type: 'SOA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 4, hostName: 'ccc.com', type: 'SOA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 5, hostName: 'nnn.com', type: 'TXT', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'}
+        {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: '3300'},
+        {id: 2, hostName: 'bbb.com', type: 'AAAA', address: 'UDN Superuser', ttl: '3600'},
+        {id: 3, hostName: 'vvv.com', type: 'SOA', address: 'UDN Superuser', ttl: '3600'},
+        {id: 4, hostName: 'ccc.com', type: 'SOA', address: 'UDN Superuser', ttl: '3600'},
+        {id: 5, hostName: 'nnn.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'}
       ]
     },
     {
@@ -41,10 +41,10 @@ export const initialState = fromJS({
         refresh: 123
       },
       subDomains: [
-        {id: 1, hostName: 'eee.com', type: 'AAAA', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 2, hostName: 'rrr.com', type: 'A', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 3, hostName: 'ttt.com', type: 'TXT', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'},
-        {id: 5, hostName: 'uuu.com', type: 'TXT', address: 'UDN Superuser', ttl: 'firstname.lastname@company.com'}
+        {id: 1, hostName: 'eee.com', type: 'AAAA', address: 'UDN Superuser', ttl: '3600'},
+        {id: 2, hostName: 'rrr.com', type: 'A', address: 'UDN Superuser', ttl: '3600'},
+        {id: 3, hostName: 'ttt.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'},
+        {id: 5, hostName: 'uuu.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'}
       ]
     }
   ]
