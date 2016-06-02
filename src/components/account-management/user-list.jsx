@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import ActionLinks from './action-links.jsx'
 import AccountManagementHeader from './account-management-header.jsx'
 
-const UserList = props => {
+export const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props
   return (
     <div>
@@ -49,6 +49,4 @@ UserList.propTypes = {
 UserList.defaultProps = {
   users: List()
 }
-
-export default UserList
 
