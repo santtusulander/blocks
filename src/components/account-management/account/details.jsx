@@ -77,11 +77,9 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Name</label>
           <Col xs={8}>
             <div className="input-group">
-              <Select
+              <SelectWrapper
+                { ... accountName }
                 className="input-select"
-                onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
-                addonAfter=' '
-                value={ 2 }
                 options={ accountOptions }
               />
 
@@ -141,10 +139,9 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Type</label>
           <Col xs={3}>
             <div className="input-group">
-              <Select
+              <SelectWrapper
+                { ... accountType }
                 className="input-select"
-                onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
-                addonAfter=' '
                 options={ accountTypeOptions }
               />
 
