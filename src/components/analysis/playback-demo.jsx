@@ -12,6 +12,7 @@ export class PlaybackDemo extends React.Component {
     super(props)
 
     this.state = {
+      hls: (Hls.isSupported() && !isSafari()) ? new Hls() : null,
       bitrates: Immutable.List(),
       bufferErrors: 0,
       chartWidth: 400,
@@ -23,6 +24,7 @@ export class PlaybackDemo extends React.Component {
     }
 
     this.playVideo = this.playVideo.bind(this)
+    this.destroyVideo = this.destroyVideo.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
   }
   componentDidMount() {
@@ -52,6 +54,7 @@ export class PlaybackDemo extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    this.destroyVideo()
   }
   measureContainers() {
     this.setState({
@@ -59,14 +62,13 @@ export class PlaybackDemo extends React.Component {
     })
   }
   playVideo() {
-    if(Hls.isSupported() && !isSafari()) {
-      const hls = new Hls()
-      hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
-      hls.attachMedia(this.refs.player)
+    if(this.state.hls) {
+      this.state.hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
+      this.state.hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
         this.setState({ttfp: ((new Date()) - this.state.videoStartPlayTime)})
       });
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      this.state.hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
         this.refs.player.play()
         const bitrates = Immutable.fromJS(data.levels).map(level => level.get('bitrate'))
         this.setState({
@@ -74,7 +76,7 @@ export class PlaybackDemo extends React.Component {
           videoStartPlayTime: new Date()
         })
       });
-      hls.on(Hls.Events.FRAG_BUFFERED, (event, data) => {
+      this.state.hls.on(Hls.Events.FRAG_BUFFERED, (event, data) => {
         const bandwidth = Math.round(8 * data.stats.length / (data.stats.tbuffered - data.stats.tfirst));
         event = Immutable.fromJS({
           index: this.state.events.size,
@@ -95,14 +97,20 @@ export class PlaybackDemo extends React.Component {
           fragMaxKbps: Math.max(data.stats.fragMaxKbps, bandwidth)
         })
       })
-      hls.on(Hls.Events.FPS_DROP, (event, data) => {
+      this.state.hls.on(Hls.Events.FPS_DROP, (event, data) => {
         this.setState({droppedFrames: data.totalDroppedFrames})
       });
-      hls.on(Hls.Events.ERROR, (event, data) => {
+      this.state.hls.on(Hls.Events.ERROR, (event, data) => {
         if(data.type == "mediaError" && data.details === "bufferStalledError") {
           this.setState({bufferErrors: this.state.bufferErrors + 1})
         }
       });
+    }
+  }
+
+  destroyVideo(){
+    if(this.state.hls) {
+      this.state.hls.destroy();
     }
   }
   render() {
