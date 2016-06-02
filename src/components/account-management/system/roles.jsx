@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 
-import RolesTab from '../roles-tab.jsx'
+import RolesList from '../roles-list.jsx'
 
 import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../../constants/roles.js'
 
@@ -39,7 +39,7 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesTab roles={fakeRoles} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole} onAdd={this.showAddNewRoleDialog} showAddNewDialog={this.state.showAddNewDialog} />
+        <RolesList roles={fakeRoles} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole} onAdd={this.showAddNewRoleDialog} showAddNewDialog={this.state.showAddNewDialog} />
       </div>
     )
   }

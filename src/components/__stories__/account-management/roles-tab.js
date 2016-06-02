@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { storiesOf, action } from '@kadira/storybook';
 
 import ThemeWrap from '../theme-wrap.jsx'
-import RolesTab from '../../account-management/roles-tab.jsx'
+import RolesList from '../../account-management/roles-list.jsx'
 
 import { createStore, combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'
@@ -33,6 +33,6 @@ storiesOf('AccountManagement', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('RolesTab', () => (
-      <RolesTab roles={RolesList} onAdd={ action('onAdd') } onEdit={ action('onEdit') }  />
+  .add('RolesList', () => (
+      <RolesList roles={RolesList} onAdd={ action('onAdd') } onEdit={ action('onEdit') }  />
   ))

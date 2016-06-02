@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
 import ActionLinks from './action-links.jsx'
-import AccountManagementHeader from './account-management-header.jsx'
+import { AccountManagementHeader } from './account-management-header.jsx'
 
-const UserList = props => {
+export const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props
   return (
     <div>
@@ -51,4 +51,3 @@ UserList.defaultProps = {
 }
 
 export default UserList
-

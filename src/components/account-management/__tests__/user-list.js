@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { fromJS, List } from 'immutable'
+import { fromJS } from 'immutable'
 
 jest.dontMock('../user-list.jsx')
 const UserList = require('../user-list.jsx').UserList
@@ -22,7 +22,7 @@ describe('UserList', () => {
   })
 
   it('should show empty message', () => {
-    const list = shallow(<UserList users={List()}/>)
+    const list = shallow(<UserList users={fromJS([])}/>)
     expect(list.find('#empty-msg').length).toBe(1)
   })
 
@@ -30,5 +30,4 @@ describe('UserList', () => {
     const list = shallow(<UserList users={fakeUsers}/>)
     expect(list.find('tbody tr').length).toBe(6)
   })
-
 })

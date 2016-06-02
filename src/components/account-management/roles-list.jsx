@@ -3,14 +3,14 @@ import { Input } from 'react-bootstrap'
 
 
 
-import AccountManagementHeader from './account-management-header.jsx'
+import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './roles-edit-form.jsx'
 
 import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../constants/roles.js'
 
-import './roles-tab.scss';
+import './roles-list.scss';
 
-const RolesTabRow = (props) => {
+export const RolesListRow = (props) => {
 
   const { role } = props
 
@@ -41,11 +41,11 @@ const RolesTabRow = (props) => {
 }
 
 
-const RolesTab = (props) => {
+export const RolesList = (props) => {
 
   if (!props.roles || props.roles.length == 0) {
     return (
-      <div>
+      <div id="empty-msg">
         <p>No roles found</p>
       </div>
     )
@@ -53,7 +53,7 @@ const RolesTab = (props) => {
 
   const tableRows = props.roles.map( (role, i) => {
     return (
-      <RolesTabRow key={i} { ... role } role={ role } onEdit={props.onEdit} onDelete={props.onDelete}  />
+      <RolesListRow key={i} { ... role } role={ role } onEdit={props.onEdit} onDelete={props.onDelete}  />
     );
   });
 
@@ -84,4 +84,4 @@ const RolesTab = (props) => {
   )
 }
 
-export default RolesTab
+export default RolesList
