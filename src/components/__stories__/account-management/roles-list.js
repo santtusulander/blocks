@@ -18,7 +18,7 @@ const store = createStore(reducer);
 
 import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../../constants/roles.js'
 
-const RolesList = Immutable.fromJS([
+const RolesListData = Immutable.fromJS([
   { id: 1, roleName: 'Role name #1', roles: [ ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER ]  },
   { id: 2, roleName: 'Role name #2', roles: [ ROLE_UDN,  ROLE_SERVICE_PROVIDER ]  },
   { id: 3, roleName: 'Role name #3', roles: [ ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER ]  },
@@ -34,5 +34,5 @@ storiesOf('AccountManagement', module)
     </ThemeWrap>
   ))
   .add('RolesList', () => (
-      <RolesList roles={RolesList} onAdd={ action('onAdd') } onEdit={ action('onEdit') }  />
+      <RolesList roles={RolesListData} onAdd={ action('onAdd') } onEdit={ action('onEdit') }  />
   ))

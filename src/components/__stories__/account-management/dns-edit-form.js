@@ -7,7 +7,8 @@ import { reducer as formReducer } from 'redux-form'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import DnsEditForm from '../../account-management/dns-edit-form.jsx'
+//import DnsEditForm from '../../account-management/dns-edit-form.jsx'
+import DnsEditFormContainer from '../../../containers/dns-edit-form-container.js'
 
 const reducers = {
   form: formReducer
@@ -27,12 +28,5 @@ storiesOf('AccountManagement', module)
     </ThemeWrap>
   ))
   .add('DnsEditForm', () => (
-    <DnsEditForm
-      show={true}
-      edit={false}
-      domain='foobar.com'
-      onSave={ action('onSave') }
-      onCancel={ action('onCancel')}
-
-    />
+    <DnsEditFormContainer show={true} domain={ 'test.com' }    />
   ))

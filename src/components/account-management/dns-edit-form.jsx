@@ -1,14 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Modal, Input, ButtonToolbar, Button, Label } from 'react-bootstrap'
-import {reduxForm} from 'redux-form'
+import { reduxForm } from 'redux-form'
 
 import recordTypes from '../../constants/dns-record-types.js'
 
 import './dns-edit-form.scss'
 
-const recordTypeOptions = recordTypes.map( (e) => {
-    return <option value={e}>{e}</option>;
-});
 
 let errors = {}
 
@@ -25,25 +22,20 @@ const validate = values => {
   return errors;
 }
 
-const DnsEditForm = (props) => {
+const recordTypeOptions = recordTypes.map( (e,i) => {
+    return <option key={i} value={e}>{e}</option>;
+});
+
+//const DnsEditForm = (props) => {
+class DnsEditForm extends Component {
+  render() {
+    const props = this.props
     const title = props.edit ? 'Edit DNS Record' : 'New DNS Record'
     const actionButtonTitle = props.edit ? 'Save' : 'Add'
 
     const { fields: { recordType, recordName, targetValue, ttl} } = props
 
     return (
-      <Modal
-      show={props.show}
-      onHide={props.onCancel}
-      dialogClassName="dns-edit-form"
-      >
-
-        <Modal.Header>
-          <h1>{ title }</h1>
-          <p>Lorem ipsum dolor</p>
-        </Modal.Header>
-
-        <Modal.Body>
           <form>
 
             <Input
@@ -88,26 +80,28 @@ const DnsEditForm = (props) => {
 
             <ButtonToolbar className="text-right extra-margin-top">
               <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-              <Button disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
+              <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
             </ButtonToolbar>
           </form>
-        </Modal.Body>
-
-      </Modal>
     )
+  }
 }
 
+DnsEditForm.displayName = 'DnsEditForm'
 
 DnsEditForm.propTypes = {
   edit: React.PropTypes.bool,
-  fields: React.PropTypes.object,
+  fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  show: React.PropTypes.bool
 }
 
 export default reduxForm({
-  fields: ['recordType', 'recordName', 'targetValue', 'ttl'],
+  //errors: errors,
+  show: {true},
   form: 'dns-edit',
+  fields: ['recordType', 'recordName', 'targetValue', 'ttl'],
   validate
 })(DnsEditForm)
+
+//export default DnsEditForm

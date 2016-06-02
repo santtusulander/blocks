@@ -100,14 +100,17 @@
       "json"
     ],
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/enzyme",
-      "<rootDir>/node_modules/immutable",
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/redux-form",
-      "<rootDir>/node_modules/react-bootstrap",
-      "<rootDir>/node_modules/d3",
       "<rootDir>/node_modules/axios",
-      "<rootDir>/node_modules/hls.js"
+      "<rootDir>/node_modules/enzyme",
+      "<rootDir>/node_modules/d3",
+      "<rootDir>/node_modules/hls.js",
+      "<rootDir>/node_modules/immutable",
+      "<rootDir>/node_modules/jsdom",
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/react-bootstrap",
+      "<rootDir>/node_modules/react-redux",
+      "<rootDir>/node_modules/redux",
+      "<rootDir>/node_modules/redux-form"
     ]
   },
   "repository": {
