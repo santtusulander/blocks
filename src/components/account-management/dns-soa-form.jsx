@@ -41,7 +41,7 @@ const validate = values => {
   return errors
 }
 
-const SoaEditForm = props => {
+export const SoaEditForm = props => {
   const {
     onCancel,
     onSave,
@@ -62,44 +62,52 @@ const SoaEditForm = props => {
       </Modal.Header>
       <Modal.Body>
         <form>
-          <Input type="text"
-            className="soa-form-input"
-            label="Domain Name"
-            id="domain_name"
-            { ...domainName }
-            />
-          {domainName.touched && domainName.error && <div className="error-msg">{domainName.error}</div>}
-          <Input type="text"
-            className="soa-form-input"
-            label="Primary Nameserver"
-            id="primary_nameserver"
-            { ...nameServer }/>
-          {nameServer.touched && nameServer.error && <div className="error-msg">{nameServer.error}</div>}
-          <Input type="text"
-            className="soa-form-input"
-            label="Responsible Person Mailbox"
-            id="responsible_person_mailbox"
-            { ...personResponsible }/>
-          {personResponsible.touched && personResponsible.error && <div className="error-msg">{personResponsible.error}</div>}
-          <Input type="text"
-            className="soa-form-input"
-            label="Serial # of Zone"
-            id="zone_serial_number"
-            { ...zoneSerialNumber }/>
-          {zoneSerialNumber.touched && zoneSerialNumber.error && <div className="error-msg">{zoneSerialNumber.error}</div>}
-          <Input type="text"
-            className="soa-form-input refresh-input"
-            label="Refresh"
-            id="refresh"
-            { ...refresh }/>
-          {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
+          <div id="domain_name">
+            <Input type="text"
+              className="soa-form-input"
+              label="Domain Name"
+              { ...domainName }
+              />
+            {domainName.touched && domainName.error && <div className="error-msg">{domainName.error}</div>}
+          </div>
+          <div id="primary_nameserver">
+            <Input type="text"
+              className="soa-form-input"
+              label="Primary Nameserver"
+              { ...nameServer }/>
+            {nameServer.touched && nameServer.error && <div className="error-msg">{nameServer.error}</div>}
+          </div>
+          <div id="responsible_person_mailbox">
+            <Input type="text"
+              className="soa-form-input"
+              label="Responsible Person Mailbox"
+              { ...personResponsible }/>
+            {personResponsible.touched && personResponsible.error && <div className="error-msg">{personResponsible.error}</div>}
+          </div>
+          <div id="zone_serial_number">
+            <Input type="text"
+              className="soa-form-input"
+              label="Serial # of Zone"
+              { ...zoneSerialNumber }/>
+            {zoneSerialNumber.touched && zoneSerialNumber.error && <div className="error-msg">{zoneSerialNumber.error}</div>}
+          </div>
+          <div id="refresh">
+            <Input type="text"
+              className="soa-form-input refresh-input"
+              label="Refresh"
+              id="refresh"
+              { ...refresh }/>
+            {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
+          </div>
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary"
               outLine={true}
               onClick={onCancel}>
               Cancel
             </Button>
-            <Button bsStyle="primary"
+            <Button
+              id="save_button"
+              bsStyle="primary"
               disabled={Object.keys(errors).length !== 0}
               onClick={onSave}>
               Save
