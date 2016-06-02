@@ -1,6 +1,8 @@
 import React from 'react'
 import { Row, Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
+import SelectWrapper from '../../select-wrapper.jsx'
 import Select from '../../select.jsx'
+
 import { ButtonWrapper as Button } from '../../button.js'
 import { reduxForm } from 'redux-form'
 
@@ -12,9 +14,9 @@ import IconEdit from '../../icons/icon-edit.jsx'
 import './details.scss'
 
 const fakeBrands = [
-  { id: 1, brandName: 'Brand Name 1' },
-  { id: 2, brandName: 'Brand Name 2' },
-  { id: 3, brandName: 'Brand Name 3' }
+  { id: '1', brandName: 'Brand Name 1' },
+  { id: '2', brandName: 'Brand Name 2' },
+  { id: '3', brandName: 'Brand Name 3' }
 ];
 
 const brandOptions = fakeBrands.map( (e) => {
@@ -22,11 +24,11 @@ const brandOptions = fakeBrands.map( (e) => {
 });
 
 const fakeAccounts = [
-  { id: 1, accountName: 'Test Account 1', brandId: 1 },
-  { id: 2, accountName: 'Test Account 2', brandId: 2 },
-  { id: 3, accountName: 'Test Account 3', brandId: 3 },
-  { id: 4, accountName: 'Test Account 4', brandId: 1 },
-  { id: 5, accountName: 'Test Account 5', brandId: 2 }
+  { id: '1', accountName: 'Test Account 1', brandId: 1 },
+  { id: '2', accountName: 'Test Account 2', brandId: 2 },
+  { id: '3', accountName: 'Test Account 3', brandId: 3 },
+  { id: '4', accountName: 'Test Account 4', brandId: 1 },
+  { id: '5', accountName: 'Test Account 5', brandId: 2 }
 ]
 
 const accountOptions = fakeAccounts.map( (e) => {
@@ -55,12 +57,6 @@ const validate = values => {
 
 }
 
-/*function handleSelectChange(path) {
-  return value => {
-    this.props.changeValue(path, value)
-  }
-}*/
-
 const AccountManagementAccountDetails = (props) => {
 
   const { fields: { accountName, brand, accountType, services } } = props
@@ -81,10 +77,12 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Name</label>
           <Col xs={8}>
             <div className="input-group">
-              <Select className="input-select"
-              onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
-              addonAfter=' '
-              options={ accountOptions }
+              <Select
+                className="input-select"
+                onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
+                addonAfter=' '
+                value={ 2 }
+                options={ accountOptions }
               />
 
               <span className="input-group-addon">
@@ -106,9 +104,10 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Brand</label>
           <Col xs={6}>
             <div className="input-group">
-              <Select className="input-select"
-                onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
-                addonAfter=' '
+
+              <SelectWrapper
+                { ... brand }
+                className="input-select"
                 options={ brandOptions }
               />
 
@@ -142,7 +141,8 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Type</label>
           <Col xs={3}>
             <div className="input-group">
-              <Select className="input-select"
+              <Select
+                className="input-select"
                 onSelect={ e => { /* e.target.getAttribute('data-value')  brand.setField('kakka' e.target.getAttribute('data-value')) ) */ } }
                 addonAfter=' '
                 options={ accountTypeOptions }
@@ -183,11 +183,9 @@ const AccountManagementAccountDetails = (props) => {
           </Col>
         </div>
 
-        <Row>
         <ButtonToolbar className="text-right extra-margin-top">
           <Button disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >Save</Button>
         </ButtonToolbar>
-        </Row>
       </form>
     </div>
   )
