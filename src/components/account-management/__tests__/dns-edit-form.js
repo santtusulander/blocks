@@ -38,4 +38,19 @@ describe("DnsEditFormContainer", () => {
     expect( form.length ).toBe(1);
   })
 
+  it("should have 3 inputs", () => {
+
+    const inputs = subject.find('input')
+    expect( inputs.length ).toBe(3)
+  })
+
+  it("shows error if recordName set to blank", () => {
+    /* NOT WORKING FOR SOME REASON */
+    const input = subject.find(".recordNameInput")
+
+    input.simulate('change', { target: { value: '' } })
+    input.simulate('click')
+    const errMsg = subject.find('.errorRecordName')
+    expect(errMsg).to.exist()
+  })
 });

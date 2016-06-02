@@ -6,7 +6,6 @@ import recordTypes from '../../constants/dns-record-types.js'
 
 import './dns-edit-form.scss'
 
-
 let errors = {}
 
 const validate = values => {
@@ -30,6 +29,7 @@ const recordTypeOptions = recordTypes.map( (e,i) => {
 class DnsEditForm extends Component {
   render() {
     const props = this.props
+
     const title = props.edit ? 'Edit DNS Record' : 'New DNS Record'
     const actionButtonTitle = props.edit ? 'Save' : 'Add'
 
@@ -48,15 +48,15 @@ class DnsEditForm extends Component {
             </Input>
 
             <Input
-            { ...recordName }
-            type="text"
-            label="Record Name"
-            placeholder="Enter Record Name"
-            addonAfter={ `.${props.domain}` }
-            className='input-narrow'
+              { ...recordName }
+              type="text"
+              label="Record Name"
+              placeholder="Enter Record Name"
+              addonAfter={ `.${props.domain}` }
+              className='input-narrow recordNameInput'
             />
 
-          {recordName.touched && recordName.error && <div className='error-msg'>{recordName.error}</div>}
+          {recordName.touched && recordName.error && <div className='error-msg errorRecordName'>{recordName.error}</div>}
 
             <Input
             { ...targetValue }
@@ -97,8 +97,6 @@ DnsEditForm.propTypes = {
 }
 
 export default reduxForm({
-  //errors: errors,
-  show: {true},
   form: 'dns-edit',
   fields: ['recordType', 'recordName', 'targetValue', 'ttl'],
   validate
