@@ -1,8 +1,7 @@
 import React from 'react'
-import { ButtonWrapper } from '../button.js'
 
 import ActionLinks from './action-links.jsx'
-import AccountManagementHeader from './account-management-header.jsx'
+import { AccountManagementHeader } from './account-management-header.jsx'
 
 //import './brand-list.scss';
 

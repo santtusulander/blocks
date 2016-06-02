@@ -4,7 +4,7 @@ import IconAdd from '../icons/icon-add.jsx'
 
 import './account-management-header.scss'
 
-const AccountManagementHeader = props =>
+export const AccountManagementHeader = props =>
     <h2 className="account-management-header">
       <span>{props.title}</span>
       {props.children}
@@ -19,4 +19,3 @@ AccountManagementHeader.propTypes = {
   title: PropTypes.string
 }
 
-export default AccountManagementHeader

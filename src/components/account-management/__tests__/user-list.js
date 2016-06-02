@@ -30,5 +30,4 @@ describe('UserList', () => {
     const list = shallow(<UserList users={fakeUsers}/>)
     expect(list.find('tbody tr').length).toBe(6)
   })
-
 })

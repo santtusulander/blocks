@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
 import ActionLinks from './action-links.jsx'
-import AccountManagementHeader from './account-management-header.jsx'
+import { AccountManagementHeader } from './account-management-header.jsx'
 
 export const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props

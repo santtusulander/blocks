@@ -3,7 +3,7 @@ import { Input } from 'react-bootstrap'
 
 
 
-import AccountManagementHeader from './account-management-header.jsx'
+import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './roles-edit-form.jsx'
 
 import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../constants/roles.js'
