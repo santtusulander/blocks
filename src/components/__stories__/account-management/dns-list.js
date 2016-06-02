@@ -5,7 +5,7 @@ import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import DNSList from '../../account-management/dns-list.jsx'
+import { DNSList } from '../../account-management/dns-list.jsx'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
@@ -17,7 +17,7 @@ storiesOf('DNSList', module)
   .addDecorator((story) => (
     <ThemeWrap>
       <Provider store={store}>
-      {story()}
+        {story()}
       </Provider>
     </ThemeWrap>
   ))

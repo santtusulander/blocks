@@ -119,9 +119,8 @@ export class AccountManagement extends Component {
           .get('SOARecord').toJS()
     }
     const dnsListProps = {
-      editSOA: this.editSOARecord,
+      soaEditOnSave: this.editSOARecord,
       modalActive: this.state.modalVisible,
-      hideModal: this.toggleModal,
       //changeActiveDomain: dnsActions.changeActiveDomain,
       activeDomain: activeDomain,
       domains: dnsData.get('domains'),
@@ -130,8 +129,8 @@ export class AccountManagement extends Component {
       dnsEditOnSave: this.dnsEditOnSave,
       accountManagementModal: accountManagementModal,
       toggleModal: toggleModal,
-      dnsInitialValues : dnsInitialValues,
-      soaInitialValues: soaFormInitialValues
+      dnsFormInitialValues: dnsInitialValues,
+      soaFormInitialValues: soaFormInitialValues
     }
 
     return (
@@ -150,7 +149,7 @@ export class AccountManagement extends Component {
               groups={this.props.groups}/>
             }
 
-            {!this.state.activeAccount && <ManageSystem dnsList={dnsListProps}/> }
+            {!this.state.activeAccount && <ManageSystem dnsList={dnsListProps}/>}
 
           </Content>
         </div>}
@@ -192,8 +191,7 @@ function mapStateToProps(state) {
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
-    soaFormData: state.form.soaEditForm,
-    toggleModal: state.ui.get('toggleModal')
+    soaFormData: state.form.soaEditForm
   };
 }
 
