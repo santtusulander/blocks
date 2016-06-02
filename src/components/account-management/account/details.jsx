@@ -8,8 +8,6 @@ import { reduxForm } from 'redux-form'
 import IconAdd from '../../icons/icon-add.jsx'
 import IconEdit from '../../icons/icon-edit.jsx'
 
-//import HoverToolTip from '../../hover-tool-tip/hover-tool-tip.jsx'
-
 import './details.scss'
 
 const fakeBrands = [
