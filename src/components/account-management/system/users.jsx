@@ -1,7 +1,7 @@
 import React from 'react'
 import { fromJS } from 'immutable'
 
-import { UserList } from '../user-list.jsx'
+import UserList from '../user-list.jsx'
 
 const fakeUsers = fromJS([
   {id: 1, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},

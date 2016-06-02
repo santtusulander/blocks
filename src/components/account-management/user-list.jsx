@@ -50,3 +50,4 @@ UserList.defaultProps = {
   users: List()
 }
 
+export default UserList

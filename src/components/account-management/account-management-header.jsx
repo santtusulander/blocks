@@ -19,3 +19,4 @@ AccountManagementHeader.propTypes = {
   title: PropTypes.string
 }
 
+export default AccountManagementHeader

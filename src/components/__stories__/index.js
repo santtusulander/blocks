@@ -12,6 +12,6 @@ import './account-management/user-list'
 import './account-management/dns-edit-form'
 import './account-management/dns-list'
 import './account-management/brand-list'
-import './account-management/roles-tab'
+import './account-management/roles-list'
 
 import './content-item-chart'
