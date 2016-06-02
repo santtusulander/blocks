@@ -9,7 +9,7 @@ const SelectWrapper = (props) => {
   return (
       <Select
         className={ props.className }
-        onSelect={ props.onChange( e ) }
+        onSelect={ e => props.onChange( e ) }
         options={ props.options }
         value={ props.value }
       />
