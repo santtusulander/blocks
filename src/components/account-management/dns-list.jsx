@@ -100,15 +100,17 @@ export const DNSList = props => {
           }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
         </tbody>
       </table>
+      { accountManagementModal === EDIT_DNS &&
+        <DnsEditForm
+          { ...props.dnsInitialValues }
+          show={accountManagementModal === EDIT_DNS}
+          edit={ true }
+          domain='foobar.com'
+          onSave={props.dnsEditOnSave}
+          onCancel={() => toggleModal(null)}
+        />
+      }
 
-      <DnsEditForm
-        id="dns-form"
-        show={accountManagementModal === EDIT_DNS}
-        edit={true}
-        domain='foobar.com'
-        onSave={dnsEditOnSave}
-        onCancel={() => toggleModal(null)}
-        { ...dnsFormInitialValues }/>
       {accountManagementModal === EDIT_SOA &&
         <SoaEditForm
           id="soa-form"
