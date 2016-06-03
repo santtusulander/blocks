@@ -47,6 +47,7 @@ const NewAccountForm = (props) => {
             {...accountName}
             type="text"
             label="Account name"
+            placeholder='Enter Account Name'
             groupClassName="border-bottom"/>
           {accountName.touched && accountName.error && <div className='error-msg'>{accountName.error}</div>}
 
@@ -54,6 +55,7 @@ const NewAccountForm = (props) => {
             {...accountBrand}
             type="text"
             label="Brand"
+            placeholder='Enter Brand'
             groupClassName="border-bottom"/>
           {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
 
