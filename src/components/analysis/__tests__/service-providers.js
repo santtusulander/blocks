@@ -34,19 +34,70 @@ const fakeStats = Immutable.fromJS({
  }]
 })
 
-const fakeStatsToday = Immutable.fromJS({
- total: 123456,
- net_on: {bytes: 123, percent_total: 0.2},
- net_off: {bytes: 456, percent_total: 0.8}
-})
+const fakeStats = Immutable.fromJS([
+  {
+    "name": "Vodafone",
+    "http": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "https": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "countries": [
+      {
+        "name": "Germany",
+        "code": "GER",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.35
+      },
+      {
+        "name": "France",
+        "code": "FRA",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.20
+      }
+    ]
+  },
+  {
+    "name": "Telstra",
+    "http": {
+      "net_on": 50000,
+      "net_on_bps": 50000,
+      "net_off": 25000,
+      "net_off_bps": 25000
+    },
+    "https": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "countries": [
+      {
+        "name": "Australia",
+        "code": "AUS",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.30
+      }
+    ]
+  }
+])
 
 describe('AnalysisServiceProviders', () => {
   it('should exist', () => {
     const analysisServiceProviders = TestUtils.renderIntoDocument(
       <AnalysisServiceProviders
         fetching={true}
-        stats={fakeStats}
-        statsToday={fakeStatsToday}/>
+        stats={fakeStats}/>
     );
     expect(TestUtils.isCompositeComponent(analysisServiceProviders)).toBeTruthy();
   });
@@ -55,8 +106,7 @@ describe('AnalysisServiceProviders', () => {
     const analysisServiceProviders = TestUtils.renderIntoDocument(
       <AnalysisServiceProviders
         fetching={false}
-        stats={fakeStats}
-        statsToday={fakeStatsToday}/>
+        stats={fakeStats}/>
     );
     const trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisServiceProviders, 'tr')
     expect(trs.length).toBe(3);
