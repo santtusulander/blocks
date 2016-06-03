@@ -14,7 +14,7 @@ import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals.js
 export const DNSList = props => {
   const {
     domains,
-    deleteEntry,
+    onDeleteEntry,
     soaEditOnSave,
     dnsEditOnSave,
     onAddDomain,
@@ -93,20 +93,20 @@ export const DNSList = props => {
                 <td>
                   <ActionLinks
                     onEdit={() => toggleModal(EDIT_DNS)}
-                    onDelete={() => deleteEntry(id)}/>
+                    onDelete={() => onDeleteEntry(id)}/>
                 </td>
               </tr>
             )
           }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
         </tbody>
       </table>
-      { accountManagementModal === EDIT_DNS &&
+      {accountManagementModal === EDIT_DNS &&
         <DnsEditForm
-          { ...props.dnsInitialValues }
+          { ...dnsFormInitialValues }
           show={accountManagementModal === EDIT_DNS}
-          edit={ true }
+          edit={true}
           domain='foobar.com'
-          onSave={props.dnsEditOnSave}
+          onSave={dnsEditOnSave}
           onCancel={() => toggleModal(null)}
         />
       }
@@ -129,12 +129,12 @@ DNSList.propTypes = {
   activeRecordType: PropTypes.string,
   changeActiveDomain: PropTypes.func,
   changeRecordType: PropTypes.func,
-  deleteEntry: PropTypes.func,
   dnsEditOnSave: PropTypes.func,
   dnsFormInitialValues: PropTypes.object,
   domains: PropTypes.instanceOf(List),
   onAddDomain: PropTypes.func,
   onAddEntry: PropTypes.func,
+  onDeleteEntry: PropTypes.func,
   soaEditOnSave: PropTypes.func,
   soaFormInitialValues: PropTypes.object,
   toggleModal: PropTypes.func
