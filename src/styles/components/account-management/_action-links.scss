@@ -5,15 +5,15 @@
 
 .action-links {
   .btn-primary {
-    background-color: transparent;
     margin-left: 5px;
+    background-color: transparent;
   }
 }
 
 .delete-icon {
+  cursor: pointer;
   fill: $pale-blue !important;
   stroke: $pale-blue !important;
-  cursor: pointer;
 }
 
 .action-link-edit {

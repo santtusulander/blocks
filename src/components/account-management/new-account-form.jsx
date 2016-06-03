@@ -68,7 +68,7 @@ const NewAccountForm = (props) => {
                   options={ serviceTypeOptions }
             />
           </div>
-          
+
           <label>Service type</label>
           {SERVICE_TYPES.map((e, i) => {
             return <Input {...serviceType} value={e} key={i} type="radio" label={e}/>
