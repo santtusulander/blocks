@@ -11,11 +11,16 @@ import SelectWrapper from '../select-wrapper.jsx'
 import { reduxForm } from 'redux-form'
 import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../constants/account-management-options'
 
-import './new-account-form.scss'
+import './add-account-form.scss'
 
-const serviceTypeOptions = ACCOUNT_TYPES.map((e, i) => {
+const accountTypeOptions = ACCOUNT_TYPES.map((e, i) => {
   return [ e.value, e.label]
 });
+
+const serviceTypeOptions = SERVICE_TYPES.map((e, i) => {
+  return [ e.value, e.label]
+});
+
 
 let errors = {}
 
@@ -33,7 +38,7 @@ const validate = (values) => {
 
 const NewAccountForm = (props) => {
 
-  const { fields: { accountName, accountBrand, serviceType }, show, onCancel, onSave } = props
+  const { fields: { accountBrand, accountName, accountType, serviceType }, show, onCancel, onSave } = props
 
   return (
     <Modal dialogClassName='account-management-new-account' show={show}>
@@ -61,11 +66,13 @@ const NewAccountForm = (props) => {
             groupClassName="border-bottom"/>
           {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
 
+
           <div className='form-group'>
+            <label className='control-label'>Account type</label>
             <SelectWrapper
-                  { ... serviceType }
+                  { ... accountType }
                   className="input-select"
-                  options={ serviceTypeOptions }
+                  options={ accountTypeOptions }
             />
           </div>
 
@@ -93,7 +100,7 @@ NewAccountForm.propTypes = {
 }
 
 export default reduxForm({
-  fields: ['accountName', 'accountBrand', 'serviceType'],
+  fields: ['accountName', 'accountBrand', 'accountType', 'serviceType'],
   form: 'new-account',
   validate
 })(NewAccountForm)
