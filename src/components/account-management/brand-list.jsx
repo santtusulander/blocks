@@ -1,9 +1,7 @@
 import React from 'react'
-
+import moment from 'moment'
 import ActionLinks from './action-links.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
-
-//import './brand-list.scss';
 
 const AVAILABILITY_SHARED = 'Shared'
 const AVAILABILITY_PRIVATE = 'Private'
@@ -23,7 +21,7 @@ const BrandListRow = (props) => {
         {props.availability}
       </td>
       <td>
-        {props.lastEdited}
+        {moment(props.lastEdited).format('MM/DD/YYYY, h:mm a')}
       </td>
       <td>
         <BrandlistUsedBy fieldVal={props.usedBy} />
@@ -47,12 +45,19 @@ const BrandlistUsedBy = (props) => {
   let content
 
   if ( Array.isArray(props.fieldVal) ) {
-    content = props.fieldVal.map( ( item ) => {
-      return (
-        <a>{item.accountName}</a>
-      )
-    });
+    return (
+      <a>
+        {props.fieldVal.length} accounts
+      </a>
 
+      /* TODO: create a tooltip
+      content = props.fieldVal.map( ( item ) => {
+       return (
+       <a>{item.accountName}</a>
+       )
+       }); */
+
+    )
   } else {
     content = props.fieldVal
   }
