@@ -187,6 +187,11 @@ class DataUtils {
         detail: []
       };
 
+      // Don't include this record if the total is falsy or "0"
+      if (!dimensionTotal || dimensionTotal === '0') {
+        return;
+      }
+
       // Set the detail array on the record
       // Calculate total visitors for the dimension
       // Remove the dimension key from each record — since we're already
