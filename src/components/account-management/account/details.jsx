@@ -74,6 +74,7 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Name</label>
           <Col xs={8}>
             <div className="input-group">
+
               <SelectWrapper
                 { ... accountName }
                 className="input-select"
