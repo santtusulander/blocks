@@ -5,7 +5,7 @@ import { Map } from 'immutable'
 
 import { ButtonWrapper as Button } from '../button.js'
 
-let errors = null
+let errors = {}
 const validate = values => {
   errors = {}
   const {
@@ -24,7 +24,7 @@ const validate = values => {
     errors.personResponsible = 'Required'
   }
   else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i.test(personResponsible)) {
-    errors.personResponsible = 'Invalid email'
+    errors.personResponsible = 'Invalid input'
   }
   if (!zoneSerialNumber) {
     errors.zoneSerialNumber = 'Required'
@@ -95,12 +95,13 @@ export const SoaEditForm = props => {
             <Input type="text"
               className="soa-form-input refresh-input"
               label="Refresh"
-              id="refresh"
               { ...refresh }/>
             {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
           </div>
           <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary"
+            <Button
+              id="cancel_button"
+              bsStyle="primary"
               outLine={true}
               onClick={onCancel}>
               Cancel
