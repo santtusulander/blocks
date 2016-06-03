@@ -1,5 +1,4 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
@@ -9,7 +8,7 @@ import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-class AnalysisOnOffNetReport extends React.Component {
+class AnalysisServiceProviders extends React.Component {
   constructor(props) {
     super(props);
 
@@ -71,8 +70,7 @@ class AnalysisOnOffNetReport extends React.Component {
     return sortFunc
   }
   render() {
-    const stats = this.props.onOffStats
-    const statsToday = this.props.onOffStatsToday
+    const {stats} = this.props
     let chart = null
     const onNet = stats.get('detail').toJS().map(datapoint => {
       return {
@@ -86,7 +84,7 @@ class AnalysisOnOffNetReport extends React.Component {
         timestamp: datapoint.timestamp
       }
     })
-    if(this.props.onOffNetChartType === 'bar') {
+    if(this.props.chartType === 'bar') {
       chart = (
         <AnalysisStacked padding={40}
           dataSets={[onNet, offNet]}
@@ -113,47 +111,7 @@ class AnalysisOnOffNetReport extends React.Component {
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
-        <Row>
-          <Col xs={12}>
-            <div className="analysis-data-box">
-              <h4>Traffic today</h4>
-              <p>{formatBytes(statsToday.get('total'))}</p>
-              <Row className="extra-margin-top">
-                <Col xs={6}>
-                  <h4>On-net</h4>
-                  <p className="on-net">
-                    {numeral(statsToday.get('net_on').get('percent_total')).format('0,0%')}
-                  </p>
-                </Col>
-                <Col xs={6}>
-                  <h4>Off-net</h4>
-                  <p className="off-net">
-                    {numeral(statsToday.get('net_off').get('percent_total')).format('0,0%')}
-                  </p>
-                </Col>
-              </Row>
-            </div>
-            <div className="analysis-data-box">
-              <h4>Traffic Month to Date</h4>
-              <p>{formatBytes(stats.get('total'))}</p>
-              <Row className="extra-margin-top">
-                <Col xs={6}>
-                  <h4>On-net</h4>
-                  <p className="on-net">
-                    {numeral(stats.get('net_on').get('percent_total')).format('0,0%')}
-                  </p>
-                </Col>
-                <Col xs={6}>
-                  <h4>Off-net</h4>
-                  <p className="off-net">
-                    {numeral(stats.get('net_off').get('percent_total')).format('0,0%')}
-                  </p>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-        <h3>ON/OFF NET</h3>
+        <h3>TOTAL TRAFFIC BY SERVICE PROVIDER</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> : chart}
@@ -201,12 +159,14 @@ class AnalysisOnOffNetReport extends React.Component {
   }
 }
 
-AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
-AnalysisOnOffNetReport.propTypes = {
+AnalysisServiceProviders.displayName = 'AnalysisServiceProviders'
+AnalysisServiceProviders.propTypes = {
+  chartType: React.PropTypes.string,
   fetching: React.PropTypes.bool,
-  onOffNetChartType: React.PropTypes.string,
-  onOffStats: React.PropTypes.instanceOf(Immutable.Map),
-  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
+  stats: React.PropTypes.instanceOf(Immutable.Map)
+}
+AnalysisServiceProviders.defaultProps = {
+  stats: Immutable.Map()
 }
 
-module.exports = AnalysisOnOffNetReport
+module.exports = AnalysisServiceProviders

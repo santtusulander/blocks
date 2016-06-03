@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, qsBuilder } from '../util'
+import { analyticsBase, qsBuilder, parseResponseData } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -12,6 +12,7 @@ const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
+const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
@@ -20,6 +21,7 @@ const emptyTraffic = Immutable.Map({
   fetching: false,
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
+  serviceProviders: Immutable.Map(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -94,6 +96,22 @@ export default handleActions({
       })
     }
   },
+  TRAFFIC_SERVICE_PROVIDERS_FETCHED: {
+    next(state, action) {
+      action.payload.data.detail = action.payload.data.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return state.merge({
+        serviceProviders: Immutable.fromJS(action.payload.data)
+      })
+    },
+    throw(state) {
+      return state.merge({
+        serviceProviders: Immutable.Map()
+      })
+    }
+  },
   TRAFFIC_STORAGE_FETCHED: {
     next(state, action) {
       action.payload.data = action.payload.data.map(datapoint => {
@@ -122,47 +140,32 @@ export default handleActions({
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/total${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
+})
+
+export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  .then(parseResponseData);
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

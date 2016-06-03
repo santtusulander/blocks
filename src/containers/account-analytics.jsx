@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -84,6 +83,7 @@ export class AccountAnalytics extends React.Component {
           activeName={activeName}
           changeDateRange={this.changeDateRange}
           changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
+          changeSPChartType={this.props.uiActions.changeSPChartType}
           dateRange={this.state.dateRange}
           endDate={this.state.endDate}
           exportFilenamePart={`${activeName} - ${moment().format()}`}
@@ -97,6 +97,8 @@ export class AccountAnalytics extends React.Component {
           onOffNetChartType={this.props.onOffNetChartType}
           onOffNetToday={this.props.onOffNetToday}
           reportsFetching={this.props.reportsFetching}
+          serviceProviders={this.props.serviceProviders}
+          serviceProvidersChartType={this.props.serviceProvidersChartType}
           serviceTypes={this.props.serviceTypes}
           siblings={availableAccounts}
           startDate={this.state.startDate}
@@ -122,6 +124,8 @@ AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
@@ -132,6 +136,8 @@ AccountAnalytics.propTypes = {
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
+  serviceProvidersChartType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -157,12 +163,14 @@ function mapStateToProps(state) {
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('accountMetrics'),
+    onOffNet: state.traffic.get('onOffNet'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
-    totalEgress: state.traffic.get('totalEgress'),
+    onOffNetToday: state.traffic.get('onOffNetToday'),
+    serviceProviders: state.traffic.get('serviceProviders'),
+    serviceProvidersChartType: state.ui.get('analysisSPChartType'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     storageStats: state.traffic.get('storage'),
-    onOffNet: state.traffic.get('onOffNet'),
-    onOffNetToday: state.traffic.get('onOffNetToday'),
+    totalEgress: state.traffic.get('totalEgress'),
     reportsFetching: state.reports.get('fetching'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
@@ -215,6 +223,7 @@ function mapDispatchToProps(dispatch, ownProps) {
       trafficActions.fetchTotalEgress(fetchOpts),
       trafficActions.fetchOnOffNet(onOffOpts),
       trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      trafficActions.fetchServiceProviders(onOffOpts),
       trafficActions.fetchStorage()
     ]).then(trafficActions.finishFetching)
     Promise.all([

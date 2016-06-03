@@ -10,6 +10,7 @@ import Analyses from './analyses'
 import AnalysisTraffic from './traffic'
 import AnalysisVisitors from './visitors'
 import AnalysisOnOffNetReport from './on-off-net-report'
+import AnalysisServiceProviders from './service-providers'
 import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
@@ -63,6 +64,9 @@ export class AnalyticsPage extends React.Component {
         break
       case 'on-off-net-report':
         exporters.onOffNet(this.props.onOffNet.get('detail'))
+        break
+      case 'service-providers':
+        exporters.serviceProviders(this.props.serviceProviders.get('detail'))
         break
       case 'file-error':
         exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
@@ -143,20 +147,22 @@ export class AnalyticsPage extends React.Component {
 
         <Sidebar>
           <Analyses
+            activeTab={this.state.activeTab}
+            activeVideo={this.state.activeVideo}
             endDate={this.props.endDate}
-            startDate={this.props.startDate}
             changeDateRange={this.props.changeDateRange}
             changeOnOffNetChartType={this.props.changeOnOffNetChartType}
-            onOffNetChartType={this.props.onOffNetChartType}
-            serviceTypes={this.props.serviceTypes}
-            toggleServiceType={this.props.toggleAnalysisServiceType}
-            activeTab={this.state.activeTab}
-            type={this.props.type}
+            changeSPChartType={this.props.changeSPChartType}
+            changeVideo={this.changeActiveVideo}
             name={this.props.activeName}
             navOptions={this.props.siblings}
-            activeVideo={this.state.activeVideo}
-            changeVideo={this.changeActiveVideo}
+            onOffNetChartType={this.props.onOffNetChartType}
+            serviceProvidersChartType={this.props.serviceProvidersChartType}
+            serviceTypes={this.props.serviceTypes}
             showExportPanel={this.showExportPanel}
+            startDate={this.props.startDate}
+            toggleServiceType={this.props.toggleAnalysisServiceType}
+            type={this.props.type}
           />
 
         </Sidebar>
@@ -166,6 +172,7 @@ export class AnalyticsPage extends React.Component {
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
             <NavItem eventKey="on-off-net-report">On/Off Net</NavItem>
+            <NavItem eventKey="service-providers">Service Providers</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
             {/* Not in 0.0.52 <NavItem eventKey="storage-usage">Storage Usage</NavItem>*/}
@@ -197,6 +204,11 @@ export class AnalyticsPage extends React.Component {
                 onOffStatsToday={this.props.onOffNetToday}
                 onOffNetChartType={this.props.onOffNetChartType}/>
             }
+            {this.state.activeTab === 'service-providers' &&
+              <AnalysisServiceProviders fetching={this.props.trafficFetching}
+                chartType={this.props.serviceProvidersChartType}
+                stats={this.props.serviceProviders}/>
+            }
             {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
                 summary={this.props.fileErrorSummary}
@@ -226,6 +238,7 @@ AnalyticsPage.propTypes = {
   activeName: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
   changeOnOffNetChartType: React.PropTypes.func,
+  changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
   exportFilenamePart: React.PropTypes.string,
@@ -239,6 +252,8 @@ AnalyticsPage.propTypes = {
   onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   reportsFetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
+  serviceProvidersChartType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   siblings: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
@@ -265,6 +280,7 @@ AnalyticsPage.defaultProps = {
   metrics: Immutable.Map(),
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
+  serviceProviders: Immutable.Map(),
   serviceTypes: Immutable.List(),
   siblings: Immutable.List(),
   storageStats: Immutable.List(),

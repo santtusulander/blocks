@@ -6,6 +6,7 @@ const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
 const UI_ANALYSIS_SERVICE_TYPE_TOGGLED = 'UI_ANALYSIS_SERVICE_TYPE_TOGGLED'
 const UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED = 'UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED'
+const UI_ANALYSIS_SP_CHART_CHANGED = 'UI_ANALYSIS_SP_CHART_CHANGED'
 const UI_CONTENT_ITEM_SORTED = 'UI_CONTENT_ITEM_SORTED'
 
 const UI_SHOW_ERROR_DIALOG = 'UI_SHOW_ERROR_DIALOG'
@@ -28,8 +29,9 @@ const defaultUI = Immutable.fromJS({
   theme: theme,
   viewingChart: true,
   notification: '',
-  analysisServiceTypes: ['http', 'https'],
   analysisOnOffNetChartType: 'bar',
+  analysisServiceTypes: ['http', 'https'],
+  analysisSPChartType: 'bar',
   showErrorDialog: false
 })
 
@@ -62,6 +64,9 @@ export default handleActions({
   UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED: (state, action) => {
     return state.set('analysisOnOffNetChartType', action.payload)
   },
+  UI_ANALYSIS_SP_CHART_CHANGED: (state, action) => {
+    return state.set('analysisSPChartType', action.payload)
+  },
   UI_CONTENT_ITEM_SORTED: (state, action) => {
     return state.merge({
       contentItemSortDirection: action.payload.direction,
@@ -83,6 +88,7 @@ export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
 export const toggleAnalysisServiceType = createAction(UI_ANALYSIS_SERVICE_TYPE_TOGGLED)
 export const changeOnOffNetChartType = createAction(UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED)
+export const changeSPChartType = createAction(UI_ANALYSIS_SP_CHART_CHANGED)
 export const sortContentItems = createAction(UI_CONTENT_ITEM_SORTED)
 export const showErrorDialog = createAction(UI_SHOW_ERROR_DIALOG)
 export const hideErrorDialog = createAction(UI_HIDE_ERROR_DIALOG)
