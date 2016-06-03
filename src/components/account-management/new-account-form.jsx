@@ -34,7 +34,7 @@ const NewAccountForm = (props) => {
   const { fields: { accountName, accountBrand, serviceType }, show } = props
 
   return (
-    <Modal className='account-management-new-account' show={show}>
+    <Modal dialogClassName='account-management-new-account' show={show}>
       <Modal.Header>
         <h1>Add new account</h1>
         <p>Lorem ipsum</p>
