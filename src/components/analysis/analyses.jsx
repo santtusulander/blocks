@@ -118,7 +118,7 @@ export class Analyses extends React.Component {
   }
 
   handleChartTypeChange(type) {
-    this.props.changeSPChartType(type)
+    this.props.changeOnOffNetChartType(type)
   }
 
   toggleServiceType(type) {
@@ -244,7 +244,7 @@ export class Analyses extends React.Component {
           </div>
           : null
         }
-        {this.props.activeTab === 'sp-report' ?
+        {this.props.activeTab === 'on-off-net-report' ?
           <div>
             <div className="sidebar-section-header">
               SERVICE PROVIDER
@@ -279,7 +279,7 @@ export class Analyses extends React.Component {
               <div className="form-group">
                 <Select className="btn-block"
                         onSelect={this.handleChartTypeChange}
-                        value={this.props.spChartType}
+                        value={this.props.onOffNetChartType}
                         options={[
                     ['bar', 'Bar Chart'],
                     ['line', 'Line Chart']]}/>
@@ -291,13 +291,13 @@ export class Analyses extends React.Component {
         this.props.activeTab !== 'playback-demo' &&
         this.props.activeTab !== 'storage-usage' ?
           <div className="sidebar-section-header">
-            {this.props.activeTab === 'sp-report' ?
+            {this.props.activeTab === 'on-off-net-report' ?
               'FILTERS' :
               'SERVICE: MEDIA DELIVERY'
             }
           </div>
           : null}
-        {this.props.activeTab === 'sp-report' ?
+        {this.props.activeTab === 'on-off-net-report' ?
           <div>
             <div className="sidebar-content">
               <Input type="checkbox" label="On-Net"/>
@@ -381,17 +381,17 @@ Analyses.propTypes   = {
   activeVideo: React.PropTypes.string,
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
-  changeSPChartType: React.PropTypes.func,
+  changeOnOffNetChartType: React.PropTypes.func,
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
   fetching: React.PropTypes.bool,
   name: React.PropTypes.string,
   navOptions: React.PropTypes.instanceOf(Immutable.List),
+  onOffNetChartType: React.PropTypes.string,
   propertyName: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   showExportPanel: React.PropTypes.func,
-  spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   toggleServiceType: React.PropTypes.func,
   type: React.PropTypes.string

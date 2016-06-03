@@ -85,7 +85,7 @@ describe('Analyses', () => {
 
   it('should change service provider', () => {
     let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}/>
+      <Analyses serviceTypes={mockServiceTypes}/>
     );
     expect(analyses.state.activeServiceProvider).toBe('all')
     analyses.handleServiceProviderChange('foo')
@@ -94,21 +94,21 @@ describe('Analyses', () => {
 
   it('should change pop', () => {
     let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}/>
+      <Analyses serviceTypes={mockServiceTypes}/>
     );
     expect(analyses.state.activePop).toBe('all')
     analyses.handlePopChange('foo')
     expect(analyses.state.activePop).toBe('foo')
   });
 
-  it('should change chart type', () => {
-    const changeSPChartType = jest.genMockFunction()
+  it('should change on off net chart type', () => {
+    const changeOnOffNetChartType = jest.genMockFunction()
     let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}
-        changeSPChartType={changeSPChartType}/>
+      <Analyses serviceTypes={mockServiceTypes}
+        changeOnOffNetChartType={changeOnOffNetChartType}/>
     );
     analyses.handleChartTypeChange('foo')
-    expect(changeSPChartType.mock.calls[0][0]).toEqual('foo')
+    expect(changeOnOffNetChartType.mock.calls[0][0]).toEqual('foo')
   });
 
   it('should toggle service types', () => {
@@ -124,7 +124,7 @@ describe('Analyses', () => {
 
   it('should toggle the nav menu', () => {
     let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes} isSPReport={true}/>
+      <Analyses serviceTypes={mockServiceTypes}/>
     );
     expect(analyses.state.navMenuOpen).toBe(false)
     analyses.toggleNavMenu()

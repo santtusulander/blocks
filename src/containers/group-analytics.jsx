@@ -77,7 +77,7 @@ export class GroupAnalytics extends React.Component {
       <AnalyticsPage
         activeName={activeGroupName}
         changeDateRange={this.changeDateRange}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
+        changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
@@ -86,11 +86,11 @@ export class GroupAnalytics extends React.Component {
         fileErrorURLs={this.props.fileErrorURLs}
         metrics={metrics}
         onOffNet={this.props.onOffNet}
+        onOffNetChartType={this.props.onOffNetChartType}
         onOffNetToday={this.props.onOffNetToday}
         reportsFetching={this.props.reportsFetching}
         serviceTypes={this.props.serviceTypes}
         siblings={availableGroups}
-        spChartType={this.props.spChartType}
         startDate={this.state.startDate}
         storageStats={this.props.storageStats}
         toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
@@ -122,11 +122,11 @@ GroupAnalytics.propTypes = {
   groups: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  spChartType: React.PropTypes.string,
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -154,7 +154,7 @@ function mapStateToProps(state) {
     onOffNetToday: state.traffic.get('onOffNetToday'),
     reportsFetching: state.reports.get('fetching'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
-    spChartType: state.ui.get('analysisSPChartType'),
+    onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),

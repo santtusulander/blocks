@@ -9,7 +9,7 @@ import Content from '../layout/content'
 import Analyses from './analyses'
 import AnalysisTraffic from './traffic'
 import AnalysisVisitors from './visitors'
-import AnalysisSPReport from './sp-report'
+import AnalysisOnOffNetReport from './on-off-net-report'
 import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
@@ -61,8 +61,8 @@ export class AnalyticsPage extends React.Component {
       case 'visitors':
         exporters.visitors(this.props.visitorsByTime)
         break
-      case 'sp-report':
-        exporters.serviceProviders(this.props.onOffNet.get('detail'))
+      case 'on-off-net-report':
+        exporters.onOffNet(this.props.onOffNet.get('detail'))
         break
       case 'file-error':
         exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
@@ -146,9 +146,9 @@ export class AnalyticsPage extends React.Component {
             endDate={this.props.endDate}
             startDate={this.props.startDate}
             changeDateRange={this.props.changeDateRange}
-            changeSPChartType={this.props.changeSPChartType}
+            changeOnOffNetChartType={this.props.changeOnOffNetChartType}
+            onOffNetChartType={this.props.onOffNetChartType}
             serviceTypes={this.props.serviceTypes}
-            spChartType={this.props.spChartType}
             toggleServiceType={this.props.toggleAnalysisServiceType}
             activeTab={this.state.activeTab}
             type={this.props.type}
@@ -165,7 +165,7 @@ export class AnalyticsPage extends React.Component {
           <Nav bsStyle="tabs" className="analysis-nav" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
+            <NavItem eventKey="on-off-net-report">On/Off Net</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
             {/* Not in 0.0.52 <NavItem eventKey="storage-usage">Storage Usage</NavItem>*/}
@@ -191,11 +191,11 @@ export class AnalyticsPage extends React.Component {
                 byBrowser={this.props.visitorsByBrowser.get('browsers')}
                 byOS={this.props.visitorsByOS.get('os')}/>
             }
-            {this.state.activeTab === 'sp-report' &&
-              <AnalysisSPReport fetching={this.props.trafficFetching}
-                serviceProviderStats={this.props.onOffNet}
-                serviceProviderStatsToday={this.props.onOffNetToday}
-                spChartType={this.props.spChartType}/>
+            {this.state.activeTab === 'on-off-net-report' &&
+              <AnalysisOnOffNetReport fetching={this.props.trafficFetching}
+                onOffStats={this.props.onOffNet}
+                onOffStatsToday={this.props.onOffNetToday}
+                onOffNetChartType={this.props.onOffNetChartType}/>
             }
             {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
@@ -225,7 +225,7 @@ AnalyticsPage.displayName = 'AnalyticsPage'
 AnalyticsPage.propTypes = {
   activeName: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
-  changeSPChartType: React.PropTypes.func,
+  changeOnOffNetChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
   exportFilenamePart: React.PropTypes.string,
@@ -236,11 +236,11 @@ AnalyticsPage.propTypes = {
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.Map),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   reportsFetching: React.PropTypes.bool,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   siblings: React.PropTypes.instanceOf(Immutable.List),
-  spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   toggleAnalysisServiceType: React.PropTypes.func,
