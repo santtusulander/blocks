@@ -10,24 +10,32 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import Sidebar from '../components/layout/sidebar'
+import AccountManagementSidebar from '../components/account-management/account-management-sidebar'
 import ManageAccount from '../components/account-management/manage-account'
 import ManageSystem from '../components/account-management/manage-system'
+
+import NewAccountForm from '../components/account-management/new-account-form.jsx'
+import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
+
+//import AccountManagementFormContainer from '../components/account-management/form-container'
+//import NewAccountForm from '../components/account-management/new-account-form'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null
+      activeAccount: props.params.account || null,
     }
 
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
+
     this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
+
   }
 
   componentWillMount() {
@@ -52,10 +60,11 @@ export class AccountManagement extends Component {
     }
     dnsActions.editSOA({ id: activeDomain.get('id'), data })
     toggleModal(null)
+
   }
 
   changeActiveAccount(account) {
-    this.setState({activeAccount: account})
+    this.setState({ activeAccount: account })
     this.props.fetchAccountData(account)
   }
 
@@ -133,12 +142,21 @@ export class AccountManagement extends Component {
       soaFormInitialValues: soaFormInitialValues
     }
 
+    const { accounts } = this.props
+
+/*    const { account } = this.props.params
+    const { showFormContainer, activeForm } = this.state
+    const isAdmin = !account
+*/
+
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
-          <Sidebar>
-            Account list here
-          </Sidebar>
+          <AccountManagementSidebar
+            accounts={accounts}
+            activate={this.changeActiveAccount}
+            addAccount={ () => { console.log('toggleModal()'); toggleModal( ADD_ACCOUNT ) } }
+          />
           <Content>
 
             {this.state.activeAccount && <ManageAccount
@@ -162,12 +180,22 @@ export class AccountManagement extends Component {
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
         </Content>}
+
+        {accountManagementModal === ADD_ACCOUNT &&
+          <NewAccountForm
+              id="add-account-form"
+              show={accountManagementModal === ADD_ACCOUNT}
+              onSave={ () => {} }
+              onCancel={ () => { toggleModal() } }
+          />}
+
       </PageContainer>
     )
   }
 }
 
 AccountManagement.displayName = 'AccountManagement'
+
 AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
@@ -200,6 +228,7 @@ function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+
   function fetchAccountData(account) {
     accountActions.fetchAccount('udn', account)
     groupActions.fetchGroups('udn', account)

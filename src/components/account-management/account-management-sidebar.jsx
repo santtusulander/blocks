@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import { ButtonWrapper as Button } from '../components/button.js'
-import Sidebar from '../components/layout/sidebar.jsx'
-import { SidebarLinks } from './sidebar-links.jsx'
+import { ButtonWrapper as Button } from '../../components/button.js'
+import Sidebar from '../../components/layout/sidebar.jsx'
+import { SidebarLinks } from '../sidebar-links.jsx'
 
-export const AccountSidebar = props => {
+export const AccountManagementSidebar = props => {
   const { accounts, activate, addAccount } = props
   return (
     <Sidebar>
@@ -24,14 +24,15 @@ export const AccountSidebar = props => {
           items={accounts}
           tag={'account'}/>
       </div>
+
     </Sidebar>
   )
 }
 
-AccountSidebar.propTypes = {
+AccountManagementSidebar.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activate: PropTypes.func,
   addAccount: PropTypes.func
 }
 
-//export default AccountSidebar
+export default AccountManagementSidebar

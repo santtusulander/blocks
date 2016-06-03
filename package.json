@@ -5,7 +5,7 @@
   "main": "dist/js/app.js",
   "author": "Idean",
   "devDependencies": {
-    "@kadira/storybook": "^1.26.0",
+    "@kadira/storybook": "^1.28.1",
     "autoprefixer-loader": "^3.2.0",
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
