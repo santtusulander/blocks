@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { getValues } from 'redux-form';
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -25,7 +26,7 @@ export class AccountManagement extends Component {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null,
+      activeAccount: props.params.account || null
     }
 
     this.editSOARecord = this.editSOARecord.bind(this)
@@ -45,19 +46,9 @@ export class AccountManagement extends Component {
   }
 
   editSOARecord() {
-    const {
-      soaFormData,
-      dnsData,
-      dnsActions,
-      toggleModal
-    } = this.props
+    const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
     const activeDomain = dnsData.get('activeDomain')
-    let data = {}
-    for(const field in soaFormData) {
-      if(soaFormData[field] instanceof Object) {
-        data[field] = soaFormData[field].value
-      }
-    }
+    const data = getValues(soaFormData)
     dnsActions.editSOA({ id: activeDomain.get('id'), data })
     toggleModal(null)
 
@@ -100,6 +91,7 @@ export class AccountManagement extends Component {
   render() {
     const {
       params: { account },
+      accounts,
       dnsData,
       dnsActions,
       activeRecordType,
@@ -142,20 +134,13 @@ export class AccountManagement extends Component {
       soaFormInitialValues: soaFormInitialValues
     }
 
-    const { accounts } = this.props
-
-/*    const { account } = this.props.params
-    const { showFormContainer, activeForm } = this.state
-    const isAdmin = !account
-*/
-
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
           <AccountManagementSidebar
             accounts={accounts}
             activate={this.changeActiveAccount}
-            addAccount={ () => { console.log('toggleModal()'); toggleModal( ADD_ACCOUNT ) } }
+            addAccount={() => toggleModal(ADD_ACCOUNT)}
           />
           <Content>
 
@@ -185,8 +170,8 @@ export class AccountManagement extends Component {
           <NewAccountForm
               id="add-account-form"
               show={accountManagementModal === ADD_ACCOUNT}
-              onSave={ () => {} }
-              onCancel={ () => { toggleModal() } }
+              onSave={() => toggleModal(null)}
+              onCancel={() => toggleModal(null)}
           />}
 
       </PageContainer>

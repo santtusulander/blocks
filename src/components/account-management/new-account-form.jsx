@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import {
   Modal,
   Input,
@@ -31,7 +31,7 @@ const validate = (values) => {
 
 const NewAccountForm = (props) => {
 
-  const { fields: { accountName, accountBrand, serviceType }, show } = props
+  const { fields: { accountName, accountBrand, serviceType }, show, onCancel, onSave } = props
 
   return (
     <Modal dialogClassName='account-management-new-account' show={show}>
@@ -41,7 +41,7 @@ const NewAccountForm = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <form onSubmit={ (e) => { e.preventDefault(); return props.onSave()} } className='new-account-form'>
+        <form className='new-account-form'>
 
           <Input
             {...accountName}
@@ -74,8 +74,8 @@ const NewAccountForm = (props) => {
           }
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" className="btn-outline" onClick={ props.onCancel }>Cancel</Button>
-            <Button disabled={ !!Object.keys(errors).length } bsStyle="primary" onClick={props.onSave}>Add</Button>
+            <Button bsStyle="primary" className="btn-outline" onClick={onCancel}>Cancel</Button>
+            <Button disabled={!!Object.keys(errors).length} bsStyle="primary" onClick={onSave}>Add</Button>
           </ButtonToolbar>
         </form>
       </Modal.Body>
@@ -84,9 +84,10 @@ const NewAccountForm = (props) => {
 }
 
 NewAccountForm.propTypes = {
-  fields: React.PropTypes.object,
-  onCancel: React.PropTypes.func,
-  onSave: React.PropTypes.func
+  fields: PropTypes.object,
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func,
+  show: PropTypes.bool
 }
 
 export default reduxForm({
