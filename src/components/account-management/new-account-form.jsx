@@ -6,13 +6,15 @@ import {
   Button
 } from 'react-bootstrap'
 
+import SelectWrapper from '../select-wrapper.jsx'
+
 import { reduxForm } from 'redux-form'
 import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../constants/account-management-options'
 
 import './new-account-form.scss'
 
-const accountTypeOptions = ACCOUNT_TYPES.map((e, i) => {
-  return <option key={i} value={e.value}>{e.label}</option>;
+const serviceTypeOptions = ACCOUNT_TYPES.map((e, i) => {
+  return [ e.value, e.label]
 });
 
 let errors = {}
@@ -59,14 +61,14 @@ const NewAccountForm = (props) => {
             groupClassName="border-bottom"/>
           {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
 
-          <Input
-            type="select"
-            label="Account type"
-            placeholder="Select account type"
-            groupClassName="btn-block border-bottom">
-            {accountTypeOptions}
-          </Input>
-
+          <div className='form-group'>
+            <SelectWrapper
+                  { ... serviceType }
+                  className="input-select"
+                  options={ serviceTypeOptions }
+            />
+          </div>
+          
           <label>Service type</label>
           {SERVICE_TYPES.map((e, i) => {
             return <Input {...serviceType} value={e} key={i} type="radio" label={e}/>
