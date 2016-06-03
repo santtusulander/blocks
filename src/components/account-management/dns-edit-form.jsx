@@ -25,7 +25,6 @@ const recordTypeOptions = recordTypes.map( (e,i) => {
     return <option key={i} value={e}>{e}</option>;
 });
 
-//const DnsEditForm = (props) => {
 class DnsEditForm extends Component {
   render() {
     const props = this.props
@@ -36,6 +35,15 @@ class DnsEditForm extends Component {
     const { fields: { recordType, recordName, targetValue, ttl} } = props
 
     return (
+
+      <Modal show={true} dialogClassName="soa-form-sidebar">
+
+        <Modal.Header>
+          <h1>{title}</h1>
+          <p>Lorem ipsum</p>
+        </Modal.Header>
+
+        <Modal.Body>
           <form>
 
             <Input
@@ -83,6 +91,8 @@ class DnsEditForm extends Component {
               <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
             </ButtonToolbar>
           </form>
+        </Modal.Body>
+      </Modal>
     )
   }
 }
@@ -101,5 +111,3 @@ export default reduxForm({
   fields: ['recordType', 'recordName', 'targetValue', 'ttl'],
   validate
 })(DnsEditForm)
-
-//export default DnsEditForm
