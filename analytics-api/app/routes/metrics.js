@@ -78,6 +78,15 @@ function routeMetrics(req, res) {
           levelHistoricalTrafficDataFormatted, optionsHistoric.start, optionsHistoric.end, optionsHistoric.granularity, 'bytes'
         );
 
+        // Add bits per second to the traffic data
+        levelTrafficDataFormatted.forEach((record) => {
+          record.bits_per_second = dataUtils.getBPSFromBytes(record.bytes, optionsFinal.granularity);
+        });
+
+        levelHistoricalTrafficDataFormatted.forEach((record) => {
+          record.bits_per_second = dataUtils.getBPSFromBytes(record.bytes, optionsHistoric.granularity);
+        });
+
         // Calculate historical variance
         let historicalVarianceData = [];
 
