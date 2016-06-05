@@ -45,12 +45,12 @@ describe('DNSList', () => {
     const list = shallow(<DNSList
       accountManagementModal={EDIT_DNS}
       />)
-    expect(list.find('#dns-form').prop('show')).toBeTruthy()
+    expect(list.find('#dns-form').length).toBe(1)
   })
 
   it('should not show modal', () => {
     const list = shallow(<DNSList accountManagementModal={null}/>)
-    expect(list.find('#dns-form').prop('show')).not.toBeTruthy()
+    expect(list.find('#dns-form').length).toBe(0)
     expect(list.find('#soa-form').length).toBe(0)
   })
 

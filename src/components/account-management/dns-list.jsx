@@ -102,12 +102,13 @@ export const DNSList = props => {
       </table>
       {accountManagementModal === EDIT_DNS &&
         <DnsEditForm
-          { ...dnsFormInitialValues }
+          id="dns-form"
           show={accountManagementModal === EDIT_DNS}
           edit={true}
           domain='foobar.com'
           onSave={dnsEditOnSave}
           onCancel={() => toggleModal(null)}
+          { ...dnsFormInitialValues }
         />
       }
 
