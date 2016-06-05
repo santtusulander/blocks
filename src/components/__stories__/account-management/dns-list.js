@@ -30,7 +30,7 @@ storiesOf('DNSList', module)
       editSOA={(action('edit SOA'))}
       toggleModal={(action('togge modal'))}
       onAddDomain={action('add domain')}
-      deleteEntry={action('delete entry')}
+      onDeleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
       onAddEntry={action('add entry')}/>
@@ -42,7 +42,7 @@ storiesOf('DNSList', module)
       domains={fakeData.get('domains')}
       editSOA={(action('edit SOA'))}
       onAddDomain={action('add domain')}
-      deleteEntry={action('delete entry')}
+      onDeleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
       onAddEntry={action('add entry')}/>
@@ -55,7 +55,7 @@ storiesOf('DNSList', module)
       domains={fakeData.get('domains')}
       activeRecordType={'AAAA'}
       onAddDomain={action('add domain')}
-      deleteEntry={action('delete entry')}
+      onDeleteEntry={action('delete entry')}
       editEntry={action('edit entry')}
       changeRecordType={action('change record type')}
       onAddEntry={action('add entry')}/>
@@ -66,6 +66,6 @@ storiesOf('DNSList', module)
       changeActiveDomain={action('changed active domain')}
       domains={fromJS([])}
       editSOA={(action('edit SOA'))}
-      deleteEntry={action('delete record')}
+      onDeleteEntry={action('delete record')}
       editEntry={action('edit record')}/>
   ))
