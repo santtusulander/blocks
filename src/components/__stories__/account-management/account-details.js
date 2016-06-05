@@ -1,10 +1,9 @@
 import React from 'react'
-import { createStore, combineReducers } from 'redux'
-import { reducer as formReducer } from 'redux-form'
-import { Provider } from 'react-redux'
+import {createStore, combineReducers} from 'redux'
+import {reducer as formReducer} from 'redux-form'
+import {Provider} from 'react-redux'
 
-import { fromJS, List } from 'immutable'
-import { storiesOf, action } from '@kadira/storybook'
+import {storiesOf} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
 import Details from '../../account-management/account/details.jsx'

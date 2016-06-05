@@ -15,7 +15,7 @@ import AccountManagementSidebar from '../components/account-management/account-m
 import ManageAccount from '../components/account-management/manage-account'
 import ManageSystem from '../components/account-management/manage-system'
 
-import NewAccountForm from '../components/account-management/new-account-form.jsx'
+import NewAccountForm from '../components/account-management/add-account-form.jsx'
 import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'

@@ -15,7 +15,7 @@ export const RolesListRow = (props) => {
   const { role } = props
 
   return (
-    <tr className='rolesTabRow'>
+    <tr className='roles-list-row'>
         <td>
           { role.get('roleName') }
         </td>
@@ -58,7 +58,7 @@ export const RolesList = (props) => {
   });
 
   return (
-    <div className='rolesTab'>
+    <div className='roles-list'>
 
       <AccountManagementHeader title={ `${props.roles.count() } Roles` } onAdd={props.onAdd}/>
 

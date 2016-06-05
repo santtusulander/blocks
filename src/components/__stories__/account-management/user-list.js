@@ -1,8 +1,8 @@
 import React from 'react'
-import { fromJS, List } from 'immutable'
-import { storiesOf, action } from '@kadira/storybook'
+import {fromJS, List} from 'immutable'
+import {storiesOf, action} from '@kadira/storybook'
 
-import { UserList } from '../../account-management/user-list.jsx'
+import {UserList} from '../../account-management/user-list.jsx'
 
 const ThemeWrap = require('../theme-wrap.jsx');
 

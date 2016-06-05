@@ -2,14 +2,14 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-.rolesTab {
+.roles-list {
   .checkbox-container {
     text-align: center;
   }
 
-  .rolesTabRow {
+  .roles-lit-row {
     .form-group {
-      padding-bottom: 0px;
+      padding-bottom: 0;
       margin-top: 4px;
     }
   }

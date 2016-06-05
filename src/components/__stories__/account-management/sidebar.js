@@ -1,9 +1,9 @@
 import React from 'react';
-import { fromJS, List } from 'immutable';
-import { storiesOf, action } from '@kadira/storybook';
+import {fromJS, List} from 'immutable';
+import {storiesOf, action} from '@kadira/storybook';
 
 import ThemeWrap from '../theme-wrap.jsx'
-import { AccountManagementSidebar } from '../../account-management/account-management-sidebar.jsx'
+import {AccountManagementSidebar} from '../../account-management/account-management-sidebar.jsx'
 
 const accounts = fromJS([
   {account_name: 'UDN Admin Account', active: false, account_id: 1},

@@ -1,9 +1,9 @@
 import React from 'react';
-import { storiesOf, action } from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 
-import { createStore, combineReducers } from 'redux'
-import { reducer as formReducer } from 'redux-form'
-import { Provider } from 'react-redux'
+import {createStore, combineReducers} from 'redux'
+import {reducer as formReducer} from 'redux-form'
+import {Provider} from 'react-redux'
 
 import ThemeWrap from '../theme-wrap.jsx'
 

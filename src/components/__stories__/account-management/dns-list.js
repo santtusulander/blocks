@@ -1,13 +1,13 @@
 import React from 'react'
-import { fromJS } from 'immutable'
-import { storiesOf, action } from '@kadira/storybook'
-import { reducer as formReducer } from 'redux-form'
-import { createStore, combineReducers } from 'redux'
-import { Provider } from 'react-redux'
+import {fromJS} from 'immutable'
+import {storiesOf, action} from '@kadira/storybook'
+import {reducer as formReducer} from 'redux-form'
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
 
-import { DNSList } from '../../account-management/dns-list.jsx'
+import {DNSList} from '../../account-management/dns-list.jsx'
 
-const stateReducer = combineReducers({ form: formReducer })
+const stateReducer = combineReducers({form: formReducer})
 const store = createStore(stateReducer)
 
 const ThemeWrap = require('../theme-wrap.jsx');

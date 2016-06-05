@@ -3,9 +3,7 @@ import React, { PropTypes } from 'react';
 import Select from './select.jsx'
 
 const SelectWrapper = (props) => {
-
-  console.log(props)
-
+  
   return (
       <Select
         className={ props.className }
