@@ -6,7 +6,3 @@ export default {
   'url-report': 'URL report',
   'playback-demo': 'playback demo'
 }
-
-const getTitle = () => {
-  
-}
