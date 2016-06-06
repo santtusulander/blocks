@@ -1,23 +1,23 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../button.js')
-jest.dontMock('classnames')
-const ButtonWrapper = require('../button.js').ButtonWrapper
+jest.unmock('../button.js')
+jest.unmock('classnames')
+import Button from '../button.js'
 
 describe('Button', () => {
   it('should exist', () => {
-    const button = shallow(<ButtonWrapper/>)
+    const button = shallow(<Button/>)
     expect(button.find('Button').length).toBe(1)
   });
 
   it('can be passed a class as prop', () => {
-    const button = shallow(<ButtonWrapper addNew={true}/>);
+    const button = shallow(<Button addNew={true}/>);
     expect(button.find('Button').hasClass('btn-add-new')).toBe(true)
   });
 
   it('can be passed bsStyle as prop', () => {
-    const button = shallow(<ButtonWrapper bsStyle={'primary'}/>);
+    const button = shallow(<Button bsStyle={'primary'}/>);
     expect(button.find('Button').prop('bsStyle')).toBeDefined()
   });
 

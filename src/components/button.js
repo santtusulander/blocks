@@ -4,11 +4,8 @@ import classNames from 'classnames'
 
 import { removeProps } from '../util/helpers'
 
-export class ButtonWrapper extends Component {
-  render() {
-    return <Button {...removeProps(this.props, ['hidden'])} className={createButtonClassName(this.props)}/>
-  }
-}
+const ButtonWrapper = props =>
+  <Button {...removeProps(props, ['hidden'])} className={createButtonClassName(props)}/>
 
 const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link']
 ButtonWrapper.propTypes = {
@@ -29,4 +26,6 @@ function createButtonClassName(props){
     'toggle-view': props.toggleView
   })
 }
+
+export default ButtonWrapper
 

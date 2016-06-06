@@ -8,7 +8,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import sortOptions from '../constants/content-item-sort-options'
 
 import AddHost from './add-host'
-import { ButtonWrapper as Button } from './button'
+import Button from './button'
 import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'

@@ -3,7 +3,7 @@ import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
 
-import { ButtonWrapper as Button } from '../button.js'
+import Button from '../button.js'
 
 let errors = {}
 const validate = values => {

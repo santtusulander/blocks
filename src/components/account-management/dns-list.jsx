@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List, Map, is } from 'immutable'
 
-import { ButtonWrapper as Button } from '../button.js'
+import Button from '../button.js'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
 import SoaEditForm from './dns-soa-form.jsx'
