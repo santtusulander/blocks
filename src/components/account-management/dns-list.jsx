@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List, Map, is } from 'immutable'
 
-import Button from '../button.js'
+import UDNButton from '../button.js'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
 import SoaEditForm from './dns-soa-form.jsx'
@@ -44,9 +44,9 @@ export const DNSList = props => {
           className="dns-dropdowns"
           onSelect={id => (changeActiveDomain(id))}
           options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-        <Button id="add-domain" bsStyle="primary" onClick={onAddDomain}>
+        <UDNButton id="add-domain" bsStyle="primary" onClick={onAddDomain}>
           <strong>ADD DOMAIN</strong>
-        </Button>
+        </UDNButton>
       </div>
       <h3 className="account-management-header">
         <span id="domain-stats">
@@ -61,14 +61,14 @@ export const DNSList = props => {
             className="dns-dropdowns"
             onSelect={type => changeRecordType(type)}
             options={recordTypeOptions}/>
-          <Button
+          <UDNButton
             id="add-dns-record"
             bsStyle="primary"
             icon={true}
             addNew={true}
             onClick={() => toggleModal(EDIT_DNS)} >
             <IconAdd/>
-          </Button>
+          </UDNButton>
         </div>
       </h3>
       <table className="table table-striped cell-text-left">
