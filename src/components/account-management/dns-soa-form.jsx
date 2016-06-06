@@ -3,7 +3,7 @@ import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
 
-import Button from '../button.js'
+import UDNButton from '../button.js'
 
 let errors = {}
 const validate = values => {
@@ -99,20 +99,20 @@ export const SoaEditForm = props => {
             {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
           </div>
           <ButtonToolbar className="text-right extra-margin-top">
-            <Button
+            <UDNButton
               id="cancel_button"
               bsStyle="primary"
               outLine={true}
               onClick={onCancel}>
               Cancel
-            </Button>
-            <Button
+            </UDNButton>
+            <UDNButton
               id="save_button"
               bsStyle="primary"
               disabled={Object.keys(errors).length !== 0}
               onClick={onSave}>
               Save
-            </Button>
+            </UDNButton>
           </ButtonToolbar>
         </form>
       </Modal.Body>

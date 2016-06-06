@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import Button from '../../components/button.js'
+import UDNButton from '../../components/button.js'
 import Sidebar from '../../components/layout/sidebar.jsx'
 import { SidebarLinks } from '../sidebar-links.jsx'
 
@@ -11,9 +11,9 @@ export const AccountManagementSidebar = props => {
     <Sidebar>
       <div className="configuration-versions">
         <div className="accounts-sidebar-header">
-          <Button id="add" bsStyle="primary" onClick={addAccount}>
+          <UDNButton id="add" bsStyle="primary" onClick={addAccount}>
             New Account
-          </Button>
+          </UDNButton>
         </div>
         <div className="sidebar-section-header">
           MANAGE ACCOUNTS
