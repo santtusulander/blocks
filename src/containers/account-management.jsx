@@ -98,7 +98,7 @@ export class AccountManagement extends Component {
     } = this.props
 
     const isAdmin = !account
-    const activeDomain = dnsData.get('activeDomain')
+    const activeDomain = dnsData && dnsData.get('activeDomain')
 
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
@@ -110,7 +110,7 @@ export class AccountManagement extends Component {
       }
     }
 
-    const soaFormInitialValues = {
+    const soaFormInitialValues = dnsData && {
       initialValues:
         dnsData
           .get('domains')
@@ -122,7 +122,7 @@ export class AccountManagement extends Component {
       modalActive: this.state.modalVisible,
       //changeActiveDomain: dnsActions.changeActiveDomain,
       activeDomain: activeDomain,
-      domains: dnsData.get('domains'),
+      domains: dnsData && dnsData.get('domains'),
       changeRecordType: dnsActions.changeActiveRecordType,
       activeRecordType: activeRecordType,
       dnsEditOnSave: this.dnsEditOnSave,
