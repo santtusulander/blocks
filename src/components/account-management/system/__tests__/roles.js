@@ -1,14 +1,14 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
 jest.dontMock('../roles.jsx')
 const Roles = require('../roles.jsx')
 
 describe('AccountManagementSystemRoles', () => {
   it('should exist', () => {
-    const roles = TestUtils.renderIntoDocument(
+    const roles = shallow(
       <Roles />
     )
-    expect(TestUtils.isCompositeComponent(roles)).toBeTruthy()
+    expect(roles.length).toBe(1)
   })
 })

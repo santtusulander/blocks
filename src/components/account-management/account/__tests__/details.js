@@ -1,14 +1,15 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../details.jsx')
-const Details = require('../details.jsx')
+import {shallow} from 'enzyme'
+jest.unmock('../details.jsx')
+
+import Details from '../details.jsx'
 
 describe('AccountManagementAccountDetails', () => {
   it('should exist', () => {
-    const details = TestUtils.renderIntoDocument(
+    const details = shallow(
       <Details />
     )
-    expect(TestUtils.isCompositeComponent(details)).toBeTruthy()
+    expect(details.length).toBe(1)
   })
 })
