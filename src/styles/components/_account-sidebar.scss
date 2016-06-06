@@ -1,6 +1,6 @@
 
 .accounts-sidebar-header {
-  min-height: 0px;
+  min-height: 0;
   padding: ($bar-height / 4) ($bar-height / 2) ($bar-height / 4);
 
   @include md {
@@ -21,6 +21,6 @@
   }
 
   button {
-    width: 100%
+    width: 100%;
   }
 }

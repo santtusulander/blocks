@@ -1,18 +1,21 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
-jest.dontMock('../account-management.jsx')
-const {AccountManagement} = require('../account-management.jsx')
+jest.unmock('../account-management.jsx')
+
+import {AccountManagement} from '../account-management.jsx'
 
 const fakeParams = {account: 1}
 
 describe('AccountManagement', () => {
   it('should exist', () => {
-    let accountManagement = TestUtils.renderIntoDocument(
+    let accountManagement = shallow(
       <AccountManagement
         fetchAccountData={jest.genMockFunction()}
-        params={fakeParams}/>
+        params={fakeParams}
+        dnsActions={ { changeRecordType: jest.genMockFunction() } }
+      />
     );
-    expect(TestUtils.isCompositeComponent(accountManagement)).toBeTruthy();
+    expect(accountManagement.length).toBe(1)
   });
 })

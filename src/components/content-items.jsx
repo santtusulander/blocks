@@ -8,7 +8,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import sortOptions from '../constants/content-item-sort-options'
 
 import AddHost from './add-host'
-import { ButtonWrapper as Button } from './button'
+import UDNButton from './button'
 import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
@@ -116,31 +116,31 @@ class ContentItems extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-              <Button bsStyle="primary"
+              <UDNButton bsStyle="primary"
                 icon={true}
                 addNew={true}
                 hidden={createNewItem === undefined}
                 onClick={this.toggleAddItem}>
                 <IconAdd/>
-              </Button>
+              </UDNButton>
               <Select
                 onSelect={this.handleSortChange}
                 value={currentValue}
                 options={sortOptions.map(opt => [opt.value, opt.label])}/>
-              <Button bsStyle="primary"
+              <UDNButton bsStyle="primary"
                 icon={true}
                 toggleView={true}
                 hidden={viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemChart/>
-              </Button>
-              <Button bsStyle="primary"
+              </UDNButton>
+              <UDNButton bsStyle="primary"
                 icon={true}
                 toggleView={true}
                 hidden={!viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemList/>
-              </Button>
+              </UDNButton>
             </ButtonToolbar>
             <p>{headerText.summary}</p>
             <h1>{headerText.label}</h1>

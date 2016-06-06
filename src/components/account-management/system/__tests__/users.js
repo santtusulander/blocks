@@ -1,14 +1,16 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
-jest.dontMock('../users.jsx')
-const Users = require('../users.jsx')
+jest.unmock('../users.jsx')
+
+import Users from '../users.jsx'
 
 describe('AccountManagementSystemUsers', () => {
   it('should exist', () => {
-    const users = TestUtils.renderIntoDocument(
+    const users = shallow(
       <Users />
     )
-    expect(TestUtils.isCompositeComponent(users)).toBeTruthy()
+
+    expect(users.length).toBe(1)
   })
 })

@@ -75,13 +75,16 @@ const urlParams = {brand: 'udn'}
 
 describe('Accounts', () => {
   it('should exist', () => {
+    const fetchData=jest.genMockFunction()
     let accounts = TestUtils.renderIntoDocument(
+
       <Accounts
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
         accounts={fakeAccounts}
         fetching={true}
+        fetchData={fetchData}
         fetchingMetrics={true}
         params={urlParams}/>
     )

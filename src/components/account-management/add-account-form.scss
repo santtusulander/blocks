@@ -1,0 +1,17 @@
+@import '../../styles/base/colors';
+@import '../../styles/base/variables';
+@import '../../styles/components/configuration/sidebar';
+
+// Account form container
+// =====================
+
+.account-management-new-account {
+  @extend .configuration-sidebar;
+
+  .form-group.border-bottom {
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+}
