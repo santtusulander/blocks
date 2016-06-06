@@ -40,7 +40,7 @@ export class AccountManagement extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchAccountData(this.state.activeAccount)
+    this.props.fetchAccountData(this.state.activeAccount, this.props.accounts)
   }
 
   editSOARecord() {
@@ -206,14 +206,13 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-
-  function fetchAccountData(account) {
-    if(!ownProps.accounts) {
+  function fetchAccountData(account, accounts) {
+    if(accounts.isEmpty()) {
       accountActions.fetchAccounts('udn')
     }
     if(account) {
