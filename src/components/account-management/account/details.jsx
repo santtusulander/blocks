@@ -2,7 +2,7 @@ import React from 'react'
 import { Row, Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import SelectWrapper from '../../select-wrapper.jsx'
 
-import { ButtonWrapper as Button } from '../../button.js'
+import Button from '../../button.js'
 import { reduxForm } from 'redux-form'
 
 import IconAdd from '../../icons/icon-add.jsx'
