@@ -40,9 +40,7 @@ export class AccountManagement extends Component {
   }
 
   componentWillMount() {
-    if(this.state.activeAccount) {
-      this.props.fetchAccountData(this.state.activeAccount)
-    }
+    this.props.fetchAccountData(this.state.activeAccount)
   }
 
   editSOARecord() {
@@ -133,7 +131,6 @@ export class AccountManagement extends Component {
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
     }
-
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
@@ -209,15 +206,20 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   function fetchAccountData(account) {
-    accountActions.fetchAccount('udn', account)
-    groupActions.fetchGroups('udn', account)
+    if(!ownProps.accounts) {
+      accountActions.fetchAccounts('udn')
+    }
+    if(account) {
+      accountActions.fetchAccount('udn', account)
+      groupActions.fetchGroups('udn', account)
+    }
   }
 
   return {
