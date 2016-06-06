@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 
-import { ButtonWrapper as Button } from '../button.js'
+import Button from '../button.js'
 import IconTrash from '../icons/icon-trash.jsx'
 
 const ActionLinks = props =>

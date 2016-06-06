@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { ButtonWrapper as Button } from '../button.js'
+import Button from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 
 import './account-management-header.scss'

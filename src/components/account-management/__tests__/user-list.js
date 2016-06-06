@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import { fromJS } from 'immutable'
 
-jest.dontMock('../user-list.jsx')
-const UserList = require('../user-list.jsx').UserList
+jest.unmock('../user-list.jsx')
+import UserList from '../user-list.jsx'
 
 const fakeUsers = fromJS([
   {id: 1, name: 'Firstname Lastname', role: 'UDN Superuser', email: 'firstname.lastname@company.com'},

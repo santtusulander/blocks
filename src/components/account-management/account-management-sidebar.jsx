@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import { ButtonWrapper as Button } from '../../components/button.js'
+import Button from '../../components/button.js'
 import Sidebar from '../../components/layout/sidebar.jsx'
 import { SidebarLinks } from '../sidebar-links.jsx'
 
