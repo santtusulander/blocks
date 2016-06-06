@@ -139,6 +139,7 @@ export class AccountManagement extends Component {
         {isAdmin && <div>
           <AccountManagementSidebar
             accounts={accounts}
+            activeAccount={this.state.activeAccount}
             activate={this.changeActiveAccount}
             addAccount={() => toggleModal(ADD_ACCOUNT)}
           />

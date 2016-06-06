@@ -6,7 +6,7 @@ import Sidebar from '../../components/layout/sidebar.jsx'
 import { SidebarLinks } from '../sidebar-links.jsx'
 
 export const AccountManagementSidebar = props => {
-  const { accounts, activate, addAccount } = props
+  const { accounts, activate, addAccount, activeAccount } = props
   return (
     <Sidebar>
       <div className="configuration-versions">
@@ -19,10 +19,10 @@ export const AccountManagementSidebar = props => {
           MANAGE ACCOUNTS
         </div>
         <SidebarLinks
+          activeItem={activeAccount}
           activate={activate}
           emptyMsg="No accounts."
-          items={accounts}
-          tag={'account'}/>
+          items={accounts}/>
       </div>
 
     </Sidebar>
@@ -32,6 +32,7 @@ export const AccountManagementSidebar = props => {
 AccountManagementSidebar.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activate: PropTypes.func,
+  activeAccount: PropTypes.number,
   addAccount: PropTypes.func
 }
 
