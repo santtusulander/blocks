@@ -48,6 +48,7 @@
     word-break: break-word;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    text-transform: uppercase;
 
     @include md {
       min-height: $md-page-header-height + $md-bar-height - 5px;
