@@ -7,6 +7,15 @@ import { Link } from 'react-router'
 
 import Select from '../../components/select'
 import DateRanges from '../../constants/date-ranges'
+import TabTitles from '../../constants/report-tab-titles'
+
+const handleReportTitleChange = (tab, type) => {
+  if(TabTitles.hasOwnProperty(tab)) {
+    return `${type} ${TabTitles[tab]}`
+  } else {
+    return `${type} ${tab}`
+  }
+}
 
 export class Analyses extends React.Component {
   constructor(props) {
@@ -141,10 +150,7 @@ export class Analyses extends React.Component {
       <div className="analyses">
 
         <div className="sidebar-header">
-          {this.props.activeTab === 'file-error' ?
-            <p className="text-sm">FILE ERROR</p> :
-            <p className="text-sm">{type} TRAFFIC OVERVIEW</p>
-          }
+          <p className="text-sm">{handleReportTitleChange(this.props.activeTab, type)}</p>
           <Dropdown id="dropdown-content" open={this.state.navMenuOpen}
                     onToggle={this.toggleNavMenu}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">

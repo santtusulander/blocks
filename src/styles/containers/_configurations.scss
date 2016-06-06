@@ -2,6 +2,8 @@
 // ==============
 
 .configuration-header {
+  position: fixed;
+  z-index: 5;
   width: calc(100% - #{$sidebar-width});
 
   @include md {
@@ -16,13 +18,11 @@
     .nav-tabs {
       background-color: rgb(1, 64, 82);
     }
+
     .page-header-layout {
       background-color: rgb(1, 51, 66);
     }
   }
-
-  position: fixed;
-  z-index: 5;
 }
 
 .configuration-container {

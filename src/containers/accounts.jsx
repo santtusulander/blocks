@@ -26,9 +26,7 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    if(this.props.accounts.isEmpty()) {
-      this.props.fetchData()
-    }
+    this.props.fetchData(this.props.metrics, this.props.accounts)
   }
   // toggleActiveAccount(id) {
   //   return () => {
@@ -137,16 +135,19 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-
   return {
-    fetchData: () => {
-      accountActions.startFetching()
-      accountActions.fetchAccounts(ownProps.params.brand)
-      metricsActions.startAccountFetching()
-      metricsActions.fetchAccountMetrics({
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X')
-      })
+    fetchData: (metrics, accounts) => {
+      if(accounts.isEmpty()) {
+        accountActions.startFetching()
+        accountActions.fetchAccounts(ownProps.params.brand)
+      }
+      if(metrics.isEmpty()) {
+        metricsActions.startAccountFetching()
+        metricsActions.fetchAccountMetrics({
+          startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+          endDate: moment.utc().endOf('hour').format('X')
+        })
+      }
     },
     accountActions: accountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)

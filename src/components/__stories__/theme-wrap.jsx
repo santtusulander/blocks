@@ -6,16 +6,16 @@ class ThemeWrap extends React.Component {
 
     if (props.theme) {
       this.state = {theme: props.theme};
-    } else {
+   } else {
       this.state = {theme: 'dark'};
-    }
+   }
 
     this.toggleTheme = this.toggleTheme.bind(this);
-  }
+ }
 
   componentDidMount(){
     this.setBodyClass(this.state.theme);
-  }
+ }
 
   toggleTheme(){
 
@@ -23,25 +23,25 @@ class ThemeWrap extends React.Component {
     this.setBodyClass( theme );
     this.setState( {'theme': theme} );
 
-  }
+ }
 
   setBodyClass( theme ){
     document.body.classList.remove('light-theme');
     document.body.classList.remove('dark-theme');
 
     document.body.classList.add(theme + '-theme');
-  }
+ }
 
   render() {
     return(
       <div>
-        <h5>Using: {this.state.theme} -theme <a onClick={ this.toggleTheme  }>Switch theme</a></h5>
+        <h5>Using: {this.state.theme} -theme <a onClick={this.toggleTheme }>Switch theme</a></h5>
         <hr/>
 
           {this.props.children}
       </div>
     );
-  }
+ }
 
 }
 
