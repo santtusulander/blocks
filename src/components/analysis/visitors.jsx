@@ -136,6 +136,7 @@ class AnalysisVisitors extends React.Component {
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
+              primaryLabel={'Visitors'}
               stacked={true}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
@@ -236,6 +237,7 @@ class AnalysisVisitors extends React.Component {
                           )
                         }).toJS()}
                         dataKey='uniq_vis'
+                        primaryLabel={'Visitors'}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -283,6 +285,7 @@ class AnalysisVisitors extends React.Component {
                           )
                         }).toJS()}
                         dataKey='uniq_vis'
+                        primaryLabel={'Visitors'}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>

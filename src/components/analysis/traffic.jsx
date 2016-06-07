@@ -146,6 +146,7 @@ class AnalysisTraffic extends React.Component {
                         )
                       }).toJS()}
                       dataKey='bits_per_second'
+                      primaryLabel={'Bps'}
                       width={this.state.byTimeWidth / 2}
                       height={50} />
                   </td>
