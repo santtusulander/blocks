@@ -1,10 +1,8 @@
 import React from 'react'
 import numeral from 'numeral'
-import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisStackedByGroup from './stacked-by-group'
-import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
@@ -14,7 +12,7 @@ class AnalysisServiceProviders extends React.Component {
 
     this.state = {
       stacksWidth: 100,
-      sortBy: 'timestamp',
+      sortBy: 'percent_total',
       sortDir: -1,
       sortFunc: ''
     }
@@ -44,30 +42,15 @@ class AnalysisServiceProviders extends React.Component {
     })
   }
   sortedData(data, sortBy, sortDir) {
-    let sortFunc = ''
-    if(this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
-      sortFunc = data.sort((a, b) => {
-        sortBy = sortBy.toString().split(',')
-        if(a.get(sortBy[0]).get(sortBy[1]) < b.get(sortBy[0]).get(sortBy[1])) {
-          return -1 * sortDir
-        }
-        else if(a.get(sortBy[0]).get(sortBy[1]) > b.get(sortBy[0]).get(sortBy[1])) {
-          return 1 * sortDir
-        }
-        return 0
-      })
-    } else {
-      sortFunc = data.sort((a, b) => {
-        if(a.get(sortBy) < b.get(sortBy)) {
-          return -1 * sortDir
-        }
-        else if(a.get(sortBy) > b.get(sortBy)) {
-          return 1 * sortDir
-        }
-        return 0
-      })
-    }
-    return sortFunc
+    return data.sort((a, b) => {
+      if(a.get(sortBy) < b.get(sortBy)) {
+        return -1 * sortDir
+      }
+      else if(a.get(sortBy) > b.get(sortBy)) {
+        return 1 * sortDir
+      }
+      return 0
+    })
   }
   render() {
     const providers = this.props.stats.map((provider, i) => {
@@ -82,24 +65,23 @@ class AnalysisServiceProviders extends React.Component {
         ]
       })
     })
-    // const onNet = stats.get('detail').toJS().map(datapoint => {
-    //   return {
-    //     bytes: datapoint.net_on.bytes,
-    //     timestamp: datapoint.timestamp
-    //   }
-    // })
-    // const offNet = stats.get('detail').toJS().map(datapoint => {
-    //   return {
-    //     bytes: datapoint.net_off.bytes,
-    //     timestamp: datapoint.timestamp
-    //   }
-    // })
-    // const sorterProps = {
-    //   activateSort: this.changeSort,
-    //   activeColumn: this.state.sortBy,
-    //   activeDirection: this.state.sortDir
-    // }
-    // const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
+    const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
+      byCountry = byCountry.push(...provider.get('countries').map(country => {
+        return Immutable.Map({
+          provider: provider.get('name'),
+          country: country.get('name'),
+          bytes: country.get('bytes'),
+          percent_total: country.get('percent_total')
+        })
+      }))
+      return byCountry
+    }, Immutable.List())
+    const sorterProps = {
+      activateSort: this.changeSort,
+      activeColumn: this.state.sortBy,
+      activeDirection: this.state.sortDir
+    }
+    const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-service-providers">
         <h3>TOTAL TRAFFIC BY SERVICE PROVIDER</h3>
@@ -111,44 +93,36 @@ class AnalysisServiceProviders extends React.Component {
               width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
           }
         </div>
-        {/*<table className="table table-striped table-analysis extra-margin-top">
+        {<table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="timestamp">
-                Date
+              <TableSorter {...sorterProps} column="provider">
+                Service Provder
               </TableSorter>
-              <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
-                On-Net in bytes
+              <TableSorter {...sorterProps} column="country">
+                Country
               </TableSorter>
-              <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
-                On-Net in %
+              <TableSorter {...sorterProps} column="bytes">
+                Traffic
               </TableSorter>
-              <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
-                Off-Net in bytes
-              </TableSorter>
-              <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
-                Off-Net in %
-              </TableSorter>
-              <TableSorter {...sorterProps} column="total">
-                Total in bytes
+              <TableSorter {...sorterProps} column="percent_total">
+                % of Traffic
               </TableSorter>
             </tr>
           </thead>
           <tbody>
-            {sortedStats.map((day, i) => {
+            {sortedStats.map((country, i) => {
               return (
                 <tr key={i}>
-                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{formatBytes(day.get('net_on').get('bytes'))}</td>
-                  <td>{numeral(day.get('net_on').get('percent_total')).format('0%')}</td>
-                  <td>{formatBytes(day.get('net_off').get('bytes'))}</td>
-                  <td>{numeral(day.get('net_off').get('percent_total')).format('0%')}</td>
-                  <td>{formatBytes(day.get('total'))}</td>
+                  <td>{country.get('provider')}</td>
+                  <td>{country.get('country')}</td>
+                  <td>{formatBytes(country.get('bytes'))}</td>
+                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
                 </tr>
               )
             })}
           </tbody>
-        </table>*/}
+        </table>}
       </div>
     )
   }

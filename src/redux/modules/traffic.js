@@ -179,15 +179,15 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
         {
           "name": "Germany",
           "code": "GER",
-          "bytes": 150000,
-          "bits_per_second": 150000,
+          "bytes": 50000,
+          "bits_per_second": 50000,
           "percent_total": 0.35
         },
         {
           "name": "France",
           "code": "FRA",
-          "bytes": 150000,
-          "bits_per_second": 150000,
+          "bytes": 250000,
+          "bits_per_second": 250000,
           "percent_total": 0.20
         }
       ]
