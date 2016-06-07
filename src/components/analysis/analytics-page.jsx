@@ -157,7 +157,6 @@ export class AnalyticsPage extends React.Component {
             name={this.props.activeName}
             navOptions={this.props.siblings}
             onOffNetChartType={this.props.onOffNetChartType}
-            serviceProvidersChartType={this.props.serviceProvidersChartType}
             serviceTypes={this.props.serviceTypes}
             showExportPanel={this.showExportPanel}
             startDate={this.props.startDate}
@@ -206,7 +205,6 @@ export class AnalyticsPage extends React.Component {
             }
             {this.state.activeTab === 'service-providers' &&
               <AnalysisServiceProviders fetching={this.props.trafficFetching}
-                chartType={this.props.serviceProvidersChartType}
                 stats={this.props.serviceProviders}/>
             }
             {this.state.activeTab === 'file-error' &&
@@ -252,8 +250,7 @@ AnalyticsPage.propTypes = {
   onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   reportsFetching: React.PropTypes.bool,
-  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
-  serviceProvidersChartType: React.PropTypes.string,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   siblings: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
@@ -280,7 +277,7 @@ AnalyticsPage.defaultProps = {
   metrics: Immutable.Map(),
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
-  serviceProviders: Immutable.Map(),
+  serviceProviders: Immutable.List(),
   serviceTypes: Immutable.List(),
   siblings: Immutable.List(),
   storageStats: Immutable.List(),

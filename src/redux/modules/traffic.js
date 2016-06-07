@@ -21,7 +21,7 @@ const emptyTraffic = Immutable.Map({
   fetching: false,
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
-  serviceProviders: Immutable.Map(),
+  serviceProviders: Immutable.List(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -98,10 +98,6 @@ export default handleActions({
   },
   TRAFFIC_SERVICE_PROVIDERS_FETCHED: {
     next(state, action) {
-      action.payload.data.detail = action.payload.data.detail.map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
-        return datapoint
-      })
       return state.merge({
         serviceProviders: Immutable.fromJS(action.payload.data)
       })

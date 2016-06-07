@@ -1,0 +1,38 @@
+.analysis-service-providers {
+
+  .line-0 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $link-blue;
+      stroke: $link-blue;
+    }
+  }
+
+  .line-1 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $pale-blue;
+      stroke: $pale-blue;
+    }
+  }
+
+  .line-2 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $orange;
+      stroke: $orange;
+    }
+  }
+
+  .line-3 {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $yellow;
+      stroke: $yellow;
+    }
+  }
+}

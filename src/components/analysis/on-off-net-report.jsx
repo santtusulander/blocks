@@ -4,7 +4,7 @@ import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
-import AnalysisStacked from './stacked'
+import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
@@ -88,7 +88,7 @@ class AnalysisOnOffNetReport extends React.Component {
     })
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
-        <AnalysisStacked padding={40}
+        <AnalysisStackedByTime padding={40}
           dataSets={[onNet, offNet]}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
@@ -112,7 +112,7 @@ class AnalysisOnOffNetReport extends React.Component {
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-traffic">
+      <div className="analysis-on-off-net-report">
         <Row>
           <Col xs={12}>
             <div className="analysis-data-box">

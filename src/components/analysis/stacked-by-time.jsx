@@ -2,13 +2,12 @@ import React from 'react'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
-import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
-class AnalysisStacked extends React.Component {
+class AnalysisStackedByTime extends React.Component {
   constructor(props) {
     super(props)
 
@@ -152,8 +151,8 @@ class AnalysisStacked extends React.Component {
   }
 }
 
-AnalysisStacked.displayName = 'AnalysisStacked'
-AnalysisStacked.propTypes = {
+AnalysisStackedByTime.displayName = 'AnalysisStackedByTime'
+AnalysisStackedByTime.propTypes = {
   className: React.PropTypes.string,
   dataSets: React.PropTypes.array,
   height: React.PropTypes.number,
@@ -161,4 +160,4 @@ AnalysisStacked.propTypes = {
   width: React.PropTypes.number
 }
 
-module.exports = AnalysisStacked
+module.exports = AnalysisStackedByTime

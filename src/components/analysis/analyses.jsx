@@ -39,7 +39,6 @@ export class Analyses extends React.Component {
     this.handleServiceProviderChange   = this.handleServiceProviderChange.bind(this)
     this.handlePopChange               = this.handlePopChange.bind(this)
     this.handleOnOffNetChartTypeChange = this.handleOnOffNetChartTypeChange.bind(this)
-    this.handleSPChartTypeChange       = this.handleSPChartTypeChange.bind(this)
     this.toggleNavMenu                 = this.toggleNavMenu.bind(this)
     this.toggleServiceType             = this.toggleServiceType.bind(this)
     this.handleExport                  = this.handleExport.bind(this);
@@ -127,10 +126,6 @@ export class Analyses extends React.Component {
 
   handleOnOffNetChartTypeChange(type) {
     this.props.changeOnOffNetChartType(type)
-  }
-
-  handleSPChartTypeChange(type) {
-    this.props.changeSPChartType(type)
   }
 
   toggleServiceType(type) {
@@ -296,23 +291,6 @@ export class Analyses extends React.Component {
             </div>
           </div>
           : null}
-        {this.props.activeTab === 'service-providers' ?
-          <div>
-            <div className="sidebar-section-header">
-              CHART TYPE
-            </div>
-            <div className="sidebar-content">
-              <div className="form-group">
-                <Select className="btn-block"
-                        onSelect={this.handleSPChartTypeChange}
-                        value={this.props.serviceProvidersChartType}
-                        options={[
-                    ['bar', 'Bar Chart'],
-                    ['line', 'Line Chart']]}/>
-              </div>
-            </div>
-          </div>
-          : null}
         {this.props.activeTab !== 'visitors' &&
         this.props.activeTab !== 'playback-demo' &&
         this.props.activeTab !== 'storage-usage' ?
@@ -408,7 +386,6 @@ Analyses.propTypes   = {
   addVersion: React.PropTypes.func,
   changeDateRange: React.PropTypes.func,
   changeOnOffNetChartType: React.PropTypes.func,
-  changeSPChartType: React.PropTypes.func,
   changeVideo: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   endDate: React.PropTypes.instanceOf(moment),
@@ -417,7 +394,6 @@ Analyses.propTypes   = {
   navOptions: React.PropTypes.instanceOf(Immutable.List),
   onOffNetChartType: React.PropTypes.string,
   propertyName: React.PropTypes.string,
-  serviceProvidersChartType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   showExportPanel: React.PropTypes.func,
   startDate: React.PropTypes.instanceOf(moment),

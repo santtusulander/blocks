@@ -78,7 +78,6 @@ export class GroupAnalytics extends React.Component {
         activeName={activeGroupName}
         changeDateRange={this.changeDateRange}
         changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
@@ -91,7 +90,6 @@ export class GroupAnalytics extends React.Component {
         onOffNetToday={this.props.onOffNetToday}
         reportsFetching={this.props.reportsFetching}
         serviceProviders={this.props.serviceProviders}
-        serviceProvidersChartType={this.props.serviceProvidersChartType}
         serviceTypes={this.props.serviceTypes}
         siblings={availableGroups}
         startDate={this.state.startDate}
@@ -129,8 +127,7 @@ GroupAnalytics.propTypes = {
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
-  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
-  serviceProvidersChartType: React.PropTypes.string,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
@@ -160,7 +157,6 @@ function mapStateToProps(state) {
     onOffNetToday: state.traffic.get('onOffNetToday'),
     reportsFetching: state.reports.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
-    serviceProvidersChartType: state.ui.get('analysisSPChartType'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
