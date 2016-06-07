@@ -23,21 +23,15 @@ class AnalysisStackedByGroup extends React.Component {
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
   }
-  moveMouse(xScale, yScale, data) {
+  moveMouse(xScale, yScale, data, xOffset) {
     return e => {
       const bounds = this.refs.chart.getBoundingClientRect()
       const xGroup = xScale.invert(e.pageX - bounds.left)
-      const i = closestGroup(data, xGroup, 1)
-      const d0 = data[i - 1]
-      const d1 = data[i]
-      let d = d0;
-      if(d1) {
-        d = xGroup - d0.timestamp.getTime() > d1.timestamp.getTime() - xGroup ? d1 : d0
-      }
+      const d = data[closestGroup(data, xGroup, 1) - 1]
       if(d) {
         this.setState({
           tooltipText: `${d.group} ${numeral(d.bytes).format('0,0')}`,
-          tooltipX: xScale(d.groupIndex),
+          tooltipX: xScale(d.groupIndex) + xOffset,
           tooltipY: yScale(d.bytes)
         })
       }
@@ -98,6 +92,7 @@ class AnalysisStackedByGroup extends React.Component {
     if(lastBarEdge < xMaxPx) {
       centerPad = (xMaxPx - lastBarEdge) / 2 - this.props.padding
     }
+    const xOffset = strokeWidth / 2 + this.props.padding / 2 + centerPad
 
     return (
       <div className={className}>
@@ -105,12 +100,11 @@ class AnalysisStackedByGroup extends React.Component {
           viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
-          ref='chart'>
+          ref='chart'
+          onMouseMove={this.moveMouse(xScale, yScale, totals, xOffset)}
+          onMouseOut={this.deactivateTooltip}>
           {this.props.datasets ? this.props.datasets.map((dataset, dataSetIndex) => {
-            const xPos = xScale(dataSetIndex) +
-              strokeWidth / 2  +
-              this.props.padding / 2 +
-              centerPad
+            const xPos = xScale(dataSetIndex) + xOffset
             return (
               <g key={dataSetIndex}>
                 {dataset.get('data').map((data, i) => {
