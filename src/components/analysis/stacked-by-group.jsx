@@ -1,6 +1,5 @@
 import React from 'react'
 import d3 from 'd3'
-import numeral from 'numeral'
 import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
@@ -30,7 +29,7 @@ class AnalysisStackedByGroup extends React.Component {
       const d = data[closestGroup(data, xGroup, 1) - 1]
       if(d) {
         this.setState({
-          tooltipText: `${d.group} ${numeral(d.bytes).format('0,0')}`,
+          tooltipText: `${d.group} ${formatBytes(d.bytes)}`,
           tooltipX: xScale(d.groupIndex) + xOffset,
           tooltipY: yScale(d.bytes)
         })

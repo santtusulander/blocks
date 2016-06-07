@@ -111,16 +111,6 @@ describe('Analyses', () => {
     expect(changeOnOffNetChartType.mock.calls[0][0]).toEqual('foo')
   });
 
-  it('should change service providers chart type', () => {
-    const changeSPChartType = jest.genMockFunction()
-    let analyses = TestUtils.renderIntoDocument(
-      <Analyses serviceTypes={mockServiceTypes}
-        changeSPChartType={changeSPChartType}/>
-    );
-    analyses.handleSPChartTypeChange('foo')
-    expect(changeSPChartType.mock.calls[0][0]).toEqual('foo')
-  });
-
   it('should toggle service types', () => {
     const toggleServiceType = jest.genMockFunction()
     let analyses = TestUtils.renderIntoDocument(

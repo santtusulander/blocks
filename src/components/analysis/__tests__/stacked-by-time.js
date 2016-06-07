@@ -38,7 +38,7 @@ const fakeData = [
   ]
 ]
 
-describe('AnalysisStacked', () => {
+describe('AnalysisStackedByTime', () => {
   it('should exist', () => {
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStackedByTime />

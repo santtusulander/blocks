@@ -17,23 +17,6 @@ const numeralFormatMock = jest.genMockFunction()
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
 
-const fakeStats = Immutable.fromJS({
- total: 31000000,
- net_on: {bytes: 500000, percent_total: 0.5},
- net_off: {bytes: 500000, percent_total: 0.5},
- detail: [{
-   timestamp: new Date(1451606400 * 1000),
-   total: 1000000,
-   net_on: {bytes: 500000, percent_total: 0.5},
-   net_off: {bytes: 500000, percent_total: 0.5}
- }, {
-   timestamp: new Date(1451692800 * 1000),
-   total: 1000000,
-   net_on: {bytes: 500000, percent_total: 0.5},
-   net_off: {bytes: 500000, percent_total: 0.5}
- }]
-})
-
 const fakeStats = Immutable.fromJS([
   {
     "name": "Vodafone",
@@ -109,6 +92,6 @@ describe('AnalysisServiceProviders', () => {
         stats={fakeStats}/>
     );
     const trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisServiceProviders, 'tr')
-    expect(trs.length).toBe(3);
+    expect(trs.length).toBe(4);
   });
 })
