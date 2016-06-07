@@ -4,6 +4,7 @@ import numeral from 'numeral'
 import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
+import {formatBytes} from '../../util/helpers'
 
 const maxStrokeWidth = 100
 const minStrokeWidth = 20
@@ -48,11 +49,11 @@ class AnalysisStackedByGroup extends React.Component {
     })
   }
   render() {
-    if(!this.props.width || !this.props.dataSets) {
+    if(!this.props.width || !this.props.datasets) {
       return <div>Loading...</div>
     }
 
-    const totals = this.props.dataSets.map(dataSet => {
+    const totals = this.props.datasets.map(dataSet => {
       const bytes = dataSet.get('data').reduce((total, data) => total + data, 0)
       return {
         bytes: bytes,
@@ -71,14 +72,14 @@ class AnalysisStackedByGroup extends React.Component {
       .domain([0, yExtent[1]])
       .range([
         yMinPx,
-        this.props.padding
+        this.props.padding * 2
       ])
 
     const xMinPx = this.props.padding * 2
     const xMaxPx = this.props.width - this.props.padding
 
     const xScale = d3.scale.linear()
-      .domain([0, this.props.dataSets.size])
+      .domain([0, this.props.datasets.size])
       .range([xMinPx, xMaxPx])
 
     let className = 'analysis-by-time analysis-stacked'
@@ -87,13 +88,13 @@ class AnalysisStackedByGroup extends React.Component {
     }
     let columnHeights = []
 
-    let strokeWidth = (xMaxPx - xMinPx) / this.props.dataSets.size - this.props.padding
+    let strokeWidth = (xMaxPx - xMinPx) / this.props.datasets.size - this.props.padding
     strokeWidth = Math.max(strokeWidth, minStrokeWidth)
     strokeWidth = Math.min(strokeWidth, maxStrokeWidth)
 
     // If last bar isn't at edge of chart, add padding to center bars
     let centerPad = 0
-    const lastBarEdge = xScale(this.props.dataSets.size - 1) + strokeWidth / 2
+    const lastBarEdge = xScale(this.props.datasets.size - 1) + strokeWidth / 2
     if(lastBarEdge < xMaxPx) {
       centerPad = (xMaxPx - lastBarEdge) / 2 - this.props.padding
     }
@@ -105,7 +106,7 @@ class AnalysisStackedByGroup extends React.Component {
           width={this.props.width}
           height={this.props.height}
           ref='chart'>
-          {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
+          {this.props.datasets ? this.props.datasets.map((dataset, dataSetIndex) => {
             const xPos = xScale(dataSetIndex) +
               strokeWidth / 2  +
               this.props.padding / 2 +
@@ -142,24 +143,38 @@ class AnalysisStackedByGroup extends React.Component {
                 y1={0} y2={this.props.height}/>
             </g>
             : null}
-          {yScale.ticks(4).reduce((axes, tick, i) => {
-            if(i) {
-              axes.push(
-                <g key={i}>
-                  <text x={this.props.padding * 2} y={yScale(tick)}
-                    textAnchor="end">
-                    {numeral(tick).format('0 a')}
-                  </text>
-                </g>
-              );
-            }
-            return axes
-          }, [])}
+          {yScale.ticks(4).map((tick, i) => {
+            return (
+              <g key={i}>
+                <text x={this.props.padding} y={yScale(tick)}>
+                  {formatBytes(tick)}
+                </text>
+              </g>
+            )
+          })}
+          {this.props.chartLabel &&
+            <text x={this.props.padding} y={this.props.padding}
+              className="chart-label">
+              {this.props.chartLabel}
+            </text>
+          }
         </svg>
         <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
           hidden={!this.state.tooltipText}>
           {this.state.tooltipText}
         </Tooltip>
+        {this.props.datasetLabels && this.props.datasetLabels.length ?
+          <div className="dataset-labels">
+            {this.props.datasetLabels.map((label, i) => (
+              <span key={i}>
+                <svg width={20} height={20}>
+                  <circle r={10} cx={10} cy={10} className={`line-${i}`}></circle>
+                </svg> <span className="chart-label">{label}</span>
+              </span>
+            ))}
+          </div>
+          : null
+        }
       </div>
     )
   }
@@ -167,8 +182,10 @@ class AnalysisStackedByGroup extends React.Component {
 
 AnalysisStackedByGroup.displayName = 'AnalysisStackedByGroup'
 AnalysisStackedByGroup.propTypes = {
+  chartLabel: React.PropTypes.string,
   className: React.PropTypes.string,
-  dataSets: React.PropTypes.instanceOf(Immutable.List),
+  datasetLabels: React.PropTypes.array,
+  datasets: React.PropTypes.instanceOf(Immutable.List),
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   width: React.PropTypes.number

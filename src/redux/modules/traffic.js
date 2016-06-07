@@ -166,14 +166,14 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
       "http": {
         "net_on": 25000,
         "net_on_bps": 25000,
-        "net_off": 50000,
-        "net_off_bps": 50000
+        "net_off": 75000,
+        "net_off_bps": 75000
       },
       "https": {
-        "net_on": 25000,
-        "net_on_bps": 25000,
-        "net_off": 50000,
-        "net_off_bps": 50000
+        "net_on": 50000,
+        "net_on_bps": 50000,
+        "net_off": 100000,
+        "net_off_bps": 100000
       },
       "countries": [
         {

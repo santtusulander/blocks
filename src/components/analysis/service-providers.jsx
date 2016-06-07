@@ -1,5 +1,6 @@
 import React from 'react'
 import numeral from 'numeral'
+import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisStackedByGroup from './stacked-by-group'
@@ -53,6 +54,7 @@ class AnalysisServiceProviders extends React.Component {
     })
   }
   render() {
+    const month = moment().format('MMMM YYYY')
     const providers = this.props.stats.map((provider, i) => {
       return Immutable.fromJS({
         group: provider.get('name'),
@@ -89,7 +91,14 @@ class AnalysisServiceProviders extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisStackedByGroup padding={40}
-              dataSets={providers}
+              chartLabel={`${month}, Month to Date`}
+              datasets={providers}
+              datasetLabels={[
+                "On-Net HTTP",
+                "On-Net HTTPS",
+                "Off-Net HTTP",
+                "Off-Net HTTPS"
+              ]}
               width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
           }
         </div>

@@ -1,10 +1,11 @@
 .analysis-service-providers {
+  position: relative;
 
   .line-0 {
 
     .dark-theme &,
     .light-theme & {
-      color: $link-blue;
+      fill: $link-blue;
       stroke: $link-blue;
     }
   }
@@ -13,7 +14,7 @@
 
     .dark-theme &,
     .light-theme & {
-      color: $pale-blue;
+      fill: $pale-blue;
       stroke: $pale-blue;
     }
   }
@@ -22,7 +23,7 @@
 
     .dark-theme &,
     .light-theme & {
-      color: $orange;
+      fill: $orange;
       stroke: $orange;
     }
   }
@@ -31,8 +32,26 @@
 
     .dark-theme &,
     .light-theme & {
-      color: $yellow;
+      fill: $yellow;
       stroke: $yellow;
+    }
+  }
+
+  .dataset-labels {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+
+    .line-0,
+    .line-1,
+    .line-2,
+    .line-3 {
+      stroke-width: 0;
+    }
+
+    .chart-label {
+      vertical-align: top;
+      margin: 0 15px 0 5px;
     }
   }
 }
