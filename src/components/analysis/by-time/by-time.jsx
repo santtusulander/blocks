@@ -2,10 +2,8 @@ import React from 'react'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
-import { findDOMNode } from 'react-dom'
 
 import Legend from './legend'
-
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
