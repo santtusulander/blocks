@@ -310,7 +310,6 @@
 
 .dark-theme,
 .light-theme .header,
-.light-theme .sidebar-layout,
 .light-theme .configuration-sidebar {
 
   .dropdown-select {
@@ -371,16 +370,6 @@
     }
   }
 
-  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
-
-    &:hover:not(:disabled),
-    &:hover:not(:disabled) .icon {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-  }
-
   .btn-primary {
 
     &,
@@ -399,6 +388,16 @@
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
+    }
+  }
+
+  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
+
+    &:hover:not(:disabled),
+    &:hover:not(:disabled) .icon {
+      color: $white;
+      fill: $white;
+      stroke: $white;
     }
   }
 
@@ -569,6 +568,27 @@
         fill: $pale-blue;
         stroke: $pale-blue;
       }
+    }
+  }
+
+  .sidebar-layout .btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: $white;
+      background-color: $pale-blue;
+      fill: $white;
+      stroke: $white;
+    }
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 

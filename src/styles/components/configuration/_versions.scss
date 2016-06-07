@@ -103,9 +103,11 @@
       margin-left: 11px;
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       border-left-color: $dt-text-color;
+    }
+    .light-theme & {
+      border-left-color: $white;
     }
   }
 }
