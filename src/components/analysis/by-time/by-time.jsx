@@ -4,8 +4,8 @@ import moment from 'moment'
 import numeral from 'numeral'
 import { findDOMNode } from 'react-dom'
 
-import Tooltip from '../../tooltip'
-import AnalysisLineLabel from './line-label'
+import Legend from './legend'
+
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
@@ -28,29 +28,30 @@ class AnalysisByTime extends React.Component {
       primaryTooltipText: null,
       primaryTooltipX: 0,
       primaryTooltipY: 0,
-      primaryTooltipOffsetTop: false,
-      primaryLabelWidth: 0,
+      //primaryTooltipOffsetTop: false,
+      //primaryLabelWidth: 0,
       secondaryTooltipText: null,
       secondaryTooltipX: 0,
       secondaryTooltipY: 0,
-      secondaryTooltipOffsetTop: false,
-      secondaryLabelWidth: 0
+     // secondaryTooltipOffsetTop: false,
+      //secondaryLabelWidth: 0
     }
 
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
-    this.measureChartLabels = this.measureChartLabels.bind(this)
+    //this.measureChartLabels = this.measureChartLabels.bind(this)
     this.formatY = this.formatY.bind(this)
   }
   componentDidMount() {
-    this.measureChartLabels()
+    //this.measureChartLabels()
   }
-  measureChartLabels() {
+  /*measureChartLabels() {
     this.setState({
       primaryLabelWidth: this.refs.primaryLabel ? findDOMNode(this.refs.primaryLabel).getBBox().width : 0,
       secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
     })
-  }
+  }*/
+
   moveMouse(xScale, yScale, primaryData, secondaryData) {
     const configTooltip = (time, date) => configureTooltip(
       time,
@@ -77,9 +78,10 @@ class AnalysisByTime extends React.Component {
         )
         this.setState({
           primaryTooltipText: tooltipConfig.text,
+
           primaryTooltipX: tooltipConfig.x,
           primaryTooltipY: tooltipConfig.y,
-          primaryTooltipOffsetTop: tooltipConfig.top
+          /* primaryTooltipOffsetTop: tooltipConfig.top*/
         })
       }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
@@ -89,18 +91,19 @@ class AnalysisByTime extends React.Component {
         )
         this.setState({
           secondaryTooltipText: tooltipConfig.text,
-          secondaryTooltipX: tooltipConfig.x,
+
+          /*secondaryTooltipX: tooltipConfig.x,
           secondaryTooltipY: tooltipConfig.y,
-          secondaryTooltipOffsetTop: tooltipConfig.top
+          secondaryTooltipOffsetTop: tooltipConfig.top*/
         })
       }
     }
   }
   deactivateTooltip() {
-    this.setState({
+    /*this.setState({
       primaryTooltipText: null,
       secondaryTooltipText: null
-    })
+    })*/
   }
   formatY(val) {
     return this.props.yAxisFormat ?
@@ -170,12 +173,12 @@ class AnalysisByTime extends React.Component {
       .x(d => xScale(d.timestamp))
       .interpolate('monotone')
 
-    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
+/*    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
       this.state.secondaryLabelWidth
 
     const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
       (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
-
+*/
     let className = 'analysis-by-time'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -222,18 +225,7 @@ class AnalysisByTime extends React.Component {
                 fill="url(#dt-secondary-gradient)" />
             }
           </g> : null}
-          {this.props.primaryLabel && <AnalysisLineLabel
-            ref="primaryLabel"
-            type="primary"
-            padding={this.props.padding}
-            labelX={primaryLabelX}
-            label={this.props.primaryLabel}/>}
-          {this.props.secondaryLabel && <AnalysisLineLabel
-            ref="secondaryLabel"
-            type="secondary"
-            padding={this.props.padding}
-            labelX={secondaryLabelX}
-            label={this.props.secondaryLabel}/>}
+
           {this.state.primaryTooltipText ?
             <g>
               <circle r="5"
@@ -313,14 +305,13 @@ class AnalysisByTime extends React.Component {
             </linearGradient>
           </defs>
         </svg>
-        <Tooltip x={this.state.primaryTooltipX} y={this.state.primaryTooltipY}
-          hidden={!this.state.primaryTooltipText} offsetTop={this.state.primaryTooltipOffsetTop}>
-          {this.state.primaryTooltipText}
-        </Tooltip>
-        <Tooltip x={this.state.secondaryTooltipX} y={this.state.secondaryTooltipY}
-          hidden={!this.state.secondaryTooltipText} offsetTop={this.state.secondaryTooltipOffsetTop}>
-          {this.state.secondaryTooltipText}
-        </Tooltip>
+
+        <Legend
+          primaryLabel={this.props.primaryLabel}
+          primaryValue={this.state.primaryTooltipText}
+          secondaryLabel={this.props.secondaryLabel}
+          secondaryValue={this.state.primaryTooltipText}
+        />
       </div>
     )
   }
