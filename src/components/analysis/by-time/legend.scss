@@ -7,23 +7,24 @@
 .chart-legend {
   position: absolute;
   display: table;
-  top: 20px;
-  right: 20px;
-  padding: 20px;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
   background-color: rgba($black, 0.2);
 
-  .legend-label {
-    &.primary::before {
-      content: "\2014 ";
+  .legend-label::before {
+    content: "\2014 ";
+  }
+  .primary {
+    .legend-label::before {
       color: $pale-blue;
     }
-    &.secondary::before {
-      content: "\2014 ";
+  }
+
+  .secondary {
+    .legend-label::before {
       color: $green;
     }
-
-    padding-right: 20px;
-    display: table-cell;
   }
 
   .legend-value {
