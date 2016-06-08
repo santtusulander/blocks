@@ -101,6 +101,8 @@ class AnalysisTraffic extends React.Component {
               primaryLabel='HTTP'
               secondaryLabel='HTTPS'
               stacked={true}
+              showLegend={true}
+              showTooltip={false}
               yAxisCustomFormat={formatBitsPerSecond}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
             }
@@ -146,7 +148,7 @@ class AnalysisTraffic extends React.Component {
                         )
                       }).toJS()}
                       dataKey='bits_per_second'
-                      primaryLabel={'Bps'}
+                      showTooltip={true}
                       width={this.state.byTimeWidth / 2}
                       height={50} />
                   </td>
