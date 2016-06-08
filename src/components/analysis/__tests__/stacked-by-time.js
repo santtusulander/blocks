@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../stacked.jsx')
-const AnalysisStacked = require('../stacked.jsx')
+jest.dontMock('../stacked-by-time.jsx')
+const AnalysisStackedByTime = require('../stacked-by-time.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')
@@ -38,17 +38,17 @@ const fakeData = [
   ]
 ]
 
-describe('AnalysisStacked', () => {
+describe('AnalysisStackedByTime', () => {
   it('should exist', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked />
+      <AnalysisStackedByTime />
     );
     expect(TestUtils.isCompositeComponent(stacks)).toBeTruthy();
   });
 
   it('can be passed a custom css class', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked className="foo" width={400} height={200} padding={10}
+      <AnalysisStackedByTime className="foo" width={400} height={200} padding={10}
         dataSets={fakeData}/>
     );
     let div = TestUtils.findRenderedDOMComponentWithTag(stacks, 'div');
@@ -57,7 +57,7 @@ describe('AnalysisStacked', () => {
 
   it('should show loading message if there is no width or data', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked/>
+      <AnalysisStackedByTime/>
     );
     let div = TestUtils.findRenderedDOMComponentWithTag(stacks, 'div')
     expect(div.textContent).toContain('Loading');
@@ -65,7 +65,7 @@ describe('AnalysisStacked', () => {
 
   it('should deactivate tooltip', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked />
+      <AnalysisStackedByTime />
     );
     stacks.state.tooltipText = "foo"
     stacks.deactivateTooltip()
@@ -74,7 +74,7 @@ describe('AnalysisStacked', () => {
 
   it('should have data lines', () => {
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
+      <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let lines = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'line')
     expect(lines.length).toBe(4);
@@ -84,7 +84,7 @@ describe('AnalysisStacked', () => {
     moment.mockClear()
     momentFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
+      <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
@@ -96,7 +96,7 @@ describe('AnalysisStacked', () => {
     numeral.mockClear()
     numeralFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStacked width={400} height={200} padding={10} dataSets={fakeData}/>
+      <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[3].textContent).toBe('number')

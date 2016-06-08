@@ -179,7 +179,7 @@ class AnalysisVisitors extends React.Component {
                   <tr key={i}>
                     <td>{country.get('name')}</td>
                     <td>{numeral(country.get('total')).format('0,0')}</td>
-                    <td>{country.get('percent_total')}%</td>
+                    <td>{numeral(country.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
                       <AnalysisByTime axes={false} padding={0} area={false}
                         primaryData={country.get('detail').map(datapoint => {
@@ -226,7 +226,7 @@ class AnalysisVisitors extends React.Component {
                   <tr key={i}>
                     <td>{browser.get('name')}</td>
                     <td>{numeral(browser.get('total')).format('0,0')}</td>
-                    <td>{numeral(browser.get('percent_total') / 100).format('0,0.0%')}</td>
+                    <td>{numeral(browser.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
                       <AnalysisByTime axes={false} padding={0} area={false}
                         primaryData={browser.get('detail').map(datapoint => {
@@ -273,7 +273,7 @@ class AnalysisVisitors extends React.Component {
                   <tr key={i}>
                     <td>{os.get('name')}</td>
                     <td>{numeral(os.get('total')).format('0,0')}</td>
-                    <td>{numeral(os.get('percent_total') / 100).format('0,0.0%')}</td>
+                    <td>{numeral(os.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
                       <AnalysisByTime axes={false} padding={0} area={false}
                         primaryData={os.get('detail').map(datapoint => {

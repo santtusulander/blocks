@@ -4,12 +4,12 @@ import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
-import AnalysisStacked from './stacked'
+import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-class AnalysisSPReport extends React.Component {
+class AnalysisOnOffNetReport extends React.Component {
   constructor(props) {
     super(props);
 
@@ -71,8 +71,8 @@ class AnalysisSPReport extends React.Component {
     return sortFunc
   }
   render() {
-    const stats = this.props.serviceProviderStats
-    const statsToday = this.props.serviceProviderStatsToday
+    const stats = this.props.onOffStats
+    const statsToday = this.props.onOffStatsToday
     let chart = null
     const onNet = stats.get('detail').toJS().map(datapoint => {
       return {
@@ -86,9 +86,9 @@ class AnalysisSPReport extends React.Component {
         timestamp: datapoint.timestamp
       }
     })
-    if(this.props.spChartType === 'bar') {
+    if(this.props.onOffNetChartType === 'bar') {
       chart = (
-        <AnalysisStacked padding={40}
+        <AnalysisStackedByTime padding={40}
           dataSets={[onNet, offNet]}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
@@ -112,7 +112,7 @@ class AnalysisSPReport extends React.Component {
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-traffic">
+      <div className="analysis-on-off-net-report">
         <Row>
           <Col xs={12}>
             <div className="analysis-data-box">
@@ -153,7 +153,7 @@ class AnalysisSPReport extends React.Component {
             </div>
           </Col>
         </Row>
-        <h3>SERVICE PROVIDER ON/OFF NET</h3>
+        <h3>ON/OFF NET</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> : chart}
@@ -201,12 +201,12 @@ class AnalysisSPReport extends React.Component {
   }
 }
 
-AnalysisSPReport.displayName = 'AnalysisSPReport'
-AnalysisSPReport.propTypes = {
+AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
+AnalysisOnOffNetReport.propTypes = {
   fetching: React.PropTypes.bool,
-  serviceProviderStats: React.PropTypes.instanceOf(Immutable.Map),
-  serviceProviderStatsToday: React.PropTypes.instanceOf(Immutable.Map),
-  spChartType: React.PropTypes.string
+  onOffNetChartType: React.PropTypes.string,
+  onOffStats: React.PropTypes.instanceOf(Immutable.Map),
+  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = AnalysisSPReport
+module.exports = AnalysisOnOffNetReport
