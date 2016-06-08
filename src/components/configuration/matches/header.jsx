@@ -1,32 +1,43 @@
 import React from 'react'
-import { Input, Modal, Panel } from 'react-bootstrap'
+import { Button, ButtonToolbar, Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
+import InputConnector from '../../input-connector'
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeFilter: 'exists'
+      activeFilter: 'exists',
+      containsVal: '',
+      header: props.match.get('cases').get(0).get(0)
     }
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleHeaderChange = this.handleHeaderChange.bind(this)
+    this.handleMatchesChange = this.handleMatchesChange.bind(this)
+    this.handleContainsValChange = this.handleContainsValChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
-    return e => {
-      this.props.changeValue(path, e.target.value)
-    }
+  handleHeaderChange(e) {
+    this.setState({header: e.target.value})
   }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
-    }
+  handleContainsValChange(e) {
+    this.setState({containsVal: e.target.value})
+  }
+  handleMatchesChange(value) {
+    this.setState({
+      activeFilter: value,
+      containsVal: ''
+    })
+  }
+  saveChanges() {
+    this.props.changeValue(
+      this.props.path.concat(['cases', 0, 0]),
+      this.state.header
+    )
+    this.props.close()
   }
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
@@ -42,21 +53,16 @@ class Header extends React.Component {
           <Input type="text" label="Name"
             placeholder="Enter Header Name"
             id="matches_header"
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
+            value={this.state.header}
+            onChange={this.handleHeaderChange}/>
 
           <hr />
 
           <div className="form-groups">
-            <div className={'input-connector no-label' +
-              (hasContainingRule ? ' show' : '')}></div>
+            <InputConnector show={hasContainingRule} noLabel={true} />
             <div className="form-group">
               <Select className="input-select"
-                onSelect={this.handleSelectChange(
-                  ['edge_configuration', 'cache_rule', 'matches', 'header_rule']
-                )}
+                onSelect={this.handleMatchesChange}
                 value={this.state.activeFilter}
                 options={[
                   ['exists', 'Exists'],
@@ -68,12 +74,19 @@ class Header extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Value"
-                placeholder="Enter Rule Value"
-                onChange={this.handleChange(
-                  ['edge_configuration', 'cache_rule', 'matches', 'header_rule_value']
-                )}/>
+                value={this.state.containsVal}
+                onChange={this.handleContainsValChange}/>
             </Panel>
           </div>
+
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
 
         </Modal.Body>
       </div>
@@ -84,6 +97,7 @@ class Header extends React.Component {
 Header.displayName = 'Header'
 Header.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }

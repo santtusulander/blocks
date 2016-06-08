@@ -3,6 +3,7 @@ import { Button, ButtonToolbar, Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
+import InputConnector from '../../input-connector'
 
 class QueryString extends React.Component {
   constructor(props) {
@@ -54,11 +55,11 @@ class QueryString extends React.Component {
             id="matches_query-string"
             value={this.state.queryString}
             onChange={this.handleQueryStringChange}/>
+
           <hr />
 
           <div className="form-groups">
-            <div className={'input-connector no-label' +
-              (hasContainingRule ? ' show' : '')}></div>
+            <InputConnector show={hasContainingRule} noLabel={true} />
             <div className="form-group">
               <Select className="input-select"
                 onSelect={this.handleMatchesChange}
