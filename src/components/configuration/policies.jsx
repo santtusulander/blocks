@@ -193,46 +193,34 @@ class ConfigurationPolicies extends React.Component {
               changeValue={this.props.changeValue}/>
           )
           break
-
-
-            // <ConfigurationMatchMimeType
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationMatchFileExtension
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationMatchFileName
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationMatchIpAddress
-            //   changeValue={this.props.changeValue}/>
+        // <ConfigurationMatchMimeType {...matcherProps}/>
+        // <ConfigurationMatchFileExtension {...matcherProps}/>
+        // <ConfigurationMatchFileName {...matcherProps}/>
+        // <ConfigurationMatchIpAddress {...matcherProps}/>
       }
     }
     if(this.state.activeSetPath) {
       const activeSet = this.props.config.getIn(this.state.activeSetPath)
+      const setterProps = {
+        changeValue: this.props.changeValue,
+        close: this.clearActiveMatchSet,
+        path: this.state.activeSetPath,
+        set: activeSet
+      }
       switch(this.state.activeSetPath.slice(-1)[0]) {
         case 'cache_name':
           activeEditForm = (
-            <ConfigurationActionCacheKeyQueryString
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              path={this.state.activeSetPath}
-              set={activeSet}/>
+            <ConfigurationActionCacheKeyQueryString {...setterProps}/>
           )
           break
         case 'cache_control':
           activeEditForm = (
-            <ConfigurationActionCache
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              path={this.state.activeSetPath}
-              set={activeSet}/>
+            <ConfigurationActionCache {...setterProps}/>
           )
           break
         case 'header':
           activeEditForm = (
-            <ConfigurationActionHeader
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              path={this.state.activeSetPath}
-              set={activeSet}/>
+            <ConfigurationActionHeader {...setterProps}/>
           )
           break
         default:
@@ -244,24 +232,15 @@ class ConfigurationPolicies extends React.Component {
               changeValue={this.props.changeValue}/>
           )
           break
-            // <ConfigurationActionRedirection
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionOriginHostname
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionCompression
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionPath
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionQueryString
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionRemoveVary
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionAllowBlock
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionPostSupport
-            //   changeValue={this.props.changeValue}/>
-            // <ConfigurationActionCors
-            //   changeValue={this.props.changeValue}/>
+        // <ConfigurationActionRedirection {...setterProps}/>
+        // <ConfigurationActionOriginHostname {...setterProps}/>
+        // <ConfigurationActionCompression {...setterProps}/>
+        // <ConfigurationActionPath {...setterProps}/>
+        // <ConfigurationActionQueryString {...setterProps}/>
+        // <ConfigurationActionRemoveVary {...setterProps}/>
+        // <ConfigurationActionAllowBlock {...setterProps}/>
+        // <ConfigurationActionPostSupport {...setterProps}/>
+        // <ConfigurationActionCors {...setterProps}/>
       }
     }
     return (
