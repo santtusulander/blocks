@@ -19,6 +19,17 @@ import { createCSVExporters } from '../../util/analysis-csv-export'
 
 import { ExportPanel }from '../export-panel'
 
+import TabTitles from '../../constants/report-tab-titles'
+
+const handleReportTitleChange = (tab) => {
+  if(TabTitles.hasOwnProperty(tab)) {
+    return `${TabTitles[tab]}`
+  } else {
+    return `${tab}`
+  }
+}
+
+
 let exporters = createCSVExporters('')
 
 export class AnalyticsPage extends React.Component {
@@ -143,7 +154,8 @@ export class AnalyticsPage extends React.Component {
           onDownload={this.onDownload}
           onSend={this.onSend}
           onCancel={this.hideExportPanel}
-          showExportPanel={this.showExportPanel}/>
+          showExportPanel={this.showExportPanel}
+          panelTitle={handleReportTitleChange(this.state.activeTab)}/>
 
         <Sidebar>
           <Analyses
