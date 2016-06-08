@@ -102,7 +102,10 @@ class AnalysisSPReport extends React.Component {
           primaryLabel='On Net'
           secondaryLabel='Off Net'
           yAxisCustomFormat={formatBytes}
-          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
+          showLegend={true}
+          showTooltip={false}
+        />
       )
     }
     const sorterProps = {

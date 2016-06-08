@@ -139,6 +139,7 @@ class AnalysisVisitors extends React.Component {
               primaryLabel={'Visitors'}
               stacked={true}
               showLegend={true}
+              showTooltip={false}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
@@ -191,7 +192,6 @@ class AnalysisVisitors extends React.Component {
                           )
                         }).toJS()}
                         dataKey='uniq_vis'
-                        showTooltip={true}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -239,7 +239,6 @@ class AnalysisVisitors extends React.Component {
                           )
                         }).toJS()}
                         dataKey='uniq_vis'
-                        showTooltip={true}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -287,7 +286,6 @@ class AnalysisVisitors extends React.Component {
                           )
                         }).toJS()}
                         dataKey='uniq_vis'
-                        showTooltip={true}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
