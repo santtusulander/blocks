@@ -18,6 +18,11 @@
         rgba($ericsson-dark-blue, 0.9));
       background-size: 100%;
     }
+
+    .light-theme & {
+      color: $white;
+      background-color: $pale-blue;
+    }
   }
 }
 
