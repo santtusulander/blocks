@@ -36,7 +36,7 @@
       color: $dt-text-color;
 
       &:hover {
-        color: $black;
+        color: rgba($dt-text-color, 0.1);
       }
     }
   }

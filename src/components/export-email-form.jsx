@@ -85,7 +85,7 @@ class ExportEmailForm extends React.Component {
       */}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={this.onCancel}>Cancel</Button>
+          <Button className="btn-outline" onClick={this.onCancel}>Cancel</Button>
           <Button type="submit" bsStyle="primary">Send</Button>
         </ButtonToolbar>
 

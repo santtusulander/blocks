@@ -1,11 +1,21 @@
 .soa-form-sidebar {
   @extend .configuration-sidebar;
+
+  .soa-form-input {
+    width: 60%;
+
+    &.refresh-input {
+      width: 15%;
+    }
+  }
+
 }
 
-.soa-form-input {
-  width: 60%;
+.dns-edit-form-sidebar {
+  @extend .configuration-sidebar;
 
-  &.refresh-input {
-    width: 15%;
+  .input-group-addon {
+    width: auto;
+    padding-left: 10px;
   }
 }

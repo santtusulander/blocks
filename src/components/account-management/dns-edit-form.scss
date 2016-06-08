@@ -2,11 +2,40 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-.dns-edit-form {
+.dns-edit-form-sidebar {
   @extend .configuration-sidebar;
 
   .input-group-addon {
     width: auto;
     padding-left: 10px;
+  }
+
+  .btn-outline {
+    .light-theme & {
+      background-color: $white !important;
+      color: $pale-blue;
+      border: 0px;
+    }
+  }
+  .btn-primary {
+    .light-theme & {
+      &,
+      &:hover,
+      &:active,
+      &.active {
+        color: $white;
+        background-color: $pale-blue;
+        fill: $white;
+        stroke: $white;
+      }
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled),
+      &.active:not(:disabled) {
+        color: $lt-button-color;
+        fill: $lt-button-color;
+        stroke: $lt-button-color;
+      }
+    }
   }
 }

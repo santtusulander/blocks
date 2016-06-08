@@ -63,6 +63,7 @@
   &.btn-outline {
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
+    color: $dt-text-color;
 
     &,
     &:hover,
@@ -571,6 +572,26 @@
     }
   }
 
+  .page-header-layout .dropdown-select {
+
+    .dropdown-toggle {
+
+      &,
+      &:hover,
+      &:active,
+      &.active {
+        background-color: rgba($black, 0.1);
+      }
+    }
+  }
+
+  .configuration-sidebar .btn-outline {
+    background-color: $white !important;
+    color: $pale-blue;
+    border: 0px;
+  }
+
+  .configuration-sidebar .btn-primary,
   .sidebar-layout .btn-primary {
 
     &,
@@ -589,19 +610,6 @@
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-
-  .page-header-layout .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        background-color: rgba($black, 0.1);
-      }
     }
   }
 

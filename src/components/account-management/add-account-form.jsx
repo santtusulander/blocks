@@ -83,7 +83,7 @@ const NewAccountForm = (props) => {
           }
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" className="btn-outline" onClick={onCancel}>Cancel</Button>
+            <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
             <Button disabled={!!Object.keys(errors).length} bsStyle="primary" onClick={onSave}>Add</Button>
           </ButtonToolbar>
         </form>
