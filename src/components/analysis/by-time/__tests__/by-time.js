@@ -1,10 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 //import TestUtils from 'react-addons-test-utils'
-import {shallow, render} from 'enzyme'
+import {shallow, render, mount} from 'enzyme'
+import jsdom from 'jsdom'
 
-jest.dontMock('../by-time.jsx')
-const AnalysisByTime = require('../by-time.jsx')
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
+global.window = document.defaultView
+
+jest.unmock('../by-time.jsx')
+import AnalysisByTime from '../by-time.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')
@@ -76,18 +80,21 @@ describe('AnalysisByTime', () => {
     expect(div.text()).toContain('Loading');
   });
 
-  /* NOT NEEDED ANYMORE -> as changed tooltips to legend
   it('should deactivate tooltip', () => {
     let byTime = shallow(
-      <AnalysisByTime />
+      <AnalysisByTime
+        showTooltip={true}
+      />
     );
+
     byTime.state.primaryTooltipText = "foo"
     byTime.state.secondaryTooltipText = "bar"
-    byTime.deactivateTooltip()
-    expect(byTime.state.primaryTooltipText).toBe(null);
-    expect(byTime.state.secondaryTooltipText).toBe(null);
+
+    byTime.instance().deactivateTooltip()
+
+    expect(byTime.state().primaryTooltipText).toBe(null);
+    expect(byTime.state().secondaryTooltipText).toBe(null);
   });
-   */
 
   it('should have a data line and area', () => {
     let byTime = shallow(
@@ -126,11 +133,11 @@ describe('AnalysisByTime', () => {
     );
 
 
-    let texts = byTime.find('text') //TestUtils.scryRenderedDOMComponentsWithTag(byTime, 'text')
+    let texts = byTime.find('text')
 
     expect(texts.at(2).prop('y')).toBe(190)
 
-    // Why 8 calls ? result is 4??
+    // FIXME: Why 8 calls ? result is 4??
     //expect(numeral.mock.calls.length).toBe(8)
 
     expect(numeral.mock.calls[0]).toEqual([1000])
@@ -160,5 +167,19 @@ describe('AnalysisByTime', () => {
     );
     let div = byTime.find('div')
     expect(div.text()).toContain('No data found.');
+  });
+
+  it('should have Legend', () => {
+    let byTime = shallow(
+      <AnalysisByTime width={400} height={200}
+        primaryData={fakeData}
+        secondaryData={fakeData}
+        dataKey="bytes_out"
+        showLegend={true}
+        primaryLabel='Test'
+      />
+    );
+
+    expect(byTime.find('Legend').length).toBe(1);
   });
 })

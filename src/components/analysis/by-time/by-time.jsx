@@ -1,8 +1,10 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 
+import Tooltip from '../../tooltip'
 import Legend from './legend'
 
 const closestDate = d3.bisector(d => d.timestamp).left
@@ -26,14 +28,30 @@ class AnalysisByTime extends React.Component {
       primaryTooltipText: null,
       primaryTooltipX: 0,
       primaryTooltipY: 0,
+      primaryTooltipOffsetTop: false,
+      primaryLabelWidth: 0,
+
       secondaryTooltipText: null,
       secondaryTooltipX: 0,
-      secondaryTooltipY: 0
+      secondaryTooltipY: 0,
+      secondaryTooltipOffsetTop: false,
+      secondaryLabelWidth: 0
     }
 
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
+
+    this.measureChartLabels = this.measureChartLabels.bind(this)
     this.formatY = this.formatY.bind(this)
+  }
+  componentDidMount() {
+    this.measureChartLabels()
+  }
+  measureChartLabels() {
+    this.setState({
+      primaryLabelWidth: this.refs.primaryLabel ? findDOMNode(this.refs.primaryLabel).getBBox().width : 0,
+      secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
+    })
   }
 
   moveMouse(xScale, yScale, primaryData, secondaryData) {
@@ -62,9 +80,10 @@ class AnalysisByTime extends React.Component {
         )
         this.setState({
           primaryTooltipText: tooltipConfig.text,
-
           primaryTooltipX: tooltipConfig.x,
-          primaryTooltipY: tooltipConfig.y
+          primaryTooltipY: tooltipConfig.y,
+          primaryTooltipY: tooltipConfig.y,
+          primaryTooltipOffsetTop: tooltipConfig.top
         })
       }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
@@ -74,10 +93,23 @@ class AnalysisByTime extends React.Component {
         )
         this.setState({
           secondaryTooltipText: tooltipConfig.text,
+          secondaryTooltipX: tooltipConfig.x,
+          secondaryTooltipY: tooltipConfig.y,
+          secondaryTooltipOffsetTop: tooltipConfig.top
         })
       }
     }
   }
+
+  deactivateTooltip() {
+    if (this.props.showTooltip) {
+      this.setState({
+        primaryTooltipText: null,
+        secondaryTooltipText: null
+      })
+    }
+  }
+
   formatY(val) {
     return this.props.yAxisFormat ?
       numeral(val).format(this.props.yAxisFormat)
@@ -145,6 +177,12 @@ class AnalysisByTime extends React.Component {
       .y0(yScale(0))
       .x(d => xScale(d.timestamp))
       .interpolate('monotone')
+
+    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
+      this.state.secondaryLabelWidth
+
+    const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
+      (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
     if(this.props.className) {
@@ -273,12 +311,32 @@ class AnalysisByTime extends React.Component {
           </defs>
         </svg>
 
-        <Legend
+      { this.props.showTooltip && <div className='tooltips'>
+          <Tooltip
+            x={this.state.primaryTooltipX}
+            y={this.state.primaryTooltipY}
+            hidden={!this.state.primaryTooltipText}
+            offsetTop={this.state.primaryTooltipOffsetTop}
+          >
+              {this.state.primaryTooltipText}
+          </Tooltip>
+
+          <Tooltip
+            x={this.state.secondaryTooltipX}
+            y={this.state.secondaryTooltipY}
+            hidden={!this.state.secondaryTooltipText}
+            offsetTop={this.state.secondaryTooltipOffsetTop}
+          >
+            {this.state.secondaryTooltipText}
+          </Tooltip>
+      </div>}
+
+      { this.props.showLegend && <Legend
           primaryLabel={this.props.primaryLabel}
           primaryValue={this.state.primaryTooltipText}
           secondaryLabel={this.props.secondaryLabel}
           secondaryValue={this.state.primaryTooltipText}
-        />
+      />}
       </div>
     )
   }
@@ -296,6 +354,8 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
+  showTooltip: React.PropTypes.bool,
+  showLegend: React.PropTypes.bool,
   stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
