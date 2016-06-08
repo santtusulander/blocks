@@ -19,7 +19,7 @@ describe('Matcher', () => {
     expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy();
   })
 
-  it('should update the parameters as changes happen', () => {
+  it('should update the state as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let matcher = TestUtils.renderIntoDocument(
       <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}/>
@@ -27,8 +27,7 @@ describe('Matcher', () => {
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(matcher, 'input')
     inputs[0].value = 'new'
     TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
-    expect(changeValue.mock.calls[0][1]).toEqual('new')
+    expect(matcher.state.val).toEqual('new')
   })
 
   it('should update the parameters as select change happens', () => {
@@ -37,8 +36,23 @@ describe('Matcher', () => {
       <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}/>
     )
     expect(matcher.state.activeFilter).toBe('exists')
-    matcher.handleSelectChange('activeFilter')('foo')
+    matcher.handleMatchesChange('foo')
     expect(matcher.state.activeFilter).toBe('foo')
-    expect(changeValue.mock.calls[0][1]).toBe('foo')
+  })
+
+  it('should save changes', () => {
+    const changeValue = jest.genMockFunction()
+    const close = jest.genMockFunction()
+    let matcher = TestUtils.renderIntoDocument(
+      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
+        close={close}/>
+    )
+    matcher.setState({
+      val: 'aaa'
+    })
+    matcher.saveChanges()
+    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
+    expect(changeValue.mock.calls[0][1]).toEqual('aaa')
+    expect(close.mock.calls.length).toBe(1)
   })
 })
