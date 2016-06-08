@@ -171,6 +171,7 @@ class ConfigurationPolicies extends React.Component {
         case 'request_cookie':
           activeEditForm = (
             <ConfigurationMatcher
+              contains={true}
               description="Match a cookie like tracking"
               name="Cookie"
               {...matcherProps}/>
@@ -179,6 +180,7 @@ class ConfigurationPolicies extends React.Component {
         case 'request_query':
           activeEditForm = (
             <ConfigurationMatcher
+              contains={true}
               description="Match a query string like sessionID"
               name="Query String"
               {...matcherProps}/>
