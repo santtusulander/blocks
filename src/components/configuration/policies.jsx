@@ -53,6 +53,7 @@ class ConfigurationPolicies extends React.Component {
     this.activateMatch = this.activateMatch.bind(this)
     this.activateRule = this.activateRule.bind(this)
     this.activateSet = this.activateSet.bind(this)
+    this.clearActiveMatchSet = this.clearActiveMatchSet.bind(this)
   }
   addRule(e) {
     e.preventDefault()
@@ -123,6 +124,12 @@ class ConfigurationPolicies extends React.Component {
       activeSetPath: path
     })
   }
+  clearActiveMatchSet() {
+    this.setState({
+      activeMatchPath: null,
+      activeSetPath: null
+    })
+  }
   render() {
     let config = this.props.config;
     if(!config || !config.size) {
@@ -138,49 +145,54 @@ class ConfigurationPolicies extends React.Component {
           activeEditForm = (
             <ConfigurationMatchHeader
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               match={activeMatch}
               path={this.state.activeMatchPath}/>
           )
-        break
+          break
         case 'request_path':
           activeEditForm = (
             <ConfigurationMatchDirectoryPath
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               match={activeMatch}
               path={this.state.activeMatchPath}/>
           )
-        break
+          break
         case 'request_host':
           activeEditForm = (
             <ConfigurationMatchHostname
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               match={activeMatch}
               path={this.state.activeMatchPath}/>
           )
-        break
+          break
         case 'request_cookie':
           activeEditForm = (
             <ConfigurationMatchCookie
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               match={activeMatch}
               path={this.state.activeMatchPath}/>
           )
-        break
+          break
         case 'request_query':
           activeEditForm = (
             <ConfigurationMatchQueryString
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               match={activeMatch}
               path={this.state.activeMatchPath}/>
           )
-        break
+          break
         default:
           activeEditForm = (
             <MatchesSelection
               path={this.state.activeMatchPath}
               changeValue={this.props.changeValue}/>
           )
-        break
+          break
 
 
             // <ConfigurationMatchMimeType
@@ -200,26 +212,29 @@ class ConfigurationPolicies extends React.Component {
           activeEditForm = (
             <ConfigurationActionCacheKeyQueryString
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               path={this.state.activeSetPath}
               set={activeSet}/>
           )
-        break
+          break
         case 'cache_control':
           activeEditForm = (
             <ConfigurationActionCache
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               path={this.state.activeSetPath}
               set={activeSet}/>
           )
-        break
+          break
         case 'header':
           activeEditForm = (
             <ConfigurationActionHeader
               changeValue={this.props.changeValue}
+              close={this.clearActiveMatchSet}
               path={this.state.activeSetPath}
               set={activeSet}/>
           )
-        break
+          break
         default:
           activeEditForm = (
             <ActionsSelection
@@ -228,7 +243,7 @@ class ConfigurationPolicies extends React.Component {
               path={this.state.activeSetPath}
               changeValue={this.props.changeValue}/>
           )
-        break
+          break
             // <ConfigurationActionRedirection
             //   changeValue={this.props.changeValue}/>
             // <ConfigurationActionOriginHostname

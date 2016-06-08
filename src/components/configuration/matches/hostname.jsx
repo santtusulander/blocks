@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Input, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -9,24 +9,28 @@ class Hostname extends React.Component {
     super(props);
 
     this.state = {
-      activeFilter: 'matches'
+      activeFilter: 'matches',
+      hostname: props.match.get('cases').get(0).get(0)
     }
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleHostnameChange = this.handleHostnameChange.bind(this)
+    this.handleMatchesChange = this.handleMatchesChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
-    return e => {
-      this.props.changeValue(path, e.target.value)
-    }
+  handleHostnameChange(e) {
+    this.setState({hostname: e.target.value})
   }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
-    }
+  handleMatchesChange(value) {
+    this.setState({
+      activeFilter: value
+    })
+  }
+  saveChanges() {
+    this.props.changeValue(
+      this.props.path.concat(['cases', 0, 0]),
+      this.state.hostname
+    )
+    this.props.close()
   }
   render() {
     return (
@@ -40,20 +44,24 @@ class Hostname extends React.Component {
           <Input type="text" label="Hostname"
             placeholder="Enter Hostname"
             id="matches_hostname"
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
+            value={this.state.hostname}
+            onChange={this.handleHostnameChange}/>
 
           <Select className="input-select"
-            onSelect={this.handleSelectChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'hostname']
-            )}
+            onSelect={this.handleMatchesChange}
             value={this.state.activeFilter}
             options={[
               ['matches', 'Matches'],
               ['does_not_match', 'Does not match']]}/>
 
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
         </Modal.Body>
       </div>
     )
@@ -63,6 +71,7 @@ class Hostname extends React.Component {
 Hostname.displayName = 'Hostname'
 Hostname.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal, Panel } from 'react-bootstrap'
+import { Button, ButtonToolbar, Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -9,24 +9,34 @@ class QueryString extends React.Component {
     super(props);
 
     this.state = {
-      activeFilter: 'exists'
+      activeFilter: 'exists',
+      containsVal: '',
+      queryString: props.match.get('cases').get(0).get(0)
     }
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleQueryStringChange = this.handleQueryStringChange.bind(this)
+    this.handleMatchesChange = this.handleMatchesChange.bind(this)
+    this.handleContainsValChange = this.handleContainsValChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
-    return e => {
-      this.props.changeValue(path, e.target.value)
-    }
+  handleQueryStringChange(e) {
+    this.setState({queryString: e.target.value})
   }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
-    }
+  handleContainsValChange(e) {
+    this.setState({containsVal: e.target.value})
+  }
+  handleMatchesChange(value) {
+    this.setState({
+      activeFilter: value,
+      containsVal: ''
+    })
+  }
+  saveChanges() {
+    this.props.changeValue(
+      this.props.path.concat(['cases', 0, 0]),
+      this.state.queryString
+    )
+    this.props.close()
   }
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
@@ -42,22 +52,16 @@ class QueryString extends React.Component {
           <Input type="text" label="Name"
             placeholder="Enter Query String"
             id="matches_query-string"
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
-
+            value={this.state.queryString}
+            onChange={this.handleQueryStringChange}/>
           <hr />
-
 
           <div className="form-groups">
             <div className={'input-connector no-label' +
               (hasContainingRule ? ' show' : '')}></div>
             <div className="form-group">
               <Select className="input-select"
-                onSelect={this.handleSelectChange(
-                  ['edge_configuration', 'cache_rule', 'matches', 'query_string_rule']
-                )}
+                onSelect={this.handleMatchesChange}
                 value={this.state.activeFilter}
                 options={[
                   ['exists', 'Exists'],
@@ -69,11 +73,19 @@ class QueryString extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Value"
-                onChange={this.handleChange(
-                  ['edge_configuration', 'cache_rule', 'matches', 'query_string_rule_value']
-                )}/>
+                value={this.state.containsVal}
+                onChange={this.handleContainsValChange}/>
             </Panel>
           </div>
+
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
 
         </Modal.Body>
       </div>
@@ -84,6 +96,7 @@ class QueryString extends React.Component {
 QueryString.displayName = 'QueryString'
 QueryString.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }
