@@ -10,15 +10,11 @@ import ConfigurationSidebar from './sidebar'
 import MatchesSelection from './matches-selection'
 import ActionsSelection from './actions-selection'
 
-import ConfigurationMatchHostname from './matches/hostname'
-import ConfigurationMatchDirectoryPath from './matches/directory-path'
 import ConfigurationMatchMimeType from './matches/mime-type'
 import ConfigurationMatchFileExtension from './matches/file-extension'
 import ConfigurationMatchFileName from './matches/file-name'
-import ConfigurationMatchQueryString from './matches/query-string'
-import ConfigurationMatchHeader from './matches/header'
-import ConfigurationMatchCookie from './matches/cookie'
 import ConfigurationMatchIpAddress from './matches/ip-address'
+import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
@@ -140,50 +136,52 @@ class ConfigurationPolicies extends React.Component {
     let activeEditForm = null
     if(this.state.activeMatchPath) {
       const activeMatch = this.props.config.getIn(this.state.activeMatchPath)
+      const matcherProps = {
+        changeValue: this.props.changeValue,
+        close: this.clearActiveMatchSet,
+        match: activeMatch,
+        path: this.state.activeMatchPath
+      }
       switch(activeMatch.get('field')) {
         case 'request_header':
           activeEditForm = (
-            <ConfigurationMatchHeader
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              match={activeMatch}
-              path={this.state.activeMatchPath}/>
+            <ConfigurationMatcher
+              contains={true}
+              description="Match a header like originvalue"
+              name="Header"
+              {...matcherProps}/>
           )
           break
         case 'request_path':
           activeEditForm = (
-            <ConfigurationMatchDirectoryPath
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              match={activeMatch}
-              path={this.state.activeMatchPath}/>
+            <ConfigurationMatcher
+              description="Match a directory path like /wp-admin/"
+              name="Directory Path"
+              {...matcherProps}/>
           )
           break
         case 'request_host':
           activeEditForm = (
-            <ConfigurationMatchHostname
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              match={activeMatch}
-              path={this.state.activeMatchPath}/>
+            <ConfigurationMatcher
+              description="Match a hostname like www.foobar.com"
+              name="Hostname"
+              {...matcherProps}/>
           )
           break
         case 'request_cookie':
           activeEditForm = (
-            <ConfigurationMatchCookie
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              match={activeMatch}
-              path={this.state.activeMatchPath}/>
+            <ConfigurationMatcher
+              description="Match a cookie like tracking"
+              name="Cookie"
+              {...matcherProps}/>
           )
           break
         case 'request_query':
           activeEditForm = (
-            <ConfigurationMatchQueryString
-              changeValue={this.props.changeValue}
-              close={this.clearActiveMatchSet}
-              match={activeMatch}
-              path={this.state.activeMatchPath}/>
+            <ConfigurationMatcher
+              description="Match a query string like sessionID"
+              name="Query String"
+              {...matcherProps}/>
           )
           break
         default:
