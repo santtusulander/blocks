@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, Input, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -116,20 +116,29 @@ class Header extends React.Component {
 
           </div>
 
-        <hr />
+          <hr />
 
-        <div className="form-group">
-          <label className="control-label">Direction</label>
-          <Select className="input-select"
-            onSelect={this.handleSelectChange('activeDirection',
-              ['edge_configuration', 'cache_rule', 'actions', 'header_direction']
-            )}
-            value={this.state.activeDirection}
-            options={[
-              ['to_origin', 'To Origin'],
-              ['to_client', 'To Client'],
-              ['to_both', 'To Both']]}/>
-        </div>
+          <div className="form-group">
+            <label className="control-label">Direction</label>
+            <Select className="input-select"
+              onSelect={this.handleSelectChange('activeDirection',
+                ['edge_configuration', 'cache_rule', 'actions', 'header_direction']
+              )}
+              value={this.state.activeDirection}
+              options={[
+                ['to_origin', 'To Origin'],
+                ['to_client', 'To Client'],
+                ['to_both', 'To Both']]}/>
+          </div>
+
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.props.close}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
 
         </Modal.Body>
       </div>
@@ -140,6 +149,7 @@ class Header extends React.Component {
 Header.displayName = 'Header'
 Header.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   path: React.PropTypes.array,
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
