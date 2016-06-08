@@ -212,7 +212,7 @@ function mapDispatchToProps(dispatch) {
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   function fetchAccountData(account, accounts) {
-    if(accounts.isEmpty()) {
+    if(accounts && accounts.isEmpty()) {
       accountActions.fetchAccounts('udn')
     }
     if(account) {

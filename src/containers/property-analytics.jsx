@@ -77,7 +77,7 @@ export class PropertyAnalytics extends React.Component {
       <AnalyticsPage
         activeName={propertyName}
         changeDateRange={this.changeDateRange}
-        changeSPChartType={this.props.uiActions.changeSPChartType}
+        changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${propertyName} - ${moment().format()}`}
@@ -86,11 +86,12 @@ export class PropertyAnalytics extends React.Component {
         fileErrorURLs={this.props.fileErrorURLs}
         metrics={metrics}
         onOffNet={this.props.onOffNet}
+        onOffNetChartType={this.props.onOffNetChartType}
         onOffNetToday={this.props.onOffNetToday}
         reportsFetching={this.props.reportsFetching}
+        serviceProviders={this.props.serviceProviders}
         serviceTypes={this.props.serviceTypes}
         siblings={availableHosts}
-        spChartType={this.props.spChartType}
         startDate={this.state.startDate}
         storageStats={this.props.storageStats}
         toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
@@ -122,11 +123,12 @@ PropertyAnalytics.propTypes = {
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  spChartType: React.PropTypes.string,
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -151,10 +153,11 @@ function mapStateToProps(state) {
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('hostMetrics'),
     onOffNet: state.traffic.get('onOffNet'),
+    onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
     reportsFetching: state.reports.get('fetching'),
+    serviceProviders: state.traffic.get('serviceProviders'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
-    spChartType: state.ui.get('analysisSPChartType'),
     storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -210,6 +213,7 @@ function mapDispatchToProps(dispatch, ownProps) {
       trafficActions.fetchTotalEgress(fetchOpts),
       trafficActions.fetchOnOffNet(onOffOpts),
       trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      trafficActions.fetchServiceProviders(onOffOpts),
       trafficActions.fetchStorage()
     ]).then(trafficActions.finishFetching)
     Promise.all([
