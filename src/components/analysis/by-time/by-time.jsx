@@ -363,4 +363,9 @@ AnalysisByTime.propTypes = {
   yAxisFormat: React.PropTypes.string
 }
 
+AnalysisByTime.defaultProps = {
+  showTooltip: true,
+  showLegend: false
+}
+
 module.exports = AnalysisByTime
