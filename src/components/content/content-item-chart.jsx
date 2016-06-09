@@ -5,10 +5,10 @@ import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconConfiguration from '../components/icons/icon-configuration.jsx'
+import IconChart from '../icons/icon-chart.jsx'
+import IconConfiguration from '../icons/icon-configuration.jsx'
 
-import LoadingSpinner from '../components/loading-spinner/loading-spinner.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 
 class ContentItemChart extends React.Component {
   constructor(props) {

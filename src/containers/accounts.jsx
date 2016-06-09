@@ -10,7 +10,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
 
-import ContentItems from '../components/content-items'
+import ContentItems from '../components/content/content-items'
 // Not in 0.5 import EditAccount from '../components/edit-account'
 // Not in 0.5 import { Link } from 'react-router'
 // Not in 0.5 import IconChart from '../components/icons/icon-chart.jsx'

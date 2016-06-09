@@ -10,7 +10,7 @@ import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import ContentItems from '../components/content-items'
+import ContentItems from '../components/content/content-items'
 
 export class Hosts extends React.Component {
   constructor(props) {
