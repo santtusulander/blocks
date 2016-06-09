@@ -2,7 +2,7 @@
 // =====================
 
 .modal-dialog.export-sidebar {
-  @extend .modal-dialog.configuration-sidebar;
+  @extend .configuration-sidebar;
 
   .modal-body {
     padding: 0 $bar-height !important;

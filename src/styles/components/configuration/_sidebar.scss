@@ -53,12 +53,16 @@
       max-width: $sm-configuration-sidebar-width;
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       color: $dt-text-color;
       background-color: $black;
       background-image: linear-gradient(rgba($pale-blue, 0.7),
         rgba($ericsson-dark-blue, 0.7));
+      background-size: 100%;
+    }
+    .light-theme & {
+      color: $lt-text-color;
+      background-color: $silver-20;
       background-size: 100%;
     }
   }
@@ -78,9 +82,12 @@
       padding: 40px ($md-bar-height / 2) 0;
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       background: rgba($pale-blue, 0.2);
+    }
+    .light-theme & {
+      color: $white;
+      background: $pale-blue;
     }
   }
 
