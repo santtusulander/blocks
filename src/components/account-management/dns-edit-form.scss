@@ -2,7 +2,7 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-.dns-edit-form {
+.dns-edit-form-sidebar {
   @extend .configuration-sidebar;
 
   .input-group-addon {

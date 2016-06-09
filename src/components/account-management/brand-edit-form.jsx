@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form'
 import SelectWrapper from '../select-wrapper.jsx'
 import UDNFileInput from '../udn-file-input.jsx'
 
-import './brands-edit-form.scss'
+import './brand-edit-form.scss'
 
 
 const fakeThemes = [
@@ -30,7 +30,7 @@ const validate = (values) => {
   return errors;
 }
 
-const BrandsEditForm = (props) => {
+const BrandEditForm = (props) => {
 
   const title = props.edit ? 'Edit Brand' : 'New Brand'
   const actionButtonTitle = props.edit ? 'Save' : 'Add'
@@ -111,9 +111,9 @@ const BrandsEditForm = (props) => {
   )
 }
 
-BrandsEditForm.displayName = 'BrandsEditForm'
+BrandEditForm.displayName = 'BrandEditForm'
 
-BrandsEditForm.propTypes = {
+BrandEditForm.propTypes = {
   edit: React.PropTypes.bool,
   fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
@@ -121,7 +121,7 @@ BrandsEditForm.propTypes = {
 }
 
 export default reduxForm({
-  form: 'brands-edit',
+  form: 'brand-edit',
   fields: ['brandName', 'brandLogo', 'favicon', 'colorTheme', 'availability'],
   validate
-})(BrandsEditForm)
+})(BrandEditForm)

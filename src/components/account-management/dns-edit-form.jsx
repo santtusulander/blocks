@@ -36,7 +36,7 @@ class DnsEditForm extends Component {
 
     return (
 
-      <Modal show={true} dialogClassName="soa-form-sidebar">
+      <Modal show={true} dialogClassName="dns-edit-form-sidebar">
 
         <Modal.Header>
           <h1>{title}</h1>
