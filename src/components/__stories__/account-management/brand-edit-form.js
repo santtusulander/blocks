@@ -6,7 +6,7 @@ import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import BrandsEditForm from '../../account-management/brands-edit-form.jsx'
+import BrandEditForm from '../../account-management/brand-edit-form.jsx'
 
 const reducers = {
   form: formReducer
@@ -17,7 +17,7 @@ const store = createStore(reducer);
 
 storiesOf('AccountManagement', module)
   .addDecorator((story) => (
-    <ThemeWrap theme='light'>
+    <ThemeWrap>
       <Provider store={store}>
         <div style={{width: '70%', padding: '3%', border: '1px solid #ccc'}}>
           {story()}
@@ -25,6 +25,6 @@ storiesOf('AccountManagement', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('BrandsEditForm', () => (
-    <BrandsEditForm show={true} onSave={action('onSave')} onCancel={action('onCancel')}  />
+  .add('BrandEditForm', () => (
+    <BrandEditForm show={true} onSave={action('onSave')} onCancel={action('onCancel')}  />
   ))
