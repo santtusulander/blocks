@@ -1,0 +1,41 @@
+@import '../../styles/base/colors';
+@import '../../styles/base/variables';
+@import '../../styles/components/configuration/sidebar';
+
+.brands-edit-sidebar {
+  @extend .configuration-sidebar;
+
+  .input-group-addon {
+    width: auto;
+    padding-left: 10px;
+  }
+
+  /* FILE INPUTS - maybe defining global styles would be better ? */
+
+  .file-input input{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .file-input label.file-input-label {
+    @extend .btn-primary;
+    font-weight: normal;
+    height: 40px;
+    min-width: 120px;
+    padding: 0 20px;
+    line-height: 40px;
+  }
+
+  .file-input input:focus  .file-input-label,
+  .file-input .file-input-label:hover {
+    color: #00a9d4;
+    fill: #00a9d4;
+    stroke: #00a9d4;
+  }
+
+}
+
