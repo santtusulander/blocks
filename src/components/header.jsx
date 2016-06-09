@@ -144,8 +144,6 @@ class Header extends React.Component {
                       <li key={i}
                         active={activeAccount === account.get('id')}>
                         <Link
-                          className={activeAccount === account.get('id') &&
-                            contentActive ? 'active' : ''}
                           to={`/content/groups/udn/${account.get('id')}`}
                           activeClassName="active"
                           onClick={this.toggleAccountMenu}>
