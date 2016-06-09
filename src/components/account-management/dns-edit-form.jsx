@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Input, ButtonToolbar, Button, Label } from 'react-bootstrap'
+import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
 import recordTypes from '../../constants/dns-record-types.js'
@@ -36,7 +36,7 @@ class DnsEditForm extends Component {
 
     return (
 
-      <Modal show={true} dialogClassName="soa-form-sidebar">
+      <Modal show={true} dialogClassName="dns-edit-form-sidebar">
 
         <Modal.Header>
           <h1>{title}</h1>
@@ -87,7 +87,7 @@ class DnsEditForm extends Component {
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
 
             <ButtonToolbar className="text-right extra-margin-top">
-              <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+              <Button className="btn-outline" onClick={props.onCancel}>Cancel</Button>
               <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
             </ButtonToolbar>
           </form>
@@ -103,7 +103,7 @@ DnsEditForm.propTypes = {
   edit: React.PropTypes.bool,
   fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
-  onSave: React.PropTypes.func,
+  onSave: React.PropTypes.func
 }
 
 export default reduxForm({

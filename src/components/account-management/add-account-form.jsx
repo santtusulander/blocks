@@ -41,14 +41,14 @@ const NewAccountForm = (props) => {
   const { fields: { accountBrand, accountName, accountType, serviceType }, show, onCancel, onSave } = props
 
   return (
-    <Modal dialogClassName='account-management-new-account' show={show}>
+    <Modal dialogClassName="add-account-form-sidebar" show={show}>
       <Modal.Header>
         <h1>Add new account</h1>
         <p>Lorem ipsum</p>
       </Modal.Header>
 
       <Modal.Body>
-        <form className='new-account-form'>
+        <form>
 
           <Input
             {...accountName}
@@ -82,8 +82,8 @@ const NewAccountForm = (props) => {
           })
           }
 
-          <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" className="btn-outline" onClick={onCancel}>Cancel</Button>
+          <ButtonToolbar className="text-right extra-margin-top">
+            <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
             <Button disabled={!!Object.keys(errors).length} bsStyle="primary" onClick={onSave}>Add</Button>
           </ButtonToolbar>
         </form>
