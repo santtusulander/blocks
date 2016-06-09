@@ -8,14 +8,9 @@
       width: 15%;
     }
   }
-
 }
 
-.dns-edit-form-sidebar {
+/* FIX for account management forms to properly extend configuration sidebar  --- some load order issue ? */
+.dns-edit-form-sidebar, .add-account-form-sidebar, .roles-edit-form {
   @extend .configuration-sidebar;
-
-  .input-group-addon {
-    width: auto;
-    padding-left: 10px;
-  }
 }

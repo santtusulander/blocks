@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Input, ButtonToolbar, Button, Label } from 'react-bootstrap'
+import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
 import recordTypes from '../../constants/dns-record-types.js'

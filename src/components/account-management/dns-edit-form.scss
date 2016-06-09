@@ -3,7 +3,7 @@
 @import '../../styles/components/configuration/sidebar';
 
 .dns-edit-form-sidebar {
-  @extend .configuration-sidebar;
+  @extend .modal-dialog.configuration-sidebar;
 
   .input-group-addon {
     width: auto;
