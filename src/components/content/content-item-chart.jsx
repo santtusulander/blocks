@@ -181,7 +181,6 @@ class ContentItemChart extends React.Component {
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
-            <div className="glow"></div>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
