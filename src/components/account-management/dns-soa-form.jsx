@@ -101,7 +101,6 @@ export const SoaEditForm = props => {
           <ButtonToolbar className="text-right extra-margin-top">
             <UDNButton
               id="cancel_button"
-              bsStyle="primary"
               outLine={true}
               onClick={onCancel}>
               Cancel

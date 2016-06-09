@@ -19,9 +19,11 @@
     + li {
       border-top: 1px solid;
 
-      .dark-theme &,
-      .light-theme & {
+      .dark-theme & {
         border-color: rgba($pale-blue, 0.2);
+      }
+      .light-theme & {
+        border-color: $silver-20;
       }
     }
 
@@ -103,9 +105,11 @@
       margin-left: 11px;
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       border-left-color: $dt-text-color;
+    }
+    .light-theme & {
+      border-left-color: $white;
     }
   }
 }

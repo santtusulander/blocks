@@ -67,7 +67,7 @@ export class ExportFileForm extends React.Component {
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={ this.onCancel }>Cancel</Button>
+          <Button className="btn-outline" onClick={ this.onCancel }>Cancel</Button>
           <Button type="submit" bsStyle="primary" onClick={ this.onDownload(this.state.fileType) }>Download</Button>
         </ButtonToolbar>
 

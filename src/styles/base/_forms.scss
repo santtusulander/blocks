@@ -30,8 +30,7 @@ label {
     display: none;
   }
 
-  .dark-theme &,
-  .light-theme .configuration-sidebar & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: rgba($black, 0.2);
 
@@ -42,6 +41,24 @@ label {
 
     &::placeholder {
       color: rgba($dt-text-color, 0.3);
+
+      @include print {
+        color: transparent;
+      }
+    }
+  }
+
+  .light-theme .configuration-sidebar & {
+    color: $lt-text-color;
+    background-color: $white;
+
+    &:focus,
+    &:active {
+      box-shadow: inset 0 0 0 1px $pale-blue;
+    }
+
+    &::placeholder {
+      color: rgba($lt-text-color, 0.3);
 
       @include print {
         color: transparent;
