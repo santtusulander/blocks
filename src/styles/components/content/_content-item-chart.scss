@@ -40,6 +40,15 @@
       visibility: visible;
       transition: opacity 250ms;
     }
+
+    .hover-info {
+      opacity: 1;
+    }
+  }
+
+  .hover-info {
+    opacity: 0;
+    transition: opacity 200ms;
   }
 
   .content-item-chart-link {
@@ -162,6 +171,16 @@
 
     .light-theme & {
       fill: $silver-40;
+    }
+  }
+
+  .day-arc {
+    opacity: 0.1;
+    transition: opacity 200ms;
+    fill: $pale-blue;
+
+    &:hover {
+      opacity: 0.4;
     }
   }
 

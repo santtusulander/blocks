@@ -10,6 +10,31 @@ import IconConfiguration from '../icons/icon-configuration.jsx'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 
+const dayHours = 24
+const rayHours = 3
+
+function groupData(rawData, groupSize, key) {
+  return rawData.reduce( (points, data, i) => {
+
+    let val
+
+    if (key) {
+      val = data[key] || 0
+    } else {
+      val = data || 0
+    }
+
+    if (!(i % groupSize)) {
+      points.push(val)
+    } else {
+      points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
+    }
+
+    return points
+
+  }, [])
+}
+
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
@@ -26,36 +51,20 @@ class ContentItemChart extends React.Component {
     }
   }
 
-  groupData(rawData, groupSize, key) {
-    return rawData.reduce( (points, data, i) => {
-
-      let val
-
-      if (key) {
-        val = data[key] || 0
-      } else {
-        val = data || 0
-      }
-
-      if (!(i % groupSize)) {
-        points.push(val)
-      } else {
-        points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
-      }
-
-      return points
-
-    }, [])
-  }
-
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
 
-    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bytes');
-    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bytes');
-    const differenceData = this.groupData(this.props.differenceData.toJS(), 24);
+    const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bytes');
+    const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bytes');
+    const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
+    const dayData = groupData(this.props.primaryData.toJS(), dayHours, 'bytes');
+    const daySlices = dayData.reduce(slices => {
+      slices.push((dayHours/rayHours)*2)
+      slices.push(1)
+      return slices
+    }, [])
 
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
@@ -119,7 +128,12 @@ class ContentItemChart extends React.Component {
       })
       .interpolate('basis')
     const pie = d3.layout.pie().sort(null)
-    const arc = d3.svg.arc().innerRadius(innerRadius - 9).outerRadius(innerRadius);
+    const differenceArc = d3.svg.arc()
+      .innerRadius(innerRadius - 9)
+      .outerRadius(innerRadius);
+    const dayArc = d3.svg.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
     const tooltip =
       (<Tooltip className="content-item-chart-tooltip"
         id={'tooltip-' + (this.props.id)}>
@@ -242,7 +256,8 @@ class ContentItemChart extends React.Component {
                           data === 0 ? 'avg' :
                           data > 0 ? 'above-avg' : ''
                         return (
-                          <path key={i} d={arc(arcs)} className={style} />
+                          <path key={i} d={differenceArc(arcs)}
+                            className={style} />
                         )
                       })
                     }
@@ -250,6 +265,22 @@ class ContentItemChart extends React.Component {
                 </svg>
               : ''}
             </ReactCSSTransitionGroup>
+            <div className="hover-info">
+              <svg className="content-item-chart-svg"
+                viewBox={differenceArcViewBox}>
+                {pie(daySlices).reduce((slices, arc, i) => {
+                  if(!(i % 2)) {
+                    const data = dayData[Math.floor(i / 2)]
+                    if(data) {
+                      slices.push(
+                        <path key={i} className="day-arc" d={dayArc(arc)}/>
+                      )
+                    }
+                  }
+                  return slices
+                }, [])}
+              </svg>
+            </div>
             <div className="text-content"
               style={{width: innerRadius * 2 - 20, height: innerRadius * 2 - 20}}>
               <div className="content-item-traffic"
