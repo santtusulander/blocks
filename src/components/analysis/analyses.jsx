@@ -8,6 +8,7 @@ import { Link } from 'react-router'
 import Select from '../../components/select'
 import DateRanges from '../../constants/date-ranges'
 import TabTitles from '../../constants/report-tab-titles'
+import STATUS_CODES from '../../constants/status-codes'
 
 const handleReportTitleChange = (tab, type) => {
   if(TabTitles.hasOwnProperty(tab)) {
@@ -329,18 +330,12 @@ export class Analyses extends React.Component {
             </div>
             <div className="sidebar-content">
               <Input type="checkbox" label="All"/>
-              <Input type="checkbox" label="401"/>
-              <Input type="checkbox" label="402"/>
-              <Input type="checkbox" label="403"/>
-              <Input type="checkbox" label="404"/>
-              <Input type="checkbox" label="405"/>
-              <Input type="checkbox" label="411"/>
-              <Input type="checkbox" label="412"/>
-              <Input type="checkbox" label="413"/>
-              <Input type="checkbox" label="500"/>
-              <Input type="checkbox" label="501"/>
-              <Input type="checkbox" label="502"/>
-              <Input type="checkbox" label="503"/>
+              {STATUS_CODES.map((code, index) =>
+                <Input type="checkbox" key={index} label={code}
+                  checked={this.props.statusCodes.includes(code)}
+                  onChange={() => this.props.toggleStatusCode(code)}
+                  />
+              )}
             </div>
             <div className="sidebar-section-header">
               PROPERTIES
@@ -397,7 +392,9 @@ Analyses.propTypes   = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   showExportPanel: React.PropTypes.func,
   startDate: React.PropTypes.instanceOf(moment),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   toggleServiceType: React.PropTypes.func,
+  toggleStatusCode: React.PropTypes.func,
   type: React.PropTypes.string
 }
 

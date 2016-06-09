@@ -6,10 +6,14 @@ const REPORTS_START_FETCH = 'REPORTS_START_FETCH'
 const REPORTS_FINISH_FETCH = 'REPORTS_FINISH_FETCH'
 const REPORTS_URL_METRICS_FETCHED = 'REPORTS_URL_METRICS_FETCHED'
 const REPORTS_FILE_ERROR_METRICS_FETCHED = 'REPORTS_FILE_ERROR_METRICS_FETCHED'
+const REPORTS_STATUS_CODE_TOGGLED = 'REPORTS_STATUS_CODE_TOGGLED'
 
+
+import STATUS_CODES from '../../constants/status-codes.js'
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 
 const emptyReports = Immutable.Map({
+  errorStatusCodes: Immutable.fromJS(STATUS_CODES),
   fetching: false,
   fileErrorSummary: Immutable.Map(),
   fileErrorURLs: Immutable.List(),
@@ -29,9 +33,45 @@ export function fetchUrlMetricsFailure(state) {
 }
 
 export function fetchFileErrorMetricsSuccess(state, action) {
+
+  const activeStatusCodes = state.get('errorStatusCodes');
+  console.log(action.payload.data.num_errors)
+  const filteredFileErrorSummary = Immutable.fromJS(action.payload.data.num_errors)
+    .entrySeq().reduce(
+      (totals, summary) => {
+        console.log(totals, summary)
+        const code = parseInt(summary[0].substring(1))
+        if(activeStatusCodes.includes(code)) {
+          totals[code < 500 ? 'clientErrs' : 'serverErrs'].push({
+            code: code,
+            value: summary[1]
+          })
+          return totals
+        }
+      }, {serverErrs: [], clientErrs: []})
+
+
+    const {serverErrs, clientErrs} = this.props.summary.entrySeq().reduce(
+      (totals, summary) => {
+        const code = parseInt(summary[0].substring(1))
+        totals[code < 500 ? 'clientErrs' : 'serverErrs'].push({
+          code: code,
+          value: summary[1]
+        })
+        return totals
+      }, {serverErrs: [], clientErrs: []}
+    )
+
+  let filteredFileErrorUrls = Immutable.List()
+  state.get('errorStatusCodes').forEach(code => {
+    filteredFileErrorUrls = filteredFileErrorUrls.concat(
+      Immutable.fromJS(action.payload.data.url_details)
+        .filter(url => url.get('status_code') === code.toString())
+    )
+  })
   return state.merge({
-    fileErrorSummary: Immutable.fromJS(action.payload.data.num_errors),
-    fileErrorURLs: Immutable.fromJS(action.payload.data.url_details)
+    fileErrorSummary: filteredFileErrorSummary || Immutable.Map(),
+    fileErrorURLs: Immutable.fromJS(filteredFileErrorUrls)
   })
 }
 
@@ -50,6 +90,17 @@ export function finishFetch(state) {
   return state.set('fetching', false)
 }
 
+export function statusCodeToggled(state, action) {
+  let newStatusCodes = state.get('errorStatusCodes')
+  if(newStatusCodes.includes(action.payload)) {
+    newStatusCodes = newStatusCodes.filter(code => code !== action.payload)
+  }
+  else {
+    newStatusCodes = newStatusCodes.push(action.payload)
+  }
+  return state.set('errorStatusCodes', newStatusCodes)
+}
+
 // REDUCERS
 
 export default handleActions({
@@ -61,7 +112,8 @@ export default handleActions({
     fetchFileErrorMetricsFailure
   ),
   REPORTS_START_FETCH: startFetch,
-  REPORTS_FINISH_FETCH: finishFetch
+  REPORTS_FINISH_FETCH: finishFetch,
+  REPORTS_STATUS_CODE_TOGGLED: statusCodeToggled
 }, emptyReports)
 
 // ACTIONS
@@ -77,5 +129,5 @@ export const fetchFileErrorsMetrics = createAction(REPORTS_FILE_ERROR_METRICS_FE
 })
 
 export const startFetching = createAction(REPORTS_START_FETCH)
-
 export const finishFetching = createAction(REPORTS_FINISH_FETCH)
+export const toggleStatusCode = createAction(REPORTS_STATUS_CODE_TOGGLED)

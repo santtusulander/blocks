@@ -160,7 +160,9 @@ export class AnalyticsPage extends React.Component {
             serviceTypes={this.props.serviceTypes}
             showExportPanel={this.showExportPanel}
             startDate={this.props.startDate}
+            statusCodes={this.props.statusCodes}
             toggleServiceType={this.props.toggleAnalysisServiceType}
+            toggleStatusCode={this.props.toggleAnalysisStatusCode}
             type={this.props.type}
           />
 
@@ -210,6 +212,7 @@ export class AnalyticsPage extends React.Component {
             {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
                 summary={this.props.fileErrorSummary}
+                serviceTypes={this.props.serviceTypes}
                 urls={this.props.fileErrorURLs}/>
             }
             {this.state.activeTab === 'url-report' &&
@@ -254,8 +257,10 @@ AnalyticsPage.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   siblings: React.PropTypes.instanceOf(Immutable.List),
   startDate: React.PropTypes.instanceOf(moment),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   toggleAnalysisServiceType: React.PropTypes.func,
+  toggleAnalysisStatusCode: React.PropTypes.func,
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
