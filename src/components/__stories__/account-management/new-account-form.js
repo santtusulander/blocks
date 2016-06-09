@@ -8,7 +8,7 @@ import {Provider} from 'react-redux'
 import ThemeWrap from '../theme-wrap.jsx'
 
 import AccountManagementFormContainer from '../../account-management/form-container.jsx'
-import NewAccountForm from '../../account-management/new-account-form.jsx'
+import NewAccountForm from '../../account-management/add-account-form.jsx'
 
 const reducers = {
   form: formReducer
