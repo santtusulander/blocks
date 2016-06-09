@@ -19,7 +19,7 @@ describe('Cache', () => {
     expect(TestUtils.isCompositeComponent(cache)).toBeTruthy();
   })
 
-  it('should update the parameters as changes happen', () => {
+  it('should update the state as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let cache = TestUtils.renderIntoDocument(
       <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}/>
@@ -27,7 +27,32 @@ describe('Cache', () => {
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cache, 'input')
     inputs[0].value = 'new'
     TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'max_age'])
-    expect(changeValue.mock.calls[0][1]).toEqual('new')
+    expect(cache.state.maxAge).toEqual('new')
+  })
+
+  it('should save changes', () => {
+    const changeValue = jest.genMockFunction()
+    const close = jest.genMockFunction()
+    const expectedSave = Immutable.fromJS({
+      cases: [[ "foo" ]],
+      check_etag: 'aaa',
+      honor_origin: 'bbb',
+      max_age: 'ccc',
+      no_store: 'ddd'
+    })
+    let cache = TestUtils.renderIntoDocument(
+      <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
+        close={close}/>
+    )
+    cache.setState({
+      checkEtag: 'aaa',
+      honorOrigin: 'bbb',
+      maxAge: 'ccc',
+      noStore: 'ddd'
+    })
+    cache.saveChanges()
+    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar'])
+    expect(Immutable.is(changeValue.mock.calls[0][1], expectedSave)).toBeTruthy()
+    expect(close.mock.calls.length).toBe(1)
   })
 })

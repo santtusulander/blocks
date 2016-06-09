@@ -1,3 +1,4 @@
+/* DECRECATED */
 import React from 'react'
 
 class AnalysisLineLabel extends React.Component {

@@ -136,7 +136,10 @@ class AnalysisVisitors extends React.Component {
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
+              primaryLabel={'Visitors'}
               stacked={true}
+              showLegend={true}
+              showTooltip={false}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>

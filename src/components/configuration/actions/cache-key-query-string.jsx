@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal, Panel } from 'react-bootstrap'
+import { Button, ButtonToolbar, Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -66,6 +66,15 @@ class CacheKeyQueryString extends React.Component {
             </Panel>
           </div>
 
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.props.close}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
+
         </Modal.Body>
       </div>
     )
@@ -75,6 +84,7 @@ class CacheKeyQueryString extends React.Component {
 CacheKeyQueryString.displayName = 'CacheKeyQueryString'
 CacheKeyQueryString.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   path: React.PropTypes.array,
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

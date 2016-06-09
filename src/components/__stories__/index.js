@@ -18,3 +18,4 @@ import './account-management/roles-list'
 import './account-management/new-account-form'
 
 import './content-item-chart'
+import './loading-spinner'

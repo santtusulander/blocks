@@ -160,4 +160,19 @@
       }
     }
   }
+
+  .btn-toolbar {
+    margin-top: 20px;
+  }
+
+  .btn-primary {
+    background-color: rgba($pale-blue, 0.5);
+  }
+
+  .btn-default {
+    color: $white;
+    background-color: transparent;
+    border: 1px solid rgba($pale-blue, 0.5);
+    text-transform: uppercase;
+  }
 }
