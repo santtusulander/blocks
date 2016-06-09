@@ -43,6 +43,9 @@ class ExportEmailForm extends React.Component {
   }
 
   render(){
+
+    const { subject } = this.props
+
     return (
       <form className='ExportEmailForm' onSubmit={this.onSubmit}>
 
@@ -64,7 +67,7 @@ class ExportEmailForm extends React.Component {
         <Input
           type='text'
           label='Subject'
-          placeholder='Trafic overview report'
+          placeholder={subject}
           onChange={this.changeValue(['subject'])}
         />
 

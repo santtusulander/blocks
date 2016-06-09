@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Input, Modal, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, Input, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
@@ -10,29 +10,46 @@ class Cache extends React.Component {
     super(props);
 
     this.state = {
-      activeFilter: 'seconds'
+      checkEtag: props.set.get('check_etag'),
+      honorOrigin: props.set.get('honor_origin'),
+      maxAge: props.set.get('max_age'),
+      noStore: props.set.get('no_store'),
+      ttlType: 'seconds'
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleTTLTypeChange = this.handleTTLTypeChange.bind(this)
+    this.handleToggleChange = this.handleToggleChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
+  handleChange(key) {
     return e => {
-      this.props.changeValue(path, e.target.value)
+      let stateObj = {}
+      stateObj[key] = e.target.value
+      this.setState(stateObj)
     }
   }
-  handleSelectChange(path) {
+  handleTTLTypeChange(value) {
+    this.setState({ttlType: value})
+  }
+  handleToggleChange(key) {
     return value => {
-      this.setState({
-        activeFilter: value
+      let stateObj = {}
+      stateObj[key] = value
+      this.setState(stateObj)
+    }
+  }
+  saveChanges() {
+    this.props.changeValue(
+      this.props.path,
+      this.props.set.merge({
+        check_etag: this.state.checkEtag,
+        max_age: this.state.maxAge,
+        no_store: this.state.noStore,
+        honor_origin: this.state.honorOrigin
       })
-      this.props.changeValue(path, value)
-    }
-  }
-  handleToggleChange(path) {
-    return value => {
-      this.props.changeValue(path, value)
-    }
+    )
+    this.props.close()
   }
   render() {
     return (
@@ -48,10 +65,8 @@ class Cache extends React.Component {
             </Col>
             <Col xs={4}>
               <Toggle className="pull-right"
-                value={this.props.set.get('no_store')}
-                changeValue={this.handleToggleChange(
-                  this.props.path.concat(['no_store'])
-                )}/>
+                value={this.state.noStore}
+                changeValue={this.handleToggleChange('noStore')}/>
             </Col>
           </Row>
 
@@ -63,10 +78,8 @@ class Cache extends React.Component {
             </Col>
             <Col xs={4}>
               <Toggle className="pull-right"
-                value={this.props.set.get('honor_origin')}
-                changeValue={this.handleToggleChange(
-                  this.props.path.concat(['honor_origin'])
-                )}/>
+                value={this.state.honorOrigin}
+                changeValue={this.handleToggleChange('honorOrigin')}/>
             </Col>
           </Row>
 
@@ -78,10 +91,8 @@ class Cache extends React.Component {
             </Col>
             <Col xs={4}>
               <Toggle className="pull-right"
-                value={this.props.set.get('check_etag')}
-                changeValue={this.handleToggleChange(
-                  this.props.path.concat(['check_etag'])
-                )}/>
+                value={this.state.checkEtag}
+                changeValue={this.handleToggleChange('checkEtag')}/>
             </Col>
           </Row>
 
@@ -93,17 +104,13 @@ class Cache extends React.Component {
                 <Input type="number"
                   id="actions_ttl-value-number"
                   placeholder="Enter TTL Value"
-                  value={this.props.set.get('max_age')}
-                  onChange={this.handleChange(
-                    this.props.path.concat(['max_age'])
-                  )}/>
+                  value={this.state.maxAge}
+                  onChange={this.handleChange('maxAge')}/>
               </Col>
               <Col xs={6}>
                 <Select className="input-select"
-                  onSelect={this.handleSelectChange(
-                    ['edge_configuration', 'cache_rule', 'actions', 'ttl_type']
-                  )}
-                  value={this.state.activeFilter}
+                  onSelect={this.handleTTLTypeChange}
+                  value={this.state.ttlType}
                   options={[
                     ['seconds', 'Seconds'],
                     ['minutes', 'Minutes'],
@@ -112,6 +119,15 @@ class Cache extends React.Component {
               </Col>
             </Row>
           </Input>
+
+          <ButtonToolbar className="text-right">
+            <Button bsStyle="default" onClick={this.props.close}>
+              Cancel
+            </Button>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
+              Save Match
+            </Button>
+          </ButtonToolbar>
 
         </Modal.Body>
       </div>
@@ -122,6 +138,7 @@ class Cache extends React.Component {
 Cache.displayName = 'Cache'
 Cache.propTypes = {
   changeValue: React.PropTypes.func,
+  close: React.PropTypes.func,
   path: React.PropTypes.array,
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

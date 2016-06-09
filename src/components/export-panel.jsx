@@ -9,6 +9,7 @@ const EXPORT_EMAIL_TAB = 2
 
 const ExportPanel = (props) => {
   const activeTab = props.exportType === 'export_email' ? EXPORT_EMAIL_TAB : EXPORT_FILE_TAB;
+  const panelTitle = `${props.panelTitle} ${props.panelTitle.indexOf('report') > 0 ? '' : 'report'}`
 
   return (
     <Modal show={props.show}
@@ -18,7 +19,7 @@ const ExportPanel = (props) => {
 
       <Modal.Header>
         <h1>Export</h1>
-        <p>Traffic overview report</p>
+        <p>{panelTitle}</p>
       </Modal.Header>
 
       <Modal.Body>
@@ -28,7 +29,7 @@ const ExportPanel = (props) => {
           </Tab>
 
           <Tab eventKey={EXPORT_EMAIL_TAB} title="Send email" disabled={false}>
-            <ExportEmailForm onSend={props.onSend} onCancel={props.onCancel} />
+            <ExportEmailForm onSend={props.onSend} onCancel={props.onCancel} subject={panelTitle} />
           </Tab>
         </Tabs>
       </Modal.Body>
