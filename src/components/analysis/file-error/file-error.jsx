@@ -8,12 +8,12 @@ import AnalysisURLList from '../url-list'
 const AnalysisFileError = props => {
   const { serviceTypes, statusCodes, summary, urls } = props
   let filteredUrls = List()
-  serviceTypes.forEach(item => {
-    statusCodes.forEach(code => {
+  serviceTypes.forEach(activeServiceType => {
+    statusCodes.forEach(activeStatusCode => {
       filteredUrls = filteredUrls.concat(
         urls.filter(url =>
-          url.get('service_type') === item &&
-          url.get('status_code') === code.toString()
+          url.get('service_type') === activeServiceType &&
+          url.get('status_code') === activeStatusCode.toString()
         )
       )
     })
@@ -39,10 +39,12 @@ const AnalysisFileError = props => {
       <Row>
         <Col xs={12}>
           <AnalysisFileErrorDataBox
+            id="client-errors"
             label="Client errors"
             code="4XX"
             errs={clientErrs}/>
           <AnalysisFileErrorDataBox
+            id="server-errors"
             label="Server errors"
             code="5XX"
             errs={serverErrs}
