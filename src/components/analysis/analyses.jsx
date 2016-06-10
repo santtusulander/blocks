@@ -65,7 +65,7 @@ export class Analyses extends React.Component {
       })
     }
     setTimeout(() => {
-      this.refs.endDateHolder.getElementsByTagName('input')[0].blur()
+      this.handleOnBlur()
     }, 200)
   }
 
