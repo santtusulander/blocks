@@ -9,24 +9,6 @@ const headerCommands = {
 module.exports = {
   commands: [headerCommands],
   elements: {
-    accountMenu: {
-      selector: '#account-menu'
-    },
-    userMenu: {
-      selector: '#user-menu'
-    },
-    username: {
-      selector: '#user-menu-username'
-    },
-    accountManagement: {
-      selector: '#account-management'
-    },
-    logOut: {
-      selector: '#log-out'
-    },
-    //themeDropdown: {
-    //  selector: '.menu-item-theme > button'
-    //},
     content: {
       selector: '#content-link'
     },
@@ -41,6 +23,21 @@ module.exports = {
     },
     purge: {
       selector: '#purge-link'
+    },
+    accountMenu: {
+      selector: '#account-menu'
+    },
+    userMenu: {
+      selector: '#user-menu'
+    },
+    username: {
+      selector: '#user-menu-username'
+    },
+    accountManagement: {
+      selector: '#account-management'
+    },
+    logOut: {
+      selector: '#log-out'
     }
   }
 };
