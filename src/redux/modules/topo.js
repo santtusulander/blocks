@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {topoBase} from '../util'
+import {topoBase, mapReducers} from '../util'
 
 const TOPO_START_FETCH = 'TOPO_START_FETCH'
 const TOPO_COUNTRIES_FETCHED = 'TOPO_COUNTRIES_FETCHED'
@@ -23,66 +23,73 @@ const emptyTopology = Immutable.Map({
 
 // REDUCERS
 
+export function countriesFetchSuccess(state, action) {
+  return state.merge({
+    countries: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function countriesFetchFailure(state) {
+  return state.merge({
+    countries: Immutable.Map(),
+    fetching: false
+  })
+}
+
+export function statesFetchSuccess(state, action) {
+  return state.merge({
+    states: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function statesFetchFailure(state) {
+  return state.merge({
+    states: Immutable.Map(),
+    fetching: false
+  })
+}
+
+export function citiesFetchSuccess(state, action) {
+  return state.merge({
+    cities: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+export function citiesFetchFailure(state) {
+  return state.merge({
+    cities: Immutable.Map(),
+    fetching: false
+  })
+}
+
+export function activeCountryChanged(state, action) {
+  return state.merge({
+    activeCountry: action.payload,
+    activeState: null,
+    states: Immutable.Map(),
+    cities: Immutable.Map()
+  })
+}
+
+export function activeStateChanged(state, action) {
+  return state.merge({
+    activeState: action.payload,
+    cities: Immutable.Map()
+  })
+}
+
+export function fetchStarted(state) {
+  return state.set('fetching', true)
+}
 export default handleActions({
-  TOPO_COUNTRIES_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        countries: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        countries: Immutable.Map(),
-        fetching: false
-      })
-    }
-  },
-  TOPO_STATES_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        states: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        states: Immutable.Map(),
-        fetching: false
-      })
-    }
-  },
-  TOPO_CITIES_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        cities: Immutable.fromJS(action.payload),
-        fetching: false
-      })
-    },
-    throw(state) {
-      return state.merge({
-        cities: Immutable.Map(),
-        fetching: false
-      })
-    }
-  },
-  TOPO_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  TOPO_ACTIVE_COUNTRY_CHANGED: (state, action) => {
-    return state.merge({
-      activeCountry: action.payload,
-      activeState: null,
-      states: Immutable.Map(),
-      cities: Immutable.Map()
-    })
-  },
-  TOPO_ACTIVE_STATE_CHANGED: (state, action) => {
-    return state.merge({
-      activeState: action.payload,
-      cities: Immutable.Map()
-    })
-  }
+  TOPO_COUNTRIES_FETCHED: mapReducers(countriesFetchSuccess, countriesFetchFailure),
+  TOPO_STATES_FETCHED: mapReducers(statesFetchSuccess, statesFetchFailure),
+  TOPO_CITIES_FETCHED: mapReducers(citiesFetchSuccess, citiesFetchFailure),
+  TOPO_START_FETCH: fetchStarted,
+  TOPO_ACTIVE_COUNTRY_CHANGED: activeCountryChanged,
+  TOPO_ACTIVE_STATE_CHANGED: activeStateChanged
 }, emptyTopology)
 
 // ACTIONS

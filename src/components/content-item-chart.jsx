@@ -8,6 +8,8 @@ import { Link } from 'react-router'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 
+import LoadingSpinner from '../components/loading-spinner/loading-spinner.jsx'
+
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +25,7 @@ class ContentItemChart extends React.Component {
       this.setState({ showDiffLegend: hover })
     }
   }
-  
+
   groupData(rawData, groupSize, key) {
     return rawData.reduce( (points, data, i) => {
 
@@ -48,7 +50,7 @@ class ContentItemChart extends React.Component {
 
   render() {
     if (this.props.fetchingMetrics) {
-      return <div id="fetchingMetrics">Loading...</div>
+      return <LoadingSpinner />
     }
 
     const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bytes');

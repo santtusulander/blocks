@@ -20,6 +20,8 @@ import IconChart from './icons/icon-chart.jsx'
 import IconItemList from './icons/icon-item-list.jsx'
 import IconItemChart from './icons/icon-item-chart.jsx'
 
+import LoadingSpinner from './loading-spinner/loading-spinner'
+
 const rangeMin = 400
 const rangeMax = 500
 
@@ -147,9 +149,10 @@ class ContentItems extends React.Component {
           </PageHeader>
 
           <div className="container-fluid body-content">
+
             {this.props.breadcrumbs ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
-              <p className="fetching-info">Loading...</p> : (
+              <LoadingSpinner /> : (
               this.props.contentItems.isEmpty() ?
                 <NoContentItems content={ifNoContent} />
               :

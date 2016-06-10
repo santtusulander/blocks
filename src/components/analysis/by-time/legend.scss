@@ -1,0 +1,43 @@
+@import '../../../styles/base/colors';
+
+.transfer-by-time {
+  position: relative;
+}
+
+.chart-legend {
+  position: absolute;
+  display: table;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  background-color: rgba($black, 0.2);
+
+  .legend-label::before {
+    content: "\2014 ";
+  }
+  .primary {
+    .legend-label::before {
+      color: $pale-blue;
+    }
+  }
+
+  .secondary {
+    .legend-label::before {
+      color: $green;
+    }
+  }
+
+  .legend-value {
+    text-align: right;
+    min-width: 130px;
+    display: inline-block;
+    font-weight: bold;
+    display: table-cell;
+  }
+
+  .legend-item {
+    width: auto;
+    height: 20px;
+    display: table-row;
+  }
+}

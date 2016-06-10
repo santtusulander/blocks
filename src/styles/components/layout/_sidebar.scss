@@ -25,8 +25,7 @@
     display: none;
   }
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
     background-image: linear-gradient(rgba($pale-blue, 0.7),
@@ -37,7 +36,23 @@
       color: $dt-text-color;
 
       &:hover {
+        color: rgba($dt-text-color, 0.1);
+      }
+    }
+  }
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
+    background-size: 100%;
+
+    a {
+      color: $lt-text-color;
+
+      &.active {
         color: $white;
+      }
+      &:hover {
+        color: rgba($black, 0.4);
       }
     }
   }
