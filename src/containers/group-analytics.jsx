@@ -132,7 +132,6 @@ GroupAnalytics.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   statusCodes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
-  toggleAnalysisStatusCode: React.PropTypes.func,
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
