@@ -1,7 +1,6 @@
 import React from 'react'
 
-const AnalysisFileErrorDataBox = ({label, code, errs}) => {
-  return (
+const AnalysisFileErrorDataBox = ({label, code, errs}) =>
   <div className="analysis-data-box">
     <h4>{label}</h4>
     <p>{code}</p>
@@ -16,8 +15,7 @@ const AnalysisFileErrorDataBox = ({label, code, errs}) => {
       })}
     </div>
   </div>
-)
-}
+
 AnalysisFileErrorDataBox.displayName = 'AnalysisFileErrorDataBox'
 AnalysisFileErrorDataBox.propTypes = {
   code: React.PropTypes.string,

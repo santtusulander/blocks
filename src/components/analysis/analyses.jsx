@@ -329,7 +329,10 @@ export class Analyses extends React.Component {
               RESPONSE CODE
             </div>
             <div className="sidebar-content">
-              <Input type="checkbox" label="All"/>
+              <Input type="checkbox"
+                label="All"
+                checked={this.props.statusCodes.size === STATUS_CODES.length}
+                onChange={() => this.props.toggleStatusCode(STATUS_CODES)}/>
               {STATUS_CODES.map((code, index) =>
                 <Input type="checkbox" key={index} label={code}
                   checked={this.props.statusCodes.includes(code)}

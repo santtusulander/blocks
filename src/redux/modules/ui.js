@@ -1,5 +1,5 @@
 import {createAction, handleActions} from 'redux-actions'
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
 
 import STATUS_CODES from '../../constants/status-codes.js'
 
@@ -27,7 +27,7 @@ const docBody = document.body
 
 docBody.className += theme + '-theme'
 
-const defaultUI = Immutable.fromJS({
+const defaultUI = fromJS({
   accountManagementModal: null,
   contentItemSortDirection: 1,
   contentItemSortValuePath: ['metrics', 'totalTraffic'],
@@ -48,13 +48,15 @@ export function accountManagementModalToggled(state, action) {
 }
 
 export function analysisStatusCodeToggled(state, action) {
+  if(action.payload === STATUS_CODES) {
+    return state.get('analysisErrorStatusCodes').size === STATUS_CODES.length ?
+      state.set('analysisErrorStatusCodes', fromJS([])) :
+      state.set('analysisErrorStatusCodes', fromJS(STATUS_CODES))
+  }
   let newStatusCodes = state.get('analysisErrorStatusCodes')
-  if(newStatusCodes.includes(action.payload)) {
-    newStatusCodes = newStatusCodes.filter(code => code !== action.payload)
-  }
-  else {
-    newStatusCodes = newStatusCodes.push(action.payload)
-  }
+  newStatusCodes = newStatusCodes.includes(action.payload) ?
+    newStatusCodes.filter(code => code !== action.payload) :
+    newStatusCodes.push(action.payload)
   return state.set('analysisErrorStatusCodes', newStatusCodes)
 }
 
