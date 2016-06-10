@@ -77,5 +77,4 @@ export const fetchFileErrorsMetrics = createAction(REPORTS_FILE_ERROR_METRICS_FE
 })
 
 export const startFetching = createAction(REPORTS_START_FETCH)
-
 export const finishFetching = createAction(REPORTS_FINISH_FETCH)

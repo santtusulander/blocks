@@ -2,12 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import {shallow,mount} from 'enzyme'
+import jsdom from 'jsdom'
 
 jest.autoMockOff()
 jest.dontMock('../hosts.jsx')
 const Hosts = require('../hosts.jsx').Hosts
 const ContentItemChart = require('../../components/content/content-item-chart.jsx')
 const ContentItemList = require('../../components/content/content-item-list.jsx')
+
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
+global.window = document.defaultView
+
 
 function hostActionsMaker() {
   return {
@@ -75,15 +81,16 @@ describe('Hosts', () => {
   });
 
   it('should show a loading message', () => {
-    let hosts = TestUtils.renderIntoDocument(
+    let hosts = mount(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
         fetchData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(hosts, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
+
+    expect(hosts.find('LoadingSpinner').length).toBe(1)
+
   });
 
   it('should show existing hosts as charts', () => {

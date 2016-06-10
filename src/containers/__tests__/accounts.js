@@ -2,6 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import {shallow,mount} from 'enzyme'
+import jsdom from 'jsdom'
+
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
+global.window = document.defaultView
 
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
@@ -109,7 +114,7 @@ describe('Accounts', () => {
   });
 
   it('should show a loading message', () => {
-    let accounts = TestUtils.renderIntoDocument(
+    let accounts = mount(
       <Accounts
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
@@ -120,8 +125,9 @@ describe('Accounts', () => {
         username="test"
         params={urlParams}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
+    //let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
+    //expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
+    expect(accounts.find('LoadingSpinner').length).toBe(1)
   });
 
   it('should show existing accounts as charts', () => {

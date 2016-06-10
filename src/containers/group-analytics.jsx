@@ -44,7 +44,6 @@ export class GroupAnalytics extends React.Component {
       this.state.endDate
     )
   }
-
   changeDateRange(startDate, endDate) {
     const dateRange =
       endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
@@ -91,10 +90,12 @@ export class GroupAnalytics extends React.Component {
         reportsFetching={this.props.reportsFetching}
         serviceProviders={this.props.serviceProviders}
         serviceTypes={this.props.serviceTypes}
+        statusCodes={this.props.statusCodes}
         siblings={availableGroups}
         startDate={this.state.startDate}
         storageStats={this.props.storageStats}
         toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+        toggleAnalysisStatusCode={this.props.uiActions.toggleAnalysisStatusCode}
         totalEgress={this.props.totalEgress}
         trafficByCountry={this.props.trafficByCountry}
         trafficByTime={this.props.trafficByTime}
@@ -129,6 +130,7 @@ GroupAnalytics.propTypes = {
   reportsFetching: React.PropTypes.bool,
   serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -158,6 +160,7 @@ function mapStateToProps(state) {
     reportsFetching: state.reports.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
+    statusCodes: state.ui.get('analysisErrorStatusCodes'),
     storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
