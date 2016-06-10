@@ -1,13 +1,14 @@
 module.exports = {
+
   'User Logs in': (client) => {
     const loginPage = client.page.loginPage();
-    const accountsPage = client.page.accountsPage();
+    const brandPage = client.page.brandPage();
 
     loginPage
       .navigate()
       .login('test', 'test');
 
-    accountsPage.expect.element('@pageHeader').text
+    brandPage.expect.element('@pageHeader').text
       .to.contain('BRAND CONTENT SUMMARY');
 
     client.end();
