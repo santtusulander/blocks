@@ -2,7 +2,7 @@ const headerCommands = {
   changeTheme() {
     return this
       .click('.menu-item-theme .dropdown-select > button')
-      .click('.menu-item-theme .dropdown-menu > li:not(.hidden)')
+      .click('.menu-item-theme .dropdown-menu > li:not(.hidden)');
   }
 };
 

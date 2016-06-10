@@ -12,7 +12,7 @@ module.exports = {
     const headerPage = client.page.headerPage();
     const brandPage = client.page.brandPage();
 
-    client.pause(3500); // Wait for page to load
+    client.pause(3000);
 
     headerPage
       .click('@accountMenu')
@@ -45,14 +45,12 @@ module.exports = {
       .expect.element('@pageTitle').text.to.contain('Accounts');
   },
 
-  /*
   'Earlier selected item should not have active class in account menu dropdown': (client) => {
     const headerPage = client.page.headerPage();
 
     headerPage
       .expect.element('.dropdown-account-menu li:nth-of-type(1) a').to.not.have.attribute('class').which.contains('active');
   },
-  */
 
   'Navigate to security page': (client) => {
     const headerPage = client.page.headerPage();
@@ -76,23 +74,9 @@ module.exports = {
       .expect.element('@pageHeader').text.to.contain('Services');
   },
 
-  /*
-  'Tests for alerts': (client) => {
-
-  }
-   */
-
-    /*
-   'Tests for help': (client) => {
-
-   }
-   */
-
-  /*
-   'Tests for search': (client) => {
-
-   }
-  */
+  //'Tests for alerts': (client) => {}
+  //'Tests for help': (client) => {}
+  //'Tests for search': (client) => {}
 
   'Open user menu': (client) => {
     const headerPage = client.page.headerPage();
