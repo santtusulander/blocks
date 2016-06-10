@@ -26,7 +26,6 @@ export class GroupAnalytics extends React.Component {
     }
 
     this.changeDateRange = this.changeDateRange.bind(this)
-    this.filterByStatusCode = this.filterByStatusCode.bind(this)
   }
 
   componentWillMount() {
@@ -44,17 +43,6 @@ export class GroupAnalytics extends React.Component {
       this.state.startDate,
       this.state.endDate
     )
-  }
-  filterByStatusCode(code) {
-    const fetchOpts = {
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: this.state.startDate.format('X'),
-      endDate: this.state.endDate.format('X')
-    }
-    this.props.reportsActions.toggleStatusCode(code)
-    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
-      .then(this.props.reportsActions.finishFetching)
   }
   changeDateRange(startDate, endDate) {
     const dateRange =
@@ -107,7 +95,7 @@ export class GroupAnalytics extends React.Component {
         startDate={this.state.startDate}
         storageStats={this.props.storageStats}
         toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
-        toggleAnalysisStatusCode={this.filterByStatusCode}
+        toggleAnalysisStatusCode={this.props.uiActions.toggleAnalysisStatusCode}
         totalEgress={this.props.totalEgress}
         trafficByCountry={this.props.trafficByCountry}
         trafficByTime={this.props.trafficByTime}
@@ -173,7 +161,7 @@ function mapStateToProps(state) {
     reportsFetching: state.reports.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
-    statusCodes: state.reports.get('errorStatusCodes'),
+    statusCodes: state.ui.get('analysisErrorStatusCodes'),
     storageStats: state.traffic.get('storage'),
     totalEgress: state.traffic.get('totalEgress'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -251,7 +239,6 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     fetchData: fetchData,
     fetchInit: fetchInit,
-    reportsActions: reportsActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

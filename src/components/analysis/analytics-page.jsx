@@ -212,6 +212,7 @@ export class AnalyticsPage extends React.Component {
             {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
                 summary={this.props.fileErrorSummary}
+                statusCodes={this.props.statusCodes}
                 serviceTypes={this.props.serviceTypes}
                 urls={this.props.fileErrorURLs}/>
             }

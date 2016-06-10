@@ -6,14 +6,34 @@ import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
 
 const AnalysisFileError = props => {
-  const { serviceTypes, summary, urls } = props
+  const { serviceTypes, statusCodes, summary, urls } = props
   let filteredUrls = List()
   serviceTypes.forEach(item => {
-    filteredUrls = filteredUrls.concat(
-      urls.filter(url => url.get('service_type') === item)
-    )
+    statusCodes.forEach(code => {
+      filteredUrls = filteredUrls.concat(
+        urls.filter(url =>
+          url.get('service_type') === item &&
+          url.get('status_code') === code.toString()
+        )
+      )
+    })
   })
-  const {serverErrs, clientErrs} = summary
+
+  let filteredErrorSummary = { clientErrs: [], serverErrs: [] }
+  for(const err in summary.toJS()) {
+    const value = summary.get(err)
+    const code = parseInt(err.substring(1))
+    if(statusCodes.includes(code)){
+      if(code < 500) {
+        filteredErrorSummary.clientErrs.push({ value, code })
+      }
+      else {
+        filteredErrorSummary.serverErrs.push({ value, code })
+      }
+    }
+  }
+  const { clientErrs, serverErrs } = filteredErrorSummary
+
   return (
     <div className="analysis-file-error">
       <Row>
@@ -31,7 +51,7 @@ const AnalysisFileError = props => {
       </Row>
       <h3>HEADER</h3>
       <AnalysisURLList
-        urls={urls}
+        urls={filteredUrls}
         labelFormat={url => `${url.get('status_code')} ${url.get('url')}`}/>
     </div>
   )
@@ -41,6 +61,7 @@ AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
   fetching: PropTypes.bool,
   serviceTypes: PropTypes.instanceOf(List),
+  statusCodes: PropTypes.instanceOf(List),
   summary: PropTypes.instanceOf(Map),
   urls: PropTypes.instanceOf(List)
 }
