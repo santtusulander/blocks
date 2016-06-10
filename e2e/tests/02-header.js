@@ -10,7 +10,7 @@ module.exports = {
 
   'Open account menu dropdown and select first item': (client) => {
     const headerPage = client.page.headerPage();
-    const brandPage = client.page.brandPage();
+    const accountsPage = client.page.accountsPage();
 
     client.pause(3000);
 
@@ -23,7 +23,7 @@ module.exports = {
     headerPage
       .click('.dropdown-account-menu li:first-of-type');
 
-    brandPage
+    accountsPage
       .expect.element('@pageTitle').text.to.contain('FooBar');
   },
 
@@ -36,12 +36,12 @@ module.exports = {
 
   'Navigate to Content': (client) => {
     const headerPage = client.page.headerPage();
-    const brandPage = client.page.brandPage();
+    const accountsPage = client.page.accountsPage();
 
     headerPage
       .click('@content');
 
-    brandPage
+    accountsPage
       .expect.element('@pageTitle').text.to.contain('Accounts');
   },
 
@@ -124,12 +124,12 @@ module.exports = {
 
   'Click Ericsson logo': (client) => {
     const headerPage = client.page.headerPage();
-    const brandPage = client.page.brandPage();
+    const accountsPage = client.page.accountsPage();
 
     headerPage
       .click('.navbar-brand');
 
-    brandPage
+    accountsPage
       .expect.element('@pageTitle').text.to.contain('Accounts');
   },
 
