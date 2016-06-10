@@ -132,7 +132,7 @@ class Header extends React.Component {
               <Dropdown id="account-menu" ref="accountMenu"
                 open={this.state.accountMenuOpen}
                 onToggle={this.toggleAccountMenu}>
-                <Link className={'main-nav-link' + contentActive}
+                <Link id="content-link" className={'main-nav-link' + contentActive}
                   to={`/content/accounts/udn`}
                   activeClassName="active">
                   Content
@@ -157,20 +157,20 @@ class Header extends React.Component {
             </li>
             <li className="main-nav-item">
               {hideConfigurations ?
-                <span className="main-nav-link inactive">Configurations</span>
+                <span id="configurations-link" className="main-nav-link inactive">Configurations</span>
               :
-                <Link className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
+                <Link id="configurations-link" className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
                   Configurations
                 </Link>
               }
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/security`} activeClassName="active">
+              <Link id="security-link" className="main-nav-link" to={`/security`} activeClassName="active">
                 Security
               </Link>
             </li>
             <li className="main-nav-item">
-              <Link className="main-nav-link" to={`/services`} activeClassName="active">
+              <Link id="services-link" className="main-nav-link" to={`/services`} activeClassName="active">
                 Services
               </Link>
             </li>
@@ -178,7 +178,7 @@ class Header extends React.Component {
               {hidePurge ?
                 <span className="main-nav-link inactive">Purge</span>
               :
-                <a href="#" className="main-nav-link"
+                <a href="#" id="purge-link" className="main-nav-link"
                   onClick={this.activatePurge}>
                   Purge
                 </a>
@@ -211,7 +211,7 @@ class Header extends React.Component {
                   <li className="dropdown-user-menu-container">
                     <ul>
                       <MenuItem header={true} className="dropdown-main-header">
-                        <div className="user-menu-item">test</div>
+                        <div id="user-menu-username" className="user-menu-item">test</div>
                       </MenuItem>
                       <MenuItem eventKey="1">
                         <div className="user-menu-item">
@@ -240,6 +240,7 @@ class Header extends React.Component {
                       </li>
                       <li>
                         <Link
+                          id="account-management"
                           to={`/account-management`} activeClassName="active"
                           onClick={this.toggleUserMenu}>
                           <div className="user-menu-item">
@@ -250,7 +251,7 @@ class Header extends React.Component {
                     </ul>
                   </li>
                   <li className="bottom-item" eventKey="5">
-                    <a href="#" onClick={this.props.logOut}>
+                    <a id="log-out" href="#" onClick={this.props.logOut}>
                       <div className="user-menu-item">Log Out</div>
                     </a>
                   </li>
