@@ -1,4 +1,5 @@
 module.exports = {
+
   'User Logs in': (client) => {
     const loginPage = client.page.loginPage();
     const accountsPage = client.page.accountsPage();
