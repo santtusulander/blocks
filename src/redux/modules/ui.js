@@ -1,10 +1,13 @@
 import {createAction, handleActions} from 'redux-actions'
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
+
+import STATUS_CODES from '../../constants/status-codes.js'
 
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
 const UI_ANALYSIS_SERVICE_TYPE_TOGGLED = 'UI_ANALYSIS_SERVICE_TYPE_TOGGLED'
+const UI_ANALYSIS_STATUS_CODE_TOGGLED = 'UI_ANALYSIS_STATUS_CODE_TOGGLED'
 const UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED = 'UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED'
 const UI_ANALYSIS_SP_CHART_CHANGED = 'UI_ANALYSIS_SP_CHART_CHANGED'
 const UI_CONTENT_ITEM_SORTED = 'UI_CONTENT_ITEM_SORTED'
@@ -24,7 +27,7 @@ const docBody = document.body
 
 docBody.className += theme + '-theme'
 
-const defaultUI = Immutable.fromJS({
+const defaultUI = fromJS({
   accountManagementModal: null,
   contentItemSortDirection: 1,
   contentItemSortValuePath: ['metrics', 'totalTraffic'],
@@ -33,6 +36,7 @@ const defaultUI = Immutable.fromJS({
   notification: '',
   analysisOnOffNetChartType: 'bar',
   analysisServiceTypes: ['http', 'https'],
+  analysisErrorStatusCodes: STATUS_CODES,
   analysisSPChartType: 'bar',
   showErrorDialog: false
 })
@@ -43,8 +47,22 @@ export function accountManagementModalToggled(state, action) {
   return state.merge({ accountManagementModal: action.payload })
 }
 
+export function analysisStatusCodeToggled(state, action) {
+  if(action.payload === STATUS_CODES) {
+    return state.get('analysisErrorStatusCodes').size === STATUS_CODES.length ?
+      state.set('analysisErrorStatusCodes', fromJS([])) :
+      state.set('analysisErrorStatusCodes', fromJS(STATUS_CODES))
+  }
+  let newStatusCodes = state.get('analysisErrorStatusCodes')
+  newStatusCodes = newStatusCodes.includes(action.payload) ?
+    newStatusCodes.filter(code => code !== action.payload) :
+    newStatusCodes.push(action.payload)
+  return state.set('analysisErrorStatusCodes', newStatusCodes)
+}
+
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
+  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled,
   UI_THEME_CHANGED: (state, action) => {
     docBody.className = docBody.className.replace(
       /dark-theme|light-theme/gi, action.payload + '-theme'
@@ -94,6 +112,7 @@ export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
 export const toggleAccountManagementModal = createAction(UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED)
+export const toggleAnalysisStatusCode = createAction(UI_ANALYSIS_STATUS_CODE_TOGGLED)
 export const toggleAnalysisServiceType = createAction(UI_ANALYSIS_SERVICE_TYPE_TOGGLED)
 export const changeOnOffNetChartType = createAction(UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED)
 export const changeSPChartType = createAction(UI_ANALYSIS_SP_CHART_CHANGED)
