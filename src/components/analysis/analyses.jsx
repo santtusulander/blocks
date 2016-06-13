@@ -249,7 +249,7 @@ export class Analyses extends React.Component {
           </div>
           : null
         }
-        {this.props.activeTab === 'on-off-net-report' ?
+        {this.props.activeTab === 'service-providers' ?
           <div>
             <div className="sidebar-section-header">
               SERVICE PROVIDER
@@ -277,6 +277,10 @@ export class Analyses extends React.Component {
                     ['option', 'Option']]}/>
               </div>
             </div>
+          </div>
+          : null}
+        {this.props.activeTab === 'on-off-net-report' ?
+          <div>
             <div className="sidebar-section-header">
               CHART TYPE
             </div>
@@ -302,7 +306,8 @@ export class Analyses extends React.Component {
             }
           </div>
           : null}
-        {this.props.activeTab === 'on-off-net-report' ?
+        {this.props.activeTab === 'on-off-net-report' ||
+         this.props.activeTab === 'service-providers' ?
           <div>
             <div className="sidebar-content">
               <Input type="checkbox" label="On-Net"/>
@@ -313,7 +318,8 @@ export class Analyses extends React.Component {
           : null}
         {this.props.activeTab !== 'visitors' &&
         this.props.activeTab !== 'playback-demo' &&
-        this.props.activeTab !== 'storage-usage' ?
+        this.props.activeTab !== 'storage-usage' &&
+        this.props.activeTab !== 'on-off-net-report' ?
           <div className="sidebar-content">
             <Input type="checkbox" label="HTTP"
                    checked={this.props.serviceTypes.includes('http')}
