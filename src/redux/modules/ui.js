@@ -29,7 +29,7 @@ docBody.className += theme + '-theme'
 
 export const defaultUI = fromJS({
   accountManagementModal: null,
-  contentItemSortDirection: 1,
+  contentItemSortDirection: -1,
   contentItemSortValuePath: ['metrics', 'totalTraffic'],
   theme: theme,
   viewingChart: true,
