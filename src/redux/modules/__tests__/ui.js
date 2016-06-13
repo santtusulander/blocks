@@ -1,9 +1,11 @@
 import { fromJS, is } from 'immutable'
 
 jest.unmock('../ui.js')
+jest.unmock('../../../constants/status-codes.js')
 
 import {
   accountManagementModalToggled,
+  analysisStatusCodeToggled,
   themeChanged,
   chartViewToggled,
   notificationChanged,
@@ -17,7 +19,7 @@ import {
   docBody
 } from '../ui.js'
 
-describe('Topology Module', () => {
+describe('UI Module', () => {
   let state = null;
   beforeEach(() => {
     state = defaultUI
@@ -26,6 +28,11 @@ describe('Topology Module', () => {
   it('should handle account management modal toggled', () => {
     const newState = accountManagementModalToggled(state, { payload: 'modal1' });
     expect(newState.get('accountManagementModal')).toBe('modal1');
+  });
+
+  it('should handle status code toggled in analysis', () => {
+    let newState = analysisStatusCodeToggled(state, { payload: 404 });
+    expect(newState.get('analysisErrorStatusCodes').includes(404)).toBeFalsy();
   });
 
   it('should handle theme change', () => {
