@@ -2,8 +2,8 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-.dns-edit-form {
-  @extend .configuration-sidebar;
+.dns-edit-form-sidebar {
+  @extend .modal-dialog.configuration-sidebar;
 
   .input-group-addon {
     width: auto;

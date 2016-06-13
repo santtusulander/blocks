@@ -3,6 +3,8 @@ import {reduxForm} from 'redux-form'
 
 import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 
+import './roles-edit-form.scss'
+
 let errors = {}
 
 const validate = values => {
@@ -41,7 +43,7 @@ const RolesEditForm = (props) => {
         {roleName.touched && roleName.error && <div className='error-msg'>{roleName.error}</div>}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+          <Button className="btn-outline" onClick={props.onCancel}>Cancel</Button>
           <Button bsStyle="primary" disabled={ Object.keys(errors).length !== 0 } onClick={props.onSave}>Save</Button>
         </ButtonToolbar>
 

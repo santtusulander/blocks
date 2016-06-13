@@ -53,8 +53,8 @@ class ContentItemChart extends React.Component {
       return <LoadingSpinner />
     }
 
-    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bytes');
-    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bytes');
+    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bits_per_second');
+    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bits_per_second');
     const differenceData = this.groupData(this.props.differenceData.toJS(), 24);
 
     const primaryMax = d3.max(primaryData, d => {

@@ -2,10 +2,7 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-// Account form container
-// =====================
-
-.account-management-new-account {
+.add-account-form-sidebar {
   @extend .configuration-sidebar;
 
   .form-group.border-bottom {
@@ -13,5 +10,6 @@
     margin-bottom: 25px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
+
 
 }
