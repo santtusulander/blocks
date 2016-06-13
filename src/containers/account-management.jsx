@@ -110,6 +110,12 @@ export class AccountManagement extends Component {
       }
     }
 
+    const brandsInitialValues = {
+      initialValues: {
+        brandName: 'Test Brand',
+      }
+    }
+
     const soaFormInitialValues = dnsData && {
       initialValues:
         dnsData
@@ -131,6 +137,7 @@ export class AccountManagement extends Component {
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
     }
+
     return (
       <PageContainer hasSidebar={isAdmin} className="account-management">
         {isAdmin && <div>
@@ -150,7 +157,14 @@ export class AccountManagement extends Component {
               groups={this.props.groups}/>
             }
 
-            {!this.state.activeAccount && <ManageSystem dnsList={dnsListProps}/>}
+            {!this.state.activeAccount && <ManageSystem
+              dnsList={dnsListProps}
+              brandsList={ {
+                accountManagementModal: accountManagementModal,
+                brands: [],
+                toggleModal: toggleModal
+              }}
+            />}
 
           </Content>
         </div>}
