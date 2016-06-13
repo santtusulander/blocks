@@ -6,16 +6,16 @@ import { reducer as formReducer } from 'redux-form'
 
 import jsdom from 'jsdom'
 
-jest.unmock('../../../components/account-management/brands-edit-form');
+jest.unmock('../../../components/account-management/brand-edit-form');
 jest.unmock('../../../components/udn-file-input');
 jest.unmock('../../../components/select-wrapper');
-import BrandsEditForm from '../../../components/account-management/brands-edit-form'
+import BrandEditForm from '../../../components/account-management/brand-edit-form'
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
 
 
-describe("BrandsEditForm", () => {
+describe("BrandEditForm", () => {
 
   let store = null
   let subject = null
@@ -26,7 +26,7 @@ describe("BrandsEditForm", () => {
       store,
     }
 
-    subject = mount(<BrandsEditForm {...props} />)
+    subject = mount(<BrandEditForm {...props} />)
   })
 
   /* Commented out because Modals cannot be tested ATM
