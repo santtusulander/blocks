@@ -2,9 +2,11 @@ import React from 'react'
 import moment from 'moment'
 import ActionLinks from './action-links.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
+import BrandEditForm from './brand-edit-form.jsx'
 
 const AVAILABILITY_SHARED = 'Shared'
 const AVAILABILITY_PRIVATE = 'Private'
+import { EDIT_BRAND } from '../../constants/account-management-modals.js'
 
 const BrandListRow = (props) => {
   return (
@@ -71,16 +73,18 @@ const BrandlistUsedBy = (props) => {
 
 const BrandList = (props) => {
 
+  const brandsFormInitialValues = {}
+
   const tableRows = props.brands.map( (brand, i) => {
     return (
-      <BrandListRow key={i} { ... brand } onEdit={props.onEdit} onDelete={props.onDelete}  />
+      <BrandListRow key={i} { ... brand } onEdit={() => props.toggleModal(EDIT_BRAND)} onDelete={props.onDelete}  />
     );
   });
 
   return (
     <div className='brandList'>
 
-      <AccountManagementHeader title={ `${props.brands.length} Brands` } />
+      <AccountManagementHeader title={ `${props.brands.length} Brands` } onAdd={() => props.toggleModal(EDIT_BRAND)}/>
 
       <table className="table table-striped">
         <thead>
@@ -98,8 +102,26 @@ const BrandList = (props) => {
         </tbody>
 
       </table>
+
+      {props.accountManagementModal === EDIT_BRAND &&
+        <BrandEditForm
+          id="brand-edit-form"
+          show={props.accountManagementModal === EDIT_BRAND}
+          edit={true}
+          onSave={() => {console.log("onSave()")} }
+          onCancel={() => props.toggleModal(null)}
+          { ...brandsFormInitialValues }
+        />
+        }
     </div>
   )
+}
+
+BrandList.propTypes = {
+  accountManagementModal: React.PropTypes.string,
+  brands: React.PropTypes.array,
+  brandsFormInitialValues: React.PropTypes.object,
+  toggleModal: React.PropTypes.func,
 }
 
 module.exports = {
@@ -108,9 +130,5 @@ module.exports = {
   AVAILABILITY_SHARED,
   AVAILABILITY_PRIVATE
 };
-
-BrandList.propTypes = {
-  brands: React.PropTypes.array
-}
 
 

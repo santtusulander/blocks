@@ -19,6 +19,7 @@ import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
+import {formatBitsPerSecond} from '../util/helpers'
 
 export class Property extends React.Component {
   constructor(props) {
@@ -242,12 +243,12 @@ export class Property extends React.Component {
                 <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
                   <AnalysisByTime axes={true} padding={30}
                     primaryData={metrics_traffic.reverse()}
-                    dataKey='bytes'
+                    dataKey='bits_per_second'
                     width={this.state.byTimeWidth}
                     height={this.state.byTimeWidth / 2.5}
                     xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                       : this.state.byTimeWidth > 600 ? 2 : 3}
-                    yAxisFormat="0 b"/>
+                    yAxisCustomFormat={formatBitsPerSecond}/>
                 </div>
 
                 {metrics_traffic && metrics_traffic.length ?
