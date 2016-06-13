@@ -2,11 +2,13 @@
 @import '../../styles/base/variables';
 @import '../../styles/components/configuration/sidebar';
 
-.dns-edit-form-sidebar {
+.brands-edit-sidebar {
   @extend .configuration-sidebar;
 
   .input-group-addon {
     width: auto;
     padding-left: 10px;
   }
+  
 }
+

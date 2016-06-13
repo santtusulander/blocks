@@ -106,7 +106,7 @@ class AnalysisServiceProviders extends React.Component {
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="provider">
-                Service Provder
+                Service Provider
               </TableSorter>
               <TableSorter {...sorterProps} column="country">
                 Country

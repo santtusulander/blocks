@@ -56,10 +56,10 @@ class ContentItemChart extends React.Component {
       return <LoadingSpinner />
     }
 
-    const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bytes');
-    const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bytes');
+    const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
+    const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
-    const dayData = groupData(this.props.primaryData.toJS(), dayHours, 'bytes');
+    const dayData = groupData(this.props.primaryData.toJS(), dayHours, 'bits_per_second');
     const daySlices = dayData.reduce(slices => {
       slices.push((dayHours/rayHours)*2)
       slices.push(1)

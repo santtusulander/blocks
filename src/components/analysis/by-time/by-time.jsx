@@ -10,7 +10,7 @@ import Legend from './legend'
 const closestDate = d3.bisector(d => d.timestamp).left
 
 const configureTooltip = (date, val, height, formatY, xScale, yScale) => {
-  const formattedDate = moment(date).format('MMM D')
+  const formattedDate = moment(date).format('MMM D h:mm a [GMT]')
   const formattedValue = formatY(val)
   return {
     text: `${formattedDate} ${formattedValue}`,
@@ -81,7 +81,6 @@ class AnalysisByTime extends React.Component {
         this.setState({
           primaryTooltipText: tooltipConfig.text,
           primaryTooltipX: tooltipConfig.x,
-          primaryTooltipY: tooltipConfig.y,
           primaryTooltipY: tooltipConfig.y,
           primaryTooltipOffsetTop: tooltipConfig.top
         })
@@ -177,12 +176,6 @@ class AnalysisByTime extends React.Component {
       .y0(yScale(0))
       .x(d => xScale(d.timestamp))
       .interpolate('monotone')
-
-    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
-      this.state.secondaryLabelWidth
-
-    const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
-      (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
     if(this.props.className) {
@@ -311,7 +304,7 @@ class AnalysisByTime extends React.Component {
           </defs>
         </svg>
 
-      { this.props.showTooltip && <div className='tooltips'>
+      {this.props.showTooltip && <div className='tooltips'>
           <Tooltip
             x={this.state.primaryTooltipX}
             y={this.state.primaryTooltipY}
@@ -331,7 +324,7 @@ class AnalysisByTime extends React.Component {
           </Tooltip>
       </div>}
 
-      { this.props.showLegend && <Legend
+      {this.props.showLegend && <Legend
           primaryLabel={this.props.primaryLabel}
           primaryValue={this.state.primaryTooltipText}
           secondaryLabel={this.props.secondaryLabel}
@@ -354,8 +347,8 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
-  showTooltip: React.PropTypes.bool,
   showLegend: React.PropTypes.bool,
+  showTooltip: React.PropTypes.bool,
   stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,

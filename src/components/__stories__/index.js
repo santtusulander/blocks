@@ -16,6 +16,7 @@ import './account-management/dns-list'
 import './account-management/brand-list'
 import './account-management/roles-list'
 import './account-management/new-account-form'
+import './account-management/brand-edit-form'
 
 // content
 import './content/add-host'

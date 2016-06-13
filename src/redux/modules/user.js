@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase} from '../util'
+import {urlBase, mapReducers} from '../util'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -22,49 +22,63 @@ const emptyUser = Immutable.Map({
 
 // REDUCERS
 
-export default handleActions({
-  USER_LOGGED_IN: {
-    next(state, action) {
-      // TODO: Real auth will return a token or set a cookie
-      const token = btoa(`${action.payload.username}:${action.payload.password}`)
-      localStorage.setItem('EricssonUDNUserToken', token)
-      localStorage.setItem('EricssonUDNUserName', action.payload.username)
-      axios.defaults.headers.common['Authorization'] = 'Basic ' + token
-      return state.merge({
-        loggedIn: true,
-        fetching: false,
-        username: action.payload.username
-      })
-    },
-    throw() {
-      return emptyUser
-    }
-  },
-  USER_LOGGED_OUT: (state) => {
+export function userLoggedInSuccess(state, action){
+  // TODO: Real auth will return a token or set a cookie
+  const token = btoa(`${action.payload.username}:${action.payload.password}`)
+
+  localStorage.setItem('EricssonUDNUserToken', token)
+  localStorage.setItem('EricssonUDNUserName', action.payload.username)
+
+  axios.defaults.headers.common['Authorization'] = 'Basic ' + token
+
+  return state.merge({
+    loggedIn: true,
+    fetching: false,
+    username: action.payload.username
+  })
+
+}
+
+export function userLoggedInFailure(state){
+  return emptyUser
+}
+
+export function userLoggedOutSuccess(state, action){
+  localStorage.removeItem('EricssonUDNUserToken')
+  localStorage.removeItem('EricssonUDNUserName')
+  axios.defaults.headers.common['Authorization'] = 'Basic 000'
+
+  return state.set('loggedIn', false)
+}
+
+export function userStartFetch(state, action){
+  return state.set('fetching', true)
+}
+
+export function userTokenChecked(state, action){
+  if(action.payload) {
+    localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+    axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload.token
+
+    return state.merge({
+      loggedIn: true,
+      username: action.payload.username
+    })
+  }
+  else {
     localStorage.removeItem('EricssonUDNUserToken')
     localStorage.removeItem('EricssonUDNUserName')
     axios.defaults.headers.common['Authorization'] = 'Basic 000'
+
     return state.set('loggedIn', false)
-  },
-  USER_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  USER_TOKEN_CHECKED: (state, action) => {
-    if(action.payload) {
-      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-      axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload.token
-      return state.merge({
-        loggedIn: true,
-        username: action.payload.username
-      })
-    }
-    else {
-      localStorage.removeItem('EricssonUDNUserToken')
-      localStorage.removeItem('EricssonUDNUserName')
-      axios.defaults.headers.common['Authorization'] = 'Basic 000'
-      return state.set('loggedIn', false)
-    }
   }
+}
+
+export default handleActions({
+  USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
+  USER_LOGGED_OUT: userLoggedOutSuccess,
+  USER_START_FETCH: userStartFetch,
+  USER_TOKEN_CHECKED: userTokenChecked
 }, emptyUser)
 
 // ACTIONS

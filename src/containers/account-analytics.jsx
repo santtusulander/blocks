@@ -32,11 +32,12 @@ export class AccountAnalytics extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
+    this.props.accounts.isEmpty() && this.props.fetchInit()
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.account !== this.props.params.account) {
-      this.props.fetchData(nextProps.params.account)
+      this.fetchData(nextProps.params.account)
     }
   }
   fetchData(account) {
@@ -127,6 +128,7 @@ AccountAnalytics.propTypes = {
   exportsActions: React.PropTypes.object,
   exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
+  fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
@@ -192,7 +194,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData (account, start, end) {
+  function fetchData(account, start, end) {
     const fetchOpts = {
       account: account,
       startDate: start.format('X'),
@@ -237,10 +239,14 @@ function mapDispatchToProps(dispatch, ownProps) {
       reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(reportsActions.finishFetching)
   }
-
+  function fetchInit() {
+    const { brand } = ownProps.params
+    accountActions.fetchAccounts(brand)
+  }
   return {
     exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
+    fetchInit: fetchInit,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
