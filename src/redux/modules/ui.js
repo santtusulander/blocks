@@ -16,7 +16,7 @@ const UI_HIDE_ERROR_DIALOG = 'UI_HIDE_ERROR_DIALOG'
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
 
-const docBody = document.body
+export const docBody = document.body
 
 /* We are manipulating body class with JS, which is not exactly how React
    is usually handling things, but in this case it seems to be the most
@@ -24,7 +24,7 @@ const docBody = document.body
 
 docBody.className += theme + '-theme'
 
-const defaultUI = Immutable.fromJS({
+export const defaultUI = Immutable.fromJS({
   accountManagementModal: null,
   contentItemSortDirection: 1,
   contentItemSortValuePath: ['metrics', 'totalTraffic'],
@@ -43,49 +43,67 @@ export function accountManagementModalToggled(state, action) {
   return state.merge({ accountManagementModal: action.payload })
 }
 
+export function themeChanged(state, action) {
+  docBody.className = docBody.className.replace(
+    /dark-theme|light-theme/gi, action.payload + '-theme'
+  )
+  localStorage.setItem('EricssonUDNUiTheme', action.payload)
+  return state.set('theme', action.payload)
+}
+
+export function chartViewToggled(state) {
+  return state.set('viewingChart', !state.get('viewingChart'))
+}
+
+export function notificationChanged(state, action) {
+  return state.set('notification', action.payload)
+}
+
+export function analysisServiceTypeToggled(state, action) {
+  let newServiceTypes = state.get('analysisServiceTypes')
+  if(newServiceTypes.includes(action.payload)) {
+    newServiceTypes = newServiceTypes.filter(type => type !== action.payload)
+  }
+  else {
+    newServiceTypes = newServiceTypes.push(action.payload)
+  }
+  return state.set('analysisServiceTypes', newServiceTypes)
+}
+
+export function analysisOnOffNetChartChanged(state, action) {
+  return state.set('analysisOnOffNetChartType', action.payload)
+}
+
+export function analysisSPChartChanged(state, action) {
+  return state.set('analysisSPChartType', action.payload)
+}
+
+export function contentItemSorted(state, action) {
+  return state.merge({
+    contentItemSortDirection: action.payload.direction,
+    contentItemSortValuePath: action.payload.valuePath
+  })
+}
+
+export function errorDialogShown(state) {
+  return state.set('showErrorDialog', true);
+}
+
+export function errorDialogHidden(state) {
+  return state.set('showErrorDialog', false);
+}
+
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
-  UI_THEME_CHANGED: (state, action) => {
-    docBody.className = docBody.className.replace(
-      /dark-theme|light-theme/gi, action.payload + '-theme'
-    )
-    localStorage.setItem('EricssonUDNUiTheme', action.payload)
-    return state.set('theme', action.payload)
-  },
-  UI_CHART_VIEW_TOGGLED: (state) => {
-    return state.set('viewingChart', !state.get('viewingChart'))
-  },
-  UI_CHANGE_NOTIFICATION: (state, action) => {
-    return state.set('notification', action.payload)
-  },
-  UI_ANALYSIS_SERVICE_TYPE_TOGGLED: (state, action) => {
-    let newServiceTypes = state.get('analysisServiceTypes')
-    if(newServiceTypes.includes(action.payload)) {
-      newServiceTypes = newServiceTypes.filter(type => type !== action.payload)
-    }
-    else {
-      newServiceTypes = newServiceTypes.push(action.payload)
-    }
-    return state.set('analysisServiceTypes', newServiceTypes)
-  },
-  UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED: (state, action) => {
-    return state.set('analysisOnOffNetChartType', action.payload)
-  },
-  UI_ANALYSIS_SP_CHART_CHANGED: (state, action) => {
-    return state.set('analysisSPChartType', action.payload)
-  },
-  UI_CONTENT_ITEM_SORTED: (state, action) => {
-    return state.merge({
-      contentItemSortDirection: action.payload.direction,
-      contentItemSortValuePath: action.payload.valuePath
-    })
-  },
-  UI_SHOW_ERROR_DIALOG: (state) => {
-    return state.set('showErrorDialog', true);
-  },
-  UI_HIDE_ERROR_DIALOG: (state) => {
-    return state.set('showErrorDialog', false);
-  }
+  UI_THEME_CHANGED: themeChanged,
+  UI_CHART_VIEW_TOGGLED: chartViewToggled,
+  UI_CHANGE_NOTIFICATION: notificationChanged,
+  UI_ANALYSIS_SERVICE_TYPE_TOGGLED: analysisServiceTypeToggled,
+  UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED: analysisOnOffNetChartChanged,
+  UI_ANALYSIS_SP_CHART_CHANGED: analysisSPChartChanged,
+  UI_CONTENT_ITEM_SORTED: contentItemSorted,
+  UI_SHOW_ERROR_DIALOG: errorDialogShown,
+  UI_HIDE_ERROR_DIALOG: errorDialogHidden
 }, defaultUI)
 
 // ACTIONS
