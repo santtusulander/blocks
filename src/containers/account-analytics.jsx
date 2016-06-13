@@ -37,7 +37,7 @@ export class AccountAnalytics extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.account !== this.props.params.account) {
-      this.props.fetchData(nextProps.params.account)
+      this.fetchData(nextProps.params.account)
     }
   }
   fetchData(account) {
