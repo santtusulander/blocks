@@ -4,6 +4,12 @@
 .modal-dialog.export-sidebar {
   @extend .configuration-sidebar;
 
+  .modal-header {
+    p {
+      text-transform: capitalize;
+    }
+  }
+
   .modal-body {
     padding: 0 $bar-height !important;
 
