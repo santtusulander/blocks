@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import {Input } from 'react-bootstrap'
 
+import './udn-file-input.scss'
+
 const UDNFileInput = (props) => {
 
   const { addonAfter, ...otherProps } = props
 
-
-
   return (
-    <div className='file-input'>
+    <div className='udn-file-input'>
       <Input
         type='file'
         {...otherProps}
