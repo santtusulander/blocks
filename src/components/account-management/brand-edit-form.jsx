@@ -7,14 +7,11 @@ import UDNFileInput from '../udn-file-input.jsx'
 
 import './brand-edit-form.scss'
 
-
-const fakeThemes = [
+const colorThemeOptions = [
   { id: '1', themeName: 'Theme Name 1' },
   { id: '2', themeName: 'Theme Name 2' },
   { id: '3', themeName: 'Theme Name 3' }
-];
-
-const colorThemeOptions = fakeThemes.map( (e) => {
+].map( (e) => {
   return [ e.id, e.themeName]
 });
 
