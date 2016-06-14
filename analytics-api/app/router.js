@@ -3,6 +3,7 @@
 let router                      = require('express').Router();
 let configs                     = require('./configs');
 let log                         = require('./logger');
+let routeTraffic                = require('./routes/traffic');
 let routeTrafficTime            = require('./routes/traffic/time');
 let routeTrafficCountry         = require('./routes/traffic/country');
 let routeTrafficTotal           = require('./routes/traffic/total');
@@ -19,6 +20,7 @@ let routeVersion                = require('./routes/version');
 router.errorHandler = errorHandler;
 
 // API routes
+router.get(`/${configs.apiBaseFolder}/traffic`,                  routeTraffic);
 router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTime);
 router.get(`/${configs.apiBaseFolder}/traffic/country`,          routeTrafficCountry);
 router.get(`/${configs.apiBaseFolder}/traffic/total`,            routeTrafficTotal);
