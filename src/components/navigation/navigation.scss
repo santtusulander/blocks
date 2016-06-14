@@ -1,0 +1,44 @@
+@import '../../styles/base/variables';
+@import '../../styles/base/colors';
+
+.navigation-sidebar {
+  width: 90px;
+
+  ul {
+    li {
+      display: block;
+      list-style: none;
+      border-left: 10px solid transparent;
+
+      &.active {
+          border-left: 10px solid $pale-blue;
+        }
+    }
+  }
+
+  a {
+    display: block;
+    font-family: "Roboto Bold", Arial, Helvetica, Sans-Serif;
+    font-size: 20px;
+    text-align: center;
+    padding: 15px;
+    color: $silver-60;
+    fill: $silver-60;
+
+    svg {
+      width: 50px;
+    }
+
+    span {
+      display: block;
+      text-align: center;
+    }
+
+    &:hover {
+      color: $pale-blue;
+      fill: $pale-blue;
+      text-decoration: none;
+
+    }
+  }
+}

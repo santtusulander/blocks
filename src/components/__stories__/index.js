@@ -20,3 +20,4 @@ import './account-management/brand-edit-form'
 
 import './content-item-chart'
 import './loading-spinner'
+import './navigation'
