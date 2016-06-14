@@ -5,6 +5,46 @@
 .dns-edit-form-sidebar {
   @extend .configuration-sidebar;
 
+  height: 100%;
+
+  .modal-content {
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .modal-body {
+    padding-bottom: 120px !important;
+  }
+
+  .btn-toolbar {
+    position: fixed;
+    bottom: 0;
+    margin-left: $bar-height*-1;
+    margin-right: $bar-height*-1;
+    width: $configuration-sidebar-width !important;
+    padding: (($md-bar-height / 2) / 1.5) $bar-height;
+
+    @include md {
+      width: $md-configuration-sidebar-width !important;
+      margin-left: $md-bar-height*-1;
+      margin-right: $md-bar-height*-1;
+      padding: (($md-bar-height / 2) / 1.5) $md-bar-height;
+    }
+
+    @include sm {
+      width: $sm-configuration-sidebar-width !important;
+      margin-left: ($md-bar-height / 2)*-1;
+      margin-right: ($md-bar-height / 2)*-1;
+      padding: ($md-bar-height / 2) $md-bar-height;
+    }
+
+    .dark-theme & {
+      background: rgba($pale-blue, 0.2);
+      background: #1c486b;
+      z-index: 1060;
+    }
+  }
+
   .input-group-addon {
     width: auto;
     padding-left: 10px;
