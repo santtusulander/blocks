@@ -5,64 +5,59 @@ $navigation-sidebar-width: 90px;
 $navigation-sidebar-width-hover: 180px;
 
 $navigation-sidebar-border-width: 10px;
+$navigation-sidebar-font-size: 20px;
 
 .navigation-sidebar {
   background-color: rgba(0,0,0,0.2); //$ericsson-dark-blue;
   width: $navigation-sidebar-width;
   transition: all 0.5s;
 
-  &:hover {
-    transition: all 0.5s;
-    width: $navigation-sidebar-width-hover;
-
-    a {
-      span {
-        transition: all 0.5s;
-        opacity: 1;
-      }
-
-      svg {
-        transition: all 0.5s;
-        padding-top: 10px;
-        width: $navigation-sidebar-width-hover / 3;
-      }
-    }
-  }
+  box-sizing: border-box;
 
   ul {
     margin: 0;
     padding: 0;
 
     li {
-      display: block;
+      height: 160px;
+
+      display: table;
+      width: 100%;
+
       text-align: center;
       list-style: none;
+
       border-left: $navigation-sidebar-border-width solid transparent;
+      border-right: $navigation-sidebar-border-width solid transparent;
 
       &.active {
           background-color: $black;
           border-left: $navigation-sidebar-border-width solid $pale-blue;
-        }
+      }
 
       a {
-        display: block;
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+
         font-family: "Roboto Bold", Arial, Helvetica, Sans-Serif;
         text-align: center;
         text-decoration: none;
-        padding: 15px 15px 15px 5px;
         color: $silver-60;
         fill: $silver-60;
 
         svg {
-          padding-top: 20px;
           transition: all 0.5s;
           width: $navigation-sidebar-width / 3;
-          display: block;
-          margin: 0 auto;
+          height: $navigation-sidebar-width / 3;
         }
 
         span {
+          font-size: 0;
+          line-height: 0;
           transition: all 0.5s;
+          display: block;
+          font-size: $navigation-sidebar-font-size;
           text-align: center;
           opacity: 0;
         }
@@ -82,6 +77,28 @@ $navigation-sidebar-border-width: 10px;
     li.logo {
       svg {
         fill: $white;
+      }
+    }
+  }
+
+  &:hover {
+    transition: all 0.5s;
+    width: $navigation-sidebar-width-hover;
+
+    li {
+      a {
+        span {
+          line-height: 1;
+          transition: all 0.5s;
+          opacity: 1;
+        }
+
+        svg {
+          transition: all 0.5s;
+          width: $navigation-sidebar-width-hover / 3;
+          height: $navigation-sidebar-width-hover / 3;
+          margin-bottom: 26px;
+        }
       }
     }
   }
