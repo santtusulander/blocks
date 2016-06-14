@@ -1,10 +1,10 @@
 import {createAction} from 'redux-actions'
 import axios from 'axios'
 import {handleActions} from 'redux-actions'
-import Immutable from 'immutable'
+import { fromJS, List } from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, qsBuilder } from '../util'
+import { analyticsBase, qsBuilder, mapReducers } from '../util'
 
 const VISITORS_START_FETCH = 'VISITORS_START_FETCH'
 const VISITORS_FINISH_FETCH = 'VISITORS_FINISH_FETCH'
@@ -14,7 +14,7 @@ const VISITORS_BY_BROWSER_FETCHED = 'VISITORS_BY_BROWSER_FETCHED'
 const VISITORS_RESET = 'VISITORS_RESET'
 const VISITORS_BY_OS_FETCHED = 'VISITORS_BY_OS_FETCHED'
 
-const emptyTraffic = Immutable.fromJS({
+export const emptyTraffic = fromJS({
   byBrowser: {browsers: []},
   byCountry: {countries: []},
   byOS: {os: []},
@@ -24,72 +24,81 @@ const emptyTraffic = Immutable.fromJS({
 
 // REDUCERS
 
+export function fetchedByTimeSuccess(state, action) {
+  return state.merge({
+    byTime: fromJS(action.payload.data.map(datapoint => {
+      datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+      return datapoint
+    }))
+  })
+}
+
+export function fetchedByTimeFailure(state) {
+  return state.merge({
+    byTime: List()
+  })
+}
+
+export function fetchedByCountrySuccess(state, action) {
+  return state.merge({
+    byCountry: fromJS(action.payload.data)
+  })
+}
+
+export function fetchedByCountryFailure(state) {
+  return state.merge({
+    byCountry: fromJS({countries: []})
+  })
+}
+
+export function fetchedByBrowserSuccess(state, action) {
+  return state.merge({
+    byBrowser: fromJS(action.payload.data)
+  })
+}
+
+export function fetchedByBrowserFailure(state) {
+  return state.merge({
+    byBrowser: fromJS({browsers: []})
+  })
+}
+
+export function fetchedByOSSuccess(state, action) {
+  return state.merge({
+    byOS: fromJS(action.payload.data)
+  })
+}
+
+export function fetchedByOSFailure(state) {
+  return state.merge({
+    byOS: fromJS({os: []})
+  })
+}
+
+export function reset(state) {
+  return state.merge({
+    byTime: List(),
+    byCountry: fromJS({countries: []}),
+    byBrowser: fromJS({browsers: []}),
+    byOS: fromJS({os: []})
+  })
+}
+export function startedFetch(state) {
+  return state.set('fetching', true)
+}
+
+export function finishedFetch(state) {
+  return state.set('fetching', false)
+}
+
 export default handleActions({
-  VISITORS_BY_TIME_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        byTime: Immutable.fromJS(action.payload.data.map(datapoint => {
-          datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
-          return datapoint
-        }))
-      })
-    },
-    throw(state) {
-      return state.merge({
-        byTime: Immutable.List()
-      })
-    }
-  },
-  VISITORS_BY_COUNTRY_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        byCountry: Immutable.fromJS(action.payload.data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        byCountry: Immutable.fromJS({countries: []})
-      })
-    }
-  },
-  VISITORS_BY_BROWSER_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        byBrowser: Immutable.fromJS(action.payload.data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        byBrowser: Immutable.fromJS({browsers: []})
-      })
-    }
-  },
-  VISITORS_BY_OS_FETCHED: {
-    next(state, action) {
-      return state.merge({
-        byOS: Immutable.fromJS(action.payload.data)
-      })
-    },
-    throw(state) {
-      return state.merge({
-        byOS: Immutable.fromJS({os: []})
-      })
-    }
-  },
-  VISITORS_RESET: (state) => {
-    return state.merge({
-      byTime: Immutable.List(),
-      byCountry: Immutable.fromJS({countries: []}),
-      byBrowser: Immutable.fromJS({browsers: []}),
-      byOS: Immutable.fromJS({os: []})
-    })
-  },
-  VISITORS_START_FETCH: (state) => {
-    return state.set('fetching', true)
-  },
-  VISITORS_FINISH_FETCH: (state) => {
-    return state.set('fetching', false)
-  }
+  VISITORS_BY_TIME_FETCHED: mapReducers(fetchedByTimeSuccess, fetchedByOSFailure),
+  VISITORS_BY_COUNTRY_FETCHED: mapReducers(fetchedByCountrySuccess, fetchedByCountryFailure),
+  VISITORS_BY_BROWSER_FETCHED: mapReducers(fetchedByBrowserSuccess, fetchedByBrowserFailure),
+  VISITORS_BY_OS_FETCHED: mapReducers(fetchedByOSSuccess, fetchedByOSFailure),
+  VISITORS_RESET: reset,
+  VISITORS_START_FETCH: startedFetch,
+  VISITORS_FINISH_FETCH: finishedFetch
 }, emptyTraffic)
 
 // ACTIONS
