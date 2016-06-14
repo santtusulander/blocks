@@ -27,5 +27,8 @@ FilterServiceType.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   toggleServiceType: React.PropTypes.func
 }
+FilterServiceType.defaultProps = {
+  serviceTypes: Immutable.List()
+}
 
 module.exports = FilterServiceType

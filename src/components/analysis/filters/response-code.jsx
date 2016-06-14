@@ -33,5 +33,8 @@ FilterResponseCode.propTypes = {
   statusCodes: React.PropTypes.instanceOf(Immutable.List),
   toggleStatusCode: React.PropTypes.func
 }
+FilterResponseCode.defaultProps = {
+  statusCodes: Immutable.List()
+}
 
 module.exports = FilterResponseCode
