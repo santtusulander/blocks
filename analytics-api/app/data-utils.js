@@ -66,15 +66,16 @@ class DataUtils {
   /**
    * Calculate transfer rates from bytes.
    *
-   * @param  {object} bytes       The number of bytes to convert to a transfer rate measurement.
-   * @param  {string} granularity The time granularity used to figure out how many
-   *                              seconds the transfer amount should be divided by.
-   * @return {string|null}        The transfer rate measurement including the unit.
-   *                              Returns null if the number couldn't be calculated.
-   *                              e.g. "10 Gbps"
+   * @param  {object}        bytes       The number of bytes to convert to a transfer rate measurement.
+   * @param  {string|number} granularity The time granularity used to figure out how many
+   *                                     seconds the transfer amount should be divided by.
+   *                                     Can also be passed as a number to divide by a specific number of seconds.
+   * @return {string|null}               The transfer rate measurement including the unit.
+   *                                     Returns null if the number couldn't be calculated.
+   *                                     e.g. "10 Gbps"
    */
   getTransferRatesFromBytes(bytes, granularity) {
-    let secondsPerGranularity = this.secondsPerGranularity[granularity];
+    let secondsPerGranularity = _.isNumber(granularity) ? granularity : this.secondsPerGranularity[granularity];
     let transferRateUnit      = this._getAppropriateTransferRateUnit(bytes, secondsPerGranularity);
     let bytesPerUnit          = transferRateUnit.bytesPerUnit;
     let transferRate          = parseFloat((bytes / bytesPerUnit / secondsPerGranularity).toFixed(2));
@@ -85,14 +86,15 @@ class DataUtils {
   /**
    * Calculate bits per second from bytes.
    *
-   * @param  {object} bytes       The number of bytes to convert to a transfer rate measurement.
-   * @param  {string} granularity The time granularity used to figure out how many
-   *                              seconds the transfer amount should be divided by.
-   * @return {number|null}        The average bits per second for the given time granularity.
-   *                              Returns null if bytes was passed as null.
+   * @param  {object}        bytes       The number of bytes to convert to a transfer rate measurement.
+   * @param  {string|number} granularity The time granularity used to figure out how many
+   *                                     seconds the transfer amount should be divided by.
+   *                                     Can also be passed as a number to divide by a specific number of seconds.
+   * @return {number|null}               The average bits per second for the given time granularity.
+   *                                     Returns null if bytes was passed as null.
    */
   getBPSFromBytes(bytes, granularity) {
-    let secondsPerGranularity = this.secondsPerGranularity[granularity];
+    let secondsPerGranularity = _.isNumber(granularity) ? granularity : this.secondsPerGranularity[granularity];
     let bitsPerSecond = Math.round((bytes * this.bitsPerByte) / secondsPerGranularity);
     return (bytes === null) ? null : bitsPerSecond;
   }
