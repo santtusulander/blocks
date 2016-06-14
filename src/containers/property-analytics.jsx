@@ -12,6 +12,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
+import * as exportsActionCreators from '../redux/modules/exports';
 
 import AnalyticsPage from '../components/analysis/analytics-page'
 
@@ -81,6 +82,8 @@ export class PropertyAnalytics extends React.Component {
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${propertyName} - ${moment().format()}`}
+        exportsActions={this.props.exportsActions}
+        exportsDialogState={this.props.exportsDialogState}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}
@@ -116,6 +119,8 @@ PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
   fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
@@ -150,6 +155,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    exportsDialogState: state.exports.toObject(),
     hosts: state.host.get('allHosts'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
@@ -240,6 +246,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 
   return {
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
     fetchInit: fetchInit,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
