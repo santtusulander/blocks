@@ -33,6 +33,16 @@ export function createCSVExporters(filenamePart) {
       const data = visitors.map(mapTimestamps)
       generate('Visitors', data)
     },
+    onOffNet: onOffNet => {
+      const data = onOffNet
+        .map(item => Immutable.Map({
+          timestamp: moment(item.get('timestamp')).format(),
+          on_net: item.getIn(['net_on', 'bytes']),
+          off_net: item.getIn(['net_off', 'bytes']),
+          total: item.get('total')
+        }))
+      generate('On Off Net', data)
+    },
     serviceProviders: onOffNet => {
       const data = onOffNet
         .map(item => Immutable.Map({

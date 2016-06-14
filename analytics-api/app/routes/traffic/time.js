@@ -27,7 +27,6 @@ function routeTrafficTime(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  let bitsPerByte = 8;
   let options = {
     start        : params.start,
     end          : params.end,
@@ -37,12 +36,6 @@ function routeTrafficTime(req, res) {
     service_type : params.service_type,
     granularity  : params.granularity,
     dimension    : 'global'
-  };
-  let secondsPerGranularityMap = {
-    '5min' : 300,
-    hour   : 3600,
-    day    : 86400,
-    month  : 2629743 // 30.44 days
   };
 
   db.getEgress(options).then((trafficData) => {
@@ -61,12 +54,7 @@ function routeTrafficTime(req, res) {
 
     // Add bits per second to each traffic record
     finalTrafficData = finalTrafficData.map((record) => {
-      let secondsPerGranularity = secondsPerGranularityMap[optionsFinal.granularity];
-      if (record.bytes == null) {
-        record.bits_per_second = null;
-      } else {
-        record.bits_per_second = Math.round((record.bytes * bitsPerByte) / secondsPerGranularity);
-      }
+      record.bits_per_second = dataUtils.getBPSFromBytes(record.bytes, optionsFinal.granularity);
       return record;
     });
 

@@ -6,10 +6,11 @@ import moment from 'moment'
 import PageContainer from '../layout/page-container'
 import Sidebar from '../layout/sidebar'
 import Content from '../layout/content'
-import Analyses from './analyses'
+import Filters from './filters/filters'
 import AnalysisTraffic from './traffic'
 import AnalysisVisitors from './visitors'
-import AnalysisSPReport from './sp-report'
+import AnalysisOnOffNetReport from './on-off-net-report'
+import AnalysisServiceProviders from './service-providers'
 import AnalysisFileError from './file-error'
 import AnalysisURLReport from './url-report'
 import AnalysisStorageUsage from './storage-usage'
@@ -17,6 +18,17 @@ import AnalysisPlaybackDemo from './playback-demo'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 
 import { ExportPanel }from '../export-panel'
+
+import TabTitles from '../../constants/report-tab-titles'
+
+const handleReportTitleChange = (tab) => {
+  if(TabTitles.hasOwnProperty(tab)) {
+    return `${TabTitles[tab]}`
+  } else {
+    return `${tab}`
+  }
+}
+
 
 let exporters = createCSVExporters('')
 
@@ -61,8 +73,11 @@ export class AnalyticsPage extends React.Component {
       case 'visitors':
         exporters.visitors(this.props.visitorsByTime)
         break
-      case 'sp-report':
-        exporters.serviceProviders(this.props.onOffNet.get('detail'))
+      case 'on-off-net-report':
+        exporters.onOffNet(this.props.onOffNet.get('detail'))
+        break
+      case 'service-providers':
+        exporters.serviceProviders(this.props.serviceProviders.get('detail'))
         break
       case 'file-error':
         exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
@@ -139,24 +154,28 @@ export class AnalyticsPage extends React.Component {
           onDownload={this.onDownload}
           onSend={this.onSend}
           onCancel={this.hideExportPanel}
-          showExportPanel={this.showExportPanel}/>
+          showExportPanel={this.showExportPanel}
+          panelTitle={handleReportTitleChange(this.state.activeTab)}/>
 
         <Sidebar>
-          <Analyses
-            endDate={this.props.endDate}
-            startDate={this.props.startDate}
-            changeDateRange={this.props.changeDateRange}
-            changeSPChartType={this.props.changeSPChartType}
-            serviceTypes={this.props.serviceTypes}
-            spChartType={this.props.spChartType}
-            toggleServiceType={this.props.toggleAnalysisServiceType}
+          <Filters
             activeTab={this.state.activeTab}
-            type={this.props.type}
+            activeVideo={this.state.activeVideo}
+            endDate={this.props.endDate}
+            changeDateRange={this.props.changeDateRange}
+            changeOnOffNetChartType={this.props.changeOnOffNetChartType}
+            changeSPChartType={this.props.changeSPChartType}
+            changeVideo={this.changeActiveVideo}
             name={this.props.activeName}
             navOptions={this.props.siblings}
-            activeVideo={this.state.activeVideo}
-            changeVideo={this.changeActiveVideo}
+            onOffNetChartType={this.props.onOffNetChartType}
+            serviceTypes={this.props.serviceTypes}
             showExportPanel={this.showExportPanel}
+            startDate={this.props.startDate}
+            statusCodes={this.props.statusCodes}
+            toggleServiceType={this.props.toggleAnalysisServiceType}
+            toggleStatusCode={this.props.toggleAnalysisStatusCode}
+            type={this.props.type}
           />
 
         </Sidebar>
@@ -165,7 +184,8 @@ export class AnalyticsPage extends React.Component {
           <Nav bsStyle="tabs" className="analysis-nav" activeKey={this.state.activeTab} onSelect={this.changeTab}>
             <NavItem eventKey="traffic">Traffic</NavItem>
             <NavItem eventKey="visitors">Visitors</NavItem>
-            <NavItem eventKey="sp-report">SP On/Off Net</NavItem>
+            <NavItem eventKey="on-off-net-report">On/Off Net</NavItem>
+            <NavItem eventKey="service-providers">Service Providers</NavItem>
             <NavItem eventKey="file-error">File Error</NavItem>
             <NavItem eventKey="url-report">URL Report</NavItem>
             {/* Not in 0.0.52 <NavItem eventKey="storage-usage">Storage Usage</NavItem>*/}
@@ -191,15 +211,21 @@ export class AnalyticsPage extends React.Component {
                 byBrowser={this.props.visitorsByBrowser.get('browsers')}
                 byOS={this.props.visitorsByOS.get('os')}/>
             }
-            {this.state.activeTab === 'sp-report' &&
-              <AnalysisSPReport fetching={this.props.trafficFetching}
-                serviceProviderStats={this.props.onOffNet}
-                serviceProviderStatsToday={this.props.onOffNetToday}
-                spChartType={this.props.spChartType}/>
+            {this.state.activeTab === 'on-off-net-report' &&
+              <AnalysisOnOffNetReport fetching={this.props.trafficFetching}
+                onOffStats={this.props.onOffNet}
+                onOffStatsToday={this.props.onOffNetToday}
+                onOffNetChartType={this.props.onOffNetChartType}/>
+            }
+            {this.state.activeTab === 'service-providers' &&
+              <AnalysisServiceProviders fetching={this.props.trafficFetching}
+                stats={this.props.serviceProviders}/>
             }
             {this.state.activeTab === 'file-error' &&
               <AnalysisFileError fetching={this.props.reportsFetching}
                 summary={this.props.fileErrorSummary}
+                statusCodes={this.props.statusCodes}
+                serviceTypes={this.props.serviceTypes}
                 urls={this.props.fileErrorURLs}/>
             }
             {this.state.activeTab === 'url-report' &&
@@ -225,6 +251,7 @@ AnalyticsPage.displayName = 'AnalyticsPage'
 AnalyticsPage.propTypes = {
   activeName: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
+  changeOnOffNetChartType: React.PropTypes.func,
   changeSPChartType: React.PropTypes.func,
   dateRange: React.PropTypes.string,
   endDate: React.PropTypes.instanceOf(moment),
@@ -236,14 +263,17 @@ AnalyticsPage.propTypes = {
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.Map),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   reportsFetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   siblings: React.PropTypes.instanceOf(Immutable.List),
-  spChartType: React.PropTypes.string,
   startDate: React.PropTypes.instanceOf(moment),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   toggleAnalysisServiceType: React.PropTypes.func,
+  toggleAnalysisStatusCode: React.PropTypes.func,
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
@@ -265,6 +295,7 @@ AnalyticsPage.defaultProps = {
   metrics: Immutable.Map(),
   onOffNet: Immutable.Map(),
   onOffNetToday: Immutable.Map(),
+  serviceProviders: Immutable.List(),
   serviceTypes: Immutable.List(),
   siblings: Immutable.List(),
   storageStats: Immutable.List(),

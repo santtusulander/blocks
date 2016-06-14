@@ -1,0 +1,22 @@
+import React from 'react';
+
+import './hover-tool-tip.scss'
+
+const HoverToolTip = (props) => {
+  return (
+    <span className='hover-tool-tip'>
+      <a className='hover-tool-tip-link' >{ props.linkText }
+        <div className='hover-tool-tip-content'>
+            {props.children}
+        </div>
+      </a>
+    </span>
+  )
+}
+
+HoverToolTip.displayName = 'HoverToolTip'
+HoverToolTip.propTypes = {
+  children: React.PropTypes.node
+};
+
+module.exports = HoverToolTip

@@ -30,6 +30,8 @@ class DataUtils {
       day    : 86400,
       month  : 2629743 // 30.44 days
     };
+
+    this.bitsPerByte = 8;
   }
 
   /**
@@ -78,6 +80,21 @@ class DataUtils {
     let transferRate          = parseFloat((bytes / bytesPerUnit / secondsPerGranularity).toFixed(2));
 
     return _.isNaN(transferRate) ? null : `${transferRate} ${transferRateUnit.unit}`;
+  }
+
+  /**
+   * Calculate bits per second from bytes.
+   *
+   * @param  {object} bytes       The number of bytes to convert to a transfer rate measurement.
+   * @param  {string} granularity The time granularity used to figure out how many
+   *                              seconds the transfer amount should be divided by.
+   * @return {number|null}        The average bits per second for the given time granularity.
+   *                              Returns null if bytes was passed as null.
+   */
+  getBPSFromBytes(bytes, granularity) {
+    let secondsPerGranularity = this.secondsPerGranularity[granularity];
+    let bitsPerSecond = Math.round((bytes * this.bitsPerByte) / secondsPerGranularity);
+    return (bytes === null) ? null : bitsPerSecond;
   }
 
   /**
@@ -169,6 +186,11 @@ class DataUtils {
         total: dimensionTotal,
         detail: []
       };
+
+      // Don't include this record if the total is falsy or "0"
+      if (!dimensionTotal || dimensionTotal === '0') {
+        return;
+      }
 
       // Set the detail array on the record
       // Calculate total visitors for the dimension

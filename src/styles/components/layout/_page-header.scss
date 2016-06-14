@@ -3,11 +3,20 @@
 
 .page-header-layout {
   min-height: $page-header-height;
-  padding: 35px 40px 10px;
+
+  @include xl {
+    padding: $xl-page-header-padding;
+  }
+
+  @include lg {
+    padding-top: 35px * 0.75;
+    padding-right: 40px * 0.75;
+    padding-bottom: 10px * 0.75;
+    padding-left: 40px * 0.75;
+  }
 
   @include md {
     min-height: $md-page-header-height;
-    padding: 25px 30px 10px;
   }
 
   @include print {

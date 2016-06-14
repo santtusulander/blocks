@@ -8,7 +8,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import sortOptions from '../constants/content-item-sort-options'
 
 import AddHost from './add-host'
-import { ButtonWrapper as Button } from './button'
+import UDNButton from './button'
 import PageContainer from './layout/page-container'
 import Content from './layout/content'
 import PageHeader from './layout/page-header'
@@ -19,6 +19,8 @@ import IconAdd from './icons/icon-add.jsx'
 import IconChart from './icons/icon-chart.jsx'
 import IconItemList from './icons/icon-item-list.jsx'
 import IconItemChart from './icons/icon-item-chart.jsx'
+
+import LoadingSpinner from './loading-spinner/loading-spinner'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -116,40 +118,41 @@ class ContentItems extends React.Component {
           <PageHeader>
             <ButtonToolbar className="pull-right">
               {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-              <Button bsStyle="primary"
+              <UDNButton bsStyle="primary"
                 icon={true}
                 addNew={true}
                 hidden={createNewItem === undefined}
                 onClick={this.toggleAddItem}>
                 <IconAdd/>
-              </Button>
+              </UDNButton>
               <Select
                 onSelect={this.handleSortChange}
                 value={currentValue}
                 options={sortOptions.map(opt => [opt.value, opt.label])}/>
-              <Button bsStyle="primary"
+              <UDNButton bsStyle="primary"
                 icon={true}
                 toggleView={true}
                 hidden={viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemChart/>
-              </Button>
-              <Button bsStyle="primary"
+              </UDNButton>
+              <UDNButton bsStyle="primary"
                 icon={true}
                 toggleView={true}
                 hidden={!viewingChart}
                 onClick={this.props.toggleChartView}>
                 <IconItemList/>
-              </Button>
+              </UDNButton>
             </ButtonToolbar>
             <p>{headerText.summary}</p>
             <h1>{headerText.label}</h1>
           </PageHeader>
 
           <div className="container-fluid body-content">
+
             {this.props.breadcrumbs ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
-              <p className="fetching-info">Loading...</p> : (
+              <LoadingSpinner /> : (
               this.props.contentItems.isEmpty() ?
                 <NoContentItems content={ifNoContent} />
               :

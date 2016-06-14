@@ -1,16 +1,16 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
-import { findDOMNode } from 'react-dom'
 
 import Tooltip from '../../tooltip'
-import AnalysisLineLabel from './line-label'
+import Legend from './legend'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
 const configureTooltip = (date, val, height, formatY, xScale, yScale) => {
-  const formattedDate = moment(date).format('MMM D')
+  const formattedDate = moment(date).format('MMM D h:mm a [GMT]')
   const formattedValue = formatY(val)
   return {
     text: `${formattedDate} ${formattedValue}`,
@@ -30,6 +30,7 @@ class AnalysisByTime extends React.Component {
       primaryTooltipY: 0,
       primaryTooltipOffsetTop: false,
       primaryLabelWidth: 0,
+
       secondaryTooltipText: null,
       secondaryTooltipX: 0,
       secondaryTooltipY: 0,
@@ -39,6 +40,7 @@ class AnalysisByTime extends React.Component {
 
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
+
     this.measureChartLabels = this.measureChartLabels.bind(this)
     this.formatY = this.formatY.bind(this)
   }
@@ -51,6 +53,7 @@ class AnalysisByTime extends React.Component {
       secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
     })
   }
+
   moveMouse(xScale, yScale, primaryData, secondaryData) {
     const configTooltip = (time, date) => configureTooltip(
       time,
@@ -96,12 +99,16 @@ class AnalysisByTime extends React.Component {
       }
     }
   }
+
   deactivateTooltip() {
-    this.setState({
-      primaryTooltipText: null,
-      secondaryTooltipText: null
-    })
+    if (this.props.showTooltip) {
+      this.setState({
+        primaryTooltipText: null,
+        secondaryTooltipText: null
+      })
+    }
   }
+
   formatY(val) {
     return this.props.yAxisFormat ?
       numeral(val).format(this.props.yAxisFormat)
@@ -170,12 +177,6 @@ class AnalysisByTime extends React.Component {
       .x(d => xScale(d.timestamp))
       .interpolate('monotone')
 
-    const secondaryLabelX = this.props.width - (this.props.padding * 1.5) -
-      this.state.secondaryLabelWidth
-
-    const primaryLabelX = secondaryLabelX - this.state.primaryLabelWidth -
-      (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
-
     let className = 'analysis-by-time'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -222,18 +223,7 @@ class AnalysisByTime extends React.Component {
                 fill="url(#dt-secondary-gradient)" />
             }
           </g> : null}
-          {this.props.primaryLabel && <AnalysisLineLabel
-            ref="primaryLabel"
-            type="primary"
-            padding={this.props.padding}
-            labelX={primaryLabelX}
-            label={this.props.primaryLabel}/>}
-          {this.props.secondaryLabel && <AnalysisLineLabel
-            ref="secondaryLabel"
-            type="secondary"
-            padding={this.props.padding}
-            labelX={secondaryLabelX}
-            label={this.props.secondaryLabel}/>}
+
           {this.state.primaryTooltipText ?
             <g>
               <circle r="5"
@@ -313,14 +303,33 @@ class AnalysisByTime extends React.Component {
             </linearGradient>
           </defs>
         </svg>
-        <Tooltip x={this.state.primaryTooltipX} y={this.state.primaryTooltipY}
-          hidden={!this.state.primaryTooltipText} offsetTop={this.state.primaryTooltipOffsetTop}>
-          {this.state.primaryTooltipText}
-        </Tooltip>
-        <Tooltip x={this.state.secondaryTooltipX} y={this.state.secondaryTooltipY}
-          hidden={!this.state.secondaryTooltipText} offsetTop={this.state.secondaryTooltipOffsetTop}>
-          {this.state.secondaryTooltipText}
-        </Tooltip>
+
+      {this.props.showTooltip && <div className='tooltips'>
+          <Tooltip
+            x={this.state.primaryTooltipX}
+            y={this.state.primaryTooltipY}
+            hidden={!this.state.primaryTooltipText}
+            offsetTop={this.state.primaryTooltipOffsetTop}
+          >
+              {this.state.primaryTooltipText}
+          </Tooltip>
+
+          <Tooltip
+            x={this.state.secondaryTooltipX}
+            y={this.state.secondaryTooltipY}
+            hidden={!this.state.secondaryTooltipText}
+            offsetTop={this.state.secondaryTooltipOffsetTop}
+          >
+            {this.state.secondaryTooltipText}
+          </Tooltip>
+      </div>}
+
+      {this.props.showLegend && <Legend
+          primaryLabel={this.props.primaryLabel}
+          primaryValue={this.state.primaryTooltipText}
+          secondaryLabel={this.props.secondaryLabel}
+          secondaryValue={this.state.primaryTooltipText}
+      />}
       </div>
     )
   }
@@ -338,11 +347,18 @@ AnalysisByTime.propTypes = {
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
+  showLegend: React.PropTypes.bool,
+  showTooltip: React.PropTypes.bool,
   stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
   yAxisCustomFormat: React.PropTypes.func,
   yAxisFormat: React.PropTypes.string
+}
+
+AnalysisByTime.defaultProps = {
+  showTooltip: true,
+  showLegend: false
 }
 
 module.exports = AnalysisByTime

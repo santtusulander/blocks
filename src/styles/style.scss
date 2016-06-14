@@ -48,6 +48,7 @@
 // Components
 // ==========
 
+@import 'components/account-sidebar';
 @import 'components/confirmation';
 @import 'components/content-item-chart';
 @import 'components/content-item-list';
@@ -62,6 +63,13 @@
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
+//Account Management
+@import 'components/account-management/dns-soa-form';
+@import 'components/account-management/account-management-header';
+@import 'components/account-management/action-links';
+@import 'components/account-management/dns-list';
+@import 'components/account-management/user-list';
+@import 'components/account-management/groups';
 // Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
@@ -70,6 +78,7 @@
 @import 'components/analysis/horizontal-bar';
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
+@import 'components/analysis/service-providers';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
@@ -82,9 +91,6 @@
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
 @import 'components/layout/sidebar';
-// Account Management
-@import 'components/account-management/groups';
-
 
 // Transitions
 // ===========

@@ -1,6 +1,6 @@
 import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import Immutable from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import moment from 'moment'
 
 import { analyticsBase, parseResponseData, qsBuilder } from '../util'
@@ -12,16 +12,16 @@ const ACCOUNT_METRICS_FETCHED = 'ACCOUNT_METRICS_FETCHED'
 const GROUP_METRICS_FETCHED = 'GROUP_METRICS_FETCHED'
 const HOST_METRICS_FETCHED = 'HOST_METRICS_FETCHED'
 
-const emptyMetrics = Immutable.Map({
-  accountMetrics: Immutable.List(),
-  groupMetrics: Immutable.List(),
-  hostMetrics: Immutable.List(),
+const emptyMetrics = Map({
+  accountMetrics: List(),
+  groupMetrics: List(),
+  hostMetrics: List(),
   fetchingAccountMetrics: false,
   fetchingGroupMetrics: false,
   fetchingHostMetrics: false
 })
 
-const parseDatapointTraffic = datapoint => {
+export const parseDatapointTraffic = datapoint => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
     traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
     return traffic;
@@ -36,17 +36,23 @@ const parseDatapointTraffic = datapoint => {
   return datapoint;
 }
 
-export const makeMetricsReducer = (fetchKey, dataKey) => {
+export function fetchSuccess(fetchKey, dataKey, state, action) {
+  const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
+  return state
+  .set(fetchKey, false)
+  .set(dataKey, fromJS(data))
+}
+
+export function fetchFailure(fetchKey, dataKey, state) {
+  return state
+    .set(fetchKey, false)
+    .set(dataKey, List())
+}
+
+export function makeMetricsReducer(fetchKey, dataKey) {
   return {
-    next: (state, action) => {
-      const data = action.payload.data.map(datapoint => parseDatapointTraffic(datapoint))
-      return state
-        .set(fetchKey, false)
-        .set(dataKey, Immutable.fromJS(data))
-    },
-    throw: state => state
-      .set(fetchKey, false)
-      .set(dataKey, Immutable.List())
+    next: (state, action) => fetchSuccess(fetchKey, dataKey, state, action),
+    throw: (state) => fetchFailure(fetchKey, dataKey, state)
   }
 }
 

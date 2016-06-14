@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -33,11 +32,12 @@ export class AccountAnalytics extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
+    this.props.accounts.isEmpty() && this.props.fetchInit()
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.account !== this.props.params.account) {
-      this.props.fetchData(nextProps.params.account)
+      this.fetchData(nextProps.params.account)
     }
   }
   fetchData(account) {
@@ -83,7 +83,7 @@ export class AccountAnalytics extends React.Component {
       <AnalyticsPage
           activeName={activeName}
           changeDateRange={this.changeDateRange}
-          changeSPChartType={this.props.uiActions.changeSPChartType}
+          changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
           dateRange={this.state.dateRange}
           endDate={this.state.endDate}
           exportFilenamePart={`${activeName} - ${moment().format()}`}
@@ -94,14 +94,17 @@ export class AccountAnalytics extends React.Component {
           fileErrorURLs={this.props.fileErrorURLs}
           metrics={metrics}
           onOffNet={this.props.onOffNet}
+          onOffNetChartType={this.props.onOffNetChartType}
           onOffNetToday={this.props.onOffNetToday}
           reportsFetching={this.props.reportsFetching}
+          serviceProviders={this.props.serviceProviders}
           serviceTypes={this.props.serviceTypes}
+          statusCodes={this.props.statusCodes}
           siblings={availableAccounts}
-          spChartType={this.props.spChartType}
           startDate={this.state.startDate}
           storageStats={this.props.storageStats}
           toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+          toggleAnalysisStatusCode={this.props.uiActions.toggleAnalysisStatusCode}
           totalEgress={this.props.totalEgress}
           trafficByCountry={this.props.trafficByCountry}
           trafficByTime={this.props.trafficByTime}
@@ -122,17 +125,22 @@ AccountAnalytics.displayName = 'AccountAnalytics'
 AccountAnalytics.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
+  fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   onOffNet: React.PropTypes.instanceOf(Immutable.Map),
+  onOffNetChartType: React.PropTypes.string,
   onOffNetToday: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   reportsFetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  spChartType: React.PropTypes.string,
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   storageStats: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
@@ -157,12 +165,14 @@ function mapStateToProps(state) {
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     metrics: state.metrics.get('accountMetrics'),
-    totalEgress: state.traffic.get('totalEgress'),
-    serviceTypes: state.ui.get('analysisServiceTypes'),
-    spChartType: state.ui.get('analysisSPChartType'),
-    storageStats: state.traffic.get('storage'),
     onOffNet: state.traffic.get('onOffNet'),
+    onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffNetToday: state.traffic.get('onOffNetToday'),
+    serviceProviders: state.traffic.get('serviceProviders'),
+    serviceTypes: state.ui.get('analysisServiceTypes'),
+    statusCodes: state.ui.get('analysisErrorStatusCodes'),
+    storageStats: state.traffic.get('storage'),
+    totalEgress: state.traffic.get('totalEgress'),
     reportsFetching: state.reports.get('fetching'),
     trafficByCountry: state.traffic.get('byCountry'),
     trafficByTime: state.traffic.get('byTime'),
@@ -184,7 +194,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData (account, start, end) {
+  function fetchData(account, start, end) {
     const fetchOpts = {
       account: account,
       startDate: start.format('X'),
@@ -215,6 +225,7 @@ function mapDispatchToProps(dispatch, ownProps) {
       trafficActions.fetchTotalEgress(fetchOpts),
       trafficActions.fetchOnOffNet(onOffOpts),
       trafficActions.fetchOnOffNetToday(onOffTodayOpts),
+      trafficActions.fetchServiceProviders(onOffOpts),
       trafficActions.fetchStorage()
     ]).then(trafficActions.finishFetching)
     Promise.all([
@@ -228,10 +239,14 @@ function mapDispatchToProps(dispatch, ownProps) {
       reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(reportsActions.finishFetching)
   }
-
+  function fetchInit() {
+    const { brand } = ownProps.params
+    accountActions.fetchAccounts(brand)
+  }
   return {
     exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
+    fetchInit: fetchInit,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
