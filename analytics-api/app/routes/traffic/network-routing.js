@@ -4,10 +4,10 @@ require('express-jsend');
 let db        = require('../../db');
 let log       = require('../../logger');
 let validator = require('../../validator');
-let testData  = require('./service-provider-data');
+let testData  = require('./network-routing-data');
 
-function routeTrafficServiceProvider(req, res) {
-  log.info('Getting traffic/service-provider');
+function routeTrafficNetworkRouting(req, res) {
+  log.info('Getting traffic/network-routing');
   log.debug('query params:', req.query);
 
   let params = req.query;
@@ -39,4 +39,4 @@ function routeTrafficServiceProvider(req, res) {
 
 }
 
-module.exports = routeTrafficServiceProvider;
+module.exports = routeTrafficNetworkRouting;
