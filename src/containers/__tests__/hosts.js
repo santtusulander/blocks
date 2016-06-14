@@ -8,8 +8,8 @@ import jsdom from 'jsdom'
 jest.autoMockOff()
 jest.dontMock('../hosts.jsx')
 const Hosts = require('../hosts.jsx').Hosts
-const ContentItemChart = require('../../components/content-item-chart.jsx')
-const ContentItemList = require('../../components/content-item-list.jsx')
+const ContentItemChart = require('../../components/content/content-item-chart.jsx')
+const ContentItemList = require('../../components/content/content-item-list.jsx')
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView

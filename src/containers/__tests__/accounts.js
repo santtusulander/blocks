@@ -11,8 +11,8 @@ global.window = document.defaultView
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
-const ContentItemChart = require('../../components/content-item-chart.jsx')
-const ContentItemList = require('../../components/content-item-list.jsx')
+const ContentItemChart = require('../../components/content/content-item-chart.jsx')
+const ContentItemList = require('../../components/content/content-item-list.jsx')
 
 function accountActionsMaker() {
   return {

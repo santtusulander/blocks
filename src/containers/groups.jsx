@@ -9,7 +9,7 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import ContentItems from '../components/content-items'
+import ContentItems from '../components/content/content-items'
 
 export class Groups extends React.Component {
   constructor(props) {
