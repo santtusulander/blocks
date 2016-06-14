@@ -1,44 +1,88 @@
 @import '../../styles/base/variables';
 @import '../../styles/base/colors';
 
+$navigation-sidebar-width: 90px;
+$navigation-sidebar-width-hover: 180px;
+
+$navigation-sidebar-border-width: 10px;
+
 .navigation-sidebar {
-  width: 90px;
+  background-color: rgba(0,0,0,0.2); //$ericsson-dark-blue;
+  width: $navigation-sidebar-width;
+  transition: all 0.5s;
 
-  ul {
-    li {
-      display: block;
-      list-style: none;
-      border-left: 10px solid transparent;
+  &:hover {
+    transition: all 0.5s;
+    width: $navigation-sidebar-width-hover;
 
-      &.active {
-          border-left: 10px solid $pale-blue;
-        }
+    a {
+      span {
+        transition: all 0.5s;
+        opacity: 1;
+      }
+
+      svg {
+        transition: all 0.5s;
+        padding-top: 10px;
+        width: $navigation-sidebar-width-hover / 3;
+      }
     }
   }
 
-  a {
-    display: block;
-    font-family: "Roboto Bold", Arial, Helvetica, Sans-Serif;
-    font-size: 20px;
-    text-align: center;
-    padding: 15px;
-    color: $silver-60;
-    fill: $silver-60;
+  ul {
+    margin: 0;
+    padding: 0;
 
-    svg {
-      width: 50px;
-    }
-
-    span {
+    li {
       display: block;
       text-align: center;
+      list-style: none;
+      border-left: $navigation-sidebar-border-width solid transparent;
+
+      &.active {
+          background-color: $black;
+          border-left: $navigation-sidebar-border-width solid $pale-blue;
+        }
+
+      a {
+        display: block;
+        font-family: "Roboto Bold", Arial, Helvetica, Sans-Serif;
+        text-align: center;
+        text-decoration: none;
+        padding: 15px 15px 15px 5px;
+        color: $silver-60;
+        fill: $silver-60;
+
+        svg {
+          padding-top: 20px;
+          transition: all 0.5s;
+          width: $navigation-sidebar-width / 3;
+          display: block;
+          margin: 0 auto;
+        }
+
+        span {
+          transition: all 0.5s;
+          text-align: center;
+          opacity: 0;
+        }
+
+        &:hover {
+          color: $pale-blue;
+
+          svg {
+            fill: $pale-blue;
+            stroke: $pale-blue;
+          }
+
+        }
+      }
     }
 
-    &:hover {
-      color: $pale-blue;
-      fill: $pale-blue;
-      text-decoration: none;
-
+    li.logo {
+      svg {
+        fill: $white;
+      }
     }
   }
 }

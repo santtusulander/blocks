@@ -12,5 +12,7 @@ storiesOf('Navigation', module)
     </ThemeWrap>
   ))
   .add('Navigation', () => (
-    <Navigation />
+    <div style={ { width: '90px' } }>
+      <Navigation />
+    </div>
   ))

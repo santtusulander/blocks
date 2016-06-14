@@ -3,6 +3,7 @@ import React from 'react'
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
 import IconContent from '../icons/icon-content.jsx'
+import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconServices from '../icons/icon-services.jsx'
 import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
@@ -13,7 +14,13 @@ const Navigation = (props) => {
   return (
     <nav className='navigation-sidebar'>
       <ul>
-          <li className='active'>
+          <li className='logo'>
+            <a href="#">
+              <IconEricsson />
+            </a>
+          </li>
+
+          <li>
             <a href="#">
               <IconContent />
               <span>Content</span>
@@ -27,7 +34,7 @@ const Navigation = (props) => {
           </a>
         </li>
 
-        <li>
+        <li className='active'>
           <a href="#">
             <IconSecurity />
             <span>Security</span>
@@ -41,7 +48,7 @@ const Navigation = (props) => {
           </a>
         </li>
 
-        <li className='active'>
+        <li>
           <a href="#">
             <IconAccount />
             <span>Account</span>
