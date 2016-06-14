@@ -6,7 +6,7 @@ import moment from 'moment'
 import PageContainer from '../layout/page-container'
 import Sidebar from '../layout/sidebar'
 import Content from '../layout/content'
-import Analyses from './analyses'
+import Filters from './filters/filters'
 import AnalysisTraffic from './traffic'
 import AnalysisVisitors from './visitors'
 import AnalysisOnOffNetReport from './on-off-net-report'
@@ -158,7 +158,7 @@ export class AnalyticsPage extends React.Component {
           panelTitle={handleReportTitleChange(this.state.activeTab)}/>
 
         <Sidebar>
-          <Analyses
+          <Filters
             activeTab={this.state.activeTab}
             activeVideo={this.state.activeVideo}
             endDate={this.props.endDate}

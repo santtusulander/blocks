@@ -13,9 +13,9 @@ describe('AnalyticsPage', () => {
     expect(page.find('PageContainer').length).toBe(1)
   });
 
-  it('should have an Analyses sidebar', () => {
+  it('should have a Filters sidebar', () => {
     const page = shallow(<AnalyticsPage />)
-    expect(page.find('Analyses').length).toBe(1)
+    expect(page.find('Filters').length).toBe(1)
   });
   it('should change tabs', () => {
     const page = TestUtils.renderIntoDocument(<AnalyticsPage/>)
