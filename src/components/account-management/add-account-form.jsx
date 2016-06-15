@@ -54,18 +54,19 @@ const NewAccountForm = (props) => {
             {...accountName}
             type="text"
             label="Account name"
-            placeholder='Enter Account Name'
-            groupClassName="border-bottom"/>
+            placeholder='Enter Account Name'/>
           {accountName.touched && accountName.error && <div className='error-msg'>{accountName.error}</div>}
+
+          <hr/>
 
           <Input
             {...accountBrand}
             type="text"
             label="Brand"
-            placeholder='Enter Brand'
-            groupClassName="border-bottom"/>
+            placeholder='Enter Brand'/>
           {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
 
+          <hr/>
 
           <div className='form-group'>
             <label className='control-label'>Account type</label>
@@ -75,6 +76,8 @@ const NewAccountForm = (props) => {
                   options={ accountTypeOptions }
             />
           </div>
+
+          <hr/>
 
           <label>Service type</label>
           {SERVICE_TYPES.map((e, i) => {
