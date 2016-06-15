@@ -10,6 +10,11 @@
   }
 }
 
+
+.fixed-size-textarea {
+  resize: none;
+  height: 150px;
+}
 /* FIX for account management forms to properly extend configuration sidebar  --- some load order issue ? */
 .dns-edit-form-sidebar, .add-account-form-sidebar, .roles-edit-form {
   @extend .configuration-sidebar;

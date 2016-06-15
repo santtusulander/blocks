@@ -18,5 +18,9 @@ import './account-management/roles-list'
 import './account-management/new-account-form'
 import './account-management/brand-edit-form'
 
+//security
+import './security/ssl-list'
+import './security/certificate-upload-form'
+
 import './content-item-chart'
 import './loading-spinner'
