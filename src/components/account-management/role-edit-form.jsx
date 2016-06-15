@@ -3,7 +3,7 @@ import {reduxForm} from 'redux-form'
 
 import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 
-import './roles-edit-form.scss'
+import './role-edit-form.scss'
 
 let errors = {}
 
@@ -25,7 +25,7 @@ const RolesEditForm = (props) => {
     <Modal
       show={props.show}
       onHide={props.onCancel}
-      dialogClassName="roles-edit-form"
+      dialogClassName="role-edit-form-sidebar"
     >
 
       <Modal.Header>
@@ -41,6 +41,8 @@ const RolesEditForm = (props) => {
         />
 
         {roleName.touched && roleName.error && <div className='error-msg'>{roleName.error}</div>}
+
+        <hr/>
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={props.onCancel}>Cancel</Button>
