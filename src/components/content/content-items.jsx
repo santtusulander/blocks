@@ -55,6 +55,10 @@ class ContentItems extends React.Component {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
       null, Immutable.Map({ totalTraffic: 0 }))
   }
+  getDailyTraffic(item) {
+    return this.props.dailyTraffic.find(traffic => traffic.get(this.props.type) === item.get('id'),
+      null, Immutable.fromJS({ detail: [] }))
+  }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
     if(sortOption) {
@@ -91,7 +95,8 @@ class ContentItems extends React.Component {
       }
       return Immutable.Map({
         item: item,
-        metrics: itemMetrics
+        metrics: itemMetrics,
+        dailyTraffic: this.getDailyTraffic(item)
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
@@ -178,6 +183,7 @@ class ContentItems extends React.Component {
                       configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
+                      dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                       description: 'Desc',
                       delete: this.props.deleteItem,
                       primaryData: contentMetrics.get('traffic'),
@@ -261,6 +267,7 @@ ContentItems.propTypes = {
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   deleteItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,

@@ -142,8 +142,8 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
-    startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('hour').format('X')
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
   }
   return {
     fetchData: (metrics, accounts, dailyTraffic) => {

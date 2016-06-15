@@ -118,8 +118,8 @@ function mapDispatchToProps(dispatch, ownProps) {
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
-    startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('hour').format('X')
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
   }
   const fetchData = () => {
     accountActions.fetchAccount(brand, account)
