@@ -10,6 +10,8 @@ import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
+import Navigation from '../components/navigation/navigation.jsx'
+
 import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
@@ -121,8 +123,11 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
+        <Navigation activeAccount={this.props.activeAccount} />
+
         {this.props.location.pathname !== '/login' ?
-          <Header
+
+        <Header
             accounts={filteredAccounts}
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}

@@ -1,25 +1,34 @@
 @import '../../styles/base/variables';
 @import '../../styles/base/colors';
 
-$navigation-sidebar-width: 90px;
-$navigation-sidebar-width-hover: 180px;
+$navigation-sidebar-width: 90px / 2;
+$navigation-sidebar-width-hover: 180px / 2;
+$navigation-element-height: $navigation-sidebar-width-hover - 20 / 2;
+$navigation-sidebar-border-width: 10px / 2;
+$navigation-sidebar-font-size: 20px / 2;
 
-$navigation-sidebar-border-width: 10px;
-$navigation-sidebar-font-size: 20px;
+$navigation-transition-time: 0.3s;
+$dark-blue-navi: #070d1e;
 
 .navigation-sidebar {
-  background-color: rgba(0,0,0,0.2); //$ericsson-dark-blue;
+  background-color: $dark-blue-navi; //$ericsson-dark-blue;
   width: $navigation-sidebar-width;
-  transition: all 0.5s;
+  transition: all $navigation-transition-time;
 
   box-sizing: border-box;
+  position: fixed;
+  top: 10px;
+  left: 0;
+  z-index: 10000;
+  height: 100vh;
 
   ul {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 
     li {
-      height: 160px;
+      height: $navigation-element-height;
 
       display: table;
       width: 100%;
@@ -27,35 +36,38 @@ $navigation-sidebar-font-size: 20px;
       text-align: center;
       list-style: none;
 
-      border-left: $navigation-sidebar-border-width solid transparent;
-      border-right: $navigation-sidebar-border-width solid transparent;
-
-      &.active {
-          background-color: $black;
-          border-left: $navigation-sidebar-border-width solid $pale-blue;
-      }
 
       a {
+        border-left: $navigation-sidebar-border-width solid transparent;
+        border-right: $navigation-sidebar-border-width solid transparent;
+
+        &.active {
+          background-color: $black;
+          border-left: $navigation-sidebar-border-width solid $pale-blue;
+        }
+
         display: table-cell;
         vertical-align: middle;
-        width: 100%;
 
-        font-family: "Roboto Bold", Arial, Helvetica, Sans-Serif;
+        font-family: "Roboto", Arial, Helvetica, Sans-Serif;
+        font-weight: bold;
         text-align: center;
         text-decoration: none;
         color: $silver-60;
         fill: $silver-60;
 
         svg {
-          transition: all 0.5s;
-          width: $navigation-sidebar-width / 3;
-          height: $navigation-sidebar-width / 3;
+          transition: all $navigation-transition-time;
+          width: $navigation-sidebar-width / 2.5;
+          height: $navigation-sidebar-width / 2.5;
+          shape-rendering: geometricPrecision;
+          stroke-linejoin:round
         }
 
         span {
           font-size: 0;
           line-height: 0;
-          transition: all 0.5s;
+          transition: all $navigation-transition-time;
           display: block;
           font-size: $navigation-sidebar-font-size;
           text-align: center;
@@ -82,22 +94,22 @@ $navigation-sidebar-font-size: 20px;
   }
 
   &:hover {
-    transition: all 0.5s;
+    transition: all $navigation-transition-time;
     width: $navigation-sidebar-width-hover;
 
     li {
       a {
         span {
           line-height: 1;
-          transition: all 0.5s;
+          transition: all $navigation-transition-time;
           opacity: 1;
         }
 
         svg {
-          transition: all 0.5s;
+          transition: all $navigation-transition-time;
           width: $navigation-sidebar-width-hover / 3;
           height: $navigation-sidebar-width-hover / 3;
-          margin-bottom: 26px;
+          margin-bottom: 26px / 2;
         }
       }
     }
