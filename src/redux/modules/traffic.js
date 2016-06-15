@@ -157,12 +157,12 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
