@@ -37,10 +37,9 @@ export const CertificateUploadForm = ({ onCancel, onSave, accounts, groups, fiel
           <div id="accounts">
             <Input type="select"
               label="Account"
-              { ...account }
-              >
-                {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
-              </Input>
+              { ...account }>
+              {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
+            </Input>
           </div>
           <div id="groups">
             <Input type="select"
