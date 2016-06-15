@@ -19,6 +19,12 @@ const fakeSecondaryData = Immutable.List([
   {bytes: 456, timestamp: 456}
 ])
 
+const fakeDailyTraffic = Immutable.fromJS([
+  {transfer_rate: 1},
+  {transfer_rate: 2},
+  {transfer_rate: 0}
+])
+
 const fakeDifferenceData = Immutable.List([0, 0, 0, 1, 1, 1])
 
 describe('ContentItemChart', () => {
@@ -44,6 +50,7 @@ describe('ContentItemChart', () => {
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
+        dailyTraffic={fakeDailyTraffic}
         differenceData={fakeDifferenceData}
         fetchingMetrics={false}
         linkTo='foo'
@@ -61,6 +68,7 @@ describe('ContentItemChart', () => {
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
+        dailyTraffic={fakeDailyTraffic}
         differenceData={fakeDifferenceData}
         fetchingMetrics={false}
         linkTo='foo'
@@ -78,6 +86,7 @@ describe('ContentItemChart', () => {
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
+        dailyTraffic={fakeDailyTraffic}
         differenceData={fakeDifferenceData}
         fetchingMetrics={false}
         linkTo='foo'
@@ -95,6 +104,7 @@ describe('ContentItemChart', () => {
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
+        dailyTraffic={fakeDailyTraffic}
         differenceData={fakeDifferenceData}
         fetchingMetrics={false}
         linkTo='foo'
@@ -107,4 +117,22 @@ describe('ContentItemChart', () => {
     contentItem.differenceHover(true)()
     expect(contentItem.state.showDiffLegend).toBe(true)
   });
+
+  it('should show day slices', () => {
+    let contentItem = TestUtils.renderIntoDocument(
+      <ContentItemChart
+        primaryData={fakePrimaryData}
+        secondaryData={fakeSecondaryData}
+        dailyTraffic={fakeDailyTraffic}
+        differenceData={fakeDifferenceData}
+        fetchingMetrics={false}
+        linkTo='foo'
+        analyticsLink='foo'
+        configurationLink='foo'
+        chartWidth='100'
+        barMaxHeight='10' />
+    )
+    const arcs = TestUtils.scryRenderedDOMComponentsWithClass(contentItem, 'day-arc')
+    expect(arcs.length).toBe(2)
+  })
 })

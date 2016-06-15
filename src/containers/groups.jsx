@@ -91,6 +91,7 @@ Groups.propTypes = {
 Groups.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   groups: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List()

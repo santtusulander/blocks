@@ -130,6 +130,7 @@ Hosts.propTypes = {
 Hosts.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   hosts: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List()

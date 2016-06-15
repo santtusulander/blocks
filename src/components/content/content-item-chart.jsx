@@ -316,6 +316,7 @@ ContentItemChart.propTypes = {
   timeToFirstByte: React.PropTypes.string
 }
 ContentItemChart.defaultProps = {
+  dailyTraffic: Immutable.List(),
   differenceData: Immutable.List(),
   primaryData: Immutable.List(),
   secondaryData: Immutable.List()

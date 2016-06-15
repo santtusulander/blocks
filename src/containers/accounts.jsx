@@ -120,6 +120,7 @@ Accounts.propTypes = {
 Accounts.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   metrics: Immutable.List()
 }
 

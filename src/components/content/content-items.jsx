@@ -284,5 +284,13 @@ ContentItems.propTypes = {
   type: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
+ContentItems.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  contentItems: Immutable.List(),
+  dailyTraffic: Immutable.List(),
+  metrics: Immutable.List(),
+  sortValuePath: Immutable.List()
+}
 
 module.exports = ContentItems
