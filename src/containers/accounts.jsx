@@ -26,7 +26,10 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData(this.props.metrics, this.props.accounts)
+    this.props.fetchData(
+      this.props.metrics,
+      this.props.accounts,
+      this.props.dailyTraffic)
   }
   // toggleActiveAccount(id) {
   //   return () => {
@@ -79,6 +82,7 @@ export class Accounts extends React.Component {
         brand={brand}
         className="groups-container"
         contentItems={filteredAccounts}
+        dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
@@ -100,6 +104,7 @@ Accounts.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -122,6 +127,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     accounts: state.account.get('allAccounts'),
+    dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
@@ -135,18 +141,26 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const metricsOpts = {
+    startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('hour').format('X')
+  }
   return {
-    fetchData: (metrics, accounts) => {
+    fetchData: (metrics, accounts, dailyTraffic) => {
       if(accounts.isEmpty()) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
       }
       if(metrics.isEmpty()) {
         metricsActions.startAccountFetching()
-        metricsActions.fetchAccountMetrics({
-          startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-          endDate: moment.utc().endOf('hour').format('X')
-        })
+        metricsActions.fetchAccountMetrics(metricsOpts)
+      }
+      if(dailyTraffic.isEmpty()) {
+        // TODO: Replace metrics endpoint with traffic endpoint after 0.7
+        // metricsActions.startAccountFetching()
+        // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
+        //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
+        metricsActions.fetchDailyAccountTraffic(metricsOpts)
       }
     },
     accountActions: accountActions,
