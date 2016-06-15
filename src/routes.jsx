@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRedirect } from 'react-router';
+import { Route, IndexRedirect, Redirect } from 'react-router';
 
 import AccountAnalytics from './containers/account-analytics'
 import AccountManagement from './containers/account-management'
@@ -20,12 +20,68 @@ import Styleguide from './containers/styleguide'
 
 import ContentTransition from './transitions/content'
 
+//Analytics v2
+import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
+
+import AnalyticsBrand from './containers/analytics/brand.jsx'
+import AnalyticsGroup from './containers/analytics/group.jsx'
+import AnalyticsAccount from './containers/analytics/account.jsx'
+import AnalyticsProperty from './containers/analytics/property.jsx'
+
+import AnalyticsTabTraffic from './components/analytics/tab-traffic.jsx'
+import AnalyticsTabVisitors from './components/analytics/tab-visitors.jsx'
+
+function getAnalyticsTabRoutes() {
+  return (
+    <div>
+      <Route path="traffic" components={{ tab: AnalyticsTabTraffic }} />
+      <Route path="visitors" components={{ tab: AnalyticsTabVisitors }} />
+
+      <IndexRedirect to="traffic" />
+    </div>
+  )
+}
+
 module.exports = (
   <Route path="/" component={Main}>
     <IndexRedirect to="/content/accounts/udn" />
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
+
+    <Route path="v2-analytics" component={AnalyticsContainer}>
+      <Route path=":brand" components={{ main: AnalyticsBrand }} />
+
+      <Route path=":brand/:account" components={{ main: AnalyticsAccount }}>
+        { getAnalyticsTabRoutes() }
+      </Route>
+
+      <Route path=":brand/:account/:group" components={{ main: AnalyticsGroup }}>
+        { getAnalyticsTabRoutes() }
+
+      </Route>
+
+      <Route path=":brand/:account/:group/:property" components={{ main: AnalyticsProperty }}>
+        { getAnalyticsTabRoutes() }
+      </Route>
+
+          {/* TODO: Add tab routes
+           <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+           <Route path=":account/on-off-net" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+           <Route path=":account/service-providers" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+           <Route path=":account/file-error" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+           <Route path=":account/url-report" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+           <Route path=":account/playback-demo" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+
+           <Route path=":group" components={{ main: AnalyticsGroup, sidebar: AnalyticsSidebarGroup }} >
+           <Route path=":property" components={{ main: AnalyticsProperty, sidebar: AnalyticsSidebarProperty }} />
+           </Route>
+           */}
+
+        { /* Currently Brand is always UDN - so redirect */ }
+      <IndexRedirect to="udn" />
+    </Route>
+
     <Route path="/content">
       <Route component={ContentTransition}>
         <Route path="accounts">
@@ -62,7 +118,8 @@ module.exports = (
           </Route>
         </Route>
       </Route>
-      <Route path="analytics">
+
+      <Route path="analytics-old">
         <Route path="account">
           <Route path=":brand">
             <Route path=":account" component={AccountAnalytics}/>
@@ -85,6 +142,7 @@ module.exports = (
           </Route>
         </Route>
       </Route>
+
     </Route>
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
