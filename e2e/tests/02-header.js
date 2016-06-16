@@ -1,5 +1,9 @@
 module.exports = {
 
+  before : (client) => {
+    client.resizeWindow(1440, 900);
+  },
+
   'Log in': (client) => {
     const loginPage = client.page.loginPage();
 
@@ -12,26 +16,31 @@ module.exports = {
     const headerPage = client.page.headerPage();
     const accountsPage = client.page.accountsPage();
 
-    client.pause(3000);
-
     headerPage
+      .waitForElementVisible('@accountMenu')
       .click('@accountMenu')
-      .expect.element('.main-nav-item:nth-of-type(1) div').to.have.attribute('class').which.contains('open');
+      .expect.element('.main-nav-item:nth-of-type(1) div')
+      .to.have.attribute('class')
+      .which.contains('open');
 
-    client.expect.element('.dropdown-account-menu li:nth-of-type(1) a').text.to.contain('FooBar');
+    client
+      .expect.element('.dropdown-account-menu li:nth-of-type(1) a')
+      .text.to.contain('FooBar');
 
     headerPage
       .click('.dropdown-account-menu li:first-of-type');
 
     accountsPage
-      .expect.element('@pageTitle').text.to.contain('FooBar');
+      .expect.element('@pageTitle').text.to.contain('FOOBAR');
   },
 
   'Selected item should have active class in account menu dropdown': (client) => {
     const headerPage = client.page.headerPage();
 
     headerPage
-      .expect.element('.dropdown-account-menu li:nth-of-type(1) a').to.have.attribute('class').which.contains('active');
+      .expect.element('.dropdown-account-menu li:nth-of-type(1) a')
+      .to.have.attribute('class')
+      .which.contains('active');
   },
 
   'Navigate to Content': (client) => {
@@ -42,14 +51,17 @@ module.exports = {
       .click('@content');
 
     accountsPage
-      .expect.element('@pageTitle').text.to.contain('Accounts');
+      .expect.element('@pageTitle')
+      .text.to.contain('ACCOUNTS');
   },
 
   'Earlier selected item should not have active class in account menu dropdown': (client) => {
     const headerPage = client.page.headerPage();
 
     headerPage
-      .expect.element('.dropdown-account-menu li:nth-of-type(1) a').to.not.have.attribute('class').which.contains('active');
+      .expect.element('.dropdown-account-menu li:nth-of-type(1) a')
+      .to.not.have.attribute('class')
+      .which.contains('active');
   },
 
   'Navigate to security page': (client) => {
@@ -60,7 +72,8 @@ module.exports = {
       .click('@security');
 
     securityPage
-      .expect.element('@pageHeader').text.to.contain('Security');
+      .expect.element('@pageHeader')
+      .text.to.contain('Security');
   },
 
   'Navigate to services page': (client) => {
@@ -71,7 +84,8 @@ module.exports = {
       .click('@services');
 
     servicesPage
-      .expect.element('@pageHeader').text.to.contain('Services');
+      .expect.element('@pageHeader')
+      .text.to.contain('Services');
   },
 
   //'Tests for alerts': (client) => {}
@@ -83,14 +97,17 @@ module.exports = {
 
     headerPage
       .click('@userMenu')
-      .expect.element('.navbar-right li:nth-of-type(4) div').to.have.attribute('class').which.contains('open');
+      .expect.element('.navbar-right li:nth-of-type(4) div')
+      .to.have.attribute('class')
+      .which.contains('open');
   },
 
   'Check username': (client) => {
     const headerPage = client.page.headerPage();
 
     headerPage
-      .expect.element('@username').text.to.contain('test');
+      .expect.element('@username')
+      .text.to.contain('test');
   },
 
   'Change to light theme': (client) => {
@@ -98,7 +115,9 @@ module.exports = {
 
     headerPage
       .changeTheme()
-      .expect.element('body').to.have.attribute('class').which.contains('light-theme');
+      .expect.element('body')
+      .to.have.attribute('class')
+      .which.contains('light-theme');
   },
 
   'Change to dark theme': (client) => {
@@ -106,7 +125,9 @@ module.exports = {
 
     headerPage
       .changeTheme()
-      .expect.element('body').to.have.attribute('class').which.contains('dark-theme');
+      .expect.element('body')
+      .to.have.attribute('class')
+      .which.contains('dark-theme');
   },
 
   'Go to account management': (client) => {
@@ -115,10 +136,13 @@ module.exports = {
 
     headerPage
       .click('@accountManagement')
-      .expect.element('@accountManagement').to.have.attribute('class').which.contains('active');
+      .expect.element('@accountManagement')
+      .to.have.attribute('class')
+      .which.contains('active');
 
     accountManagementPage
-      .expect.element('@pageHeader').text.to.contain('UDN Admin Account');
+      .expect.element('@pageHeader')
+      .text.to.contain('UDN ADMIN ACCOUNT');
 
   },
 
@@ -130,7 +154,8 @@ module.exports = {
       .click('.navbar-brand');
 
     accountsPage
-      .expect.element('@pageTitle').text.to.contain('Accounts');
+      .expect.element('@pageTitle')
+      .text.to.contain('ACCOUNTS');
   },
 
   'Log out': (client) => {
@@ -142,8 +167,11 @@ module.exports = {
       .click('@logOut');
 
     loginPage
-      .expect.element('.login-header').text.to.contain('Log In');
+      .expect.element('.login-header')
+      .text.to.contain('Log In');
+  },
 
+  after : (client) => {
     client.end();
   }
 };
