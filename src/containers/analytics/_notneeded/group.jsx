@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { Link } from 'react-router'
+
+import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 
 
@@ -31,11 +33,9 @@ class AnalyticsGroup extends React.Component {
   render(){
     return (
       <div>
-        <h1>AnalyticsGroup</h1>
 
-      { this.props.children }
 
-        <h3>PROPERTIES</h3>
+        <h3>PROPERTIES (should be dropdown)</h3>
 
       {
         this.props.properties.map( property => {
@@ -48,6 +48,9 @@ class AnalyticsGroup extends React.Component {
           )
         })
       }
+
+        <h2>Analytics for Group</h2>
+        { this.props.children }
 
       </div>
     )

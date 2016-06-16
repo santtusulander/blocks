@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { Link } from 'react-router'
+
+import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 
 class AnalyticsAccount extends React.Component {
@@ -20,6 +22,7 @@ class AnalyticsAccount extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.brand !== this.props.params.brand ||
       nextProps.params.account !== this.props.params.account ) {
+
       this.props.groupActions.fetchGroups(nextProps.params.brand, nextProps.params.account);
     }
   }
@@ -27,11 +30,7 @@ class AnalyticsAccount extends React.Component {
   render(){
     return (
       <div>
-        <h1>AnalyticsAccount</h1>
-
-        { this.props.children}
-
-        <h3>GROUPS</h3>
+        <h3>GROUPS (should be drop down)</h3>
       {
         this.props.groups.map( group => {
           return (
@@ -44,6 +43,9 @@ class AnalyticsAccount extends React.Component {
         })
         }
 
+        <h2>Analytics for Account</h2>
+        { this.props.children}
+
       </div>
     )
   }
@@ -52,7 +54,6 @@ class AnalyticsAccount extends React.Component {
 function mapStateToProps(state) {
   return {
     groups: state.group.get('allGroups'),
-    activeGroup: state.group.get('activeGroup')
   }
 }
 

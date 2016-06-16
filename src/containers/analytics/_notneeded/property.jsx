@@ -7,16 +7,13 @@ class AnalyticsProperty extends React.Component {
 
   componentDidMount(){
     console.log("Property: componentDidMount()");
-    //TODO: call fetchHost()
   }
 
   render() {
     return (
       <div>
-        <h1>AnalyticsProperty</h1>
-
+        <h2>Analytics for property</h2>
         {this.props.children}
-
       </div>
     )
   }

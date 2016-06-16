@@ -13,14 +13,32 @@ class AnalyticsTabTraffic extends React.Component {
     super(props)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     console.log("AnalyticsTabTraffic - componentDidMount()")
 
+    this.fetchData()
+  }
+
+  componentDidUpdate(prevProps){
+    const params = this.props.params
+    const prevParams = prevProps.params
+
+    if ( !(params.brand === prevParams.brand &&
+      params.account === prevParams.account &&
+      params.group === prevParams.group &&
+      params.property === prevParams.property )) {
+
+      this.fetchData()
+
+    }
+
+  }
+
+  fetchData(){
     const endDate = moment().utc().endOf('day')
     const startDate = moment().utc().startOf('month')
 
-
-    const fetchOpts = Object.assign({
+    const fetchOpts = {
       account: this.props.params.account,
       brand: this.props.params.brand,
       group: this.props.params.group,
@@ -28,12 +46,14 @@ class AnalyticsTabTraffic extends React.Component {
 
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
-    })
+    }
 
+    const onOffOpts = Object.assign({}, fetchOpts)
+    onOffOpts.granularity = 'day'
 
-
-    const onOffOpts = {}
-    const onOffTodayOpts = {}
+    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().utc().format('X')
 
     this.props.trafficActions.fetchByTime(fetchOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -47,18 +67,26 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   render(){
+    const metrics = this.props.metrics
+
+    const peakTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
+    const avgTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('average') : '0.0 Gbps'
+    const lowTraffic = metrics.has('transfer_rates') ?
+      metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
+
+
     return (
       <div>
-        <p>Traffic tab contents</p>
-
         <AnalysisTraffic
-          avgTraffic={'avg traffic'}
+          avgTraffic={avgTraffic}
           byCountry={this.props.trafficByCountry}
           byTime={this.props.trafficByTime}
           dateRange={'-date range-'}
           fetching={false}
-          lowTraffic={'-low-'}
-          peakTraffic={'-peak-'}
+          lowTraffic={lowTraffic}
+          peakTraffic={peakTraffic}
           serviceTypes={Immutable.fromJS(['http', 'https'])}
           totalEgress={this.props.totalEgress}
         />
@@ -69,6 +97,7 @@ class AnalyticsTabTraffic extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    metrics: Immutable.List(),
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress'),

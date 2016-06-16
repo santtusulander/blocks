@@ -29,11 +29,7 @@ class AnalyticsBrand extends React.Component {
   render() {
     return (
       <div>
-        <h1>AnalyticsBrand</h1>
-
-        { this.props.children || <p>Brands don't have analytics at the moment, sorry.</p>}
-
-        <h3>ACCOUNTS</h3>
+        <h3>ACCOUNTS (should be dropdown)</h3>
       {
         this.props.accounts.map( account => {
           return (
@@ -45,6 +41,10 @@ class AnalyticsBrand extends React.Component {
           )
         })
       }
+
+
+        { this.props.children || <p>Brands don't have analytics at the moment, choose account.</p>}
+
 
       </div>
     )
