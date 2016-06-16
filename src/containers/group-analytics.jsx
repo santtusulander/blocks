@@ -214,6 +214,10 @@ function mapDispatchToProps(dispatch, ownProps) {
       fetchOpts.service_type = serviceTypes.first()
     }
 
+    const countryOpts = Object.assign({}, fetchOpts, {
+      max_countries: 10
+    })
+
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
     const onOffTodayOpts = Object.assign({}, onOffOpts)
@@ -242,7 +246,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     ]).then(trafficActions.finishFetching)
     Promise.all([
       visitorsActions.fetchByTime(fetchOpts),
-      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByCountry(countryOpts),
       visitorsActions.fetchByBrowser(fetchOpts),
       visitorsActions.fetchByOS(fetchOpts)
     ]).then(visitorsActions.finishFetching)
