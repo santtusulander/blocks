@@ -89,7 +89,9 @@ module.exports = (
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
     </Route>
-    <Route path="/security" component={Security}/>
+    <Route path="/security">
+      <Route path=":subPage" component={Security}/>
+    </Route>
     <Route path="/services" component={Services}/>
     {/* TODO: This is temporary until the user api is managing permissions */}
     <Route path="/account-management/:account" component={AccountManagement}/>

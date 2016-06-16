@@ -165,7 +165,7 @@ class Header extends React.Component {
               }
             </li>
             <li className="main-nav-item">
-              <Link id="security-link" className="main-nav-link" to={`/security`} activeClassName="active">
+              <Link id="security-link" className="main-nav-link" to={`/security/token-authentication`} activeClassName="active">
                 Security
               </Link>
             </li>
