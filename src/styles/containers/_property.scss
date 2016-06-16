@@ -1,0 +1,71 @@
+// Property
+// ========
+
+.property-container {
+
+  .page-header-layout {
+    border-bottom: 5px solid rgba($black, 0.5);
+  }
+
+  .content-layout > .container-fluid {
+    padding-top: 0;
+  }
+
+  .property-info-row {
+    padding: 30px 0;
+
+    .dark-theme & {
+      border-bottom: 2px solid rgba($white, 0.2);
+    }
+
+    .light-theme & {
+      border-bottom: 2px solid rgba($black, 0.2);
+    }
+  }
+
+  .kpi {
+    h3 {
+      margin: 5px 0 0;
+      word-wrap: break-word;
+    }
+  }
+
+  .property-content {
+    position: relative;
+
+    .content-separator {
+      position: absolute;
+      top: 0;
+      left: calc(50% - 1px);
+      width: 2px;
+      height: 100%;
+
+      .dark-theme & {
+        background-color: rgba($white, 0.2);
+      }
+
+      .light-theme & {
+        background-color: rgba($black, 0.2);
+      }
+    }
+  }
+
+  .chart-header {
+    clear: both;
+    overflow: auto;
+    margin-top: $btn-height;
+
+    @include md {
+      margin-top: $md-btn-height;
+    }
+
+    .kpi {
+      float: right;
+      margin-left: $btn-height;
+
+      @include md {
+        margin-left: $md-btn-height;
+      }
+    }
+  }
+}
