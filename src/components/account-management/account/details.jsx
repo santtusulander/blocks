@@ -11,25 +11,11 @@ import IconEdit from '../../icons/icon-edit.jsx'
 import './details.scss'
 
 const fakeBrands = [
-  { id: '1', brandName: 'Brand Name 1' },
-  { id: '2', brandName: 'Brand Name 2' },
-  { id: '3', brandName: 'Brand Name 3' }
+  { id: 'udn', brandName: 'UDN' }
 ];
 
 const brandOptions = fakeBrands.map( (e) => {
   return [ e.id, e.brandName ]
-});
-
-const fakeAccounts = [
-  { id: '1', accountName: 'Test Account 1', brandId: 1 },
-  { id: '2', accountName: 'Test Account 2', brandId: 2 },
-  { id: '3', accountName: 'Test Account 3', brandId: 3 },
-  { id: '4', accountName: 'Test Account 4', brandId: 1 },
-  { id: '5', accountName: 'Test Account 5', brandId: 2 }
-]
-
-const accountOptions = fakeAccounts.map( (e) => {
-  return [ e.id, e.accountName]
 });
 
 const fakeAccountTypes = [
@@ -53,15 +39,15 @@ const validate = values => {
 
 }
 
+const servicesOptions = [
+  'UDN Network Partner',
+  'Media Delivery',
+  'Storage'
+]
+
 const AccountManagementAccountDetails = (props) => {
 
   const { fields: { accountName, brand, accountType, services } } = props
-
-  const servicesOptions = [
-    'UDN Network Partner',
-    'Media Delivery',
-    'Storage'
-  ]
 
   return (
     <div className="account-management-account-details">
@@ -73,12 +59,11 @@ const AccountManagementAccountDetails = (props) => {
           <label className="col-xs-3 control-label">Account Name</label>
           <Col xs={8}>
             <div className="input-group">
-
-              <SelectWrapper
+              <input
                 { ... accountName }
-                className="input-select"
-                options={ accountOptions }
-              />
+                type="text"
+                placeholder="Enter Account Name"
+                className="form-control"/>
 
               <span className="input-group-addon">
                 <OverlayTrigger placement="top" overlay={
@@ -103,16 +88,18 @@ const AccountManagementAccountDetails = (props) => {
               <SelectWrapper
                 { ... brand }
                 className="input-select"
-                options={ brandOptions }
+                options={brandOptions}
               />
 
               <span className="input-group-addon">
                 <ButtonToolbar>
-                  <UDNButton bsStyle="success" icon={true} addNew={true} onClick={props.onAdd}>
+                  <UDNButton bsStyle="success" icon={true} addNew={true}
+                    onClick={props.onAdd}>
                     <IconAdd/>
                   </UDNButton>
 
-                  <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={props.onAdd}>
+                  <UDNButton bsStyle="primary" icon={true} addNew={true}
+                    onClick={props.onAdd}>
                     <IconEdit/>
                   </UDNButton>
 
@@ -167,8 +154,8 @@ const AccountManagementAccountDetails = (props) => {
                     <Input
                       value={option}
                       type='checkbox'
-                      label={ option }
-                      onChange={ e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value)) }
+                      label={option}
+                      onChange={e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value))}
                     />
                   </div>
                 )
@@ -178,7 +165,12 @@ const AccountManagementAccountDetails = (props) => {
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <UDNButton disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >Save</UDNButton>
+          <UDNButton
+            disabled={Object.keys(errors).length > 0}
+            bsStyle="primary"
+            onClick={props.onSave}>
+            Save
+          </UDNButton>
         </ButtonToolbar>
       </form>
     </div>
@@ -186,7 +178,11 @@ const AccountManagementAccountDetails = (props) => {
 }
 
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
-AccountManagementAccountDetails.propTypes = {}
+AccountManagementAccountDetails.propTypes = {
+  fields: React.PropTypes.object,
+  onAdd: React.PropTypes.func,
+  onSave: React.PropTypes.func
+}
 
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services[]'],
