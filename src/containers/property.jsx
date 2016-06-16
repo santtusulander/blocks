@@ -148,6 +148,12 @@ export class Property extends React.Component {
       metric => metric.get('property') === this.props.location.query.name)
       || Immutable.Map()
     const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    // Add 28 days to the historical data so it matches up
+    const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
+      .map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp).add(28, 'days').toDate()
+        return datapoint
+      })
     const avg_transfer_rate = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
@@ -256,12 +262,23 @@ export class Property extends React.Component {
             <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
               <AnalysisByTime axes={true} padding={30}
                 primaryData={metrics_traffic.reverse()}
+                secondaryData={historical_traffic.reverse()}
                 dataKey='bits_per_second'
                 width={this.state.byTimeWidth}
-                height={this.state.byTimeWidth / 2.5}
+                height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
                 yAxisCustomFormat={formatBitsPerSecond}/>
+              <div className="chart-labels">
+                <svg width="20" height="20">
+                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
+                </svg>
+                Selected Period
+                <svg width="20" height="20">
+                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
+                </svg>
+                Comparison Period
+              </div>
             </div>
           </div>
         </Content>
