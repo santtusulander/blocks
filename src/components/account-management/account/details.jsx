@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
+import { Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import SelectWrapper from '../../select-wrapper.jsx'
 
 import UDNButton from '../../button.js'
@@ -33,9 +33,8 @@ const accountOptions = fakeAccounts.map( (e) => {
 });
 
 const fakeAccountTypes = [
-  'UDN Network Partner',
-  'Media Delivery',
-  'Storage'
+  'Content Provider',
+  'Service Provider'
 ]
 
 const accountTypeOptions = fakeAccountTypes.map( (e) => {
@@ -140,7 +139,7 @@ const AccountManagementAccountDetails = (props) => {
               <SelectWrapper
                 { ... accountType }
                 className="input-select"
-                options={ accountTypeOptions }
+                options={accountTypeOptions}
               />
 
               <span className="input-group-addon">
