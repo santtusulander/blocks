@@ -9,16 +9,16 @@ import {
 import SelectWrapper from '../select-wrapper.jsx'
 
 import { reduxForm } from 'redux-form'
-import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
 
 import './add-account-form.scss'
 
-const accountTypeOptions = ACCOUNT_TYPES.map((e, i) => {
+const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [ e.value, e.label]
 });
 
-const serviceTypeOptions = SERVICE_TYPES.map((e, i) => {
-  return [ e.value, e.label]
+const brandOptions = BRANDS.map( (e) => {
+  return [ e.id, e.brandName ]
 });
 
 
@@ -59,11 +59,14 @@ const NewAccountForm = (props) => {
 
           <hr/>
 
-          <Input
-            {...accountBrand}
-            type="text"
-            label="Brand"
-            placeholder='Enter Brand'/>
+          <div className='form-group'>
+            <label className='control-label'>Brand</label>
+            <SelectWrapper
+                  { ... accountBrand }
+                  className="input-select"
+                  options={brandOptions}
+            />
+          </div>
           {accountBrand.touched && accountBrand.error && <div className='error-msg'>{accountBrand.error}</div>}
 
           <hr/>
@@ -73,17 +76,17 @@ const NewAccountForm = (props) => {
             <SelectWrapper
                   { ... accountType }
                   className="input-select"
-                  options={ accountTypeOptions }
+                  options={accountTypeOptions}
             />
           </div>
 
           <hr/>
 
           <label>Service type</label>
-          {SERVICE_TYPES.map((e, i) => {
-            return <Input {...serviceType} value={e} key={i} type="radio" label={e}/>
-          })
-          }
+          {SERVICE_TYPES.map((service, i) => <Input {...serviceType}
+            key={i} type="radio"
+            value={service.value} label={service.label}/>
+          )}
 
           <ButtonToolbar className="text-right extra-margin-top">
             <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
