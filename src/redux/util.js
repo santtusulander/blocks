@@ -33,7 +33,12 @@ export function mapReducers(next, err) {
 
 export function qsBuilder(params) {
   const qs = Object.keys(params).map(key => {
+
+    //remove undefined values
+    if (params[key] === undefined ) return
+
     let param = key
+
     if(key == 'startDate') {
       param = 'start'
     }

@@ -1,13 +1,25 @@
 import React from 'react'
 
-const AnalyticsProperty = (props) => {
-  return (
-    <div>
-      <h1>AnalyticsProperty</h1>
+class AnalyticsProperty extends React.Component {
+  constructor(props){
+    super(props)
+  }
 
-      {props.tab}
-    </div>
-  )
+  componentDidMount(){
+    console.log("Property: componentDidMount()");
+    //TODO: call fetchHost()
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>AnalyticsProperty</h1>
+
+        {this.props.children}
+
+      </div>
+    )
+  }
 }
 
 export default AnalyticsProperty

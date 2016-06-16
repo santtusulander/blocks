@@ -1,6 +1,6 @@
 import React from 'react'
 
-class AnalyticsTemplate extends React.Component {
+class AnalyticsContainer extends React.Component {
   constructor(props){
     super(props)
   }
@@ -8,13 +8,16 @@ class AnalyticsTemplate extends React.Component {
   render(){
     return (
       <div>
-        <h2>Analytics Template</h2>
+        <h2>Analytics Container</h2>
 
-        {this.props.main}
+        {this.props.children}
 
       </div>
     )
   }
 }
 
-export default AnalyticsTemplate
+export default AnalyticsContainer
+
+//TODO: get breadcrumbs from store
+//set active brand, account, group, property
