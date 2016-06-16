@@ -43,7 +43,8 @@ class AccountManagementManageAccount extends React.Component {
               initialValues={{
                 accountName: this.props.account.get('name'),
                 brand: 'udn'
-              }}/>
+              }}
+              onSave={this.props.editAccount}/>
           }
           {this.state.activeTab === 'groups' &&
             <Groups
@@ -68,6 +69,7 @@ AccountManagementManageAccount.propTypes = {
   account: React.PropTypes.instanceOf(Immutable.Map),
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
+  editAccount: React.PropTypes.func,
   editGroup: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   isAdmin: React.PropTypes.bool
