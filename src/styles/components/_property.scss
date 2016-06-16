@@ -1,53 +1,6 @@
 // Property
 // ========
 
-.property-header {
-  min-height: $page-header-height;
-  padding: 15px 0 30px 170px;
-
-  @include md {
-    min-height: $md-page-header-height;
-    padding: 20px 0 30px 140px;
-  }
-
-  @include print {
-    min-height: 0;
-    padding: 0;
-  }
-
-  p {
-    margin-bottom: -5px;
-  }
-
-  h1 {
-    margin-bottom: 0;
-  }
-
-  .btn-toolbar {
-    margin-top: 30px;
-  }
-
-  .dark-theme & {
-    background: url('../assets/img/dt-content-chart.svg') 0 0 no-repeat;
-    background-size: 120px 120px;
-    border-bottom: 2px solid rgba($white, 0.2);
-
-    @include md {
-      background-size: 100px 100px;
-    }
-  }
-
-  .light-theme & {
-    background: url('../assets/img/dt-content-chart.svg') 0 0 no-repeat;
-    background-size: 120px 120px;
-    border-bottom: 2px solid rgba($black, 0.2);
-
-    @include md {
-      background-size: 100px 100px;
-    }
-  }
-}
-
 .property-info-row {
   padding: 30px 0;
 

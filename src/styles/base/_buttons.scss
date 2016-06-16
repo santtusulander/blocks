@@ -206,11 +206,11 @@
 
   .caret {
     position: relative;
-    margin: 0 ($btn-height / 4) 0 ($btn-height / 2);
+    margin: -8px ($btn-height / 4) 0 ($btn-height / 2);
     border: 0;
 
     @include md {
-      margin: 0 ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
+      margin: -8px ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
     }
 
     &::before {

@@ -5,7 +5,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import {Map} from 'immutable'
 
-import SoaEditForm from '../../account-management/dns-soa-form.jsx'
+import SoaEditForm from '../../account-management/soa-edit-form.jsx'
 
 const stateReducer = combineReducers({form: formReducer})
 const store = createStore(stateReducer)
