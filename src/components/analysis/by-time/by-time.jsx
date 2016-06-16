@@ -149,7 +149,7 @@ class AnalysisByTime extends React.Component {
       : d3.extent(primaryData, d => d.timestamp)
 
     const yScale = d3.scale.linear()
-      .domain([0, Math.max(yPrimaryExtent[1], ySecondayExtent[1])])
+      .domain([0, Math.max(yPrimaryExtent[1] || 0, ySecondayExtent[1] || 0)])
       .range([
         this.props.height - this.props.padding * (this.props.axes ? 2 : 1),
         this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)

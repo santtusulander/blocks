@@ -34,15 +34,26 @@ export class GroupAnalytics extends React.Component {
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
+    if(nextProps.serviceTypes !== this.props.serviceTypes) {
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+    }
     if(nextProps.params.group !== this.props.params.group) {
       this.fetchData(nextProps.params.group)
     }
   }
-  fetchData(group) {
+  fetchData(group, serviceTypes) {
+
+    // TODO: Maybe some general error messaging box?
+    if(serviceTypes && !serviceTypes.size) {
+      alert('There must be at least one service type selected.')
+      return
+    }
+
     this.props.fetchData(
       group || this.props.params.group,
       this.state.startDate,
-      this.state.endDate
+      this.state.endDate,
+      serviceTypes || this.props.serviceTypes
     )
   }
   changeDateRange(startDate, endDate) {
@@ -189,14 +200,24 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData(group, start, end) {
+  function fetchData(group, start, end, serviceTypes) {
     const {brand, account} = ownProps.params
+
     const fetchOpts = {
       account: account,
       group: group,
       startDate: start.format('X'),
       endDate: end.format('X')
     }
+
+    if(serviceTypes.size === 1) {
+      fetchOpts.service_type = serviceTypes.first()
+    }
+
+    const countryOpts = Object.assign({}, fetchOpts, {
+      max_countries: 10
+    })
+
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
     const onOffTodayOpts = Object.assign({}, onOffOpts)
@@ -225,7 +246,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     ]).then(trafficActions.finishFetching)
     Promise.all([
       visitorsActions.fetchByTime(fetchOpts),
-      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByCountry(countryOpts),
       visitorsActions.fetchByBrowser(fetchOpts),
       visitorsActions.fetchByOS(fetchOpts)
     ]).then(visitorsActions.finishFetching)
