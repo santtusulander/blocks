@@ -94,7 +94,7 @@ class DnsEditForm extends Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={props.onCancel}>Cancel</Button>
               <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary"
-                      onClick={props.onSave}>{ actionButtonTitle }</Button>
+                onClick={props.onSave}>{ actionButtonTitle }</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
