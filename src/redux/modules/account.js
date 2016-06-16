@@ -14,7 +14,7 @@ const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
 const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
 
 const emptyAccounts = Immutable.fromJS({
-  activeAccount: null,
+  activeAccount: undefined,
   allAccounts: [],
   fetching: false
 })

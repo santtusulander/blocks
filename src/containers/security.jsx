@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react'
-import { fromJS, Map, List } from 'immutable'
+import { Map, List } from 'immutable'
 import { Nav, Navbar } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
+import * as securityActionCreators from '../redux/modules/security'
 
 import PageHeader from '../components/layout/page-header'
 import PageContainer from '../components/layout/page-container'
@@ -18,33 +18,26 @@ class Security extends React.Component {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
-    if(this.props.accounts.isEmpty()) {
-      this.props.fetchAccountData(null, this.props.accounts)
-    }
+  componentWillMount() {
+    this.props.fetchListData(this.props.params.subPage)
+    this.props.fetchAccountData(this.props.accounts)
   }
-
   render() {
     const {
       accounts,
       activeAccount,
+      fetchAccount,
+      sslCertificates,
       params: { subPage }
     } = this.props
-    const fakeCertificates = fromJS([
-      {id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 'group 1'},
-      {id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 'group 3'},
-      {id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 'group 1'},
-      {id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 'group 3'},
-      {id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 'group 1'},
-      {id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 'group 3'}
-    ])
     const sslListProps = {
-      certificates: fakeCertificates,
+      certificates: sslCertificates && sslCertificates.get('items'),
       uploadCertificate: () => {},
       deleteCertificate: () => {},
       editCertificate: () => {},
       onCheck: () => {}
     }
+    const changeActiveAccount = brand => id => fetchAccount(brand, id)
     const accountOptions = accounts.map(account => [account.get('id'), account.get('name')])
     return (
       <PageContainer className="account-management">
@@ -54,8 +47,9 @@ class Security extends React.Component {
             <div className='dns-filter-wrapper'>
               Account
               <Select
+                onSelect={changeActiveAccount('udn')}
                 className="dns-dropdowns"
-                value={activeAccount && activeAccount.get('name')}
+                value={activeAccount.get('id')}
                 options={accountOptions.toJS()}/>
             </div>
           </PageHeader>
@@ -89,37 +83,53 @@ class Security extends React.Component {
 }
 
 Security.defaultProps = {
-  activeAccount: Map({})
+  activeAccount: Map({ id: 1, name: 'Account1' })
 }
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
-  activeAccount: PropTypes.instanceOf(Map)
+  activeAccount: PropTypes.instanceOf(Map),
+  fetchAccount: PropTypes.func,
+  fetchAccountData: PropTypes.func,
+  fetchListData: PropTypes.func,
+  params: PropTypes.object,
+  sslCertificates: PropTypes.instanceOf(Map)
 }
 
 
 function mapStateToProps(state) {
+  const activeAccount = state.account.get('activeAccount')
+  const accountId = activeAccount ? activeAccount.get('id') : 1
+  const sslCertificates = state.security.get('sslCertificates').find(item => item.get('account') === accountId)
   return {
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
-    groups: state.group.get('allGroups')
+    activeAccount,
+    sslCertificates
   };
 }
 
 function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
-  function fetchAccountData(account, accounts) {
+  const securityActions = bindActionCreators(securityActionCreators, dispatch)
+  function fetchListData(activeTab) {
+    switch(activeTab) {
+      case 'ssl-certificate':
+        securityActions.fetchSSLCertificates()
+        break
+      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
+      // case 'content-targeting': securityActions.fetchTokenAuthentication(account)
+      default: break
+    }
+  }
+  function fetchAccountData(accounts) {
     if(accounts && accounts.isEmpty()) {
       accountActions.fetchAccounts('udn')
-    }
-    if(account) {
-      accountActions.fetchAccount('udn', account)
-      groupActions.fetchGroups('udn', account)
     }
   }
 
   return {
-    fetchAccountData: fetchAccountData
+    fetchListData: fetchListData,
+    fetchAccountData: fetchAccountData,
+    fetchAccount: accountActions.fetchAccount
   };
 }
 
