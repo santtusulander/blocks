@@ -14,11 +14,23 @@ function hostActionsMaker() {
   }
 }
 
+function purgeActionsMaker() {
+  return {
+    resetActivePurge: jest.genMockFunction()
+  }
+}
+
 function trafficActionsMaker() {
   return {
     startFetching: jest.genMockFunction(),
     fetchByTime: jest.genMockFunction(),
     finishFetching: jest.genMockFunction()
+  }
+}
+
+function uiActionsMaker() {
+  return {
+    changeNotification: jest.genMockFunction()
   }
 }
 
@@ -228,10 +240,17 @@ const fakeHost = Immutable.fromJS({
 
 const fakeMetrics = Immutable.fromJS([
   {
+    property: 'www.abc.com',
     avg_cache_hit_rate: 1,
-    historical_traffic: [],
+    historical_traffic: [
+      {timestamp: new Date(1461258800000), bits_per_second: 1},
+      {timestamp: new Date(1461260800000), bits_per_second: 2}
+    ],
     historical_variance: [],
-    traffic: [],
+    traffic: [
+      {timestamp: new Date(1461268800000), bits_per_second: 3},
+      {timestamp: new Date(1461270800000), bits_per_second: 4}
+    ],
     transfer_rates: {
       peak: '3 Unit',
       average: '2 Unit',
@@ -239,10 +258,17 @@ const fakeMetrics = Immutable.fromJS([
     }
   },
   {
+    property: 'www.fake.com',
     avg_cache_hit_rate: 2,
-    historical_traffic: [],
+    historical_traffic: [
+      {timestamp: new Date(1461258800000), bits_per_second: 10},
+      {timestamp: new Date(1461260800000), bits_per_second: 20}
+    ],
     historical_variance: [],
-    traffic: [],
+    traffic: [
+      {timestamp: new Date(1461268800000), bits_per_second: 30},
+      {timestamp: new Date(1461270800000), bits_per_second: 40}
+    ],
     transfer_rates: {
       peak: '6 Unit',
       average: '5 Unit',
@@ -305,7 +331,7 @@ describe('Property', () => {
         visitorsByCountry={fakeVisitors}
         visitorsActions={visitorsActionsMaker()}/>
     )
-    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'property-header')
+    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'page-header-layout')
     expect(header.textContent).toContain('www.abc.com')
   });
 
@@ -322,5 +348,39 @@ describe('Property', () => {
     expect(property.state.propertyMenuOpen).toBe(false)
     property.togglePropertyMenu()
     expect(property.state.propertyMenuOpen).toBe(true)
+  });
+
+  it('should show a notification', () => {
+    const uiActions = uiActionsMaker()
+    const property = TestUtils.renderIntoDocument(
+      <Property
+        params={urlParams}
+        location={fakeLocation}
+        fetching={true}
+        hostActions={hostActionsMaker()}
+        trafficActions={trafficActionsMaker()}
+        uiActions={uiActions}
+        visitorsActions={visitorsActionsMaker()} />
+    )
+    property.showNotification('aaa')
+    expect(uiActions.changeNotification.mock.calls[0][0]).toBe('aaa')
+  })
+
+  it('should toggle purge form', () => {
+    const purgeActions = purgeActionsMaker()
+    const property = TestUtils.renderIntoDocument(
+      <Property
+        params={urlParams}
+        location={fakeLocation}
+        fetching={true}
+        hostActions={hostActionsMaker()}
+        purgeActions={purgeActions}
+        trafficActions={trafficActionsMaker()}
+        visitorsActions={visitorsActionsMaker()} />
+    )
+    expect(property.state.purgeActive).toBe(false)
+    property.togglePurge()
+    expect(property.state.purgeActive).toBe(true)
+    expect(purgeActions.resetActivePurge.mock.calls.length).toBe(1)
   });
 })

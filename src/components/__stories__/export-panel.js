@@ -1,10 +1,9 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import { storiesOf, action } from '@kadira/storybook';
 
 const ThemeWrap = require('./theme-wrap.jsx');
-//const ExportPanel = require('../export-panel.jsx');
 
-import {ExportPanel} from '../export-panel.jsx'
+import { ExportPanel } from '../export-panel.jsx'
 
 storiesOf('ExportPanel', module)
   .addDecorator((story) => (
@@ -13,20 +12,22 @@ storiesOf('ExportPanel', module)
     </ThemeWrap>
   ))
   .add('Download (dark)', () => (
-      <ExportPanel
-          show={true}
-          exportType={'export_pdf'}
-          onDownload={action('onDownload')}
-          onCancel={action('onCancel')}
-          onSend={action('onSend')}
-      />
+    <ExportPanel
+      show={true}
+      exportType={'export_pdf'}
+      onDownload={action('onDownload')}
+      onSend={action('onSend')}
+      onCancel={action('onCancel')}
+      panelTitle={'Export panel dark'}
+    />
   ))
   .add('Email (dark)', () => (
-      <ExportPanel
-          show={true}
-          exportType={'export_email'}
-          onDownload={action('onDownload')}
-          onCancel={action('onCancel')}
-          onSend={action('onSend')}
-      />
+    <ExportPanel
+      show={true}
+      exportType={'export_email'}
+      onSend={action('onSend')}
+      onCancel={action('onCancel')}
+      showExportPanel={true}
+      panelTitle={'Export panel dark'}
+    />
   ))
