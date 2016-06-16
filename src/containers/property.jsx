@@ -15,6 +15,7 @@ import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
@@ -152,50 +153,44 @@ export class Property extends React.Component {
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
     const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
-    const policyPath = Immutable.List([
-      'default_policy', 'policy_rules'])
-    let controlIndex = activeConfig.getIn(policyPath)
-      .findIndex(policy => {
-        if(policy.has('set')) {
-          return policy.get('set').has('cache_control')
-        }
-      })
-    let nameIndex = activeConfig.getIn(policyPath)
-      .findIndex(policy => {
-        if(policy.has('set')) {
-          return policy.get('set').has('cache_name')
-        }
-      })
     return (
       <PageContainer>
         <Content>
-          <div className="container-fluid">
-            <Row className="property-header no-end-gutters">
-              <ButtonToolbar className="pull-right">
-                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-              </ButtonToolbar>
+          <PageHeader>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+              <Link className="btn btn-success btn-icon"
+                to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                <IconChart/>
+              </Link>
+              <Link className="btn btn-success btn-icon"
+                to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                <IconConfiguration/>
+              </Link>
+            </ButtonToolbar>
 
-              <p>PROPERTY SUMMARY</p>
-              <Dropdown id="dropdown-content"
-                open={this.state.propertyMenuOpen}
-                onToggle={this.togglePropertyMenu}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.location.query.name}</h1>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {this.props.properties.map(
-                    (property, i) =>
-                      property !== this.props.location.query.name ?
-                      <li key={i}>
-                        <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
-                          onClick={this.togglePropertyMenu}>
-                          {property}
-                        </Link>
-                      </li> : null
-                  ).toJS()}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Row>
+            <p>PROPERTY SUMMARY</p>
+            <Dropdown id="dropdown-content"
+              open={this.state.propertyMenuOpen}
+              onToggle={this.togglePropertyMenu}>
+              <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <h1>{this.props.location.query.name}</h1>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {this.props.properties.map(
+                  (property, i) =>
+                    property !== this.props.location.query.name ?
+                    <li key={i}>
+                      <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
+                        onClick={this.togglePropertyMenu}>
+                        {property}
+                      </Link>
+                    </li> : null
+                ).toJS()}
+              </Dropdown.Menu>
+            </Dropdown>
+          </PageHeader>
+          <div className="container-fluid">
 
             <Row className="property-info-row no-end-gutters">
               <Col xs={3}>
@@ -234,10 +229,6 @@ export class Property extends React.Component {
                 <h3 className="has-btn extra-margin-top">
                   Traffic Summary
                   <span className="heading-suffix"> (last 28 days)</span>
-                  <Link className="btn btn-primary btn-icon pull-right"
-                    to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
-                    <IconChart/>
-                  </Link>
                 </h3>
 
                 <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
@@ -279,97 +270,9 @@ export class Property extends React.Component {
                         </Col>
                       </Row>
                     </Col>
-                    <Col xs={5}>
-                      Top 3 Countries by Visitors
-                      {this.props.fetching || this.props.visitorsFetching ?
-                        <p>Loading...</p> :
-                        this.props.visitorsByCountry.get('countries').size ?
-                          this.props.visitorsByCountry.get('countries').map((country, i) => {
-                            return (
-                              <h2 key={i}>
-                                {numeral(country.get('percent_total')).format('0.00')}
-                                <span className="heading-suffix"> %</span>
-                                <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
-                              </h2>
-                            )
-                          }
-                        ) : <h2>0 %</h2>
-                      }
-                    </Col>
                   </Row>
                   : null
                 }
-              {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
-              </Col>
-
-              <div className="content-separator"></div>
-
-              <Col xs={6} className="property-configuration-summary">
-                <h3 className="has-btn">
-                  Edge Configuration
-                  <Link className="btn btn-primary btn-icon pull-right"
-                    to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
-                    <IconConfiguration />
-                  </Link>
-                </h3>
-
-                <Table className="unstyled no-padding auto-width">
-                  <tbody>
-                    <tr>
-                      <td>Honor Origin Cache Control</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.ignore_case) ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Ignore case from origin</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.honor_etags) === "strong" ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Enable e-Tag support</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.honor_origin_cache_policies) ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-
-                <h3 className="extra-margin-top">Cache Rules</h3>
-
-                <Table striped={true}>
-                  <thead>
-                    <tr>
-                      <th>RULE TYPE</th>
-                      <th>TTL VALUE</th>
-                      <th>RULE</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Error Response</td>
-                      <td>10 sec</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Redirect</td>
-                      <td>no-store</td>
-                      <td>-</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Col>
-            </Row>*/}
           </div>
         </Content>
         {this.state.purgeActive ? <PurgeModal

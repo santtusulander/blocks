@@ -3,20 +3,25 @@
 
 .page-header-layout {
   min-height: $page-header-height;
-
-  @include xl {
-    padding: $xl-page-header-padding;
-  }
+  padding-top: $page-header-padding-top;
+  padding-right: $bar-height;
+  padding-bottom: $page-header-padding-bottom;
+  padding-left: $bar-height;
 
   @include lg {
-    padding-top: 35px * 0.75;
-    padding-right: 40px * 0.75;
-    padding-bottom: 10px * 0.75;
-    padding-left: 40px * 0.75;
+    padding-top: ($page-header-padding-top * 0.75);
+    padding-bottom: ($page-header-padding-bottom * 0.75);
   }
 
   @include md {
     min-height: $md-page-header-height;
+    padding-right: $md-bar-height;
+    padding-left: $md-bar-height;
+  }
+
+  @include sm {
+    padding-right: ($md-bar-height / 2);
+    padding-left: ($md-bar-height / 2);
   }
 
   @include print {
@@ -25,7 +30,7 @@
   }
 
   .dark-theme & {
-    background-color: rgba($black, 0.2);
+    background-color: rgba($pale-blue, 0.2);
   }
 
   .light-theme & {
@@ -37,7 +42,7 @@
   }
 
   .btn-toolbar {
-    margin-top: 15px;
+    margin-top: 5px;
 
     @include print {
       display: none;
@@ -49,6 +54,26 @@
 
     @include md {
       height: $md-btn-height;
+    }
+  }
+
+  h1 {
+    color: $pale-blue;
+    text-transform: uppercase;
+    font-size: 40px;
+
+    @include md {
+      font-size: 30px;
+    }
+  }
+
+  .btn.btn-primary {
+    background-color: $pale-blue;
+    color: $white;
+
+    &:hover {
+      background-color: rgba($pale-blue, 0.8);
+      color: $white;
     }
   }
 }
