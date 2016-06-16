@@ -1,5 +1,5 @@
 module.exports = {
-  url: 'http://localhost:3000/content/groups/udn/2',
+  url: 'http://localhost:3000/content/hosts/udn/2/5',
   elements: {
     pageHeader: {
       selector: '.page-header-layout p'
@@ -11,7 +11,13 @@ module.exports = {
       selector: '.btn-toolbar > a:first-of-type'
     },
     amoebaAnalyticsIcon: {
-      selector: '#content-item-chart-5 .content-item-toolbar .btn-toolbar a'
+      selector: 'div[id*="renandstimpy"] .content-item-toolbar .btn-toolbar a:first-of-type'
+    },
+    addPropertyIcon: {
+      selector: '.btn-toolbar > button.btn-add-new'
+    },
+    amoebaConfigurationsIcon: {
+      selector: 'div[id*="renandstimpy"] .content-item-toolbar .btn-toolbar a:last-of-type'
     },
     sortDropdown: {
       selector: '.btn-toolbar > div.dropdown > .dropdown-toggle'
@@ -25,8 +31,8 @@ module.exports = {
     lastAmoebaTitle: {
       selector: '.content-item-grid .grid-item:last-of-type .content-item-chart-name'
     },
-    nickelodeonAmoeba: {
-      selector: '#content-item-chart-5'
+    stimpyAmoeba: {
+      selector: 'div[id*="renandstimpy"]'
     }
   }
 };

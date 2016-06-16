@@ -148,13 +148,19 @@ export class Property extends React.Component {
       metric => metric.get('property') === this.props.location.query.name)
       || Immutable.Map()
     const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    // Add 28 days to the historical data so it matches up
+    const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
+      .map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp).add(28, 'days').toDate()
+        return datapoint
+      })
     const avg_transfer_rate = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
+    const avg_ttfb = metrics.has('avg_ttfb') ? metrics.get('avg_ttfb') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
-    const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
     return (
-      <PageContainer>
+      <PageContainer className="property-container">
         <Content>
           <PageHeader>
             <ButtonToolbar className="pull-right">
@@ -193,86 +199,87 @@ export class Property extends React.Component {
           <div className="container-fluid">
 
             <Row className="property-info-row no-end-gutters">
-              <Col xs={3}>
+              <Col xs={3} className="kpi">
                 Origin Hostname
                 <h3>
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </h3>
               </Col>
-              <Col xs={3}>
+              <Col xs={3} className="kpi">
                 Published Hostname
                 <h3>
                   {activeConfig.get('edge_configuration').get('published_name')}
                 </h3>
               </Col>
-              <Col xs={2}>
-                Configuration Version
+              <Col xs={2} className="kpi">
+                Current Version
                 <h3>{activeConfig.get('config_name')}</h3>
               </Col>
-              <Col xs={3}>
-                Published
+              <Col xs={4} className="kpi">
+                Deployed
                 <h3>
                   {moment(
                     activeConfig.get('configuration_status').get('deployment_date'), 'X'
                   ).format('M/D/YYYY, h:mma')}
                 </h3>
               </Col>
-              <Col xs={1}>
-                Trial
-                <h3>{isTrial ? 'TRUE' : 'FALSE'}</h3>
-              </Col>
             </Row>
 
-            {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
-              <Row className="no-end-gutters property-content">
-              <Col xs={6} className="property-analytics-summary">*/}
-                <h3 className="has-btn extra-margin-top">
-                  Traffic Summary
-                  <span className="heading-suffix"> (last 28 days)</span>
+            <div className="chart-header">
+              <div className="kpi">
+                Unique visitors / h (avg)
+                <h3>
+                  {this.props.fetching || this.props.visitorsFetching ?
+                    <span>Loading...</span> :
+                    numeral(uniq_vis).format('0,0')
+                  }
                 </h3>
+              </div>
+              <div className="kpi">
+                Time to First Byte (avg)
+                <h3>
+                  {avg_ttfb}
+                </h3>
+              </div>
+              <div className="kpi">
+                Cache Hit Rate (avg)
+                <h3>
+                  {avg_cache_hit_rate}%
+                </h3>
+              </div>
+              <div className="kpi">
+                Bandwidth (avg/s)
+                <h3>
+                  {avg_transfer_rate}
+                </h3>
+              </div>
+              <h3 className="has-btn">
+                Traffic Summary
+                <span className="heading-suffix"> (last 28 days)</span>
+              </h3>
+            </div>
 
-                <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
-                  <AnalysisByTime axes={true} padding={30}
-                    primaryData={metrics_traffic.reverse()}
-                    dataKey='bits_per_second'
-                    width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 2.5}
-                    xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
-                      : this.state.byTimeWidth > 600 ? 2 : 3}
-                    yAxisCustomFormat={formatBitsPerSecond}/>
-                </div>
-
-                {metrics_traffic && metrics_traffic.length ?
-                  <Row className="extra-margin-top no-gutters">
-                    <Col xs={7}>
-                      <Row>
-                        <Col xs={6}>
-                          Unique visitors
-                          {this.props.fetching || this.props.visitorsFetching ?
-                            <p>Loading...</p> :
-                            <h2>{numeral(uniq_vis).format('0,0')}</h2>
-                          }
-                        </Col>
-                        <Col xs={6}>
-                          Bandwidth
-                          <h2>
-                            {avg_transfer_rate[0]}
-                            <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
-                          </h2>
-                        </Col>
-                      </Row>
-                      <Row className="extra-margin-top">
-                        <Col xs={6}>
-                          Cache Hit Rate
-                          <h2>{avg_cache_hit_rate}
-                            <span className="heading-suffix"> %</span>
-                          </h2>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  : null
-                }
+            <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
+              <AnalysisByTime axes={true} padding={30}
+                primaryData={metrics_traffic.reverse()}
+                secondaryData={historical_traffic.reverse()}
+                dataKey='bits_per_second'
+                width={this.state.byTimeWidth}
+                height={this.state.byTimeWidth / 3}
+                xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+                  : this.state.byTimeWidth > 600 ? 2 : 3}
+                yAxisCustomFormat={formatBitsPerSecond}/>
+              <div className="chart-labels">
+                <svg width="20" height="20">
+                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
+                </svg>
+                Selected Period
+                <svg width="20" height="20">
+                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
+                </svg>
+                Comparison Period
+              </div>
+            </div>
           </div>
         </Content>
         {this.state.purgeActive ? <PurgeModal
