@@ -31,38 +31,53 @@ export class AccountAnalytics extends React.Component {
     //this.changeTab = this.changeTab.bind(this)
     this.changeDateRange = this.changeDateRange.bind(this)
   }
+
   componentWillMount() {
     this.props.accounts.isEmpty() && this.props.fetchInit()
     this.fetchData()
   }
+
   componentWillReceiveProps(nextProps) {
+    if(nextProps.serviceTypes !== this.props.serviceTypes) {
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+    }
     if(nextProps.params.account !== this.props.params.account) {
-      this.fetchData(nextProps.params.account)
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
     }
   }
-  fetchData(account) {
+
+  fetchData(account, serviceTypes) {
+
+    // TODO: Maybe some general error messaging box?
+    if(serviceTypes && !serviceTypes.size) {
+      alert('There must be at least one service type selected.')
+      return
+    }
+
     this.props.fetchData(
       account || this.props.params.account,
       this.state.startDate,
-      this.state.endDate
+      this.state.endDate,
+      serviceTypes || this.props.serviceTypes
     )
   }
 
   changeDateRange(startDate, endDate) {
     const dateRange =
-      endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
-      startDate._d == moment().utc().startOf('month')._d + "" ? 'month to date' :
-      startDate._d == moment().utc().startOf('week')._d + "" ? 'week to date' :
-      startDate._d == moment().utc().startOf('day')._d + "" ? 'today' :
-      'custom'
+            endDate._d != moment().utc().endOf('day')._d + "" ? 'custom' :
+              startDate._d == moment().utc().startOf('month')._d + "" ? 'month to date' :
+                startDate._d == moment().utc().startOf('week')._d + "" ? 'week to date' :
+                  startDate._d == moment().utc().startOf('day')._d + "" ? 'today' :
+                    'custom'
     this.setState({
       dateRange: dateRange,
       endDate: endDate,
       startDate: startDate
     }, this.fetchData)
   }
+
   render() {
-    const filteredAccounts = filterAccountsByUserName(
+    const filteredAccounts  = filterAccountsByUserName(
       this.props.accounts,
       this.props.username
     )
@@ -76,53 +91,53 @@ export class AccountAnalytics extends React.Component {
     })
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
-    const metrics = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
+    const metrics    = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
     const activeName = this.props.activeAccount ? this.props.activeAccount.get('name') : ''
 
     return (
       <AnalyticsPage
-          activeName={activeName}
-          changeDateRange={this.changeDateRange}
-          changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
-          dateRange={this.state.dateRange}
-          endDate={this.state.endDate}
-          exportFilenamePart={`${activeName} - ${moment().format()}`}
-          exportsActions={this.props.exportsActions}
-          exportsDialogState={this.props.exportsDialogState}
-          fetchingMetrics={this.props.fetchingMetrics}
-          fileErrorSummary={this.props.fileErrorSummary}
-          fileErrorURLs={this.props.fileErrorURLs}
-          metrics={metrics}
-          onOffNet={this.props.onOffNet}
-          onOffNetChartType={this.props.onOffNetChartType}
-          onOffNetToday={this.props.onOffNetToday}
-          reportsFetching={this.props.reportsFetching}
-          serviceProviders={this.props.serviceProviders}
-          serviceTypes={this.props.serviceTypes}
-          statusCodes={this.props.statusCodes}
-          siblings={availableAccounts}
-          startDate={this.state.startDate}
-          storageStats={this.props.storageStats}
-          toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
-          toggleAnalysisStatusCode={this.props.uiActions.toggleAnalysisStatusCode}
-          totalEgress={this.props.totalEgress}
-          trafficByCountry={this.props.trafficByCountry}
-          trafficByTime={this.props.trafficByTime}
-          trafficFetching={this.props.trafficFetching}
-          type="account"
-          urlMetrics={this.props.urlMetrics}
-          visitorsByBrowser={this.props.visitorsByBrowser}
-          visitorsByCountry={this.props.visitorsByCountry}
-          visitorsByOS={this.props.visitorsByOS}
-          visitorsByTime={this.props.visitorsByTime}
-          visitorsFetching={this.props.visitorsFetching}
+        activeName={activeName}
+        changeDateRange={this.changeDateRange}
+        changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
+        dateRange={this.state.dateRange}
+        endDate={this.state.endDate}
+        exportFilenamePart={`${activeName} - ${moment().format()}`}
+        exportsActions={this.props.exportsActions}
+        exportsDialogState={this.props.exportsDialogState}
+        fetchingMetrics={this.props.fetchingMetrics}
+        fileErrorSummary={this.props.fileErrorSummary}
+        fileErrorURLs={this.props.fileErrorURLs}
+        metrics={metrics}
+        onOffNet={this.props.onOffNet}
+        onOffNetChartType={this.props.onOffNetChartType}
+        onOffNetToday={this.props.onOffNetToday}
+        reportsFetching={this.props.reportsFetching}
+        serviceProviders={this.props.serviceProviders}
+        serviceTypes={this.props.serviceTypes}
+        statusCodes={this.props.statusCodes}
+        siblings={availableAccounts}
+        startDate={this.state.startDate}
+        storageStats={this.props.storageStats}
+        toggleAnalysisServiceType={this.props.uiActions.toggleAnalysisServiceType}
+        toggleAnalysisStatusCode={this.props.uiActions.toggleAnalysisStatusCode}
+        totalEgress={this.props.totalEgress}
+        trafficByCountry={this.props.trafficByCountry}
+        trafficByTime={this.props.trafficByTime}
+        trafficFetching={this.props.trafficFetching}
+        type="account"
+        urlMetrics={this.props.urlMetrics}
+        visitorsByBrowser={this.props.visitorsByBrowser}
+        visitorsByCountry={this.props.visitorsByCountry}
+        visitorsByOS={this.props.visitorsByOS}
+        visitorsByTime={this.props.visitorsByTime}
+        visitorsFetching={this.props.visitorsFetching}
       />
     );
   }
 }
 
 AccountAnalytics.displayName = 'AccountAnalytics'
-AccountAnalytics.propTypes = {
+AccountAnalytics.propTypes   = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   exportsActions: React.PropTypes.object,
@@ -188,23 +203,28 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  const reportsActions = bindActionCreators(reportsActionCreators, dispatch)
-  const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
+  const accountActions  = bindActionCreators(accountActionCreators, dispatch)
+  const metricsActions  = bindActionCreators(metricsActionCreators, dispatch)
+  const reportsActions  = bindActionCreators(reportsActionCreators, dispatch)
+  const trafficActions  = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData(account, start, end) {
+  function fetchData(account, start, end, serviceTypes) {
     const fetchOpts = {
       account: account,
       startDate: start.format('X'),
       endDate: end.format('X')
     }
-    const onOffOpts = Object.assign({}, fetchOpts)
+
+    if(serviceTypes.size === 1) {
+      fetchOpts.service_type = serviceTypes.first()
+    }
+
+    const onOffOpts       = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
+    const onOffTodayOpts  = Object.assign({}, onOffOpts)
     onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
+      onOffTodayOpts.endDate = moment().utc().format('X')
     trafficActions.startFetching()
     visitorsActions.startFetching()
     reportsActions.startFetching()
@@ -239,10 +259,12 @@ function mapDispatchToProps(dispatch, ownProps) {
       reportsActions.fetchURLMetrics(fetchOpts)
     ]).then(reportsActions.finishFetching)
   }
+
   function fetchInit() {
     const { brand } = ownProps.params
     accountActions.fetchAccounts(brand)
   }
+
   return {
     exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,

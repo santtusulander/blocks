@@ -34,15 +34,26 @@ export class PropertyAnalytics extends React.Component {
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
+    if(nextProps.serviceTypes !== this.props.serviceTypes) {
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+    }
     if(nextProps.location.query.name !== this.props.location.query.name) {
       this.fetchData(nextProps.location.query.name)
     }
   }
-  fetchData(property) {
+  fetchData(property, serviceTypes) {
+
+    // TODO: Maybe some general error messaging box?
+    if(serviceTypes && !serviceTypes.size) {
+      alert('There must be at least one service type selected.')
+      return
+    }
+
     this.props.fetchData(
       property || this.props.location.query.name,
       this.state.startDate,
-      this.state.endDate
+      this.state.endDate,
+      serviceTypes || this.props.serviceTypes
     )
   }
 
@@ -191,7 +202,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData(property, start, end) {
+  function fetchData(property, start, end, serviceTypes) {
     const {account, group} = ownProps.params
     const fetchOpts = {
       account: account,
@@ -200,6 +211,11 @@ function mapDispatchToProps(dispatch, ownProps) {
       startDate: start.format('X'),
       endDate: end.format('X')
     }
+
+    if(serviceTypes.size === 1) {
+      fetchOpts.service_type = serviceTypes.first()
+    }
+
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
     const onOffTodayOpts = Object.assign({}, onOffOpts)
