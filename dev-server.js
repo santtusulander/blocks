@@ -21,6 +21,9 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
+    '/AAA*': {
+      target: 'http://api.cdx-dev.unifieddeliverynetwork.net'
+    },
     '/VCDN*': {
       target: 'http://api.cdx-dev.unifieddeliverynetwork.net'
     },

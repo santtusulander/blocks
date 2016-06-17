@@ -71,7 +71,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchContent = createAction(CONTENT_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/content`)
+  return axios.get(`${urlBase}/AAA/brands/${brand}/content`)
   .then((res) => {
     if(res) {
       return res.data;

@@ -22,7 +22,7 @@ export const exportsHideDialog = createAction(EXPORTS_HIDE_DIALOG);
 export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportParams) => {
 
   /* TODO: Make API call similar to this
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
+  return axios.post(`${urlBase}/AAA/brands/${brand}/accounts`, {}, {
     headers: {
       'Content-Type': 'application/json'
     }

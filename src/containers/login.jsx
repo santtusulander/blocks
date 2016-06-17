@@ -35,16 +35,16 @@ export class Login extends React.Component {
   }
   goToAccountPage() {
     // this.props.accountActions.startFetching()
-    // this.props.accountActions.fetchAccounts('udn').then(action => {
+    // this.props.accountActions.fetchAccounts('UDN').then(action => {
     //   if(!action.error && action.payload.data.length) {
     //     const firstId = action.payload.data[0].id
-    //     this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
+    //     this.props.history.pushState(null, `/content/groups/UDN/${firstId}`)
     //   }
     //   else {
     //     this.setState({loginError: action.payload.message})
     //   }
     // })
-    this.props.history.pushState(null, getContentUrl('brand', 'udn', {}));
+    this.props.history.pushState(null, getContentUrl('brand', 'UDN', {}))
   }
   onSubmit(e) {
     e.preventDefault()
