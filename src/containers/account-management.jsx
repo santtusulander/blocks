@@ -29,6 +29,8 @@ export class AccountManagement extends Component {
       activeAccount: props.params.account || null
     }
 
+    this.notificationTimeout = null
+
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
 
@@ -36,7 +38,8 @@ export class AccountManagement extends Component {
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
-
+    this.editAccount = this.editAccount.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   componentWillMount() {
@@ -86,6 +89,21 @@ export class AccountManagement extends Component {
     )
   }
 
+  editAccount(accountId, data) {
+    return this.props.accountActions.updateAccount(
+      'udn',
+      accountId,
+      data
+    ).then(() => this.showNotification('Account detail updates saved.'))
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
+  }
+
   render() {
     const {
       params: { account },
@@ -107,12 +125,6 @@ export class AccountManagement extends Component {
         recordName: 'mikkotest',
         targetValue: '11.22.33.44',
         ttl: '3600'
-      }
-    }
-
-    const brandsInitialValues = {
-      initialValues: {
-        brandName: 'Test Brand',
       }
     }
 
@@ -153,13 +165,14 @@ export class AccountManagement extends Component {
               account={this.props.activeAccount}
               addGroup={this.addGroupToActiveAccount}
               deleteGroup={this.deleteGroupFromActiveAccount}
+              editAccount={this.editAccount}
               editGroup={this.editGroupInActiveAccount}
               groups={this.props.groups}/>
             }
 
             {!this.state.activeAccount && <ManageSystem
               dnsList={dnsListProps}
-              brandsList={ {
+              brandsList={{
                 accountManagementModal: accountManagementModal,
                 brands: [],
                 toggleModal: toggleModal
@@ -174,6 +187,7 @@ export class AccountManagement extends Component {
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}
             deleteGroup={this.deleteGroupFromActiveAccount}
+            editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
         </Content>}
@@ -194,6 +208,7 @@ export class AccountManagement extends Component {
 AccountManagement.displayName = 'AccountManagement'
 
 AccountManagement.propTypes = {
+  accountActions: PropTypes.object,
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
@@ -205,7 +220,8 @@ AccountManagement.propTypes = {
   groups: PropTypes.instanceOf(List),
   params: PropTypes.object,
   soaFormData: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uiActions: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -236,10 +252,12 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
+    accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     fetchAccountData: fetchAccountData,
-    groupActions: groupActions
+    groupActions: groupActions,
+    uiActions: uiActions
   };
 }
 
