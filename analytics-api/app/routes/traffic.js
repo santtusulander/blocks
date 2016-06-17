@@ -2,6 +2,7 @@
 
 require('express-jsend');
 let _         = require('lodash');
+let moment    = require('moment');
 let log       = require('../logger');
 let dataUtils = require('../data-utils');
 let db        = require('../db');
@@ -24,10 +25,20 @@ function routeTraffic(req, res) {
     property      : {required: false, type: 'Property'},
     service_type  : {required: false, type: 'Service'},
     granularity   : {required: false, type: 'Granularity'},
+    resolution    : {required: false, type: 'Granularity'},
     list_children : {required: false, type: 'Boolean'},
     show_detail   : {required: false, type: 'Boolean'},
     show_totals   : {required: false, type: 'Boolean'}
   });
+
+  // Extra custom parameter validation
+  if (!errors) {
+    let granularitySeconds = dataUtils.secondsPerGranularity[params.granularity || 'hour'];
+    let resolutionSeconds  = dataUtils.secondsPerGranularity[params.resolution || 'hour'];
+    if (resolutionSeconds > granularitySeconds) {
+      errors = [`Error with resolution/granularity parameter: The resolution parameter must be smaller than the granularity parameter. Granularity value received: ${params.granularity} — Resolution value received: ${params.resolution}`];
+    }
+  }
 
   if (errors) {
     return res.status(400).jerror('Bad Request Parameters', errors);
@@ -40,6 +51,7 @@ function routeTraffic(req, res) {
     group         : params.group,
     property      : params.property,
     granularity   : params.granularity,
+    resolution    : params.resolution,
     service_type  : params.service_type,
     list_children : isListingChildren,
     show_detail   : showDetail,
@@ -47,6 +59,7 @@ function routeTraffic(req, res) {
   };
 
   let optionsFinal = db._getQueryOptions(options);
+  let resolution = optionsFinal.resolution || optionsFinal.granularity;
 
   db.getTrafficWithTotals(optionsFinal).spread((totalsData, detailData) => {
     let duration      = optionsFinal.end - optionsFinal.start + 1;
@@ -140,26 +153,117 @@ function routeTraffic(req, res) {
       if (optionsFinal.show_detail && detailData) {
 
         // Get the array of detail data for the current entity
+        // NOTE: This will return one record per resolution, not granularity (e.g. month, day, hour, 5min)
         let entityDetailData = detailData.filter((record) => record[selectedLevel] === entity);
         let entityDetailDataFilled = dataUtils.buildContiguousTimeline(
           entityDetailData,
           optionsFinal.start,
           optionsFinal.end,
-          optionsFinal.granularity,
+          resolution,
           ['chit_ratio', 'avg_fbl', 'bytes', 'transfer_rate', 'requests', 'connections']
         );
+
+        // Populate entityDetailDataFilled with the number of records specified by granularity.
+        // This will only be done if resolution is smaller than granularity.
+        // For example, the caller want to use hourly data aggregated by day — meaning
+        // the granularity would be day, and the resolution would be hour.
+        if (resolution !== optionsFinal.granularity) {
+          let entityDetailDataGrouped = {};
+
+          // Create an object where each key is a UTC unix timestamp reresenting
+          // the start of the boundary defined by granularity (e.g. one per day).
+          entityDetailDataFilled.forEach((detailRecordData) => {
+            let time = moment.unix(detailRecordData.timestamp).utc();
+            let boundary = time.startOf(optionsFinal.granularity).format('X');
+
+            if (!entityDetailDataGrouped[boundary]) {
+              entityDetailDataGrouped[boundary] = [detailRecordData];
+            } else {
+              entityDetailDataGrouped[boundary].push(detailRecordData);
+            }
+          });
+
+          // Aggregate all the grouped data into a new array of objects that each
+          // represent a period of time defined by granularity (e.g. one per day).
+          entityDetailDataFilled = [];
+          _.forOwn(entityDetailDataGrouped, (records, timestamp) => {
+            let bytesSum       = _.sumBy(records, (record) => record.bytes);
+            let bytesMax       = _.maxBy(records, (record) => record.bytes);
+            bytesMax           = bytesMax ? bytesMax.bytes : null;
+            let bytesMin       = _.minBy(records, (record) => record.bytes);
+            bytesMin           = bytesMin ? bytesMin.bytes : null;
+            let bytesAvg       = _.meanBy(records, (record) => record.bytes);
+            let requestsSum    = _.sumBy(records, (record) => record.requests);
+            let requestsMax    = _.maxBy(records, (record) => record.requests);
+            requestsMax        = requestsMax ? requestsMax.requests : null;
+            let requestsMin    = _.minBy(records, (record) => record.requests);
+            requestsMin        = requestsMin ? requestsMin.requests : null;
+            let requestsAvg    = _.meanBy(records, (record) => record.requests);
+            let connectionsSum = _.sumBy(records, (record) => record.connections);
+            let connectionsMax = _.maxBy(records, (record) => record.connections);
+            connectionsMax     = connectionsMax ? connectionsMax.connections : null;
+            let connectionsMin = _.minBy(records, (record) => record.connections);
+            connectionsMin     = connectionsMin ? connectionsMin.connections : null;
+            let connectionsAvg = _.meanBy(records, (record) => record.connections);
+
+            let aggregateRecord = {
+              timestamp           : Number(timestamp),
+              bytes               : bytesSum,
+              bytes_peak          : bytesMax,
+              bytes_lowest        : bytesMin,
+              bytes_average       : Math.round(bytesAvg),
+              requests            : requestsSum,
+              requests_peak       : requestsMax,
+              requests_lowest     : requestsMin,
+              requests_average    : Math.round(requestsAvg),
+              connections         : connectionsSum,
+              connections_peak    : connectionsMax,
+              connections_lowest  : connectionsMin,
+              connections_average : Math.round(connectionsAvg)
+            };
+
+            entityDetailDataFilled.push(aggregateRecord);
+
+          });
+
+        }
 
         // Maniplulate each detail record
         record.detail = entityDetailDataFilled.map((detailRecordData) => {
           let detailRecord = {
             timestamp     : detailRecordData.timestamp,
-            chit_ratio    : detailRecordData.chit_ratio,
-            avg_fbl       : detailRecordData.avg_fbl,
-            bytes         : detailRecordData.bytes,
-            transfer_rate : dataUtils.getBPSFromBytes(detailRecordData.bytes, optionsFinal.granularity),
-            requests      : detailRecordData.requests,
-            connections   : detailRecordData.connections
+            bytes: {
+              total   : detailRecordData.bytes,
+              peak    : detailRecordData.bytes_peak,
+              low     : detailRecordData.bytes_lowest,
+              average : detailRecordData.bytes_average
+            },
+            transfer_rates: {
+              total   : dataUtils.getBPSFromBytes(detailRecordData.bytes, duration),
+              peak    : dataUtils.getBPSFromBytes(detailRecordData.bytes_peak, optionsFinal.granularity),
+              low     : dataUtils.getBPSFromBytes(detailRecordData.bytes_lowest, optionsFinal.granularity),
+              average : dataUtils.getBPSFromBytes(detailRecordData.bytes_average, optionsFinal.granularity)
+            },
+            requests: {
+              total   : detailRecordData.requests,
+              peak    : detailRecordData.requests_peak,
+              low     : detailRecordData.requests_lowest,
+              average : detailRecordData.requests_average
+            },
+            connections: {
+              total   : detailRecordData.connections,
+              peak    : detailRecordData.connections_peak,
+              low     : detailRecordData.connections_lowest,
+              average : detailRecordData.connections_average
+            }
           };
+
+          // We can only provide chit_ratio and avg_fbl if we didn't previously
+          // aggregate numbers for each granularity interval.
+          if (resolution === optionsFinal.granularity) {
+            detailRecord.chit_ratio = detailRecordData.chit_ratio;
+            detailRecord.avg_fbl    = `${Math.round(detailRecordData.avg_fbl)} ms`;
+          }
 
           // Add the current detail record to the detail array
           return detailRecord;

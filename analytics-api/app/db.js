@@ -238,13 +238,14 @@ class AnalyticsDB {
     let queryOptions      = [];
 
     // Build the table name
-    let table = `${accountLevel}_global_${optionsFinal.granularity}`;
+    let tableGranularity = optionsFinal.resolution || optionsFinal.granularity;
+    let table = `${accountLevel}_global_${tableGranularity}`;
     queryOptions.push(table);
     queryOptions.push(optionsFinal.start);
     queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
-    if (optionsFinal.granularity === 'day' || optionsFinal.granularity === 'month') {
+    if (tableGranularity === 'day' || tableGranularity === 'month') {
       conditions.push("timezone = 'UTC' AND");
     }
 
