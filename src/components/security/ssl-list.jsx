@@ -5,7 +5,7 @@ import { List } from 'immutable'
 import ActionLinks from '../account-management/action-links.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
-const SSLList = ({ certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
+const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
   return (
     <div>
       <AccountManagementHeader title={`${certificates.size} Certificates`} onAdd={uploadCertificate}/>
@@ -32,7 +32,7 @@ const SSLList = ({ certificates, onCheck, editCertificate, deleteCertificate, up
                   <Input type="checkbox"
                     onChange={() => onCheck(id)}
                     label={certificate.get('title')}
-                    checked={false}/>
+                    checked={activeCertificates.includes(id)}/>
                 </td>
                 <td>{certificate.get('commonName')}</td>
                 <td>{certificate.get('group')}</td>
@@ -51,6 +51,7 @@ const SSLList = ({ certificates, onCheck, editCertificate, deleteCertificate, up
 }
 
 SSLList.propTypes = {
+  activeCertificates: PropTypes.instanceOf(List),
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,

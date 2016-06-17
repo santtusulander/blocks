@@ -24,29 +24,41 @@ import {
 } from '../constants/account-management-modals.js'
 
 class Security extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
   componentWillMount() {
-    this.props.fetchListData(this.props.params.subPage)
     this.props.fetchAccountData(this.props.accounts)
   }
+
+  componentWillReceiveProps(nextProps) {
+    switch(nextProps.params.subPage) {
+      case 'ssl-certificate':
+        this.props.securityActions.fetchSSLCertificates({ account: nextProps.activeAccount.get('id') })
+        break
+      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
+      // case 'content-targeting': securityActions.fetchContentTrageting(account)
+      default: break
+    }
+  }
+
   render() {
     const {
       accounts,
       activeAccount,
+      activeCertificates,
       activeModal,
       fetchAccount,
       sslCertificates,
+      securityActions: { toggleActiveCertificates },
       toggleModal,
       params: { subPage }
     } = this.props
     const sslListProps = {
+      activeCertificates,
       certificates: sslCertificates && sslCertificates.get('items'),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
       deleteCertificate: () => toggleModal(DELETE_CERTIFICATE),
-      editCertificate: () => {toggleModal(EDIT_CERTIFICATE)},
-      onCheck: () => {}
+      editCertificate: () => toggleModal(EDIT_CERTIFICATE),
+      onCheck: id => toggleActiveCertificates(id)
     }
     const certificateFormProps = {
       activeAccount,
@@ -90,10 +102,11 @@ class Security extends React.Component {
         </div>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm title='Edit Certificate'{ ...certificateFormProps }/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm title='Upload Certificate'{ ...certificateFormProps }/>}
-        {activeModal === DELETE_CERTIFICATE && <DeleteModal
-          itemToDelete='Certificate'
-          onDelete={() => toggleModal(null)}
-          onCancel={() => toggleModal(null)}/>}
+        {activeModal === DELETE_CERTIFICATE &&
+          <DeleteModal
+            itemToDelete='Certificate'
+            onDelete={() => toggleModal(null)}
+            onCancel={() => toggleModal(null)}/>}
       </PageContainer>
     )
   }
@@ -105,25 +118,25 @@ Security.defaultProps = {
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchAccountData: PropTypes.func,
   fetchListData: PropTypes.func,
   params: PropTypes.object,
+  securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func
 }
 
 
 function mapStateToProps(state) {
-  const activeAccount = state.account.get('activeAccount')
-  const accountId = activeAccount ? activeAccount.get('id') : 1
-  const sslCertificates = state.security.get('sslCertificates').find(item => item.get('account') === accountId)
   return {
+    activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount,
-    sslCertificates
+    activeAccount: state.account.get('activeAccount'),
+    sslCertificates: state.security.get('sslCertificates')
   };
 }
 
@@ -131,16 +144,6 @@ function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  function fetchListData(activeTab) {
-    switch(activeTab) {
-      case 'ssl-certificate':
-        securityActions.fetchSSLCertificates()
-        break
-      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
-      // case 'content-targeting': securityActions.fetchTokenAuthentication(account)
-      default: break
-    }
-  }
   function fetchAccountData(accounts) {
     if(accounts && accounts.isEmpty()) {
       accountActions.fetchAccounts('udn')
@@ -148,9 +151,9 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
-    fetchListData: fetchListData,
     fetchAccountData: fetchAccountData,
     fetchAccount: accountActions.fetchAccount,
+    securityActions: securityActions,
     toggleModal: uiActions.toggleAccountManagementModal
   };
 }

@@ -7,7 +7,7 @@ const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_ACTIVE_CERTIFICATES_TOGGLED = 'SECURITY_ACTIVE_CERTIFICATES_TOGGLED'
 
 
-const fakeSSLCertificates = [
+const fakeSSLCertificates = fromJS([
   {
     account: 25,
     items: [
@@ -46,18 +46,19 @@ const fakeSSLCertificates = [
         {id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 'group 1'}
     ]
   }
-]
+])
 
 export const initialState = fromJS({
   fetching: false,
   activeCertificates: [],
-  sslCertificates: []
+  sslCertificates: {}
 })
 
 // REDUCERS
 
 export function fetchSSLCertificatesSuccess(state, action) {
-  return state.merge({ sslCertificates: action.payload })
+  const sslCertificates = fakeSSLCertificates.find(item => item.get('account') === action.payload.account)
+  return state.merge({ sslCertificates })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -87,9 +88,14 @@ export function editSSLCertificateFailure(state) {
 }
 
 export function activeCertificatesToggled(state, action) {
-  return state.merge({
-    activeCertificates: action.payload
-  })
+  let newActiveCertificates = state.get('activeCertificates')
+  if(newActiveCertificates.includes(action.payload)) {
+    newActiveCertificates = newActiveCertificates.filter(type => type !== action.payload)
+  }
+  else {
+    newActiveCertificates = newActiveCertificates.push(action.payload)
+  }
+  return state.set('activeCertificates', newActiveCertificates)
 }
 
 export default handleActions({
@@ -99,8 +105,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, () => {
-  return new Promise(res => res(fakeSSLCertificates))
+export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, opts => {
+  return new Promise(res => res(opts))
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {
