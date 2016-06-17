@@ -16,6 +16,7 @@ function routeTraffic(req, res) {
   let isListingChildren = _.isUndefined(params.list_children) ? false : params.list_children === 'true';
   let showDetail        = _.isUndefined(params.show_detail) ? true : params.show_detail === 'true';
   let showTotals        = _.isUndefined(params.show_totals) ? true : params.show_totals === 'true';
+  let fieldFilters      = _.isUndefined(params.field_filters) ? [] : params.field_filters.split(',');
 
   let errors = validator.validate(params, {
     start         : {required: true, type: 'Timestamp'},
@@ -28,7 +29,8 @@ function routeTraffic(req, res) {
     resolution    : {required: false, type: 'Granularity'},
     list_children : {required: false, type: 'Boolean'},
     show_detail   : {required: false, type: 'Boolean'},
-    show_totals   : {required: false, type: 'Boolean'}
+    show_totals   : {required: false, type: 'Boolean'},
+    field_filters : {required: false, type: 'List'}
   });
 
   // Extra custom parameter validation
@@ -147,6 +149,7 @@ function routeTraffic(req, res) {
 
         // Ensure proper defaults
         record.totals = _.defaultsDeep(record.totals, defaultTotals);
+        record.totals = fieldFilters.length ? _.pick(record.totals, fieldFilters) : record.totals;
       }
 
       // Conditionally add totals to the entity record based on the show_totals param
@@ -266,6 +269,8 @@ function routeTraffic(req, res) {
           }
 
           // Add the current detail record to the detail array
+          detailRecord = _.defaultsDeep(detailRecord, defaultTotals);
+          detailRecord = fieldFilters.length ? _.pick(detailRecord, fieldFilters) : detailRecord;
           return detailRecord;
         });
       }
