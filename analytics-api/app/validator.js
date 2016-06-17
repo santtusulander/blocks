@@ -57,6 +57,10 @@ class Validator {
       boolean: {
         validator : /^(?:true|false)$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid boolean (true or false). Value received: ${value}`
+      },
+      list: {
+        validator : /^(?:[^ ,]+,)*?(?:[^ ,]+)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid comma separated list of values with no spaces (e.g. 'hello', 'hello,there', 'well,hello,there'). Value received: ${value}`
       }
     };
   }
