@@ -5,7 +5,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import { fromJS } from 'immutable'
 
-import CertificateUploadForm from '../../security/certificate-upload-form.jsx'
+import CertificateForm from '../../security/certificate-form.jsx'
 
 const stateReducer = combineReducers({form: formReducer})
 const store = createStore(stateReducer)
@@ -20,7 +20,7 @@ storiesOf('Upload Certificate Form', module)
     </ThemeWrap>
   ))
   .add('Default', () => (
-      <CertificateUploadForm
+      <CertificateForm
           accounts={fromJS([{ id: 1, name: 'Account 1' }, { id: 2, name: 'Account 2' } ])}
           groups={fromJS([{ id: 1, name: 'Group 1' }, { id: 2, name: 'Group 2' } ])}
           onCancel={action('cancel pressed')}

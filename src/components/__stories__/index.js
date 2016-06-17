@@ -20,7 +20,8 @@ import './account-management/brand-edit-form'
 
 //security
 import './security/ssl-list'
-import './security/certificate-upload-form'
+import './security/certificate-form'
+import './delete-modal'
 
 import './content-item-chart'
 import './loading-spinner'
