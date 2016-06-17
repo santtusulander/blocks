@@ -279,15 +279,15 @@ class AnalyticsDB {
         sum(bytes) as bytes,
         max(bytes) as bytes_peak,
         min(bytes) as bytes_lowest,
-        avg(bytes) as bytes_average,
+        round(avg(bytes)) as bytes_average,
         sum(requests) as requests,
         max(requests) as requests_peak,
         min(requests) as requests_lowest,
-        avg(requests) as requests_average,
+        round(avg(requests)) as requests_average,
         sum(connections) as connections,
         max(connections) as connections_peak,
         min(connections) as connections_lowest,
-        avg(connections) as connections_average,
+        round(avg(connections)) as connections_average,
         round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
         round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
       FROM ??
