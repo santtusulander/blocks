@@ -27,7 +27,9 @@ class AnalyticsTabVisitors extends React.Component {
     if ( !(params.brand === prevParams.brand &&
       params.account === prevParams.account &&
       params.group === prevParams.group &&
-      params.property === prevParams.property )) {
+      params.property === prevParams.property &&
+
+      this.props.filters === prevProps.filters )) {
 
       this.fetchData()
 
@@ -35,8 +37,8 @@ class AnalyticsTabVisitors extends React.Component {
   }
 
   fetchData(){
-    const endDate = moment().utc().endOf('day')
-    const startDate = moment().utc().startOf('month')
+    const endDate = this.props.filters.get('dateRange').endDate || moment().utc().endOf('day')
+    const startDate = this.props.filters.get('dateRange').startDate || moment().utc().startOf('month')
 
     const fetchOpts = {
       account: this.props.params.account,

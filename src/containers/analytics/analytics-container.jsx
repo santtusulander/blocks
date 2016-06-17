@@ -6,8 +6,11 @@ import { connect } from 'react-redux'
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
+import * as filtersActionCreators from '../../redux/modules/filters'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
+import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
+
 import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
 
 function getNameById( list, id ) {
@@ -23,6 +26,8 @@ function getNameById( list, id ) {
 class AnalyticsContainer extends React.Component {
   constructor(props){
     super(props)
+
+    this.onFilterChange = this.onFilterChange.bind(this)
   }
 
   componentDidMount(){
@@ -55,6 +60,11 @@ class AnalyticsContainer extends React.Component {
     }
   }
 
+  onFilterChange( filterName, filterValue){
+    console.log('AnalyticsContainer - onFilterChange()', filterName, filterValue)
+    this.props.filtersActions.setFilterValue({filterName: filterName, filterValue: filterValue} )
+  }
+
   render(){
     { /* TODO: Breadcrumbs should be put to UI - module in redux */ }
     let breadCrumbLinks = []
@@ -70,9 +80,14 @@ class AnalyticsContainer extends React.Component {
 
         <AnalyticsViewControl {...this.props} />
 
+        <AnalyticsFilters
+          onFilterChange={ this.onFilterChange }
+          filters={this.props.filters}
+        />
+
         {
           /* Render tab -content */
-          this.props.children
+          React.cloneElement(this.props.children, {filters: this.props.filters} )
         }
 
       </div>
@@ -85,7 +100,9 @@ function mapStateToProps(state) {
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
-    properties: state.host.get('allHosts')
+    properties: state.host.get('allHosts'),
+
+    filters: state.filters.get('filters')
   }
 }
 
@@ -95,7 +112,9 @@ function mapDispatchToProps(dispatch, ownProps) {
     //TODO: Add module for brands?
     // brandActions: bindActionCreators(brandActionCreators, dispatch)
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    propertyActions: bindActionCreators(propertyActionCreators, dispatch)
+    propertyActions: bindActionCreators(propertyActionCreators, dispatch),
+
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch)
   }
 }
 
