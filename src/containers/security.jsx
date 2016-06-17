@@ -9,12 +9,11 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import SecurityPageHeader from '../components/security/security-page-header'
 import DeleteModal from '../components/delete-modal'
 import CertificateForm from '../components/security/certificate-form-container'
-import PageHeader from '../components/layout/page-header'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import Select from '../components/select.jsx'
 import SSLList from '../components/security/ssl-list'
 
 import {
@@ -67,32 +66,20 @@ class Security extends React.Component {
       onSave: () => toggleModal(null),
       onCancel: () => toggleModal(null)
     }
-    const changeActiveAccount = brand => id => fetchAccount(brand, id)
-    const accountOptions = accounts.map(account => [account.get('id'), account.get('name')])
     return (
       <PageContainer className="account-management">
          <div className="account-management-system-users">
-          <PageHeader>
-            <h1 className="security-header-text">Security</h1>
-            <div className='dns-filter-wrapper'>
-              Account
-              <Select
-                onSelect={changeActiveAccount('udn')}
-                className="dns-dropdowns"
-                value={activeAccount.get('id')}
-                options={accountOptions.toJS()}/>
-            </div>
-          </PageHeader>
+          <SecurityPageHeader activeAccount={activeAccount.get('id')} accounts={accounts} fetchAccount={fetchAccount}/>
           <Nav bsStyle="tabs" className="system-nav">
-              <li className="navbar">
-                <Link to="/security/ssl-certificate" activeClassName="active">SSL CERTIFICATE</Link>
-              </li>
-              <li className="navbar">
-                <Link to="/security/token-authentication" activeClassName="active">TOKEN AUTHENTICATION</Link>
-              </li>
-              <li className="navbar">
-                <Link to="/security/content-targeting" activeClassName="active">CONTENT TARGETING</Link>
-              </li>
+            <li className="navbar">
+              <Link to="/security/ssl-certificate" activeClassName="active">SSL CERTIFICATE</Link>
+            </li>
+            <li className="navbar">
+              <Link to="/security/token-authentication" activeClassName="active">TOKEN AUTHENTICATION</Link>
+            </li>
+            <li className="navbar">
+              <Link to="/security/content-targeting" activeClassName="active">CONTENT TARGETING</Link>
+            </li>
           </Nav>
           <Content className="tab-bodies">
             {subPage === 'ssl-certificate' && <SSLList { ...sslListProps }/>}
