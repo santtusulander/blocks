@@ -20,6 +20,22 @@ import Styleguide from './containers/styleguide'
 
 import ContentTransition from './transitions/content'
 
+/* TODO: define routes here instead of 'fixed' paths */
+const routes = {
+  analytics: '/v2-analytics',
+  analyticsBrand: ':brand',
+  analyticsAccout: ':brand/:account',
+  analyticsGroup: ':brand/:account/:group',
+  analyticsProperty: ':brand/:account/:group/:property',
+
+  analyticsTabTraffic: 'traffic',
+  analyticsTabVisitors: 'visitors'
+}
+
+/* helper to get route by name */
+export function getRoute(name) {
+  return routes[name]
+}
 
 //Analytics v2
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
@@ -27,24 +43,26 @@ import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 
+/* helper for creating Tab-Routes */
 function getAnalyticsTabRoutes() {
   return (
     <span>
-      <IndexRedirect to="traffic" />
-      <Route path="traffic" component={ AnalyticsTabTraffic } />
-      <Route path="visitors" component={ AnalyticsTabVisitors } />
-                {/* TODO: Add tab routes
-                 <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-                 <Route path=":account/on-off-net" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-                 <Route path=":account/service-providers" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-                 <Route path=":account/file-error" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-                 <Route path=":account/url-report" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-                 <Route path=":account/playback-demo" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+      <IndexRedirect to={routes.analyticsTabTraffic} />
+      <Route path={routes.analyticsTabTraffic} component={ AnalyticsTabTraffic } />
+      <Route path={routes.analyticsTabVisitors} component={ AnalyticsTabVisitors } />
 
-                 <Route path=":group" components={{ main: AnalyticsGroup, sidebar: AnalyticsSidebarGroup }} >
-                 <Route path=":property" components={{ main: AnalyticsProperty, sidebar: AnalyticsSidebarProperty }} />
-                 </Route>
-                 */}
+      {/* TODO: Add tab routes
+       <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+       <Route path=":account/on-off-net" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+       <Route path=":account/service-providers" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+       <Route path=":account/file-error" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+       <Route path=":account/url-report" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+       <Route path=":account/playback-demo" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
+
+       <Route path=":group" components={{ main: AnalyticsGroup, sidebar: AnalyticsSidebarGroup }} >
+       <Route path=":property" components={{ main: AnalyticsProperty, sidebar: AnalyticsSidebarProperty }} />
+       </Route>
+       */}
 
     </span>
   )
@@ -57,17 +75,17 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
 
-    <Route path="/v2-analytics">
+    <Route path={routes.analytics}>
       { /* default - set 'udn' as brand */ }
       <IndexRedirect to="udn" />
-      <Route path=":brand" component={AnalyticsContainer} />
-      <Route path=":brand/:account" component={AnalyticsContainer}>
+      <Route path={routes.analyticsBrand} component={AnalyticsContainer} />
+      <Route path={routes.analyticsAccout} component={AnalyticsContainer}>
           { getAnalyticsTabRoutes() }
       </Route>
-      <Route path=":brand/:account/:group" component={AnalyticsContainer}>
+      <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
           { getAnalyticsTabRoutes() }
       </Route>
-      <Route path=":brand/:account/:group/:property" component={AnalyticsContainer}>
+      <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
           { getAnalyticsTabRoutes() }
       </Route>
     </Route>
