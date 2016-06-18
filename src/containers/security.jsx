@@ -63,8 +63,7 @@ class Security extends React.Component {
       activeAccount,
       accounts,
       fetchAccount,
-      onSave: () => toggleModal(null),
-      onCancel: () => toggleModal(null)
+      toggleModal
     }
     return (
       <PageContainer className="account-management">

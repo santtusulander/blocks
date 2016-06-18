@@ -67,8 +67,9 @@ export function fetchSSLCertificatesFailure(state) {
   })
 }
 
-export function uploadSSLCertificateSuccess(state) {
-  return state
+export function uploadSSLCertificateSuccess(state, action) {
+  action.payload.account = Math.floor(Math.random() * 500) + 100
+  return state.merge({ sslCertificates: state.get('sslCertificates').push(action.payload)})
 }
 
 export function uploadSSLCertificateFailure(state) {
@@ -78,7 +79,7 @@ export function uploadSSLCertificateFailure(state) {
 }
 
 export function editSSLCertificateSuccess(state) {
-  return state
+  return state.merge({ sslCertificates: state.get('sslCertificates').push(action.payload)})
 }
 
 export function editSSLCertificateFailure(state) {

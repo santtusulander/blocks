@@ -1,10 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import { Modal } from 'react-bootstrap'
-import { reduxForm } from 'redux-form'
+import { reduxForm, getValues } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { List, Map } from 'immutable'
-import CertificateForm from './certificate-form'
+
 import * as groupActionCreators from '../../redux/modules/group'
+import * as securityActionCreators from '../../redux/modules/security'
+
+import CertificateForm from './certificate-form'
 
 let errors = {}
 const validate = values => {
@@ -32,7 +35,13 @@ class CertificateFormContainer extends Component {
     }
   }
   render() {
-    const { subtitle, title, ...formProps } = this.props
+    const { subtitle, title, formData, save, toggleModal, ...formProps } = this.props
+    const onCancel = () => toggleModal(null)
+    const onSave = () => {
+      save(formData)
+      toggleModal(null)
+    }
+
     return (
       <Modal show={true} dialogClassName="soa-form-sidebar">
         <Modal.Header>
@@ -40,7 +49,7 @@ class CertificateFormContainer extends Component {
           {subtitle && <p>{subtitle}</p>}
         </Modal.Header>
         <Modal.Body>
-          <CertificateForm { ...errors }{ ...formProps }/>
+          <CertificateForm { ...onSave }{ ...onCancel }{ ...errors }{ ...formProps }/>
         </Modal.Body>
       </Modal>
     )
@@ -53,7 +62,9 @@ CertificateFormContainer.propTypes = {
   children: PropTypes.array,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
+  formData: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  save: PropTypes.func,
   subtitle: PropTypes.string,
   title: PropTypes.string,
   toggleModal: PropTypes.func
@@ -65,12 +76,15 @@ export default reduxForm({
   validate
 }, function mapStateToProps(state) {
   return {
+    formValues: getValues(state.form.certificateForm),
     groups: state.group.get('allGroups')
   }
 }, function mapDispatchToProps(dispatch) {
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
-    fetchGroups: groupActions.fetchGroups
+    fetchGroups: groupActions.fetchGroups,
+    save: securityActions.uploadCertificate
   }
 }
 )(CertificateFormContainer)
