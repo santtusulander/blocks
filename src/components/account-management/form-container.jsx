@@ -1,13 +1,13 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import './add-account-form.scss'
-
+//import './add-account-form.scss'
+import './modal-form-panel.scss'
 const AccountManagementFormContainer = (props) => {
 
   return (
     <Modal show={props.show}
            onHide={props.onCancel}
-           dialogClassName="account-form-container">
+           dialogClassName="modal-form-panel">
 
       <Modal.Header>
         <h1>{props.title}</h1>

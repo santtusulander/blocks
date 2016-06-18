@@ -94,10 +94,12 @@ describe('Account Module', () => {
 
   it('should handle update success', () => {
     const state = Immutable.fromJS({
-      activeAccount: 'something'
+      activeAccount: {id: 1, name: 'aaa'},
+      allAccounts: [{id: 1, name: 'aaa'}]
     });
-    const newState = updateSuccess(state);
-    expect(newState.get('activeAccount')).toBe(null);
+    const newState = updateSuccess(state, {payload: {id: 1, name: 'bbb'}});
+    expect(newState.get('activeAccount').get('name')).toBe('bbb');
+    expect(newState.get('allAccounts').get(0).get('name')).toBe('bbb');
     expect(newState.get('fetching')).toBeFalsy();
   });
 

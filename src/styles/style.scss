@@ -44,6 +44,7 @@
 @import 'containers/main';
 @import 'containers/account-management';
 @import 'containers/security';
+@import 'containers/property';
 
 
 // Components
@@ -59,13 +60,11 @@
 @import 'components/header';
 @import 'components/input-connector';
 @import 'components/notification';
-@import 'components/property';
 @import 'components/select';
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
 //Account Management
-@import 'components/account-management/dns-soa-form';
 @import 'components/account-management/account-management-header';
 @import 'components/account-management/action-links';
 @import 'components/account-management/dns-list';

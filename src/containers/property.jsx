@@ -15,6 +15,7 @@ import * as visitorsActionCreators from '../redux/modules/visitors'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
+import PageHeader from '../components/layout/page-header'
 import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
@@ -147,229 +148,138 @@ export class Property extends React.Component {
       metric => metric.get('property') === this.props.location.query.name)
       || Immutable.Map()
     const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    // Add 28 days to the historical data so it matches up
+    const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
+      .map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp).add(28, 'days').toDate()
+        return datapoint
+      })
     const avg_transfer_rate = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('average').split(' ') : [0, null]
     const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
+    const avg_ttfb = metrics.has('avg_ttfb') ? metrics.get('avg_ttfb') : 0
     const uniq_vis = this.props.visitorsByCountry.get('total')
-    const isTrial = activeHost.get('services').get(0).get('deployment_mode') === 'trial'
-    const policyPath = Immutable.List([
-      'default_policy', 'policy_rules'])
-    let controlIndex = activeConfig.getIn(policyPath)
-      .findIndex(policy => {
-        if(policy.has('set')) {
-          return policy.get('set').has('cache_control')
-        }
-      })
-    let nameIndex = activeConfig.getIn(policyPath)
-      .findIndex(policy => {
-        if(policy.has('set')) {
-          return policy.get('set').has('cache_name')
-        }
-      })
     return (
-      <PageContainer>
+      <PageContainer className="property-container">
         <Content>
-          <div className="container-fluid">
-            <Row className="property-header no-end-gutters">
-              <ButtonToolbar className="pull-right">
-                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-              </ButtonToolbar>
+          <PageHeader>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+              <Link className="btn btn-success btn-icon"
+                to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                <IconChart/>
+              </Link>
+              <Link className="btn btn-success btn-icon"
+                to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                <IconConfiguration/>
+              </Link>
+            </ButtonToolbar>
 
-              <p>PROPERTY SUMMARY</p>
-              <Dropdown id="dropdown-content"
-                open={this.state.propertyMenuOpen}
-                onToggle={this.togglePropertyMenu}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.location.query.name}</h1>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {this.props.properties.map(
-                    (property, i) =>
-                      property !== this.props.location.query.name ?
-                      <li key={i}>
-                        <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
-                          onClick={this.togglePropertyMenu}>
-                          {property}
-                        </Link>
-                      </li> : null
-                  ).toJS()}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Row>
+            <p>PROPERTY SUMMARY</p>
+            <Dropdown id="dropdown-content"
+              open={this.state.propertyMenuOpen}
+              onToggle={this.togglePropertyMenu}>
+              <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <h1>{this.props.location.query.name}</h1>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {this.props.properties.map(
+                  (property, i) =>
+                    property !== this.props.location.query.name ?
+                    <li key={i}>
+                      <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
+                        onClick={this.togglePropertyMenu}>
+                        {property}
+                      </Link>
+                    </li> : null
+                ).toJS()}
+              </Dropdown.Menu>
+            </Dropdown>
+          </PageHeader>
+          <div className="container-fluid">
 
             <Row className="property-info-row no-end-gutters">
-              <Col xs={3}>
+              <Col xs={3} className="kpi">
                 Origin Hostname
                 <h3>
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </h3>
               </Col>
-              <Col xs={3}>
+              <Col xs={3} className="kpi">
                 Published Hostname
                 <h3>
                   {activeConfig.get('edge_configuration').get('published_name')}
                 </h3>
               </Col>
-              <Col xs={2}>
-                Configuration Version
+              <Col xs={2} className="kpi">
+                Current Version
                 <h3>{activeConfig.get('config_name')}</h3>
               </Col>
-              <Col xs={3}>
-                Published
+              <Col xs={4} className="kpi">
+                Deployed
                 <h3>
                   {moment(
                     activeConfig.get('configuration_status').get('deployment_date'), 'X'
                   ).format('M/D/YYYY, h:mma')}
                 </h3>
               </Col>
-              <Col xs={1}>
-                Trial
-                <h3>{isTrial ? 'TRUE' : 'FALSE'}</h3>
-              </Col>
             </Row>
 
-            {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
-              <Row className="no-end-gutters property-content">
-              <Col xs={6} className="property-analytics-summary">*/}
-                <h3 className="has-btn extra-margin-top">
-                  Traffic Summary
-                  <span className="heading-suffix"> (last 28 days)</span>
-                  <Link className="btn btn-primary btn-icon pull-right"
-                    to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
-                    <IconChart/>
-                  </Link>
+            <div className="chart-header">
+              <div className="kpi">
+                Unique visitors / h (avg)
+                <h3>
+                  {this.props.fetching || this.props.visitorsFetching ?
+                    <span>Loading...</span> :
+                    numeral(uniq_vis).format('0,0')
+                  }
                 </h3>
-
-                <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
-                  <AnalysisByTime axes={true} padding={30}
-                    primaryData={metrics_traffic.reverse()}
-                    dataKey='bits_per_second'
-                    width={this.state.byTimeWidth}
-                    height={this.state.byTimeWidth / 2.5}
-                    xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
-                      : this.state.byTimeWidth > 600 ? 2 : 3}
-                    yAxisCustomFormat={formatBitsPerSecond}/>
-                </div>
-
-                {metrics_traffic && metrics_traffic.length ?
-                  <Row className="extra-margin-top no-gutters">
-                    <Col xs={7}>
-                      <Row>
-                        <Col xs={6}>
-                          Unique visitors
-                          {this.props.fetching || this.props.visitorsFetching ?
-                            <p>Loading...</p> :
-                            <h2>{numeral(uniq_vis).format('0,0')}</h2>
-                          }
-                        </Col>
-                        <Col xs={6}>
-                          Bandwidth
-                          <h2>
-                            {avg_transfer_rate[0]}
-                            <span className="heading-suffix"> {avg_transfer_rate[1]}</span>
-                          </h2>
-                        </Col>
-                      </Row>
-                      <Row className="extra-margin-top">
-                        <Col xs={6}>
-                          Cache Hit Rate
-                          <h2>{avg_cache_hit_rate}
-                            <span className="heading-suffix"> %</span>
-                          </h2>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col xs={5}>
-                      Top 3 Countries by Visitors
-                      {this.props.fetching || this.props.visitorsFetching ?
-                        <p>Loading...</p> :
-                        this.props.visitorsByCountry.get('countries').size ?
-                          this.props.visitorsByCountry.get('countries').map((country, i) => {
-                            return (
-                              <h2 key={i}>
-                                {numeral(country.get('percent_total')).format('0.00')}
-                                <span className="heading-suffix"> %</span>
-                                <span className="heading-suffix"> {country.get('name').toUpperCase()}</span>
-                              </h2>
-                            )
-                          }
-                        ) : <h2>0 %</h2>
-                      }
-                    </Col>
-                  </Row>
-                  : null
-                }
-              {/* TODO: Temporary https://vidscale.atlassian.net/browse/UDNP-391
-              </Col>
-
-              <div className="content-separator"></div>
-
-              <Col xs={6} className="property-configuration-summary">
-                <h3 className="has-btn">
-                  Edge Configuration
-                  <Link className="btn btn-primary btn-icon pull-right"
-                    to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
-                    <IconConfiguration />
-                  </Link>
+              </div>
+              <div className="kpi">
+                Time to First Byte (avg)
+                <h3>
+                  {avg_ttfb}
                 </h3>
+              </div>
+              <div className="kpi">
+                Cache Hit Rate (avg)
+                <h3>
+                  {avg_cache_hit_rate}%
+                </h3>
+              </div>
+              <div className="kpi">
+                Bandwidth (avg/s)
+                <h3>
+                  {avg_transfer_rate}
+                </h3>
+              </div>
+              <h3 className="has-btn">
+                Traffic Summary
+                <span className="heading-suffix"> (last 28 days)</span>
+              </h3>
+            </div>
 
-                <Table className="unstyled no-padding auto-width">
-                  <tbody>
-                    <tr>
-                      <td>Honor Origin Cache Control</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.ignore_case) ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Ignore case from origin</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.honor_etags) === "strong" ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Enable e-Tag support</td>
-                      <td>
-                        {activeConfig.getIn(policyPaths.honor_origin_cache_policies) ?
-                          <b className="text-green">On</b> :
-                          <b className="text-orange">Off</b>
-                        }
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-
-                <h3 className="extra-margin-top">Cache Rules</h3>
-
-                <Table striped={true}>
-                  <thead>
-                    <tr>
-                      <th>RULE TYPE</th>
-                      <th>TTL VALUE</th>
-                      <th>RULE</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Error Response</td>
-                      <td>10 sec</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Redirect</td>
-                      <td>no-store</td>
-                      <td>-</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Col>
-            </Row>*/}
+            <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
+              <AnalysisByTime axes={true} padding={30}
+                primaryData={metrics_traffic.reverse()}
+                secondaryData={historical_traffic.reverse()}
+                dataKey='bits_per_second'
+                width={this.state.byTimeWidth}
+                height={this.state.byTimeWidth / 3}
+                xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+                  : this.state.byTimeWidth > 600 ? 2 : 3}
+                yAxisCustomFormat={formatBitsPerSecond}/>
+              <div className="chart-labels">
+                <svg width="20" height="20">
+                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
+                </svg>
+                Selected Period
+                <svg width="20" height="20">
+                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
+                </svg>
+                Comparison Period
+              </div>
+            </div>
           </div>
         </Content>
         {this.state.purgeActive ? <PurgeModal
