@@ -87,7 +87,7 @@ class AnalyticsContainer extends React.Component {
 
         {
           /* Render tab -content */
-          React.cloneElement(this.props.children, {filters: this.props.filters} )
+          this.props.children && React.cloneElement(this.props.children, {filters: this.props.filters} )
         }
 
       </div>
