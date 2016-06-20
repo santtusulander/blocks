@@ -117,9 +117,9 @@ export function startFetch(state) {
   return state.set('fetching', true)
 }
 
-export function updateSuccess(state) {
+export function updateSuccess(state, action) {
   return state.merge({
-    activeHost: null,
+    activeHost: Immutable.fromJS(action.payload),
     fetching: false
   })
 }
@@ -211,8 +211,10 @@ export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id,
       'Content-Type': 'application/json'
     }
   })
-  .then(() => {
-    return host;
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
   })
 })
 

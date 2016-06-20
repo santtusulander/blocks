@@ -49,7 +49,6 @@ export class Filters extends React.Component {
     this.handlePopChange               = this.handlePopChange.bind(this)
     this.handleOnOffNetChartTypeChange = this.handleOnOffNetChartTypeChange.bind(this)
     this.toggleNavMenu                 = this.toggleNavMenu.bind(this)
-    this.toggleServiceType             = this.toggleServiceType.bind(this)
     this.handleExport                  = this.handleExport.bind(this);
   }
 
@@ -63,10 +62,6 @@ export class Filters extends React.Component {
 
   handleOnOffNetChartTypeChange(type) {
     this.props.changeOnOffNetChartType(type)
-  }
-
-  toggleServiceType(type) {
-    return () => this.props.toggleServiceType(type)
   }
 
   toggleNavMenu() {
@@ -152,7 +147,7 @@ export class Filters extends React.Component {
         this.props.activeTab !== 'on-off-net-report' ?
           <ServiceType
             serviceTypes={this.props.serviceTypes}
-            toggleServiceType={this.toggleServiceType}/>
+            toggleServiceType={this.props.toggleServiceType}/>
           : null}
         {this.props.activeTab === 'file-error' &&
           <div>
