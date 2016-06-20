@@ -35,11 +35,13 @@ class CertificateFormContainer extends Component {
     }
   }
   render() {
-    const { subtitle, title, formData, save, toggleModal, ...formProps } = this.props
-    const onCancel = () => toggleModal(null)
-    const onSave = () => {
-      save(formData)
-      toggleModal(null)
+    const { subtitle, title, formValues, save, toggleModal, ...formProps } = this.props
+    const buttonFunctions = {
+      onCancel: () => toggleModal(null),
+      onSave: () => {
+        save(formValues)
+        toggleModal(null)
+      }
     }
 
     return (
@@ -49,7 +51,7 @@ class CertificateFormContainer extends Component {
           {subtitle && <p>{subtitle}</p>}
         </Modal.Header>
         <Modal.Body>
-          <CertificateForm { ...onSave }{ ...onCancel }{ ...errors }{ ...formProps }/>
+          <CertificateForm { ...buttonFunctions }{ ...errors }{ ...formProps }/>
         </Modal.Body>
       </Modal>
     )
@@ -62,7 +64,7 @@ CertificateFormContainer.propTypes = {
   children: PropTypes.array,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
-  formData: PropTypes.object,
+  formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   save: PropTypes.func,
   subtitle: PropTypes.string,
@@ -84,7 +86,7 @@ export default reduxForm({
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
     fetchGroups: groupActions.fetchGroups,
-    save: securityActions.uploadCertificate
+    save: securityActions.uploadSSLCertificate
   }
 }
 )(CertificateFormContainer)

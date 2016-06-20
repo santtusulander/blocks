@@ -5,6 +5,7 @@ import { mapReducers } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_ACTIVE_CERTIFICATES_TOGGLED = 'SECURITY_ACTIVE_CERTIFICATES_TOGGLED'
+const SECURITY_SSL_CERTIFICATES_UPLOAD = 'SECURITY_SSL_CERTIFICATES_UPLOAD'
 
 
 const fakeSSLCertificates = fromJS([
@@ -69,7 +70,8 @@ export function fetchSSLCertificatesFailure(state) {
 
 export function uploadSSLCertificateSuccess(state, action) {
   action.payload.account = Math.floor(Math.random() * 500) + 100
-  return state.merge({ sslCertificates: state.get('sslCertificates').push(action.payload)})
+  console.log(state.get('sslCertificates').toJS())
+  return state.merge({ sslCertificates: state.getIn(['sslCertificates', 'items']).push(action.payload)})
 }
 
 export function uploadSSLCertificateFailure(state) {
@@ -101,10 +103,14 @@ export function activeCertificatesToggled(state, action) {
 
 export default handleActions({
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
-  SECURITY_ACTIVE_CERTIFICATES_TOGGLED: activeCertificatesToggled
+  SECURITY_ACTIVE_CERTIFICATES_TOGGLED: activeCertificatesToggled,
+  SECURITY_SSL_CERTIFICATES_UPLOAD: mapReducers(uploadSSLCertificateSuccess, uploadSSLCertificateFailure)
 }, initialState)
 
 // ACTIONS
+export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, opts => {
+  return new Promise(res => res(opts))
+})
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, opts => {
   return new Promise(res => res(opts))
