@@ -3,7 +3,17 @@ import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, parseResponseData, qsBuilder } from '../util'
+import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
+
+const emptyTraffic = fromJS({
+  thisMonth: [],
+  lastMonth: []
+})
+
+const dailyTrafficOpts = {
+  list_children: 'true',
+  granularity: 'day'
+}
 
 const ACCOUNT_METRICS_START_FETCH = 'ACCOUNT_METRICS_START_FETCH'
 const GROUP_METRICS_START_FETCH = 'GROUP_METRICS_START_FETCH'
@@ -11,11 +21,23 @@ const HOST_METRICS_START_FETCH = 'HOST_METRICS_START_FETCH'
 const ACCOUNT_METRICS_FETCHED = 'ACCOUNT_METRICS_FETCHED'
 const GROUP_METRICS_FETCHED = 'GROUP_METRICS_FETCHED'
 const HOST_METRICS_FETCHED = 'HOST_METRICS_FETCHED'
+const ACCOUNT_DAILY_TRAFFIC_FETCHED = 'ACCOUNT_DAILY_TRAFFIC_FETCHED'
+const ACCOUNT_HOURLY_TRAFFIC_FETCHED = 'ACCOUNT_HOURLY_TRAFFIC_FETCHED'
+const GROUP_DAILY_TRAFFIC_FETCHED = 'GROUP_DAILY_TRAFFIC_FETCHED'
+const GROUP_HOURLY_TRAFFIC_FETCHED = 'GROUP_HOURLY_TRAFFIC_FETCHED'
+const HOST_DAILY_TRAFFIC_FETCHED = 'HOST_DAILY_TRAFFIC_FETCHED'
+const HOST_HOURLY_TRAFFIC_FETCHED = 'HOST_HOURLY_TRAFFIC_FETCHED'
 
 const emptyMetrics = Map({
+  accountDailyTraffic: List(),
   accountMetrics: List(),
+  accountHourlyTraffic: emptyTraffic,
+  groupDailyTraffic: List(),
   groupMetrics: List(),
+  groupHourlyTraffic: emptyTraffic,
+  hostDailyTraffic: List(),
   hostMetrics: List(),
+  hostHourlyTraffic: emptyTraffic,
   fetchingAccountMetrics: false,
   fetchingGroupMetrics: false,
   fetchingHostMetrics: false
@@ -58,18 +80,132 @@ export function makeMetricsReducer(fetchKey, dataKey) {
 
 export const makeFetchStarter = fetchKey => state => state.set(fetchKey, true)
 
+// TODO: Replace metrics endpoint with traffic endpoint after 0.7
+// export function fetchHourlyAccountTrafficSuccess(state, action) {
+//   return state.merge({
+//     accountHourlyTraffic: fromJS({
+//       thisMonth: action.payload.thisMonth.data,
+//       lastMonth: action.payload.lastMonth.data
+//     }),
+//     fetching: false
+//   })
+// }
+//
+// export function fetchHourlyAccountTrafficFailure(state) {
+//   return state.merge({
+//     accountHourlyTraffic: List(),
+//     fetching: false
+//   })
+// }
+
+export function fetchDailyAccountTrafficSuccess(state, action) {
+  return state.merge({
+    accountDailyTraffic: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchDailyAccountTrafficFailure(state) {
+  return state.merge({
+    accountDailyTraffic: List(),
+    fetching: false
+  })
+}
+
+export function fetchDailyGroupTrafficSuccess(state, action) {
+  return state.merge({
+    groupDailyTraffic: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchDailyGroupTrafficFailure(state) {
+  return state.merge({
+    groupDailyTraffic: List(),
+    fetching: false
+  })
+}
+
+export function fetchDailyHostTrafficSuccess(state, action) {
+  return state.merge({
+    hostDailyTraffic: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchDailyHostTrafficFailure(state) {
+  return state.merge({
+    hostDailyTraffic: List(),
+    fetching: false
+  })
+}
+
 // REDUCERS
 
 export default handleActions({
   ACCOUNT_METRICS_FETCHED: makeMetricsReducer('fetchingAccountMetrics', 'accountMetrics'),
+  ACCOUNT_DAILY_TRAFFIC_FETCHED: mapReducers(
+    fetchDailyAccountTrafficSuccess,
+    fetchDailyAccountTrafficFailure
+  ),
+  // ACCOUNT_HOURLY_TRAFFIC_FETCHED: mapReducers(
+  //   fetchHourlyAccountTrafficSuccess,
+  //   fetchHourlyAccountTrafficFailure
+  // ),
   GROUP_METRICS_FETCHED: makeMetricsReducer('fetchingGroupMetrics', 'groupMetrics'),
+  GROUP_DAILY_TRAFFIC_FETCHED: mapReducers(
+    fetchDailyGroupTrafficSuccess,
+    fetchDailyGroupTrafficFailure
+  ),
   HOST_METRICS_FETCHED: makeMetricsReducer('fetchingHostMetrics', 'hostMetrics'),
+  HOST_DAILY_TRAFFIC_FETCHED: mapReducers(
+    fetchDailyHostTrafficSuccess,
+    fetchDailyHostTrafficFailure
+  ),
   ACCOUNT_METRICS_START_FETCH: makeFetchStarter('fetchingAccountMetrics'),
   GROUP_METRICS_START_FETCH: makeFetchStarter('fetchingGroupMetrics'),
   HOST_METRICS_START_FETCH: makeFetchStarter('fetchingHostMetrics')
 }, emptyMetrics)
 
 // ACTIONS
+
+export const fetchHourlyAccountTraffic = createAction(ACCOUNT_HOURLY_TRAFFIC_FETCHED, opts => {
+  const thisMonthOpts = Object.assign({}, opts, {
+    list_children: 'true',
+    granularity: 'hour'
+  })
+  const lastMonthOpts = Object.assign({}, thisMonthOpts, {
+    startDate: moment(opts.startDate, 'X').subtract(28, 'days').format('X'),
+    endDate: moment(opts.endDate, 'X').subtract(28, 'days').format('X')
+  })
+  return Promise.all([
+    axios.get(`${analyticsBase()}/traffic${qsBuilder(thisMonthOpts)}`),
+    axios.get(`${analyticsBase()}/traffic${qsBuilder(lastMonthOpts)}`)
+  ]).then(response => {
+    return {
+      thisMonth: parseResponseData(response[0]),
+      lastMonth: parseResponseData(response[1])
+    }
+  })
+})
+
+export const fetchDailyAccountTraffic = createAction(ACCOUNT_DAILY_TRAFFIC_FETCHED, opts => {
+  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
+  .then(parseResponseData)
+})
+
+export const fetchDailyGroupTraffic = createAction(GROUP_DAILY_TRAFFIC_FETCHED, opts => {
+  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
+  .then(parseResponseData)
+})
+
+export const fetchDailyHostTraffic = createAction(HOST_DAILY_TRAFFIC_FETCHED, opts => {
+  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
+  .then(parseResponseData)
+})
 
 export const fetchAccountMetrics = createAction(ACCOUNT_METRICS_FETCHED, opts => {
   return axios.get(`${analyticsBase()}/metrics${qsBuilder(opts)}`)

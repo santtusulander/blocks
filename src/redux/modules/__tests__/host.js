@@ -109,10 +109,10 @@ describe('Host Module', () => {
 
   it('should handle update success', () => {
     const state = Immutable.fromJS({
-      activeHost: 'something'
+      activeHost: {id: 1}
     });
-    const newState = updateSuccess(state);
-    expect(newState.get('activeHost')).toBe(null);
+    const newState = updateSuccess(state, {payload: {id: 2}});
+    expect(newState.get('activeHost').get('id')).toBe(2);
     expect(newState.get('fetching')).toBeFalsy();
   });
 

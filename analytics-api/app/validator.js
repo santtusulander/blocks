@@ -53,6 +53,14 @@ class Validator {
       status_codes: {
         validator : /^(?:[1-5][0-9x]{2},)*?(?:[1-5][0-9x]{2})$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid comma separated list of HTTP status codes (e.g. '404', '404,500', '304,4xx,500'). Notice there are no spaces, and you can use 'xx' as a wildcard to get all status codes of a type (e.g. '4xx', '5xx', etc). Value received: ${value}`
+      },
+      boolean: {
+        validator : /^(?:true|false)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid boolean (true or false). Value received: ${value}`
+      },
+      list: {
+        validator : /^(?:[^ ,]+,)*?(?:[^ ,]+)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid comma separated list of values with no spaces (e.g. 'hello', 'hello,there', 'well,hello,there'). Value received: ${value}`
       }
     };
   }
