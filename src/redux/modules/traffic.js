@@ -19,8 +19,27 @@ const emptyTraffic = Immutable.Map({
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
-  onOffNet: Immutable.Map(),
-  onOffNetToday: Immutable.Map(),
+  onOffNet: Immutable.fromJS({
+    detail: [{
+      net_on: { percent_total: 0, bytes: 0  },
+      net_off: { percent_total: 0, bytes: 0 },
+      timestamp: new Date().getTime(),
+      total: 0
+    }],
+    net_on: {bytes: 0, percent_total: 0},
+    net_off: {bytes: 0, percent_total: 0},
+    total: 0
+
+  }),
+  onOffNetToday: Immutable.fromJS({
+    detail: [{
+      net_on: { percent_total: 0, bytes: 0, timestamp: new Date().getTime()}, total: 0,
+      net_off: { percent_total: 0, bytes: 0, timestamp: new Date().getTime(), total: 0}
+    }],
+    net_on: {bytes: 0, percent_total: 0},
+    net_off: {bytes: 0, percent_total: 0},
+    total: 0
+  }),
   serviceProviders: Immutable.List(),
   storage: Immutable.List(),
   totalEgress: 0
