@@ -107,6 +107,9 @@ const AnalyticsViewControl = (props) => {
         <li>
           <Link to={ getTabLink(props.location.pathname, 'visitors') } activeClassName='active'>Visitors</Link>
         </li>
+        <li>
+          <Link to={ getTabLink(props.location.pathname, 'on-off-net') } activeClassName='active'>On/Off net</Link>
+        </li>
       </Nav>
 
     </div>
