@@ -12,8 +12,8 @@ global.window = document.defaultView
 jest.autoMockOff()
 jest.dontMock('../groups.jsx')
 const Groups = require('../groups.jsx').Groups
-const ContentItemChart = require('../../components/content-item-chart.jsx')
-const ContentItemList = require('../../components/content-item-list.jsx')
+const ContentItemChart = require('../../components/content/content-item-chart.jsx')
+const ContentItemList = require('../../components/content/content-item-list.jsx')
 
 function groupActionsMaker() {
   return {

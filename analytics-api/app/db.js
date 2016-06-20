@@ -220,6 +220,122 @@ class AnalyticsDB {
   }
 
   /**
+   * Get the average cache hit rate, time to first byte, transfer rates (average, peak, low, total),
+   * bytes (average, peak, low, total), requests (average, peak, low, total), and
+   * connections (average, peak, low, total).
+   * NOTE: The data returned is grouped by account level and optionally epoch_start.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getTraffic(options) {
+    let optionsFinal      = this._getQueryOptions(options);
+    let isListingChildren = optionsFinal.list_children;
+    let accountLevel      = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let grouping          = [];
+    let queryOptions      = [];
+
+    // Build the table name
+    let tableGranularity = optionsFinal.resolution || optionsFinal.granularity;
+    let table = `${accountLevel}_global_${tableGranularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    if (tableGranularity === 'day' || tableGranularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && !isListingChildren
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    // Build the GROUP BY clause
+    grouping.push(accountLevelData.field);
+    optionsFinal.is_detail && grouping.push('epoch_start');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start as timestamp,
+        ${accountLevelData.select},
+        sum(bytes) as bytes,
+        max(bytes) as bytes_peak,
+        min(bytes) as bytes_lowest,
+        round(avg(bytes)) as bytes_average,
+        sum(requests) as requests,
+        max(requests) as requests_peak,
+        min(requests) as requests_lowest,
+        round(avg(requests)) as requests_average,
+        sum(connections) as connections,
+        max(connections) as connections_peak,
+        min(connections) as connections_lowest,
+        round(avg(connections)) as connections_average,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
+      FROM ??
+      WHERE ${conditions.join('\n        ')}
+        AND flow_dir = 'out'
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join(',\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+
+  /**
+   * Get total and detailed traffic information.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getTrafficWithTotals(options) {
+    let optionsTotals = Object.assign({}, options, {is_detail: false});
+    let optionsDetail = Object.assign({}, options, {is_detail: true});
+    let queries = [];
+
+    options.show_totals && queries.push(this.getTraffic(optionsTotals));
+    options.show_detail && queries.push(this.getTraffic(optionsDetail));
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        let dataTotals = [];
+        let dataDetail = [];
+
+        if (queryData.length === 1) {
+          dataTotals = options.show_totals ? queryData[0] : [];
+          dataDetail = options.show_detail ? queryData[0] : [];
+
+        } else if (queryData.length === 2) {
+          dataTotals = options.show_totals ? queryData[0] : [];
+          dataDetail = options.show_detail ? queryData[1] : [];
+        }
+
+        return [dataTotals, dataDetail];
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
    * Get traffic data, cache hit rate, and transfer rates for all properties/groups
    * in a group/account within a given time range.
    *
