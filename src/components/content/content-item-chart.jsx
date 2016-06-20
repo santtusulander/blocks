@@ -11,6 +11,7 @@ import IconConfiguration from '../icons/icon-configuration.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip'
 import TrafficTooltip from './traffic-tooltip'
+import {formatBitsPerSecond} from '../../util/helpers'
 
 const dayHours = 24
 const rayHours = 3
@@ -141,8 +142,12 @@ class ContentItemChart extends React.Component {
     const dayArc = d3.svg.arc()
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
-    const {avgTransfer, maxTransfer, minTransfer} = this.state.activeSlice ?
-      this.state.activeSlice : this.props
+    let {avgTransfer, maxTransfer, minTransfer} = this.props
+    if(this.state.activeSlice) {
+      avgTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('average'), true)
+      maxTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('peak'), true)
+      minTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('low'), true)
+    }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
         {this.state.showDiffLegend ?
@@ -214,7 +219,7 @@ class ContentItemChart extends React.Component {
                   {pie(daySlices).reduce((slices, arc, i) => {
                     if(!(i % 2)) {
                       const data = this.props.dailyTraffic.get(Math.floor(i / 2))
-                      if(data && data.get('transfer_rate')) {
+                      if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
                         slices.push(
                           <path key={i} className="day-arc" d={dayArc(arc)}
                             onMouseEnter={this.sliceHover(data)}
