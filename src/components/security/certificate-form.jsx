@@ -5,13 +5,14 @@ import { List } from 'immutable'
 import UDNButton from '../button.js'
 
 export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors }) => {
-  const { account, group, sslCertTitle, privateKey, interMediateCert, certificate } = fields
+  const { account, group, title, privateKey, interMediateCert, certificate } = fields
   return (
     <form>
       <div id="accounts">
         <Input type="select"
           label="Account"
           { ...account }>
+          {!account.value && <option>Please select an account</option>}
           {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
         </Input>
         <hr/>
@@ -20,6 +21,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
         <Input type="select"
           label="Assign to Group"
           { ...group }>
+          {!group.value && <option>Please select a group</option>}
           {groups.map((group, i) => <option key={i} value={group.get('id')}>{group.get('name')}</option>)}
         </Input>
         <hr/>
@@ -27,8 +29,8 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
       <div id="sslCertTitle">
         <Input type="text"
           label="SSL Cert Title"
-          { ...sslCertTitle }/>
-        {sslCertTitle.touched && sslCertTitle.error && <div className="error-msg">{sslCertTitle.error}</div>}
+          { ...title }/>
+        {title.touched && title.error && <div className="error-msg">{title.error}</div>}
         <hr/>
       </div>
       <div id="privateKey">
