@@ -20,9 +20,9 @@ const fakeSecondaryData = Immutable.List([
 ])
 
 const fakeDailyTraffic = Immutable.fromJS([
-  {transfer_rate: 1},
-  {transfer_rate: 2},
-  {transfer_rate: 0}
+  {transfer_rates: {total: 1}},
+  {transfer_rates: {total: 2}},
+  {transfer_rates: {total: 0}}
 ])
 
 const fakeDifferenceData = Immutable.List([0, 0, 0, 1, 1, 1])
