@@ -26,56 +26,48 @@ export class ConfigurationVersions extends React.Component {
       }
       return built
     }, {production: [], staging: [], inprocess: []})
-    let highestAttainment = 'In Process'
-    if(this.props.status === 2) {
-      highestAttainment = 'In Staging'
-    }
-    else if(this.props.status === 3) {
-      highestAttainment = 'In Production'
-    }
     return (
       <div className="configuration-versions">
         <div className="sidebar-header">
-          <h3>{this.props.propertyName}</h3>
-          <p className="text-sm">{highestAttainment}</p>
-          <div className="sidebar-actions">
-            <ButtonToolbar>
-              <Button bsStyle="primary" className="btn-icon add-btn"
-                onClick={this.props.addVersion}>
-                <IconAdd width="30" height="30" />
-              </Button>
-              <Button bsStyle="primary" className="btn-icon delete-btn">
-                <IconDelete width="30" height="30" />
-              </Button>
-              <Button bsStyle="primary" className="view-log-btn">
-                View Log
-              </Button>
-            </ButtonToolbar>
-          </div>
+          <Button bsStyle="success" className="btn-icon add-btn pull-right"
+            onClick={this.props.addVersion}>
+            <IconAdd width="30" height="30" />
+          </Button>
+          <h1>
+            Versions
+          </h1>
         </div>
         <div className="sidebar-section-header">
-          PRODUCTION
+          Active Production
         </div>
           <SidebarLinks
             activate={this.props.activate}
-            emptyMsg="None in production."
+            emptyMsg="None"
             items={configs.production}
             tag={'config'}/>
         <div className="sidebar-section-header">
-          STAGING
+          Active Staging
         </div>
         <SidebarLinks
             activate={this.props.activate}
-            emptyMsg="None in staging."
+            emptyMsg="None"
             items={configs.staging}
             tag={'config'}/>
         <div className="sidebar-section-header">
-          IN PROCESS
+          Saved
         </div>
         <SidebarLinks
           activate={this.props.activate}
-          emptyMsg="None in process."
+          emptyMsg="None"
           items={configs.inprocess}
+          tag={'config'}/>
+        <div className="sidebar-section-header">
+          De-Activated
+        </div>
+        <SidebarLinks
+          activate={this.props.activate}
+          emptyMsg="None"
+          items={[]}
           tag={'config'}/>
       </div>
     );
