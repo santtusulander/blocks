@@ -1,9 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add.jsx'
-import IconDelete from '../icons/icon-delete.jsx'
 import { SidebarLinks } from '../sidebar-links'
 
 export class ConfigurationVersions extends React.Component {
