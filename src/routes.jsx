@@ -31,6 +31,7 @@ const routes = {
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
   analyticsTabOnOffNet: 'on-off-net',
+  analyticsTabServiceProviders: 'service-providers',
 
   content: '/content'
 }
@@ -46,6 +47,7 @@ import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
+import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
 
 
 /* helper for creating Tab-Routes */
@@ -56,6 +58,7 @@ function getAnalyticsTabRoutes() {
       <Route path={routes.analyticsTabTraffic} component={ AnalyticsTabTraffic } />
       <Route path={routes.analyticsTabVisitors} component={ AnalyticsTabVisitors } />
       <Route path={routes.analyticsTabOnOffNet} component={ AnalyticsTabOnOffNet } />
+      <Route path={routes.analyticsTabServiceProviders} component={ AnalyticsTabServiceProviders } />
 
       {/* TODO: Add tab routes
        <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
