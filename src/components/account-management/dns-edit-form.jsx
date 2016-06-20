@@ -13,26 +13,26 @@ const validate = values => {
 
   const { recordType, recordName, targetValue, ttl } = values
 
-  if (!recordType || recordType.length === 0) errors.recordType = 'RecordType is required'
-  if (!ttl || ttl.length === 0) errors.ttl = 'TTL is required'
-  if (!recordName || recordName.length === 0 ) errors.recordName = 'RecordName is required'
-  if (!targetValue ||targetValue.length === 0) errors.targetValue = 'TargetValue is required'
+  if(!recordType || recordType.length === 0) errors.recordType = 'RecordType is required'
+  if(!ttl || ttl.length === 0) errors.ttl = 'TTL is required'
+  if(!recordName || recordName.length === 0) errors.recordName = 'RecordName is required'
+  if(!targetValue || targetValue.length === 0) errors.targetValue = 'TargetValue is required'
 
   return errors;
 }
 
-const recordTypeOptions = recordTypes.map( (e,i) => {
-    return <option key={i} value={e}>{e}</option>;
+const recordTypeOptions = recordTypes.map((e, i) => {
+  return <option key={i} value={e}>{e}</option>;
 });
 
 class DnsEditForm extends Component {
   render() {
     const props = this.props
 
-    const title = props.edit ? 'Edit DNS Record' : 'New DNS Record'
+    const title             = props.edit ? 'Edit DNS Record' : 'New DNS Record'
     const actionButtonTitle = props.edit ? 'Save' : 'Add'
 
-    const { fields: { recordType, recordName, targetValue, ttl} } = props
+    const { fields: { recordType, recordName, targetValue, ttl } } = props
 
     return (
 
@@ -47,13 +47,14 @@ class DnsEditForm extends Component {
           <form>
 
             <Input
-            { ...recordType }
-            type="select"
-            label="Select Record Type"
-            placeholder="Select"
-            >
-            { recordTypeOptions }
+              { ...recordType }
+              type="select"
+              label="Select Record Type"
+              placeholder="Select">
+              { recordTypeOptions }
             </Input>
+
+            <hr/>
 
             <Input
               { ...recordName }
@@ -61,34 +62,39 @@ class DnsEditForm extends Component {
               label="Record Name"
               placeholder="Enter Record Name"
               addonAfter={ `.${props.domain}` }
-              className='input-narrow recordNameInput'
-            />
+              className='input-narrow recordNameInput'/>
 
-          {recordName.touched && recordName.error && <div className='error-msg errorRecordName'>{recordName.error}</div>}
+            {recordName.touched && recordName.error &&
+            <div className='error-msg errorRecordName'>{recordName.error}</div>}
 
-            <Input
-            { ...targetValue }
-            type="text"
-            label="Target Value"
-            placeholder="Enter Target Value"
-            />
-
-          {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
+            <hr/>
 
             <Input
-            { ...ttl }
-            type="text"
-            label="TTL Value"
-            placeholder="Enter TTL Value"
-            className='input-narrow'
-            addonAfter='seconds'
+              { ...targetValue }
+              type="text"
+              label="Target Value"
+              placeholder="Enter Target Value"
             />
 
-          {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
+            {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
+
+            <hr/>
+
+            <Input
+              { ...ttl }
+              type="text"
+              label="TTL Value"
+              placeholder="Enter TTL Value"
+              className='input-narrow'
+              addonAfter='seconds'
+            />
+
+            {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
 
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-              <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
+              <Button disabled={ Object.keys(props.errors).length > 0 } bsStyle="primary"
+                onClick={props.onSave}>{ actionButtonTitle }</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>

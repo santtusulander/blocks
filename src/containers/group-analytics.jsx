@@ -11,6 +11,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
+import * as exportsActionCreators from '../redux/modules/exports';
 
 import AnalyticsPage from '../components/analysis/analytics-page'
 
@@ -33,15 +34,26 @@ export class GroupAnalytics extends React.Component {
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
+    if(nextProps.serviceTypes !== this.props.serviceTypes) {
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+    }
     if(nextProps.params.group !== this.props.params.group) {
       this.fetchData(nextProps.params.group)
     }
   }
-  fetchData(group) {
+  fetchData(group, serviceTypes) {
+
+    // TODO: Maybe some general error messaging box?
+    if(serviceTypes && !serviceTypes.size) {
+      alert('There must be at least one service type selected.')
+      return
+    }
+
     this.props.fetchData(
       group || this.props.params.group,
       this.state.startDate,
-      this.state.endDate
+      this.state.endDate,
+      serviceTypes || this.props.serviceTypes
     )
   }
   changeDateRange(startDate, endDate) {
@@ -79,6 +91,8 @@ export class GroupAnalytics extends React.Component {
         changeOnOffNetChartType={this.props.uiActions.changeOnOffNetChartType}
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
+        exportsActions={this.props.exportsActions}
+        exportsDialogState={this.props.exportsDialogState}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${moment().format()}`}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
@@ -116,6 +130,8 @@ GroupAnalytics.displayName = 'GroupAnalytics'
 GroupAnalytics.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
   fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
@@ -149,6 +165,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    exportsDialogState: state.exports.toObject(),
     groups: state.group.get('allGroups'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
@@ -183,14 +200,24 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData(group, start, end) {
+  function fetchData(group, start, end, serviceTypes) {
     const {brand, account} = ownProps.params
+
     const fetchOpts = {
       account: account,
       group: group,
       startDate: start.format('X'),
       endDate: end.format('X')
     }
+
+    if(serviceTypes.size === 1) {
+      fetchOpts.service_type = serviceTypes.first()
+    }
+
+    const countryOpts = Object.assign({}, fetchOpts, {
+      max_countries: 10
+    })
+
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
     const onOffTodayOpts = Object.assign({}, onOffOpts)
@@ -219,7 +246,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     ]).then(trafficActions.finishFetching)
     Promise.all([
       visitorsActions.fetchByTime(fetchOpts),
-      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByCountry(countryOpts),
       visitorsActions.fetchByBrowser(fetchOpts),
       visitorsActions.fetchByOS(fetchOpts)
     ]).then(visitorsActions.finishFetching)
@@ -236,6 +263,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 
   return {
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
     fetchInit: fetchInit,
     uiActions: bindActionCreators(uiActionCreators, dispatch)

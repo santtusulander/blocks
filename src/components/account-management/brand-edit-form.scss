@@ -1,14 +1,10 @@
-@import '../../styles/base/colors';
-@import '../../styles/base/variables';
-@import '../../styles/components/configuration/sidebar';
+@import "../../styles/components/modal-form-panel";
 
-.brands-edit-sidebar {
-  @extend .configuration-sidebar;
+.brand-edit-form-sidebar {
+  @extend .modal-form-panel;
 
   .input-group-addon {
     width: auto;
     padding-left: 10px;
   }
-  
 }
-

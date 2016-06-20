@@ -12,6 +12,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 import * as reportsActionCreators from '../redux/modules/reports'
+import * as exportsActionCreators from '../redux/modules/exports';
 
 import AnalyticsPage from '../components/analysis/analytics-page'
 
@@ -33,15 +34,26 @@ export class PropertyAnalytics extends React.Component {
     this.fetchData()
   }
   componentWillReceiveProps(nextProps) {
+    if(nextProps.serviceTypes !== this.props.serviceTypes) {
+      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+    }
     if(nextProps.location.query.name !== this.props.location.query.name) {
       this.fetchData(nextProps.location.query.name)
     }
   }
-  fetchData(property) {
+  fetchData(property, serviceTypes) {
+
+    // TODO: Maybe some general error messaging box?
+    if(serviceTypes && !serviceTypes.size) {
+      alert('There must be at least one service type selected.')
+      return
+    }
+
     this.props.fetchData(
       property || this.props.location.query.name,
       this.state.startDate,
-      this.state.endDate
+      this.state.endDate,
+      serviceTypes || this.props.serviceTypes
     )
   }
 
@@ -81,6 +93,8 @@ export class PropertyAnalytics extends React.Component {
         dateRange={this.state.dateRange}
         endDate={this.state.endDate}
         exportFilenamePart={`${activeAccountName} - ${activeGroupName} - ${propertyName} - ${moment().format()}`}
+        exportsActions={this.props.exportsActions}
+        exportsDialogState={this.props.exportsDialogState}
         fetchingMetrics={this.props.fetchingMetrics}
         fileErrorSummary={this.props.fileErrorSummary}
         fileErrorURLs={this.props.fileErrorURLs}
@@ -116,6 +130,8 @@ PropertyAnalytics.displayName = 'PropertyAnalytics'
 PropertyAnalytics.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  exportsActions: React.PropTypes.object,
+  exportsDialogState: React.PropTypes.object,
   fetchData: React.PropTypes.func,
   fetchInit: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
@@ -150,6 +166,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    exportsDialogState: state.exports.toObject(),
     hosts: state.host.get('allHosts'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
@@ -185,7 +202,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const trafficActions = bindActionCreators(trafficActionCreators, dispatch)
   const visitorsActions = bindActionCreators(visitorsActionCreators, dispatch)
 
-  function fetchData(property, start, end) {
+  function fetchData(property, start, end, serviceTypes) {
     const {account, group} = ownProps.params
     const fetchOpts = {
       account: account,
@@ -194,6 +211,15 @@ function mapDispatchToProps(dispatch, ownProps) {
       startDate: start.format('X'),
       endDate: end.format('X')
     }
+
+    if(serviceTypes.size === 1) {
+      fetchOpts.service_type = serviceTypes.first()
+    }
+
+    const countryOpts = Object.assign({}, fetchOpts, {
+      max_countries: 10
+    })
+
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
     const onOffTodayOpts = Object.assign({}, onOffOpts)
@@ -222,7 +248,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     ]).then(trafficActions.finishFetching)
     Promise.all([
       visitorsActions.fetchByTime(fetchOpts),
-      visitorsActions.fetchByCountry(fetchOpts),
+      visitorsActions.fetchByCountry(countryOpts),
       visitorsActions.fetchByBrowser(fetchOpts),
       visitorsActions.fetchByOS(fetchOpts)
     ]).then(visitorsActions.finishFetching)
@@ -240,6 +266,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 
   return {
+    exportsActions: bindActionCreators(exportsActionCreators, dispatch),
     fetchData: fetchData,
     fetchInit: fetchInit,
     uiActions: bindActionCreators(uiActionCreators, dispatch)

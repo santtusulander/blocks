@@ -1,0 +1,33 @@
+import React from 'react'
+
+import Select from '../../../components/select'
+
+export class FilterChartType extends React.Component {
+  render() {
+    return (
+      <div>
+        <div className="sidebar-section-header">
+          CHART TYPE
+        </div>
+        <div className="sidebar-content">
+          <div className="form-group">
+            <Select className="btn-block"
+              onSelect={this.props.changeType}
+              value={this.props.value}
+              options={[
+                ['bar', 'Bar Chart'],
+                ['line', 'Line Chart']]}/>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+FilterChartType.displayName = 'FilterChartType'
+FilterChartType.propTypes = {
+  changeType: React.PropTypes.func,
+  value: React.PropTypes.string
+}
+
+module.exports = FilterChartType

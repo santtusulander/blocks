@@ -36,7 +36,7 @@ const BrandEditForm = (props) => {
 
   return (
 
-    <Modal show={true} dialogClassName="brands-edit-sidebar">
+    <Modal show={true} dialogClassName="brand-edit-form-sidebar">
 
       <Modal.Header>
         <h1>{title}</h1>
@@ -55,6 +55,8 @@ const BrandEditForm = (props) => {
 
           {brandName.touched && brandName.error && <div className='error-msg errorBrandName'>{brandName.error}</div>}
 
+          <hr/>
+
           <UDNFileInput
             { ...brandLogo }
             id='brand-input'
@@ -63,6 +65,8 @@ const BrandEditForm = (props) => {
             addonAfter=' ICO, GIF or PNG'
             className='input-file'
           />
+
+          <hr/>
 
           <UDNFileInput
             { ...favicon }
@@ -73,29 +77,29 @@ const BrandEditForm = (props) => {
             className='input-file'
           />
 
-          <div className="form-group">
+          <hr/>
 
+          <div className="form-group">
             <label className='control-label'>Choose Color Theme</label>
             <SelectWrapper
               { ... colorTheme }
               className="input-select"
               options={ colorThemeOptions }
             />
-
           </div>
+
+          <hr/>
 
           <div className="form-group">
             <label className='control-label'>Availability</label>
-
             <Input {...availability} value='private' type="radio" label='Keep private (only I can assign this brand to accounts)'/>
           </div>
 
           <div className="form-group">
-
             <Input {...availability} value='public' type="radio" label='Public' />
-
           </div>
-            {availability.touched && availability.error && <div className='error-msg errorAvailability'>{availability.error}</div>}
+
+          {availability.touched && availability.error && <div className='error-msg errorAvailability'>{availability.error}</div>}
 
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>

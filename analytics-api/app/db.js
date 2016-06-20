@@ -763,6 +763,14 @@ class AnalyticsDB {
     return this._executeQuery(queryParameterized, queryOptions);
 
   }
+
+  /**
+   * Get data stored in the schema_info table
+   */
+  getSchemaInfo() {
+    return this._executeQuery('SELECT * FROM schema_info;');
+  }
+
 }
 
 module.exports = new AnalyticsDB(configs);

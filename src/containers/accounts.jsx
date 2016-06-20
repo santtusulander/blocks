@@ -11,17 +11,10 @@ import * as uiActionCreators from '../redux/modules/ui'
 import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
-// Not in 0.5 import EditAccount from '../components/edit-account'
-// Not in 0.5 import { Link } from 'react-router'
-// Not in 0.5 import IconChart from '../components/icons/icon-chart.jsx'
 
 export class Accounts extends React.Component {
   constructor(props) {
     super(props);
-    // this.changeActiveAccountValue = this.changeActiveAccountValue.bind(this)
-    // this.saveActiveAccountChanges = this.saveActiveAccountChanges.bind(this)
-    // this.toggleActiveAccount = this.toggleActiveAccount.bind(this)
-    // this.createNewAccount = this.createNewAccount.bind(this)
     this.deleteAccount = this.deleteAccount.bind(this)
     this.sortItems = this.sortItems.bind(this)
   }
@@ -31,27 +24,6 @@ export class Accounts extends React.Component {
       this.props.accounts,
       this.props.dailyTraffic)
   }
-  // toggleActiveAccount(id) {
-  //   return () => {
-  //     if(this.props.activeAccount && this.props.activeAccount.get('account_id') === id){
-  //       this.props.accountActions.changeActiveAccount(null)
-  //     }
-  //     else {
-  //       this.props.accountActions.fetchAccount(this.props.params.brand, id)
-  //     }
-  //   }
-  // }
-  // changeActiveAccountValue(valPath, value) {
-  //   this.props.accountActions.changeActiveAccount(
-  //     this.props.activeAccount.setIn(valPath, value)
-  //   )
-  // }
-  // saveActiveAccountChanges() {
-  //   this.props.accountActions.updateAccount(this.props.params.brand, this.props.activeAccount.toJS())
-  // }
-  // createNewAccount() {
-  //   this.props.accountActions.createAccount(this.props.params.brand)
-  // }
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
   }

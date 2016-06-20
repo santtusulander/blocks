@@ -182,73 +182,18 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
-export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, () => {
-  return Promise.resolve({data: [
-    {
-      "name": "Vodafone",
-      "http": {
-        "net_on": 25000,
-        "net_on_bps": 25000,
-        "net_off": 75000,
-        "net_off_bps": 75000
-      },
-      "https": {
-        "net_on": 50000,
-        "net_on_bps": 50000,
-        "net_off": 100000,
-        "net_off_bps": 100000
-      },
-      "countries": [
-        {
-          "name": "Germany",
-          "code": "GER",
-          "bytes": 50000,
-          "bits_per_second": 50000,
-          "percent_total": 0.35
-        },
-        {
-          "name": "France",
-          "code": "FRA",
-          "bytes": 250000,
-          "bits_per_second": 250000,
-          "percent_total": 0.20
-        }
-      ]
-    },
-    {
-      "name": "Telstra",
-      "http": {
-        "net_on": 50000,
-        "net_on_bps": 50000,
-        "net_off": 25000,
-        "net_off_bps": 25000
-      },
-      "https": {
-        "net_on": 25000,
-        "net_on_bps": 25000,
-        "net_off": 50000,
-        "net_off_bps": 50000
-      },
-      "countries": [
-        {
-          "name": "Australia",
-          "code": "AUS",
-          "bytes": 150000,
-          "bits_per_second": 150000,
-          "percent_total": 0.30
-        }
-      ]
-    }
-  ]})
+export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  .then(parseResponseData)
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {
