@@ -73,23 +73,27 @@ class AnalysisOnOffNetReport extends React.Component {
   render() {
     const stats = this.props.onOffStats
     const statsToday = this.props.onOffStatsToday
+
     let chart = null
-    const onNet = stats.get('detail').toJS().map(datapoint => {
+    const onNet = stats.get('detail').map(datapoint => {
+
       return {
-        bytes: datapoint.net_on.bytes,
-        timestamp: datapoint.timestamp
+        bytes: datapoint.getIn(['net_on' , 'bytes']),
+        timestamp: datapoint.get('timestamp')
       }
     })
-    const offNet = stats.get('detail').toJS().map(datapoint => {
+
+    const offNet = stats.get('detail').map(datapoint => {
       return {
-        bytes: datapoint.net_off.bytes,
-        timestamp: datapoint.timestamp
+        bytes: datapoint.getIn(['net_off' , 'bytes']),
+        timestamp: datapoint.get('timestamp')
       }
     })
+
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
         <AnalysisStackedByTime padding={40}
-          dataSets={[onNet, offNet]}
+          dataSets={[onNet.toJS(), offNet.toJS()]}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
@@ -97,8 +101,8 @@ class AnalysisOnOffNetReport extends React.Component {
       chart = (
         <AnalysisByTime axes={true} padding={40}
           dataKey="bytes"
-          primaryData={onNet}
-          secondaryData={offNet}
+          primaryData={onNet.toJS()}
+          secondaryData={offNet.toJS()}
           primaryLabel='On Net'
           secondaryLabel='Off Net'
           yAxisCustomFormat={formatBytes}
@@ -125,13 +129,13 @@ class AnalysisOnOffNetReport extends React.Component {
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
-                    {numeral(statsToday.get('net_on').get('percent_total')).format('0,0%')}
+                    {numeral(statsToday.getIn(['net_on','percent_total'])).format('0,0%')}
                   </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
-                    {numeral(statsToday.get('net_off').get('percent_total')).format('0,0%')}
+                    {numeral(statsToday.getIn(['net_off','percent_total'])).format('0,0%')}
                   </p>
                 </Col>
               </Row>
@@ -143,13 +147,13 @@ class AnalysisOnOffNetReport extends React.Component {
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
-                    {numeral(stats.get('net_on').get('percent_total')).format('0,0%')}
+                    {numeral(stats.getIn(['net_on','percent_total'])).format('0,0%')}
                   </p>
                 </Col>
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
-                    {numeral(stats.get('net_off').get('percent_total')).format('0,0%')}
+                    {numeral(stats.getIn(['net_off','percent_total'])).format('0,0%')}
                   </p>
                 </Col>
               </Row>
@@ -189,10 +193,10 @@ class AnalysisOnOffNetReport extends React.Component {
               return (
                 <tr key={i}>
                   <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{formatBytes(day.get('net_on').get('bytes'))}</td>
-                  <td>{numeral(day.get('net_on').get('percent_total')).format('0%')}</td>
-                  <td>{formatBytes(day.get('net_off').get('bytes'))}</td>
-                  <td>{numeral(day.get('net_off').get('percent_total')).format('0%')}</td>
+                  <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
+                  <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
+                  <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>
+                  <td>{numeral(day.getIn(['net_off', 'percent_total'])).format('0%')}</td>
                   <td>{formatBytes(day.get('total'))}</td>
                 </tr>
               )
