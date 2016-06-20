@@ -1,0 +1,5 @@
+{
+  "/VCDN/v2/udn/accounts": "/accounts",
+  "/VCDN/v2/udn/accounts/:accountId/groups": "/accounts/:accountId/groups",
+  "/VCDN/v2/udn/accounts/:*/groups/:*/published_hosts": "/published_hosts"
+}

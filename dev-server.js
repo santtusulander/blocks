@@ -10,8 +10,11 @@ var server = new WebpackDevServer(compiler, {
   hot: true,
   historyApiFallback: true,
   proxy: {
-    '/VCDN*': {
+    /*'/VCDN*': {
       target: 'http://api.cdx-dev.unifieddeliverynetwork.net'
+    },*/
+    '/VCDN*': {
+      target: 'http://localhost:8080'
     },
     '/analytics*': {
       target: 'http://localhost:3030'
