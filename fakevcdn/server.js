@@ -6,17 +6,22 @@ var middlewares = jsonServer.defaults()
 
 // Add this before server.use(router)
 server.use(jsonServer.rewriter({
-  "/accounts/:accountId/groups/:id/published_hosts": "/groups/:id/published_hosts"
+  "/VCDN/v2/udn/accounts/:accountId/groups/:id": "/VCDN/v2/udn/groups/:id",
+  "/VCDN/v2/udn/accounts/:accountId/groups/:id/published_hosts": "/VCDN/v2/udn/groups/:id/published_hosts",
+  "/VCDN/v2/udn/accounts/:accountId/groups/:id/published_hosts/:siteId": "/VCDN/v2/udn/groups/:id/published_hosts"
 }))
 
 server.use(middlewares)
 server.use("/VCDN/v2/udn", router)
 
-// Or /resources in general
 router.render = function (req, res) {
-  res.jsonp({
-    data: res.locals.data
-  })
+  if (req.url.match(/published_hosts$/i) ) {
+    res.jsonp( res.locals.data[0].hosts )
+  } else {
+    res.jsonp({
+      data: res.locals.data
+    })
+  }
 }
 
 server.listen(8080, function(){
