@@ -8,7 +8,7 @@ var middlewares = jsonServer.defaults()
 server.use(jsonServer.rewriter({
   "/VCDN/v2/udn/accounts/:accountId/groups/:id": "/VCDN/v2/udn/groups/:id",
   "/VCDN/v2/udn/accounts/:accountId/groups/:id/published_hosts": "/VCDN/v2/udn/groups/:id/published_hosts",
-  "/VCDN/v2/udn/accounts/:accountId/groups/:id/published_hosts/:siteId": "/VCDN/v2/udn/groups/:id/published_hosts"
+  "/VCDN/v2/udn/accounts/:accountId/groups/:id/published_hosts/:siteId": "/VCDN/v2/udn/host_data/1"
 }))
 
 server.use(middlewares)
