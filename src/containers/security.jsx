@@ -9,8 +9,8 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import SecurityPageHeader from '../components/security/security-page-header'
 import DeleteModal from '../components/delete-modal'
+import SecurityPageHeader from '../components/security/security-page-header'
 import CertificateForm from '../components/security/certificate-form-container'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
@@ -49,19 +49,25 @@ class Security extends React.Component {
       activeModal,
       fetchAccount,
       sslCertificates,
-      securityActions: { toggleActiveCertificates },
+      securityActions: { toggleActiveCertificates, changeCertificateToEdit, deleteSSLCertificate },
       toggleModal,
       params: { subPage }
     } = this.props
+    const showModalWithItem = (modalToShow, itemID) => {
+      toggleModal(modalToShow)
+      changeCertificateToEdit(itemID)
+    }
     const sslListProps = {
+      activeModal,
       activeCertificates,
       certificates: sslCertificates && sslCertificates.get('items'),
+      onCheck: id => toggleActiveCertificates(id),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      deleteCertificate: () => toggleModal(DELETE_CERTIFICATE),
-      editCertificate: () => toggleModal(EDIT_CERTIFICATE),
-      onCheck: id => toggleActiveCertificates(id)
+      editCertificate: id => showModalWithItem(EDIT_CERTIFICATE, id),
+      deleteCertificate: id => showModalWithItem(DELETE_CERTIFICATE, id)
     }
     const certificateFormProps = {
+      edit: activeModal === EDIT_CERTIFICATE ? true : false,
       activeAccount,
       accounts,
       fetchAccount,
@@ -91,10 +97,12 @@ class Security extends React.Component {
         {activeModal === EDIT_CERTIFICATE && <CertificateForm title='Edit Certificate'{ ...certificateFormProps }/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm title='Upload Certificate'{ ...certificateFormProps }/>}
         {activeModal === DELETE_CERTIFICATE &&
-          <DeleteModal
-            itemToDelete='Certificate'
-            onDelete={() => toggleModal(null)}
-            onCancel={() => toggleModal(null)}/>}
+        <DeleteModal
+          itemToDelete='Certificate'
+          onCancel={() => toggleModal(null)}
+          onDelete={() => {
+            toggleModal(null)
+            deleteSSLCertificate()}}/>}
       </PageContainer>
     )
   }

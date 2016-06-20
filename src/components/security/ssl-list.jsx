@@ -52,6 +52,7 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
 
 SSLList.propTypes = {
   activeCertificates: PropTypes.instanceOf(List),
+  activeModal: PropTypes.string,
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
