@@ -14,6 +14,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
           { ...account }>
           {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
         </Input>
+        <hr/>
       </div>
       <div id="groups">
         <Input type="select"
@@ -21,12 +22,14 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
           { ...group }>
           {groups.map((group, i) => <option key={i} value={group.get('id')}>{group.get('name')}</option>)}
         </Input>
+        <hr/>
       </div>
       <div id="sslCertTitle">
         <Input type="text"
           label="SSL Cert Title"
           { ...sslCertTitle }/>
         {sslCertTitle.touched && sslCertTitle.error && <div className="error-msg">{sslCertTitle.error}</div>}
+        <hr/>
       </div>
       <div id="privateKey">
         <Input type="textarea"
@@ -34,12 +37,14 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
           className="fixed-size-textarea"
           { ...privateKey }/>
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
+        <hr/>
       </div>
       <div id="interMediateCert">
         <Input type="textarea"
           className="fixed-size-textarea"
           label="Intermediate Certificate (optional)"
         { ...interMediateCert }/>
+        <hr/>
       </div>
       <div id="certificate">
         <Input type="textarea"
@@ -48,7 +53,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
           { ...certificate }/>
         {certificate.touched && certificate.error && <div className="error-msg">{certificate.error}</div>}
       </div>
-      <ButtonToolbar className="text-right extra-margin-top">
+      <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
           id="cancel_button"
           outLine={true}

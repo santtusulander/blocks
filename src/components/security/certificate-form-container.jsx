@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Modal } from 'react-bootstrap'
 import { reduxForm, getValues } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { List, Map } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 
 import * as groupActionCreators from '../../redux/modules/group'
 import * as securityActionCreators from '../../redux/modules/security'
@@ -45,7 +45,7 @@ class CertificateFormContainer extends Component {
     }
 
     return (
-      <Modal show={true} dialogClassName="soa-form-sidebar">
+      <Modal show={true} dialogClassName="soa-edit-form-sidebar">
         <Modal.Header>
           <h1>{title}</h1>
           {subtitle && <p>{subtitle}</p>}
@@ -61,7 +61,6 @@ class CertificateFormContainer extends Component {
 CertificateFormContainer.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  children: PropTypes.array,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
   formValues: PropTypes.object,
@@ -78,7 +77,7 @@ export default reduxForm({
   validate
 }, function mapStateToProps(state) {
   return {
-    formValues: getValues(state.form.certificateForm),
+    formValues: fromJS(getValues(state.form.certificateForm)),
     groups: state.group.get('allGroups')
   }
 }, function mapDispatchToProps(dispatch) {

@@ -29,13 +29,15 @@ class Security extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    switch(nextProps.params.subPage) {
-      case 'ssl-certificate':
-        this.props.securityActions.fetchSSLCertificates({ account: nextProps.activeAccount.get('id') })
-        break
-      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
-      // case 'content-targeting': securityActions.fetchContentTrageting(account)
-      default: break
+    if(nextProps.params.subPage !== this.props.params.subPage) {
+      switch(nextProps.params.subPage) {
+        case 'ssl-certificate':
+          this.props.securityActions.fetchSSLCertificates({ account: nextProps.activeAccount.get('id') })
+          break
+        // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
+        // case 'content-targeting': securityActions.fetchContentTrageting(account)
+        default: break
+      }
     }
   }
 
