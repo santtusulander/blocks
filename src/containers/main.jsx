@@ -123,7 +123,11 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
-        <Navigation activeAccount={this.props.activeAccount} />
+        <Navigation
+          activeAccount={this.props.activeAccount}
+          activeGroup={this.props.activeGroup}
+          activeHost={this.props.activeHost}
+        />
 
         {this.props.location.pathname !== '/login' ?
 

@@ -22,15 +22,19 @@ const AnalyticsFilters = (props) => {
 
       <FilterDateRange
         changeDateRange={ (startDate, endDate) => { props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})} }
+        startDate={props.filters.get('dateRange').startDate}
+        startDate={props.filters.get('dateRange').endDate}
       />
 
       <FilterServiceProvider
         changeServiceProvider={ (val) => { props.onFilterChange('serviceProvider', val ) } }
         options={ serviceProviderOpts }
+        value={props.filters.get('serviceProvider')}
       />
       <FilterPop
         changePop={ (val) => { props.onFilterChange('pop', val ) } }
         options={popOpts}
+        value={props.filters.get('pop')}
       />
 
       <FilterOnOffNet
@@ -38,8 +42,8 @@ const AnalyticsFilters = (props) => {
       />
 
       <FilterServiceType
-        serviceType={['http', 'https']}
-        toggleServiceType={ (val) => { props.onFilterChange('serviceType', val ) } }
+        serviceTypes={props.filters.get('serviceTypes')}
+        toggleServiceType={ (val) => { props.onFilterChange('serviceTypes', val ) } }
       />
 
     </div>

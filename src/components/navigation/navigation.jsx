@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
 
+import { getRoute } from '../../routes.jsx'
+
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
 import IconContent from '../icons/icon-content.jsx'
@@ -11,8 +13,22 @@ import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
 
+function generateNestedLink( base, linkArr ){
+  linkArr = linkArr.filter( (e) => {
+    return e
+  })
+
+  return base + '/' + linkArr.join("/")
+}
+
 const Navigation = (props) => {
   const activeAccountId = props.activeAccount && props.activeAccount.get('id') || null;
+  const activeGroupId = props.activeGroup && props.activeGroup.get('id') || null;
+  const activeHostId = props.activeHost && props.activeHost.get('id') || null;
+
+  const contentUrl = activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
+
+  const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', activeAccountId, activeGroupId, activeHostId] )
 
   return (
     <nav className='navigation-sidebar'>
@@ -25,14 +41,14 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={`/content/groups/udn/${activeAccountId}`} activeClassName="active">
+          <Link to={contentUrl} activeClassName="active">
             <IconContent />
             <span>Content</span>
           </Link>
         </li>
 
         <li>
-          <Link to={`/content/analytics/account/udn/${activeAccountId}`} activeClassName="active">
+          <Link to={analyticsUrl} activeClassName="active">
             <IconAnalytics />
             <span>Analytics</span>
           </Link>

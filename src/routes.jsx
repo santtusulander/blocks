@@ -24,12 +24,14 @@ import ContentTransition from './transitions/content'
 const routes = {
   analytics: '/v2-analytics',
   analyticsBrand: ':brand',
-  analyticsAccout: ':brand/:account',
+  analyticsAccount: ':brand/:account',
   analyticsGroup: ':brand/:account/:group',
   analyticsProperty: ':brand/:account/:group/:property',
 
   analyticsTabTraffic: 'traffic',
-  analyticsTabVisitors: 'visitors'
+  analyticsTabVisitors: 'visitors',
+
+  content: '/content'
 }
 
 /* helper to get route by name */
@@ -75,11 +77,12 @@ module.exports = (
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
 
-    <Route path={routes.analytics}>
+    { /* Analytics - routes */ }
+    <Route path={routes.analytics}>z
       { /* default - set 'udn' as brand */ }
       <IndexRedirect to="udn" />
       <Route path={routes.analyticsBrand} component={AnalyticsContainer} />
-      <Route path={routes.analyticsAccout} component={AnalyticsContainer}>
+      <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
           { getAnalyticsTabRoutes() }
       </Route>
       <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
@@ -90,7 +93,7 @@ module.exports = (
       </Route>
     </Route>
 
-    <Route path="/content">
+    <Route path={routes.content}>
       <Route component={ContentTransition}>
         <Route path="accounts">
           <Route path=":brand" component={Accounts}/>

@@ -15,12 +15,19 @@ server.use(middlewares)
 server.use("/VCDN/v2/udn", router)
 
 router.render = function (req, res) {
-  if (req.url.match(/published_hosts$/i) ) {
-    res.jsonp( res.locals.data[0].hosts )
+
+  if (req.url.match(/published_hosts$/i)) {
+    res.jsonp(res.locals.data[0].hosts)
   } else {
-    res.jsonp({
-      data: res.locals.data
-    })
+    if (req.url.match(/host_data/i)) {
+      res.jsonp(
+        res.locals.data
+      )
+    } else {
+      res.jsonp({
+        data: res.locals.data
+      })
+    }
   }
 }
 

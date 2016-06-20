@@ -20,6 +20,11 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentDidUpdate(prevProps){
+    const params = JSON.stringify(this.props.params)
+    const prevParams = JSON.stringify(prevProps.params)
+
+    if ( !( params === prevParams) ) this.fetchData()
+    /*
     const params = this.props.params
     const prevParams = prevProps.params
 
@@ -31,7 +36,7 @@ class AnalyticsTabTraffic extends React.Component {
       this.fetchData()
 
     }
-
+    */
   }
 
   fetchData(){

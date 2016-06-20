@@ -1,6 +1,5 @@
 export const account = require('./account').default;
 export const exports = require('./exports').default;
-export const filters = require('./filters').default;
 export const form = require('redux-form').reducer;
 export const group = require('./group').default;
 export const host = require('./host').default;
@@ -17,3 +16,5 @@ export const reports = require('./reports').default;
 //Account Management
 export const dns = require('./dns').default;
 
+//Analytics
+export const filters = require('./filters').default;

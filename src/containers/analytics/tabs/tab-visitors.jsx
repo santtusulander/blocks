@@ -16,35 +16,34 @@ class AnalyticsTabVisitors extends React.Component {
     console.log("AnalyticsTabVisitors - componentDidMount()")
     console.log(this.props.params);
 
-    this.fetchData()
+    this.fetchData(this.props.params, this.props.filters)
 
   }
 
-  componentDidUpdate(prevProps){
-    const params = this.props.params
-    const prevParams = prevProps.params
+  componentWillReceiveProps(nextProps){
 
-    if ( !(params.brand === prevParams.brand &&
-      params.account === prevParams.account &&
-      params.group === prevParams.group &&
-      params.property === prevParams.property &&
+    console.log('TabVisitors() - componentWillReceiveProps()')
 
-      this.props.filters === prevProps.filters )) {
+    const params = JSON.stringify(this.props.params)
+    const prevParams = JSON.stringify(nextProps.params)
+    const filters = JSON.stringify(this.props.filters)
+    const prevFilters = JSON.stringify(nextProps.filters)
 
-      this.fetchData()
+    console.log('props', params, prevParams, filters,prevFilters)
 
-    }
+    if ( !( params === prevParams && filters === prevFilters) ) this.fetchData(nextProps.params, nextProps.filters)
+
   }
 
-  fetchData(){
-    const endDate = this.props.filters.get('dateRange').endDate || moment().utc().endOf('day')
-    const startDate = this.props.filters.get('dateRange').startDate || moment().utc().startOf('month')
+  fetchData(params, filters){
+    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
+    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
 
     const fetchOpts = {
-      account: this.props.params.account,
-      brand: this.props.params.brand,
-      group: this.props.params.group,
-      host: this.props.params.property,
+      account: params.account,
+      brand: params.brand,
+      group: params.group,
+      host: params.property,
 
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
@@ -80,7 +79,8 @@ function mapStateToProps(state) {
     byCountry: state.visitors.get('byCountry'),
     byOS: state.visitors.get('byOS'),
     byTime: state.visitors.get('byTime'),
-    fetching: state.visitors.get('fetching')
+    fetching: state.visitors.get('fetching'),
+    filters: state.filters.get('filters')
   }
 }
 

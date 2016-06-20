@@ -31,32 +31,38 @@ class AnalyticsContainer extends React.Component {
   }
 
   componentDidMount(){
-    this.props.accountActions.fetchAccounts(this.props.params.brand)
-    this.props.groupActions.fetchGroups(this.props.params.brand, this.props.params.account)
-    this.props.propertyActions.fetchHosts(this.props.params.brand, this.props.params.account, this.props.params.group)
+    this.props.params.brand && this.props.accountActions.fetchAccounts(this.props.params.brand)
+    this.props.params.account && this.props.groupActions.fetchGroups(this.props.params.brand, this.props.params.account)
+    this.props.params.group && this.props.propertyActions.fetchHosts(this.props.params.brand, this.props.params.account, this.props.params.group)
+
+    //this.fetchData({})
   }
 
   componentWillReceiveProps( nextProps ) {
-    this.fetchData(nextProps)
+    const params = JSON.stringify(this.props.params)
+    const prevParams = JSON.stringify(nextProps.params)
+
+
+    this.fetchData( nextProps.params)
   }
 
-  fetchData(nextProps){
+  fetchData(params){
     /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
-    if(nextProps.params.brand !== this.props.params.brand) {
-      this.props.accountActions.fetchAccounts(nextProps.params.brand)
+    if(params.brand !== this.props.params.brand) {
+      this.props.accountActions.fetchAccounts(params.brand)
     }
 
-    if(nextProps.params.brand !== this.props.params.brand ||
-      nextProps.params.account !== this.props.params.account ) {
+    if(params.brand !== this.props.params.brand ||
+      params.account !== this.props.params.account ) {
 
-      this.props.groupActions.fetchGroups(nextProps.params.brand, nextProps.params.account)
+      this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
-    if ( nextProps.params.brand !== this.props.params.brand ||
-      nextProps.params.account !== this.props.params.account ||
-      nextProps.params.group !== this.props.params.group  ) {
+    if ( params.brand !== this.props.params.brand ||
+      params.account !== this.props.params.account ||
+      params.group !== this.props.params.group  ) {
 
-      this.props.propertyActions.fetchHosts(nextProps.params.brand, nextProps.params.account, nextProps.params.group)
+      this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }
 
@@ -93,6 +99,14 @@ class AnalyticsContainer extends React.Component {
       </div>
     )
   }
+}
+
+AnalyticsContainer.propTypes = {
+  brands: React.PropTypes.instanceOf(Immutable.List),
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  filters: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 function mapStateToProps(state) {
