@@ -52,8 +52,6 @@
 
 @import 'components/account-sidebar';
 @import 'components/confirmation';
-@import 'components/content-item-chart';
-@import 'components/content-item-list';
 @import 'components/datepicker';
 @import 'components/delete-modal';
 @import 'components/error-modal';
@@ -92,6 +90,9 @@
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
 @import 'components/layout/sidebar';
+// Content
+@import 'components/content/content-item-chart';
+@import 'components/content/content-item-list';
 
 // Transitions
 // ===========

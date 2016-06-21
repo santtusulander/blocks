@@ -13,6 +13,8 @@ import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 
+import IconArrowLeft from '../components/icons/icon-arrow-left'
+
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
 import ConfigurationPolicies from '../components/configuration/policies'
@@ -34,7 +36,8 @@ export class Configuration extends React.Component {
       activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
-      showPublishModal: false
+      showPublishModal: false,
+      showVersionModal: false
     }
 
     this.changeValue = this.changeValue.bind(this)
@@ -44,6 +47,7 @@ export class Configuration extends React.Component {
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
     this.togglePublishModal = this.togglePublishModal.bind(this)
+    this.toggleVersionModal = this.toggleVersionModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.notificationTimeout = null
   }
@@ -103,7 +107,8 @@ export class Configuration extends React.Component {
       .get('configurations').findIndex(config => config.get('config_id') === id)
     this.setState({
       activeConfig: index,
-      activeConfigOriginal: this.props.activeHost.getIn(['services',0,'configurations',index])
+      activeConfigOriginal: this.props.activeHost.getIn(['services',0,'configurations',index]),
+      showVersionModal: false
     })
   }
   createNewVersion(id) {
@@ -156,6 +161,9 @@ export class Configuration extends React.Component {
   togglePublishModal() {
     this.setState({showPublishModal: !this.state.showPublishModal})
   }
+  toggleVersionModal() {
+    this.setState({showVersionModal: !this.state.showVersionModal})
+  }
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
@@ -172,18 +180,7 @@ export class Configuration extends React.Component {
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (
-      <PageContainer hasSidebar={true}>
-        <Sidebar>
-          <ConfigurationVersions
-            fetching={this.props.fetching}
-            configurations={this.props.activeHost.get('services').get(0).get('configurations')}
-            activate={this.activateVersion}
-            propertyName={this.props.location.query.name}
-            activeIndex={this.state.activeConfig}
-            addVersion={this.cloneActiveVersion}
-            status={this.props.activeHost.get('status')}
-            activeHost={this.props.activeHost}/>
-        </Sidebar>
+      <PageContainer className="configuration-container">
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
@@ -207,6 +204,13 @@ export class Configuration extends React.Component {
                   </Button>
                   : ''
                 }
+                <Button bsStyle="primary" onClick={this.toggleVersionModal}
+                  className="versions-btn">
+                  <div className="icon-holder">
+                    <IconArrowLeft/>
+                  </div>
+                  Versions
+                </Button>
               </ButtonToolbar>
 
               <h1>{activeConfig.get('config_name') || activeConfig.get('config_id')}</h1>
@@ -249,7 +253,7 @@ export class Configuration extends React.Component {
               </NavItem>
             </Nav>
           </div>
-          <div className="container-fluid content-container configuration-container">
+          <div className="container-fluid content-container">
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
                 edgeConfiguration={activeConfig.get('edge_configuration')}
@@ -317,6 +321,24 @@ export class Configuration extends React.Component {
             </Modal.Body>
           </Modal>
           : ''}
+
+          {this.state.showVersionModal ?
+            <Modal show={true}
+              dialogClassName="configuration-sidebar configuration-versions-sidebar"
+              onHide={this.toggleVersionModal}>
+              <Sidebar>
+                <ConfigurationVersions
+                  fetching={this.props.fetching}
+                  configurations={this.props.activeHost.get('services').get(0).get('configurations')}
+                  activate={this.activateVersion}
+                  propertyName={this.props.location.query.name}
+                  activeIndex={this.state.activeConfig}
+                  addVersion={this.cloneActiveVersion}
+                  status={this.props.activeHost.get('status')}
+                  activeHost={this.props.activeHost}/>
+              </Sidebar>
+            </Modal>
+            : ''}
       </PageContainer>
     );
   }

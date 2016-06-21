@@ -4,15 +4,7 @@
 .configuration-header {
   position: fixed;
   z-index: 5;
-  width: calc(100% - #{$sidebar-width});
-
-  @include md {
-    width: calc(100% - #{$md-sidebar-width});
-  }
-
-  @include sm {
-    width: calc(100% - #{$sm-sidebar-width});
-  }
+  width: 100%;
 
   .dark-theme & {
     .nav-tabs {
@@ -26,12 +18,45 @@
 }
 
 .configuration-container {
-  padding-top: calc(#{$page-header-height} + #{$bar-height} + #{$bar-height}) !important;
 
-  @include md {
-    padding-top: calc(#{$md-page-header-height} + #{$md-bar-height} + #{$md-bar-height}) !important;
+  .content-container {
+    padding-top: calc(#{$page-header-height} + #{$bar-height} + #{$bar-height}) !important;
+
+    @include md {
+      padding-top: calc(#{$md-page-header-height} + #{$md-bar-height} + #{$md-bar-height}) !important;
+    }
   }
 
+  .versions-btn {
+    margin-left: 10px;
+
+    .icon-holder {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      position: relative;
+      margin: 7px 10px 0 0;
+      background-color: rgba($black, 0.1);
+      border-radius: 50%;
+      vertical-align: top;
+    }
+
+    .icon {
+      width: 7px;
+      position: absolute;
+      top: 3px;
+      left: 8px;
+      fill: $white;
+    }
+  }
+}
+
+.configuration-versions-sidebar {
+
+  .sidebar-layout {
+    top: 0;
+    width: 100%;
+  }
 }
 
 .configurations-container {

@@ -28,6 +28,11 @@
       margin: 0 (-$sm-sidebar-right-col-width) 0 0;
     }
 
+    &.configuration-versions-sidebar {
+      max-width: 500px;
+      margin: 0;
+    }
+
     &.right-col-visible {
       width: 96%;
       margin-right: 0;

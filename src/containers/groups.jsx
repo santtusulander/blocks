@@ -9,7 +9,7 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import ContentItems from '../components/content-items'
+import ContentItems from '../components/content/content-items'
 
 export class Groups extends React.Component {
   constructor(props) {
@@ -52,6 +52,7 @@ export class Groups extends React.Component {
         breadcrumbs={breadcrumbs}
         className="groups-container"
         contentItems={this.props.groups}
+        dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -74,6 +75,7 @@ Groups.displayName = 'Groups'
 Groups.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -89,6 +91,7 @@ Groups.propTypes = {
 Groups.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   groups: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List()
@@ -98,6 +101,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: state.group.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
@@ -113,16 +117,18 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const metricsOpts = {
+    account: account,
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
+  }
   const fetchData = () => {
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
     metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
-    metricsActions.fetchGroupMetrics({
-      account: account,
-      startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-      endDate: moment.utc().endOf('hour').format('X')
-    })
+    metricsActions.fetchGroupMetrics(metricsOpts)
+    metricsActions.fetchDailyGroupTraffic(metricsOpts)
   }
   return {
     fetchData: fetchData,

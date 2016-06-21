@@ -1,8 +1,11 @@
-import './add-host';
 import './confirmation';
 import './export-panel';
 import './export-email-form';
 import './export-file-form';
+import './loading-spinner'
+import './delete-modal'
+import './content-item-chart'
+import './loading-spinner'
 
 
 //account management
@@ -21,7 +24,8 @@ import './account-management/brand-edit-form'
 //security
 import './security/ssl-list'
 import './security/certificate-form'
-import './delete-modal'
 
-import './content-item-chart'
-import './loading-spinner'
+// content
+import './content/add-host'
+import './content/content-item-chart'
+

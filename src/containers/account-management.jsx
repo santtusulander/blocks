@@ -19,7 +19,6 @@ import NewAccountForm from '../components/account-management/add-account-form.js
 import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
-//import NewAccountForm from '../components/account-management/new-account-form'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -39,6 +38,7 @@ export class AccountManagement extends Component {
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
     this.editAccount = this.editAccount.bind(this)
+    this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
   }
 
@@ -95,6 +95,22 @@ export class AccountManagement extends Component {
       accountId,
       data
     ).then(() => this.showNotification('Account detail updates saved.'))
+  }
+
+  addAccount(data) {
+    return this.props.accountActions.createAccount(data.brand, data.name).then(
+      action => {
+        return this.props.accountActions.updateAccount(
+          data.brand,
+          action.payload.id,
+          { name: data.name }
+          // TODO: should be "data" above but API does not support all fields
+        ).then(() => {
+          this.showNotification(`Account ${data.name} created.`)
+          this.props.toggleModal(null)
+        })
+      }
+    )
   }
 
   showNotification(message) {
@@ -196,7 +212,7 @@ export class AccountManagement extends Component {
           <NewAccountForm
               id="add-account-form"
               show={accountManagementModal === ADD_ACCOUNT}
-              onSave={() => toggleModal(null)}
+              onSave={this.addAccount}
               onCancel={() => toggleModal(null)}
           />}
 
