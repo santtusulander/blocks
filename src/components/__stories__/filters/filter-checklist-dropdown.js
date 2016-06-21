@@ -28,7 +28,7 @@ storiesOf('Filters', module)
     <div style={{width: '400px'}}>
       <FilterChecklistDropdown
         options={options}
-        handleSelect={action('Handling select')}
+        handleCheck={action('Handling check')}
       />
     </div>
   ))
