@@ -246,6 +246,14 @@
     margin-bottom: 7%;
     transform: translateX(-50%);
   }
+
+  .show-help {
+    margin-left: 15px;
+
+    @include md {
+      margin-left: 10px;
+    }
+  }
 }
 
 .difference-legend {
