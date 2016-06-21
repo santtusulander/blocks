@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import d3 from 'd3'
-import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { ButtonToolbar, OverlayTrigger, Tooltip, Button } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
@@ -289,6 +289,10 @@ class ContentItemChart extends React.Component {
                   <IconConfiguration/>
                 </Link> : ''
               }
+              <Link to="/starburst-help"
+                className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
+                ?
+              </Link>
             </ButtonToolbar>
           </div>
         </div>
