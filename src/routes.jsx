@@ -33,6 +33,8 @@ const routes = {
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabServiceProviders: 'service-providers',
   analyticsTabFileError: 'file-error',
+  analyticsTabUrlReport: 'url-report',
+  analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content'
 }
@@ -50,6 +52,8 @@ import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
 import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
 import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
+import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
+import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 
 /* helper for creating Tab-Routes */
 function getAnalyticsTabRoutes() {
@@ -61,6 +65,8 @@ function getAnalyticsTabRoutes() {
       <Route path={routes.analyticsTabOnOffNet} component={ AnalyticsTabOnOffNet } />
       <Route path={routes.analyticsTabServiceProviders} component={ AnalyticsTabServiceProviders } />
       <Route path={routes.analyticsTabFileError} component={ AnalyticsTabFileError } />
+      <Route path={routes.analyticsTabUrlReport} component={ AnalyticsTabUrlReport } />
+      <Route path={routes.analyticsTabPlaybackDemo} component={ AnalyticsTabPlaybackDemo } />
 
       {/* TODO: Add tab routes
        <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >

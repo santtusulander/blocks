@@ -120,6 +120,12 @@ const AnalyticsViewControl = (props) => {
         <li>
           <Link to={ getTabLink(props.location.pathname, 'file-error') } activeClassName='active'>File Error</Link>
         </li>
+        <li>
+          <Link to={ getTabLink(props.location.pathname, 'url-report') } activeClassName='active'>Url Report</Link>
+        </li>
+        <li>
+          <Link to={ getTabLink(props.location.pathname, 'playback-demo') } activeClassName='active'>Playback demo</Link>
+        </li>
       </Nav>
 
     </div>
