@@ -12,10 +12,13 @@ import CertificateForm from './certificate-form'
 let errors = {}
 const validate = values => {
   errors = {}
-  const {
-    sslCertTitle,
-    privateKey,
-    certificate } = values
+  const { sslCertTitle, privateKey, certificate, account, group } = values
+  if (!account) {
+    errors.account = 'Required'
+  }
+  if (!group) {
+    errors.group = 'Required'
+  }
   if (!sslCertTitle) {
     errors.sslCertTitle = 'Required'
   }
@@ -31,13 +34,13 @@ const validate = values => {
 class CertificateFormContainer extends Component {
   componentWillMount() {
     if(this.props.groups.isEmpty()) {
-      // this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
+      this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
     }
   }
   render() {
-    const { subtitle, title, formValues, upload, edit, toggleModal, toEdit, ...formProps } = this.props
+    const { subtitle, title, formValues, upload, edit, cancel, toggleModal, toEdit, ...formProps } = this.props
     const buttonFunctions = {
-      onCancel: () => toggleModal(null),
+      onCancel: () => cancel(toggleModal),
       onSave: () => {
         toggleModal(null)
         toEdit ?
@@ -86,26 +89,22 @@ export default reduxForm({
     toEdit,
     initialValues: initialValues && initialValues.toJS(),
     formValues: fromJS(getValues(state.form.certificateForm)),
-    // Only for development while the API is broken; accounts come from parent
-    groups: fromJS([
-      {id: '1', name: 'aaa'},
-      {id: '2', name: 'bbb'}
-    ]),
-    accounts: fromJS([
-      {id: '1', name: 'aaa'},
-      {id: '2', name: 'bbb'}
-    ])
-    // Actual data:
-    // groups: state.group.get('allGroups')
+    groups: state.group.get('allGroups')
   }
 }, function mapDispatchToProps(dispatch) {
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
     fetchGroups: groupActions.fetchGroups,
-    upload: (formValues) =>
+    cancel: toggleModal => {
+      dispatch(reset('certificateForm'))
+      securityActions.changeCertificateToEdit(null)
+      dispatch(reset('certificateForm'))
+      toggleModal(null)
+    },
+    upload: formValues =>
       securityActions.uploadSSLCertificate(formValues).then(() => dispatch(reset('certificateForm'))),
-    edit: (formValues) =>
+    edit: formValues =>
       securityActions.editSSLCertificate(formValues).then(() => dispatch(reset('certificateForm')))
   }
 }

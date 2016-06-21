@@ -123,12 +123,9 @@ export function editSSLCertificateFailure(state) {
 
 export function activeCertificatesToggled(state, action) {
   let newActiveCertificates = state.get('activeCertificates')
-  if(newActiveCertificates.includes(action.payload)) {
-    newActiveCertificates = newActiveCertificates.filter(type => type !== action.payload)
-  }
-  else {
-    newActiveCertificates = newActiveCertificates.push(action.payload)
-  }
+  newActiveCertificates =  newActiveCertificates.includes(action.payload) ?
+    newActiveCertificates.filter(id => id !== action.payload) :
+    newActiveCertificates.push(action.payload)
   return state.set('activeCertificates', newActiveCertificates)
 }
 
