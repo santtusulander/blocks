@@ -1,4 +1,4 @@
-import './confirmation';
+/*import './confirmation';
 import './export-panel';
 import './export-email-form';
 import './export-file-form';
@@ -24,7 +24,7 @@ import './navigation.js'
 // content
 import './content/add-host'
 import './content/content-item-chart.js'
-
+*/
 // filters
 import './filters/filter-dropdown'
 import './filters/date-range-filter'

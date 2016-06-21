@@ -7,7 +7,9 @@ import DateRangeFilter from '../analysis/filters/date-range-filter/date-range-fi
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
-import FilterServiceType from '../analysis/filters/service-type.jsx'
+//import FilterServiceType from '../analysis/filters/service-type.jsx'
+
+import FilterChecklistDropdown from '../analysis/filters/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
 import './analytics-filters.scss'
 
@@ -75,11 +77,9 @@ const AnalyticsFilters = (props) => {
     }
     { props.showFilters.includes('service-type') &&
       <div className='filter'>
-        <FilterServiceType
-        serviceTypes={props.filters.get('serviceTypes')}
-        toggleServiceType={ (val) => {
-          props.onFilterChange('serviceTypes', val)
-        } }
+        <FilterChecklistDropdown
+          options={props.filters.get('serviceTypes')}
+          handleCheck={ (val) => { props.onFilterChange('serviceTypes', val)} }
         />
       </div>
     }
