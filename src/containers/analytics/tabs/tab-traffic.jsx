@@ -75,7 +75,7 @@ class AnalyticsTabTraffic extends React.Component {
           fetching={false}
           lowTraffic={lowTraffic}
           peakTraffic={peakTraffic}
-          serviceTypes={Immutable.fromJS(['http', 'https'])}
+          serviceTypes={this.props.filters.get('serviceTypes')}
           totalEgress={this.props.totalEgress}
         />
       </div>

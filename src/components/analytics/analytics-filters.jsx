@@ -7,7 +7,7 @@ import DateRangeFilter from '../analysis/filters/date-range-filter/date-range-fi
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
-//import FilterServiceType from '../analysis/filters/service-type.jsx'
+import FilterServiceType from '../analysis/filters/service-type.jsx'
 
 import FilterChecklistDropdown from '../analysis/filters/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
@@ -30,7 +30,7 @@ const AnalyticsFilters = (props) => {
     { props.showFilters.includes('date-range') &&
       <div className='filter'>
         <div className="sidebar-section-header">
-        Date Range
+          Date Range
         </div>
         <DateRangeFilter
         changeDateRange={ (startDate, endDate) => {
@@ -77,12 +77,27 @@ const AnalyticsFilters = (props) => {
     }
     { props.showFilters.includes('service-type') &&
       <div className='filter'>
+        <div className="sidebar-section-header">
+        Service Types
+        </div>
+
         <FilterChecklistDropdown
-          options={props.filters.get('serviceTypes')}
+          options={props.filterOptions.get('serviceTypes')}
           handleCheck={ (val) => { props.onFilterChange('serviceTypes', val)} }
         />
       </div>
     }
+
+    { props.showFilters.includes('error-code') &&
+      <div className='filter'>
+        <FilterServiceType
+        serviceTypes={props.filters.get('serviceTypes')}
+        toggleServiceType={ (val) => {
+          props.onFilterChange('errorCodes', val)
+        } }
+      />
+    </div>
+      }
     </div>
   )
 }

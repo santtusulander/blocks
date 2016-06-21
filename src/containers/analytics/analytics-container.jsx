@@ -94,8 +94,8 @@ class AnalyticsContainer extends React.Component {
       'visitors': ['date-range'],
       'on-off-net': ['date-range', 'on-off-net'],
       'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-codes'],
-      'url-report': ['date-range', 'error-codes'],
+      'file-error': ['date-range', 'error-code'],
+      'url-report': ['date-range', 'error-code'],
       'playback-demo': []
     })
 
@@ -110,6 +110,7 @@ class AnalyticsContainer extends React.Component {
         <AnalyticsFilters
           onFilterChange={ this.onFilterChange }
           filters={this.props.filters}
+          filterOptions={this.props.filterOptions}
           showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
         />
 
@@ -141,7 +142,8 @@ function mapStateToProps(state) {
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
     properties: state.host.get('allHosts'),
-    filters: state.filters.get('filters')
+    filters: state.filters.get('filters'),
+    filterOptions: state.filters.get('filterOptions')
   }
 }
 

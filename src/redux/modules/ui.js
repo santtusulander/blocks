@@ -16,6 +16,8 @@ const UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED = 'UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED
 const UI_SHOW_ERROR_DIALOG = 'UI_SHOW_ERROR_DIALOG'
 const UI_HIDE_ERROR_DIALOG = 'UI_HIDE_ERROR_DIALOG'
 
+const UI_SET_BREADCRUMBS = 'UI_SET_BREADCRUMBS'
+
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
 
@@ -110,6 +112,11 @@ export function analysisStatusCodeToggled(state, action) {
   return state.set('analysisErrorStatusCodes', newStatusCodes)
 }
 
+export function setBreadcrumbValues(state, action) {
+
+  return state
+}
+
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
   UI_THEME_CHANGED: themeChanged,
@@ -121,7 +128,9 @@ export default handleActions({
   UI_CONTENT_ITEM_SORTED: contentItemSorted,
   UI_SHOW_ERROR_DIALOG: errorDialogShown,
   UI_HIDE_ERROR_DIALOG: errorDialogHidden,
-  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled
+  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled,
+
+  UI_SET_BREADCRUMBS: setBreadcrumbValues
 }, defaultUI)
 
 // ACTIONS
@@ -137,3 +146,5 @@ export const changeSPChartType = createAction(UI_ANALYSIS_SP_CHART_CHANGED)
 export const sortContentItems = createAction(UI_CONTENT_ITEM_SORTED)
 export const showErrorDialog = createAction(UI_SHOW_ERROR_DIALOG)
 export const hideErrorDialog = createAction(UI_HIDE_ERROR_DIALOG)
+
+export const setBreadcrumbs = createAction(UI_SET_BREADCRUMBS)

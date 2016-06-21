@@ -127,6 +127,8 @@ export class Main extends React.Component {
           activeAccount={this.props.activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
+          params={this.props.params}
+          pathname={this.props.location.pathname}
         />
 
         {this.props.location.pathname !== '/login' ?
@@ -224,7 +226,8 @@ function mapStateToProps(state) {
     showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
     username: state.user.get('username'),
-    viewingChart: state.ui.get('viewingChart')
+    viewingChart: state.ui.get('viewingChart'),
+    breadCrumbps: state.ui.get('breadCrumbs')
   };
 }
 

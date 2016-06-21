@@ -26,7 +26,12 @@ import './content/add-host'
 import './content/content-item-chart.js'
 */
 // filters
+<<<<<<< Updated upstream
 import './filters/filter-dropdown'
 import './filters/date-range-filter'
 import './filters/filter-checklist-dropdown'
 
+=======
+import './filters/filter-dropdown.js'
+import './filters/date-range-filter.js'
+>>>>>>> Stashed changes

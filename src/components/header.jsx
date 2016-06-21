@@ -79,8 +79,11 @@ class Header extends React.Component {
     // Show breadcrumbs only for property levels
     let showBreadcrumbs = /(\/content\/property\/)/.test(this.props.pathname) ||
       /(\/content\/configuration\/)/.test(this.props.pathname) ||
-      /(\/analytics\/property\/)/.test(this.props.pathname)
+      /(\/v2-analytics\/property\/)/.test(this.props.pathname)
     let contentActive = /(\/content\/)/.test(this.props.pathname) ? ' active' : ''
+
+    //always show breadcrumbs
+    showBreadcrumbs = true;
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
