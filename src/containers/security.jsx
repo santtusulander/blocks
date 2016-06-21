@@ -26,18 +26,13 @@ class Security extends React.Component {
 
   componentWillMount() {
     this.props.fetchAccountData(this.props.accounts)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.params.subPage !== this.props.params.subPage) {
-      switch(nextProps.params.subPage) {
-        case 'ssl-certificate':
-          this.props.securityActions.fetchSSLCertificates({ account: nextProps.activeAccount.get('id') })
-          break
-        // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
-        // case 'content-targeting': securityActions.fetchContentTrageting(account)
-        default: break
-      }
+    switch(this.props.params.subPage) {
+      case 'ssl-certificate':
+        this.props.securityActions.fetchSSLCertificates()
+        break
+      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
+      // case 'content-targeting': securityActions.fetchContentTrageting(account)
+      default: break
     }
   }
 
@@ -60,14 +55,14 @@ class Security extends React.Component {
     const sslListProps = {
       activeModal,
       activeCertificates,
-      certificates: sslCertificates && sslCertificates.get('items'),
+      certificates: sslCertificates,
       onCheck: id => toggleActiveCertificates(id),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
       editCertificate: id => showModalWithItem(EDIT_CERTIFICATE, id),
       deleteCertificate: id => showModalWithItem(DELETE_CERTIFICATE, id)
     }
     const certificateFormProps = {
-      edit: activeModal === EDIT_CERTIFICATE ? true : false,
+      title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
       activeAccount,
       accounts,
       fetchAccount,
@@ -94,22 +89,21 @@ class Security extends React.Component {
             {subPage === 'content-targeting' && <h3>content-targeting</h3>}
           </Content>
         </div>
-        {activeModal === EDIT_CERTIFICATE && <CertificateForm title='Edit Certificate'{ ...certificateFormProps }/>}
-        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm title='Upload Certificate'{ ...certificateFormProps }/>}
+        {activeModal && activeModal !== DELETE_CERTIFICATE && <CertificateForm{ ...certificateFormProps }/>}
         {activeModal === DELETE_CERTIFICATE &&
-        <DeleteModal
-          itemToDelete='Certificate'
-          onCancel={() => toggleModal(null)}
-          onDelete={() => {
-            toggleModal(null)
-            deleteSSLCertificate()}}/>}
+          <DeleteModal
+            itemToDelete='Certificate'
+            onCancel={() => toggleModal(null)}
+            onDelete={() => {
+              toggleModal(null)
+              deleteSSLCertificate()}}/>}
       </PageContainer>
     )
   }
 }
 
 Security.defaultProps = {
-  activeAccount: Map({ id: 1, name: 'Account1' })
+  activeAccount: Map({ id: 25, name: 'FooBar' })
 }
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
@@ -121,18 +115,19 @@ Security.propTypes = {
   fetchListData: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
-  sslCertificates: PropTypes.instanceOf(Map),
+  sslCertificates: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
 }
 
 
 function mapStateToProps(state) {
+  const activeAccount = state.account.get('activeAccount') || Map({ id: 25, name: 'FooBar' })
   return {
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
-    sslCertificates: state.security.get('sslCertificates')
+    activeAccount,
+    sslCertificates: state.security.get('sslCertificates').filter(cert => cert.get('account') === activeAccount.get('id'))
   };
 }
 

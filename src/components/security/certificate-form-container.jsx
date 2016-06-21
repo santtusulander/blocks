@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Modal } from 'react-bootstrap'
 import { reduxForm, getValues, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { List, Map, fromJS } from 'immutable'
+import { List, Map } from 'immutable'
 
 import * as groupActionCreators from '../../redux/modules/group'
 import * as securityActionCreators from '../../redux/modules/security'
@@ -16,7 +16,7 @@ const validate = values => {
   if (!account) {
     errors.account = 'Required'
   }
-  if (!group) {
+  if (!group || group === '') {
     errors.group = 'Required'
   }
   if (!sslCertTitle) {
@@ -33,8 +33,19 @@ const validate = values => {
 
 class CertificateFormContainer extends Component {
   componentWillMount() {
-    if(this.props.groups.isEmpty()) {
+    if(!this.props.fields.account.value) {
       this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
+    }
+    else {
+      this.props.fetchGroups('udn', this.props.fields.account.value)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const nextAccountValue = nextProps.fields.account.value
+    const thisAccountValue = this.props.fields.account.value
+    if(nextAccountValue && nextAccountValue !== thisAccountValue) {
+      this.props.fetchGroups('udn', parseInt(nextAccountValue))
     }
   }
   render() {
@@ -43,9 +54,10 @@ class CertificateFormContainer extends Component {
       onCancel: () => cancel(toggleModal),
       onSave: () => {
         toggleModal(null)
-        toEdit ?
-          edit(formValues.set('commonName', '*.unifieddelivery.net')) :
-          upload(formValues.set('commonName', '*.unifieddelivery.net'))
+        formValues.account = parseInt(formValues.account)
+        formValues.group = parseInt(formValues.group)
+        formValues.commonName = '*.unifieddelivery.net'
+        toEdit ? edit(formValues) : upload(formValues)
       }
     }
     return (
@@ -65,6 +77,7 @@ class CertificateFormContainer extends Component {
 CertificateFormContainer.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  cancel: PropTypes.func,
   edit: PropTypes.func,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
@@ -82,13 +95,12 @@ export default reduxForm({
   form: 'certificateForm',
   validate
 }, function mapStateToProps(state) {
-  const toEdit = state.security.get('editingCertificate')
-  const initialValues = state.security.getIn(['sslCertificates', 'items'])
-    .find(item => item.get('id') === toEdit)
+  const toEdit = state.security.get('certificateToEdit')
+  const initialValues = toEdit && state.security.get('sslCertificates').find(item => item.get('id') === toEdit)
   return {
     toEdit,
     initialValues: initialValues && initialValues.toJS(),
-    formValues: fromJS(getValues(state.form.certificateForm)),
+    formValues: getValues(state.form.certificateForm),
     groups: state.group.get('allGroups')
   }
 }, function mapDispatchToProps(dispatch) {

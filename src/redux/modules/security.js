@@ -12,59 +12,37 @@ const SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED = 'SECURITY_SSL_CERTIFICATE_TO_ED
 
 
 const fakeSSLCertificates = fromJS([
-  {
-    account: 25,
-    items: [
-      {id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-      {id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-      {id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-      {id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-      {id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-      {id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3}
-    ]
-  },
-  {
-    account: 1,
-    items: [
-        {id: 7, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-        {id: 8, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-        {id: 9, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-        {id: 10, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-        {id: 11, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
-    ]
-  },
-  {
-    account: 3,
-    items: [
-        {id: 12, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-        {id: 13, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-        {id: 14, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-        {id: 15, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3}
-    ]
-  },
-  {
-    account: 2,
-    items: [
-        {id: 16, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-        {id: 17, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-        {id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
-    ]
-  }
+  {account: 1, id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 2, id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 3, id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 4, id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 5, id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 6, id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 25, id: 7, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 2, id: 8, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 3, id: 9, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 4, id: 10, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 5, id: 11, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 25, id: 12, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 1, id: 13, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 2, id: 14, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 3, id: 15, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 25, id: 16, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  {account: 5, id: 17, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 6, id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
 ])
 
 export const initialState = fromJS({
   fetching: false,
-  editingCertificate: null,
+  certificateToEdit: null,
   activeCertificates: [],
-  sslCertificates: {
-  }
+  sslCertificates: []
 })
 
 // REDUCERS
 
-export function fetchSSLCertificatesSuccess(state, action) {
-  const sslCertificates = fakeSSLCertificates.find(item => item.get('account') === action.payload.account)
-  return state.merge({ sslCertificates })
+export function fetchSSLCertificatesSuccess(state) {
+  return state.merge({ sslCertificates: fakeSSLCertificates })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -74,18 +52,15 @@ export function fetchSSLCertificatesFailure(state) {
 }
 
 export function uploadSSLCertificateSuccess(state, action) {
-  action.payload.account = Math.floor(Math.random() * 500) + 100
-  const updatedItems = state.getIn(['sslCertificates', 'items']).push(action.payload)
-  return state.merge({ sslCertificates: state.get('sslCertificates').merge({ items: updatedItems }) })
+  action.payload.id = Math.floor(Math.random() * 500) + 100
+  const sslCertificates = state.get('sslCertificates')
+  return state.merge({ sslCertificates: sslCertificates.merge(sslCertificates.push(fromJS(action.payload))) })
 }
 
 export function deleteSSLCertificateSuccess(state) {
-  const toEdit = state.get('editingCertificate')
-  const items = state.getIn(['sslCertificates', 'items'])
-  const updatedItems = items.delete(items.findIndex(item => item.get('id') === toEdit))
-  return state.merge({
-    editingCertificate: null,
-    sslCertificates: state.get('sslCertificates').merge({ items: updatedItems }) })
+  const sslCertificates = state.get('sslCertificates')
+  const itemIndex = sslCertificates.findIndex(item => item.get('id') === state.get('certificateToEdit'))
+  return state.merge({ sslCertificates: sslCertificates.delete(itemIndex) })
 }
 
 export function uploadSSLCertificateFailure(state) {
@@ -101,18 +76,14 @@ export function deleteSSLCertificateFailure(state) {
 }
 
 export function certificateToEditChanged(state, action) {
-  return state.merge({ editingCertificate: action.payload })
+  return state.merge({ certificateToEdit: action.payload })
 }
 
 export function editSSLCertificateSuccess(state, action) {
-  const toEdit = state.get('editingCertificate')
-  const items = state.getIn(['sslCertificates', 'items'])
-  const updatedItems = items.update(
-    items.findIndex(item => item.get('id') === toEdit),
-    item => item.merge(action.payload))
-  return state.merge({
-    editingCertificate: null,
-    sslCertificates: state.get('sslCertificates').merge({ items: updatedItems }) })
+  const sslCertificates = state.get('sslCertificates')
+  const itemIndex = sslCertificates.findIndex(item => item.get('id') === state.get('certificateToEdit'))
+  return state.merge({ sslCertificates: sslCertificates.update(itemIndex, item => item.merge(action.payload)) })
+
 }
 
 export function editSSLCertificateFailure(state) {

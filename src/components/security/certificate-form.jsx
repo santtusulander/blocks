@@ -21,7 +21,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
         <Input type="select"
           label="Assign to Group"
           { ...group }>
-          {!group.value && <option>Please select a group</option>}
+          {!group.value && <option value="">Please select a group</option>}
           {groups.map((group, i) => <option key={i} value={group.get('id')}>{group.get('name')}</option>)}
         </Input>
         <hr/>
