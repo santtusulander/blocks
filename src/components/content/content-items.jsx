@@ -5,22 +5,22 @@ import { Link } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import sortOptions from '../constants/content-item-sort-options'
+import sortOptions from '../../constants/content-item-sort-options'
 
 import AddHost from './add-host'
-import UDNButton from './button'
-import PageContainer from './layout/page-container'
-import Content from './layout/content'
-import PageHeader from './layout/page-header'
+import UDNButton from '../button'
+import PageContainer from '../layout/page-container'
+import Content from '../layout/content'
+import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
-import { Breadcrumbs } from './breadcrumbs'
-import Select from './select'
-import IconAdd from './icons/icon-add.jsx'
-import IconChart from './icons/icon-chart.jsx'
-import IconItemList from './icons/icon-item-list.jsx'
-import IconItemChart from './icons/icon-item-chart.jsx'
+import { Breadcrumbs } from '../breadcrumbs'
+import Select from '../select'
+import IconAdd from '../icons/icon-add.jsx'
+import IconChart from '../icons/icon-chart.jsx'
+import IconItemList from '../icons/icon-item-list.jsx'
+import IconItemChart from '../icons/icon-item-chart.jsx'
 
-import LoadingSpinner from './loading-spinner/loading-spinner'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -54,6 +54,10 @@ class ContentItems extends React.Component {
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
       null, Immutable.Map({ totalTraffic: 0 }))
+  }
+  getDailyTraffic(item) {
+    return this.props.dailyTraffic.find(traffic => traffic.get(this.props.type) === item.get('id'),
+      null, Immutable.fromJS({ detail: [] }))
   }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
@@ -91,7 +95,8 @@ class ContentItems extends React.Component {
       }
       return Immutable.Map({
         item: item,
-        metrics: itemMetrics
+        metrics: itemMetrics,
+        dailyTraffic: this.getDailyTraffic(item)
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
@@ -178,6 +183,7 @@ class ContentItems extends React.Component {
                       configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
+                      dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                       description: 'Desc',
                       delete: this.props.deleteItem,
                       primaryData: contentMetrics.get('traffic'),
@@ -261,6 +267,7 @@ ContentItems.propTypes = {
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   deleteItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -276,6 +283,14 @@ ContentItems.propTypes = {
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
+}
+ContentItems.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  contentItems: Immutable.List(),
+  dailyTraffic: Immutable.List(),
+  metrics: Immutable.List(),
+  sortValuePath: Immutable.List()
 }
 
 module.exports = ContentItems

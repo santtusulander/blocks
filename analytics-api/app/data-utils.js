@@ -66,15 +66,16 @@ class DataUtils {
   /**
    * Calculate transfer rates from bytes.
    *
-   * @param  {object} bytes       The number of bytes to convert to a transfer rate measurement.
-   * @param  {string} granularity The time granularity used to figure out how many
-   *                              seconds the transfer amount should be divided by.
-   * @return {string|null}        The transfer rate measurement including the unit.
-   *                              Returns null if the number couldn't be calculated.
-   *                              e.g. "10 Gbps"
+   * @param  {object}        bytes       The number of bytes to convert to a transfer rate measurement.
+   * @param  {string|number} granularity The time granularity used to figure out how many
+   *                                     seconds the transfer amount should be divided by.
+   *                                     Can also be passed as a number to divide by a specific number of seconds.
+   * @return {string|null}               The transfer rate measurement including the unit.
+   *                                     Returns null if the number couldn't be calculated.
+   *                                     e.g. "10 Gbps"
    */
   getTransferRatesFromBytes(bytes, granularity) {
-    let secondsPerGranularity = this.secondsPerGranularity[granularity];
+    let secondsPerGranularity = _.isNumber(granularity) ? granularity : this.secondsPerGranularity[granularity];
     let transferRateUnit      = this._getAppropriateTransferRateUnit(bytes, secondsPerGranularity);
     let bytesPerUnit          = transferRateUnit.bytesPerUnit;
     let transferRate          = parseFloat((bytes / bytesPerUnit / secondsPerGranularity).toFixed(2));
@@ -85,14 +86,15 @@ class DataUtils {
   /**
    * Calculate bits per second from bytes.
    *
-   * @param  {object} bytes       The number of bytes to convert to a transfer rate measurement.
-   * @param  {string} granularity The time granularity used to figure out how many
-   *                              seconds the transfer amount should be divided by.
-   * @return {number|null}        The average bits per second for the given time granularity.
-   *                              Returns null if bytes was passed as null.
+   * @param  {object}        bytes       The number of bytes to convert to a transfer rate measurement.
+   * @param  {string|number} granularity The time granularity used to figure out how many
+   *                                     seconds the transfer amount should be divided by.
+   *                                     Can also be passed as a number to divide by a specific number of seconds.
+   * @return {number|null}               The average bits per second for the given time granularity.
+   *                                     Returns null if bytes was passed as null.
    */
   getBPSFromBytes(bytes, granularity) {
-    let secondsPerGranularity = this.secondsPerGranularity[granularity];
+    let secondsPerGranularity = _.isNumber(granularity) ? granularity : this.secondsPerGranularity[granularity];
     let bitsPerSecond = Math.round((bytes * this.bitsPerByte) / secondsPerGranularity);
     return (bytes === null) ? null : bitsPerSecond;
   }
@@ -115,27 +117,36 @@ class DataUtils {
    * So, it's important that all the objects in the data array have the same
    * properties. The first record in the data array will be used as a template.
    *
-   * @param  {array}  data         Array of traffic records
-   * @param  {number} start        Start of the time range as a UTC UNIX timestamp
-   * @param  {number} end          End of the time range as a UTC UNIX timestamp
-   * @param  {string} granularity  The time granularity (5min, hour, day, or month)
-   * @param  {string} nullProperty The property of the object to set as null
-   *                               e.g. 'bytes' or 'uniq_vis'
-   * @return {array}               A new array with missing records populated
-   *                               by null records.
+   * @param  {array}        data         Array of traffic records
+   * @param  {number}       start        Start of the time range as a UTC UNIX timestamp
+   * @param  {number}       end          End of the time range as a UTC UNIX timestamp
+   * @param  {string}       granularity  The time granularity (5min, hour, day, or month)
+   * @param  {string|array} nullProperty The property of the object to set as null
+   *                                     e.g. 'bytes' or ['bytes', 'uniq_vis']
+   * @return {array}                     A new array with missing records populated
+   *                                     by null records.
    */
   buildContiguousTimeline(data, start, end, granularity, nullProperty) {
-    let finalData   = [];
-    let interval    = granularity === '5min' ? 5 : 1;
-    let unit        = granularity === '5min' ? 'minutes' : granularity;
-    let startTime   = moment.unix(start).utc();
-    let endTime     = moment.unix(end).utc();
-    let currentTime = moment(startTime);
-    let dataGrouped = _.groupBy(data, 'timestamp');
-    let nullRecord  = {};
+    let finalData      = [];
+    let interval       = granularity === '5min' ? 5 : 1;
+    let unit           = granularity === '5min' ? 'minutes' : granularity;
+    let startTime      = moment.unix(start).utc();
+    let endTime        = moment.unix(end).utc();
+    let currentTime    = moment(startTime);
+    let dataGrouped    = _.groupBy(data, 'timestamp');
+    let nullRecord     = {};
+    let nullProperties = [];
 
-    nullRecord[nullProperty] = null;
+    // Populate the nullRecord with the specified properties
+    if (typeof nullProperty === 'string') {
+      nullProperties = [nullProperty];
+    } else if (_.isArray(nullProperty)) {
+      nullProperties = nullProperty;
+    }
 
+    nullProperties.forEach((prop) => nullRecord[prop] = null);
+
+    // Build the contiguous timeline
     while (currentTime.isBefore(endTime)) {
       let record;
       let matchingRecord = dataGrouped[currentTime.format('X')];

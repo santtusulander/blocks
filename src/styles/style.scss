@@ -43,6 +43,7 @@
 @import 'containers/login';
 @import 'containers/main';
 @import 'containers/account-management';
+@import 'containers/property';
 
 
 // Components
@@ -50,21 +51,17 @@
 
 @import 'components/account-sidebar';
 @import 'components/confirmation';
-@import 'components/content-item-chart';
-@import 'components/content-item-list';
 @import 'components/datepicker';
 @import 'components/error-modal';
 @import 'components/footer';
 @import 'components/header';
 @import 'components/input-connector';
 @import 'components/notification';
-@import 'components/property';
 @import 'components/select';
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
 //Account Management
-@import 'components/account-management/dns-soa-form';
 @import 'components/account-management/account-management-header';
 @import 'components/account-management/action-links';
 @import 'components/account-management/dns-list';
@@ -91,6 +88,9 @@
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
 @import 'components/layout/sidebar';
+// Content
+@import 'components/content/content-item-chart';
+@import 'components/content/content-item-list';
 
 // Transitions
 // ===========

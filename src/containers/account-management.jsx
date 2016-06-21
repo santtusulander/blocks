@@ -19,7 +19,6 @@ import NewAccountForm from '../components/account-management/add-account-form.js
 import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
-//import NewAccountForm from '../components/account-management/new-account-form'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -29,6 +28,8 @@ export class AccountManagement extends Component {
       activeAccount: props.params.account || null
     }
 
+    this.notificationTimeout = null
+
     this.editSOARecord = this.editSOARecord.bind(this)
     this.changeActiveAccount = this.changeActiveAccount.bind(this)
 
@@ -36,7 +37,9 @@ export class AccountManagement extends Component {
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
-
+    this.editAccount = this.editAccount.bind(this)
+    this.addAccount = this.addAccount.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   componentWillMount() {
@@ -86,6 +89,37 @@ export class AccountManagement extends Component {
     )
   }
 
+  editAccount(accountId, data) {
+    return this.props.accountActions.updateAccount(
+      'udn',
+      accountId,
+      data
+    ).then(() => this.showNotification('Account detail updates saved.'))
+  }
+
+  addAccount(data) {
+    return this.props.accountActions.createAccount(data.brand, data.name).then(
+      action => {
+        return this.props.accountActions.updateAccount(
+          data.brand,
+          action.payload.id,
+          { name: data.name }
+          // TODO: should be "data" above but API does not support all fields
+        ).then(() => {
+          this.showNotification(`Account ${data.name} created.`)
+          this.props.toggleModal(null)
+        })
+      }
+    )
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
+  }
+
   render() {
     const {
       params: { account },
@@ -107,12 +141,6 @@ export class AccountManagement extends Component {
         recordName: 'mikkotest',
         targetValue: '11.22.33.44',
         ttl: '3600'
-      }
-    }
-
-    const brandsInitialValues = {
-      initialValues: {
-        brandName: 'Test Brand',
       }
     }
 
@@ -153,13 +181,14 @@ export class AccountManagement extends Component {
               account={this.props.activeAccount}
               addGroup={this.addGroupToActiveAccount}
               deleteGroup={this.deleteGroupFromActiveAccount}
+              editAccount={this.editAccount}
               editGroup={this.editGroupInActiveAccount}
               groups={this.props.groups}/>
             }
 
             {!this.state.activeAccount && <ManageSystem
               dnsList={dnsListProps}
-              brandsList={ {
+              brandsList={{
                 accountManagementModal: accountManagementModal,
                 brands: [],
                 toggleModal: toggleModal
@@ -174,6 +203,7 @@ export class AccountManagement extends Component {
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}
             deleteGroup={this.deleteGroupFromActiveAccount}
+            editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
         </Content>}
@@ -182,7 +212,7 @@ export class AccountManagement extends Component {
           <NewAccountForm
               id="add-account-form"
               show={accountManagementModal === ADD_ACCOUNT}
-              onSave={() => toggleModal(null)}
+              onSave={this.addAccount}
               onCancel={() => toggleModal(null)}
           />}
 
@@ -194,6 +224,7 @@ export class AccountManagement extends Component {
 AccountManagement.displayName = 'AccountManagement'
 
 AccountManagement.propTypes = {
+  accountActions: PropTypes.object,
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
@@ -205,7 +236,8 @@ AccountManagement.propTypes = {
   groups: PropTypes.instanceOf(List),
   params: PropTypes.object,
   soaFormData: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uiActions: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -236,10 +268,12 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
+    accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     fetchAccountData: fetchAccountData,
-    groupActions: groupActions
+    groupActions: groupActions,
+    uiActions: uiActions
   };
 }
 

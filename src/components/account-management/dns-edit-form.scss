@@ -1,12 +1,5 @@
-@import '../../styles/base/colors';
-@import '../../styles/base/variables';
-@import '../../styles/components/configuration/sidebar';
+@import "../../styles/components/modal-form-panel";
 
 .dns-edit-form-sidebar {
-  @extend .configuration-sidebar;
-
-  .input-group-addon {
-    width: auto;
-    padding-left: 10px;
-  }
+  @extend .modal-form-panel;
 }

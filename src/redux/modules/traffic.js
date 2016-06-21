@@ -7,6 +7,7 @@ import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../uti
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
+const TRAFFIC_FETCHED = 'TRAFFIC_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
@@ -16,7 +17,7 @@ const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
-  byTime: Immutable.List(),
+  traffic: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
   onOffNet: Immutable.Map(),
@@ -27,6 +28,24 @@ const emptyTraffic = Immutable.Map({
 })
 
 // REDUCERS
+
+export function trafficFetchSuccess(state, action){
+  return state.merge({
+    traffic: Immutable.fromJS(action.payload.data.map(entity => {
+      entity.detail = entity.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return entity
+    }))
+  })
+}
+
+export function trafficFetchFailure(state){
+  return state.merge({
+    traffic: Immutable.List()
+  })
+}
 
 export function trafficByTimeSuccess(state, action){
   return state.merge({
@@ -119,7 +138,7 @@ export function trafficStorageFailure(state){
   })
 }
 
-export function trafficStartFetch(state, action){
+export function trafficStartFetch(state){
   return state.set('fetching', true)
 }
 
@@ -128,6 +147,7 @@ export function trafficFinishFetch(state){
 }
 
 export default handleActions({
+  TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
   TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
@@ -140,6 +160,11 @@ export default handleActions({
 }, emptyTraffic)
 
 // ACTIONS
+
+export const fetchTraffic = createAction(TRAFFIC_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
@@ -157,73 +182,18 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
-export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, () => {
-  return Promise.resolve({data: [
-    {
-      "name": "Vodafone",
-      "http": {
-        "net_on": 25000,
-        "net_on_bps": 25000,
-        "net_off": 75000,
-        "net_off_bps": 75000
-      },
-      "https": {
-        "net_on": 50000,
-        "net_on_bps": 50000,
-        "net_off": 100000,
-        "net_off_bps": 100000
-      },
-      "countries": [
-        {
-          "name": "Germany",
-          "code": "GER",
-          "bytes": 50000,
-          "bits_per_second": 50000,
-          "percent_total": 0.35
-        },
-        {
-          "name": "France",
-          "code": "FRA",
-          "bytes": 250000,
-          "bits_per_second": 250000,
-          "percent_total": 0.20
-        }
-      ]
-    },
-    {
-      "name": "Telstra",
-      "http": {
-        "net_on": 50000,
-        "net_on_bps": 50000,
-        "net_off": 25000,
-        "net_off_bps": 25000
-      },
-      "https": {
-        "net_on": 25000,
-        "net_on_bps": 25000,
-        "net_off": 50000,
-        "net_off_bps": 50000
-      },
-      "countries": [
-        {
-          "name": "Australia",
-          "code": "AUS",
-          "bytes": 150000,
-          "bits_per_second": 150000,
-          "percent_total": 0.30
-        }
-      ]
-    }
-  ]})
+export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  .then(parseResponseData)
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

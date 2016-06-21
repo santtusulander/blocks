@@ -3,10 +3,12 @@
 let router                      = require('express').Router();
 let configs                     = require('./configs');
 let log                         = require('./logger');
+let routeTraffic                = require('./routes/traffic');
 let routeTrafficTime            = require('./routes/traffic/time');
 let routeTrafficCountry         = require('./routes/traffic/country');
 let routeTrafficTotal           = require('./routes/traffic/total');
 let routeTrafficServiceProvider = require('./routes/traffic/service-provider');
+let routeTrafficNetworkRouting  = require('./routes/traffic/network-routing');
 let routeTrafficUrls            = require('./routes/traffic/urls');
 let routeVisitorsTime           = require('./routes/visitors/time');
 let routeVisitorsCountry        = require('./routes/visitors/country');
@@ -19,10 +21,12 @@ let routeVersion                = require('./routes/version');
 router.errorHandler = errorHandler;
 
 // API routes
+router.get(`/${configs.apiBaseFolder}/traffic`,                  routeTraffic);
 router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTime);
 router.get(`/${configs.apiBaseFolder}/traffic/country`,          routeTrafficCountry);
 router.get(`/${configs.apiBaseFolder}/traffic/total`,            routeTrafficTotal);
 router.get(`/${configs.apiBaseFolder}/traffic/service-provider`, routeTrafficServiceProvider);
+router.get(`/${configs.apiBaseFolder}/traffic/network-routing`,  routeTrafficNetworkRouting);
 router.get(`/${configs.apiBaseFolder}/traffic/urls`,             routeTrafficUrls);
 router.get(`/${configs.apiBaseFolder}/visitors/time`,            routeVisitorsTime);
 router.get(`/${configs.apiBaseFolder}/visitors/country`,         routeVisitorsCountry);

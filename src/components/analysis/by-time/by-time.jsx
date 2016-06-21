@@ -9,14 +9,14 @@ import Legend from './legend'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
-const configureTooltip = (date, val, height, formatY, xScale, yScale) => {
-  const formattedDate = moment(date).format('MMM D h:mm a [GMT]')
-  const formattedValue = formatY(val)
+const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal) => {
+  const formattedDate = moment(date).format('MMM D H:mm')
+  const formattedValue = formatY(actualVal || positionVal)
   return {
     text: `${formattedDate} ${formattedValue}`,
     x: xScale(date),
-    y: yScale(val),
-    top: yScale(val) + 50 > height
+    y: yScale(positionVal),
+    top: yScale(positionVal) + 50 > height
   }
 }
 
@@ -55,13 +55,14 @@ class AnalysisByTime extends React.Component {
   }
 
   moveMouse(xScale, yScale, primaryData, secondaryData) {
-    const configTooltip = (time, date) => configureTooltip(
+    const configTooltip = (time, positionData, actualData) => configureTooltip(
       time,
-      date,
+      positionData,
       this.props.height,
       this.formatY,
       xScale,
-      yScale
+      yScale,
+      actualData
     )
     return e => {
       const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
@@ -86,9 +87,15 @@ class AnalysisByTime extends React.Component {
         })
       }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
+        let realValue = secondaryData[i][this.props.dataKey]
+        // If this is a stacked chart, take out the added data
+        if(this.props.stacked && primaryData && primaryData.length && primaryData[i]) {
+          realValue = realValue - primaryData[i][this.props.dataKey]
+        }
         const tooltipConfig = configTooltip(
           secondaryData[i].timestamp,
-          secondaryData[i][this.props.dataKey]
+          secondaryData[i][this.props.dataKey],
+          realValue
         )
         this.setState({
           secondaryTooltipText: tooltipConfig.text,
@@ -149,7 +156,7 @@ class AnalysisByTime extends React.Component {
       : d3.extent(primaryData, d => d.timestamp)
 
     const yScale = d3.scale.linear()
-      .domain([0, Math.max(yPrimaryExtent[1], ySecondayExtent[1])])
+      .domain([0, Math.max(yPrimaryExtent[1] || 0, ySecondayExtent[1] || 0)])
       .range([
         this.props.height - this.props.padding * (this.props.axes ? 2 : 1),
         this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)
@@ -328,7 +335,7 @@ class AnalysisByTime extends React.Component {
           primaryLabel={this.props.primaryLabel}
           primaryValue={this.state.primaryTooltipText}
           secondaryLabel={this.props.secondaryLabel}
-          secondaryValue={this.state.primaryTooltipText}
+          secondaryValue={this.state.secondaryTooltipText}
       />}
       </div>
     )

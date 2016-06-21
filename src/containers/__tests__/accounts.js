@@ -11,8 +11,8 @@ global.window = document.defaultView
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
-const ContentItemChart = require('../../components/content-item-chart.jsx')
-const ContentItemList = require('../../components/content-item-list.jsx')
+const ContentItemChart = require('../../components/content/content-item-chart.jsx')
+const ContentItemList = require('../../components/content/content-item-list.jsx')
 
 function accountActionsMaker() {
   return {
@@ -165,75 +165,6 @@ describe('Accounts', () => {
     expect(child.length).toBe(1)
     expect(child[0].props.id).toBe('1')
   });
-
-  // it('should activate an account for edit when toggled', () => {
-  //   const accountActions = accountActionsMaker()
-  //   let accounts = TestUtils.renderIntoDocument(
-  //     <Accounts
-  //       accountActions={accountActions}
-  //       uiActions={uiActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
-  //       accounts={fakeAccounts}
-  //       params={urlParams}
-  //       metrics={fakeMetrics}/>
-  //   )
-  //   accounts.toggleActiveAccount('1')()
-  //   expect(accountActions.fetchAccount.mock.calls[0]).toEqual(['udn','1'])
-  // });
-  //
-  // it('should deactivate an account when toggled if already active', () => {
-  //   const accountActions = accountActionsMaker()
-  //   let accounts = TestUtils.renderIntoDocument(
-  //     <Accounts
-  //       accountActions={accountActions}
-  //       uiActions={uiActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
-  //       accounts={fakeAccounts}
-  //       activeAccount={Immutable.Map({account_id:'1'})}
-  //       params={urlParams}
-  //       metrics={fakeMetrics}/>
-  //   )
-  //   accounts.toggleActiveAccount('1')()
-  //   expect(accountActions.changeActiveAccount.mock.calls[0][0]).toBe(null)
-  // });
-  //
-  // it('should be able to change the active account', () => {
-  //   const accountActions = accountActionsMaker()
-  //   let accounts = TestUtils.renderIntoDocument(
-  //     <Accounts
-  //       accountActions={accountActions}
-  //       uiActions={uiActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
-  //       accounts={fakeAccounts}
-  //       activeAccount={Immutable.Map({account_id: '1', name: 'aaa'})}
-  //       params={urlParams}
-  //       metrics={fakeMetrics}/>
-  //   )
-  //   accounts.changeActiveAccountValue(['name'], 'bbb')
-  //   expect(accountActions.changeActiveAccount.mock.calls[0][0].toJS()).toEqual({
-  //     account_id: '1',
-  //     name: 'bbb'
-  //   })
-  // })
-  //
-  // it('should be able save updates to the active account', () => {
-  //   const accountActions = accountActionsMaker()
-  //   let accounts = TestUtils.renderIntoDocument(
-  //     <Accounts
-  //       accountActions={accountActions}
-  //       uiActions={uiActionsMaker()}
-  //       metricsActions={metricsActionsMaker()}
-  //       accounts={fakeAccounts}
-  //       activeAccount={Immutable.Map({account_id: '1', name: 'aaa'})}
-  //       params={urlParams}
-  //       metrics={fakeMetrics}/>
-  //   )
-  //   accounts.saveActiveAccountChanges()
-  //   expect(accountActions.updateAccount.mock.calls[0][1]).toEqual({
-  //     account_id: '1',
-  //     name: 'aaa'
-  //   })
-  // })
 
   it('should delete an account when clicked', () => {
     const accountActions = accountActionsMaker()

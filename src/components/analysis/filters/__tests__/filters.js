@@ -43,17 +43,6 @@ describe('Filters', () => {
     expect(changeOnOffNetChartType.mock.calls[0][0]).toEqual('foo')
   });
 
-  it('should toggle service types', () => {
-    const toggleServiceType = jest.genMockFunction()
-    let filters = TestUtils.renderIntoDocument(
-      <Filters serviceTypes={mockServiceTypes}
-        toggleServiceType={toggleServiceType}/>
-    );
-    filters.toggleServiceType('zyx')()
-    expect(toggleServiceType.mock.calls.length).toBe(1)
-    expect(toggleServiceType.mock.calls[0][0]).toEqual('zyx')
-  });
-
   it('should toggle the nav menu', () => {
     let filters = TestUtils.renderIntoDocument(
       <Filters serviceTypes={mockServiceTypes}/>

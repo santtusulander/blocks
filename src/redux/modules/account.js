@@ -23,7 +23,7 @@ export function createSuccess(state, action) {
   const newAccount = Immutable.fromJS(action.payload)
   return state.merge({
     activeAccount: newAccount,
-    allAccounts: state.get('allAccounts').push(newAccount.get('account_id'))
+    allAccounts: state.get('allAccounts').push(newAccount)
   })
 }
 
@@ -73,9 +73,17 @@ export function startFetch(state) {
   return state.set('fetching', true)
 }
 
-export function updateSuccess(state) {
+export function updateSuccess(state, action) {
+  const updatedAccount = Immutable.fromJS(action.payload)
+  const currIndex = state.get('allAccounts').findIndex(
+    account => account.get('id') === updatedAccount.get('id')
+  )
+  const updatedAccounts = currIndex !== -1 ?
+    state.get('allAccounts').set(currIndex, updatedAccount)
+    : state.get('allAccounts')
   return state.merge({
-    activeAccount: null,
+    activeAccount: updatedAccount,
+    allAccounts: updatedAccounts,
     fetching: false
   })
 }
@@ -104,8 +112,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
+export const createAccount = createAction(ACCOUNT_CREATED, (brand, name) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {name: name}, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -130,17 +138,13 @@ export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
   .then(parseResponseData);
 })
 
-export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, account) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account.account_id}`, account, {
+export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${id}`, account, {
     headers: {
       'Content-Type': 'application/json'
     }
   })
-  .then((res) => {
-    if(res) {
-      return account;
-    }
-  })
+  .then(parseResponseData)
 })
 
 export const startFetching = createAction(ACCOUNT_START_FETCH)

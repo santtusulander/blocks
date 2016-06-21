@@ -4,7 +4,7 @@ import { List, Map, is } from 'immutable'
 import UDNButton from '../button.js'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
-import SoaEditForm from './dns-soa-form.jsx'
+import SoaEditForm from './soa-edit-form.jsx'
 import DnsEditForm from './dns-edit-form.jsx'
 
 import Select from '../select.jsx'
