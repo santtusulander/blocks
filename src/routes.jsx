@@ -79,7 +79,7 @@ module.exports = (
     <Route path="/login" component={Login}/>
 
     { /* Analytics - routes */ }
-    <Route path={routes.analytics}>z
+    <Route path={routes.analytics}>
       { /* default - set 'udn' as brand */ }
       <IndexRedirect to="udn" />
       <Route path={routes.analyticsBrand} component={AnalyticsContainer} />
@@ -94,6 +94,7 @@ module.exports = (
       </Route>
     </Route>
 
+    { /* Content - routes */ }
     <Route path={routes.content}>
       <Route component={ContentTransition}>
         <Route path="accounts">
@@ -121,6 +122,7 @@ module.exports = (
           </Route>
         </Route>
       </Route>
+
       <Route path="configuration">
         <Route path=":brand">
           <Route path=":account">
@@ -131,6 +133,7 @@ module.exports = (
         </Route>
       </Route>
 
+      { /* TODO: This needs to be refactored to Content ... > property > analytics - routes & tabs */}
       <Route path="analytics">
         <Route path="account">
           <Route path=":brand">
@@ -154,8 +157,8 @@ module.exports = (
           </Route>
         </Route>
       </Route>
-
     </Route>
+
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
     </Route>
