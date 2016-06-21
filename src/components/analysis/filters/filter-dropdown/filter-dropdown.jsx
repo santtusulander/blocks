@@ -12,19 +12,25 @@ export class FilterDropdown extends React.Component {
     this.state = {
       dropdownOpen: false,
       filteredResults: this.props.options,
-      filterValue: ''
+      filterValue: '',
+      selectedValue: null
     }
 
     this.handleSelect = this.handleSelect.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
   }
 
-  toggleDropdown(val) {
-    this.setState({ dropdownOpen: !val })
+  toggleDropdown(isOpen) {
+    this.setState({ dropdownOpen: !isOpen })
   }
 
-  handleSelect(link) {
-    this.props.handleSelect(link)
+  handleSelect(val) {
+    this.setState({
+      selectedValue: val
+    }, () => {
+      this.toggleDropdown(this.state.dropdownOpen)
+      this.props.handleSelect(val)
+    })
   }
 
   handleFilter() {
@@ -41,9 +47,9 @@ export class FilterDropdown extends React.Component {
 
   render() {
 
-    const { dropdownOpen, filteredResults, filterValue } = this.state
+    const { dropdownOpen, filteredResults, filterValue, selectedValue } = this.state
 
-    let label     = "Please Select"
+    let label     = selectedValue ? selectedValue : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if(this.props.className) {
@@ -75,9 +81,11 @@ export class FilterDropdown extends React.Component {
           </div>
           }
           <Dropdown.Menu>
+            {this.props.parent &&
             <MenuItem className="parent">
               {this.props.parent}
             </MenuItem>
+            }
             {filteredResults.map((option, i) =>
               <MenuItem key={i}
                         onClick={() => this.handleSelect(option.get('link'))}
