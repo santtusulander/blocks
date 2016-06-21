@@ -7,11 +7,14 @@ import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
+import * as uiActionCreators from '../../redux/modules/ui'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
 import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
 
-import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
+//import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
+
+import {getTabName} from '../../util/helpers.js'
 
 import './analytics-container.scss'
 
@@ -48,6 +51,17 @@ class AnalyticsContainer extends React.Component {
     this.fetchData( nextProps.params)
   }
 
+  /*componentDidUpdate() {
+    let breadCrumbLinks = []
+
+    if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: `/v2-analytics/${this.props.params.brand}`})
+    if (this.props.params.account) breadCrumbLinks.push({label: getNameById(this.props.accounts, this.props.params.account), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}`})
+    if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`})
+    if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
+
+    this.props.uiAction.setBreadcrumbs( breadCrumbLinks )
+  }*/
+
   fetchData(params){
     /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
     if(params.brand !== this.props.params.brand) {
@@ -74,31 +88,29 @@ class AnalyticsContainer extends React.Component {
   }
 
   render(){
-    { /* TODO: Breadcrumbs should be put to UI - module in redux */ }
-    let breadCrumbLinks = []
 
-    if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: `/v2-analytics/${this.props.params.brand}`})
-    if (this.props.params.account) breadCrumbLinks.push({label: getNameById(this.props.accounts, this.props.params.account), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}`})
-    if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`})
-    if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
-
-    const availableFilters = {
+    const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
       'visitors': ['date-range'],
       'on-off-net': ['date-range', 'on-off-net'],
-      'service-providers': ['date-range', 'service-provider', 'service-type', 'on-off-net']
-
-    }
+      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+      'file-error': ['date-range', 'error-codes'],
+      'url-report': ['date-range', 'error-codes'],
+      'playback-demo': []
+    })
 
     return (
       <div className='analytics-container'>
-        <Breadcrumbs links={breadCrumbLinks} />
+
+       {/* Breadcrumbs already in header
+       <Breadcrumbs links={this.props.breadcrumbs} /> */}
 
         <AnalyticsViewControl {...this.props} />
 
         <AnalyticsFilters
           onFilterChange={ this.onFilterChange }
           filters={this.props.filters}
+          showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
         />
 
         <div className='analytics-tab-container'>
@@ -141,7 +153,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     propertyActions: bindActionCreators(propertyActionCreators, dispatch),
 
-    filtersActions: bindActionCreators(filtersActionCreators, dispatch)
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
 }
 

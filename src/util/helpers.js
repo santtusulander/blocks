@@ -104,3 +104,21 @@ export function removeProps(object, remove) {
 
   return result
 }
+
+/* REFACTOR: this is a quick fix to get tab links from current path
+ - takes the last link part out and replaces it with tabName
+ */
+export function getTabLink( path, tabName){
+  let linkArr = path.split('/')
+
+  linkArr.pop()
+  linkArr.push(tabName)
+
+  return linkArr.join('/')
+
+}
+
+export function getTabName( path ){
+  let linkArr = path.split('/')
+  return linkArr.pop()
+}

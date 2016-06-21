@@ -25,40 +25,64 @@ const AnalyticsFilters = (props) => {
   return (
     <div className='analytics-filters'>
 
+    { props.showFilters.includes('date-range') &&
       <div className='filter'>
+        <div className="sidebar-section-header">
+        Date Range
+        </div>
         <DateRangeFilter
-          changeDateRange={ (startDate, endDate) => { props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})} }
-          startDate={props.filters.get('dateRange').startDate}
-          endDate={props.filters.get('dateRange').endDate}
+        changeDateRange={ (startDate, endDate) => {
+          props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
+        } }
+        startDate={props.filters.get('dateRange').startDate}
+        endDate={props.filters.get('dateRange').endDate}
         />
       </div>
+    }
 
+    { props.showFilters.includes('service-provider') &&
       <div className='filter'>
         <FilterServiceProvider
-          changeServiceProvider={ (val) => { props.onFilterChange('serviceProvider', val ) } }
-          options={ serviceProviderOpts }
-          value={props.filters.get('serviceProvider')}
+        changeServiceProvider={ (val) => {
+          props.onFilterChange('serviceProvider', val)
+        } }
+        options={ serviceProviderOpts }
+        value={props.filters.get('serviceProvider')}
         />
       </div>
+    }
+
+    { props.showFilters.includes('pop') &&
       <div className='filter'>
         <FilterPop
-          changePop={ (val) => { props.onFilterChange('pop', val ) } }
-          options={popOpts}
-          value={props.filters.get('pop')}
+        changePop={ (val) => {
+          props.onFilterChange('pop', val)
+        } }
+        options={popOpts}
+        value={props.filters.get('pop')}
         />
       </div>
+    }
+
+    { props.showFilters.includes('on-off-net') &&
       <div className='filter'>
         <FilterOnOffNet
-          changeOnOffNet={ (val) => { props.onFilterChange('onOffNet', val ) } }
+        changeOnOffNet={ (val) => {
+          props.onFilterChange('onOffNet', val)
+        } }
         />
       </div>
-
+    }
+    { props.showFilters.includes('service-type') &&
       <div className='filter'>
         <FilterServiceType
-          serviceTypes={props.filters.get('serviceTypes')}
-          toggleServiceType={ (val) => { props.onFilterChange('serviceTypes', val ) } }
+        serviceTypes={props.filters.get('serviceTypes')}
+        toggleServiceType={ (val) => {
+          props.onFilterChange('serviceTypes', val)
+        } }
         />
       </div>
+    }
     </div>
   )
 }

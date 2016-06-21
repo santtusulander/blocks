@@ -7,17 +7,7 @@ import Select from '../select.jsx'
 
 import { getRoute } from '../../routes.jsx'
 
-/* REFACTOR: this is a quick fix to get tab links from current path
-    - takes the last link part out and replaces it with tabName
- */
-function getTabLink( path, tabName){
-  let linkArr = path.split('/')
-
-  linkArr.pop()
-  linkArr.push(tabName)
-  return linkArr.join('/')
-
-}
+import {getTabLink} from '../../util/helpers.js'
 
 function createOptions( opts ){
   return opts.map( opt => {
