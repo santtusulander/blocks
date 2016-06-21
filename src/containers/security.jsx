@@ -22,7 +22,7 @@ import {
   DELETE_CERTIFICATE
 } from '../constants/account-management-modals.js'
 
-class Security extends React.Component {
+export class Security extends React.Component {
   componentWillMount() {
     this.props.fetchAccountData(this.props.accounts)
     switch(this.props.params.subPage) {
@@ -87,9 +87,9 @@ class Security extends React.Component {
             {subPage === 'content-targeting' && <h3>content-targeting</h3>}
           </Content>
         </div>
-        {activeModal && activeModal !== DELETE_CERTIFICATE && <CertificateForm{ ...certificateFormProps }/>}
-        {activeModal === DELETE_CERTIFICATE &&
-          <DeleteModal
+        {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
+        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
+        {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
             onCancel={() => toggleModal(null)}
             onDelete={() => {

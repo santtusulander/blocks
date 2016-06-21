@@ -48,7 +48,7 @@ class CertificateFormContainer extends Component {
     }
   }
   render() {
-    const { subtitle, title, formValues, upload, edit, cancel, toggleModal, toEdit, ...formProps } = this.props
+    const { title, formValues, upload, edit, cancel, toggleModal, toEdit, ...formProps } = this.props
     const buttonFunctions = {
       onCancel: () => cancel(toggleModal),
       onSave: () => {
@@ -63,7 +63,7 @@ class CertificateFormContainer extends Component {
       <Modal show={true} dialogClassName="soa-edit-form-sidebar">
         <Modal.Header>
           <h1>{title}</h1>
-          {subtitle && <p>{subtitle}</p>}
+          {toEdit && <p>{formProps.fields.title.value}</p>}
         </Modal.Header>
         <Modal.Body>
           <CertificateForm { ...buttonFunctions }{ ...errors }{ ...formProps }/>
@@ -82,7 +82,6 @@ CertificateFormContainer.propTypes = {
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
-  subtitle: PropTypes.string,
   title: PropTypes.string,
   toEdit: PropTypes.number,
   toggleModal: PropTypes.func,
