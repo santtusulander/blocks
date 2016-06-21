@@ -1,0 +1,13 @@
+@import '../../../vendor/bootstrap/stylesheets/bootstrap-compass';
+@import '../../../vendor/bootstrap/stylesheets/bootstrap';
+
+.analytics-filters {
+
+  margin: 20px 0;
+
+  .filter {
+    @extend .col-md-2;
+  }
+
+}
+

@@ -13,6 +13,8 @@ import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
 
 import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
 
+import './analytics-container.scss'
+
 function getNameById( list, id ) {
   const foundItem = list.find( (item) => {
     return item.get('id').toString() === id.toString()
@@ -80,8 +82,16 @@ class AnalyticsContainer extends React.Component {
     if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`})
     if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
 
+    const availableFilters = {
+      'traffic': ['date-range', 'service-type'],
+      'visitors': ['date-range'],
+      'on-off-net': ['date-range', 'on-off-net'],
+      'service-providers': ['date-range', 'service-provider', 'service-type', 'on-off-net']
+
+    }
+
     return (
-      <div>
+      <div className='analytics-container'>
         <Breadcrumbs links={breadCrumbLinks} />
 
         <AnalyticsViewControl {...this.props} />
@@ -91,10 +101,14 @@ class AnalyticsContainer extends React.Component {
           filters={this.props.filters}
         />
 
+        <div className='analytics-tab-container'>
+
         {
           /* Render tab -content */
           this.props.children && React.cloneElement(this.props.children, {filters: this.props.filters} )
         }
+
+        </div>
 
       </div>
     )
@@ -115,7 +129,6 @@ function mapStateToProps(state) {
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
     properties: state.host.get('allHosts'),
-
     filters: state.filters.get('filters')
   }
 }
