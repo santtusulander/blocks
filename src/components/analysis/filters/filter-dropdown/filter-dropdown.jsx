@@ -1,35 +1,61 @@
 import React from 'react'
-import moment from 'moment'
+import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
 
 import './filter-dropdown.scss'
 
-export class ChecklistFilter extends React.Component {
+export class FilterDropdown extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
+      filteredResults: this.props.options,
+      filterValue: ''
     }
-  }
 
-  componentWillMount() {
+    this.handleSelect = this.handleSelect.bind(this)
+    this.handleFilter = this.handleFilter.bind(this)
   }
 
   toggleDropdown(val) {
     this.setState({ dropdownOpen: !val })
   }
 
+  handleSelect(link) {
+    this.props.handleSelect(link)
+  }
+
+  handleFilter() {
+    let inputVal = this.refs.filterInput.value
+    let filtered = this.props.options.filter(
+      option => option.get('label').toLowerCase().indexOf(inputVal) !== -1
+    )
+
+    this.setState({
+      filterValue: inputVal,
+      filteredResults: filtered
+    })
+  }
+
   render() {
 
-    const { dropdownOpen } = this.state
+    const { dropdownOpen, filteredResults, filterValue } = this.state
 
     let label     = "Please Select"
-    let className = 'dropdown-select btn-block'
+    let className = 'dropdown-select dropdown-filter btn-block'
+
+    if(this.props.className) {
+      className += ` ${this.props.className}`
+    }
+
+    if(this.props.parent) {
+      className += ' has-parent'
+    }
 
     return (
-      <div className="form-group relative-positioned">
+      <div className="form-group">
         <Dropdown id=""
                   open={dropdownOpen}
                   className={className}>
@@ -37,15 +63,26 @@ export class ChecklistFilter extends React.Component {
             <IconSelectCaret/>
             {label}
           </Dropdown.Toggle>
-
+          {dropdownOpen &&
+          <div className="filter-container">
+            <input
+              ref="filterInput"
+              type="text"
+              placeholder="search"
+              onChange={this.handleFilter}
+              value={filterValue}
+            />
+          </div>
+          }
           <Dropdown.Menu>
-
-            {options.map((options, i) =>
+            <MenuItem className="parent">
+              {this.props.parent}
+            </MenuItem>
+            {filteredResults.map((option, i) =>
               <MenuItem key={i}
-                        data-value={options[0]}
-                        onClick={e => this.handleTimespanChange(e.target.getAttribute('data-value'))}
-                        className={this.state.activeDateRange === options[0] && 'hidden'}>
-                {options[1]}
+                        onClick={() => this.handleSelect(option.get('link'))}
+                        className="children">
+                {option.get('label')}
               </MenuItem>
             )}
 
@@ -56,11 +93,10 @@ export class ChecklistFilter extends React.Component {
   }
 }
 
-DateRangeFilter.displayName = 'DateRangeFilter'
-DateRangeFilter.propTypes   = {
-  changeDateRange: React.PropTypes.func,
-  endDate: React.PropTypes.instanceOf(moment),
-  startDate: React.PropTypes.instanceOf(moment)
+FilterDropdown.displayName = 'FilterDropdown'
+FilterDropdown.propTypes   = {
+  handleSelect: React.PropTypes.func,
+  options: React.PropTypes.instanceOf(Immutable)
 }
 
-module.exports = DateRangeFilter
+module.exports = FilterDropdown
