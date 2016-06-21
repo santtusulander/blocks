@@ -40,7 +40,6 @@ class CertificateFormContainer extends Component {
       this.props.fetchGroups('udn', this.props.fields.account.value)
     }
   }
-
   componentWillReceiveProps(nextProps) {
     const nextAccountValue = nextProps.fields.account.value
     const thisAccountValue = this.props.fields.account.value
@@ -109,7 +108,6 @@ export default reduxForm({
   return {
     fetchGroups: groupActions.fetchGroups,
     cancel: toggleModal => {
-      dispatch(reset('certificateForm'))
       securityActions.changeCertificateToEdit(null)
       dispatch(reset('certificateForm'))
       toggleModal(null)

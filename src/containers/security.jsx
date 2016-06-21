@@ -23,7 +23,6 @@ import {
 } from '../constants/account-management-modals.js'
 
 class Security extends React.Component {
-
   componentWillMount() {
     this.props.fetchAccountData(this.props.accounts)
     switch(this.props.params.subPage) {
@@ -35,7 +34,6 @@ class Security extends React.Component {
       default: break
     }
   }
-
   render() {
     const {
       accounts,
@@ -105,6 +103,7 @@ class Security extends React.Component {
 Security.defaultProps = {
   activeAccount: Map({ id: 25, name: 'FooBar' })
 }
+
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
@@ -118,7 +117,6 @@ Security.propTypes = {
   sslCertificates: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
 }
-
 
 function mapStateToProps(state) {
   const activeAccount = state.account.get('activeAccount') || Map({ id: 25, name: 'FooBar' })
