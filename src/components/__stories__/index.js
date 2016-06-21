@@ -29,3 +29,4 @@ import './content/content-item-chart'
 
 // filters
 import './filters/filter-dropdown'
+import './filters/date-range-filter'

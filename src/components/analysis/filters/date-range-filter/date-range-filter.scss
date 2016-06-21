@@ -1,0 +1,33 @@
+@import "../../../../styles/base/variables";
+
+.relative-positioned {
+  position: relative;
+}
+
+.datepicker-container {
+  position: absolute;
+  left: 100%;
+  width: $sidebar-width - $bar-height;
+
+  @include md {
+    width: $md-sidebar-width - $md-bar-height;
+  }
+
+  @include sm {
+    width: $sm-sidebar-width - ($md-bar-height / 3 * 2);
+  }
+}
+
+.datepicker-input-wrapper {
+  float: left;
+  display: block;
+  width: ($sidebar-width - $bar-height) / 2;
+
+  @include md {
+    width: ($md-sidebar-width - $md-bar-height) / 2;
+  }
+
+  @include sm {
+    width: ($sm-sidebar-width - ($md-bar-height / 3 * 2)) / 2;
+  }
+}
