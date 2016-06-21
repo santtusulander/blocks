@@ -7,6 +7,7 @@ import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../uti
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
+const TRAFFIC_FETCHED = 'TRAFFIC_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
@@ -16,7 +17,7 @@ const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
-  byTime: Immutable.List(),
+  traffic: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
   onOffNet: Immutable.fromJS({
@@ -46,6 +47,24 @@ const emptyTraffic = Immutable.Map({
 })
 
 // REDUCERS
+
+export function trafficFetchSuccess(state, action){
+  return state.merge({
+    traffic: Immutable.fromJS(action.payload.data.map(entity => {
+      entity.detail = entity.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return entity
+    }))
+  })
+}
+
+export function trafficFetchFailure(state){
+  return state.merge({
+    traffic: Immutable.List()
+  })
+}
 
 export function trafficByTimeSuccess(state, action){
   return state.merge({
@@ -138,7 +157,7 @@ export function trafficStorageFailure(state){
   })
 }
 
-export function trafficStartFetch(state, action){
+export function trafficStartFetch(state){
   return state.set('fetching', true)
 }
 
@@ -147,6 +166,7 @@ export function trafficFinishFetch(state){
 }
 
 export default handleActions({
+  TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
   TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
@@ -159,6 +179,11 @@ export default handleActions({
 }, emptyTraffic)
 
 // ACTIONS
+
+export const fetchTraffic = createAction(TRAFFIC_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)

@@ -3,6 +3,8 @@ jest.unmock('moment')
 
 import Immutable from 'immutable'
 import {
+  trafficFetchSuccess,
+  trafficFetchFailure,
   trafficByTimeSuccess,
   trafficByTimeFailure,
   trafficByCountrySuccess,
@@ -29,6 +31,7 @@ describe('Traffic Module', () => {
       timestamp = new Date().toISOString();
 
       state = Immutable.fromJS({
+        traffic: [],
         byTime: [],
         byCountry: [],
         totalEgress: [],
@@ -37,6 +40,18 @@ describe('Traffic Module', () => {
         serviceProviders: [],
         storage: [],
       });
+    })
+
+    it('should handle trafficFetchSuccess', () => {
+      const newState = trafficFetchSuccess(state, {payload: {data:  [{account: 1, detail: [{timestamp: timestamp}] }] }})
+
+      expect(newState.get('traffic').count() ).toBe(1);
+    })
+
+    it('should handle trafficFetchFailure', () => {
+      const newState = trafficFetchFailure(state, {payload: {data:  [{value: 'test', timestamp: timestamp}] } })
+
+      expect(newState.get('traffic').count() ).toBe(0);
     })
 
     it('should handle trafficByTimeSuccess', () => {

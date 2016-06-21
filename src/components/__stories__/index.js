@@ -1,8 +1,8 @@
-import './add-host';
 import './confirmation';
 import './export-panel';
 import './export-email-form';
 import './export-file-form';
+import './loading-spinner'
 
 
 //account management
@@ -22,3 +22,10 @@ import './content-item-chart'
 import './loading-spinner'
 import './navigation'
 import './filters'
+
+// content
+import './content/add-host'
+import './content/content-item-chart'
+
+// filters
+import './filters/filter-dropdown'

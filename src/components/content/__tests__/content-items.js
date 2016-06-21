@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { shallow, mount } from 'enzyme'
 
-jest.dontMock('../../constants/content-item-sort-options.js')
+jest.dontMock('../../../constants/content-item-sort-options.js')
 jest.dontMock('../content-items.jsx')
 
 const ContentItems = require('../content-items.jsx')
@@ -237,4 +237,3 @@ describe('ContentItems', () => {
   });
 
 })
-
