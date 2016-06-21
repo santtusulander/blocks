@@ -21,3 +21,6 @@ import './account-management/brand-edit-form'
 // content
 import './content/add-host'
 import './content/content-item-chart'
+
+// filters
+import './filters/filter-dropdown'
