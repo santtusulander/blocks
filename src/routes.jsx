@@ -58,7 +58,7 @@ import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-d
 /* helper for creating Tab-Routes */
 function getAnalyticsTabRoutes() {
   return (
-    <span>
+    <Route>
       <IndexRedirect to={routes.analyticsTabTraffic} />
       <Route path={routes.analyticsTabTraffic} component={ AnalyticsTabTraffic } />
       <Route path={routes.analyticsTabVisitors} component={ AnalyticsTabVisitors } />
@@ -67,21 +67,7 @@ function getAnalyticsTabRoutes() {
       <Route path={routes.analyticsTabFileError} component={ AnalyticsTabFileError } />
       <Route path={routes.analyticsTabUrlReport} component={ AnalyticsTabUrlReport } />
       <Route path={routes.analyticsTabPlaybackDemo} component={ AnalyticsTabPlaybackDemo } />
-
-      {/* TODO: Add tab routes
-       <Route path=":account/visitors" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-       <Route path=":account/on-off-net" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-       <Route path=":account/service-providers" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-       <Route path=":account/file-error" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-       <Route path=":account/url-report" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-       <Route path=":account/playback-demo" components={{ main: AnalyticsAccount, tab: AnalyticsSidebarAccount }} >
-
-       <Route path=":group" components={{ main: AnalyticsGroup, sidebar: AnalyticsSidebarGroup }} >
-       <Route path=":property" components={{ main: AnalyticsProperty, sidebar: AnalyticsSidebarProperty }} />
-       </Route>
-       */}
-
-    </span>
+    </Route>
   )
 }
 

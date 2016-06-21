@@ -2,7 +2,6 @@ import './confirmation';
 import './export-panel';
 import './export-email-form';
 import './export-file-form';
-import './loading-spinner'
 
 
 //account management
@@ -18,14 +17,13 @@ import './account-management/roles-list'
 import './account-management/new-account-form'
 import './account-management/brand-edit-form'
 
-import './content-item-chart'
-import './loading-spinner'
-import './navigation'
-import './filters'
+import './loading-spinner.js'
+import './navigation.js'
+//import './filters.js'
 
 // content
 import './content/add-host'
-import './content/content-item-chart'
+import './content/content-item-chart.js'
 
 // filters
 import './filters/filter-dropdown'

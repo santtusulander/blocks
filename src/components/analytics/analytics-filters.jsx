@@ -1,6 +1,9 @@
 import React from 'react'
 
-import FilterDateRange from '../analysis/filters/date-range.jsx'
+//import FilterDateRange from '../analysis/filters/date-range.jsx'
+
+import DateRangeFilter from '../analysis/filters/date-range-filter/date-range-filter.jsx'
+
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
@@ -23,10 +26,10 @@ const AnalyticsFilters = (props) => {
     <div className='analytics-filters'>
 
       <div className='filter'>
-        <FilterDateRange
+        <DateRangeFilter
           changeDateRange={ (startDate, endDate) => { props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})} }
           startDate={props.filters.get('dateRange').startDate}
-          startDate={props.filters.get('dateRange').endDate}
+          endDate={props.filters.get('dateRange').endDate}
         />
       </div>
 

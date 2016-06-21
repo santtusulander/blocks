@@ -4,7 +4,11 @@ import Immutable from 'immutable'
 const initialState = //Immutable.Map();
 Immutable.fromJS({
   filters: {
-    dateRange: {startDate: null, endDate: null}
+    dateRange: {startDate: null, endDate: null},
+    serviceTypes: ['http', 'https'],
+    serviceProviders: ['All'],
+    onOffNet: ['on-net', 'off-net'],
+    errorCodes: ['All']
   }
 })
 
