@@ -64,9 +64,7 @@ class AnalyticsTabFileError extends React.Component {
 
      */
 
-    this.props.reportsActions.fetchURLMetrics(fetchOpts)
     this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts);
-
 
   }
 
