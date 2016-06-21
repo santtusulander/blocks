@@ -3,8 +3,6 @@ import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
-
-import DateRangeSelect from '../../../../components/date-range-select.jsx'
 import DateRanges from '../../../../constants/date-ranges'
 
 import './date-range-filter.scss'
@@ -55,7 +53,7 @@ export class DateRangeFilter extends React.Component {
       endDate: endDate.utc().endOf('day')
     })
 
-    this.handleOnBlur()
+    this.toggleDropdown(this.state.dropdownOpen)
   }
 
   handleOnBlur() {
@@ -65,10 +63,11 @@ export class DateRangeFilter extends React.Component {
   }
 
   toggleDropdown(val) {
-    this.setState({ dropdownOpen: !val })
-    setTimeout(() => {
-      this.setStartDateActive()
-    }, 1)
+    this.setState({ dropdownOpen: !val }, () => {
+      setTimeout(() => {
+        this.state.dropdownOpen && this.setStartDateActive()
+      }, 1)
+    })
   }
 
   setStartDateActive() {
@@ -87,7 +86,7 @@ export class DateRangeFilter extends React.Component {
     let endDate   = moment().utc().endOf('day')
 
     if(value === 'month_to_date') {
-      startDate = moment().utc().startOf('month')
+      startDate = moment().utc().startOf('day').subtract(1, 'month')
     }
     else if(value === 'today') {
       startDate = moment().utc().startOf('day')
@@ -100,21 +99,21 @@ export class DateRangeFilter extends React.Component {
       startDate = moment().utc().startOf('month').subtract(1, 'month')
       endDate   = moment().utc().endOf('month').subtract(1, 'month')
     }
-    this.props.changeDateRange(startDate, endDate)
+
     this.setState({
       activeDateRange: value,
       endDate: endDate,
       startDate: startDate
-    })
-    this.setStartDateActive()
+    }, this.toggleDropdown(this.state.dropdownOpen))
+    this.props.changeDateRange(startDate, endDate)
   }
 
   render() {
 
     const { dropdownOpen, activeDateRange } = this.state
 
-    let label     = "Please Select"
-    let className = 'dropdown-select btn-block'
+    let label     = 'Please Select'
+    let className = 'dropdown-select dropdown-select-datepicker btn-block'
 
     const currentSelection = options.find(
       option => option[0] === this.state.activeDateRange
@@ -123,61 +122,52 @@ export class DateRangeFilter extends React.Component {
     label = currentSelection ? currentSelection[1] : activeDateRange
 
     return (
-      <div>
-        <div className="sidebar-section-header">
-          Date Range
-        </div>
-        <div className="sidebar-content">
-          <div className="form-group relative-positioned">
 
-            <Dropdown id=""
-                      open={dropdownOpen}
-                      className={className}>
-              <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
-                <IconSelectCaret/>
-                {label}
-              </Dropdown.Toggle>
+      <div className="form-group relative-positioned">
+        <Dropdown id=""
+                  open={dropdownOpen}
+                  className={className}>
+          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
+            <IconSelectCaret/>
+            {label}
+          </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <div className="datepicker-container">
-                  <div ref="startDateHolder" className={'datepicker-input-wrapper start-date datepicker-open'}>
-                    <DatePicker
-                      dateFormat="MM/DD/YYYY"
-                      selected={this.state.startDate}
-                      startDate={this.state.startDate}
-                      endDate={this.state.endDate}
-                      onChange={this.handleStartDateChange}
-                      onBlur={this.handleOnBlur}/>
-                  </div>
-                  <div ref="endDateHolder" className={'datepicker-input-wrapper end-date datepicker-open'}>
-                    <DatePicker
-                      open={true}
-                      popoverAttachment='top right'
-                      popoverTargetAttachment='bottom right'
-                      dateFormat="MM/DD/YYYY"
-                      selected={this.state.endDate}
-                      startDate={this.state.startDate}
-                      endDate={this.state.endDate}
-                      onChange={this.handleEndDateChange}
-                      onBlur={this.handleOnBlur}/>
-                  </div>
-                </div>
+          <Dropdown.Menu>
+            <div className="datepicker-container">
+              <div ref="startDateHolder" className={'datepicker-input-wrapper start-date datepicker-open'}>
+                <DatePicker
+                  dateFormat="MM/DD/YYYY"
+                  selected={this.state.startDate}
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  onChange={this.handleStartDateChange}
+                  onBlur={this.handleOnBlur}/>
+              </div>
+              <div ref="endDateHolder" className={'datepicker-input-wrapper end-date datepicker-open'}>
+                <DatePicker
+                  open={true}
+                  popoverAttachment='top right'
+                  popoverTargetAttachment='bottom right'
+                  dateFormat="MM/DD/YYYY"
+                  selected={this.state.endDate}
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  onChange={this.handleEndDateChange}
+                  onBlur={this.handleOnBlur}/>
+              </div>
+            </div>
 
-                {options.map((options, i) =>
-                  <MenuItem key={i}
-                            data-value={options[0]}
-                            onClick={e => this.handleTimespanChange(e.target.getAttribute('data-value'))}
-                            className={this.state.activeDateRange === options[0] && 'hidden'}>
-                    {options[1]}
-                  </MenuItem>
-                )}
+            {options.map((options, i) =>
+              <MenuItem key={i}
+                        data-value={options[0]}
+                        onClick={e => this.handleTimespanChange(e.target.getAttribute('data-value'))}
+                        className={this.state.activeDateRange === options[0] && 'hidden'}>
+                {options[1]}
+              </MenuItem>
+            )}
 
-              </Dropdown.Menu>
-            </Dropdown>
-
-          </div>
-
-        </div>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     )
   }
