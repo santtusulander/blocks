@@ -34,6 +34,10 @@ function createPropertyOptions( opts ){
 function getAnalyticsUrl( linkType, val, params ){
 
   let url
+  val = encodeURIComponent(val).replace(/\./g, "%2e")
+
+  console.log("urlEncoded:", val)
+
   const {brand,account,group,property} = params;
 
   switch ( linkType ) {
@@ -113,6 +117,9 @@ const AnalyticsViewControl = (props) => {
         <li>
           <Link to={ getTabLink(props.location.pathname, 'service-providers') } activeClassName='active'>Service Providers</Link>
         </li>
+        <li>
+          <Link to={ getTabLink(props.location.pathname, 'file-error') } activeClassName='active'>File Error</Link>
+        </li>
       </Nav>
 
     </div>
@@ -125,8 +132,5 @@ const AnalyticsViewControl = (props) => {
   groups: Immutable.List(),
   properties: Immutable.List()
 }*/
-contextTypes: {
-  router: React.PropTypes.object.isRequired
-}
 
 export default AnalyticsViewControl
