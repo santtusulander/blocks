@@ -28,3 +28,5 @@ import './content/content-item-chart.js'
 // filters
 import './filters/filter-dropdown'
 import './filters/date-range-filter'
+import './filters/filter-checklist-dropdown'
+
