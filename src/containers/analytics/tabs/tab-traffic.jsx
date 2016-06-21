@@ -16,59 +16,42 @@ class AnalyticsTabTraffic extends React.Component {
   componentDidMount() {
     console.log("AnalyticsTabTraffic - componentDidMount()")
 
-    this.fetchData()
+    this.fetchData(this.props.params, this.props.filters)
   }
 
-  componentDidUpdate(prevProps){
+  componentWillReceiveProps(nextProps){
+
+    console.log('AnalyticsTabTraffic() - componentWillReceiveProps()')
+
     const params = JSON.stringify(this.props.params)
-    const prevParams = JSON.stringify(prevProps.params)
+    const prevParams = JSON.stringify(nextProps.params)
+    const filters = JSON.stringify(this.props.filters)
+    const prevFilters = JSON.stringify(nextProps.filters)
 
-    if ( !( params === prevParams) ) this.fetchData()
-    /*
-    const params = this.props.params
-    const prevParams = prevProps.params
+    console.log('props', params, prevParams, filters,prevFilters)
 
-    if ( !(params.brand === prevParams.brand &&
-      params.account === prevParams.account &&
-      params.group === prevParams.group &&
-      params.property === prevParams.property )) {
+    if ( !( params === prevParams && filters === prevFilters) ) this.fetchData(nextProps.params, nextProps.filters)
 
-      this.fetchData()
-
-    }
-    */
   }
 
-  fetchData(){
-    const endDate = moment().utc().endOf('day')
-    const startDate = moment().utc().startOf('month')
+  fetchData(params, filters){
+    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
+    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
 
     const fetchOpts = {
-      account: this.props.params.account,
-      brand: this.props.params.brand,
-      group: this.props.params.group,
-      host: this.props.params.property,
+      account: params.account,
+      brand: params.brand,
+      group: params.group,
+      host: params.property,
 
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
     }
 
-    const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
-
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-
     this.props.trafficActions.fetchByTime(fetchOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
-    /*this.props.trafficActions.fetchOnOffNet(onOffOpts),
-    this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts),
-    this.props.trafficActions.fetchServiceProviders(onOffOpts),
-    this.props.trafficActions.fetchStorage()
-    */
   }
 
   render(){
