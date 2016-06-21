@@ -18,6 +18,7 @@ const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
   traffic: Immutable.List(),
+  byTime: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
   onOffNet: Immutable.fromJS({
