@@ -41,10 +41,6 @@ function routeTrafficUrls(req, res) {
     limit        : params.limit
   };
 
-
-  return res.jsend(testData);
-  /* eslint no-unreachable: 0 */
-
   db.getTrafficByUrl(options).then((trafficData) => {
     res.jsend(trafficData);
   }).catch((err) => {
