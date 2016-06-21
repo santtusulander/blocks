@@ -1,0 +1,70 @@
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+
+}
+
+$animLength: 1.5s;
+$animDelay: $animLength / 4;
+
+.loading-spinner {
+  width: 100%;
+  position: absolute;
+  margin-left: -60px;
+  z-index: 1000;
+
+  .spinner-content {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    margin: 100px auto;
+  }
+
+  svg {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+
+    path#circle {
+      fill: #d2d2d2;
+    }
+
+    &#circleSvg {
+      animation: spin $animLength * 2 linear infinite;
+    }
+
+    &#logoSvg {
+      fill: #00285f;
+
+      #e1 {
+        animation: fade $animLength ease infinite;
+        animation-delay: 0;
+      }
+      #e2 {
+        animation: fade $animLength ease infinite;
+        animation-delay: ($animDelay * 1);
+      }
+      #e3 {
+        animation: fade $animLength ease infinite;
+        animation-delay: ($animDelay * 2);
+      }
+    }
+  }
+
+  .light-theme & {
+    #logoSvg {
+      fill: #d2d2d2;
+    }
+  }
+}

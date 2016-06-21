@@ -1,6 +1,9 @@
 var path = require('path');
+var ExtractTextPlugin    = require('extract-text-webpack-plugin');
 
 const isProductionBuild = () => (process.argv.indexOf('--production-build') !== -1)
+
+const publicUrl = process.env.PUBLIC_URL || '/'
 
 module.exports = {
   entry: {
@@ -9,7 +12,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
-    publicPath: isProductionBuild() ? process.env.PUBLIC_URL : `http://localhost:${process.env.PORT}/`,
+    publicPath: isProductionBuild() ? publicUrl : `http://localhost:${process.env.PORT}/`,
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js'
   },
@@ -32,12 +35,18 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: [
-          'style',
-          'css?sourceMap',
-          "autoprefixer?{browsers:['last 2 version', 'IE 9']}",
-          'sass?sourceMap'
-        ]
+        loader:
+          isProductionBuild() ?
+            ExtractTextPlugin.extract(
+              'style',
+              [
+                'css?sourceMap',
+                "autoprefixer?{browsers:['last 2 version', 'IE 9']}",
+                'sass?sourceMap'
+              ]
+            )
+          :
+            "style!css?sourceMap!autoprefixer?{browsers:['last 2 version', 'IE 9']}!sass?sourceMap"
       },
       {
         test: /\.(jpg|jpeg|gif|png)$/,

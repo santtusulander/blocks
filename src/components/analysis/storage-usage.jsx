@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 
-import AnalysisStacked from './stacked'
+import AnalysisStackedByTime from './stacked-by-time'
 
 class AnalysisStorageUsageReport extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class AnalysisStorageUsageReport extends React.Component {
         <div ref="chartHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
-            <AnalysisStacked padding={40}
+            <AnalysisStackedByTime padding={40}
               dataSets={[stats.toJS()]}
               width={this.state.chartWidth} height={this.state.chartWidth / 3}/>}
         </div>

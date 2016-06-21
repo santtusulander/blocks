@@ -290,15 +290,13 @@ class AnalyticsDB {
     optionsFinal.group    && conditions.push('AND group_id = ?');
     optionsFinal.property && conditions.push('AND property = ?');
 
-    // TODO: should this GROUP BY account_id, group_id, and property instead of epoch_start?
     let queryParameterized = `
       SELECT
         epoch_start AS timestamp,
         sum(bytes) AS bytes
       FROM ??
       WHERE ${conditions.join('\n        ')}
-        AND flow_dir = 'out'
-      GROUP BY epoch_start;
+        AND flow_dir = 'out';
     `;
 
     return this._executeQuery(queryParameterized, [
@@ -648,6 +646,13 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
 
+  }
+
+  /**
+   * Get data stored in the schema_info table
+   */
+  getSchemaInfo() {
+    return this._executeQuery('SELECT * FROM schema_info;');
   }
 
 }

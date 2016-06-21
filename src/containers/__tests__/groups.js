@@ -2,6 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import {shallow,mount} from 'enzyme'
+import jsdom from 'jsdom'
+
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
+global.window = document.defaultView
+
 
 jest.autoMockOff()
 jest.dontMock('../groups.jsx')
@@ -98,7 +104,7 @@ describe('Groups', () => {
   });
 
   it('should show a loading message', () => {
-    let groups = TestUtils.renderIntoDocument(
+    let groups = mount(
       <Groups groupActions={groupActionsMaker()}
         uiActions={uiActionsMaker()}
         fetchData={jest.genMockFunction()}
@@ -106,8 +112,8 @@ describe('Groups', () => {
         fetchingMetrics={true}
         params={urlParams}/>
     )
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(groups, 'div')
-    expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
+
+    expect(groups.find('LoadingSpinner').length).toBe(1)
   });
 
   it('should show existing groups as charts', () => {
@@ -160,7 +166,7 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id:1})}
+  //       activeGroup={Immutable.Map({id:1})}
   //       params={urlParams}/>
   //   )
   //   groups.toggleActiveGroup(1)()
@@ -174,12 +180,12 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
   //       params={urlParams}/>
   //   )
   //   groups.changeActiveGroupValue(['name'], 'bbb')
   //   expect(groupActions.changeActiveGroup.mock.calls[0][0].toJS()).toEqual({
-  //     group_id: 1,
+  //     id: 1,
   //     name: 'bbb'
   //   })
   // })
@@ -191,12 +197,11 @@ describe('Groups', () => {
   //       uiActions={uiActionsMaker()}
   //       fetchData={jest.genMockFunction()}
   //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({group_id: 1, name: 'aaa'})}
+  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
   //       params={urlParams}/>
   //   )
   //   groups.saveActiveGroupChanges()
-  //   expect(groupActions.updateGroup.mock.calls[0][2]).toEqual({
-  //     group_id: 1,
+  //   expect(groupActions.updateGroup.mock.calls[0][3]).toEqual({
   //     name: 'aaa'
   //   })
   // })

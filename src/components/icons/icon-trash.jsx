@@ -5,7 +5,7 @@ import Icon from '../icon.jsx'
 class IconTrash extends React.Component {
   render() {
     return (
-      <Icon width="18" height="27">
+      <Icon className={this.props.className} width="18" height="27">
         <g>
           <rect x="4" y="10" width="2" height="12"/>
           <rect x="8" y="10" width="2" height="12"/>

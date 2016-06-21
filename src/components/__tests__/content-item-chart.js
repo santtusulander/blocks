@@ -31,7 +31,7 @@ describe('ContentItemChart', () => {
 
   it('should show a loading message', () => {
     let contentItem = shallow(<ContentItemChart fetchingMetrics={true}/>)
-    expect(contentItem.find('#fetchingMetrics').length).toBe(1)
+    expect(contentItem.find('LoadingSpinner').length).toBe(1)
   });
 
   it('should not show a loading message', () => {

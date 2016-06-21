@@ -63,6 +63,7 @@
   &.btn-outline {
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
+    color: $dt-text-color;
 
     &,
     &:hover,
@@ -310,8 +311,7 @@
 
 .dark-theme,
 .light-theme .header,
-.light-theme .sidebar-layout,
-.light-theme .configuration-sidebar {
+/* TODO: Should this be removed? .light-theme .configuration-sidebar */ {
 
   .dropdown-select {
 
@@ -371,16 +371,6 @@
     }
   }
 
-  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
-
-    &:hover:not(:disabled),
-    &:hover:not(:disabled) .icon {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-  }
-
   .btn-primary {
 
     &,
@@ -399,6 +389,16 @@
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
+    }
+  }
+
+  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
+
+    &:hover:not(:disabled),
+    &:hover:not(:disabled) .icon {
+      color: $white;
+      fill: $white;
+      stroke: $white;
     }
   }
 
@@ -582,6 +582,34 @@
       &.active {
         background-color: rgba($black, 0.1);
       }
+    }
+  }
+
+  .configuration-sidebar .btn-outline {
+    background-color: $white !important;
+    color: $pale-blue;
+    border: 0px;
+  }
+
+  .configuration-sidebar .btn-primary,
+  .sidebar-layout .btn-primary {
+
+    &,
+    &:hover,
+    &:active,
+    &.active {
+      color: $white;
+      background-color: $pale-blue;
+      fill: $white;
+      stroke: $white;
+    }
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled),
+    &.active:not(:disabled) {
+      color: $lt-button-color;
+      fill: $lt-button-color;
+      stroke: $lt-button-color;
     }
   }
 

@@ -8,7 +8,7 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterAccountsByUserName } from '../util/helpers'
+import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content-items'
 // Not in 0.5 import EditAccount from '../components/edit-account'
@@ -26,9 +26,7 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    if(this.props.accounts.isEmpty()) {
-      this.props.fetchData()
-    }
+    this.props.fetchData(this.props.metrics, this.props.accounts)
   }
   // toggleActiveAccount(id) {
   //   return () => {
@@ -69,7 +67,10 @@ export class Accounts extends React.Component {
       sortValuePath,
       viewingChart,
       uiActions } = this.props
+
     const filteredAccounts = filterAccountsByUserName(accounts, username)
+    const filteredMetrics = filterMetricsByAccounts(metrics, filteredAccounts)
+
     const nextPageURLBuilder = (accountID) => `/content/groups/${brand}/${accountID}`
     const analyticsURLBuilder = (accountID) => `/content/analytics/account/${brand}/${accountID}`
     return (
@@ -82,7 +83,7 @@ export class Accounts extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: 'BRAND CONTENT SUMMARY', label: 'Accounts' }}
-        metrics={metrics}
+        metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
@@ -134,16 +135,19 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-
   return {
-    fetchData: () => {
-      accountActions.startFetching()
-      accountActions.fetchAccounts(ownProps.params.brand)
-      metricsActions.startAccountFetching()
-      metricsActions.fetchAccountMetrics({
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X')
-      })
+    fetchData: (metrics, accounts) => {
+      if(accounts.isEmpty()) {
+        accountActions.startFetching()
+        accountActions.fetchAccounts(ownProps.params.brand)
+      }
+      if(metrics.isEmpty()) {
+        metricsActions.startAccountFetching()
+        metricsActions.fetchAccountMetrics({
+          startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
+          endDate: moment.utc().endOf('hour').format('X')
+        })
+      }
     },
     accountActions: accountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)

@@ -1,16 +1,22 @@
 import React from 'react'
 
-class AccountManagementSystemDNS extends React.Component {
-  render() {
-    return (
-      <div className="account-management-system-dns">
-        <h2>DNS</h2>
-      </div>
-    )
-  }
+import { DNSList } from '../dns-list.jsx'
+
+const AccountManagementSystemDNS = props => {
+  return (
+    <div className="account-management-system-dns">
+      <DNSList
+        onAddDomain={() => console.log('add domain')}
+        changeActiveDomain={id => console.log('change active domain, id:', id)}
+        onAddEntry={() => console.log('add entry')}
+        onDeleteEntry={() => console.log('delete entry')}
+        {...props}
+      />
+    </div>
+  )
 }
 
 AccountManagementSystemDNS.displayName = 'AccountManagementSystemDNS'
 AccountManagementSystemDNS.propTypes = {}
 
-module.exports = AccountManagementSystemDNS
+export default AccountManagementSystemDNS

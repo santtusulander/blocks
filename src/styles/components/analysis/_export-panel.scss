@@ -2,7 +2,13 @@
 // =====================
 
 .modal-dialog.export-sidebar {
-  @extend .modal-dialog.configuration-sidebar;
+  @extend .configuration-sidebar;
+
+  .modal-header {
+    p {
+      text-transform: capitalize;
+    }
+  }
 
   .modal-body {
     padding: 0 $bar-height !important;
@@ -17,8 +23,8 @@
   }
 
   h4 {
-    text-transform: uppercase;
     margin: 0;
+    text-transform: uppercase;
   }
 
   .export-panel-tabs {
@@ -47,8 +53,8 @@
     margin: ($bar-height / 4) 0 ($bar-height / 2);
 
     .form-group {
-      background-color: rgba($black, 0.1);
       padding: 15px;
+      background-color: rgba($black, 0.1);
 
       &:nth-of-type(odd) {
         background-color: rgba($black, 0.2);

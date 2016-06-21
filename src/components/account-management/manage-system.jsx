@@ -38,10 +38,10 @@ class AccountManagementManageSystem extends React.Component {
             <Users/>
           }
           {this.state.activeTab === 'brands' &&
-            <Brands/>
+            <Brands { ...this.props.brandsList} />
           }
           {this.state.activeTab === 'dns' &&
-            <DNS/>
+            <DNS {...this.props.dnsList}/>
           }
           {this.state.activeTab === 'roles' &&
             <Roles/>
@@ -53,6 +53,9 @@ class AccountManagementManageSystem extends React.Component {
 }
 
 AccountManagementManageSystem.displayName = 'AccountManagementManageSystem'
-AccountManagementManageSystem.propTypes = {}
+AccountManagementManageSystem.propTypes = {
+  brandsList: React.PropTypes.object,
+  dnsList: React.PropTypes.object
+}
 
 module.exports = AccountManagementManageSystem

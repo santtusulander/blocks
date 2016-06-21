@@ -84,3 +84,9 @@ private.json
 
 # Test coverage reports
 /coverage/
+
+# Selenium binaries
+/bin/
+
+# e2e reports
+/e2e/reports/

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../components/icons/icon-select-caret.jsx'
 
-class Select extends React.Component {
+class Select extends Component {
   constructor(props) {
     super(props);
 
@@ -46,10 +46,14 @@ class Select extends React.Component {
 }
 Select.displayName = 'Select'
 Select.propTypes = {
-  className: React.PropTypes.string,
-  onSelect: React.PropTypes.func,
-  options: React.PropTypes.array,
-  value: React.PropTypes.string
+  className: PropTypes.string,
+  onSelect: PropTypes.func,
+  options: PropTypes.array,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
+
+Select.defaultProps = {
+  options: []
+}
 
 module.exports = Select

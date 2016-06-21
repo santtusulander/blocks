@@ -1,0 +1,16 @@
+.soa-form-sidebar {
+  @extend .configuration-sidebar;
+
+  .soa-form-input {
+    width: 60%;
+
+    &.refresh-input {
+      width: 15%;
+    }
+  }
+}
+
+/* FIX for account management forms to properly extend configuration sidebar  --- some load order issue ? */
+.dns-edit-form-sidebar, .add-account-form-sidebar, .roles-edit-form {
+  @extend .configuration-sidebar;
+}
