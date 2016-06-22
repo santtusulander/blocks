@@ -214,7 +214,7 @@ describe('ConfigurationVersions', () => {
         configurations={fakeConfigs}
         activeHost={fakeHost}/>
     )
-    expect(versions.find('SidebarLinks').length).toBe(3)
+    expect(versions.find('SidebarLinks').length).toBe(4)
   })
 
   it('should add a verson', () => {

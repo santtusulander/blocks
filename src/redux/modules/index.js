@@ -16,3 +16,6 @@ export const reports = require('./reports').default;
 //Account Management
 export const dns = require('./dns').default;
 
+//Security
+export const security = require('./security').default;
+

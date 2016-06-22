@@ -35,19 +35,13 @@ export class PropertyAnalytics extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.serviceTypes !== this.props.serviceTypes) {
-      this.fetchData(nextProps.params.account, nextProps.serviceTypes)
+      this.fetchData(nextProps.location.query.name, nextProps.serviceTypes)
     }
     if(nextProps.location.query.name !== this.props.location.query.name) {
       this.fetchData(nextProps.location.query.name)
     }
   }
   fetchData(property, serviceTypes) {
-
-    // TODO: Maybe some general error messaging box?
-    if(serviceTypes && !serviceTypes.size) {
-      alert('There must be at least one service type selected.')
-      return
-    }
 
     this.props.fetchData(
       property || this.props.location.query.name,

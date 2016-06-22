@@ -9,14 +9,14 @@ import Legend from './legend'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
-const configureTooltip = (date, val, height, formatY, xScale, yScale) => {
+const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal) => {
   const formattedDate = moment(date).format('MMM D H:mm')
-  const formattedValue = formatY(val)
+  const formattedValue = formatY(actualVal || positionVal)
   return {
     text: `${formattedDate} ${formattedValue}`,
     x: xScale(date),
-    y: yScale(val),
-    top: yScale(val) + 50 > height
+    y: yScale(positionVal),
+    top: yScale(positionVal) + 50 > height
   }
 }
 
@@ -55,13 +55,14 @@ class AnalysisByTime extends React.Component {
   }
 
   moveMouse(xScale, yScale, primaryData, secondaryData) {
-    const configTooltip = (time, date) => configureTooltip(
+    const configTooltip = (time, positionData, actualData) => configureTooltip(
       time,
-      date,
+      positionData,
       this.props.height,
       this.formatY,
       xScale,
-      yScale
+      yScale,
+      actualData
     )
     return e => {
       const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
@@ -86,9 +87,15 @@ class AnalysisByTime extends React.Component {
         })
       }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
+        let realValue = secondaryData[i][this.props.dataKey]
+        // If this is a stacked chart, take out the added data
+        if(this.props.stacked && primaryData && primaryData.length && primaryData[i]) {
+          realValue = realValue - primaryData[i][this.props.dataKey]
+        }
         const tooltipConfig = configTooltip(
           secondaryData[i].timestamp,
-          secondaryData[i][this.props.dataKey]
+          secondaryData[i][this.props.dataKey],
+          realValue
         )
         this.setState({
           secondaryTooltipText: tooltipConfig.text,
@@ -328,7 +335,8 @@ class AnalysisByTime extends React.Component {
           primaryLabel={this.props.primaryLabel}
           primaryValue={this.state.primaryTooltipText}
           secondaryLabel={this.props.secondaryLabel}
-          secondaryValue={this.state.primaryTooltipText}
+          secondaryValue={this.state.secondaryTooltipText}
+          comparisonLabel={this.props.comparisonLabel}
       />}
       </div>
     )
@@ -340,6 +348,7 @@ AnalysisByTime.propTypes = {
   area: React.PropTypes.bool,
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
+  comparisonLabel: React.PropTypes.string,
   dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,

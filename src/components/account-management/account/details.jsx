@@ -8,24 +8,16 @@ import { reduxForm } from 'redux-form'
 
 import IconAdd from '../../icons/icon-add.jsx'
 import IconEdit from '../../icons/icon-edit.jsx'
+import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../../constants/account-management-options'
 
 import './details.scss'
 
-const fakeBrands = [
-  { id: 'udn', brandName: 'UDN' }
-];
-
-const brandOptions = fakeBrands.map( (e) => {
+const brandOptions = BRANDS.map( (e) => {
   return [ e.id, e.brandName ]
 });
 
-const fakeAccountTypes = [
-  'Content Provider',
-  'Service Provider'
-]
-
-const accountTypeOptions = fakeAccountTypes.map( (e) => {
-  return [ e, e ]
+const accountTypeOptions = ACCOUNT_TYPES.map(e => {
+  return [ e.value, e.label]
 });
 
 
@@ -40,12 +32,6 @@ const validate = values => {
   return errors;
 
 }
-
-const servicesOptions = [
-  'UDN Network Partner',
-  'Media Delivery',
-  'Storage'
-]
 
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
@@ -168,13 +154,13 @@ class AccountManagementAccountDetails extends React.Component {
             <label className="col-xs-3 control-label">Services</label>
             <Col xs={3}>
               {
-                servicesOptions.map( (option, index) => {
+                SERVICE_TYPES.map( (option, index) => {
                   return (
                     <div key={index} className='checkbox-div'>
                       <Input
-                        value={option}
+                        value={option.value}
                         type='checkbox'
-                        label={option}
+                        label={option.label}
                         onChange={e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value))}
                       />
                     </div>

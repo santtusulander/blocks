@@ -14,7 +14,7 @@ const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
 const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
 
 const emptyAccounts = Immutable.fromJS({
-  activeAccount: null,
+  activeAccount: undefined,
   allAccounts: [],
   fetching: false
 })
@@ -23,7 +23,7 @@ export function createSuccess(state, action) {
   const newAccount = Immutable.fromJS(action.payload)
   return state.merge({
     activeAccount: newAccount,
-    allAccounts: state.get('allAccounts').push(newAccount.get('account_id'))
+    allAccounts: state.get('allAccounts').push(newAccount)
   })
 }
 
@@ -112,8 +112,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createAccount = createAction(ACCOUNT_CREATED, (brand) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {}, {
+export const createAccount = createAction(ACCOUNT_CREATED, (brand, name) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, {name: name}, {
     headers: {
       'Content-Type': 'application/json'
     }

@@ -5,7 +5,7 @@ let _         = require('lodash');
 let log       = require('../logger');
 let db        = require('../db');
 let validator = require('../validator');
-let testData  = require('./file-errors-data');
+// let testData  = require('./file-errors-data');
 
 function routeFileErrors(req, res) {
   log.info('Getting file-errors');
@@ -33,11 +33,6 @@ function routeFileErrors(req, res) {
     property     : params.property,
     service_type : params.service_type
   };
-
-
-  return res.jsend(testData);
-  /* eslint no-unreachable: 0 */
-
 
   db.getFileErrors(options).then((fileErrorData) => {
     let responseData   = {};

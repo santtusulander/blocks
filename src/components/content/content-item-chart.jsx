@@ -3,59 +3,77 @@ import Immutable from 'immutable'
 import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import { Link } from 'react-router'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconConfiguration from '../components/icons/icon-configuration.jsx'
+import IconChart from '../icons/icon-chart.jsx'
+import IconConfiguration from '../icons/icon-configuration.jsx'
 
-import LoadingSpinner from '../components/loading-spinner/loading-spinner.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
+import DifferenceTooltip from './difference-tooltip.jsx'
+import TrafficTooltip from './traffic-tooltip.jsx'
+import {formatBitsPerSecond} from '../../util/helpers'
+
+const dayHours = 24
+const rayHours = 3
+
+function groupData(rawData, groupSize, key) {
+  return rawData.reduce( (points, data, i) => {
+
+    let val
+
+    if (key) {
+      val = data[key] || 0
+    } else {
+      val = data || 0
+    }
+
+    if (!(i % groupSize)) {
+      points.push(val)
+    } else {
+      points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
+    }
+
+    return points
+
+  }, [])
+}
 
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      activeSlice: false,
       showDiffLegend: false
     }
 
     this.differenceHover = this.differenceHover.bind(this)
+    this.sliceHover = this.sliceHover.bind(this)
   }
   differenceHover(hover) {
     return () => {
       this.setState({ showDiffLegend: hover })
     }
   }
-
-  groupData(rawData, groupSize, key) {
-    return rawData.reduce( (points, data, i) => {
-
-      let val
-
-      if (key) {
-        val = data[key] || 0
-      } else {
-        val = data || 0
-      }
-
-      if (!(i % groupSize)) {
-        points.push(val)
-      } else {
-        points[points.length - 1] = parseInt(points[points.length - 1]) + parseInt(val)
-      }
-
-      return points
-
-    }, [])
+  sliceHover(sliceData) {
+    return () => {
+      this.setState({ activeSlice: sliceData })
+    }
   }
-
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
 
-    const primaryData = this.groupData(this.props.primaryData.toJS(), 3, 'bits_per_second');
-    const secondaryData = this.groupData(this.props.secondaryData.toJS(), 3, 'bits_per_second');
-    const differenceData = this.groupData(this.props.differenceData.toJS(), 24);
+    const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
+    const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
+    const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
+    const daySlices = this.props.dailyTraffic.toJS().reduce(slices => {
+      slices.push((dayHours/rayHours)*2)
+      slices.push(1)
+      return slices
+    }, [])
 
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
@@ -119,69 +137,39 @@ class ContentItemChart extends React.Component {
       })
       .interpolate('basis')
     const pie = d3.layout.pie().sort(null)
-    const arc = d3.svg.arc().innerRadius(innerRadius - 9).outerRadius(innerRadius);
-    const tooltip =
-      (<Tooltip className="content-item-chart-tooltip"
-        id={'tooltip-' + (this.props.id)}>
+    const differenceArc = d3.svg.arc()
+      .innerRadius(innerRadius - 9)
+      .outerRadius(innerRadius);
+    const dayArc = d3.svg.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
+    let {avgTransfer, maxTransfer, minTransfer} = this.props
+    const endDate = moment.utc().format('MMM D')
+    const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
+    let tooltipDate = `${startDate} - ${endDate}`
+    if(this.state.activeSlice) {
+      avgTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('average'), true)
+      maxTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('peak'), true)
+      minTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('low'), true)
+      tooltipDate = moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D')
+    }
+    const tooltip = (<Tooltip className="content-item-chart-tooltip"
+      id={'tooltip-' + (this.props.id)}>
         {this.state.showDiffLegend ?
-          <div>
-            <div className="tooltip-header">
-              <b>TRAFFIC VS 28 DAYS AGO</b>
-            </div>
-            <div>
-              Higher
-              <div className="pull-right difference-legend above-avg" />
-            </div>
-            <div>
-              Same
-              <div className="pull-right difference-legend avg" />
-            </div>
-            <div>
-              Lower
-              <div className="pull-right difference-legend below-avg" />
-            </div>
-            <div>
-              Data Missing
-              <div className="pull-right difference-legend no-data" />
-            </div>
-          </div>
-          :
-          <div>
-            <div className="tooltip-header">
-              <b>TRAFFIC (28 days)</b>
-            </div>
-            <div>
-              Peak
-              <span className="pull-right">
-                {this.props.maxTransfer ? this.props.maxTransfer.split(' ')[0] : ''}
-                <span className="data-suffix"> {this.props.maxTransfer ?
-                  this.props.maxTransfer.split(' ')[1] : ''}</span>
-              </span>
-            </div>
-            <div>
-              Average <span className="pull-right">
-                {this.props.avgTransfer ? this.props.avgTransfer.split(' ')[0] : ''}
-                <span className="data-suffix"> {this.props.avgTransfer ?
-                  this.props.avgTransfer.split(' ')[1] : ''}</span>
-              </span>
-            </div>
-            <div>
-              Low <span className="pull-right">
-                {this.props.minTransfer ? this.props.minTransfer.split(' ')[0] : ''}
-                <span className="data-suffix"> {this.props.minTransfer ?
-                  this.props.minTransfer.split(' ')[1] : ''}</span>
-              </span>
-            </div>
-          </div>
+          <DifferenceTooltip/>
+          : <TrafficTooltip
+            date={tooltipDate}
+            avgTransfer={avgTransfer}
+            maxTransfer={maxTransfer}
+            minTransfer={minTransfer}/>
         }
-        </Tooltip>)
+      </Tooltip>)
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <Link className="content-item-chart-link" to={this.props.linkTo}>
-            <div className="glow"></div>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
@@ -231,9 +219,24 @@ class ContentItemChart extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {this.props.differenceData.size && !this.props.fetchingMetrics ?
-                <svg className="content-item-chart-svg difference-arc"
-                  viewBox={differenceArcViewBox}>
+              <svg className="content-item-chart-svg difference-arc"
+                viewBox={differenceArcViewBox}>
+                <g className="hover-info">
+                  {pie(daySlices).reduce((slices, arc, i) => {
+                    if(!(i % 2)) {
+                      const data = this.props.dailyTraffic.get(Math.floor(i / 2))
+                      if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
+                        slices.push(
+                          <path key={i} className="day-arc" d={dayArc(arc)}
+                            onMouseEnter={this.sliceHover(data)}
+                            onMouseLeave={this.sliceHover(null)}/>
+                        )
+                      }
+                    }
+                    return slices
+                  }, [])}
+                </g>
+                {this.props.differenceData.size && !this.props.fetchingMetrics ?
                   <g onMouseEnter={this.differenceHover(true)}
                     onMouseLeave={this.differenceHover(false)}>
                     {
@@ -243,13 +246,14 @@ class ContentItemChart extends React.Component {
                           data === 0 ? 'avg' :
                           data > 0 ? 'above-avg' : ''
                         return (
-                          <path key={i} d={arc(arcs)} className={style} />
+                          <path key={i} d={differenceArc(arcs)}
+                            className={style} />
                         )
                       })
                     }
                   </g>
-                </svg>
-              : ''}
+                : ''}
+              </svg>
             </ReactCSSTransitionGroup>
             <div className="text-content"
               style={{width: innerRadius * 2 - 20, height: innerRadius * 2 - 20}}>
@@ -291,6 +295,10 @@ class ContentItemChart extends React.Component {
                   <IconConfiguration/>
                 </Link> : ''
               }
+              <Link to="/starburst-help"
+                className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
+                ?
+              </Link>
             </ButtonToolbar>
           </div>
         </div>
@@ -308,6 +316,7 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   differenceData: React.PropTypes.instanceOf(Immutable.List),
@@ -322,6 +331,7 @@ ContentItemChart.propTypes = {
   timeToFirstByte: React.PropTypes.string
 }
 ContentItemChart.defaultProps = {
+  dailyTraffic: Immutable.List(),
   differenceData: Immutable.List(),
   primaryData: Immutable.List(),
   secondaryData: Immutable.List()

@@ -2,12 +2,15 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, Row, Table } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
 import numeral from 'numeral'
 
+import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
+import * as metricsActionCreators from '../redux/modules/metrics'
 import * as purgeActionCreators from '../redux/modules/purge'
 import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -87,6 +90,34 @@ export class Property extends React.Component {
         max_countries: 3
       })
     ]).then(this.props.visitorsActions.finishFetching)
+    if(!this.props.properties || !this.props.properties.size) {
+      this.props.hostActions.fetchHosts(
+        this.props.params.brand,
+        this.props.params.account,
+        this.props.params.group
+      )
+    }
+    if(!this.props.activeAccount || !this.props.activeAccount.size) {
+      this.props.accountActions.fetchAccount(
+        this.props.params.brand,
+        this.props.params.account
+      )
+    }
+    if(!this.props.activeGroup || !this.props.activeGroup.size) {
+      this.props.groupActions.fetchGroup(
+        this.props.params.brand,
+        this.props.params.account,
+        this.props.params.group
+      )
+    }
+    if(!this.props.metrics || !this.props.metrics.size) {
+      this.props.metricsActions.fetchHostMetrics({
+        account: this.props.params.account,
+        group: this.props.params.group,
+        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('day').format('X')
+      })
+    }
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -263,22 +294,16 @@ export class Property extends React.Component {
               <AnalysisByTime axes={true} padding={30}
                 primaryData={metrics_traffic.reverse()}
                 secondaryData={historical_traffic.reverse()}
+                primaryLabel="Selected Period"
+                comparisonLabel="Comparison Period"
+                showLegend={true}
+                showTooltip={false}
                 dataKey='bits_per_second'
                 width={this.state.byTimeWidth}
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
                 yAxisCustomFormat={formatBitsPerSecond}/>
-              <div className="chart-labels">
-                <svg width="20" height="20">
-                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
-                </svg>
-                Selected Period
-                <svg width="20" height="20">
-                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
-                </svg>
-                Comparison Period
-              </div>
             </div>
           </div>
         </Content>
@@ -296,6 +321,9 @@ export class Property extends React.Component {
 Property.displayName = 'Property'
 Property.propTypes = {
   account: React.PropTypes.string,
+  accountActions: React.PropTypes.object,
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
@@ -304,10 +332,12 @@ Property.propTypes = {
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   id: React.PropTypes.string,
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
+  metricsActions: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
@@ -320,9 +350,21 @@ Property.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
 }
+Property.defaultProps = {
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  activeHost: Immutable.Map(),
+  activePurge: Immutable.Map(),
+  metrics: Immutable.List(),
+  properties: Immutable.List(),
+  trafficByTime: Immutable.List(),
+  visitorsByCountry: Immutable.Map()
+}
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
     fetching: state.host.get('fetching'),
@@ -338,7 +380,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

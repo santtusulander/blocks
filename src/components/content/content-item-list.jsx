@@ -4,9 +4,9 @@ import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
-import AnalysisByTime from '../components/analysis/by-time'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconConfiguration from '../components/icons/icon-configuration.jsx'
+import AnalysisByTime from '../analysis/by-time'
+import IconChart from '../icons/icon-chart.jsx'
+import IconConfiguration from '../icons/icon-configuration.jsx'
 
 class ContentItemList extends React.Component {
   constructor(props) {
