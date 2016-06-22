@@ -24,6 +24,7 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
+import DateRangeSelect from '../components/date-range-select'
 
 export class Property extends React.Component {
   constructor(props) {
@@ -32,8 +33,10 @@ export class Property extends React.Component {
     this.state = {
       byLocationWidth: 0,
       byTimeWidth: 0,
+      endDate: moment.utc().endOf('day'),
       purgeActive: false,
-      propertyMenuOpen: false
+      propertyMenuOpen: false,
+      startDate: moment.utc().startOf('month')
     }
 
     this.togglePurge = this.togglePurge.bind(this)
@@ -42,6 +45,7 @@ export class Property extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
     this.notificationTimeout = null
+    this.changeDateRange = this.changeDateRange.bind(this)
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -54,13 +58,29 @@ export class Property extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.location.query.name !== this.props.location.query.name) {
-      this.fetchData(nextProps.location.query.name)
+      // reset to month to date for new property
+      this.setState({
+        startDate: moment.utc().startOf('month'),
+        endDate: moment.utc().endOf('day')
+      }, () => {
+        this.fetchHost(nextProps.location.query.name)
+        this.fetchData(nextProps.location.query.name)
+      })
     }
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
-  fetchData(property) {
+  dateDiff() {
+    return this.state.endDate.diff(this.state.startDate)
+  }
+  changeDateRange (startDate, endDate) {
+    this.setState({
+      startDate: startDate,
+      endDate: endDate
+    }, () => this.fetchData(this.props.location.query.name))
+  }
+  fetchHost(property) {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(
       this.props.params.brand,
@@ -68,23 +88,18 @@ export class Property extends React.Component {
       this.props.params.group,
       property
     )
-    this.props.trafficActions.startFetching()
-    Promise.all([
-      this.props.trafficActions.fetchByTime({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        property: property,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X')
-      })
-    ]).then(this.props.trafficActions.finishFetching)
+  }
+  fetchData(property) {
+    if(!this.props.activeHost || !this.props.activeHost.size) {
+      this.fetchHost(property)
+    }
     Promise.all([
       this.props.visitorsActions.fetchByCountry({
         account: this.props.params.account,
         group: this.props.params.group,
         property: property,
-        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('day').format('X'),
+        startDate: this.state.startDate.format('X'),
+        endDate: this.state.endDate.format('X'),
         granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
@@ -110,14 +125,12 @@ export class Property extends React.Component {
         this.props.params.group
       )
     }
-    if(!this.props.metrics || !this.props.metrics.size) {
-      this.props.metricsActions.fetchHostMetrics({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('day').format('X')
-      })
-    }
+    this.props.metricsActions.fetchHostMetrics({
+      account: this.props.params.account,
+      group: this.props.params.group,
+      startDate: this.state.startDate.format('X'),
+      endDate: this.state.endDate.format('X')
+    })
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -179,10 +192,10 @@ export class Property extends React.Component {
       metric => metric.get('property') === this.props.location.query.name)
       || Immutable.Map()
     const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
-    // Add 28 days to the historical data so it matches up
+    // Add time difference to the historical data so it matches up
     const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
       .map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp).add(28, 'days').toDate()
+        datapoint.timestamp = moment(datapoint.timestamp).add(this.dateDiff(), 'ms').toDate()
         return datapoint
       })
     const avg_transfer_rate = metrics.has('transfer_rates') ?
@@ -286,7 +299,10 @@ export class Property extends React.Component {
               </div>
               <h3 className="has-btn">
                 Traffic Summary
-                <span className="heading-suffix"> (last 28 days)</span>
+                <DateRangeSelect
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  changeDateRange={this.changeDateRange}/>
               </h3>
             </div>
 
@@ -343,7 +359,6 @@ Property.propTypes = {
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
-  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
@@ -357,7 +372,6 @@ Property.defaultProps = {
   activePurge: Immutable.Map(),
   metrics: Immutable.List(),
   properties: Immutable.List(),
-  trafficByTime: Immutable.List(),
   visitorsByCountry: Immutable.Map()
 }
 
@@ -371,7 +385,6 @@ function mapStateToProps(state) {
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     metrics: state.metrics.get('hostMetrics'),
     properties: state.host.get('allHosts'),
-    trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
