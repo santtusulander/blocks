@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
-import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
+import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import './filter-checklist-dropdown.scss'
 
@@ -93,24 +93,26 @@ export class FilterChecklistDropdown extends React.Component {
           </div>
           }
           <Dropdown.Menu>
-            {filteredResults.map((option, i) =>
-              <li key={i}
-                  role="presentation"
-                  className="children">
-                <Input type="checkbox"
-                       label={option.get('label')}
-                       value={option.get('label')}
-                       checked={checkedResults.indexOf(option.get('label')) !== -1}
-                       onChange={this.handleCheck}/>
+            <li>
+              <ul className='scrollable-menu'>
+                {filteredResults.map((option, i) =>
+                  <li key={i}
+                      role="presentation"
+                      className="children">
+                    <Input type="checkbox"
+                           label={option.get('label')}
+                           value={option.get('value')}
+                           checked={checkedResults.indexOf(option.get('value')) !== -1}
+                           onChange={this.handleCheck}/>
+                  </li>
+                )}
+              </ul>
+              <li className="clear-container">
+                <Button bsClass="btn btn-block btn-primary"
+                        onClick={this.handleClear}>Clear</Button>
               </li>
-            )}
+            </li>
           </Dropdown.Menu>
-          {dropdownOpen &&
-          <div className="clear-container">
-            <Button bsClass="btn btn-block btn-primary"
-                    onClick={this.handleClear}>Clear</Button>
-          </div>
-          }
         </Dropdown>
       </div>
     )
