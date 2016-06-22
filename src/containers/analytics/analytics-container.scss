@@ -1,3 +1,5 @@
+@import '../../styles/base/variables';
+@import '../../styles/base/colors';
 @import '../../../vendor/bootstrap/stylesheets/bootstrap-compass';
 @import '../../../vendor/bootstrap/stylesheets/bootstrap';
 
@@ -10,5 +12,60 @@
     @extend .container-fluid;
 
     padding: 20px 60px;
+  }
+
+  .analysis-data-box {
+    width: 40%;
+    max-width: 350px;
+    padding: $btn-height / 2;
+
+    @include md {
+      padding: $md-btn-height / 2;
+    }
+
+    @include print {
+      padding: 0;
+    }
+
+    &.wide {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
+    }
+
+    h4 {
+      margin-bottom: 5px;
+      font-size: $font-size-sm;
+      text-transform: uppercase;
+
+      @include md {
+        font-size: $md-font-size-sm;
+      }
+
+      @include print {
+        font-size: $print-font-size;
+      }
+    }
+
+    p {
+      margin-bottom: 5px;
+      font-size: 40px;
+      font-weight: bold;
+
+      @include sm {
+        font-size: 32px;
+      }
+
+      @include print {
+        font-size: $print-font-size * 2;
+      }
+    }
   }
 }

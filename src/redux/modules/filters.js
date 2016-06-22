@@ -5,6 +5,7 @@ const initialState = //Immutable.Map();
 Immutable.fromJS({
   filters: {
     dateRange: {startDate: null, endDate: null},
+    dateRangeLabel: '',
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],
     onOffNet: ['on-net', 'off-net'],
