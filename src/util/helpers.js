@@ -117,8 +117,18 @@ export function getTabLink( path, tabName){
   return linkArr.join('/')
 
 }
-
+/* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName( path ){
   let linkArr = path.split('/')
   return linkArr.pop()
+}
+
+/* Constructs nested link from linkParts -array */
+export function generateNestedLink( base, linkParts ){
+  //remove nulls
+  linkParts = linkParts.filter( (e) => {
+    return e
+  })
+
+  return base + '/' + linkParts.join("/")
 }

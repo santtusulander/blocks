@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
+import { generateNestedLink } from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -12,15 +13,6 @@ import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
-
-function generateNestedLink( base, linkArr ){
-  //remove nulls
-  linkArr = linkArr.filter( (e) => {
-    return e
-  })
-
-  return base + '/' + linkArr.join("/")
-}
 
 const Navigation = (props) => {
   const activeAccountId = props.activeAccount && props.activeAccount.get('id') || null;
