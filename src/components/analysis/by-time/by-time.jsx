@@ -336,6 +336,7 @@ class AnalysisByTime extends React.Component {
           primaryValue={this.state.primaryTooltipText}
           secondaryLabel={this.props.secondaryLabel}
           secondaryValue={this.state.secondaryTooltipText}
+          comparisonLabel={this.props.comparisonLabel}
       />}
       </div>
     )
@@ -347,6 +348,7 @@ AnalysisByTime.propTypes = {
   area: React.PropTypes.bool,
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
+  comparisonLabel: React.PropTypes.string,
   dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,

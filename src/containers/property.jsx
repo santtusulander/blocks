@@ -294,22 +294,16 @@ export class Property extends React.Component {
               <AnalysisByTime axes={true} padding={30}
                 primaryData={metrics_traffic.reverse()}
                 secondaryData={historical_traffic.reverse()}
+                primaryLabel="Selected Period"
+                comparisonLabel="Comparison Period"
+                showLegend={true}
+                showTooltip={false}
                 dataKey='bits_per_second'
                 width={this.state.byTimeWidth}
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
                 yAxisCustomFormat={formatBitsPerSecond}/>
-              <div className="chart-labels">
-                <svg width="20" height="20">
-                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
-                </svg>
-                Selected Period
-                <svg width="20" height="20">
-                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
-                </svg>
-                Comparison Period
-              </div>
             </div>
           </div>
         </Content>

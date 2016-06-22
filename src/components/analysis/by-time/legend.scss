@@ -27,6 +27,18 @@
     }
   }
 
+  .comparison {
+    .legend-label {
+      margin-right: 5px;
+      &::before {
+        content: none;
+      }
+    }
+    .secondary-label {
+      margin-right: 5px;
+    }
+  }
+
   .legend-value {
     text-align: right;
     min-width: 130px;
