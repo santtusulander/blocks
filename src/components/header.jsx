@@ -6,7 +6,7 @@ import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 import {Breadcrumbs} from '../components/breadcrumbs.jsx'
-import UdnAdminToolbar from '../components/udn-admin-toolbar.jsx'
+import UdnAdminToolbar from '../components/udn-admin-toolbar/udn-admin-toolbar.jsx'
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
@@ -66,6 +66,9 @@ class Header extends React.Component {
     const activeAccount = this.props.activeAccount ?
       this.props.activeAccount.get('id')
       : null
+    const activeGroup = this.props.activeGroup ?
+      this.props.activeGroup.get('id')
+      : null
     const activeHost = this.props.location.query.name
     // Hide Configurations for all levels higher than group summary / property levels
     let hideConfigurations = /(\/content\/accounts\/)/.test(this.props.pathname) ||
@@ -87,10 +90,26 @@ class Header extends React.Component {
       /*/(\/content\/configuration\/)/.test(this.props.pathname)*/
 
 
-    let contentActive = new RegExp( getRoute('content'), 'g' ) ? ' active' : ''
+    let contentActive = new RegExp( getRoute('content'), 'g' ).test(this.props.pathname) ? ' active' : ''
     const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(this.props.pathname)
 
     const adminSection = 'Account'
+    let contentBreadcrumbs = [];
+
+    //create breadcrumbs for content -pages
+    if (contentActive) {
+      if (this.props.params.account === activeAccount) {
+        contentBreadcrumbs.push( {url: `/content/groups/udn/${this.props.params.account}`, label:  this.props.params.account === activeAccount ? this.props.activeAccount.get('name') : 'ACCOUNT'})
+      }
+
+      if (this.props.params.group === activeGroup) {
+        contentBreadcrumbs.push( {url: `/content/hosts/udn/${this.props.params.account}/${this.props.params.group}`, label:  this.props.params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'})
+      }
+
+      if (activeHost) {
+        contentBreadcrumbs.push( {url: `/content/property/udn/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(activeHost).replace(/\./g, "%2e")}`, label:  activeHost})
+      }
+    }
 
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
@@ -114,8 +133,13 @@ class Header extends React.Component {
           <Breadcrumbs links={this.props.breadcrumbs} />
         }
 
+        { contentActive &&
+          <Breadcrumbs links={contentBreadcrumbs} />
+        }
 
-        { (showContentBreadcrumbs /* && !analyticsActive*/) &&
+
+
+        { /* (showContentBreadcrumbs  && !analyticsActive) &&
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
             <li className="breadcrumb-back">
               <Link to={`/content/accounts/udn`} />
@@ -142,14 +166,14 @@ class Header extends React.Component {
                   {activeHost}
                 </Link>
               </li>
-              }
+            }
             <li className="active">
               {/(\/content\/property\/)/.test(this.props.pathname) && activeHost}
               {/(\/content\/configuration\/)/.test(this.props.pathname) && 'Configuration'}
               {/(\/analytics\/property\/)/.test(this.props.pathname) && 'Analytics'}
             </li>
           </ol>
-        }
+        */ }
         </Nav>
 
         { /* NOT NEEDED ANYMORE
