@@ -4,6 +4,7 @@ import {getRoute} from '../routes.jsx'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
+  bytes = bytes || 0
   if(bytes < 1000) {
     formatted = numeral(bytes).format('0,0')+' B'
   }
@@ -24,6 +25,7 @@ export function formatBytes(bytes) {
 
 export function formatBitsPerSecond(bits_per_second, decimals) {
   const digits = decimals ? '0,0.00' : '0,0'
+  bits_per_second = bits_per_second || 0
   let formatted = numeral(bits_per_second / 1000000000000000).format(digits)+' Pbps'
   if(bits_per_second < 1000) {
     formatted = numeral(bits_per_second).format(digits)+' bps'

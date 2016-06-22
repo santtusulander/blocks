@@ -72,7 +72,7 @@ export class Property extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   dateDiff() {
-    return this.state.endDate.diff(this.state.startDate)
+    return this.state.endDate.diff(this.state.startDate) + 1
   }
   changeDateRange (startDate, endDate) {
     this.setState({
@@ -125,12 +125,14 @@ export class Property extends React.Component {
         this.props.params.group
       )
     }
-    this.props.metricsActions.fetchHostMetrics({
+    const metricsOpts = {
       account: this.props.params.account,
       group: this.props.params.group,
       startDate: this.state.startDate.format('X'),
-      endDate: this.state.endDate.format('X')
-    })
+      endDate: this.state.endDate.format('X'),
+      property: property
+    }
+    this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -188,21 +190,25 @@ export class Property extends React.Component {
     }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
-    const metrics = this.props.metrics.find(
-      metric => metric.get('property') === this.props.location.query.name)
-      || Immutable.Map()
-    const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
+    const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
+    const metrics_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
+      return {
+        timestamp: moment(hour.get('timestamp'), 'X').toDate(),
+        bits_per_second: hour.getIn(['transfer_rates','average'])
+      }
+    }).toJS()
     // Add time difference to the historical data so it matches up
-    const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
-      .map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp).add(this.dateDiff(), 'ms').toDate()
-        return datapoint
-      })
-    const avg_transfer_rate = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('average').split(' ') : [0, null]
-    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
-    const avg_ttfb = metrics.has('avg_ttfb') ? metrics.get('avg_ttfb') : 0
+    const historical_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
+      return {
+        timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
+        bits_per_second: hour.getIn(['transfer_rates','average'])
+      }
+    }).toJS()
+    const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
+    const avg_cache_hit_rate = totals && totals.get('chit_ratio')
+    const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    // console.log(this.props.hourlyTraffic.toJS())
     return (
       <PageContainer className="property-container">
         <Content>
@@ -294,7 +300,7 @@ export class Property extends React.Component {
               <div className="kpi">
                 Bandwidth (avg/s)
                 <h3>
-                  {avg_transfer_rate}
+                  {formatBitsPerSecond(avg_transfer_rate, true)}
                 </h3>
               </div>
               <h3 className="has-btn">
@@ -308,8 +314,8 @@ export class Property extends React.Component {
 
             <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
               <AnalysisByTime axes={true} padding={30}
-                primaryData={metrics_traffic.reverse()}
-                secondaryData={historical_traffic.reverse()}
+                primaryData={metrics_traffic}
+                secondaryData={historical_traffic}
                 primaryLabel="Selected Period"
                 comparisonLabel="Comparison Period"
                 showLegend={true}
@@ -350,9 +356,9 @@ Property.propTypes = {
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
+  hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,
   location: React.PropTypes.object,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
@@ -370,7 +376,10 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
-  metrics: Immutable.List(),
+  hourlyTraffic: Immutable.fromJS({
+    now: [],
+    history: []
+  }),
   properties: Immutable.List(),
   visitorsByCountry: Immutable.Map()
 }
@@ -383,7 +392,7 @@ function mapStateToProps(state) {
     activePurge: state.purge.get('activePurge'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    metrics: state.metrics.get('hostMetrics'),
+    hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
     trafficFetching: state.traffic.get('fetching'),
     visitorsByCountry: state.visitors.get('byCountry'),
