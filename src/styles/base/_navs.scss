@@ -6,6 +6,9 @@
 .navbar-nav,
 .navbar-header {
 
+  //add padding for sidenav
+  padding-left: 45px;
+
   &,
   .container-fluid > & {
     float: left;

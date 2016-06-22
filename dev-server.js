@@ -13,6 +13,9 @@ var server = new WebpackDevServer(compiler, {
     '/VCDN*': {
       target: 'http://api.cdx-stag.unifieddeliverynetwork.net'
     },
+    /*'/VCDN*': {
+      target: 'http://localhost:8080'
+    },*/
     '/analytics*': {
       target: 'http://localhost:3030'
     }

@@ -10,6 +10,8 @@ import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
+import Navigation from '../components/navigation/navigation.jsx'
+
 import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
@@ -121,6 +123,14 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
+        <Navigation
+          activeAccount={this.props.activeAccount}
+          activeGroup={this.props.activeGroup}
+          activeHost={this.props.activeHost}
+          params={this.props.params}
+          pathname={this.props.location.pathname}
+        />
+
         {this.props.location.pathname !== '/login' &&
           this.props.location.pathname !== '/starburst-help' ?
           <Header
@@ -129,6 +139,7 @@ export class Main extends React.Component {
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
             activatePurge={this.activatePurge(firstProperty)}
+            breadcrumbs={this.props.breadcrumbs}
             fetching={this.props.fetching}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
@@ -216,7 +227,8 @@ function mapStateToProps(state) {
     showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
     username: state.user.get('username'),
-    viewingChart: state.ui.get('viewingChart')
+    viewingChart: state.ui.get('viewingChart'),
+    breadcrumbs: state.ui.get('breadcrumbs')
   };
 }
 

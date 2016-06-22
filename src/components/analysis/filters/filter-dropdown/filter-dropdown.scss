@@ -1,0 +1,40 @@
+@import "../../../../styles/base/variables";
+@import "../../../../styles/base/colors";
+
+.dropdown-filter {
+  .filter-container {
+    clear: both;
+    height: 60px;
+    padding: 10px;
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    border-top: 1px solid rgba($pale-blue, 0.1);
+
+    input[type="text"] {
+      border: none;
+      background: #000;
+      display: block;
+      width: 100%;
+      height: 40px;
+      padding: 10px 15px;
+      border-radius: 20px;
+    }
+  }
+
+  .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &.has-parent {
+    .parent > a {
+      font-weight: bold;
+    }
+    .children > a {
+      &:before {
+        content: "› ";
+      }
+    }
+  }
+}

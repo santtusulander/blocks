@@ -2,8 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link } from 'react-router'
 
+import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
+import {Breadcrumbs} from '../components/breadcrumbs.jsx'
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
@@ -76,18 +78,31 @@ class Header extends React.Component {
       /(\/analytics\/account\/)/.test(this.props.pathname) ||
       this.props.pathname === '/security' ||
       this.props.pathname === '/services'
+
     // Show breadcrumbs only for property levels
-    let showBreadcrumbs = /(\/content\/property\/)/.test(this.props.pathname) ||
-      /(\/content\/configuration\/)/.test(this.props.pathname) ||
-      /(\/analytics\/property\/)/.test(this.props.pathname)
-    let contentActive = /(\/content\/)/.test(this.props.pathname) ? ' active' : ''
+    let showBreadcrumbs = true;
+    /*/(\/content\/property\/)/.test(this.props.pathname) ||
+      /(\/content\/configuration\/)/.test(this.props.pathname)
+    */
+
+    let contentActive = new RegExp( getRoute('content'), 'g' ) ? ' active' : ''
+    const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(this.props.pathname)
+
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
           className={this.state.animatingGradient ?
             'header-gradient animated' :
-            'header-gradient'}></div>
-        {showBreadcrumbs ?
+            'header-gradient'}>
+        </div>
+
+        <Nav className="main-nav">
+
+        { analyticsActive &&
+          <Breadcrumbs links={this.props.breadcrumbs} />
+        }
+
+        { (showBreadcrumbs && !analyticsActive) &&
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
             <li className="breadcrumb-back">
               <Link to={`/content/accounts/udn`} />
@@ -97,15 +112,15 @@ class Header extends React.Component {
                 {activeAccount ?
                   activeAccount == this.props.params.account ?
                     this.props.activeAccount.get('name')
-                  : 'ACCOUNT'
-                : null}
+                    : 'ACCOUNT'
+                  : null}
               </Link>
             </li>
             <li>
               <Link to={`/content/hosts/udn/${this.props.params.account}/${this.props.params.group}`}>
                 {this.props.activeGroup ?
                   this.props.activeGroup.get('name')
-                : 'GROUP'}
+                  : 'GROUP'}
               </Link>
             </li>
             {/(\/content\/property\/)/.test(this.props.pathname) ? null :
@@ -114,14 +129,17 @@ class Header extends React.Component {
                   {activeHost}
                 </Link>
               </li>
-            }
+              }
             <li className="active">
               {/(\/content\/property\/)/.test(this.props.pathname) && activeHost}
               {/(\/content\/configuration\/)/.test(this.props.pathname) && 'Configuration'}
               {/(\/analytics\/property\/)/.test(this.props.pathname) && 'Analytics'}
             </li>
-          </ol> :
-        <div>
+          </ol>
+        }
+        </Nav>
+
+        { /* NOT NEEDED ANYMORE
           <Navbar.Header>
             <Navbar.Brand>
               <Link to={`/content/accounts/udn`}>Ericsson</Link>
@@ -180,11 +198,14 @@ class Header extends React.Component {
               :
                 <a href="#" id="purge-link" className="main-nav-link"
                   onClick={this.activatePurge}>
+
                   Purge
                 </a>
               }
             </li>
           </Nav>
+          */ }
+
           <Nav pullRight={true}>
             <li>
               <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
@@ -259,7 +280,6 @@ class Header extends React.Component {
               </Dropdown>
             </li>
           </Nav>
-        </div>}
       </Navbar>
     );
   }

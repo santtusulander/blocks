@@ -7,7 +7,8 @@ import AnalysisURLList from '../url-list'
 
 const AnalysisFileError = props => {
   const { serviceTypes, statusCodes, summary, urls } = props
-  let filteredUrls = List()
+
+  /*let filteredUrls = List()
   serviceTypes.forEach(activeServiceType => {
     statusCodes.forEach(activeStatusCode => {
       filteredUrls = filteredUrls.concat(
@@ -31,7 +32,10 @@ const AnalysisFileError = props => {
         filteredErrorSummary.serverErrs.push({ value, code })
       }
     }
-  }
+  }*/
+
+  const filteredErrorSummary = summary;
+  const filteredUrls = urls;
   const { clientErrs, serverErrs } = filteredErrorSummary
 
   return (
