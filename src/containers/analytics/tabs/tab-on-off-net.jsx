@@ -7,6 +7,7 @@ import moment from 'moment'
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
+import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabOnOffNet extends React.Component {
   constructor(props){
@@ -35,8 +36,7 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 
   fetchData(params, filters){
-    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
-    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
+    const {startDate, endDate} = getDateRange( filters )
 
     const fetchOpts = {
       account: params.account,

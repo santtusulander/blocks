@@ -8,9 +8,9 @@ function getUnit(stat) {
   return stat ? stat.split(' ')[1] : ''
 }
 
-const ContentTrafficTooltip = ({avgTransfer, maxTransfer, minTransfer}) => <div>
+const ContentTrafficTooltip = ({avgTransfer, maxTransfer, minTransfer, date}) => <div>
   <div className="tooltip-header">
-    <b>TRAFFIC (28 days)</b>
+    <b>Bandwidth</b> {date}
   </div>
   <div>
     Peak

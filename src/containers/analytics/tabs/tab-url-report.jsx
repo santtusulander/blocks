@@ -7,6 +7,7 @@ import moment from 'moment'
 import AnalysisURLReport from '../../../components/analysis/url-report.jsx'
 
 import * as reportsActionCreators from '../../../redux/modules/reports'
+import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabUrlReport extends React.Component {
   constructor(props){
@@ -35,8 +36,7 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 
   fetchData(params, filters){
-    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
-    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
+    const {startDate, endDate} = getDateRange( filters )
 
     const fetchOpts = {
       account: params.account,

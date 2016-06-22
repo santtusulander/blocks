@@ -131,9 +131,9 @@ export class Main extends React.Component {
           pathname={this.props.location.pathname}
         />
 
-        {this.props.location.pathname !== '/login' ?
-
-        <Header
+        {this.props.location.pathname !== '/login' &&
+          this.props.location.pathname !== '/starburst-help' ?
+          <Header
             accounts={filteredAccounts}
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}

@@ -1,14 +1,26 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
+// import { Provider } from 'react-redux'
+// import { createStore } from 'redux'
 
-jest.dontMock('../security.jsx')
-const Security = require('../security.jsx')
+jest.unmock('../security.jsx')
+import { Security } from '../security.jsx'
 
 describe('Security', () => {
+  let subject, props = null
+  beforeEach(() => {
+    props = {
+      fetchAccountData: jest.genMockFunction(),
+      params: { subPage: 'a' },
+      securityActions: {
+        toggleActiveCertificates: jest.genMockFunction(),
+        changeCertificateToEdit: jest.genMockFunction(),
+        deleteSSLCertificate: jest.genMockFunction()
+      }
+    }
+    subject = () => shallow(<Security { ...props }/>)
+  })
   it('should exist', () => {
-    let security = TestUtils.renderIntoDocument(
-      <Security />
-    );
-    expect(TestUtils.isCompositeComponent(security)).toBeTruthy();
+    expect(subject().length).toBe(1);
   });
 })

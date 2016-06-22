@@ -2,7 +2,7 @@ import React from 'react'
 
 const ContentDifferenceTooltip = () => <div>
   <div className="tooltip-header">
-    <b>TRAFFIC VS 28 DAYS AGO</b>
+    <b>Bandwidth</b> vs 28 days ago
   </div>
   <div>
     Higher

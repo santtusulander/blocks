@@ -7,6 +7,8 @@ import moment from 'moment'
 import AnalysisVisitors from '../../../components/analysis/visitors.jsx'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
+import { getDateRange } from '../../../redux/util.js'
+
 class AnalyticsTabVisitors extends React.Component {
   constructor(props){
     super(props)
@@ -36,8 +38,7 @@ class AnalyticsTabVisitors extends React.Component {
   }
 
   fetchData(params, filters){
-    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
-    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
+    const {startDate, endDate} = getDateRange( filters )
 
     const fetchOpts = {
       account: params.account,

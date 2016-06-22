@@ -7,6 +7,8 @@ import moment from 'moment'
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
+import * as metricsActionCreators from '../../../redux/modules/metrics'
+import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props){
@@ -35,8 +37,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   fetchData(params, filters){
-    const endDate = filters.get('dateRange').endDate || moment().utc().endOf('day')
-    const startDate = filters.get('dateRange').startDate || moment().utc().startOf('month')
+    const {startDate, endDate} = getDateRange( filters )
 
     const fetchOpts = {
       account: params.account,
@@ -52,10 +53,15 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
+    //TODO: fetchMetrics !!!!
+
   }
 
   render(){
-    const metrics = this.props.metrics
+    // TODO: This should have its own endpoint so we don't have to fetch info
+    // for all accounts
+    const metrics    = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
+
 
     const peakTraffic = metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
@@ -71,7 +77,7 @@ class AnalyticsTabTraffic extends React.Component {
           avgTraffic={avgTraffic}
           byCountry={this.props.trafficByCountry}
           byTime={this.props.trafficByTime}
-          dateRange={'-date range-'}
+          dateRange={this.props.filters.get('dateRangeLabel')}
           fetching={false}
           lowTraffic={lowTraffic}
           peakTraffic={peakTraffic}
@@ -94,7 +100,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    metricsActions: bindActionCreators(metricsActionCreators, dispatch)
   }
 }
 
