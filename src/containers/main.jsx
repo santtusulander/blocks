@@ -139,6 +139,7 @@ export class Main extends React.Component {
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
             activatePurge={this.activatePurge(firstProperty)}
+            breadcrumbs={this.props.breadcrumbs}
             fetching={this.props.fetching}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
@@ -227,7 +228,7 @@ function mapStateToProps(state) {
     theme: state.ui.get('theme'),
     username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart'),
-    breadCrumbps: state.ui.get('breadCrumbs')
+    breadcrumbs: state.ui.get('breadcrumbs')
   };
 }
 

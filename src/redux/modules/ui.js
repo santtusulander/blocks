@@ -40,7 +40,8 @@ export const defaultUI = fromJS({
   analysisServiceTypes: ['http', 'https'],
   analysisErrorStatusCodes: STATUS_CODES,
   analysisSPChartType: 'bar',
-  showErrorDialog: false
+  showErrorDialog: false,
+  breadcrumbs: []
 })
 
 // REDUCERS
@@ -113,8 +114,7 @@ export function analysisStatusCodeToggled(state, action) {
 }
 
 export function setBreadcrumbValues(state, action) {
-
-  return state
+  return state.set('breadcrumbs', action.payload)
 }
 
 export default handleActions({

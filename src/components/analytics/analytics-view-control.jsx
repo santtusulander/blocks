@@ -107,13 +107,15 @@ const AnalyticsViewControl = (props) => {
          value={ props.params.group }
        />
 
-         <Select
-         options={ propertyOptions }
-         onSelect={ (val) => {
-           props.history.pushState(null, getAnalyticsUrl('property', val, props.params) )
-           } }
-         value={ props.params.property }
-       />
+    {propertyOptions.count() > 0 &&
+      <Select
+        options={ propertyOptions }
+        onSelect={ (val) => {
+          props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
+        } }
+        value={ props.params.property }
+      />
+    }
 
       <ButtonToolbar className="pull-right">
         <Button bsStyle="primary" >Export</Button>

@@ -32,8 +32,19 @@ function getNameById( list, id ) {
 
   return null
 }
+/* NOT USED ATM
+function getAnalysisType( params ){
+  if (params.property) return 'property'
+  if (params.group) return 'group'
+  if (params.account) return 'account'
+  if (params.brand) return 'brand'
+
+  return null
+}
+*/
 
 class AnalyticsContainer extends React.Component {
+
   constructor(props){
     super(props)
 
@@ -41,22 +52,17 @@ class AnalyticsContainer extends React.Component {
   }
 
   componentDidMount(){
-    this.props.params.brand && this.props.accountActions.fetchAccounts(this.props.params.brand)
-    this.props.params.account && this.props.groupActions.fetchGroups(this.props.params.brand, this.props.params.account)
-    this.props.params.group && this.props.propertyActions.fetchHosts(this.props.params.brand, this.props.params.account, this.props.params.group)
-
-    //this.fetchData({})
+    this.fetchData(this.props.params, true)
   }
 
   componentWillReceiveProps( nextProps ) {
-    const params = JSON.stringify(this.props.params)
-    const prevParams = JSON.stringify(nextProps.params)
+    const prevParams = JSON.stringify(this.props.params)
+    const params = JSON.stringify(nextProps.params)
 
-
-    this.fetchData( nextProps.params)
+    if (params !== prevParams) this.fetchData( nextProps.params)
   }
 
-  /*componentDidUpdate() {
+  setBreadcrumbs() {
     let breadCrumbLinks = []
 
     if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: `/v2-analytics/${this.props.params.brand}`})
@@ -64,27 +70,34 @@ class AnalyticsContainer extends React.Component {
     if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`})
     if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
 
-    this.props.uiAction.setBreadcrumbs( breadCrumbLinks )
-  }*/
+    this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
+  }
 
-  fetchData(params){
+  fetchData(params, refresh){
+    let promises = [];
+
     /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
-    if(params.brand !== this.props.params.brand) {
-      this.props.accountActions.fetchAccounts(params.brand)
+    if(params.brand !== this.props.params.brand || refresh) {
+      promises.push( this.props.accountActions.fetchAccounts(params.brand) )
     }
 
     if(params.brand !== this.props.params.brand ||
-      params.account !== this.props.params.account ) {
+      params.account !== this.props.params.account || refresh) {
 
-      this.props.groupActions.fetchGroups(params.brand, params.account)
+      promises.push( this.props.groupActions.fetchGroups(params.brand, params.account) )
     }
 
     if ( params.brand !== this.props.params.brand ||
       params.account !== this.props.params.account ||
-      params.group !== this.props.params.group  ) {
+      params.group !== this.props.params.group  || refresh) {
 
-      this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
+      promises.push(this.props.propertyActions.fetchHosts(params.brand, params.account, params.group) )
     }
+
+    //Set breadcrumbs when finished
+    Promise.all(promises).then(() => {
+      this.setBreadcrumbs()
+    });
   }
 
   onFilterChange( filterName, filterValue){
