@@ -17,9 +17,8 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
-//import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
-
-import {getTabName} from '../../util/helpers.js'
+import {getRoute} from '../../routes.jsx'
+import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
 
 import './analytics-container.scss'
 
@@ -32,7 +31,7 @@ function getNameById( list, id ) {
 
   return null
 }
-/* NOT USED ATM
+/* NOT USED ATM - maybe needed?
 function getAnalysisType( params ){
   if (params.property) return 'property'
   if (params.group) return 'group'
@@ -65,9 +64,9 @@ class AnalyticsContainer extends React.Component {
   setBreadcrumbs() {
     let breadCrumbLinks = []
 
-    if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: `/v2-analytics/${this.props.params.brand}`})
-    if (this.props.params.account) breadCrumbLinks.push({label: getNameById(this.props.accounts, this.props.params.account), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}`})
-    if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}`})
+    if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: getAnalyticsUrl('brand', this.props.params.brand, this.props.params)})
+    if (this.props.params.account) breadCrumbLinks.push({label: getNameById(this.props.accounts, this.props.params.account), url: getAnalyticsUrl('account', this.props.params.account, this.props.params)})
+    if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: getAnalyticsUrl('group', this.props.params.group, this.props.params)})
     if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
 
     this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
@@ -91,10 +90,11 @@ class AnalyticsContainer extends React.Component {
       params.account !== this.props.params.account ||
       params.group !== this.props.params.group  || refresh) {
 
-      promises.push(this.props.propertyActions.fetchHosts(params.brand, params.account, params.group) )
+      /*No need use promise-array to wait for properties as breadcrumbs for property is only its ID (www....)*/
+      this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
 
-    //Set breadcrumbs when finished
+    //Set breadcrumbs when finished (breadcrumbs need brand/account/group names)
     Promise.all(promises).then(() => {
       this.setBreadcrumbs()
     });
@@ -107,6 +107,7 @@ class AnalyticsContainer extends React.Component {
 
   render(){
 
+    /* TODO: should  be moved to consts ? */
     const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
       'visitors': ['date-range'],
@@ -122,7 +123,17 @@ class AnalyticsContainer extends React.Component {
         <Content>
           <PageHeader>
             <p>ANALYTICS</p>
-            <AnalyticsViewControl {...this.props} />
+
+            <AnalyticsViewControl
+              brands={this.props.brands}
+              accounts={this.props.accounts}
+              groups={this.props.groups}
+              properties={this.props.properties}
+              params={this.props.params}
+              location={this.props.location}
+              history={this.props.history}
+            />
+
           </PageHeader>
 
           <AnalyticsFilters

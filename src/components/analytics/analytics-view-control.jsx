@@ -7,7 +7,7 @@ import Select from '../select.jsx'
 import FilterDropdown from '../analysis/filters/filter-dropdown/filter-dropdown.jsx'
 
 import { getRoute } from '../../routes.jsx'
-import {getTabLink} from '../../util/helpers.js'
+import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
@@ -23,6 +23,7 @@ function createPropertyOptions( opts ){
   })
 }
 
+/* Not USED atm - will be used when filter dropdown is implemented
 function createDropdownOptions ( opts ) {
   return opts.map(opt => {
     return {
@@ -40,87 +41,59 @@ function createPropertyDropdownOptions ( opts ){
     }
   })
 }
-
-function getAnalyticsUrl( linkType, val, params ){
-
-  let url
-
-  const {brand,account,group,property} = params;
-
-  switch ( linkType ) {
-    case 'brand':
-      url = `${getRoute('analytics')}/${val}`
-      break;
-
-    case 'account':
-      url = `${getRoute('analytics')}/${brand}/${val}`
-      break;
-    case 'group':
-      url = `${getRoute('analytics')}/${brand}/${account}/${val}`
-      break;
-    case 'property':
-      url = `${getRoute('analytics')}/${brand}/${account}/${group}/${val}`
-      break;
-  }
-
-  return url
-}
+*/
 
 const AnalyticsViewControl = (props) => {
-  /*const brandOptions = createOptions( props.brands )
+  /*
+  const brandOptions = createOptions( props.brands )
+   */
+
   const accountOptions = createOptions( props.accounts )
-  */
   const groupOptions = createOptions( props.groups )
   const propertyOptions = createPropertyOptions( props.properties )
 
-
-  const groupDropdownOptions = createDropdownOptions( props.groups )
+  /*const groupDropdownOptions = createDropdownOptions( props.groups )
   const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
+  */
 
   return (
     <div className='analytics-view-control'>
 
-    {/*
-      <Select
-        options={ brandOptions }
-        onSelect={ (val) => {
-          props.history.pushState(null, getAnalyticsUrl('brand', val, props.params))
-        } }
-        value={ props.params.brand }
-        label={'Choose Brand'}
-      />
-
+    { /* If account is not selected (Needs to be: UDN ADMIN) */
+      !props.params.account &&
       <Select
         options={ accountOptions }
         onSelect={ (val) => {
-          props.history.pushState(null, getAnalyticsUrl('account', val, props.params) )
+          props.history.pushState(null, getAnalyticsUrl('account', val, props.params))
         } }
-        value={ props.params.account }
+        value={ props.params.group }
       />
-     */}
+      }
 
-       <Select
-         options={ groupOptions }
-         onSelect={ (val) => {
-           props.history.pushState(null, getAnalyticsUrl('group', val, props.params) )
-           } }
-         value={ props.params.group }
-       />
-
-    {propertyOptions.count() > 0 &&
+    {groupOptions.count() > 0 &&
       <Select
-        options={ propertyOptions }
+        options={ groupOptions }
         onSelect={ (val) => {
-          props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
+          props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
         } }
-        value={ props.params.property }
+        value={ props.params.group }
       />
-    }
+      }
+      {propertyOptions.count() > 0 &&
+        <Select
+          options={ propertyOptions }
+          onSelect={ (val) => {
+            props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
+          } }
+          value={ props.params.property }
+        />
+      }
 
       <ButtonToolbar className="pull-right">
         <Button bsStyle="primary" >Export</Button>
       </ButtonToolbar>
-    { /*
+
+      { /* TODO: Implement filtered dropdown, when possible (component fixed)
       <FilterDropdown
         options={ groupDropdownOptions }
         handleSelect={ (val) => {
@@ -134,7 +107,7 @@ const AnalyticsViewControl = (props) => {
           props.history.pushState(null, getAnalyticsUrl('property', val, props.params) )
         } }
       />
-    */ }
+      */ }
 
 
       <Nav bsStyle="tabs" >
@@ -160,16 +133,26 @@ const AnalyticsViewControl = (props) => {
           <Link to={ getTabLink(props.location.pathname, 'playback-demo') } activeClassName='active'>Playback demo</Link>
         </li>
       </Nav>
-
     </div>
   )
 }
 
-/*AnalyticsViewControl.propTypes = {
-  accounts: Immutable.List(),
+AnalyticsViewControl.defaultProps = {
   brands: Immutable.List(),
+  accounts: Immutable.List(),
   groups: Immutable.List(),
-  properties: Immutable.List()
-}*/
+  properties: Immutable.List(),
+  params: {}
+}
+
+AnalyticsViewControl.propTypes = {
+  brands: React.PropTypes.instanceOf(Immutable.List),
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  location: React.PropTypes.object,
+  history: React.PropTypes.object,
+  params: React.PropTypes.object
+}
 
 export default AnalyticsViewControl

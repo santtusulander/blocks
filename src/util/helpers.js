@@ -1,5 +1,6 @@
 import numeral from 'numeral'
 import Immutable from 'immutable'
+import {getRoute} from '../routes.jsx'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -131,4 +132,27 @@ export function generateNestedLink( base, linkParts ){
   })
 
   return base + '/' + linkParts.join("/")
+}
+
+export function getAnalyticsUrl( linkType, val, params ){
+  const {brand,account,group,property} = params
+  let url
+
+  switch ( linkType ) {
+    case 'brand':
+      url = `${getRoute('analytics')}/${val}`
+      break;
+    case 'account':
+      url = `${getRoute('analytics')}/${brand}/${val}`
+      break;
+    case 'group':
+      url = `${getRoute('analytics')}/${brand}/${account}/${val}`
+      break;
+    case 'property':
+      url = `${getRoute('analytics')}/${brand}/${account}/${group}/${val}`
+      break;
+  }
+
+  return url
+
 }
