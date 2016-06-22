@@ -6,6 +6,7 @@ import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 import {Breadcrumbs} from '../components/breadcrumbs.jsx'
+import UdnAdminToolbar from '../components/udn-admin-toolbar.jsx'
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
@@ -79,14 +80,17 @@ class Header extends React.Component {
       this.props.pathname === '/security' ||
       this.props.pathname === '/services'
 
-    // Show breadcrumbs only for property levels
-    let showBreadcrumbs = true;
-    /*/(\/content\/property\/)/.test(this.props.pathname) ||
-      /(\/content\/configuration\/)/.test(this.props.pathname)
-    */
+    // Show breadcrumbs for content
+    let showContentBreadcrumbs =
+      /(\/content\/)/.test(this.props.pathname)
+
+      /*/(\/content\/configuration\/)/.test(this.props.pathname)*/
+
 
     let contentActive = new RegExp( getRoute('content'), 'g' ) ? ' active' : ''
     const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(this.props.pathname)
+
+    const adminSection = 'Account'
 
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
@@ -98,11 +102,20 @@ class Header extends React.Component {
 
         <Nav className="main-nav">
 
+        { adminSection &&
+          <UdnAdminToolbar
+            accounts={this.props.accounts}
+            activeAccount={this.props.activeAccount}
+            sectionLabel={adminSection}
+            fetchAccountData={this.props.fetchAccountData}
+          />
+        }
         { analyticsActive &&
           <Breadcrumbs links={this.props.breadcrumbs} />
         }
 
-        { (showBreadcrumbs && !analyticsActive) &&
+
+        { (showContentBreadcrumbs /* && !analyticsActive*/) &&
           <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
             <li className="breadcrumb-back">
               <Link to={`/content/accounts/udn`} />
