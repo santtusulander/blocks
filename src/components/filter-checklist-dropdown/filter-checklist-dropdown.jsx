@@ -26,17 +26,10 @@ export class FilterChecklistDropdown extends React.Component {
     this.setState({ dropdownOpen: !val })
   }
 
-  handleCheck(e) {
-    let val     = e.target.value
-    let checked = this.state.checkedResults
-
-    if(checked.indexOf(val) === -1) {
-      checked.push(val)
-    } else {
-      checked.splice(checked.indexOf(val), 1)
-    }
-    this.setState({ checkedResults: checked })
-    this.props.handleCheck(this.state.checkedResults)
+  handleCheck(option) {
+    let index  = this.props.options.indexOf(option)
+    let oldVal = option.get('checked')
+    let newVal = option.set('checked', !oldVal)
   }
 
   handleFilter() {
@@ -64,7 +57,6 @@ export class FilterChecklistDropdown extends React.Component {
   render() {
 
     const { dropdownOpen, filteredResults, filterValue, checkedResults } = this.state
-
     let label     = checkedResults.length ? this.getLabel() : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
@@ -77,7 +69,7 @@ export class FilterChecklistDropdown extends React.Component {
         <Dropdown id=""
                   open={dropdownOpen}
                   className={className}>
-          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
+          <Dropdown.Toggle onClick={() => this.toggleDropdown(dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
             {label}
           </Dropdown.Toggle>
@@ -102,15 +94,15 @@ export class FilterChecklistDropdown extends React.Component {
                     <Input type="checkbox"
                            label={option.get('label')}
                            value={option.get('value')}
-                           checked={checkedResults.indexOf(option.get('value')) !== -1}
-                           onChange={this.handleCheck}/>
+                           checked={option.get('checked')}
+                           onChange={() => this.handleCheck(option)}/>
                   </li>
                 )}
               </ul>
-              <li className="clear-container">
-                <Button bsClass="btn btn-block btn-primary"
-                        onClick={this.handleClear}>Clear</Button>
-              </li>
+            </li>
+            <li className="clear-container">
+              <Button bsClass="btn btn-block btn-primary"
+                      onClick={this.handleClear}>Clear</Button>
             </li>
           </Dropdown.Menu>
         </Dropdown>

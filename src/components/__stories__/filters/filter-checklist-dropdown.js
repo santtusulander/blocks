@@ -7,15 +7,15 @@ const ThemeWrap = require('../theme-wrap.jsx');
 import FilterChecklistDropdown from '../../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
 const options = Immutable.fromJS([
-  { value: 'link1', label: 'Property 1' },
-  { value: 'link2', label: 'Property 2' },
-  { value: 'link3', label: 'Property 3' },
-  { value: 'link4', label: 'Property 4' },
-  { value: 'link5', label: 'Property 5' },
-  { value: 'link6', label: 'Property 6' },
-  { value: 'link7', label: 'Property 7' },
-  { value: 'link8', label: 'Property 8' },
-  { value: 'link9', label: 'Property 9' }
+  { value: 'link1', label: 'Property 1', checked: true },
+  { value: 'link2', label: 'Property 2', checked: true },
+  { value: 'link3', label: 'Property 3', checked: false },
+  { value: 'link4', label: 'Property 4', checked: false },
+  { value: 'link5', label: 'Property 5', checked: true },
+  { value: 'link6', label: 'Property 6', checked: false },
+  { value: 'link7', label: 'Property 7', checked: false },
+  { value: 'link8', label: 'Property 8', checked: false },
+  { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
 storiesOf('Filters', module)
