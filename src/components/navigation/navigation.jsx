@@ -20,10 +20,12 @@ const Navigation = (props) => {
 
   //const activeHostId = props.activeHost && props.activeHost.get('id') || null;
 
-  const contentUrl = activeGroupId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
+  //const contentUrl = activeGroupId ? `${ getRoute('content') }/groups/udn/${activeAccountId}/${activeGroupId}` : activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
+  const contentUrl = activeAccountId ? `${ getRoute('content') }/groups/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
+    //: activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
 
   //Analytics should always default to account level analytics, and not depend on the content leaf.
-  const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', activeAccountId] )
+  const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', activeAccountId, activeGroupId] )
 
   //Alternative -- create from url -params (if deep link is needed)
   //const {account, host, group, property} = props.params;
