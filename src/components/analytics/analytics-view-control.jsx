@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 import Immutable from 'immutable'
 import {Link, browserHistory} from 'react-router'
-import { Nav, NavItem, Dropdown } from 'react-bootstrap'
+import { Nav, NavItem, Dropdown, ButtonToolbar, Button } from 'react-bootstrap'
 
 import Select from '../select.jsx'
+import FilterDropdown from '../analysis/filters/filter-dropdown/filter-dropdown.jsx'
 
 import { getRoute } from '../../routes.jsx'
-
 import {getTabLink} from '../../util/helpers.js'
+
+import './analytics-view-control.scss'
 
 function createOptions( opts ){
   return opts.map( opt => {
@@ -21,12 +23,27 @@ function createPropertyOptions( opts ){
   })
 }
 
+function createDropdownOptions ( opts ) {
+  return opts.map(opt => {
+    return {
+      link: opt.get('id').toString(),
+      label: opt.get('name')
+    }
+  })
+}
+
+function createPropertyDropdownOptions ( opts ){
+  return opts.map( opt => {
+    return {
+      link: opt,
+      label: opt
+    }
+  })
+}
+
 function getAnalyticsUrl( linkType, val, params ){
 
   let url
-  val = encodeURIComponent(val).replace(/\./g, "%2e")
-
-  console.log("urlEncoded:", val)
 
   const {brand,account,group,property} = params;
 
@@ -50,13 +67,18 @@ function getAnalyticsUrl( linkType, val, params ){
 }
 
 const AnalyticsViewControl = (props) => {
-  const brandOptions = createOptions( props.brands )
+  /*const brandOptions = createOptions( props.brands )
   const accountOptions = createOptions( props.accounts )
+  */
   const groupOptions = createOptions( props.groups )
   const propertyOptions = createPropertyOptions( props.properties )
 
+
+  const groupDropdownOptions = createDropdownOptions( props.groups )
+  const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
+
   return (
-    <div className='view-control'>
+    <div className='analytics-view-control'>
 
     {/*
       <Select
@@ -77,21 +99,40 @@ const AnalyticsViewControl = (props) => {
       />
      */}
 
-      <Select
-        options={ groupOptions }
-        onSelect={ (val) => {
+       <Select
+         options={ groupOptions }
+         onSelect={ (val) => {
+           props.history.pushState(null, getAnalyticsUrl('group', val, props.params) )
+           } }
+         value={ props.params.group }
+       />
+
+         <Select
+         options={ propertyOptions }
+         onSelect={ (val) => {
+           props.history.pushState(null, getAnalyticsUrl('property', val, props.params) )
+           } }
+         value={ props.params.property }
+       />
+
+      <ButtonToolbar className="pull-right">
+        <Button bsStyle="primary" >Export</Button>
+      </ButtonToolbar>
+    { /*
+      <FilterDropdown
+        options={ groupDropdownOptions }
+        handleSelect={ (val) => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params) )
         } }
-        value={ props.params.group }
       />
 
-      <Select
-        options={ propertyOptions }
-        onSelect={ (val) => {
+      <FilterDropdown
+        options={ propertyDropdownOptions }
+        handleSelect={ (val) => {
           props.history.pushState(null, getAnalyticsUrl('property', val, props.params) )
         } }
-        value={ props.params.property }
       />
+    */ }
 
 
       <Nav bsStyle="tabs" >

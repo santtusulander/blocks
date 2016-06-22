@@ -12,6 +12,11 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
 import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
 
+//layout
+import PageContainer from '../../components/layout/page-container'
+import Content from '../../components/layout/content'
+import PageHeader from '../../components/layout/page-header'
+
 //import { Breadcrumbs } from '../../components/breadcrumbs.jsx'
 
 import {getTabName} from '../../util/helpers.js'
@@ -100,30 +105,30 @@ class AnalyticsContainer extends React.Component {
     })
 
     return (
-      <div className='analytics-container'>
+      <PageContainer className='analytics-container'>
+        <Content>
+          <PageHeader>
+            <p>ANALYTICS</p>
+            <AnalyticsViewControl {...this.props} />
+          </PageHeader>
 
-       {/* Breadcrumbs already in header
-       <Breadcrumbs links={this.props.breadcrumbs} /> */}
+          <AnalyticsFilters
+            onFilterChange={ this.onFilterChange }
+            filters={this.props.filters}
+            filterOptions={this.props.filterOptions}
+            showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
+          />
 
-        <AnalyticsViewControl {...this.props} />
+          <div className='analytics-tab-container'>
 
-        <AnalyticsFilters
-          onFilterChange={ this.onFilterChange }
-          filters={this.props.filters}
-          filterOptions={this.props.filterOptions}
-          showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
-        />
+          {
+            /* Render tab -content */
+            this.props.children && React.cloneElement(this.props.children, {filters: this.props.filters} )
+          }
 
-        <div className='analytics-tab-container'>
-
-        {
-          /* Render tab -content */
-          this.props.children && React.cloneElement(this.props.children, {filters: this.props.filters} )
-        }
-
-        </div>
-
-      </div>
+          </div>
+        </Content>
+      </PageContainer>
     )
   }
 }

@@ -1,5 +1,14 @@
+@import '../../../vendor/bootstrap/stylesheets/bootstrap-compass';
+@import '../../../vendor/bootstrap/stylesheets/bootstrap';
+
 .analytics-container {
+  .page-header-layout {
+    padding-bottom: 0;
+  }
+
   .analytics-tab-container {
-    clear: both;
+    @extend .container-fluid;
+
+    padding: 20px 60px;
   }
 }

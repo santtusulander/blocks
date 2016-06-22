@@ -2,8 +2,11 @@
 @import '../../../vendor/bootstrap/stylesheets/bootstrap';
 
 .analytics-filters {
+  @extend .container-fluid;
 
-  margin: 20px 0;
+  background-color: rgba(0,0,0, 0.2);
+
+  padding: 30px 45px 20px 45px;
 
   .filter {
     @extend .col-md-3;
