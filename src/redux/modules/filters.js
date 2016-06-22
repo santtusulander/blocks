@@ -1,10 +1,9 @@
 import { createAction, handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
-const initialState = //Immutable.Map();
-Immutable.fromJS({
+const initialState = Immutable.fromJS({
   filters: {
-    dateRange: {startDate: null, endDate: null},
+    dateRange: {}, //startDate: , endDate: },
     dateRangeLabel: '',
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],

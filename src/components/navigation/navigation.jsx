@@ -16,10 +16,11 @@ import './navigation.scss'
 
 const Navigation = (props) => {
   const activeAccountId = props.activeAccount && props.activeAccount.get('id') || null;
-  //const activeGroupId = props.activeGroup && props.activeGroup.get('id') || null;
+  const activeGroupId = props.activeGroup && props.activeGroup.get('id') || null;
+
   //const activeHostId = props.activeHost && props.activeHost.get('id') || null;
 
-  const contentUrl = activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
+  const contentUrl = activeGroupId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
 
   //Analytics should always default to account level analytics, and not depend on the content leaf.
   const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', activeAccountId] )

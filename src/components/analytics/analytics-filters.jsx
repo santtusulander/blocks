@@ -1,6 +1,5 @@
 import React from 'react'
-
-//import FilterDateRange from '../analysis/filters/date-range.jsx'
+import Immutable from 'immutable'
 
 import DateRangeFilter from '../analysis/filters/date-range-filter/date-range-filter.jsx'
 
@@ -36,8 +35,8 @@ const AnalyticsFilters = (props) => {
         changeDateRange={ (startDate, endDate) => {
           props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
         } }
-        startDate={props.filters.get('dateRange').startDate}
-        endDate={props.filters.get('dateRange').endDate}
+        startDate={props.filters.getIn(['dateRange','startDate'])}
+        endDate={props.filters.getIn(['dateRange','endDate'])}
         />
       </div>
     }
@@ -78,7 +77,7 @@ const AnalyticsFilters = (props) => {
     { props.showFilters.includes('service-type') &&
       <div className='filter'>
         <div className="sidebar-section-header">
-        Service Types
+          Service Types
         </div>
 
         <FilterChecklistDropdown
@@ -91,15 +90,23 @@ const AnalyticsFilters = (props) => {
     { props.showFilters.includes('error-code') &&
       <div className='filter'>
         <FilterServiceType
-        serviceTypes={props.filters.get('serviceTypes')}
-        toggleServiceType={ (val) => {
-          props.onFilterChange('errorCodes', val)
-        } }
+          serviceTypes={props.filters.get('serviceTypes')}
+          toggleServiceType={ (val) => {
+            props.onFilterChange('errorCodes', val)
+          }}
       />
     </div>
       }
     </div>
   )
+}
+
+AnalyticsFilters.defaultProps = {
+  showFilters: Immutable.Map()
+}
+
+AnalyticsFilters.propTypes = {
+  filters: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 export default AnalyticsFilters
