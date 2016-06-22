@@ -1,7 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
 
-import Select from './select.jsx'
+import Select from '../select.jsx'
+import './udn-admin-toolbar.scss'
 
 const UdnAdminToolbar = ({accounts, activeAccount, sectionLabel, fetchAccountData}) => {
 
@@ -17,7 +18,7 @@ const UdnAdminToolbar = ({accounts, activeAccount, sectionLabel, fetchAccountDat
         value={activeAccount.get('id')}
       />
 
-      <p>{sectionLabel}</p>
+
     </div>
   )
 }
