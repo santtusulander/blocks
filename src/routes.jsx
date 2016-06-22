@@ -16,6 +16,7 @@ import PropertyAnalytics from './containers/property-analytics'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
+import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
 
 import ContentTransition from './transitions/content'
@@ -23,6 +24,7 @@ import ContentTransition from './transitions/content'
 module.exports = (
   <Route path="/" component={Main}>
     <IndexRedirect to="/content/accounts/udn" />
+    <Route path="starburst-help" component={StarburstHelp}/>
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
@@ -89,7 +91,10 @@ module.exports = (
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
     </Route>
-    <Route path="/security" component={Security}/>
+    <Route path="/security">
+      <IndexRedirect to="/security/ssl-certificate"/>
+      <Route path=":subPage" component={Security}/>
+    </Route>
     <Route path="/services" component={Services}/>
     {/* TODO: This is temporary until the user api is managing permissions */}
     <Route path="/account-management/:account" component={AccountManagement}/>

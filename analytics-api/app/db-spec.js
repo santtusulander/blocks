@@ -588,7 +588,8 @@ describe('db.getVisitorWithTotals', function() {
     group: 3,
     property: 'idean.com',
     granularity: 'hour',
-    aggregate_granularity: 'month'
+    aggregate_granularity: 'month',
+    dimension: 'country'
   };
 
   beforeEach(function() {
@@ -597,7 +598,7 @@ describe('db.getVisitorWithTotals', function() {
     spyOn(log, 'error').and.stub();
   });
 
-  it('should call getVisitors three times with the correct options', function() {
+  it('should call getVisitors three times with the correct options if dimension is country', function() {
     db.getVisitorWithTotals(options);
 
     let getVisitorsDetailOptions    = db.getVisitors.calls.argsFor(0)[0];
@@ -609,6 +610,11 @@ describe('db.getVisitorWithTotals', function() {
     expect(getVisitorsDimensionOptions.granularity).toBe(options.aggregate_granularity);
     expect(getVisitorsTotalOptions.granularity).toBe(options.aggregate_granularity);
     expect(getVisitorsTotalOptions.dimension).toBe('global');
+  });
+
+  it('should call getVisitors twice with the correct options if dimension is NOT country', function() {
+    db.getVisitorWithTotals(Object.assign({}, options, {dimension: 'os'}));
+    expect(db.getVisitors.calls.count()).toBe(2);
   });
 
   it('should return a promise', function() {

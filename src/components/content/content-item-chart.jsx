@@ -3,14 +3,15 @@ import Immutable from 'immutable'
 import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import moment from 'moment'
 
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
-import DifferenceTooltip from './difference-tooltip'
-import TrafficTooltip from './traffic-tooltip'
+import DifferenceTooltip from './difference-tooltip.jsx'
+import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 const dayHours = 24
@@ -143,16 +144,21 @@ class ContentItemChart extends React.Component {
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
     let {avgTransfer, maxTransfer, minTransfer} = this.props
+    const endDate = moment.utc().format('MMM D')
+    const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
+    let tooltipDate = `${startDate} - ${endDate}`
     if(this.state.activeSlice) {
       avgTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('average'), true)
       maxTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('peak'), true)
       minTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('low'), true)
+      tooltipDate = moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D')
     }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
         {this.state.showDiffLegend ?
           <DifferenceTooltip/>
           : <TrafficTooltip
+            date={tooltipDate}
             avgTransfer={avgTransfer}
             maxTransfer={maxTransfer}
             minTransfer={minTransfer}/>
@@ -289,6 +295,10 @@ class ContentItemChart extends React.Component {
                   <IconConfiguration/>
                 </Link> : ''
               }
+              <Link to="/starburst-help"
+                className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
+                ?
+              </Link>
             </ButtonToolbar>
           </div>
         </div>
