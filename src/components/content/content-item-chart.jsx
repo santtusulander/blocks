@@ -10,8 +10,8 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
-import DifferenceTooltip from './difference-tooltip'
-import TrafficTooltip from './traffic-tooltip'
+import DifferenceTooltip from './difference-tooltip.jsx'
+import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 const dayHours = 24
