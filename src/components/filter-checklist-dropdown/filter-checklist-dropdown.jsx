@@ -11,7 +11,7 @@ export class FilterChecklistDropdown extends React.Component {
 
     this.state = {
       dropdownOpen: false,
-      checkedResults: [],
+      checkedResults: this.props.options.filter(item => !!item.get('checked')),
       filteredResults: this.props.options,
       filterValue: ''
     }
@@ -27,9 +27,11 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(option) {
-    let index  = this.props.options.indexOf(option)
-    let oldVal = option.get('checked')
-    let newVal = option.set('checked', !oldVal)
+    let checked = this.state.checkedResults
+    let newlist = checked.indexOf(option) === -1 ? checked.push(option) : checked.delete(checked.indexOf(option))
+
+    this.setState({ checkedResults: newlist })
+    this.props.handleCheck(this.state.checkedResults)
   }
 
   handleFilter() {
@@ -46,22 +48,46 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleClear() {
     this.setState({
-      checkedResults: []
+      checkedResults: Immutable.List()
     }, () => this.props.handleCheck(this.state.checkedResults))
   }
 
   getLabel() {
-    return this.state.checkedResults.length > 1 ? `${this.state.checkedResults[0]} and ${this.state.checkedResults.length - 1} more` : this.state.checkedResults[0]
+    return this.state.checkedResults.size > 1 ? `${this.state.checkedResults.first().get('label')} and ${this.state.checkedResults.size - 1} more` : this.state.checkedResults.first().get('label')
   }
 
   render() {
 
     const { dropdownOpen, filteredResults, filterValue, checkedResults } = this.state
-    let label     = checkedResults.length ? this.getLabel() : 'Please Select'
+
+    let itemList;
+    let label     = checkedResults.size ? this.getLabel() : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if(this.props.className) {
       className += ` ${this.props.className}`
+    }
+
+    if(filteredResults.size) {
+      itemList = filteredResults.map((option, i) => {
+        return (
+          <li key={i}
+              role="presentation"
+              className="children">
+            <Input type="checkbox"
+                   label={option.get('label')}
+                   value={option.get('value')}
+                   checked={checkedResults.indexOf(option) !== -1}
+                   onChange={() => this.handleCheck(option)}/>
+          </li>
+        )
+      })
+    } else {
+      itemList = (
+        <li role="presentation" className="children">
+          <div className="form-group">No results...</div>
+        </li>
+      )
     }
 
     return (
@@ -69,7 +95,7 @@ export class FilterChecklistDropdown extends React.Component {
         <Dropdown id=""
                   open={dropdownOpen}
                   className={className}>
-          <Dropdown.Toggle onClick={() => this.toggleDropdown(dropdownOpen)} noCaret={true}>
+          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
             {label}
           </Dropdown.Toggle>
@@ -87,17 +113,7 @@ export class FilterChecklistDropdown extends React.Component {
           <Dropdown.Menu>
             <li>
               <ul className='scrollable-menu'>
-                {filteredResults.map((option, i) =>
-                  <li key={i}
-                      role="presentation"
-                      className="children">
-                    <Input type="checkbox"
-                           label={option.get('label')}
-                           value={option.get('value')}
-                           checked={option.get('checked')}
-                           onChange={() => this.handleCheck(option)}/>
-                  </li>
-                )}
+                {itemList}
               </ul>
             </li>
             <li className="clear-container">
