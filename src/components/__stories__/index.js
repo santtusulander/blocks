@@ -3,6 +3,9 @@ import './export-panel';
 import './export-email-form';
 import './export-file-form';
 import './loading-spinner'
+import './delete-modal'
+import './content-item-chart'
+import './loading-spinner'
 
 
 //account management
@@ -18,6 +21,11 @@ import './account-management/roles-list'
 import './account-management/new-account-form'
 import './account-management/brand-edit-form'
 
+//security
+import './security/ssl-list'
+import './security/certificate-form'
+
 // content
 import './content/add-host'
 import './content/content-item-chart'
+
