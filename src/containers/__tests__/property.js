@@ -7,10 +7,29 @@ jest.autoMockOff()
 jest.dontMock('../property.jsx')
 const Property = require('../property.jsx').Property
 
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.genMockFunction()
+  }
+}
+
+function groupActionsMaker() {
+  return {
+    fetchGroup: jest.genMockFunction()
+  }
+}
+
 function hostActionsMaker() {
   return {
     startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction()
+    fetchHost: jest.genMockFunction(),
+    fetchHosts: jest.genMockFunction()
+  }
+}
+
+function metricsActionsMaker() {
+  return {
+    fetchHostMetrics: jest.genMockFunction()
   }
 }
 
@@ -298,7 +317,10 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hostActions={hostActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         trafficActions={trafficActionsMaker()}
         visitorsActions={visitorsActionsMaker()} />
     );
@@ -308,7 +330,11 @@ describe('Property', () => {
   it('should request data on mount', () => {
     const hostActions = hostActionsMaker()
     TestUtils.renderIntoDocument(
-      <Property hostActions={hostActions} fetching={true}
+      <Property
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
+        hostActions={hostActions}
+        metricsActions={metricsActionsMaker()} fetching={true}
         params={urlParams} location={fakeLocation}
         trafficActions={trafficActionsMaker()}
         visitorsActions={visitorsActionsMaker()}/>
@@ -322,6 +348,9 @@ describe('Property', () => {
   it('should display the property name', () => {
     const property = TestUtils.renderIntoDocument(
       <Property hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         params={urlParams} location={fakeLocation}
         activeHost={fakeHost}
         trafficActions={trafficActionsMaker()}
@@ -341,7 +370,10 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hostActions={hostActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         trafficActions={trafficActionsMaker()}
         visitorsActions={visitorsActionsMaker()} />
     )
@@ -357,7 +389,10 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hostActions={hostActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         trafficActions={trafficActionsMaker()}
         uiActions={uiActions}
         visitorsActions={visitorsActionsMaker()} />
@@ -373,7 +408,10 @@ describe('Property', () => {
         params={urlParams}
         location={fakeLocation}
         fetching={true}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         hostActions={hostActionsMaker()}
+        metricsActions={metricsActionsMaker()}
         purgeActions={purgeActions}
         trafficActions={trafficActionsMaker()}
         visitorsActions={visitorsActionsMaker()} />

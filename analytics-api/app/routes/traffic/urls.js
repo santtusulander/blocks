@@ -4,7 +4,7 @@ require('express-jsend');
 let log       = require('../../logger');
 let db        = require('../../db');
 let validator = require('../../validator');
-let testData  = require('./urls-data');
+// let testData  = require('./urls-data');
 
 function routeTrafficUrls(req, res) {
   log.info('Getting traffic/urls');
@@ -40,10 +40,6 @@ function routeTrafficUrls(req, res) {
     sort_dir     : params.sort_dir,
     limit        : params.limit
   };
-
-
-  return res.jsend(testData);
-  /* eslint no-unreachable: 0 */
 
   db.getTrafficByUrl(options).then((trafficData) => {
     res.jsend(trafficData);

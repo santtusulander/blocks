@@ -629,18 +629,39 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getVisitorWithTotals(options) {
-    let aggregateGranularity  = options.aggregate_granularity || 'month';
-    let dimensionTotalOptions = {granularity: aggregateGranularity, isAggregate: true};
-    let grandTotalOptions     = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};
+    let shouldQueryGlobalTotals = options.dimension === 'country';
+    let aggregateGranularity    = options.aggregate_granularity || 'month';
+    let dimensionTotalOptions   = {granularity: aggregateGranularity, isAggregate: true};
+    let globalTotalOptions      = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};
     let queries = [
+      // Detailed records for each dimension value
       this.getVisitors(options),
-      this.getVisitors(Object.assign({}, options, dimensionTotalOptions)),
-      this.getVisitors(Object.assign({}, options, grandTotalOptions))
+
+      // Totals for each dimension value
+      this.getVisitors(Object.assign({}, options, dimensionTotalOptions))
     ];
+
+    // Conditionally check the global tables to get grand totals
+    if (shouldQueryGlobalTotals) {
+      let globalTotalQuery = this.getVisitors(Object.assign({}, options, globalTotalOptions));
+      queries.push(globalTotalQuery);
+    }
 
     return Promise.all(queries)
       .then((queryData) => {
         log.info(`Successfully received data from ${queryData.length} queries.`);
+
+        // Sum the dimension totals to get the grand total, instead of querying the global tables
+        if (!shouldQueryGlobalTotals) {
+          let summedDimensionTotals = _.sumBy(queryData[1], 'uniq_vis');
+          queryData.push(summedDimensionTotals);
+
+        } else {
+          // Return the uniq_vis value from the buried array for the grand total data
+          let grandTotalData = queryData[2];
+          let totalExists = !!(grandTotalData && grandTotalData[0] && _.isNumber(grandTotalData[0].uniq_vis));
+          queryData[2] = totalExists ? grandTotalData[0].uniq_vis : null;
+        }
         return queryData;
       })
       .catch((err) => log.error(err));
