@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
-import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
+import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import './filter-checklist-dropdown.scss'
 
@@ -11,7 +11,7 @@ export class FilterChecklistDropdown extends React.Component {
 
     this.state = {
       dropdownOpen: false,
-      checkedResults: [],
+      checkedResults: this.props.options.filter(item => !!item.get('checked')),
       filteredResults: this.props.options,
       filterValue: ''
     }
@@ -26,16 +26,11 @@ export class FilterChecklistDropdown extends React.Component {
     this.setState({ dropdownOpen: !val })
   }
 
-  handleCheck(e) {
-    let val     = e.target.value
+  handleCheck(option) {
     let checked = this.state.checkedResults
+    let newlist = checked.indexOf(option) === -1 ? checked.push(option) : checked.delete(checked.indexOf(option))
 
-    if(checked.indexOf(val) === -1) {
-      checked.push(val)
-    } else {
-      checked.splice(checked.indexOf(val), 1)
-    }
-    this.setState({ checkedResults: checked })
+    this.setState({ checkedResults: newlist })
     this.props.handleCheck(this.state.checkedResults)
   }
 
@@ -53,23 +48,46 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleClear() {
     this.setState({
-      checkedResults: []
+      checkedResults: Immutable.List()
     }, () => this.props.handleCheck(this.state.checkedResults))
   }
 
   getLabel() {
-    return this.state.checkedResults.length > 1 ? `${this.state.checkedResults[0]} and ${this.state.checkedResults.length - 1} more` : this.state.checkedResults[0]
+    return this.state.checkedResults.size > 1 ? `${this.state.checkedResults.first().get('label')} and ${this.state.checkedResults.size - 1} more` : this.state.checkedResults.first().get('label')
   }
 
   render() {
 
     const { dropdownOpen, filteredResults, filterValue, checkedResults } = this.state
 
-    let label     = checkedResults.length ? this.getLabel() : 'Please Select'
+    let itemList;
+    let label     = checkedResults.size ? this.getLabel() : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if(this.props.className) {
       className += ` ${this.props.className}`
+    }
+
+    if(filteredResults.size) {
+      itemList = filteredResults.map((option, i) => {
+        return (
+          <li key={i}
+              role="presentation"
+              className="children">
+            <Input type="checkbox"
+                   label={option.get('label')}
+                   value={option.get('value')}
+                   checked={checkedResults.indexOf(option) !== -1}
+                   onChange={() => this.handleCheck(option)}/>
+          </li>
+        )
+      })
+    } else {
+      itemList = (
+        <li role="presentation" className="children">
+          <div className="form-group">No results...</div>
+        </li>
+      )
     }
 
     return (
@@ -93,24 +111,16 @@ export class FilterChecklistDropdown extends React.Component {
           </div>
           }
           <Dropdown.Menu>
-            {filteredResults.map((option, i) =>
-              <li key={i}
-                  role="presentation"
-                  className="children">
-                <Input type="checkbox"
-                       label={option.get('label')}
-                       value={option.get('label')}
-                       checked={checkedResults.indexOf(option.get('label')) !== -1}
-                       onChange={this.handleCheck}/>
-              </li>
-            )}
+            <li>
+              <ul className='scrollable-menu'>
+                {itemList}
+              </ul>
+            </li>
+            <li className="clear-container">
+              <Button bsClass="btn btn-block btn-primary"
+                      onClick={this.handleClear}>Clear</Button>
+            </li>
           </Dropdown.Menu>
-          {dropdownOpen &&
-          <div className="clear-container">
-            <Button bsClass="btn btn-block btn-primary"
-                    onClick={this.handleClear}>Clear</Button>
-          </div>
-          }
         </Dropdown>
       </div>
     )

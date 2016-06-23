@@ -1,12 +1,16 @@
-@import "../../../../styles/base/variables";
-@import "../../../../styles/base/colors";
+@import "../../styles/base/variables";
+@import "../../styles/base/colors";
 
 .dropdown-filter {
   .filter-container {
     animation: showDropdown 250ms ease-out;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
     clear: both;
     height: 60px;
-    padding: 10px;
+    padding: 10px 20px;
     color: $dt-text-color;
     background-color: $black;
     background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
@@ -24,8 +28,7 @@
   }
 
   .dropdown-menu {
-    max-height: 300px;
-    overflow-y: auto;
+    top: 100px;
 
     .children {
       .form-group {
@@ -39,12 +42,15 @@
     }
   }
 
+  .scrollable-menu {
+    list-style-type: none;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-left: 0;
+  }
+
   .clear-container {
     animation: showDropdown 250ms ease-out;
-    position: absolute;
-    top: 400px;
-    left: 0;
-    right: 0;
     background-color: $black;
     background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
     padding: 20px;
