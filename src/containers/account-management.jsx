@@ -168,56 +168,47 @@ export class AccountManagement extends Component {
 
     return (
       <PageContainer className="account-management">
-        {isAdmin && <div>
-          {/* REMOVE: Not needed
-          <AccountManagementSidebar
-            accounts={accounts}
-            activeAccount={this.state.activeAccount}
-            activate={this.changeActiveAccount}
-            addAccount={() => toggleModal(ADD_ACCOUNT)}
-          />
-          */}
-          <Content>
-
-            {this.props.activeAccount && <ManageAccount
-              account={this.props.activeAccount}
-              addGroup={this.addGroupToActiveAccount}
-              deleteGroup={this.deleteGroupFromActiveAccount}
-              editAccount={this.editAccount}
-              editGroup={this.editGroupInActiveAccount}
-              groups={this.props.groups}/>
-            }
-
-            {!this.props.activeAccount && <ManageSystem
-              dnsList={dnsListProps}
-              brandsList={{
-                accountManagementModal: accountManagementModal,
-                brands: [],
-                toggleModal: toggleModal
-              }}
-            />}
-
-          </Content>
-        </div>}
-
-        {!isAdmin && <Content>
-          <ManageAccount
+        <Content>
+          {this.props.activeAccount && <ManageAccount
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}
             deleteGroup={this.deleteGroupFromActiveAccount}
             editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
-        </Content>}
+          }
 
-        {accountManagementModal === ADD_ACCOUNT &&
-          <NewAccountForm
-              id="add-account-form"
-              show={accountManagementModal === ADD_ACCOUNT}
-              onSave={this.addAccount}
-              onCancel={() => toggleModal(null)}
-          />}
+          {!this.props.activeAccount &&
+            <ManageSystem
+              dnsList={dnsListProps}
+              brandsList={{
+                accountManagementModal: accountManagementModal,
+                brands: [],
+                toggleModal: toggleModal
+              }}
+            />
+          }
 
+          {!isAdmin &&
+            <ManageAccount
+              account={this.props.activeAccount}
+              addGroup={this.addGroupToActiveAccount}
+              deleteGroup={this.deleteGroupFromActiveAccount}
+              editAccount={this.editAccount}
+              editGroup={this.editGroupInActiveAccount}
+              groups={this.props.groups}
+            />
+          }
+
+          {accountManagementModal === ADD_ACCOUNT &&
+            <NewAccountForm
+                id="add-account-form"
+                show={accountManagementModal === ADD_ACCOUNT}
+                onSave={this.addAccount}
+                onCancel={() => toggleModal(null)}
+            />
+          }
+        </Content>
       </PageContainer>
     )
   }
