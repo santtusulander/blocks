@@ -100,7 +100,7 @@ class ContentItemList extends React.Component {
               {!this.props.fetchingMetrics ?
                 <AnalysisByTime axes={false} padding={0} className="bg-transparent"
                   dataKey="bytes"
-                  primaryData={this.props.primaryData.toJS()}
+                  primaryData={this.props.primaryData.toJS().reverse()}
                   width={this.state.byTimeWidth}
                   height={this.state.byTimeHeight} />
               : ''}
