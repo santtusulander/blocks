@@ -4,6 +4,8 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .breadcrumb {
+  float: left;
+
   padding: 0;
   margin-bottom: 0;
   text-transform: uppercase;
@@ -101,7 +103,7 @@
       }
     }
 
-    &:not(.breadcrumb-back)::after {
+    &:not(.breadcrumb-back, :last-child)::after {
       padding: 0 10px;
       content: '\203A';
 
