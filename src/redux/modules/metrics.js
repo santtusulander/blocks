@@ -191,10 +191,10 @@ export default handleActions({
 // ACTIONS
 
 export const fetchHourlyAccountTraffic = createAction(ACCOUNT_HOURLY_TRAFFIC_FETCHED, opts => {
-  const nowOpts = Object.assign({}, opts, {
+  const nowOpts = Object.assign({}, {
     list_children: 'true',
     granularity: 'hour'
-  })
+  }, opts)
   const historyOpts = Object.assign({}, nowOpts, {
     startDate: moment(opts.startDate, 'X').subtract(28, 'days').format('X'),
     endDate: moment(opts.endDate, 'X').subtract(28, 'days').format('X')
@@ -211,22 +211,22 @@ export const fetchHourlyAccountTraffic = createAction(ACCOUNT_HOURLY_TRAFFIC_FET
 })
 
 export const fetchDailyAccountTraffic = createAction(ACCOUNT_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })
 
 export const fetchDailyGroupTraffic = createAction(GROUP_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })
 
 export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, opts => {
   const dateDiff = moment(opts.endDate, 'X').diff(moment(opts.startDate, 'X')) + 1
-  const nowOpts = Object.assign({}, opts, {
+  const nowOpts = Object.assign({}, {
     granularity: 'hour'
-  })
+  }, opts)
   const historyOpts = Object.assign({}, nowOpts, {
     startDate: moment(opts.startDate, 'X').subtract(dateDiff, 'ms').format('X'),
     endDate: moment(opts.endDate, 'X').subtract(dateDiff, 'ms').format('X')
@@ -243,7 +243,7 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
 })
 
 export const fetchDailyHostTraffic = createAction(HOST_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, opts, dailyTrafficOpts)
+  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })
