@@ -86,6 +86,9 @@ class AnalysisByTime extends React.Component {
           primaryTooltipOffsetTop: tooltipConfig.top
         })
       }
+      else {
+        this.setState({primaryTooltipText: null})
+      }
       if(secondaryData && secondaryData.length && secondaryData[i]) {
         let realValue = secondaryData[i][this.props.dataKey]
         // If this is a stacked chart, take out the added data
@@ -103,6 +106,9 @@ class AnalysisByTime extends React.Component {
           secondaryTooltipY: tooltipConfig.y,
           secondaryTooltipOffsetTop: tooltipConfig.top
         })
+      }
+      else {
+        this.setState({secondaryTooltipText: null})
       }
     }
   }

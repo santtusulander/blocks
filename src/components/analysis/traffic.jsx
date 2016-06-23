@@ -28,6 +28,9 @@ class AnalysisTraffic extends React.Component {
     setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+  componentWillReceiveProps() {
+    setTimeout(() => {this.measureContainers()}, 500)
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }

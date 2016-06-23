@@ -137,11 +137,11 @@ export class AnalyticsPage extends React.Component {
 
   render() {
     const metrics = this.props.metrics
-    const peakTraffic = metrics.has('transfer_rates') ?
+    const peakTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
-    const avgTraffic = metrics.has('transfer_rates') ?
+    const avgTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('average') : '0.0 Gbps'
-    const lowTraffic = metrics.has('transfer_rates') ?
+    const lowTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
 
     return (
