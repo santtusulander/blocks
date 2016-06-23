@@ -7,7 +7,7 @@ import moment from 'moment'
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import { getDateRange } from '../../../redux/util.js'
+import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
 class AnalyticsTabOnOffNet extends React.Component {
   componentDidMount() {
@@ -15,29 +15,13 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const params = JSON.stringify(this.props.params)
-    const prevParams = JSON.stringify(nextProps.params)
-    const filters = JSON.stringify(this.props.filters)
-    const prevFilters = JSON.stringify(nextProps.filters)
-
-    if (!( params === prevParams &&
-           filters === prevFilters &&
-           nextProps.location.search === this.props.location.search) ) {
+    if(changedParamsFiltersQS(this.props, nextProps)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
 
   fetchData(params, filters, location){
-    const {startDate, endDate} = getDateRange( filters )
-
-    const fetchOpts = {
-      account: params.account,
-      brand: params.brand,
-      group: params.group,
-      property: location.query.property,
-      startDate: startDate.format('X'),
-      endDate: endDate.format('X')
-    }
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
@@ -52,14 +36,12 @@ class AnalyticsTabOnOffNet extends React.Component {
 
   render(){
     return (
-      <div>
-        <AnalysisOnOffNetReport
-          fetching={this.props.fetching}
-          onOffNetChartType={this.props.onOffNetChartType}
-          onOffStats={this.props.onOffStats}
-          onOffStatsToday={this.props.onOffStatsToday}
-        />
-      </div>
+      <AnalysisOnOffNetReport
+        fetching={this.props.fetching}
+        onOffNetChartType={this.props.onOffNetChartType}
+        onOffStats={this.props.onOffStats}
+        onOffStatsToday={this.props.onOffStatsToday}
+      />
     )
   }
 }

@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import AnalysisFileError from '../../../components/analysis/file-error'
 
 import * as reportsActionCreators from '../../../redux/modules/reports'
-import { getDateRange } from '../../../redux/util.js'
+import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
 class AnalyticsTabFileError extends React.Component {
   componentDidMount() {
@@ -14,44 +14,23 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const params = JSON.stringify(this.props.params)
-    const prevParams = JSON.stringify(nextProps.params)
-    const filters = JSON.stringify(this.props.filters)
-    const prevFilters = JSON.stringify(nextProps.filters)
-
-    if (!( params === prevParams &&
-           filters === prevFilters &&
-           nextProps.location.search === this.props.location.search) ) {
+    if(changedParamsFiltersQS(this.props, nextProps)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
 
   fetchData(params, filters, location){
-    const {startDate, endDate} = getDateRange( filters )
-
-    const fetchOpts = {
-      account: params.account,
-      brand: params.brand,
-      group: params.group,
-      property: location.query.property,
-
-      startDate: startDate.format('X'),
-      endDate: endDate.format('X')
-    }
-
-    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts);
-
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
+    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
   }
 
   render(){
     return (
-      <div>
-        <AnalysisFileError fetching={this.props.fetching}
-          summary={this.props.fileErrorSummary}
-          statusCodes={Immutable.List()}
-          serviceTypes={Immutable.fromJS(['http', 'https'])}
-          urls={this.props.fileErrorURLs}/>
-      </div>
+      <AnalysisFileError fetching={this.props.fetching}
+        summary={this.props.fileErrorSummary}
+        statusCodes={Immutable.List()}
+        serviceTypes={Immutable.fromJS(['http', 'https'])}
+        urls={this.props.fileErrorURLs}/>
     )
   }
 }

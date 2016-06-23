@@ -6,13 +6,7 @@ import AnalysisPlaybackDemo from '../../../components/analysis/playback-demo.jsx
 
 class AnalyticsTabPlaybackDemo extends React.Component {
   render() {
-    return (
-      <div>
-        <AnalysisPlaybackDemo
-          activeVideo={this.props.filters.get('video')}
-        />
-      </div>
-    )
+    return <AnalysisPlaybackDemo activeVideo={this.props.filters.get('video')}/>
   }
 }
 
