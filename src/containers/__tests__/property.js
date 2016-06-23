@@ -29,7 +29,9 @@ function hostActionsMaker() {
 
 function metricsActionsMaker() {
   return {
-    fetchHostMetrics: jest.genMockFunction()
+    fetchDailyHostTraffic: jest.genMockFunction(),
+    fetchHostMetrics: jest.genMockFunction(),
+    fetchHourlyHostTraffic: jest.genMockFunction()
   }
 }
 
