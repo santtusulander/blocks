@@ -84,7 +84,7 @@ export class AccountAnalytics extends React.Component {
     const availableAccounts = filteredAccounts.map(account => {
       return {
         active: account.get('id') === this.props.params.account,
-        link: `/content/analytics/account/${this.props.params.brand}/${account.get('id')}`,
+        link: `/v2-analytics/${this.props.params.brand}/${account.get('id')}`,
         name: account.get('name')
       }
 

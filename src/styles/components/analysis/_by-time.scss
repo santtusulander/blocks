@@ -90,4 +90,15 @@
       stroke: rgba($black, 0.2);
     }
   }
+
+  .slice {
+    fill: rgba($pale-blue, 0.4);
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+      transition: opacity 200ms;
+    }
+  }
 }

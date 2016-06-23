@@ -4,12 +4,16 @@ import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
+import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
 import Header from '../components/header'
+import Navigation from '../components/navigation/navigation.jsx'
+
 import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
@@ -33,7 +37,10 @@ export class Main extends React.Component {
   }
   componentWillMount() {
     this.props.userActions.checkToken()
+
+    this.props.fetchAccountData(this.props.activeAccount, this.props.accounts)
   }
+
   activatePurge(property) {
     return e => {
       if(e) {
@@ -121,15 +128,25 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
+        <Navigation
+          activeAccount={this.props.activeAccount}
+          activeGroup={this.props.activeGroup}
+          activeHost={this.props.activeHost}
+          params={this.props.params}
+          pathname={this.props.location.pathname}
+        />
+
         {this.props.location.pathname !== '/login' &&
           this.props.location.pathname !== '/starburst-help' ?
           <Header
-            accounts={filteredAccounts}
+            accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
             activatePurge={this.activatePurge(firstProperty)}
+            breadcrumbs={this.props.breadcrumbs}
             fetching={this.props.fetching}
+            fetchAccountData={this.props.fetchAccountData}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
             logOut={this.logOut}
@@ -216,17 +233,34 @@ function mapStateToProps(state) {
     showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
     username: state.user.get('username'),
-    viewingChart: state.ui.get('viewingChart')
+    viewingChart: state.ui.get('viewingChart'),
+    breadcrumbs: state.ui.get('breadcrumbs')
   };
 }
 
 function mapDispatchToProps(dispatch) {
+  const accountActions = bindActionCreators(accountActionCreators, dispatch);
+  const groupActions = bindActionCreators(groupActionCreators, dispatch);
+
+  function fetchAccountData(account, accounts) {
+    if(accounts && accounts.isEmpty()) {
+      accountActions.fetchAccounts('udn')
+    }
+    if(account) {
+      accountActions.fetchAccount('udn', account)
+      groupActions.fetchGroups('udn', account)
+    }
+  }
+
   return {
+    accountActions: accountActions,
+    groupActions: groupActions,
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    userActions: bindActionCreators(userActionCreators, dispatch)
-  };
+    userActions: bindActionCreators(userActionCreators, dispatch),
+    fetchAccountData: fetchAccountData
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

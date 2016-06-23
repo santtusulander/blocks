@@ -52,7 +52,6 @@
 
   .chart-header {
     clear: both;
-    overflow: auto;
     margin-top: $btn-height;
 
     @include md {
@@ -66,6 +65,11 @@
       @include md {
         margin-left: $md-btn-height;
       }
+    }
+
+    .date-range-select {
+      display: inline-block;
+      margin-left: 1em;
     }
   }
 
@@ -103,5 +107,9 @@
     .secondary-label {
       fill: rgba($pale-blue, 0.2);
     }
+  }
+
+  .slice-tooltip {
+    width: 200px;
   }
 }

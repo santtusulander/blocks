@@ -74,7 +74,7 @@ export class GroupAnalytics extends React.Component {
     const availableGroups = this.props.groups.map(group => {
       return {
         active: group.get('id') === this.props.params.group,
-        link: `/content/analytics/group/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`,
+        link: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${group.get('id')}`,
         name: group.get('name')
       }
     })
