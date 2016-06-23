@@ -194,7 +194,7 @@ export class Property extends React.Component {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
   }
   hoverSlice(date, x1, x2) {
-    if(date) {
+    if(date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
         .find(day => moment.utc(day.get('timestamp'), 'X')
           .isSame(moment.utc(date), 'day'))
@@ -225,7 +225,7 @@ export class Property extends React.Component {
       }
     }).toJS()
     // Add time difference to the historical data so it matches up
-    const historical_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
+    const historical_traffic = !this.props.hourlyTraffic.get('history').size ? [] : this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
       return {
         timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
         bits_per_second: hour.getIn(['transfer_rates','average'])
