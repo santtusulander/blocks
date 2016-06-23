@@ -63,12 +63,13 @@ export class Hosts extends React.Component {
       const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
       return `/content/configuration/${builtPath}${encoded}`
     }
+    const analyticsPath = `${brand}/${account}/${group}/property?property=`
     const analyticsURLBuilder = (...property) => {
       if(property[0]) {
         const encoded = encodeURIComponent(property[0]).replace(/\./g, "%2e")
-        return `/content/analytics/property/${builtPath}${encoded}`
+        return `/v2-analytics/${analyticsPath}${encoded}`
       }
-      return `/content/analytics/group/${brand}/${account}/${group}`
+      return `/v2-analytics/${brand}/${account}/${group}`
     }
     const breadcrumbs = [
       {

@@ -244,7 +244,7 @@ export class Property extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               <Link className="btn btn-success btn-icon"
-                to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                to={`/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?property=${this.props.location.query.name}`}>
                 <IconChart/>
               </Link>
               <Link className="btn btn-success btn-icon"

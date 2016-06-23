@@ -58,16 +58,39 @@ class AnalyticsContainer extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (params !== prevParams) this.fetchData( nextProps.params)
+    if (params !== prevParams ||
+      this.props.location.search !== nextProps.location.search) {
+      this.fetchData( nextProps.params)
+    }
   }
 
   setBreadcrumbs() {
     let breadCrumbLinks = []
 
-    if (this.props.params.brand) breadCrumbLinks.push({label: getNameById(this.props.brands, this.props.params.brand), url: getAnalyticsUrl('brand', this.props.params.brand, this.props.params)})
-    if (this.props.params.account) breadCrumbLinks.push({label: getNameById(this.props.accounts, this.props.params.account), url: getAnalyticsUrl('account', this.props.params.account, this.props.params)})
-    if (this.props.params.group) breadCrumbLinks.push({label: getNameById(this.props.groups, this.props.params.group), url: getAnalyticsUrl('group', this.props.params.group, this.props.params)})
-    if (this.props.params.property) breadCrumbLinks.push({label: this.props.params.property, url: ''})
+    if (this.props.params.brand) {
+      breadCrumbLinks.push({
+        label: getNameById(this.props.brands, this.props.params.brand),
+        url: getAnalyticsUrl('brand', this.props.params.brand, this.props.params)
+      })
+    }
+    if (this.props.params.account) {
+      breadCrumbLinks.push({
+        label: getNameById(this.props.accounts, this.props.params.account),
+        url: getAnalyticsUrl('account', this.props.params.account, this.props.params)
+      })
+    }
+    if (this.props.params.group) {
+      breadCrumbLinks.push({
+        label: getNameById(this.props.groups, this.props.params.group),
+        url: getAnalyticsUrl('group', this.props.params.group, this.props.params)
+      })
+    }
+    if (this.props.location.query.property) {
+      breadCrumbLinks.push({
+        label: this.props.location.query.property,
+        url: getAnalyticsUrl('property', this.props.location.query.property, this.props.params)
+      })
+    }
 
     this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
   }
@@ -101,7 +124,6 @@ class AnalyticsContainer extends React.Component {
   }
 
   onFilterChange( filterName, filterValue){
-    console.log('AnalyticsContainer - onFilterChange()', filterName, filterValue)
     this.props.filtersActions.setFilterValue({filterName: filterName, filterValue: filterValue} )
   }
 
@@ -147,7 +169,10 @@ class AnalyticsContainer extends React.Component {
 
           {
             /* Render tab -content */
-            this.props.children && React.cloneElement(this.props.children, {filters: this.props.filters} )
+            this.props.children && React.cloneElement(this.props.children, {
+              filters: this.props.filters,
+              location: this.props.location
+            } )
           }
 
           </div>
@@ -158,11 +183,13 @@ class AnalyticsContainer extends React.Component {
 }
 
 AnalyticsContainer.propTypes = {
-  brands: React.PropTypes.instanceOf(Immutable.List),
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  brands: React.PropTypes.instanceOf(Immutable.List),
+  filters: React.PropTypes.instanceOf(Immutable.Map),
   groups: React.PropTypes.instanceOf(Immutable.List),
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  filters: React.PropTypes.instanceOf(Immutable.Map)
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List)
 }
 
 function mapStateToProps(state) {

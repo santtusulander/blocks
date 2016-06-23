@@ -69,7 +69,7 @@ export class PropertyAnalytics extends React.Component {
     const availableHosts = this.props.hosts.map(host => {
       return {
         active: host === propertyName,
-        link: `/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(host).replace(/\./g, "%2e")}`,
+        link: `/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?property=${encodeURIComponent(host).replace(/\./g, "%2e")}`,
         name: host
       }
     })
