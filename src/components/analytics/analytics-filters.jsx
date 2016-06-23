@@ -8,7 +8,7 @@ import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 
-import FilterChecklistDropdown from '../analysis/filters/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
 import './analytics-filters.scss'
 
