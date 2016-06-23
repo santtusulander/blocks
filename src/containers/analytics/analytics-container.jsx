@@ -124,7 +124,10 @@ class AnalyticsContainer extends React.Component {
   }
 
   onFilterChange( filterName, filterValue){
-    this.props.filtersActions.setFilterValue({filterName: filterName, filterValue: filterValue} )
+    this.props.filtersActions.setFilterValue({
+      filterName: filterName,
+      filterValue: filterValue
+    } )
   }
 
   render(){
@@ -137,7 +140,7 @@ class AnalyticsContainer extends React.Component {
       'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
       'file-error': ['date-range', 'error-code'],
       'url-report': ['date-range', 'error-code'],
-      'playback-demo': []
+      'playback-demo': ['video']
     })
 
     return (

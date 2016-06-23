@@ -8,7 +8,8 @@ const initialState = Immutable.fromJS({
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],
     onOffNet: ['on-net', 'off-net'],
-    errorCodes: ['All']
+    errorCodes: ['All'],
+    video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
@@ -36,4 +37,3 @@ export default handleActions({
 // ACTIONS
 
 export const setFilterValue = createAction(SET_FILTER_VALUE)
-
