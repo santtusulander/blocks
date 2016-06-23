@@ -242,7 +242,7 @@ function routeTraffic(req, res) {
               average : detailRecordData.bytes_average
             },
             transfer_rates: {
-              total   : dataUtils.getBPSFromBytes(detailRecordData.bytes, duration),
+              total   : dataUtils.getBPSFromBytes(detailRecordData.bytes, optionsFinal.granularity),
               peak    : dataUtils.getBPSFromBytes(detailRecordData.bytes_peak, optionsFinal.granularity),
               low     : dataUtils.getBPSFromBytes(detailRecordData.bytes_lowest, optionsFinal.granularity),
               average : dataUtils.getBPSFromBytes(detailRecordData.bytes_average, optionsFinal.granularity)
