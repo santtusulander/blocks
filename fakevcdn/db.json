@@ -1,0 +1,169 @@
+{
+  "accounts": [
+    {"id": 2, "name": "Fake Account 2"},
+    {"id": 3, "name": "Fake Account 3"},
+    {"id": 4, "name": "Fake Account 4"}
+  ],
+  "groups": [
+    {"id": 5, "name": "Fake Account 2 - Group 2", "accountId": 2},
+    {"id": 6, "name": "Fake Account 2 - Group 3", "accountId": 2},
+    {"id": 7, "name": "Fake Account 2 - Group 4", "accountId": 2},
+
+    {"id": 8, "name":  "Fake Account 3 - Group 2", "accountId": 3},
+    {"id": 9, "name":  "Fake Account 3 - Group 3", "accountId": 3},
+    {"id": 10, "name": "Fake Account 3 - Group 4", "accountId": 3},
+
+    {"id": 11, "name": "Fake Account 4 - Group 2", "accountId": 4},
+    {"id": 12, "name": "Fake Account 4 - Group 3", "accountId": 4},
+    {"id": 13, "name": "Fake Account 4 - Group 4", "accountId": 4}
+
+  ],
+  "published_hosts": [
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 5 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 6 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 7 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 8 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 9 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 10 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 11 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 12 },
+    { "hosts": [
+       "www.fake1.com",
+        "www.fake2.com",
+        "www.fake3.com"
+    ], "groupId": 13 }
+  ],
+  "host_data": [
+    { "id": 1,
+      "status":1,
+      "updated":1455704044,
+      "description":"CNN.com provisioning",
+      "created":1455704044,
+      "services":[
+        {
+          "updated":1455704044,
+          "active_configurations": [{"config_id": 1}],
+          "description":"Service description",
+          "end_date":1487240044,
+          "created":1455704044,
+          "object_id":"65883fd7ab4f407faee98dce8d1adfb2",
+          "deployment_mode":"trial",
+          "service_type":"large",
+          "start_date":1455704044,
+          "configurations":[
+            {
+              "config_id":1,
+              "request_policy":{},
+              "config_created":1455704044,
+              "edge_configuration":{
+                "ingest_order":[
+                  "tor",
+                  "nyc",
+                  "mon"
+                ],
+                "enabled_midgress_ssl":false,
+                "published_name":"cnn.com",
+                "origin_host_port":80,
+                "host_header":"foobar",
+                "origin_path_append":"",
+                "enabled_origin_ssl":false,
+                "ssl_certificate_id":"cnn.com",
+                "origin_host_name":"cnn.com",
+                "detected_cdn":""
+              },
+              "response_policy":{},
+              "config_name":"test1",
+              "default_policy":{},
+              "config_updated":1455704044,
+              "configuration_status":{
+                "deployment_date":1454918889,
+                "comments":"In progress",
+                "git_tag":"1.0.1",
+                "last_edited_by":"John Doe",
+                "git_id":"4hjn5j34nb4ok443",
+                "deployment_status":1
+              }
+            },
+            {
+              "config_id":2,
+              "request_policy":{},
+              "config_created":1455704044,
+              "edge_configuration":{
+                "ingest_order":[
+                  "tor",
+                  "mon",
+                  "nyc"
+                ],
+                "enabled_midgress_ssl":false,
+                "published_name":"test.cnn.com",
+                "origin_host_port":80,
+                "host_header":"foobar",
+                "origin_path_append":"",
+                "enabled_origin_ssl":false,
+                "ssl_certificate_id":"",
+                "origin_host_name":"origin.cnn.com",
+                "detected_cdn":""
+              },
+              "response_policy":{},
+              "config_name":"test1",
+              "default_policy": {
+                "policy_name": "Test policy",
+                "policy_rules":
+                  [
+                    {
+                      "rule_name": "Setting cache control",
+                      "set":
+                      {"cache_control":
+                      {"honor_origin": true,
+                        "check_etag": "weak"}}
+                    }
+                  ]
+              },
+              "config_updated":1455704044,
+              "configuration_status":{
+                "deployment_date":1454918889,
+                "comments":"In progress",
+                "git_tag":"1.0.0-experimental",
+                "last_edited_by":"John Doe",
+                "git_id":"4h2ew4n5j34nb4ok8883",
+                "deployment_status":1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

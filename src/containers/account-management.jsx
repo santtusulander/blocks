@@ -42,10 +42,10 @@ export class AccountManagement extends Component {
     this.showNotification = this.showNotification.bind(this)
   }
 
-  componentWillMount() {
+/*  componentWillMount() {
     this.props.fetchAccountData(this.state.activeAccount, this.props.accounts)
   }
-
+*/
   editSOARecord() {
     const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
     const activeDomain = dnsData.get('activeDomain')
@@ -57,7 +57,7 @@ export class AccountManagement extends Component {
 
   changeActiveAccount(account) {
     this.setState({ activeAccount: account })
-    this.props.fetchAccountData(account)
+    //this.props.fetchAccountData(account)
   }
 
   dnsEditOnSave(){
@@ -167,17 +167,19 @@ export class AccountManagement extends Component {
     }
 
     return (
-      <PageContainer hasSidebar={isAdmin} className="account-management">
+      <PageContainer className="account-management">
         {isAdmin && <div>
+          {/* REMOVE: Not needed
           <AccountManagementSidebar
             accounts={accounts}
             activeAccount={this.state.activeAccount}
             activate={this.changeActiveAccount}
             addAccount={() => toggleModal(ADD_ACCOUNT)}
           />
+          */}
           <Content>
 
-            {this.state.activeAccount && <ManageAccount
+            {this.props.activeAccount && <ManageAccount
               account={this.props.activeAccount}
               addGroup={this.addGroupToActiveAccount}
               deleteGroup={this.deleteGroupFromActiveAccount}
@@ -186,7 +188,7 @@ export class AccountManagement extends Component {
               groups={this.props.groups}/>
             }
 
-            {!this.state.activeAccount && <ManageSystem
+            {!this.props.activeAccount && <ManageSystem
               dnsList={dnsListProps}
               brandsList={{
                 accountManagementModal: accountManagementModal,
@@ -231,7 +233,7 @@ AccountManagement.propTypes = {
   activeRecordType: PropTypes.string,
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
-  fetchAccountData: PropTypes.func,
+  //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   params: PropTypes.object,
@@ -257,7 +259,9 @@ function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  function fetchAccountData(account, accounts) {
+
+  /* This is fetched by main - container as we should always have account
+    function fetchAccountData(account, accounts) {
     if(accounts && accounts.isEmpty()) {
       accountActions.fetchAccounts('udn')
     }
@@ -265,13 +269,13 @@ function mapDispatchToProps(dispatch) {
       accountActions.fetchAccount('udn', account)
       groupActions.fetchGroups('udn', account)
     }
-  }
+  }*/
 
   return {
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
-    fetchAccountData: fetchAccountData,
+    //fetchAccountData: fetchAccountData,
     groupActions: groupActions,
     uiActions: uiActions
   };

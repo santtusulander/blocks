@@ -55,15 +55,16 @@ class AnalysisServiceProviders extends React.Component {
   }
   render() {
     const month = moment().format('MMMM YYYY')
+
     const providers = this.props.stats.map((provider, i) => {
       return Immutable.fromJS({
         group: provider.get('name'),
         groupIndex: i,
         data: [
-          provider.get('http').get('net_on'),
-          provider.get('https').get('net_on'),
-          provider.get('http').get('net_off'),
-          provider.get('https').get('net_off')
+          provider.getIn(['http','net_on']),
+          provider.getIn(['https','net_on']),
+          provider.getIn(['http','net_off']),
+          provider.getIn(['https','net_off'])
         ]
       })
     })

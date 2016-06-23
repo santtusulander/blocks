@@ -4,8 +4,7 @@ import './export-email-form';
 import './export-file-form';
 import './loading-spinner'
 import './delete-modal'
-import './content-item-chart'
-import './loading-spinner'
+import './navigation.js'
 
 
 //account management
@@ -21,6 +20,15 @@ import './account-management/roles-list'
 import './account-management/new-account-form'
 import './account-management/brand-edit-form'
 
+// content
+import './content/add-host'
+import './content/content-item-chart.js'
+
+// filters
+import './filters/filter-dropdown'
+import './filters/date-range-filter'
+import './filters/filter-checklist-dropdown'
+
 //security
 import './security/ssl-list'
 import './security/certificate-form'
@@ -28,4 +36,3 @@ import './security/certificate-form'
 // content
 import './content/add-host'
 import './content/content-item-chart'
-

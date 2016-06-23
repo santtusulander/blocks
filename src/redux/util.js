@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const urlBase = ''
 
 export const topoBase = () => {
@@ -33,7 +35,12 @@ export function mapReducers(next, err) {
 
 export function qsBuilder(params) {
   const qs = Object.keys(params).map(key => {
+
+    //remove undefined values
+    if (params[key] === undefined ) return
+
     let param = key
+
     if(key == 'startDate') {
       param = 'start'
     }
@@ -43,4 +50,14 @@ export function qsBuilder(params) {
     return `${param}=${params[key]}`
   })
   return qs.length ? '?'+qs.join('&') : ''
+}
+
+export function getDateRange( filters ) {
+  const endDate = filters.getIn(['dateRange', 'endDate']) || moment().utc().endOf('day')
+  const startDate = filters.getIn(['dateRange', 'startDate']) || moment().utc().startOf('month')
+
+  return {
+    startDate,
+    endDate
+  }
 }

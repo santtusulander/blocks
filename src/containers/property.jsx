@@ -24,16 +24,21 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
+import DateRangeSelect from '../components/date-range-select'
+import Tooltip from '../components/tooltip'
 
 export class Property extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      byLocationWidth: 0,
+      activeSlice: null,
+      activeSliceX: 100,
       byTimeWidth: 0,
+      endDate: moment.utc().endOf('day'),
       purgeActive: false,
-      propertyMenuOpen: false
+      propertyMenuOpen: false,
+      startDate: moment.utc().startOf('month')
     }
 
     this.togglePurge = this.togglePurge.bind(this)
@@ -42,6 +47,9 @@ export class Property extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
     this.notificationTimeout = null
+    this.changeDateRange = this.changeDateRange.bind(this)
+    this.hoverSlice = this.hoverSlice.bind(this)
+    this.selectSlice = this.selectSlice.bind(this)
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -54,13 +62,32 @@ export class Property extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.location.query.name !== this.props.location.query.name) {
-      this.fetchData(nextProps.location.query.name)
+      // reset to month to date for new property
+      this.setState({
+        startDate: moment.utc().startOf('month'),
+        endDate: moment.utc().endOf('day'),
+        activeSlice: null
+      }, () => {
+        this.fetchHost(nextProps.location.query.name)
+        this.fetchData(nextProps.location.query.name)
+      })
     }
+    this.measureContainers()
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
-  fetchData(property) {
+  dateDiff() {
+    return this.state.endDate.diff(this.state.startDate) + 1
+  }
+  changeDateRange (startDate, endDate) {
+    this.setState({
+      startDate: startDate,
+      endDate: endDate,
+      activeSlice: null
+    }, () => this.fetchData(this.props.location.query.name))
+  }
+  fetchHost(property) {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(
       this.props.params.brand,
@@ -68,23 +95,18 @@ export class Property extends React.Component {
       this.props.params.group,
       property
     )
-    this.props.trafficActions.startFetching()
-    Promise.all([
-      this.props.trafficActions.fetchByTime({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        property: property,
-        startDate: moment.utc().endOf('hour').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('hour').format('X')
-      })
-    ]).then(this.props.trafficActions.finishFetching)
+  }
+  fetchData(property) {
+    if(!this.props.activeHost || !this.props.activeHost.size) {
+      this.fetchHost(property)
+    }
     Promise.all([
       this.props.visitorsActions.fetchByCountry({
         account: this.props.params.account,
         group: this.props.params.group,
         property: property,
-        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('day').format('X'),
+        startDate: this.state.startDate.format('X'),
+        endDate: this.state.endDate.format('X'),
         granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
@@ -110,14 +132,16 @@ export class Property extends React.Component {
         this.props.params.group
       )
     }
-    if(!this.props.metrics || !this.props.metrics.size) {
-      this.props.metricsActions.fetchHostMetrics({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-        endDate: moment.utc().endOf('day').format('X')
-      })
+    const metricsOpts = {
+      account: this.props.params.account,
+      group: this.props.params.group,
+      startDate: this.state.startDate.format('X'),
+      endDate: this.state.endDate.format('X'),
+      property: property,
+      list_children: 'false'
     }
+    this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
+    this.props.metricsActions.fetchDailyHostTraffic(metricsOpts)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -169,27 +193,50 @@ export class Property extends React.Component {
   togglePropertyMenu() {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
   }
+  hoverSlice(date, x1, x2) {
+    if(date) {
+      const activeSlice = this.props.dailyTraffic.get(0).get('detail')
+        .find(day => moment.utc(day.get('timestamp'), 'X')
+          .isSame(moment.utc(date), 'day'))
+      const xPos = (((x1 + x2) / 2) - 100)
+      this.setState({
+        activeSlice: activeSlice,
+        activeSliceX: xPos
+      })
+    }
+    else {
+      this.setState({activeSlice: null})
+    }
+  }
+  selectSlice(date) {
+    this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
+  }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
-    const metrics = this.props.metrics.find(
-      metric => metric.get('property') === this.props.location.query.name)
-      || Immutable.Map()
-    const metrics_traffic = metrics.has('traffic') ? metrics.get('traffic').toJS() : []
-    // Add 28 days to the historical data so it matches up
-    const historical_traffic = (metrics.has('historical_traffic') ? metrics.get('historical_traffic').toJS() : [])
-      .map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp).add(28, 'days').toDate()
-        return datapoint
-      })
-    const avg_transfer_rate = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('average').split(' ') : [0, null]
-    const avg_cache_hit_rate = metrics.has('avg_cache_hit_rate') ? metrics.get('avg_cache_hit_rate') : 0
-    const avg_ttfb = metrics.has('avg_ttfb') ? metrics.get('avg_ttfb') : 0
+    const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
+    const metrics_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
+      return {
+        timestamp: moment(hour.get('timestamp'), 'X').toDate(),
+        bits_per_second: hour.getIn(['transfer_rates','average'])
+      }
+    }).toJS()
+    // Add time difference to the historical data so it matches up
+    const historical_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
+      return {
+        timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
+        bits_per_second: hour.getIn(['transfer_rates','average'])
+      }
+    }).toJS()
+    const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
+    const avg_cache_hit_rate = totals && totals.get('chit_ratio')
+    const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    const sliceGranularity = this.state.endDate.diff(this.state.startDate, 'days') <= 1 ?
+      null : 'day'
     return (
       <PageContainer className="property-container">
         <Content>
@@ -197,7 +244,7 @@ export class Property extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               <Link className="btn btn-success btn-icon"
-                to={`/content/analytics/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                to={`/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?property=${this.props.location.query.name}`}>
                 <IconChart/>
               </Link>
               <Link className="btn btn-success btn-icon"
@@ -281,35 +328,60 @@ export class Property extends React.Component {
               <div className="kpi">
                 Bandwidth (avg/s)
                 <h3>
-                  {avg_transfer_rate}
+                  {formatBitsPerSecond(avg_transfer_rate, true)}
                 </h3>
               </div>
               <h3 className="has-btn">
                 Traffic Summary
-                <span className="heading-suffix"> (last 28 days)</span>
+                <DateRangeSelect
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  changeDateRange={this.changeDateRange}/>
               </h3>
             </div>
 
             <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
               <AnalysisByTime axes={true} padding={30}
-                primaryData={metrics_traffic.reverse()}
-                secondaryData={historical_traffic.reverse()}
+                primaryData={metrics_traffic}
+                secondaryData={historical_traffic}
+                primaryLabel="Selected Period"
+                comparisonLabel="Comparison Period"
+                showLegend={true}
+                showTooltip={false}
                 dataKey='bits_per_second'
                 width={this.state.byTimeWidth}
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
-                yAxisCustomFormat={formatBitsPerSecond}/>
-              <div className="chart-labels">
-                <svg width="20" height="20">
-                  <line x1="0" y1="10" x2="20" y2="10" className="primary-label"/>
-                </svg>
-                Selected Period
-                <svg width="20" height="20">
-                  <circle cx="10" cy="10" r="10" className="secondary-label"/>
-                </svg>
-                Comparison Period
-              </div>
+                yAxisCustomFormat={formatBitsPerSecond}
+                sliceGranularity={sliceGranularity}
+                hoverSlice={this.hoverSlice}
+                selectSlice={this.selectSlice}/>
+              {this.state.activeSlice && <Tooltip
+                className="slice-tooltip"
+                x={this.state.activeSliceX}
+                y={-30}
+                hidden={false}>
+                <div className="tooltip-header">
+                  <b>{moment.utc(this.state.activeSlice.get('timestamp'),'X').format('MMM D, ddd')}</b>
+                </div>
+                <div>
+                  Peak
+                  <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','peak']))}
+                  </span>
+                </div>
+                <div>
+                  Average <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','average']))}
+                  </span>
+                </div>
+                <div>
+                  Low <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','low']))}
+                  </span>
+                </div>
+              </Tooltip>}
             </div>
           </div>
         </Content>
@@ -333,6 +405,7 @@ Property.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -340,16 +413,15 @@ Property.propTypes = {
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
+  hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,
   location: React.PropTypes.object,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
-  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
@@ -361,9 +433,12 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
-  metrics: Immutable.List(),
+  dailyTraffic: Immutable.List(),
+  hourlyTraffic: Immutable.fromJS({
+    now: [],
+    history: []
+  }),
   properties: Immutable.List(),
-  trafficByTime: Immutable.List(),
   visitorsByCountry: Immutable.Map()
 }
 
@@ -373,11 +448,11 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
+    dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    metrics: state.metrics.get('hostMetrics'),
+    hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
-    trafficByTime: state.traffic.get('byTime'),
     trafficFetching: state.traffic.get('fetching'),
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
