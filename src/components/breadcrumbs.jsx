@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router'
 
 export const Breadcrumbs = props => {
-  const links = props.links || []
+  const links = props.links
   const lastLink = links && links.length - 1
+
   return (
     <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
       {links.map((link, index) => {
@@ -18,6 +19,10 @@ export const Breadcrumbs = props => {
   )
 }
 Breadcrumbs.displayName = 'Breadcrumbs'
+Breadcrumbs.defaultProps = {
+  links: []
+}
+
 Breadcrumbs.propTypes = {
   links: React.PropTypes.array
 };
