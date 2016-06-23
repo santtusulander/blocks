@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
+import moment from 'moment'
 import Immutable from 'immutable'
-import {Link, browserHistory} from 'react-router'
+import { Link } from 'react-router'
 import { Nav, NavItem, Dropdown, ButtonToolbar, Button } from 'react-bootstrap'
 
 import Select from '../select.jsx'
-import FilterDropdown from '../analysis/filters/filter-dropdown/filter-dropdown.jsx'
-
+//import FilterDropdown from '../analysis/filters/filter-dropdown/filter-dropdown.jsx'
+import {getTabLink, getAnalyticsUrl} from '../../util/helpers.js'
 import { getRoute } from '../../routes.jsx'
-import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
@@ -42,12 +42,10 @@ function createPropertyDropdownOptions ( opts ){
   })
 }
 */
-
 const AnalyticsViewControl = (props) => {
   /*
   const brandOptions = createOptions( props.brands )
    */
-
   const accountOptions = createOptions( props.accounts )
   const groupOptions = createOptions( props.groups )
   const propertyOptions = createPropertyOptions( props.properties )
@@ -90,7 +88,7 @@ const AnalyticsViewControl = (props) => {
       }
 
       <ButtonToolbar className="pull-right">
-        <Button bsStyle="primary" >Export</Button>
+        <Button bsStyle="primary" onClick={props.exportCSV}>Export</Button>
       </ButtonToolbar>
 
       { /* TODO: Implement filtered dropdown, when possible (component fixed)
@@ -146,13 +144,13 @@ AnalyticsViewControl.defaultProps = {
 }
 
 AnalyticsViewControl.propTypes = {
-  brands: React.PropTypes.instanceOf(Immutable.List),
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  brands: React.PropTypes.instanceOf(Immutable.List),
   groups: React.PropTypes.instanceOf(Immutable.List),
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  location: React.PropTypes.object,
   history: React.PropTypes.object,
-  params: React.PropTypes.object
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List)
 }
 
 export default AnalyticsViewControl

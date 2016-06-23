@@ -2,13 +2,13 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 import { getDateRange } from '../../../redux/util.js'
+import { createCSVExporters } from '../../../util/analysis-csv-export'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props){
@@ -53,7 +53,8 @@ class AnalyticsTabTraffic extends React.Component {
 
   }
 
-  render(){
+  render() {
+    this.props.setDataToExport(this.props.trafficByTime, this.props.filters.get('serviceTypes'))
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics    = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
@@ -87,14 +88,15 @@ class AnalyticsTabTraffic extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    serviceTypes: state.filters.get('serviceTypes'),
     metrics: Immutable.List(),
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress'),
+    totalEgress: state.traffic.get('totalEgress')
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch)

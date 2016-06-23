@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -19,6 +20,8 @@ import PageHeader from '../../components/layout/page-header'
 
 import {getRoute} from '../../routes.jsx'
 import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
+import { createCSVExporters } from '../../util/analysis-csv-export'
+
 
 import './analytics-container.scss'
 
@@ -46,7 +49,7 @@ class AnalyticsContainer extends React.Component {
 
   constructor(props){
     super(props)
-
+    this.dataToExport = {}
     this.onFilterChange = this.onFilterChange.bind(this)
   }
 
@@ -97,7 +100,6 @@ class AnalyticsContainer extends React.Component {
 
   fetchData(params, refresh){
     let promises = [];
-
     /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
     if(params.brand !== this.props.params.brand || refresh) {
       promises.push( this.props.accountActions.fetchAccounts(params.brand) )
@@ -131,7 +133,6 @@ class AnalyticsContainer extends React.Component {
   }
 
   render(){
-
     /* TODO: should  be moved to consts ? */
     const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
@@ -142,7 +143,20 @@ class AnalyticsContainer extends React.Component {
       'url-report': ['date-range', 'error-code'],
       'playback-demo': ['video']
     })
+    const setDataToExport = (data, serviceTypes) => {
+      this.dataToExport.data = data
+      if(serviceTypes) {
+        this.dataToExport.serviceTypes = serviceTypes
+      }
+    }
 
+    const exportCSV = () => {
+      const fileNamePart = (type, item) => this.props.params[type] && item ? ` - ${item.get('name')}` : ''
+      const fileName = `${this.props.activeAccount.get('name')}${fileNamePart('group', this.props.activeGroup)}${fileNamePart('property', this.props.activeHost)}`
+      switch(getTabName(this.props.location.pathname)) {
+        case 'traffic': createCSVExporters(fileName).traffic(this.dataToExport.data, this.dataToExport.serviceTypes)
+      }
+    }
     return (
       <PageContainer className='analytics-container'>
         <Content>
@@ -150,6 +164,7 @@ class AnalyticsContainer extends React.Component {
             <p>ANALYTICS</p>
 
             <AnalyticsViewControl
+              exportCSV={exportCSV}
               brands={this.props.brands}
               accounts={this.props.accounts}
               groups={this.props.groups}
@@ -173,6 +188,8 @@ class AnalyticsContainer extends React.Component {
           {
             /* Render tab -content */
             this.props.children && React.cloneElement(this.props.children, {
+              params: this.props.params,
+              setDataToExport: setDataToExport,
               filters: this.props.filters,
               location: this.props.location
             } )
@@ -187,6 +204,9 @@ class AnalyticsContainer extends React.Component {
 
 AnalyticsContainer.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   brands: React.PropTypes.instanceOf(Immutable.List),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   groups: React.PropTypes.instanceOf(Immutable.List),
@@ -197,6 +217,9 @@ AnalyticsContainer.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.account.get('activeGroup'),
+    activeHost: state.account.get('activeHost'),
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
@@ -206,7 +229,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     //TODO: Add module for brands?
@@ -219,4 +242,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsContainer)
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsContainer)
