@@ -31,7 +31,6 @@ export class Property extends React.Component {
     super(props)
 
     this.state = {
-      byLocationWidth: 0,
       byTimeWidth: 0,
       endDate: moment.utc().endOf('day'),
       purgeActive: false,
@@ -67,6 +66,7 @@ export class Property extends React.Component {
         this.fetchData(nextProps.location.query.name)
       })
     }
+    this.measureContainers()
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
@@ -130,9 +130,11 @@ export class Property extends React.Component {
       group: this.props.params.group,
       startDate: this.state.startDate.format('X'),
       endDate: this.state.endDate.format('X'),
-      property: property
+      property: property,
+      list_children: 'false'
     }
     this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
+    this.props.metricsActions.fetchDailyHostTraffic(metricsOpts)
   }
   measureContainers() {
     if(this.refs.byTimeHolder) {
@@ -208,6 +210,8 @@ export class Property extends React.Component {
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
+    const sliceGranularity = this.state.endDate.diff(this.state.startDate, 'days') <= 1 ?
+      null : 'day'
     return (
       <PageContainer className="property-container">
         <Content>
@@ -324,7 +328,8 @@ export class Property extends React.Component {
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
-                yAxisCustomFormat={formatBitsPerSecond}/>
+                yAxisCustomFormat={formatBitsPerSecond}
+                sliceGranularity={sliceGranularity}/>
             </div>
           </div>
         </Content>
@@ -348,6 +353,7 @@ Property.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -375,6 +381,7 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
     history: []
@@ -389,6 +396,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
+    dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),

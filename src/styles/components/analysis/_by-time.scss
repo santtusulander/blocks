@@ -90,4 +90,12 @@
       stroke: rgba($black, 0.2);
     }
   }
+
+  .slice {
+    fill: transparent;
+
+    &:hover {
+      fill: rgba($pale-blue, 0.4);
+    }
+  }
 }

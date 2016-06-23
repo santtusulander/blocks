@@ -162,11 +162,10 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)
       ]);
 
+    const startDate = new Date(Math.min(xPrimaryExtent[0], xSecondayExtent[0]))
+    const endDate = new Date(Math.max(xPrimaryExtent[1], xSecondayExtent[1]))
     const xScale = d3.time.scale.utc()
-      .domain([
-        Math.min(xPrimaryExtent[0], xSecondayExtent[0]),
-        Math.max(xPrimaryExtent[1], xSecondayExtent[1])
-      ])
+      .domain([startDate, endDate])
       .range([
         this.props.padding * (this.props.axes ? 3 : 1),
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
@@ -202,6 +201,13 @@ class AnalysisByTime extends React.Component {
     const dayTicksStartDate = this.props.axes ? moment(dayTicks[0]).date() : 1
     if(dayTicksStartDate < 25 && dayTicksStartDate > 1) {
       monthTicks.unshift(dayTicks[0])
+    }
+    const slices = []
+    if(this.props.sliceGranularity) {
+      slices.push(startDate)
+      while(slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
+        slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
+      }
     }
     return (
       <div className={className}
@@ -299,6 +305,19 @@ class AnalysisByTime extends React.Component {
             }, [])
             : null
           }
+          {slices.map((slice, i) => {
+            const startX = xScale(slice)
+            const endX = xScale(moment.utc(slice).endOf(this.props.sliceGranularity))
+            return (
+              <polygon key={i} className="slice"
+                points={[
+                  `${startX},${this.props.height}`,
+                  `${startX},0`,
+                  `${endX},0`,
+                  `${endX},${this.props.height}`
+                ].join(' ')}/>
+            )
+          })}
           <defs>
             <linearGradient id="dt-primary-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
@@ -358,6 +377,7 @@ AnalysisByTime.propTypes = {
   secondaryLabel: React.PropTypes.string,
   showLegend: React.PropTypes.bool,
   showTooltip: React.PropTypes.bool,
+  sliceGranularity: React.PropTypes.string,
   stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
