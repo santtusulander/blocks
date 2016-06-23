@@ -78,11 +78,11 @@ class AnalyticsTabTraffic extends React.Component {
       })
     }
 
-    const peakTraffic = metrics.has('transfer_rates') ?
+    const peakTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.getIn(['transfer_rates','peak']) : '0.0 Gbps'
-    const avgTraffic = metrics.has('transfer_rates') ?
+    const avgTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.getIn(['transfer_rates','average']) : '0.0 Gbps'
-    const lowTraffic = metrics.has('transfer_rates') ?
+    const lowTraffic = metrics && metrics.has('transfer_rates') ?
       metrics.getIn(['transfer_rates','lowest']) : '0.0 Gbps'
 
     return (
