@@ -1,3 +1,13 @@
 .udn-admin-toolbar {
   float: left;
+  margin: 10px 0;
+
+  .dropdown-select {
+    display: inline-block;
+  }
+
+  &::after {
+    padding: 0 10px;
+    content: '\203A';
+  }
 }

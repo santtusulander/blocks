@@ -49,7 +49,6 @@ export class Groups extends React.Component {
         activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
-        breadcrumbs={breadcrumbs}
         className="groups-container"
         contentItems={this.props.groups}
         dailyTraffic={this.props.dailyTraffic}

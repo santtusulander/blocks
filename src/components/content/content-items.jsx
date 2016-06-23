@@ -13,7 +13,6 @@ import PageContainer from '../layout/page-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
-import { Breadcrumbs } from '../breadcrumbs'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IconChart from '../icons/icon-chart.jsx'
@@ -155,7 +154,6 @@ class ContentItems extends React.Component {
 
           <div className="container-fluid body-content">
 
-            {this.props.breadcrumbs ? <Breadcrumbs links={this.props.breadcrumbs}/> : null}
             {this.props.fetching || this.props.fetchingMetrics  ?
               <LoadingSpinner /> : (
               this.props.contentItems.isEmpty() ?
@@ -262,7 +260,6 @@ ContentItems.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
-  breadcrumbs: React.PropTypes.array,
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
