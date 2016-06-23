@@ -25,12 +25,15 @@ import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
+import Tooltip from '../components/tooltip'
 
 export class Property extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      activeSlice: null,
+      activeSliceX: 100,
       byTimeWidth: 0,
       endDate: moment.utc().endOf('day'),
       purgeActive: false,
@@ -62,7 +65,8 @@ export class Property extends React.Component {
       // reset to month to date for new property
       this.setState({
         startDate: moment.utc().startOf('month'),
-        endDate: moment.utc().endOf('day')
+        endDate: moment.utc().endOf('day'),
+        activeSlice: null
       }, () => {
         this.fetchHost(nextProps.location.query.name)
         this.fetchData(nextProps.location.query.name)
@@ -79,7 +83,8 @@ export class Property extends React.Component {
   changeDateRange (startDate, endDate) {
     this.setState({
       startDate: startDate,
-      endDate: endDate
+      endDate: endDate,
+      activeSlice: null
     }, () => this.fetchData(this.props.location.query.name))
   }
   fetchHost(property) {
@@ -189,7 +194,19 @@ export class Property extends React.Component {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
   }
   hoverSlice(date, x1, x2) {
-    // console.log(date, x1, x2)
+    if(date) {
+      const activeSlice = this.props.dailyTraffic.get(0).get('detail')
+        .find(day => moment.utc(day.get('timestamp'), 'X')
+          .isSame(moment.utc(date), 'day'))
+      const xPos = (((x1 + x2) / 2) - 100)
+      this.setState({
+        activeSlice: activeSlice,
+        activeSliceX: xPos
+      })
+    }
+    else {
+      this.setState({activeSlice: null})
+    }
   }
   selectSlice(date) {
     this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
@@ -340,6 +357,31 @@ export class Property extends React.Component {
                 sliceGranularity={sliceGranularity}
                 hoverSlice={this.hoverSlice}
                 selectSlice={this.selectSlice}/>
+              {this.state.activeSlice && <Tooltip
+                className="slice-tooltip"
+                x={this.state.activeSliceX}
+                y={-30}
+                hidden={false}>
+                <div className="tooltip-header">
+                  <b>{moment.utc(this.state.activeSlice.get('timestamp'),'X').format('MMM D, ddd')}</b>
+                </div>
+                <div>
+                  Peak
+                  <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','peak']))}
+                  </span>
+                </div>
+                <div>
+                  Average <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','average']))}
+                  </span>
+                </div>
+                <div>
+                  Low <span className="pull-right">
+                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','low']))}
+                  </span>
+                </div>
+              </Tooltip>}
             </div>
           </div>
         </Content>
