@@ -23,6 +23,22 @@ const popOpts = [
   ['option', 'Option']
 ]
 
+function getToggledValues( currentValues, toggleVal) {
+  let vals;
+  if ( currentValues.includes(toggleVal) ) {
+    return currentValues.filter( (val ) => {
+      return val.toLowerCase() !== toggleVal.toLowerCase()
+    })
+  }
+
+  return currentValues.push( toggleVal )
+
+  //console.log('toggle: ', toggleVal, currentValues.toJS(), vals.toJS())
+
+  //return vals;
+
+}
+
 const AnalyticsFilters = (props) => {
   return (
     <div className='analytics-filters'>
@@ -81,9 +97,14 @@ const AnalyticsFilters = (props) => {
             Service Types
           </div>
 
-          <FilterChecklistDropdown
+          {/*<FilterChecklistDropdown
             options={props.filterOptions.get('serviceTypes')}
             handleCheck={ (val) => { props.onFilterChange('serviceTypes', val)} }
+          />*/}
+
+          <FilterServiceType
+            serviceTypes={ props.filters.get('serviceTypes') }
+            toggleServiceType={ (val) => { props.onFilterChange('serviceTypes', getToggledValues( props.filters.get('serviceTypes'), val) ) } }
           />
         </div>
       }
@@ -91,7 +112,7 @@ const AnalyticsFilters = (props) => {
       { props.showFilters.includes('error-code') &&
         <div className='filter'>
           <FilterServiceType
-            serviceTypes={props.filters.get('serviceTypes')}
+            serviceTypes={props.filters.get('errorCodes')}
             toggleServiceType={ (val) => {
               props.onFilterChange('errorCodes', val)
             }}
