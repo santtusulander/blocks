@@ -27,7 +27,7 @@ const routes = {
   analyticsBrand: ':brand',
   analyticsAccount: ':brand/:account',
   analyticsGroup: ':brand/:account/:group',
-  analyticsProperty: ':brand/:account/:group/:property',
+  analyticsProperty: ':brand/:account/:group/property',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',

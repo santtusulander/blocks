@@ -111,13 +111,13 @@ export function removeProps(object, remove) {
 /* REFACTOR: this is a quick fix to get tab links from current path
  - takes the last link part out and replaces it with tabName
  */
-export function getTabLink( path, tabName){
-  let linkArr = path.split('/')
+export function getTabLink( location, tabName){
+  let linkArr = location.pathname.split('/')
 
   linkArr.pop()
   linkArr.push(tabName)
 
-  return linkArr.join('/')
+  return linkArr.join('/')+location.search
 
 }
 /* A helper for returning tabName / url from path - NOT 100% accurate */
@@ -137,7 +137,7 @@ export function generateNestedLink( base, linkParts ){
 }
 
 export function getAnalyticsUrl( linkType, val, params ){
-  const {brand,account,group,property} = params
+  const {brand,account,group} = params
   let url
 
   switch ( linkType ) {
@@ -151,7 +151,7 @@ export function getAnalyticsUrl( linkType, val, params ){
       url = `${getRoute('analytics')}/${brand}/${account}/${val}`
       break;
     case 'property':
-      url = `${getRoute('analytics')}/${brand}/${account}/${group}/${val}`
+      url = `${getRoute('analytics')}/${brand}/${account}/${group}/property?property=${val}`
       break;
   }
 

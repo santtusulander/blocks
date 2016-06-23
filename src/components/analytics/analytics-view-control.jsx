@@ -85,7 +85,7 @@ const AnalyticsViewControl = (props) => {
           onSelect={ (val) => {
             props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
           } }
-          value={ props.params.property }
+          value={ props.location.query.property }
         />
       }
 
@@ -112,25 +112,25 @@ const AnalyticsViewControl = (props) => {
 
       <Nav bsStyle="tabs" >
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'traffic') } activeClassName='active'>Traffic</Link>
+          <Link to={ getTabLink(props.location, 'traffic') } activeClassName='active'>Traffic</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'visitors') } activeClassName='active'>Visitors</Link>
+          <Link to={ getTabLink(props.location, 'visitors') } activeClassName='active'>Visitors</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'on-off-net') } activeClassName='active'>On/Off net</Link>
+          <Link to={ getTabLink(props.location, 'on-off-net') } activeClassName='active'>On/Off net</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'service-providers') } activeClassName='active'>Service Providers</Link>
+          <Link to={ getTabLink(props.location, 'service-providers') } activeClassName='active'>Service Providers</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'file-error') } activeClassName='active'>File Error</Link>
+          <Link to={ getTabLink(props.location, 'file-error') } activeClassName='active'>File Error</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'url-report') } activeClassName='active'>Url Report</Link>
+          <Link to={ getTabLink(props.location, 'url-report') } activeClassName='active'>Url Report</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location.pathname, 'playback-demo') } activeClassName='active'>Playback demo</Link>
+          <Link to={ getTabLink(props.location, 'playback-demo') } activeClassName='active'>Playback demo</Link>
         </li>
       </Nav>
     </div>

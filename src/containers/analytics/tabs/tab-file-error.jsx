@@ -15,34 +15,30 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   componentDidMount() {
-    console.log("AnalyticsTabFileError - componentDidMount()")
-
-    this.fetchData(this.props.params, this.props.filters)
+    this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
 
   componentWillReceiveProps(nextProps){
-
-    console.log('AnalyticsTabFileError() - componentWillReceiveProps()')
-
     const params = JSON.stringify(this.props.params)
     const prevParams = JSON.stringify(nextProps.params)
     const filters = JSON.stringify(this.props.filters)
     const prevFilters = JSON.stringify(nextProps.filters)
 
-    console.log('props', params, prevParams, filters,prevFilters)
-
-    if ( !( params === prevParams && filters === prevFilters) ) this.fetchData(nextProps.params, nextProps.filters)
-
+    if (!( params === prevParams &&
+           filters === prevFilters &&
+           nextProps.location.search === this.props.location.search) ) {
+      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    }
   }
 
-  fetchData(params, filters){
+  fetchData(params, filters, location){
     const {startDate, endDate} = getDateRange( filters )
 
     const fetchOpts = {
       account: params.account,
       brand: params.brand,
       group: params.group,
-      host: params.property,
+      property: location.query.property,
 
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
