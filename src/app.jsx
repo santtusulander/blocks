@@ -31,7 +31,9 @@ axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   if(error && error.status === 401) {
-    location.href='/login'
+    if(!location.href.includes('/login')) {
+      location.href='/login'
+    }
   } else {
     store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
   }
