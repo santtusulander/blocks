@@ -10,10 +10,6 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabOnOffNet extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
@@ -39,7 +35,6 @@ class AnalyticsTabOnOffNet extends React.Component {
       brand: params.brand,
       group: params.group,
       property: location.query.property,
-
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
     }
@@ -53,11 +48,6 @@ class AnalyticsTabOnOffNet extends React.Component {
 
     this.props.trafficActions.fetchOnOffNet(onOffOpts)
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
-
-    /*
-    this.props.trafficActions.fetchServiceProviders(onOffOpts)
-    this.props.trafficActions.fetchStorage()
-    */
   }
 
   render(){
@@ -74,6 +64,23 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 }
 
+AnalyticsTabOnOffNet.propTypes = {
+  fetching: React.PropTypes.bool,
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  location: React.PropTypes.object,
+  onOffNetChartType: React.PropTypes.string,
+  onOffStats: React.PropTypes.instanceOf(Immutable.Map),
+  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map),
+  params: React.PropTypes.object,
+  trafficActions: React.PropTypes.object
+}
+
+AnalyticsTabOnOffNet.defaultProps = {
+  filters: Immutable.Map(),
+  onOffStats: Immutable.Map(),
+  onOffStatsToday: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
     fetching: state.traffic.get('fetching'),
@@ -84,7 +91,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }

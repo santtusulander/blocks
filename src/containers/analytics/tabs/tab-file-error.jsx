@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisFileError from '../../../components/analysis/file-error'
 
@@ -10,10 +9,6 @@ import * as reportsActionCreators from '../../../redux/modules/reports'
 import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabFileError extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
@@ -44,22 +39,6 @@ class AnalyticsTabFileError extends React.Component {
       endDate: endDate.format('X')
     }
 
-    /*const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
-
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-    */
-    //this.props.trafficActions.fetchOnOffNet(onOffOpts)
-    //this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
-
-    /*
-    this.props.trafficActions.fetchServiceProviders(onOffOpts)
-    this.props.trafficActions.fetchStorage()
-
-     */
-
     this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts);
 
   }
@@ -77,6 +56,22 @@ class AnalyticsTabFileError extends React.Component {
   }
 }
 
+AnalyticsTabFileError.propTypes = {
+  fetching: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  reportsActions: React.PropTypes.object
+}
+
+AnalyticsTabFileError.defaultProps = {
+  fileErrorSummary: Immutable.Map(),
+  fileErrorURLs: Immutable.List(),
+  filters: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
     fetching: state.reports.get('fetching'),
@@ -88,7 +83,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }

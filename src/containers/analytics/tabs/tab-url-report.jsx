@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisURLReport from '../../../components/analysis/url-report.jsx'
 
@@ -10,10 +9,6 @@ import * as reportsActionCreators from '../../../redux/modules/reports'
 import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabUrlReport extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
@@ -39,26 +34,9 @@ class AnalyticsTabUrlReport extends React.Component {
       brand: params.brand,
       group: params.group,
       property: location.query.property,
-
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
     }
-
-    /*const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
-
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-    */
-    //this.props.trafficActions.fetchOnOffNet(onOffOpts)
-    //this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
-
-    /*
-    this.props.trafficActions.fetchServiceProviders(onOffOpts)
-    this.props.trafficActions.fetchStorage()
-
-     */
 
     this.props.reportsActions.fetchURLMetrics(fetchOpts)
 
@@ -77,18 +55,33 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 }
 
+AnalyticsTabUrlReport.propTypes = {
+  fetching: React.PropTypes.bool,
+  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
+  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  reportsActions: React.PropTypes.object
+}
+
+AnalyticsTabUrlReport.defaultProps = {
+  fileErrorSummary: Immutable.Map(),
+  fileErrorURLs: Immutable.List(),
+  filters: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
     fetching: state.reports.get('fetching'),
     filters: state.filters.get('filters'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
-    fileErrorURLs: state.reports.get('fileErrorURLs'),
-    urlMetrics: state.reports.get('urlMetrics')
+    fileErrorURLs: state.reports.get('fileErrorURLs')
 
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }

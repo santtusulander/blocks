@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
@@ -103,6 +102,26 @@ class AnalyticsTabTraffic extends React.Component {
   }
 }
 
+AnalyticsTabTraffic.propTypes = {
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  history: React.PropTypes.object,
+  location: React.PropTypes.object,
+  metrics: React.PropTypes.instanceOf(Immutable.Map),
+  metricsActions: React.PropTypes.object,
+  params: React.PropTypes.object,
+  totalEgress: React.PropTypes.number,
+  trafficActions: React.PropTypes.object,
+  trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List)
+}
+
+AnalyticsTabTraffic.defaultProps = {
+  filters: Immutable.Map(),
+  metrics: Immutable.Map(),
+  trafficByCountry: Immutable.List(),
+  trafficByTime: Immutable.List()
+}
+
 function mapStateToProps(state) {
   return {
     metrics: state.metrics,
@@ -112,16 +131,11 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch)
   }
-}
-
-AnalyticsTabTraffic.defaultProps = {
-  metrics: Immutable.Map()
-
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);

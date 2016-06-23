@@ -17,7 +17,6 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
-import {getRoute} from '../../routes.jsx'
 import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
 
 import './analytics-container.scss'
@@ -31,16 +30,6 @@ function getNameById( list, id ) {
 
   return null
 }
-/* NOT USED ATM - maybe needed?
-function getAnalysisType( params ){
-  if (params.property) return 'property'
-  if (params.group) return 'group'
-  if (params.account) return 'account'
-  if (params.brand) return 'brand'
-
-  return null
-}
-*/
 
 class AnalyticsContainer extends React.Component {
 
@@ -162,10 +151,10 @@ class AnalyticsContainer extends React.Component {
           </PageHeader>
 
           <AnalyticsFilters
-            onFilterChange={ this.onFilterChange }
+            onFilterChange={this.onFilterChange}
             filters={this.props.filters}
             filterOptions={this.props.filterOptions}
-            showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
+            showFilters={availableFilters.get( getTabName( this.props.location.pathname ) )}
           />
 
           <div className='analytics-tab-container'>
@@ -186,13 +175,29 @@ class AnalyticsContainer extends React.Component {
 }
 
 AnalyticsContainer.propTypes = {
+  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   brands: React.PropTypes.instanceOf(Immutable.List),
+  children: React.PropTypes.node,
+  filterOptions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
+  filtersActions: React.PropTypes.object,
+  groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  history: React.PropTypes.object,
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List)
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  propertyActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object
+}
+
+AnalyticsContainer.defaultProps = {
+  accounts: Immutable.List(),
+  brands: Immutable.List(),
+  filters: Immutable.Map(),
+  groups: Immutable.List(),
+  properties: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -206,7 +211,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     //TODO: Add module for brands?

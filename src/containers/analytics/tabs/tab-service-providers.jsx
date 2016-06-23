@@ -10,10 +10,6 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { getDateRange } from '../../../redux/util.js'
 
 class AnalyticsTabServiceProviders extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
@@ -40,7 +36,6 @@ class AnalyticsTabServiceProviders extends React.Component {
       brand: params.brand,
       group: params.group,
       property: location.query.property,
-
       startDate: startDate.format('X'),
       endDate: endDate.format('X')
     }
@@ -53,8 +48,6 @@ class AnalyticsTabServiceProviders extends React.Component {
     onOffTodayOpts.endDate = moment().utc().format('X')
 
     this.props.trafficActions.fetchServiceProviders(onOffOpts)
-    /*this.props.trafficActions.fetchStorage()
-    */
   }
 
   render(){
@@ -69,6 +62,20 @@ class AnalyticsTabServiceProviders extends React.Component {
   }
 }
 
+AnalyticsTabServiceProviders.propTypes = {
+  fetching: React.PropTypes.bool,
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
+  trafficActions: React.PropTypes.object
+}
+
+AnalyticsTabServiceProviders.defaultProps = {
+  filters: Immutable.Map(),
+  serviceProviders: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
     fetching: state.traffic.get('fetching'),
@@ -77,7 +84,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
