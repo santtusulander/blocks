@@ -10,7 +10,7 @@ import Legend from './legend'
 const closestDate = d3.bisector(d => d.timestamp).left
 
 const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal) => {
-  const formattedDate = moment(date).format('MMM D H:mm')
+  const formattedDate = moment.utc(date).format('MMM D H:mm')
   const formattedValue = formatY(actualVal || positionVal)
   return {
     text: `${formattedDate} ${formattedValue}`,

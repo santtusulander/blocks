@@ -208,7 +208,6 @@ export class Property extends React.Component {
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
-    // console.log(this.props.hourlyTraffic.toJS())
     return (
       <PageContainer className="property-container">
         <Content>
