@@ -13,6 +13,7 @@ import { getDateRange } from '../../../redux/util.js'
 class AnalyticsTabTraffic extends React.Component {
   constructor(props){
     super(props)
+    this.state = {metricKey: 'account', dataKey: 'accountMetrics'}
   }
 
   componentDidMount() {
@@ -49,23 +50,40 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
-    //TODO: fetchMetrics !!!!
-
+    //REFACTOR:
+    if ( location.query.property) {
+      this.setState({metricKey: 'hostMetrics'})
+      this.props.metricsActions.fetchHostMetrics({account: params.account, group: params.group, startDate: fetchOpts.startDate, endDate: fetchOpts.endDate})
+    } else if (params.group) {
+      this.setState({metricKey: 'groupMetrics'})
+      this.props.metricsActions.fetchGroupMetrics({account: params.account, startDate: fetchOpts.startDate, endDate: fetchOpts.endDate})
+    } else if (params.account) {
+      this.setState({metricKey: 'accountMetrics'})
+      this.props.metricsActions.fetchAccountMetrics({startDate: fetchOpts.startDate, endDate: fetchOpts.endDate})
+    }
   }
 
   render(){
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
-    const metrics    = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
 
+    let metrics = Immutable.Map()
+    if ( this.props.metrics.has(this.state.metricKey) ) {
+      metrics = this.props.metrics.get(this.state.metricKey).find( (val) => {
+        return (
+          this.props.params.account && val.get('account') === parseInt(this.props.params.account) ||
+          this.props.params.group && val.get('group') === parseInt(this.props.params.group) ||
+          this.props.location.query.property && val.get('property') === this.props.location.query.property
+        )
+      })
+    }
 
     const peakTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('peak') : '0.0 Gbps'
+      metrics.getIn(['transfer_rates','peak']) : '0.0 Gbps'
     const avgTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('average') : '0.0 Gbps'
+      metrics.getIn(['transfer_rates','average']) : '0.0 Gbps'
     const lowTraffic = metrics.has('transfer_rates') ?
-      metrics.get('transfer_rates').get('lowest') : '0.0 Gbps'
-
+      metrics.getIn(['transfer_rates','lowest']) : '0.0 Gbps'
 
     return (
       <div>
@@ -87,10 +105,10 @@ class AnalyticsTabTraffic extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    metrics: Immutable.List(),
+    metrics: state.metrics,
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress'),
+    totalEgress: state.traffic.get('totalEgress')
   }
 }
 
@@ -99,6 +117,11 @@ function mapDispatchToProps(dispatch, ownProps) {
     trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch)
   }
+}
+
+AnalyticsTabTraffic.defaultProps = {
+  metrics: Immutable.Map()
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);
