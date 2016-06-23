@@ -310,6 +310,15 @@ class AnalysisByTime extends React.Component {
             const endX = xScale(moment.utc(slice).endOf(this.props.sliceGranularity))
             return (
               <polygon key={i} className="slice"
+                onClick={() => {
+                  this.props.selectSlice(slice)
+                }}
+                onMouseOver={() => {
+                  this.props.hoverSlice(slice, startX, endX)
+                }}
+                onMouseOut={() => {
+                  this.props.hoverSlice()
+                }}
                 points={[
                   `${startX},${this.props.height}`,
                   `${startX},0`,
@@ -370,11 +379,13 @@ AnalysisByTime.propTypes = {
   comparisonLabel: React.PropTypes.string,
   dataKey: React.PropTypes.string,
   height: React.PropTypes.number,
+  hoverSlice: React.PropTypes.func,
   padding: React.PropTypes.number,
   primaryData: React.PropTypes.array,
   primaryLabel: React.PropTypes.string,
   secondaryData: React.PropTypes.array,
   secondaryLabel: React.PropTypes.string,
+  selectSlice: React.PropTypes.func,
   showLegend: React.PropTypes.bool,
   showTooltip: React.PropTypes.bool,
   sliceGranularity: React.PropTypes.string,

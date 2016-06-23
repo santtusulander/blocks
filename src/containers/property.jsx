@@ -45,6 +45,8 @@ export class Property extends React.Component {
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
     this.notificationTimeout = null
     this.changeDateRange = this.changeDateRange.bind(this)
+    this.hoverSlice = this.hoverSlice.bind(this)
+    this.selectSlice = this.selectSlice.bind(this)
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -185,6 +187,12 @@ export class Property extends React.Component {
   }
   togglePropertyMenu() {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
+  }
+  hoverSlice(date, x1, x2) {
+    // console.log(date, x1, x2)
+  }
+  selectSlice(date) {
+    this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
   }
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
@@ -329,7 +337,9 @@ export class Property extends React.Component {
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
                 yAxisCustomFormat={formatBitsPerSecond}
-                sliceGranularity={sliceGranularity}/>
+                sliceGranularity={sliceGranularity}
+                hoverSlice={this.hoverSlice}
+                selectSlice={this.selectSlice}/>
             </div>
           </div>
         </Content>

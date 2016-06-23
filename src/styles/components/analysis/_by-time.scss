@@ -92,10 +92,13 @@
   }
 
   .slice {
-    fill: transparent;
+    fill: rgba($pale-blue, 0.4);
+    opacity: 0;
 
     &:hover {
-      fill: rgba($pale-blue, 0.4);
+      opacity: 1;
+      cursor: pointer;
+      transition: opacity 200ms;
     }
   }
 }
