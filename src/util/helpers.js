@@ -1,6 +1,7 @@
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import {getRoute} from '../routes.jsx'
+import {getDateRange} from '../redux/util.js'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -157,4 +158,28 @@ export function getAnalyticsUrl( linkType, val, params ){
 
   return url
 
+}
+
+export function buildAnalyticsOpts(params, filters, location){
+  const {startDate, endDate} = getDateRange(filters)
+  return {
+    account: params.account,
+    brand: params.brand,
+    group: params.group,
+    property: location.query.property,
+    startDate: startDate.format('X'),
+    endDate: endDate.format('X')
+  }
+}
+
+export function changedParamsFiltersQS(props, nextProps){
+  const params = JSON.stringify(props.params)
+  const prevParams = JSON.stringify(nextProps.params)
+  const filters = JSON.stringify(props.filters)
+  const prevFilters = JSON.stringify(nextProps.filters)
+
+  return !(
+    params === prevParams &&
+    filters === prevFilters &&
+    nextProps.location.search === props.location.search)
 }
