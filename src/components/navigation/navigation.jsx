@@ -85,10 +85,10 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <a href="#">
+          <Link to={'/support'} activeClassName="active">
             <IconSupport />
             <span>Support</span>
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>

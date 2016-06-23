@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 import Select from '../select.jsx'
 import './udn-admin-toolbar.scss'
 
-const UdnAdminToolbar = ({accounts, activeAccount, sectionLabel, fetchAccountData}) => {
+const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData}) => {
 
   const accountOptions = accounts.map( account => {
     return [account.get('id'), account.get('name')]
@@ -18,7 +18,6 @@ const UdnAdminToolbar = ({accounts, activeAccount, sectionLabel, fetchAccountDat
         value={activeAccount.get('id')}
       />
 
-
     </div>
   )
 }
@@ -26,7 +25,6 @@ const UdnAdminToolbar = ({accounts, activeAccount, sectionLabel, fetchAccountDat
 UdnAdminToolbar.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
-  sectionLabel: ''
 }
 
 export default UdnAdminToolbar
