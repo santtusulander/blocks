@@ -154,7 +154,6 @@ function routeTraffic(req, res) {
 
       // Conditionally add totals to the entity record based on the show_totals param
       if (optionsFinal.show_detail && detailData) {
-
         // Get the array of detail data for the current entity
         // NOTE: This will return one record per resolution, not granularity (e.g. month, day, hour, 5min)
         let entityDetailData = detailData.filter((record) => record[selectedLevel] === entity);
@@ -163,7 +162,12 @@ function routeTraffic(req, res) {
           optionsFinal.start,
           optionsFinal.end,
           resolution,
-          ['chit_ratio', 'avg_fbl', 'bytes', 'transfer_rate', 'requests', 'connections']
+          [
+            'chit_ratio', 'avg_fbl',
+            'bytes', 'bytes_average', 'bytes_lowest', 'bytes_peak',
+            'requests', 'requests_average', 'requests_lowest', 'requests_peak',
+            'connections', 'connections_average', 'connections_lowest', 'connections_peak'
+          ]
         );
 
         // Populate entityDetailDataFilled with the number of records specified by granularity.
@@ -265,7 +269,7 @@ function routeTraffic(req, res) {
           // aggregate numbers for each granularity interval.
           if (resolution === optionsFinal.granularity) {
             detailRecord.chit_ratio = detailRecordData.chit_ratio;
-            detailRecord.avg_fbl    = `${Math.round(detailRecordData.avg_fbl)} ms`;
+            detailRecord.avg_fbl    = detailRecordData.avg_fbl === null ? null : `${Math.round(detailRecordData.avg_fbl)} ms`;
           }
 
           // Add the current detail record to the detail array
