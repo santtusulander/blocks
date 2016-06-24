@@ -49,12 +49,25 @@ class AnalyticsContainer extends React.Component {
 
   constructor(props){
     super(props)
-    this.dataToExport = {}
+    this.dataToExport = []
     this.onFilterChange = this.onFilterChange.bind(this)
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.fetchData(this.props.params, true)
+    const { params: { brand, account, group },
+      location: { query: { property } },
+      activeAccount,
+      activeGroup,
+      activeHost,
+      accountActions,
+      groupActions,
+      propertyActions } = this.props
+    Promise.all([
+      account && !activeAccount && accountActions.fetchAccount(brand, account),
+      group && !activeGroup && groupActions.fetchGroup(brand, account, group),
+      property && !activeHost && propertyActions.fetchHost(brand, account, group, property)
+    ])
   }
 
   componentWillReceiveProps( nextProps ) {
@@ -69,7 +82,6 @@ class AnalyticsContainer extends React.Component {
 
   setBreadcrumbs() {
     let breadCrumbLinks = []
-
     if (this.props.params.brand) {
       breadCrumbLinks.push({
         label: getNameById(this.props.brands, this.props.params.brand),
@@ -143,18 +155,12 @@ class AnalyticsContainer extends React.Component {
       'url-report': ['date-range', 'error-code'],
       'playback-demo': ['video']
     })
-    const setDataToExport = (data, serviceTypes) => {
-      this.dataToExport.data = data
-      if(serviceTypes) {
-        this.dataToExport.serviceTypes = serviceTypes
-      }
-    }
-
+    const setDataToExport = (...data) => this.dataToExport = data
     const exportCSV = () => {
       const fileNamePart = (type, item) => this.props.params[type] && item ? ` - ${item.get('name')}` : ''
       const fileName = `${this.props.activeAccount.get('name')}${fileNamePart('group', this.props.activeGroup)}${fileNamePart('property', this.props.activeHost)}`
       switch(getTabName(this.props.location.pathname)) {
-        case 'traffic': createCSVExporters(fileName).traffic(this.dataToExport.data, this.dataToExport.serviceTypes)
+        case 'traffic': createCSVExporters(fileName).traffic(...this.dataToExport)
       }
     }
     return (
@@ -218,8 +224,8 @@ AnalyticsContainer.propTypes = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.account.get('activeGroup'),
-    activeHost: state.account.get('activeHost'),
+    activeGroup: state.group.get('activeGroup'),
+    activeHost: state.host.get('activeHost'),
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
