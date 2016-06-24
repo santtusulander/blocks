@@ -298,6 +298,7 @@ AnalyticsPage.defaultProps = {
   serviceProviders: Immutable.List(),
   serviceTypes: Immutable.List(),
   siblings: Immutable.List(),
+  statusCodes: Immutable.List(),
   storageStats: Immutable.List(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List(),

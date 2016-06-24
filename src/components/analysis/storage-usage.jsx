@@ -49,4 +49,8 @@ AnalysisStorageUsageReport.propTypes = {
   storageStats: React.PropTypes.instanceOf(Immutable.List)
 }
 
+AnalysisStorageUsageReport.defaultProps = {
+  storageStats: Immutable.List()
+}
+
 module.exports = AnalysisStorageUsageReport

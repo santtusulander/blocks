@@ -12,10 +12,10 @@ moment.mockReturnValue({
   utc: momentUtcMock
 })
 
-jest.dontMock('../date-range.jsx')
-const DateRange = require('../date-range.jsx')
+jest.dontMock('../date-range-select.jsx')
+const DateRange = require('../date-range-select.jsx')
 
-describe('FilterDateRange', () => {
+describe('DateRangeSelect', () => {
   it('should exist', () => {
     const filter = TestUtils.renderIntoDocument(<DateRange/>)
     expect(TestUtils.isCompositeComponent(filter)).toBeTruthy()

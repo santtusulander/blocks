@@ -178,4 +178,10 @@ AnalysisTraffic.propTypes = {
   totalEgress: React.PropTypes.number
 }
 
+AnalysisTraffic.defaultProps = {
+  byCountry: Immutable.List(),
+  byTime: Immutable.List(),
+  serviceTypes: Immutable.List()
+}
+
 module.exports = AnalysisTraffic
