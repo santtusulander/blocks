@@ -121,14 +121,14 @@ const AnalyticsViewControl = (props) => {
           <Link to={getTabLink(props.location, 'service-providers')}
             activeClassName='active'>Service Providers</Link>
         </li>
-        <li>
+        {props.location.query.property && <li>
           <Link to={getTabLink(props.location, 'file-error')}
             activeClassName='active'>File Error</Link>
-        </li>
-        <li>
+        </li>}
+        {props.location.query.property && <li>
           <Link to={getTabLink(props.location, 'url-report')}
             activeClassName='active'>Url Report</Link>
-        </li>
+        </li>}
         <li>
           <Link to={getTabLink(props.location, 'playback-demo')}
             activeClassName='active'>Playback demo</Link>
