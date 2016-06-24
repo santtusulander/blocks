@@ -184,4 +184,8 @@ AnalysisStackedByGroup.propTypes = {
   width: React.PropTypes.number
 }
 
+AnalysisStackedByGroup.defaultProps = {
+  datasets: Immutable.List()
+}
+
 module.exports = AnalysisStackedByGroup

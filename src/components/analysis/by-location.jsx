@@ -274,6 +274,15 @@ AnalysisByLocation.propTypes = {
   width: React.PropTypes.number
 }
 
+AnalysisByLocation.defaultProps = {
+  cities: Immutable.Map(),
+  cityData: Immutable.List(),
+  countries: Immutable.Map(),
+  countryData: Immutable.List(),
+  stateData: Immutable.List(),
+  states: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
     activeCountry: state.topo.get('activeCountry'),
