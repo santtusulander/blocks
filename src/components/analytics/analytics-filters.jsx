@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 
-import DateRangeFilter from '../analysis/filters/date-range-filter/date-range-filter.jsx'
+import DateRangeSelect from '../date-range-select.jsx'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterPop from '../analysis/filters/pop.jsx'
@@ -40,13 +40,13 @@ const AnalyticsFilters = (props) => {
           <div className="sidebar-section-header">
             Date Range
           </div>
-          <DateRangeFilter
-          changeDateRange={(startDate, endDate) => {
-            props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
-          }}
-          startDate={props.filters.getIn(['dateRange','startDate'])}
-          endDate={props.filters.getIn(['dateRange','endDate'])}
-          />
+          <DateRangeSelect
+            changeDateRange={(startDate, endDate) => {
+              props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
+            }}
+            startDate={props.filters.getIn(['dateRange','startDate'])}
+            endDate={props.filters.getIn(['dateRange','endDate'])}
+            />
         </div>
       }
 

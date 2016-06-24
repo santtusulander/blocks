@@ -3,7 +3,10 @@ import Immutable from 'immutable'
 
 const initialState = Immutable.fromJS({
   filters: {
-    dateRange: {}, //startDate: , endDate: },
+    dateRange: {
+      startDate: null,
+      endDate: null
+    }, //startDate: , endDate: },
     dateRangeLabel: '',
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],
