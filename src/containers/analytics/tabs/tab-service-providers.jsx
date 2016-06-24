@@ -58,6 +58,7 @@ class AnalyticsTabServiceProviders extends React.Component {
   }
 
   render(){
+    this.props.setDataToExport(this.props.serviceProviders.get('detail'))
     return (
       <div>
         <AnalysisServiceProviders

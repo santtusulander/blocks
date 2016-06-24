@@ -61,6 +61,7 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 
   render(){
+    this.props.setDataToExport(this.props.onOffStats.get('detail'))
     return (
       <div>
         <AnalysisOnOffNetReport
