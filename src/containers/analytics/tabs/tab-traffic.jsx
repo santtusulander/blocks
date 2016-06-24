@@ -27,7 +27,14 @@ class AnalyticsTabTraffic extends React.Component {
 
   fetchData(params, filters, location){
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
-    this.props.trafficActions.fetchByTime(fetchOpts)
+    const startDate = filters.getIn(['dateRange', 'startDate'])
+    const endDate = filters.getIn(['dateRange', 'endDate'])
+    const rangeDiff = startDate && endDate ? endDate.diff(startDate, 'month') : 0
+
+    const byTimeOpts = Object.assign({
+      granularity: rangeDiff >= 2 ? 'day' : 'hour'
+    }, fetchOpts)
+    this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 

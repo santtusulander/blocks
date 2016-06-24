@@ -1,12 +1,10 @@
-import React, {Component} from 'react'
+import React from 'react'
 import Immutable from 'immutable'
-import {Link, browserHistory} from 'react-router'
-import { Nav, NavItem, Dropdown, ButtonToolbar, Button } from 'react-bootstrap'
+import {Link} from 'react-router'
+import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
 import Select from '../select.jsx'
-import FilterDropdown from '../analysis/filters/filter-dropdown/filter-dropdown.jsx'
 
-import { getRoute } from '../../routes.jsx'
 import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
@@ -44,10 +42,6 @@ function createPropertyDropdownOptions ( opts ){
 */
 
 const AnalyticsViewControl = (props) => {
-  /*
-  const brandOptions = createOptions( props.brands )
-   */
-
   const accountOptions = createOptions( props.accounts )
   const groupOptions = createOptions( props.groups )
   const propertyOptions = createPropertyOptions( props.properties )
@@ -62,30 +56,30 @@ const AnalyticsViewControl = (props) => {
     { /* If account is not selected (Needs to be: UDN ADMIN) */
       !props.params.account &&
       <Select
-        options={ accountOptions }
-        onSelect={ (val) => {
+        options={accountOptions}
+        onSelect={val => {
           props.history.pushState(null, getAnalyticsUrl('account', val, props.params))
-        } }
-        value={ props.params.group }
+        }}
+        value={props.params.group}
       />
       }
 
     {groupOptions.count() > 0 &&
       <Select
-        options={ groupOptions }
-        onSelect={ (val) => {
+        options={groupOptions}
+        onSelect={val => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
         } }
-        value={ props.params.group }
+        value={props.params.group}
       />
       }
       {propertyOptions.count() > 0 &&
         <Select
-          options={ propertyOptions }
-          onSelect={ (val) => {
+          options={propertyOptions}
+          onSelect={val => {
             props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
-          } }
-          value={ props.location.query.property }
+          }}
+          value={props.location.query.property}
         />
       }
 
@@ -112,47 +106,54 @@ const AnalyticsViewControl = (props) => {
 
       <Nav bsStyle="tabs" >
         <li>
-          <Link to={ getTabLink(props.location, 'traffic') } activeClassName='active'>Traffic</Link>
+          <Link to={getTabLink(props.location, 'traffic')}
+            activeClassName='active'>Traffic</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location, 'visitors') } activeClassName='active'>Visitors</Link>
+          <Link to={getTabLink(props.location, 'visitors')}
+            activeClassName='active'>Visitors</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location, 'on-off-net') } activeClassName='active'>On/Off net</Link>
+          <Link to={getTabLink(props.location, 'on-off-net')}
+            activeClassName='active'>On/Off net</Link>
         </li>
         <li>
-          <Link to={ getTabLink(props.location, 'service-providers') } activeClassName='active'>Service Providers</Link>
+          <Link to={getTabLink(props.location, 'service-providers')}
+            activeClassName='active'>Service Providers</Link>
         </li>
+        {props.location.query.property && <li>
+          <Link to={getTabLink(props.location, 'file-error')}
+            activeClassName='active'>File Error</Link>
+        </li>}
+        {props.location.query.property && <li>
+          <Link to={getTabLink(props.location, 'url-report')}
+            activeClassName='active'>Url Report</Link>
+        </li>}
         <li>
-          <Link to={ getTabLink(props.location, 'file-error') } activeClassName='active'>File Error</Link>
-        </li>
-        <li>
-          <Link to={ getTabLink(props.location, 'url-report') } activeClassName='active'>Url Report</Link>
-        </li>
-        <li>
-          <Link to={ getTabLink(props.location, 'playback-demo') } activeClassName='active'>Playback demo</Link>
+          <Link to={getTabLink(props.location, 'playback-demo')}
+            activeClassName='active'>Playback demo</Link>
         </li>
       </Nav>
     </div>
   )
 }
 
+AnalyticsViewControl.propTypes = {
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  brands: React.PropTypes.instanceOf(Immutable.List),
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  history: React.PropTypes.object,
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List)
+}
+
 AnalyticsViewControl.defaultProps = {
-  brands: Immutable.List(),
   accounts: Immutable.List(),
+  brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),
   params: {}
-}
-
-AnalyticsViewControl.propTypes = {
-  brands: React.PropTypes.instanceOf(Immutable.List),
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  groups: React.PropTypes.instanceOf(Immutable.List),
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  location: React.PropTypes.object,
-  history: React.PropTypes.object,
-  params: React.PropTypes.object
 }
 
 export default AnalyticsViewControl
