@@ -65,6 +65,7 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 
   render(){
+    this.props.setDataToExport(this.props.urlMetrics)
     return (
       <div>
         <AnalysisURLReport fetching={this.props.fetching}

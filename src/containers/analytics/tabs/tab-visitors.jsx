@@ -56,6 +56,7 @@ class AnalyticsTabVisitors extends React.Component {
   }
 
   render() {
+    this.props.setDataToExport(this.props.byTime)
     return (
       <div>
         <AnalysisVisitors

@@ -145,6 +145,20 @@ class AnalyticsContainer extends React.Component {
   }
 
   render(){
+    const {
+      params,
+      children,
+      brands,
+      accounts,
+      groups,
+      properties,
+      history,
+      filterOptions,
+      filters,
+      activeAccount,
+      activeGroup,
+      location: { pathname, query: { property } }
+    } = this.props
     /* TODO: should  be moved to consts ? */
     const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
@@ -157,10 +171,11 @@ class AnalyticsContainer extends React.Component {
     })
     const setDataToExport = (...data) => this.dataToExport = data
     const exportCSV = () => {
-      const fileNamePart = (type, item) => this.props.params[type] && item ? ` - ${item.get('name')}` : ''
-      const fileName = `${this.props.activeAccount.get('name')}${fileNamePart('group', this.props.activeGroup)}${fileNamePart('property', this.props.activeHost)}`
-      switch(getTabName(this.props.location.pathname)) {
+      const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
+      const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
+      switch(getTabName(pathname)) {
         case 'traffic': createCSVExporters(fileName).traffic(...this.dataToExport)
+        case 'visitors': createCSVExporters(fileName).visitors(...this.dataToExport)
       }
     }
     return (
@@ -171,32 +186,32 @@ class AnalyticsContainer extends React.Component {
 
             <AnalyticsViewControl
               exportCSV={exportCSV}
-              brands={this.props.brands}
-              accounts={this.props.accounts}
-              groups={this.props.groups}
-              properties={this.props.properties}
-              params={this.props.params}
+              brands={brands}
+              accounts={accounts}
+              groups={groups}
+              properties={properties}
+              params={params}
               location={this.props.location}
-              history={this.props.history}
+              history={history}
             />
 
           </PageHeader>
 
           <AnalyticsFilters
-            onFilterChange={ this.onFilterChange }
-            filters={this.props.filters}
-            filterOptions={this.props.filterOptions}
-            showFilters={availableFilters.get( getTabName( this.props.location.pathname ) ) }
+            onFilterChange={this.onFilterChange}
+            filters={filters}
+            filterOptions={filterOptions}
+            showFilters={availableFilters.get(getTabName(pathname))}
           />
 
           <div className='analytics-tab-container'>
 
           {
             /* Render tab -content */
-            this.props.children && React.cloneElement(this.props.children, {
-              params: this.props.params,
+            children && React.cloneElement(children, {
+              params: params,
               setDataToExport: setDataToExport,
-              filters: this.props.filters,
+              filters: filters,
               location: this.props.location
             } )
           }
