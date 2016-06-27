@@ -78,7 +78,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={'/account-management'} activeClassName="active">
+          <Link to={ `${getRoute('accountManagement')}/${activeAccountId}`} activeClassName="active">
             <IconAccount />
             <span>Account</span>
           </Link>

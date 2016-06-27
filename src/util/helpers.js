@@ -2,6 +2,7 @@ import numeral from 'numeral'
 import Immutable from 'immutable'
 import {getRoute} from '../routes.jsx'
 import {getDateRange} from '../redux/util.js'
+import {filterNeedsReload} from '../constants/filters.js'
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
@@ -172,14 +173,30 @@ export function buildAnalyticsOpts(params, filters, location){
   }
 }
 
+export function filterChangeNeedsReload( currentFilters, nextFilters ) {
+  let changedFilters= [];
+
+  currentFilters.map( (filter, i) => {
+    if ( filter !== nextFilters.get(i) )  changedFilters.push(i)
+  })
+
+  const reloadNeeded = changedFilters.reduce( (prev, filterName) => {
+    if (filterNeedsReload.includes(filterName)) return true;
+
+    return false;
+  }, false)
+
+  return reloadNeeded;
+}
+
 export function changedParamsFiltersQS(props, nextProps){
   const params = JSON.stringify(props.params)
   const prevParams = JSON.stringify(nextProps.params)
-  const filters = JSON.stringify(props.filters)
-  const prevFilters = JSON.stringify(nextProps.filters)
+
+  const filterReload = filterChangeNeedsReload( nextProps.filters, props.filters)
 
   return !(
     params === prevParams &&
-    filters === prevFilters &&
+    !filterReload &&
     nextProps.location.search === props.location.search)
 }

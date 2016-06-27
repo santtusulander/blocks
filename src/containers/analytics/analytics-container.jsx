@@ -40,6 +40,10 @@ class AnalyticsContainer extends React.Component {
   }
 
   componentDidMount(){
+
+    //Reset filters to default when entering analytics page
+    this.props.filtersActions.resetFilters();
+
     this.fetchData(this.props.params, true)
   }
 

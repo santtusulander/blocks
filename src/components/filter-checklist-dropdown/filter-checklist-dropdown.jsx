@@ -62,7 +62,7 @@ export class FilterChecklistDropdown extends React.Component {
 
     let itemList;
     let label     = checkedResults.size ? this.getLabel() : 'Please Select'
-    let className = 'dropdown-select dropdown-filter btn-block'
+    let className = 'dropdown-select dropdown-filter dropdown-checklist btn-block'
 
     if(this.props.className) {
       className += ` ${this.props.className}`
@@ -105,6 +105,7 @@ export class FilterChecklistDropdown extends React.Component {
               ref="filterInput"
               type="text"
               placeholder="search"
+              className="form-control"
               onChange={this.handleFilter}
               value={filterValue}
             />
