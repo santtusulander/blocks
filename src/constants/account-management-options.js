@@ -5,8 +5,8 @@ export const ACCOUNT_TYPES = [
 
 export const SERVICE_TYPES = [
   { value: 'network_partner', label: 'UDN Network Partner' },
-  { value: 'media_delivery', label: 'Media Delivery' },
-  { value: 'storage', label: 'Storage' }
+  { value: 'media_delivery', label: 'Media Delivery' }
+  // Not in 0.7 { value: 'storage', label: 'Storage' }
 ]
 
 export const BRANDS = [
