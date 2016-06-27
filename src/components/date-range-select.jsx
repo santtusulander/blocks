@@ -25,9 +25,10 @@ export class DateRangeSelect extends React.Component {
   }
 
   componentWillMount() {
+    // Default to month to date if no dates are specified
     this.setState({
-      endDate: this.props.endDate,
-      startDate: this.props.startDate
+      endDate: this.props.endDate || moment().utc().endOf('day'),
+      startDate: this.props.startDate || moment().utc().startOf('month')
     })
   }
 

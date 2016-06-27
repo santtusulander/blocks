@@ -7,43 +7,21 @@ import moment from 'moment'
 import AnalysisServiceProviders from '../../../components/analysis/service-providers.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import { getDateRange } from '../../../redux/util.js'
+import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
 class AnalyticsTabServiceProviders extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
 
   componentWillReceiveProps(nextProps){
-
-    const params = JSON.stringify(this.props.params)
-    const prevParams = JSON.stringify(nextProps.params)
-    const filters = JSON.stringify(this.props.filters)
-    const prevFilters = JSON.stringify(nextProps.filters)
-
-    if (!( params === prevParams &&
-           filters === prevFilters &&
-           nextProps.location.search === this.props.location.search) ) {
+    if(changedParamsFiltersQS(this.props, nextProps)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
 
   fetchData(params, filters, location){
-    const {startDate, endDate} = getDateRange( filters )
-
-    const fetchOpts = {
-      account: params.account,
-      brand: params.brand,
-      group: params.group,
-      property: location.query.property,
-
-      startDate: startDate.format('X'),
-      endDate: endDate.format('X')
-    }
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     const onOffOpts = Object.assign({}, fetchOpts)
     onOffOpts.granularity = 'day'
@@ -53,8 +31,6 @@ class AnalyticsTabServiceProviders extends React.Component {
     onOffTodayOpts.endDate = moment().utc().format('X')
 
     this.props.trafficActions.fetchServiceProviders(onOffOpts)
-    /*this.props.trafficActions.fetchStorage()
-    */
   }
 
   export(exporters) {
@@ -63,14 +39,26 @@ class AnalyticsTabServiceProviders extends React.Component {
 
   render(){
     return (
-      <div>
-        <AnalysisServiceProviders
-          fetching={this.props.fetching}
-          stats={this.props.serviceProviders}
-        />
-      </div>
+      <AnalysisServiceProviders
+        fetching={this.props.fetching}
+        stats={this.props.serviceProviders}
+      />
     )
   }
+}
+
+AnalyticsTabServiceProviders.propTypes = {
+  fetching: React.PropTypes.bool,
+  filters: React.PropTypes.instanceOf(Immutable.Map),
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
+  trafficActions: React.PropTypes.object
+}
+
+AnalyticsTabServiceProviders.defaultProps = {
+  filters: Immutable.Map(),
+  serviceProviders: Immutable.Map()
 }
 
 function mapStateToProps(state) {

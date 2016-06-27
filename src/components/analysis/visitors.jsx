@@ -311,4 +311,12 @@ AnalysisVisitors.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List)
 }
 
+AnalysisVisitors.defaultProps = {
+  byBrowser: Immutable.List(),
+  byCountry: Immutable.List(),
+  byOS: Immutable.List(),
+  byTime: Immutable.List(),
+  serviceTypes: Immutable.List()
+}
+
 module.exports = AnalysisVisitors

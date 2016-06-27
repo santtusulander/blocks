@@ -216,4 +216,9 @@ AnalysisOnOffNetReport.propTypes = {
   onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
 
+AnalysisOnOffNetReport.defaultProps = {
+  onOffStats: Immutable.Map(),
+  onOffStatsToday: Immutable.Map()
+}
+
 module.exports = AnalysisOnOffNetReport

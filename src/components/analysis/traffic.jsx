@@ -28,6 +28,9 @@ class AnalysisTraffic extends React.Component {
     setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+  componentWillReceiveProps() {
+    setTimeout(() => {this.measureContainers()}, 500)
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
@@ -173,6 +176,12 @@ AnalysisTraffic.propTypes = {
   peakTraffic: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number
+}
+
+AnalysisTraffic.defaultProps = {
+  byCountry: Immutable.List(),
+  byTime: Immutable.List(),
+  serviceTypes: Immutable.List()
 }
 
 module.exports = AnalysisTraffic

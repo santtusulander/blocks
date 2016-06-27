@@ -11,7 +11,7 @@ var server = new WebpackDevServer(compiler, {
   historyApiFallback: true,
   proxy: {
     '/VCDN*': {
-      target: 'http://api.cdx-stag.unifieddeliverynetwork.net'
+      target: 'http://api.cdx-dev.unifieddeliverynetwork.net'
     },
     /*'/VCDN*': {
       target: 'http://localhost:8080'

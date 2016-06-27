@@ -22,9 +22,6 @@ export class FilterServiceType extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          HTTP/HTTPS
-        </div>
         <div className="sidebar-content">
           <Input type="checkbox" label="HTTP"
             checked={this.props.serviceTypes.includes('http')}
