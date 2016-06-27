@@ -12,9 +12,9 @@ import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../../constants/account
 
 import './details.scss'
 
-const brandOptions = BRANDS.map( (e) => {
-  return [ e.id, e.brandName ]
-});
+// const brandOptions = BRANDS.map( (e) => {
+//   return [ e.id, e.brandName ]
+// });
 
 const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [ e.value, e.label]
@@ -50,13 +50,56 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   render() {
-    const { fields: { accountName, brand, accountType, services } } = this.props
+    const { fields: { accountName, accountType, services } } = this.props
 
     return (
       <div className="account-management-account-details">
         <h2>Details</h2>
 
         <form className='form-horizontal'>
+
+          <div className="form-group">
+            <label className="col-xs-3 control-label">Brand</label>
+            <Col xs={6}>
+              <div className="input-group brand-row">
+
+                <span className="brand-field">UDN</span>
+                {/* Not in 0.7
+                  <SelectWrapper
+                    { ... brand }
+                    className="input-select"
+                    options={brandOptions}
+                  />*/}
+
+
+                <span className="input-group-addon brand-tooltip">
+                  <ButtonToolbar>
+                  { // Not in 0.7
+                    //   <UDNButton bsStyle="success" icon={true} addNew={true}
+                    //     onClick={this.props.onAdd}>
+                    //     <IconAdd/>
+                    //   </UDNButton>
+
+                    //   <UDNButton bsStyle="primary" icon={true} addNew={true}
+                    //     onClick={this.props.onAdd}>
+                    //     <IconEdit/>
+                    //   </UDNButton>
+                  }
+
+                    <OverlayTrigger placement="top" overlay={
+                      <Tooltip id="tooltip_brand">
+                        <div className="tooltip-header">Brand</div>
+                        <div className="text-sm">Lorem ipsum ...</div>
+                      </Tooltip>
+                      }>
+
+                      <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
+                    </OverlayTrigger>
+                  </ButtonToolbar>
+                </span>
+              </div>
+            </Col>
+          </div>
 
           <div className="form-group">
             <label className="col-xs-3 control-label">Account Name</label>
@@ -83,45 +126,6 @@ class AccountManagementAccountDetails extends React.Component {
 
               {accountName.touched && accountName.error &&
               <div className='error-msg errorAccountName'>{accountName.error}</div>}
-            </Col>
-          </div>
-
-          <div className="form-group">
-            <label className="col-xs-3 control-label">Brand</label>
-            <Col xs={6}>
-              <div className="input-group">
-
-                <SelectWrapper
-                  { ... brand }
-                  className="input-select"
-                  options={brandOptions}
-                />
-
-                <span className="input-group-addon">
-                  <ButtonToolbar>
-                    <UDNButton bsStyle="success" icon={true} addNew={true}
-                      onClick={this.props.onAdd}>
-                      <IconAdd/>
-                    </UDNButton>
-
-                    <UDNButton bsStyle="primary" icon={true} addNew={true}
-                      onClick={this.props.onAdd}>
-                      <IconEdit/>
-                    </UDNButton>
-
-                    <OverlayTrigger placement="top" overlay={
-                      <Tooltip id="tooltip_brand">
-                        <div className="tooltip-header">Brand</div>
-                        <div className="text-sm">Lorem ipsum ...</div>
-                      </Tooltip>
-                      }>
-
-                      <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
-                    </OverlayTrigger>
-                  </ButtonToolbar>
-                </span>
-
-              </div>
             </Col>
           </div>
 
