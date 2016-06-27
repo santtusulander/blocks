@@ -19,9 +19,12 @@ export class Groups extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
+    /* FIXME: This is not the right way of deciding when to fetch - causes sometimes 'No Groups found' - error
+     * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
+     **/
+    //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
       this.props.fetchData()
-    }
+    //}
   }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
