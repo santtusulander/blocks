@@ -90,10 +90,14 @@ class AnalysisOnOffNetReport extends React.Component {
       }
     })
 
+    let dataSets = [];
+    if ( this.props.onOffFilter.contains('on-net') ) dataSets.push( onNet.toJS() )
+    if ( this.props.onOffFilter.contains('off-net') ) dataSets.push( offNet.toJS() )
+
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
         <AnalysisStackedByTime padding={40}
-          dataSets={[onNet.toJS(), offNet.toJS()]}
+          dataSets={ dataSets }
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
@@ -101,8 +105,8 @@ class AnalysisOnOffNetReport extends React.Component {
       chart = (
         <AnalysisByTime axes={true} padding={40}
           dataKey="bytes"
-          primaryData={onNet.toJS()}
-          secondaryData={offNet.toJS()}
+          primaryData={dataSets && dataSets[0]}
+          secondaryData={dataSets[1] && dataSets[1]}
           primaryLabel='On Net'
           secondaryLabel='Off Net'
           yAxisCustomFormat={formatBytes}
@@ -126,36 +130,44 @@ class AnalysisOnOffNetReport extends React.Component {
               <h4>Traffic today</h4>
               <p>{formatBytes(statsToday.get('total'))}</p>
               <Row className="extra-margin-top">
+              { this.props.onOffFilter.contains('on-net') &&
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
-                    {numeral(statsToday.getIn(['net_on','percent_total'])).format('0,0%')}
+                    {numeral(statsToday.getIn(['net_on', 'percent_total'])).format('0,0%')}
                   </p>
                 </Col>
+              }
+              { this.props.onOffFilter.contains('off-net') &&
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
-                    {numeral(statsToday.getIn(['net_off','percent_total'])).format('0,0%')}
+                    {numeral(statsToday.getIn(['net_off', 'percent_total'])).format('0,0%')}
                   </p>
                 </Col>
+              }
               </Row>
             </div>
             <div className="analysis-data-box">
               <h4>Traffic Month to Date</h4>
               <p>{formatBytes(stats.get('total'))}</p>
               <Row className="extra-margin-top">
+              { this.props.onOffFilter.contains('on-net') &&
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
-                    {numeral(stats.getIn(['net_on','percent_total'])).format('0,0%')}
+                      {numeral(stats.getIn(['net_on', 'percent_total'])).format('0,0%')}
                   </p>
                 </Col>
+              }
+              { this.props.onOffFilter.contains('off-net') &&
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
-                    {numeral(stats.getIn(['net_off','percent_total'])).format('0,0%')}
+                      {numeral(stats.getIn(['net_off', 'percent_total'])).format('0,0%')}
                   </p>
                 </Col>
+              }
               </Row>
             </div>
           </Col>
@@ -213,12 +225,14 @@ AnalysisOnOffNetReport.propTypes = {
   fetching: React.PropTypes.bool,
   onOffNetChartType: React.PropTypes.string,
   onOffStats: React.PropTypes.instanceOf(Immutable.Map),
-  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
+  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map),
+  onOffFilter: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalysisOnOffNetReport.defaultProps = {
   onOffStats: Immutable.Map(),
-  onOffStatsToday: Immutable.Map()
+  onOffStatsToday: Immutable.Map(),
+  onOffFilter: Immutable.Map()
 }
 
 module.exports = AnalysisOnOffNetReport

@@ -41,6 +41,7 @@ class AnalyticsTabOnOffNet extends React.Component {
         onOffNetChartType={this.props.onOffNetChartType}
         onOffStats={this.props.onOffStats}
         onOffStatsToday={this.props.onOffStatsToday}
+        onOffFilter={this.props.filters.get('onOffNet')}
       />
     )
   }
