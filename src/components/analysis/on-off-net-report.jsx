@@ -172,19 +172,19 @@ class AnalysisOnOffNetReport extends React.Component {
                 Date
               </TableSorter>
               <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
-                On-Net in bytes
+                On Net (Bytes)
               </TableSorter>
               <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
-                On-Net in %
+                On Net (%)
               </TableSorter>
               <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
-                Off-Net in bytes
+                Off Net (Bytes)
               </TableSorter>
               <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
-                Off-Net in %
+                Off Net (%)
               </TableSorter>
               <TableSorter {...sorterProps} column="total">
-                Total in bytes
+                Total (Bytes)
               </TableSorter>
             </tr>
           </thead>
