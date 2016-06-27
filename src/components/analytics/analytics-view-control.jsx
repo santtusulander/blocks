@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import {Link} from 'react-router'
 import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
@@ -40,8 +40,10 @@ function createPropertyDropdownOptions ( opts ){
   })
 }
 */
-
 const AnalyticsViewControl = (props) => {
+  /*
+  const brandOptions = createOptions( props.brands )
+   */
   const accountOptions = createOptions( props.accounts )
   const groupOptions = createOptions( props.groups )
   const propertyOptions = createPropertyOptions( props.properties )
@@ -69,7 +71,7 @@ const AnalyticsViewControl = (props) => {
         options={groupOptions}
         onSelect={val => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
-        } }
+        }}
         value={props.params.group}
       />
       }
@@ -84,7 +86,7 @@ const AnalyticsViewControl = (props) => {
       }
 
       <ButtonToolbar className="pull-right">
-        <Button bsStyle="primary" >Export</Button>
+        <Button bsStyle="primary" onClick={props.exportCSV}>Export</Button>
       </ButtonToolbar>
 
       { /* TODO: Implement filtered dropdown, when possible (component fixed)
@@ -139,13 +141,14 @@ const AnalyticsViewControl = (props) => {
 }
 
 AnalyticsViewControl.propTypes = {
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  brands: React.PropTypes.instanceOf(Immutable.List),
-  groups: React.PropTypes.instanceOf(Immutable.List),
-  history: React.PropTypes.object,
-  location: React.PropTypes.object,
-  params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List)
+  accounts: PropTypes.instanceOf(Immutable.List),
+  brands: PropTypes.instanceOf(Immutable.List),
+  exportCSV: PropTypes.func,
+  groups: PropTypes.instanceOf(Immutable.List),
+  history: PropTypes.object,
+  location: PropTypes.object,
+  params: PropTypes.object,
+  properties: PropTypes.instanceOf(Immutable.List)
 }
 
 AnalyticsViewControl.defaultProps = {

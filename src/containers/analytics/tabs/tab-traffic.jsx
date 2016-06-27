@@ -7,7 +7,9 @@ import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
+
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props){
@@ -63,7 +65,11 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  render(){
+  export(exporters) {
+    exporters.traffic(this.props.trafficByTime, this.props.filters.get('serviceTypes'))
+  }
+
+  render() {
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
 
@@ -123,6 +129,8 @@ AnalyticsTabTraffic.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    serviceTypes: state.filters.get('serviceTypes'),
+    metrics: Immutable.List(),
     metrics: state.metrics,
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
@@ -137,4 +145,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabTraffic);

@@ -14,7 +14,7 @@ const HOST_UPDATED = 'HOST_UPDATED'
 const ACTIVE_HOST_CHANGED = 'ACTIVE_HOST_CHANGED'
 
 const emptyHosts = Immutable.Map({
-  activeHost: null,
+  activeHost: undefined,
   allHosts: Immutable.List(),
   fetching: false
 })
