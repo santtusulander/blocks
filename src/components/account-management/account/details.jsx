@@ -164,9 +164,9 @@ class AccountManagementAccountDetails extends React.Component {
                       <Input
                         value={option.value}
                         type='checkbox'
+                        { ...services[index] }
                         label={option.label}
-                        onChange={e => e.target.checked ? services.addField(e.target.value) : services.removeField(services.indexOf(e.target.value))}
-                      />
+                        />
                     </div>
                   )
                 })
