@@ -6,9 +6,9 @@ import Immutable from 'immutable'
 import UDNButton from '../../button.js'
 import { reduxForm } from 'redux-form'
 
-import IconAdd from '../../icons/icon-add.jsx'
-import IconEdit from '../../icons/icon-edit.jsx'
-import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../../constants/account-management-options'
+// import IconAdd from '../../icons/icon-add.jsx'
+// import IconEdit from '../../icons/icon-edit.jsx'
+import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../../constants/account-management-options'
 
 import './details.scss'
 
