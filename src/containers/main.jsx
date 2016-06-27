@@ -152,7 +152,8 @@ export class Main extends React.Component {
             logOut={this.logOut}
             location={this.props.location}
             pathname={this.props.location.pathname}
-            params={this.props.params}/>
+            params={this.props.params}
+            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}/>
           : ''
         }
         <div className="content-container">{this.props.children}</div>

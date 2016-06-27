@@ -167,6 +167,8 @@ export class AccountManagement extends Component {
       soaFormInitialValues: soaFormInitialValues
     }
 
+    console.log(accountManagementModal)
+
     return (
       <PageContainer className="account-management">
         <Content>
@@ -193,17 +195,6 @@ export class AccountManagement extends Component {
               }}
             />
           */ }
-
-          {/*!isAdmin &&
-            <ManageAccount
-              account={this.props.activeAccount}
-              addGroup={this.addGroupToActiveAccount}
-              deleteGroup={this.deleteGroupFromActiveAccount}
-              editAccount={this.editAccount}
-              editGroup={this.editGroupInActiveAccount}
-              groups={this.props.groups}
-            />
-          */}
 
           {accountManagementModal === ADD_ACCOUNT &&
             <NewAccountForm
