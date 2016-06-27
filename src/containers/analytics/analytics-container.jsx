@@ -17,7 +17,6 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
-import {getRoute} from '../../routes.jsx'
 import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 
@@ -49,23 +48,12 @@ class AnalyticsContainer extends React.Component {
   constructor(props){
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
+    this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
   componentWillMount(){
     this.fetchData(this.props.params, true)
-    const { params: { brand, account, group },
-      location: { query: { property } },
-      activeAccount,
-      activeGroup,
-      activeHost,
-      accountActions,
-      groupActions,
-      propertyActions } = this.props
-    Promise.all([
-      account && !activeAccount && accountActions.fetchAccount(brand, account),
-      group && !activeGroup && groupActions.fetchGroup(brand, account, group),
-      property && !activeHost && propertyActions.fetchHost(brand, account, group, property)
-    ])
+    this.fetchActiveItems(this.props)
   }
 
   componentWillReceiveProps( nextProps ) {
@@ -74,7 +62,8 @@ class AnalyticsContainer extends React.Component {
 
     if (params !== prevParams ||
       this.props.location.search !== nextProps.location.search) {
-      this.fetchData( nextProps.params)
+      this.fetchActiveItems(nextProps)
+      this.fetchData(nextProps.params)
     }
   }
 
@@ -106,6 +95,17 @@ class AnalyticsContainer extends React.Component {
     }
 
     this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
+  }
+
+  fetchActiveItems(props) {
+    const {
+      params: { brand, account, group },
+      accountActions,
+      groupActions } = props
+    Promise.all([
+      account && accountActions.fetchAccount(brand, account),
+      group && groupActions.fetchGroup(brand, account, group)
+    ])
   }
 
   fetchData(params, refresh){
@@ -217,17 +217,26 @@ class AnalyticsContainer extends React.Component {
   }
 }
 
+AnalyticsContainer.defaultProps = {
+  activeAccount: Immutable.fromJS({}),
+  activeGroup: Immutable.fromJS({}),
+  activeHost: Immutable.fromJS({})
+}
+
 AnalyticsContainer.propTypes = {
+  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   brands: React.PropTypes.instanceOf(Immutable.List),
   filters: React.PropTypes.instanceOf(Immutable.Map),
+  groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List)
+  properties: React.PropTypes.instanceOf(Immutable.List),
+  propertyActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -251,7 +260,6 @@ function mapDispatchToProps(dispatch) {
     // brandActions: bindActionCreators(brandActionCreators, dispatch)
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     propertyActions: bindActionCreators(propertyActionCreators, dispatch),
-
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }

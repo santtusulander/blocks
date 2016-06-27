@@ -36,7 +36,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   }
