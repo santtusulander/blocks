@@ -1,5 +1,15 @@
 .account-management-account-details {
   .input-group {
+    &.brand-row {
+      display: inline-flex;
+      & .brand-tooltip {
+        padding-top: 13px;
+      }
+      & .brand-field {
+        font-size: 20px;
+        padding-top: 20px;
+      }
+    }
     .btn-toolbar {
       margin-left: 10px;
     }
