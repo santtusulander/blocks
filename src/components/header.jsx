@@ -114,6 +114,7 @@ class Header extends React.Component {
             <UdnAdminToolbar
               accounts={this.props.accounts}
               activeAccount={this.props.activeAccount}
+              toggleAccountManagementModal={this.props.toggleAccountManagementModal}
               fetchAccountData={this.props.fetchAccountData}
             />
           </li>
@@ -335,7 +336,8 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  theme: React.PropTypes.string
+  theme: React.PropTypes.string,
+  toggleAccountManagementModal: React.PropTypes.func
 }
 
 module.exports = Header;
