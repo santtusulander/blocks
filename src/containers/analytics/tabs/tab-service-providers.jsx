@@ -57,8 +57,11 @@ class AnalyticsTabServiceProviders extends React.Component {
     */
   }
 
+  export(exporters) {
+    exporters.serviceProviders(this.props.serviceProviders.get('detail'))
+  }
+
   render(){
-    this.props.setDataToExport(this.props.serviceProviders.get('detail'))
     return (
       <div>
         <AnalysisServiceProviders
@@ -84,4 +87,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabServiceProviders);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabServiceProviders);

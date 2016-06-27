@@ -64,8 +64,11 @@ class AnalyticsTabFileError extends React.Component {
 
   }
 
+  export(exporters) {
+    exporters.fileError(this.props.fileErrorURLs, this.props.serviceTypes)
+  }
+
   render(){
-    this.props.setDataToExport(this.props.fileErrorURLs, this.props.serviceTypes)
     return (
       <div>
         <AnalysisFileError fetching={this.props.fetching}
@@ -90,10 +93,10 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabFileError);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabFileError);

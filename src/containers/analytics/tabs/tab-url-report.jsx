@@ -64,8 +64,11 @@ class AnalyticsTabUrlReport extends React.Component {
 
   }
 
+  export(exporters) {
+    exporters.urlReport(this.props.urlMetrics)
+  }
+
   render(){
-    this.props.setDataToExport(this.props.urlMetrics)
     return (
       <div>
         <AnalysisURLReport fetching={this.props.fetching}
@@ -89,10 +92,10 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabUrlReport);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabUrlReport);

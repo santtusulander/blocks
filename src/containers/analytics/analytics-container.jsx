@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -49,7 +48,6 @@ class AnalyticsContainer extends React.Component {
 
   constructor(props){
     super(props)
-    this.dataToExport = []
     this.onFilterChange = this.onFilterChange.bind(this)
   }
 
@@ -169,14 +167,10 @@ class AnalyticsContainer extends React.Component {
       'url-report': ['date-range', 'error-code'],
       'playback-demo': ['video']
     })
-    const setDataToExport = (...data) => this.dataToExport = data
     const exportCSV = () => {
       const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
       const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
-      switch(getTabName(pathname)) {
-        case 'traffic': createCSVExporters(fileName).traffic(...this.dataToExport)
-        case 'visitors': createCSVExporters(fileName).visitors(...this.dataToExport)
-      }
+      this.refs.tab.getWrappedInstance().export(createCSVExporters(fileName))
     }
     return (
       <PageContainer className='analytics-container'>
@@ -210,7 +204,7 @@ class AnalyticsContainer extends React.Component {
             /* Render tab -content */
             children && React.cloneElement(children, {
               params: params,
-              setDataToExport: setDataToExport,
+              ref: 'tab',
               filters: filters,
               location: this.props.location
             } )
@@ -263,4 +257,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsContainer)

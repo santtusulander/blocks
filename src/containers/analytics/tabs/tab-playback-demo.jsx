@@ -8,6 +8,11 @@ import AnalysisPlaybackDemo from '../../../components/analysis/playback-demo.jsx
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
 class AnalyticsTabPlaybackDemo extends React.Component {
+
+  export() {
+    // export analytics
+  }
+
   render() {
     return (
       <div>
@@ -37,4 +42,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabPlaybackDemo);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabPlaybackDemo);

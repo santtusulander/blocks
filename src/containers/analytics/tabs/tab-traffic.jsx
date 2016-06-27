@@ -53,8 +53,11 @@ class AnalyticsTabTraffic extends React.Component {
 
   }
 
+  export(exporters) {
+    exporters.traffic(this.props.trafficByTime, this.props.filters.get('serviceTypes'))
+  }
+
   render() {
-    this.props.setDataToExport(this.props.trafficByTime, this.props.filters.get('serviceTypes'))
     // TODO: This should have its own endpoint so we don't have to fetch info
     // for all accounts
     const metrics    = this.props.metrics.find(metric => metric.get('account') + "" === this.props.params.account) || Immutable.Map()
@@ -103,4 +106,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabTraffic);
