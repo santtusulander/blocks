@@ -44,7 +44,7 @@ export class AccountManagement extends Component {
 
   componentWillMount() {
     const accountId = this.props.params.account
-    if ( accountId && !this.props.activeAccount) this.props.accountActions.fetchAccount('udn', accountId)
+    if ( accountId && accountId !== 'null' && !this.props.activeAccount) this.props.accountActions.fetchAccount('udn', accountId)
   }
 
   editSOARecord() {
@@ -180,6 +180,10 @@ export class AccountManagement extends Component {
           }
 
           {!this.props.activeAccount &&
+            <p className='text-center'><br/>Please, select account.</p>
+          }
+
+            {/*
             <ManageSystem
               dnsList={dnsListProps}
               brandsList={{
@@ -188,7 +192,7 @@ export class AccountManagement extends Component {
                 toggleModal: toggleModal
               }}
             />
-          }
+          */ }
 
           {/*!isAdmin &&
             <ManageAccount
