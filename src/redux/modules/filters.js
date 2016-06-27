@@ -31,12 +31,19 @@ export function setValue(state, action) {
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
+export function resetDefaults(state, action){
+  return initialState
+}
+
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
+const RESET_FILTERS = 'RESET_FILTERS'
 
 export default handleActions({
-  SET_FILTER_VALUE: setValue
+  SET_FILTER_VALUE: setValue,
+  RESET_FILTERS: resetDefaults
 }, initialState)
 
 // ACTIONS
 
 export const setFilterValue = createAction(SET_FILTER_VALUE)
+export const resetFilters = createAction(RESET_FILTERS)
