@@ -1,5 +1,5 @@
 export const ACCOUNT_TYPES = [
-  { value: 0, label: 'Content Provider' },
+  { value: 3, label: 'Content Provider' },
   { value: 1, label: 'Service Provider' }
 ]
 
