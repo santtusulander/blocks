@@ -55,6 +55,8 @@ const AnalyticsViewControl = (props) => {
   return (
     <div className='analytics-view-control'>
 
+    <p>ANALYTICS</p>
+
     { /* If account is not selected (Needs to be: UDN ADMIN) */
       !props.params.account &&
       <Select
@@ -64,7 +66,7 @@ const AnalyticsViewControl = (props) => {
         }}
         value={props.params.group}
       />
-      }
+    }
 
     {groupOptions.count() > 0 &&
       <Select
