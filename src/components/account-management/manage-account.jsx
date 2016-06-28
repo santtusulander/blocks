@@ -6,6 +6,7 @@ import PageHeader from '../layout/page-header'
 import Details from './account/details'
 import Groups from './account/groups'
 import Users from './account/users'
+import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../constants/account-management-options'
 
 class AccountManagementManageAccount extends React.Component {
   constructor(props) {
@@ -43,7 +44,8 @@ class AccountManagementManageAccount extends React.Component {
               initialValues={{
                 accountName: this.props.account.get('name'),
                 brand: 'udn',
-                services: [false, true]
+                services: SERVICE_TYPES.map(type => this.props.account.get('services').includes(type.value)),
+                accountType: ACCOUNT_TYPES.find(type => this.props.account.get('provider_type') === type.value).value
               }}
               onSave={this.props.editAccount}/>
           }

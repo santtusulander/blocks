@@ -74,17 +74,16 @@ class AccountManagementAccountDetails extends React.Component {
 
                 <span className="input-group-addon brand-tooltip">
                   <ButtonToolbar>
-                  { // Not in 0.7
-                    //   <UDNButton bsStyle="success" icon={true} addNew={true}
-                    //     onClick={this.props.onAdd}>
-                    //     <IconAdd/>
-                    //   </UDNButton>
+                  {/* Not in 0.7
+                      <UDNButton bsStyle="success" icon={true} addNew={true}
+                        onClick={this.props.onAdd}>
+                        <IconAdd/>
+                      </UDNButton>
 
-                    //   <UDNButton bsStyle="primary" icon={true} addNew={true}
-                    //     onClick={this.props.onAdd}>
-                    //     <IconEdit/>
-                    //   </UDNButton>
-                  }
+                      <UDNButton bsStyle="primary" icon={true} addNew={true}
+                        onClick={this.props.onAdd}>
+                        <IconEdit/>
+                      </UDNButton>*/}
 
                     <OverlayTrigger placement="top" overlay={
                       <Tooltip id="tooltip_brand">
@@ -134,7 +133,7 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={3}>
               <div className="input-group">
                 <SelectWrapper
-                  { ... accountType }
+                  { ...accountType }
                   className="input-select"
                   options={accountTypeOptions}
                 />
