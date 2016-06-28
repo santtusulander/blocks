@@ -54,6 +54,7 @@ class AccountManagementAccountDetails extends React.Component {
     const { fields: { accountName, accountType, services } } = this.props
     return (
       <div className="account-management-account-details">
+        <h2>Details</h2>
         <form className='form-horizontal'>
 
           <div className="form-group">
