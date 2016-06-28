@@ -6,7 +6,11 @@ import PageHeader from '../layout/page-header'
 import Details from './account/details'
 import Groups from './account/groups'
 import Users from './account/users'
+import UDNButton from '../button.js'
+import IconAdd from '../icons/icon-add.jsx'
+
 import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../constants/account-management-options'
+import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
 class AccountManagementManageAccount extends React.Component {
   constructor(props) {
@@ -22,15 +26,17 @@ class AccountManagementManageAccount extends React.Component {
     this.setState({activeTab: newTab})
   }
   render() {
-    const { account, isAdmin } = this.props
-    if(!account || !account.size) {
-      return <div>Loading...</div>
-    }
+    const { account, isAdmin, toggleModal } = this.props
+    const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
     const services = account.get('services') && SERVICE_TYPES.map(type => account.get('services').includes(type.value))
     return (
       <div className="account-management-manage-account">
         <PageHeader>
-          <h1>{account.get('name')}</h1>
+          <h1>{account.get('name')}
+            <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={() => toggleModal(ADD_ACCOUNT)}>
+              <IconAdd/>
+            </UDNButton>
+          </h1>
         </PageHeader>
         <Nav bsStyle="tabs" className="system-nav"
           activeKey={this.state.activeTab} onSelect={this.changeTab}>
@@ -39,26 +45,28 @@ class AccountManagementManageAccount extends React.Component {
           <NavItem eventKey="users">Users</NavItem>
         </Nav>
         <div className="tab-bodies">
-          {this.state.activeTab === 'details' &&
+          {account.isEmpty && <p className='text-center'><br/>Please select an account.</p>}
+          {this.state.activeTab === 'details' && !account.isEmpty() &&
             <Details
+              toggleModal={toggleModal}
               account={account}
               isAdmin={isAdmin}
               initialValues={{
                 accountName: account.get('name'),
                 brand: 'udn',
                 services: services || [false, true],
-                accountType: ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value).value
+                accountType: accountType && accountType.value
               }}
               onSave={this.props.editAccount}/>
           }
-          {this.state.activeTab === 'groups' &&
+          {this.state.activeTab === 'groups' && !account.isEmpty() &&
             <Groups
               addGroup={this.props.addGroup}
               deleteGroup={this.props.deleteGroup}
               editGroup={this.props.editGroup}
               groups={this.props.groups}/>
           }
-          {this.state.activeTab === 'users' &&
+          {this.state.activeTab === 'users' && !account.isEmpty() &&
             <Users
               account={account}
               isAdmin={isAdmin}/>
@@ -77,7 +85,8 @@ AccountManagementManageAccount.propTypes = {
   editAccount: React.PropTypes.func,
   editGroup: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  isAdmin: React.PropTypes.bool
+  isAdmin: React.PropTypes.bool,
+  toggleModal: React.PropTypes.func
 }
 AccountManagementManageAccount.defaultProps = {
   account: Immutable.Map({}),
