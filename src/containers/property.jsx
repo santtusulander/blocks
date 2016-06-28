@@ -29,10 +29,10 @@ import Tooltip from '../components/tooltip'
 
 // default dates to month to date
 function safeMomentStartDate(date) {
-  return moment.utc(date, 'X') || moment.utc().startOf('month')
+  return date ? moment.utc(date, 'X') : moment.utc().startOf('month')
 }
 function safeMomentEndDate(date) {
-  return moment.utc(date, 'X') || moment.utc().endOf('day')
+  return date ? moment.utc(date, 'X') : moment.utc().endOf('day')
 }
 function safeFormattedStartDate(date) {
   return date || moment.utc().startOf('month').format('X')
@@ -353,7 +353,7 @@ export class Property extends React.Component {
                 </h3>
               </div>
               <h3 className="has-btn">
-                Traffic Summary
+                Property Summary
                 <DateRangeSelect
                   startDate={startDate}
                   endDate={endDate}
