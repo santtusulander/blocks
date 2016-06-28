@@ -98,7 +98,7 @@ class AnalysisTraffic extends React.Component {
          </div>*/}
         <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
         <div className="analysis-data-box wide">
-          {(bandWithData().peak, bandWithData().low, bandWithData().average) > 0 ?
+          {(bandWithData().peak + bandWithData().low + bandWithData().average) > 0 ?
             <Row>
               <Col xs={4} className="right-separator">
                 <h4>Peak</h4>
