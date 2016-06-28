@@ -26,6 +26,10 @@ class AnalyticsTabVisitors extends React.Component {
     this.props.visitorsActions.fetchByOS(fetchOpts)
   }
 
+  export(exporters) {
+    exporters.visitors(this.props.byTime)
+  }
+
   render() {
     return (
       <AnalysisVisitors
@@ -80,4 +84,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabVisitors);
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabVisitors);

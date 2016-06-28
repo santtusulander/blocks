@@ -5,13 +5,14 @@
 
 .analytics-container {
   .page-header-layout {
-    padding-bottom: 0;
+    padding: 0;
+
   }
 
   .analytics-tab-container {
     @extend .container-fluid;
 
-    padding: 20px 60px;
+    padding: 20px 20px 20px 60px;
   }
 
   .analysis-data-box {

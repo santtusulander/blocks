@@ -27,6 +27,7 @@ class AccountManagementAccountEditGroup extends React.Component {
     this.props.save(this.state.name)
   }
   render() {
+
     return (
       <tr className="edit-row">
         <td colSpan={3}>
@@ -35,7 +36,7 @@ class AccountManagementAccountEditGroup extends React.Component {
             placeholder="Enter name" ref="input"/>
         </td>
         <td>
-          <Button onClick={this.save} bsStyle="primary">SAVE</Button>
+          <Button onClick={this.save} bsStyle="primary" disabled={!this.state.name}>SAVE</Button>
         </td>
       </tr>
     )

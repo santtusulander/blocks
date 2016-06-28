@@ -14,7 +14,7 @@ const GROUP_UPDATED = 'GROUP_UPDATED'
 const ACTIVE_GROUP_CHANGED = 'ACTIVE_GROUP_CHANGED'
 
 const emptyGroups = Immutable.Map({
-  activeGroup: null,
+  activeGroup: undefined,
   allGroups: Immutable.List(),
   fetching: false
 })

@@ -147,11 +147,15 @@ class ContentItemChart extends React.Component {
     const endDate = moment.utc().format('MMM D')
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
-    if(this.state.activeSlice) {
-      avgTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('average'), true)
-      maxTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('peak'), true)
-      minTransfer = formatBitsPerSecond(this.state.activeSlice.get('transfer_rates').get('low'), true)
-      tooltipDate = moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D')
+    let link = this.props.linkTo
+    const activeSlice = this.state.activeSlice
+    if(activeSlice) {
+      avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
+      maxTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('peak'), true)
+      minTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('low'), true)
+      const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
+      tooltipDate = sliceStart.format('MMM D')
+      link = `${this.props.linkTo}&startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
     }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
@@ -169,7 +173,7 @@ class ContentItemChart extends React.Component {
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <Link className="content-item-chart-link" to={this.props.linkTo}>
+          <Link className="content-item-chart-link" to={link}>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"

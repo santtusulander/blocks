@@ -93,7 +93,7 @@ class Header extends React.Component {
       }
     }
 
-    if ( /(\/account-management)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'ACCOUNT'} )
+    if ( /(\/account-management)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'Account Management'} )
     if ( /(\/services)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SERVICES'} )
     if ( /(\/security)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SECURITY'} )
     if ( /(\/support)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SUPPORT'} )

@@ -27,6 +27,20 @@ import {formatBitsPerSecond} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 
+// default dates to month to date
+function safeMomentStartDate(date) {
+  return date ? moment.utc(date, 'X') : moment.utc().startOf('month')
+}
+function safeMomentEndDate(date) {
+  return date ? moment.utc(date, 'X') : moment.utc().endOf('day')
+}
+function safeFormattedStartDate(date) {
+  return date || moment.utc().startOf('month').format('X')
+}
+function safeFormattedEndDate(date) {
+  return date || moment.utc().endOf('day').format('X')
+}
+
 export class Property extends React.Component {
   constructor(props) {
     super(props)
@@ -35,10 +49,8 @@ export class Property extends React.Component {
       activeSlice: null,
       activeSliceX: 100,
       byTimeWidth: 0,
-      endDate: moment.utc().endOf('day'),
       purgeActive: false,
-      propertyMenuOpen: false,
-      startDate: moment.utc().startOf('month')
+      propertyMenuOpen: false
     }
 
     this.togglePurge = this.togglePurge.bind(this)
@@ -53,7 +65,7 @@ export class Property extends React.Component {
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
-    this.fetchData(this.props.location.query.name)
+    this.fetchData(this.props.location.query)
   }
   componentDidMount() {
     this.measureContainers()
@@ -61,15 +73,18 @@ export class Property extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {
-    if(nextProps.location.query.name !== this.props.location.query.name) {
-      // reset to month to date for new property
+    const newQuery = nextProps.location.query
+    const oldQuery = this.props.location.query
+    if(newQuery.name !== oldQuery.name) {
+      this.fetchHost(newQuery.name)
+      this.fetchData(newQuery)
+    }
+    else if(newQuery.startDate !== oldQuery.startDate ||
+      newQuery.endDate !== oldQuery.endDate) {
       this.setState({
-        startDate: moment.utc().startOf('month'),
-        endDate: moment.utc().endOf('day'),
         activeSlice: null
       }, () => {
-        this.fetchHost(nextProps.location.query.name)
-        this.fetchData(nextProps.location.query.name)
+        this.fetchData(newQuery)
       })
     }
     this.measureContainers()
@@ -78,14 +93,23 @@ export class Property extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   dateDiff() {
-    return this.state.endDate.diff(this.state.startDate) + 1
+    const startDate = safeMomentStartDate(this.props.location.query.startDate)
+    const endDate = safeMomentEndDate(this.props.location.query.endDate)
+    // Add a minute since endDate is 1 minute less than a full day
+    return endDate.diff(startDate)+60000
   }
   changeDateRange (startDate, endDate) {
+    const {query, pathname} = this.props.location
+    const fStartDate = safeMomentStartDate(startDate).format('X')
+    const fEndDate = safeMomentEndDate(endDate).format('X')
     this.setState({
-      startDate: startDate,
-      endDate: endDate,
       activeSlice: null
-    }, () => this.fetchData(this.props.location.query.name))
+    }, () => {
+      this.props.history.pushState(
+        null,
+        `${pathname}?name=${query.name}&startDate=${fStartDate}&endDate=${fEndDate}`
+      )
+    })
   }
   fetchHost(property) {
     this.props.hostActions.startFetching()
@@ -96,48 +120,40 @@ export class Property extends React.Component {
       property
     )
   }
-  fetchData(property) {
+  fetchData(queryParams) {
+    const {brand, account, group} = this.props.params
+    const startDate = safeFormattedStartDate(queryParams.startDate)
+    const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
-      this.fetchHost(property)
+      this.fetchHost(queryParams.name)
     }
     Promise.all([
       this.props.visitorsActions.fetchByCountry({
-        account: this.props.params.account,
-        group: this.props.params.group,
-        property: property,
-        startDate: this.state.startDate.format('X'),
-        endDate: this.state.endDate.format('X'),
+        account: account,
+        group: group,
+        property: queryParams.name,
+        startDate: startDate,
+        endDate: endDate,
         granularity: 'day',
         aggregate_granularity: 'day',
         max_countries: 3
       })
     ]).then(this.props.visitorsActions.finishFetching)
     if(!this.props.properties || !this.props.properties.size) {
-      this.props.hostActions.fetchHosts(
-        this.props.params.brand,
-        this.props.params.account,
-        this.props.params.group
-      )
+      this.props.hostActions.fetchHosts(brand, account, group)
     }
     if(!this.props.activeAccount || !this.props.activeAccount.size) {
-      this.props.accountActions.fetchAccount(
-        this.props.params.brand,
-        this.props.params.account
-      )
+      this.props.accountActions.fetchAccount(brand, account)
     }
     if(!this.props.activeGroup || !this.props.activeGroup.size) {
-      this.props.groupActions.fetchGroup(
-        this.props.params.brand,
-        this.props.params.account,
-        this.props.params.group
-      )
+      this.props.groupActions.fetchGroup(brand, account, group)
     }
     const metricsOpts = {
-      account: this.props.params.account,
-      group: this.props.params.group,
-      startDate: this.state.startDate.format('X'),
-      endDate: this.state.endDate.format('X'),
-      property: property,
+      account: account,
+      group: group,
+      startDate: startDate,
+      endDate: endDate,
+      property: queryParams.name,
       list_children: 'false'
     }
     this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
@@ -215,28 +231,33 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
+    const startDate = safeMomentStartDate(this.props.location.query.startDate)
+    const endDate = safeMomentEndDate(this.props.location.query.endDate)
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
-    const metrics_traffic = !totals ? [] : this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
-      return {
-        timestamp: moment(hour.get('timestamp'), 'X').toDate(),
-        bits_per_second: hour.getIn(['transfer_rates','average'])
-      }
-    }).toJS()
+    const metrics_traffic = !totals ?
+      [] :
+      this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
+        return {
+          timestamp: moment(hour.get('timestamp'), 'X').toDate(),
+          bits_per_second: hour.getIn(['transfer_rates','average'])
+        }
+      }).toJS()
     // Add time difference to the historical data so it matches up
-    const historical_traffic = !this.props.hourlyTraffic.get('history').size ? [] : this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
-      return {
-        timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
-        bits_per_second: hour.getIn(['transfer_rates','average'])
-      }
-    }).toJS()
+    const historical_traffic = !this.props.hourlyTraffic.get('history').size ?
+      [] :
+      this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
+        return {
+          timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
+          bits_per_second: hour.getIn(['transfer_rates','average'])
+        }
+      }).toJS()
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
-    const sliceGranularity = this.state.endDate.diff(this.state.startDate, 'days') <= 1 ?
-      null : 'day'
+    const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     return (
       <PageContainer className="property-container">
         <Content>
@@ -332,10 +353,10 @@ export class Property extends React.Component {
                 </h3>
               </div>
               <h3 className="has-btn">
-                Traffic Summary
+                Property Summary
                 <DateRangeSelect
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
+                  startDate={startDate}
+                  endDate={endDate}
                   changeDateRange={this.changeDateRange}/>
               </h3>
             </div>
@@ -412,6 +433,7 @@ Property.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
+  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,

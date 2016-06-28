@@ -18,6 +18,8 @@ import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
 import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
+import { createCSVExporters } from '../../util/analysis-csv-export'
+
 
 import './analytics-container.scss'
 
@@ -35,16 +37,15 @@ class AnalyticsContainer extends React.Component {
 
   constructor(props){
     super(props)
-
     this.onFilterChange = this.onFilterChange.bind(this)
+    this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
-  componentDidMount(){
-
+  componentWillMount(){
     //Reset filters to default when entering analytics page
     this.props.filtersActions.resetFilters();
-
     this.fetchData(this.props.params, true)
+    this.fetchActiveItems(this.props)
   }
 
   componentWillReceiveProps( nextProps ) {
@@ -53,13 +54,13 @@ class AnalyticsContainer extends React.Component {
 
     if (params !== prevParams ||
       this.props.location.search !== nextProps.location.search) {
-      this.fetchData( nextProps.params)
+      this.fetchActiveItems(nextProps)
+      this.fetchData(nextProps.params)
     }
   }
 
   setBreadcrumbs() {
     let breadCrumbLinks = []
-
     if (this.props.params.brand) {
       breadCrumbLinks.push({
         label: getNameById(this.props.brands, this.props.params.brand),
@@ -88,9 +89,19 @@ class AnalyticsContainer extends React.Component {
     this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
   }
 
+  fetchActiveItems(props) {
+    const {
+      params: { brand, account, group },
+      accountActions,
+      groupActions } = props
+    Promise.all([
+      account && accountActions.fetchAccount(brand, account),
+      group && groupActions.fetchGroup(brand, account, group)
+    ])
+  }
+
   fetchData(params, refresh){
     let promises = [];
-
     /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
     if(params.brand !== this.props.params.brand || refresh) {
       promises.push( this.props.accountActions.fetchAccounts(params.brand) )
@@ -124,6 +135,20 @@ class AnalyticsContainer extends React.Component {
   }
 
   render(){
+    const {
+      params,
+      children,
+      brands,
+      accounts,
+      groups,
+      properties,
+      history,
+      filterOptions,
+      filters,
+      activeAccount,
+      activeGroup,
+      location: { pathname, query: { property } }
+    } = this.props
 
     /* TODO: should  be moved to consts ? */
     const availableFilters = Immutable.fromJS({
@@ -135,38 +160,43 @@ class AnalyticsContainer extends React.Component {
       'url-report': ['date-range', 'error-code'],
       'playback-demo': ['video']
     })
-
+    const exportCSV = () => {
+      const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
+      const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
+      this.refs.tab.getWrappedInstance().export(createCSVExporters(fileName))
+    }
     return (
       <PageContainer className='analytics-container'>
         <Content>
           <PageHeader>
-            <p>ANALYTICS</p>
-
             <AnalyticsViewControl
-              brands={this.props.brands}
-              accounts={this.props.accounts}
-              groups={this.props.groups}
-              properties={this.props.properties}
-              params={this.props.params}
+              exportCSV={exportCSV}
+              brands={brands}
+              accounts={accounts}
+              groups={groups}
+              properties={properties}
+              params={params}
               location={this.props.location}
-              history={this.props.history}
+              history={history}
             />
-
           </PageHeader>
+
 
           <AnalyticsFilters
             onFilterChange={this.onFilterChange}
-            filters={this.props.filters}
-            filterOptions={this.props.filterOptions}
-            showFilters={availableFilters.get( getTabName( this.props.location.pathname ) )}
+            filters={filters}
+            filterOptions={filterOptions}
+            showFilters={availableFilters.get(getTabName(pathname))}
           />
 
           <div className='analytics-tab-container'>
 
           {
             /* Render tab -content */
-            this.props.children && React.cloneElement(this.props.children, {
-              filters: this.props.filters,
+            children && React.cloneElement(children, {
+              params: params,
+              ref: 'tab',
+              filters: filters,
               location: this.props.location
             } )
           }
@@ -181,6 +211,8 @@ class AnalyticsContainer extends React.Component {
 AnalyticsContainer.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   brands: React.PropTypes.instanceOf(Immutable.List),
   children: React.PropTypes.node,
   filterOptions: React.PropTypes.object,
@@ -206,6 +238,9 @@ AnalyticsContainer.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
+    activeHost: state.host.get('activeHost'),
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
@@ -222,7 +257,6 @@ function mapDispatchToProps(dispatch) {
     // brandActions: bindActionCreators(brandActionCreators, dispatch)
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     propertyActions: bindActionCreators(propertyActionCreators, dispatch),
-
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
