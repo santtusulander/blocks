@@ -237,6 +237,8 @@ export class Property extends React.Component {
     }
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
+    console.log(startDate.toDate())
+    console.log(endDate.toDate())
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
@@ -262,6 +264,13 @@ export class Property extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
+    const formatHistoryTooltip = (date, value) => {
+      const formattedDate = moment.utc(date)
+        .subtract(this.dateDiff(), 'ms')
+        .format('MMM D H:mm')
+      const formattedValue = formatBitsPerSecond(value)
+      return `${formattedDate} ${formattedValue}`
+    }
     return (
       <PageContainer className="property-container">
         <Content>
@@ -387,7 +396,8 @@ export class Property extends React.Component {
                 yAxisCustomFormat={formatBitsPerSecond}
                 sliceGranularity={sliceGranularity}
                 hoverSlice={this.hoverSlice}
-                selectSlice={this.selectSlice}/>
+                selectSlice={this.selectSlice}
+                formatSecondaryTooltip={formatHistoryTooltip}/>
               {this.state.activeSlice && <Tooltip
                 className="slice-tooltip"
                 x={this.state.activeSliceX}
