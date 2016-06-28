@@ -170,7 +170,7 @@ class ContentItems extends React.Component {
                   className={viewingChart ?
                     'content-item-grid' :
                     'content-item-lists'}>
-                  {contentItems.map((content, i) => {
+                  {contentItems.map(content => {
                     const item = content.get('item')
                     const contentMetrics = content.get('metrics')
                     const id = String(item.get('id'))
@@ -197,7 +197,7 @@ class ContentItems extends React.Component {
                       barMaxHeight: (scaledWidth / 7).toString()
                     }
                     return (
-                      <ContentItem key={i}
+                      <ContentItem key={id}
                         isChart={viewingChart}
                         itemProps={itemProps}
                         scaledWidth={scaledWidth}

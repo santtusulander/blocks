@@ -237,8 +237,6 @@ export class Property extends React.Component {
     }
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    console.log(startDate.toDate())
-    console.log(endDate.toDate())
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
