@@ -32,8 +32,12 @@ class AccountManagementManageAccount extends React.Component {
     return (
       <div className="account-management-manage-account">
         <PageHeader>
-          <h1>{account.get('name')}
-            <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={() => toggleModal(ADD_ACCOUNT)}>
+          <h1>{account.get('name') || 'No active account'}
+            <UDNButton bsStyle="success"
+              pageHeaderBtn={true}
+              icon={true}
+              addNew={true}
+              onClick={() => toggleModal(ADD_ACCOUNT)}>
               <IconAdd/>
             </UDNButton>
           </h1>
@@ -45,7 +49,7 @@ class AccountManagementManageAccount extends React.Component {
           <NavItem eventKey="users">Users</NavItem>
         </Nav>
         <div className="tab-bodies">
-          {account.isEmpty && <p className='text-center'><br/>Please select an account.</p>}
+          {account.isEmpty() && <p className='text-center'><br/>Please select an account.</p>}
           {this.state.activeTab === 'details' && !account.isEmpty() &&
             <Details
               toggleModal={toggleModal}
