@@ -6,10 +6,6 @@ import AnalysisPlaybackDemo from '../../../components/analysis/playback-demo.jsx
 
 class AnalyticsTabPlaybackDemo extends React.Component {
 
-  export() {
-    // export analytics
-  }
-
   render() {
     return <AnalysisPlaybackDemo activeVideo={this.props.filters.get('video')}/>
   }
@@ -29,4 +25,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, null, null, { withRef: true })(AnalyticsTabPlaybackDemo);
+export default connect(mapStateToProps)(AnalyticsTabPlaybackDemo);
