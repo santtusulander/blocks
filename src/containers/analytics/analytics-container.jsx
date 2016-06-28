@@ -171,6 +171,8 @@ class AnalyticsContainer extends React.Component {
             <p>ANALYTICS</p>
 
             <AnalyticsViewControl
+              activeAccount={activeAccount}
+              activeGroup={activeGroup}
               exportCSV={exportCSV}
               brands={brands}
               accounts={accounts}
