@@ -46,10 +46,10 @@ export class DateRangeSelect extends React.Component {
     if(this.state.activeDateRange !== DateRanges.CUSTOM_TIMERANGE) {
       nextState.activeDateRange = this.matchActiveDateRange(nextProps.startDate, nextProps.endDate)
     }
-    if(nextState.startDate && !this.state.startDate.isSame(nextProps.startDate, 'day')) {
+    if(nextProps.startDate && !this.state.startDate.isSame(nextProps.startDate, 'day')) {
       nextState.startDate = nextProps.startDate
     }
-    if(nextState.endDate && !this.state.endDate.isSame(nextProps.endDate, 'day')) {
+    if(nextProps.endDate && !this.state.endDate.isSame(nextProps.endDate, 'day')) {
       nextState.endDate = nextProps.endDate
     }
     this.setState(nextState)
