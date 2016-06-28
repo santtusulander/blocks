@@ -77,18 +77,6 @@ class AnalysisTraffic extends React.Component {
       activeDirection: this.state.sortDir
     }
 
-    const bandWithData = () => {
-
-      let peak = Math.max(Math.max.apply(Math, httpData.toJS().map((data) => data.bits_per_second || 0)), Math.max.apply(Math, httpsData.toJS().map((data) => data.bits_per_second || 0)))
-      let low  = Math.min(Math.min.apply(Math, httpData.toJS().map((data) => (data.bits_per_second && data.bits_per_second > 0) ? data.bits_per_second : Infinity)), Math.min.apply(Math, httpsData.toJS().map((data) => (data.bits_per_second && data.bits_per_second > 0) ? data.bits_per_second : Infinity)))
-
-      return {
-        peak: isFinite(peak) ? peak : 0,
-        low: isFinite(low) ? low : 0,
-        average: (peak + low) / 2
-      }
-    }
-
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-traffic">
@@ -98,28 +86,20 @@ class AnalysisTraffic extends React.Component {
          </div>*/}
         <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
         <div className="analysis-data-box wide">
-          {(bandWithData().peak + bandWithData().low + bandWithData().average) > 0 ?
-            <Row>
-              <Col xs={4} className="right-separator">
-                <h4>Peak</h4>
-                {!this.props.fetching &&
-                <p>{formatBitsPerSecond(bandWithData().peak, 2)}</p>
-                }
-              </Col>
-              <Col xs={4} className="right-separator">
-                <h4>Average</h4>
-                {!this.props.fetching &&
-                <p>{formatBitsPerSecond(bandWithData().average, 2)}</p>
-                }
-              </Col>
-              <Col xs={4}>
-                <h4>Low</h4>
-                {!this.props.fetching &&
-                <p>{formatBitsPerSecond(bandWithData().low, 2)}</p>
-                }
-              </Col>
-            </Row>
-            : <p>No data found</p>}
+          <Row>
+            <Col xs={4} className="right-separator">
+              <h4>Peak</h4>
+              <p>{this.props.peakTraffic && this.props.peakTraffic}</p>
+            </Col>
+            <Col xs={4} className="right-separator">
+              <h4>Average</h4>
+              <p>{this.props.avgTraffic && this.props.avgTraffic}</p>
+            </Col>
+            <Col xs={4}>
+              <h4>Low</h4>
+              <p>{this.props.lowTraffic && this.props.lowTraffic}</p>
+            </Col>
+          </Row>
         </div>
         <h3>TRANSFER BY TIME</h3>
         <div ref="byTimeHolder" className="transfer-by-time">
