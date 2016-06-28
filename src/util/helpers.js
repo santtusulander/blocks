@@ -4,7 +4,7 @@ import { getRoute } from '../routes.jsx'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 
-const BYTE_BASE = 1024
+const BYTE_BASE = 1000
 
 export function formatBytes(bytes) {
   let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format('0,0') + ' PB'
