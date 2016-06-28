@@ -128,14 +128,15 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
-        <Navigation
-          activeAccount={this.props.activeAccount}
-          activeGroup={this.props.activeGroup}
-          activeHost={this.props.activeHost}
-          params={this.props.params}
-          pathname={this.props.location.pathname}
+      { this.props.user.get('loggedIn') && 
+      < Navigation
+        activeAccount={this.props.activeAccount}
+        activeGroup={this.props.activeGroup}
+        activeHost={this.props.activeHost}
+        params={this.props.params}
+        pathname={this.props.location.pathname}
         />
-
+      }
         {this.props.location.pathname !== '/login' &&
           this.props.location.pathname !== '/starburst-help' ?
           <Header
@@ -233,6 +234,7 @@ function mapStateToProps(state) {
     properties: state.host.get('allHosts'),
     showErrorDialog: state.ui.get('showErrorDialog'),
     theme: state.ui.get('theme'),
+    user: state.user,
     username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart'),
     breadcrumbs: state.ui.get('breadcrumbs')
