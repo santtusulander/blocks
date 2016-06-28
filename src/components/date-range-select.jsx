@@ -13,30 +13,14 @@ const startOfYesterday = () => startOfThisDay().subtract(1, 'day')
 const endOfYesterday = () => endOfThisDay().subtract(1, 'day')
 const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
-
-function matchActiveDateRange(start, end) {
-  if(!start && !end ||
-    startOfThisMonth().isSame(start) && endOfThisDay().isSame(end, 'day')) {
-    return 'month_to_date'
-  }
-  if(startOfThisDay().isSame(start) && endOfThisDay().isSame(end, 'hour')) {
-    return 'today'
-  }
-  if(startOfYesterday().isSame(start) && endOfYesterday().isSame(end, 'hour')) {
-    return 'yesterday'
-  }
-  if(startOfLastMonth().isSame(start) && endOfLastMonth().isSame(end, 'day')) {
-    return 'last_month'
-  }
-  return 'custom_timerange'
-}
+const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
 export class DateRangeSelect extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeDateRange: 'month_to_date',
+      activeDateRange: DateRanges.MONTH_TO_DATE,
       datepickerOpen: false,
       endDate: null,
       startDate: null
@@ -51,7 +35,7 @@ export class DateRangeSelect extends React.Component {
 
   componentWillMount() {
     this.setState({
-      activeDateRange: matchActiveDateRange(this.props.startDate, this.props.endDate),
+      activeDateRange: this.matchActiveDateRange(this.props.startDate, this.props.endDate),
       endDate: this.props.endDate || endOfThisDay(),
       startDate: this.props.startDate || startOfThisMonth()
     })
@@ -59,16 +43,41 @@ export class DateRangeSelect extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const nextState = {}
-    if(this.state.activeDateRange !== 'custom_timerange') {
-      nextState.activeDateRange = matchActiveDateRange(nextProps.startDate, nextProps.endDate)
+    if(this.state.activeDateRange !== DateRanges.CUSTOM_TIMERANGE) {
+      nextState.activeDateRange = this.matchActiveDateRange(nextProps.startDate, nextProps.endDate)
     }
-    if(nextState.startDate && !this.state.startDate.isSame(nextProps.startDate)) {
+    if(nextState.startDate && !this.state.startDate.isSame(nextProps.startDate, 'day')) {
       nextState.startDate = nextProps.startDate
     }
-    if(nextState.endDate && !this.state.endDate.isSame(nextProps.endDate)) {
+    if(nextState.endDate && !this.state.endDate.isSame(nextProps.endDate, 'day')) {
       nextState.endDate = nextProps.endDate
     }
     this.setState(nextState)
+  }
+
+  matchActiveDateRange(start, end) {
+    if(this.props.availableRanges.indexOf(DateRanges.MONTH_TO_DATE) !== -1 &&
+      (!start && !end ||
+      startOfThisMonth().isSame(start, 'day') && endOfThisDay().isSame(end, 'day'))) {
+      return DateRanges.MONTH_TO_DATE
+    }
+    if(this.props.availableRanges.indexOf(DateRanges.TODAY) !== -1 &&
+      startOfThisDay().isSame(start, 'hour') && endOfThisDay().isSame(end, 'hour')) {
+      return DateRanges.TODAY
+    }
+    if(this.props.availableRanges.indexOf(DateRanges.YESTERDAY) !== -1 &&
+      startOfYesterday().isSame(start, 'hour') && endOfYesterday().isSame(end, 'hour')) {
+      return DateRanges.YESTERDAY
+    }
+    if(this.props.availableRanges.indexOf(DateRanges.LAST_MONTH) !== -1 &&
+      startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
+      return DateRanges.LAST_MONTH
+    }
+    if(this.props.availableRanges.indexOf(DateRanges.LAST_28) !== -1 &&
+      startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
+      return DateRanges.LAST_28
+    }
+    return DateRanges.CUSTOM_TIMERANGE
   }
 
   handleStartDateChange(startDate) {
@@ -110,21 +119,25 @@ export class DateRangeSelect extends React.Component {
   handleTimespanChange(value) {
     let startDate = this.props.startDate
     let endDate   = this.props.endDate
-    if(value === 'month_to_date') {
+    if(value === DateRanges.MONTH_TO_DATE) {
       startDate = startOfThisMonth()
       endDate   = endOfThisDay()
     }
-    else if(value === 'today') {
+    else if(value === DateRanges.TODAY) {
       startDate = startOfThisDay()
       endDate   = endOfThisDay()
     }
-    else if(value === 'yesterday') {
+    else if(value === DateRanges.YESTERDAY) {
       startDate = startOfYesterday()
       endDate   = endOfYesterday()
     }
-    else if(value === 'last_month') {
+    else if(value === DateRanges.LAST_MONTH) {
       startDate = startOfLastMonth()
       endDate   = endOfLastMonth()
+    }
+    else if(value === DateRanges.LAST_28) {
+      startDate = startOfLast28()
+      endDate   = endOfThisDay()
     }
     this.setState({
       activeDateRange: value,
@@ -136,18 +149,14 @@ export class DateRangeSelect extends React.Component {
   }
 
   render() {
+    const ranges = this.props.availableRanges.map(range => [range, range])
     return (
       <div className="date-range-select">
         <Select className="btn-block"
                 onSelect={this.handleTimespanChange}
                 value={this.state.activeDateRange}
-                options={[
-            ['month_to_date', DateRanges.MONTH_TO_DATE],
-            ['last_month', DateRanges.LAST_MONTH],
-            ['today', DateRanges.TODAY],
-            ['yesterday', DateRanges.YESTERDAY],
-            ['custom_timerange', DateRanges.CUSTOM_TIMERANGE]]}/>
-        {this.state.activeDateRange === 'custom_timerange' ?
+                options={ranges}/>
+        {this.state.activeDateRange === DateRanges.CUSTOM_TIMERANGE ?
           <Row className="no-gutters">
             <Col xs={6}>
               <p className="text-sm">FROM</p>
@@ -193,6 +202,7 @@ export class DateRangeSelect extends React.Component {
 
 DateRangeSelect.displayName = 'DateRangeSelect'
 DateRangeSelect.propTypes = {
+  availableRanges: React.PropTypes.array,
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
   startDate: React.PropTypes.instanceOf(moment)
