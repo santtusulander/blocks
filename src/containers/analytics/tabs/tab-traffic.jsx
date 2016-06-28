@@ -8,31 +8,29 @@ import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 
-import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
-
+import { buildAnalyticsOpts, formatBitsPerSecond } from '../../../util/helpers.js'
 
 class AnalyticsTabTraffic extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = {metricKey: 'account', dataKey: 'accountMetrics'}
+    this.state = { metricKey: 'account' }
   }
 
   componentDidMount() {
     this.fetchData(this.props.params, this.props.filters, this.props.location)
   }
 
-  componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
+  componentWillReceiveProps(nextProps) {
+    if(this.props.filters !== nextProps.filters) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
 
-  fetchData(params, filters, location){
-    const fetchOpts = buildAnalyticsOpts(params, filters, location)
-    const startDate = filters.getIn(['dateRange', 'startDate'])
-    const endDate = filters.getIn(['dateRange', 'endDate'])
-    const rangeDiff = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-
+  fetchData(params, filters, location) {
+    const fetchOpts  = buildAnalyticsOpts(params, filters, location)
+    const startDate  = filters.getIn(['dateRange', 'startDate'])
+    const endDate    = filters.getIn(['dateRange', 'endDate'])
+    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
     const byTimeOpts = Object.assign({
       granularity: rangeDiff >= 2 ? 'day' : 'hour'
     }, fetchOpts)
@@ -41,26 +39,30 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     //REFACTOR:
-    if ( location.query.property) {
-      this.setState({metricKey: 'hostMetrics'})
-      this.props.metricsActions.fetchHostMetrics({
+    if(location.query.property) {
+      this.setState({ metricKey: 'hostMetrics' })
+      this.props.trafficActions.fetchTraffic({
         account: params.account,
         group: params.group,
         startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate
+        endDate: fetchOpts.endDate,
+        service_type: fetchOpts.service_type
       })
-    } else if (params.group) {
-      this.setState({metricKey: 'groupMetrics'})
-      this.props.metricsActions.fetchGroupMetrics({
+    } else if(params.group) {
+      this.setState({ metricKey: 'groupMetrics' })
+      this.props.trafficActions.fetchTraffic({
         account: params.account,
         startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate
+        endDate: fetchOpts.endDate,
+        service_type: fetchOpts.service_type
       })
-    } else if (params.account) {
-      this.setState({metricKey: 'accountMetrics'})
-      this.props.metricsActions.fetchAccountMetrics({
+    } else if(params.account) {
+      this.setState({ metricKey: 'accountMetrics' })
+      this.props.trafficActions.fetchTraffic({
+        account: params.account,
         startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate
+        endDate: fetchOpts.endDate,
+        service_type: fetchOpts.service_type
       })
     }
   }
@@ -70,36 +72,20 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   render() {
-    // TODO: This should have its own endpoint so we don't have to fetch info
-    // for all accounts
-
-    let metrics = Immutable.Map()
-    if ( this.props.metrics.has(this.state.metricKey) ) {
-      metrics = this.props.metrics.get(this.state.metricKey).find( (val) => {
-        return (
-          this.props.params.account && val.get('account') === parseInt(this.props.params.account) ||
-          this.props.params.group && val.get('group') === parseInt(this.props.params.group) ||
-          this.props.location.query.property && val.get('property') === this.props.location.query.property
-        )
-      })
-    }
-
-    const peakTraffic = metrics && metrics.has('transfer_rates') ?
-      metrics.getIn(['transfer_rates','peak']) : '0.0 Gbps'
-    const avgTraffic = metrics && metrics.has('transfer_rates') ?
-      metrics.getIn(['transfer_rates','average']) : '0.0 Gbps'
-    const lowTraffic = metrics && metrics.has('transfer_rates') ?
-      metrics.getIn(['transfer_rates','lowest']) : '0.0 Gbps'
+    const { traffic } = this.props
+    const peakTraffic = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'peak']) : 0
+    const avgTraffic  = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'average']) : 0
+    const lowTraffic  = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'low']) : 0
 
     return (
       <AnalysisTraffic
-        avgTraffic={avgTraffic}
+        avgTraffic={formatBitsPerSecond(avgTraffic, 2)}
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
         dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
-        lowTraffic={lowTraffic}
-        peakTraffic={peakTraffic}
+        lowTraffic={formatBitsPerSecond(lowTraffic, 2)}
+        peakTraffic={formatBitsPerSecond(peakTraffic, 2)}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
       />
@@ -130,8 +116,8 @@ AnalyticsTabTraffic.defaultProps = {
 function mapStateToProps(state) {
   return {
     serviceTypes: state.filters.get('serviceTypes'),
-    metrics: Immutable.List(),
     metrics: state.metrics,
+    traffic: state.traffic.get('traffic'),
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress')
