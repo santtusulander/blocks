@@ -37,7 +37,9 @@ const routes = {
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
 
-  content: '/content'
+  content: '/content',
+
+  accountManagement: '/account-management'
 }
 
 /* helper to get route by name */
@@ -169,6 +171,7 @@ module.exports = (
       <Route path=":subPage" component={Security}/>
     </Route>
     <Route path="/services" component={Services}/>
+
     {/* TODO: This is temporary until the user api is managing permissions */}
     <Route path="/account-management/:account" component={AccountManagement}/>
     <Route path="/account-management" component={AccountManagement}/>

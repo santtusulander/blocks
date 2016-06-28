@@ -42,7 +42,8 @@ class AccountManagementManageAccount extends React.Component {
               isAdmin={this.props.isAdmin}
               initialValues={{
                 accountName: this.props.account.get('name'),
-                brand: 'udn'
+                brand: 'udn',
+                services: [false, true]
               }}
               onSave={this.props.editAccount}/>
           }

@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map, is, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -42,10 +42,11 @@ export class AccountManagement extends Component {
     this.showNotification = this.showNotification.bind(this)
   }
 
-/*  componentWillMount() {
-    this.props.fetchAccountData(this.state.activeAccount, this.props.accounts)
+  componentWillMount() {
+    const accountId = this.props.params.account
+    if ( accountId && accountId !== 'null' && !this.props.activeAccount) this.props.accountActions.fetchAccount('udn', accountId)
   }
-*/
+
   editSOARecord() {
     const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
     const activeDomain = dnsData.get('activeDomain')
@@ -166,6 +167,8 @@ export class AccountManagement extends Component {
       soaFormInitialValues: soaFormInitialValues
     }
 
+    console.log(accountManagementModal)
+
     return (
       <PageContainer className="account-management">
         <Content>
@@ -179,6 +182,10 @@ export class AccountManagement extends Component {
           }
 
           {!this.props.activeAccount &&
+            <p className='text-center'><br/>Please, select account.</p>
+          }
+
+            {/*
             <ManageSystem
               dnsList={dnsListProps}
               brandsList={{
@@ -187,18 +194,7 @@ export class AccountManagement extends Component {
                 toggleModal: toggleModal
               }}
             />
-          }
-
-          {!isAdmin &&
-            <ManageAccount
-              account={this.props.activeAccount}
-              addGroup={this.addGroupToActiveAccount}
-              deleteGroup={this.deleteGroupFromActiveAccount}
-              editAccount={this.editAccount}
-              editGroup={this.editGroupInActiveAccount}
-              groups={this.props.groups}
-            />
-          }
+          */ }
 
           {accountManagementModal === ADD_ACCOUNT &&
             <NewAccountForm

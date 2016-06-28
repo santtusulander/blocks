@@ -77,9 +77,13 @@ const AnalyticsFilters = (props) => {
       {props.showFilters.includes('on-off-net') &&
         <div className='filter'>
           <FilterOnOffNet
-          changeOnOffNet={val => {
-            props.onFilterChange('onOffNet', val)
-          }}
+            onOffNetValues={props.filters.get('onOffNet')}
+            toggleFilter={val => {
+              props.onFilterChange(
+                'onOffNet',
+                getToggledValues( props.filters.get('onOffNet'), val)
+              )
+            }}
           />
         </div>
       }

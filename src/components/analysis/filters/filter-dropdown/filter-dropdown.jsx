@@ -75,6 +75,7 @@ export class FilterDropdown extends React.Component {
               ref="filterInput"
               type="text"
               placeholder="search"
+              className="form-control"
               onChange={this.handleFilter}
               value={filterValue}
             />
