@@ -109,7 +109,7 @@ export class AccountManagement extends Component {
         ).then(() => {
           this.showNotification(`Account ${data.name} created.`)
           this.props.toggleModal(null)
-        })
+        }).then(() => this.props.groupActions.fetchGroups(data.brand, action.payload.id))
       }
     )
   }
@@ -166,8 +166,6 @@ export class AccountManagement extends Component {
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
     }
-
-    console.log(accountManagementModal)
 
     return (
       <PageContainer className="account-management">
