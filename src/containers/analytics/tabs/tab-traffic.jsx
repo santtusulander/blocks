@@ -8,7 +8,7 @@ import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 
-import { buildAnalyticsOpts, formatBitsPerSecond } from '../../../util/helpers.js'
+import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.filters !== nextProps.filters) {
+    if(this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
@@ -34,6 +34,7 @@ class AnalyticsTabTraffic extends React.Component {
     const byTimeOpts = Object.assign({
       granularity: rangeDiff >= 2 ? 'day' : 'hour'
     }, fetchOpts)
+
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
@@ -44,6 +45,7 @@ class AnalyticsTabTraffic extends React.Component {
       this.props.trafficActions.fetchTraffic({
         account: params.account,
         group: params.group,
+        property: location.query.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
@@ -52,6 +54,7 @@ class AnalyticsTabTraffic extends React.Component {
       this.setState({ metricKey: 'groupMetrics' })
       this.props.trafficActions.fetchTraffic({
         account: params.account,
+        group: params.group,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
