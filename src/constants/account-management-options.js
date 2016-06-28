@@ -1,11 +1,11 @@
 export const ACCOUNT_TYPES = [
-  { value: 'content_provider', label: 'Content Provider' },
-  { value: 'service_provider', label: 'Service Provider' }
+  { value: 0, label: 'Content Provider' },
+  { value: 1, label: 'Service Provider' }
 ]
 
 export const SERVICE_TYPES = [
-  { value: 'network_partner', label: 'UDN Network Partner' },
-  { value: 'media_delivery', label: 'Media Delivery' }
+  { value: 0, label: 'UDN Network Partner' },
+  { value: 1, label: 'Media Delivery' }
   // Not in 0.7 { value: 'storage', label: 'Storage' }
 ]
 
