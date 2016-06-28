@@ -26,19 +26,23 @@ import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
+import DateRanges from '../constants/date-ranges'
 
-// default dates to month to date
+const endOfThisDay = () => moment().utc().endOf('day')
+const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
+
+// default dates to last 28 days
 function safeMomentStartDate(date) {
-  return date ? moment.utc(date, 'X') : moment.utc().startOf('month')
+  return date ? moment.utc(date, 'X') : startOfLast28()
 }
 function safeMomentEndDate(date) {
-  return date ? moment.utc(date, 'X') : moment.utc().endOf('day')
+  return date ? moment.utc(date, 'X') : endOfThisDay()
 }
 function safeFormattedStartDate(date) {
-  return date || moment.utc().startOf('month').format('X')
+  return date || startOfLast28().format('X')
 }
 function safeFormattedEndDate(date) {
-  return date || moment.utc().endOf('day').format('X')
+  return date || endOfThisDay().format('X')
 }
 
 export class Property extends React.Component {
@@ -357,7 +361,13 @@ export class Property extends React.Component {
                 <DateRangeSelect
                   startDate={startDate}
                   endDate={endDate}
-                  changeDateRange={this.changeDateRange}/>
+                  changeDateRange={this.changeDateRange}
+                  availableRanges={[
+                    DateRanges.LAST_28,
+                    DateRanges.TODAY,
+                    DateRanges.YESTERDAY,
+                    DateRanges.CUSTOM_TIMERANGE
+                  ]}/>
               </h3>
             </div>
 
