@@ -21,9 +21,11 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
-      this.props.fetchData()
+    if(!this.props.activeGroup ||
+      String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+      this.props.fetchGroupData()
     }
+    this.props.fetchMetricsData()
   }
   createNewHost(id, deploymentMode) {
     this.props.hostActions.createHost(
@@ -115,7 +117,8 @@ Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  fetchData: React.PropTypes.func,
+  fetchGroupData: React.PropTypes.func,
+  fetchMetricsData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
@@ -163,17 +166,20 @@ function mapDispatchToProps(dispatch, ownProps) {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
-  const fetchData = () => {
+  const fetchGroupData = () => {
     hostActions.startFetching()
     accountActions.fetchAccount(brand, account)
     groupActions.fetchGroup(brand, account, group)
     hostActions.fetchHosts(brand, account, group)
+  }
+  const fetchMetricsData = () => {
     metricsActions.startHostFetching()
     metricsActions.fetchHostMetrics(metricsOpts)
     metricsActions.fetchDailyHostTraffic(metricsOpts)
   }
   return {
-    fetchData: fetchData,
+    fetchGroupData: fetchGroupData,
+    fetchMetricsData: fetchMetricsData,
     hostActions: hostActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
