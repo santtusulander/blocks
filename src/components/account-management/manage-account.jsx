@@ -22,13 +22,15 @@ class AccountManagementManageAccount extends React.Component {
     this.setState({activeTab: newTab})
   }
   render() {
-    if(!this.props.account || !this.props.account.size) {
+    const { account, isAdmin } = this.props
+    if(!account || !account.size) {
       return <div>Loading...</div>
     }
+    const services = account.get('services') && SERVICE_TYPES.map(type => account.get('services').includes(type.value))
     return (
       <div className="account-management-manage-account">
         <PageHeader>
-          <h1>{this.props.account.get('name')}</h1>
+          <h1>{account.get('name')}</h1>
         </PageHeader>
         <Nav bsStyle="tabs" className="system-nav"
           activeKey={this.state.activeTab} onSelect={this.changeTab}>
@@ -39,13 +41,13 @@ class AccountManagementManageAccount extends React.Component {
         <div className="tab-bodies">
           {this.state.activeTab === 'details' &&
             <Details
-              account={this.props.account}
-              isAdmin={this.props.isAdmin}
+              account={account}
+              isAdmin={isAdmin}
               initialValues={{
-                accountName: this.props.account.get('name'),
+                accountName: account.get('name'),
                 brand: 'udn',
-                services: SERVICE_TYPES.map(type => this.props.account.get('services').includes(type.value)),
-                accountType: ACCOUNT_TYPES.find(type => this.props.account.get('provider_type') === type.value).value
+                services: services || [false, true],
+                accountType: ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value).value
               }}
               onSave={this.props.editAccount}/>
           }
@@ -58,8 +60,8 @@ class AccountManagementManageAccount extends React.Component {
           }
           {this.state.activeTab === 'users' &&
             <Users
-              account={this.props.account}
-              isAdmin={this.props.isAdmin}/>
+              account={account}
+              isAdmin={isAdmin}/>
           }
         </div>
       </div>
