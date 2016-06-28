@@ -5,7 +5,7 @@ import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
 import Select from '../select.jsx'
 
-import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
+import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
@@ -85,9 +85,14 @@ const AnalyticsViewControl = (props) => {
         />
       }
 
-      <ButtonToolbar className="pull-right">
-        <Button bsStyle="primary" onClick={props.exportCSV}>Export</Button>
-      </ButtonToolbar>
+        <ButtonToolbar className="pull-right">
+          <Button
+            bsStyle="primary"
+            disabled={getTabName(props.location.pathname) === 'playback-demo'}
+            onClick={props.exportCSV}>
+            Export
+          </Button>
+        </ButtonToolbar>
 
       { /* TODO: Implement filtered dropdown, when possible (component fixed)
       <FilterDropdown
