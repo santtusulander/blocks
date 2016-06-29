@@ -177,6 +177,7 @@ class AnalyticsContainer extends React.Component {
               params={params}
               location={this.props.location}
               history={history}
+              activeTab={getTabName(pathname)}
             />
           </PageHeader>
 
