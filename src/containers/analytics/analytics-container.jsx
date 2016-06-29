@@ -149,6 +149,7 @@ class AnalyticsContainer extends React.Component {
       activeGroup,
       location: { pathname, query: { property } }
     } = this.props
+
     /* TODO: should  be moved to consts ? */
     const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
@@ -168,8 +169,6 @@ class AnalyticsContainer extends React.Component {
       <PageContainer className='analytics-container'>
         <Content>
           <PageHeader>
-            <p>ANALYTICS</p>
-
             <AnalyticsViewControl
               exportCSV={exportCSV}
               brands={brands}
@@ -180,8 +179,8 @@ class AnalyticsContainer extends React.Component {
               location={this.props.location}
               history={history}
             />
-
           </PageHeader>
+
 
           <AnalyticsFilters
             onFilterChange={this.onFilterChange}

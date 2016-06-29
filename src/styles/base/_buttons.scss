@@ -74,6 +74,13 @@
       outline: none;
       box-shadow: none;
     }
+
+    .light-theme & {
+      color: $lt-text-color;
+      background-color: rgba($black, 0.1);
+      fill: $lt-text-color;
+      stroke: $lt-text-color;
+    }
   }
 
   &.btn-icon {
@@ -311,7 +318,8 @@
 
 .dark-theme,
 .light-theme .header,
-/* TODO: Should this be removed? .light-theme .configuration-sidebar */ {
+  /* TODO: Should this be removed? .light-theme .configuration-sidebar */
+{
 
   .dropdown-select {
 

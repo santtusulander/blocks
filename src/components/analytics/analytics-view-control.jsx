@@ -5,7 +5,7 @@ import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
 import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 
-import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
+import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
@@ -55,6 +55,8 @@ const AnalyticsViewControl = (props) => {
   return (
     <div className='analytics-view-control'>
 
+      <p>ANALYTICS</p>
+
       { /* If account is not selected (Needs to be: UDN ADMIN) */
         !props.params.account &&
         <HeadingDropdown
@@ -91,7 +93,12 @@ const AnalyticsViewControl = (props) => {
       }
 
       <ButtonToolbar className="pull-right">
-        <Button bsStyle="primary" onClick={props.exportCSV}>Export</Button>
+        <Button
+          bsStyle="primary"
+          disabled={getTabName(props.location.pathname) === 'playback-demo'}
+          onClick={props.exportCSV}>
+          Export
+        </Button>
       </ButtonToolbar>
 
       { /* TODO: Implement filtered dropdown, when possible (component fixed)
