@@ -83,7 +83,7 @@ const AnalyticsViewControl = (props) => {
           onSelect={val => {
             props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
           }}
-          value={props.location.query.property}
+          value={props.params.property}
         />
       }
 
@@ -130,11 +130,11 @@ const AnalyticsViewControl = (props) => {
           <Link to={getTabLink(props.location, 'service-providers')}
             activeClassName='active'>Service Providers</Link>
         </li>
-        {props.location.query.property && <li>
+        {props.params.property && <li>
           <Link to={getTabLink(props.location, 'file-error')}
             activeClassName='active'>File Error</Link>
         </li>}
-        {props.location.query.property && <li>
+        {props.params.property && <li>
           <Link to={getTabLink(props.location, 'url-report')}
             activeClassName='active'>Url Report</Link>
         </li>}

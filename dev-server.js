@@ -8,7 +8,18 @@ var compiler = webpack(webpackConfig);
 
 var server = new WebpackDevServer(compiler, {
   hot: true,
-  historyApiFallback: true,
+  historyApiFallback: {
+    /* fix dot in url problem by rewriting to index.html */
+    rewrites: [
+      {
+        from: /^\/.*$/,
+        to: function() {
+          return '/index.html';
+        }
+      }
+    ]
+  },
+  //was: true,
   proxy: {
     '/VCDN*': {
       target: 'http://api.cdx-dev.unifieddeliverynetwork.net'

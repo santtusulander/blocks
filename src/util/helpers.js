@@ -119,7 +119,7 @@ export function getTabLink( location, tabName){
   linkArr.pop()
   linkArr.push(tabName)
 
-  return linkArr.join('/')+location.search
+  return linkArr.join('/')
 
 }
 /* A helper for returning tabName / url from path - NOT 100% accurate */
@@ -153,7 +153,7 @@ export function getAnalyticsUrl( linkType, val, params ){
       url = `${getRoute('analytics')}/${brand}/${account}/${val}`
       break;
     case 'property':
-      url = `${getRoute('analytics')}/${brand}/${account}/${group}/property?property=${val}`
+      url = `${getRoute('analytics')}/${brand}/${account}/${group}/${val}`
       break;
   }
 
@@ -167,7 +167,7 @@ export function buildAnalyticsOpts(params, filters, location){
     account: params.account,
     brand: params.brand,
     group: params.group,
-    property: location.query.property,
+    property: params.property,
     startDate: startDate.format('X'),
     endDate: endDate.format('X')
   }

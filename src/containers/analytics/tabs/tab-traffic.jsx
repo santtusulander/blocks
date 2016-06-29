@@ -41,7 +41,7 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     //REFACTOR:
-    if ( location.query.property) {
+    if ( params.property) {
       this.setState({metricKey: 'hostMetrics'})
       this.props.metricsActions.fetchHostMetrics({
         account: params.account,
@@ -79,7 +79,7 @@ class AnalyticsTabTraffic extends React.Component {
         return (
           this.props.params.account && val.get('account') === parseInt(this.props.params.account) ||
           this.props.params.group && val.get('group') === parseInt(this.props.params.group) ||
-          this.props.location.query.property && val.get('property') === this.props.location.query.property
+          this.props.params.property && val.get('property') === this.props.params.property
         )
       })
     }
