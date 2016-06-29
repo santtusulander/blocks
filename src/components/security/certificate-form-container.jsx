@@ -112,7 +112,11 @@ export default reduxForm({
       toggleModal(null)
     },
     upload: formValues =>
-      securityActions.uploadSSLCertificate(formValues).then(() => dispatch(reset('certificateForm'))),
+      securityActions.uploadSSLCertificate({
+        title: formValues.title,
+        private_key: formValues.privateKey,
+        certificate: formValues.certificate
+      }).then(() => dispatch(reset('certificateForm'))),
     edit: formValues =>
       securityActions.editSSLCertificate(formValues).then(() => dispatch(reset('certificateForm')))
   }

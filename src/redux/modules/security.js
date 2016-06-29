@@ -1,7 +1,8 @@
+import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers } from '../util'
+import { mapReducers, urlBase, parseResponseData } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_ACTIVE_CERTIFICATES_TOGGLED = 'SECURITY_ACTIVE_CERTIFICATES_TOGGLED'
@@ -110,8 +111,13 @@ export default handleActions({
 }, initialState)
 
 // ACTIONS
-export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, opts => {
-  return new Promise(res => res(opts))
+export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, data) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(parseResponseData)
 })
 
 export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, opts => {
