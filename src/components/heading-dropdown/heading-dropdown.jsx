@@ -19,15 +19,17 @@ class HeadingDropdown extends Component {
 
   render() {
 
+    const { options, value, type } = this.props
+
     let className = 'heading-dropdown'
-    let label     = 'Please Select'
+    let label     = `Please Select ${type ? type : ''}`
 
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
 
-    const currentSelection = this.props.options.find(
-      option => option[0] === this.props.value
+    const currentSelection = options.find(
+      option => option[0] === value
     )
 
     if(currentSelection) {

@@ -42,14 +42,14 @@ function createPropertyOptions(opts) {
  }
  */
 const AnalyticsViewControl = (props) => {
-  /*
-   const brandOptions = createOptions( props.brands )
-   */
+
   const accountOptions  = createOptions(props.accounts)
   const groupOptions    = createOptions(props.groups)
   const propertyOptions = createPropertyOptions(props.properties)
 
-  /*const groupDropdownOptions = createDropdownOptions( props.groups )
+  /*
+   const brandOptions = createOptions( props.brands )
+   const groupDropdownOptions = createDropdownOptions( props.groups )
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
 
@@ -65,6 +65,7 @@ const AnalyticsViewControl = (props) => {
             props.history.pushState(null, getAnalyticsUrl('account', val, props.params))
           }}
           value={props.params.group}
+          type={'Account'}
         />
       }
 
@@ -75,6 +76,7 @@ const AnalyticsViewControl = (props) => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
         }}
         value={props.params.group}
+        type={'Group'}
       />
       }
 
@@ -85,6 +87,7 @@ const AnalyticsViewControl = (props) => {
           props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
         }}
         value={props.location.query.property}
+        type={'Property'}
       />
       }
 
