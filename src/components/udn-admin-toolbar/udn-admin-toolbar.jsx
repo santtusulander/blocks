@@ -5,7 +5,7 @@ import Select from '../select.jsx'
 import './udn-admin-toolbar.scss'
 import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
-const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, toggleAccountManagementModal}) => {
+const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, routes, toggleAccountManagementModal, history}) => {
 
   const accountOptions = accounts.map( account => {
     return [account.get('id'), account.get('name')]
@@ -25,7 +25,13 @@ const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, toggleAccou
             toggleAccountManagementModal(ADD_ACCOUNT)
           }
           else {
-            fetchAccountData(account)
+            //FIXME: this is NOT 100% accurate
+            const currentRoute = routes[routes.length - 1].path
+            //replace :account with selected valye
+            const newRoute = currentRoute.replace(/:account/, account )
+
+            history.push( newRoute )
+            //fetchAccountData(account)
           }
         }}
         value={activeAccount.get('id')}

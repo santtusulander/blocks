@@ -69,7 +69,7 @@ class Header extends React.Component {
     const activeGroup = this.props.activeGroup ?
       this.props.activeGroup.get('id').toString()
       : null
-    const activeHost = this.props.location.query.name
+    const activeHost = this.props.location.query.name || this.props.params.property
 
     const contentActive = new RegExp( getRoute('content'), 'g' ).test(this.props.pathname)
     const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(this.props.pathname)
@@ -116,6 +116,9 @@ class Header extends React.Component {
               activeAccount={this.props.activeAccount}
               toggleAccountManagementModal={this.props.toggleAccountManagementModal}
               fetchAccountData={this.props.fetchAccountData}
+              location={this.props.location}
+              history={this.props.history}
+              routes={this.props.routes}
             />
           </li>
         }
@@ -332,7 +335,7 @@ Header.propTypes = {
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
   isAdmin:  React.PropTypes.bool,
-  location: React.PropTypes.object,
+  routes: React.PropTypes.array,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
