@@ -1,3 +1,4 @@
+import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import { getRoute } from '../routes.jsx'
@@ -204,4 +205,14 @@ export function changedParamsFiltersQS(props, nextProps) {
   return !(
   params === prevParams && !filterReload &&
   nextProps.location.search === props.location.search)
+}
+
+/**
+ * Format unix timestamp to desired format
+ * @param unix
+ * @param format
+ * @returns {*}
+ */
+export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
 }

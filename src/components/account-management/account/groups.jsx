@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Table, Button, Row, Col} from 'react-bootstrap'
+import { Table, Button, Row, Col } from 'react-bootstrap'
+import { formatUnixTimestamp} from '../../../util/helpers'
 
 import IconAdd from '../../icons/icon-add.jsx'
 import IconTrash from '../../icons/icon-trash.jsx'
@@ -18,53 +19,63 @@ class AccountManagementAccountGroups extends React.Component {
       sortDir: 1
     }
 
-    this.addGroup = this.addGroup.bind(this)
-    this.changeSort = this.changeSort.bind(this)
-    this.deleteGroup = this.deleteGroup.bind(this)
-    this.editGroup = this.editGroup.bind(this)
-    this.sortedData = this.sortedData.bind(this)
+    this.addGroup        = this.addGroup.bind(this)
+    this.changeSort      = this.changeSort.bind(this)
+    this.deleteGroup     = this.deleteGroup.bind(this)
+    this.editGroup       = this.editGroup.bind(this)
+    this.sortedData      = this.sortedData.bind(this)
     this.saveEditedGroup = this.saveEditedGroup.bind(this)
-    this.saveNewGroup = this.saveNewGroup.bind(this)
-    this.cancelAdding = this.cancelAdding.bind(this)
+    this.saveNewGroup    = this.saveNewGroup.bind(this)
+    this.cancelAdding    = this.cancelAdding.bind(this)
   }
+
   componentDidMount() {
     window.addEventListener('click', this.cancelAdding)
   }
+
   componentWillUnmount() {
     window.removeEventListener('click', this.cancelAdding)
   }
+
   cancelAdding() {
     this.setState({
       adding: false,
       editing: null
     })
   }
+
   addGroup(e) {
     e.stopPropagation()
-    this.setState({adding: true})
+    this.setState({ adding: true })
   }
+
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
       sortDir: direction
     })
   }
+
   deleteGroup(group) {
     return () => this.props.deleteGroup(group)
   }
+
   editGroup(group) {
     return (e) => {
       e.preventDefault()
       e.stopPropagation()
-      this.setState({editing: group})
+      this.setState({ editing: group })
     }
   }
+
   saveEditedGroup(group) {
     return name => this.props.editGroup(group, name).then(this.cancelAdding)
   }
+
   saveNewGroup(name) {
     this.props.addGroup(name).then(this.cancelAdding)
   }
+
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
@@ -82,8 +93,9 @@ class AccountManagementAccountGroups extends React.Component {
       return 0
     })
   }
+
   render() {
-    const sorterProps = {
+    const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
@@ -122,34 +134,34 @@ class AccountManagementAccountGroups extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.adding && <EditGroup save={this.saveNewGroup}/>}
-            {sortedGroups.map((group, i) => {
-              if(group.get('id') === this.state.editing) {
-                return (
-                  <EditGroup key={i}
-                    name={group.get('name')}
-                    save={this.saveEditedGroup(group.get('id'))}/>
-                )
-              }
+          {this.state.adding && <EditGroup save={this.saveNewGroup}/>}
+          {sortedGroups.map((group, i) => {
+            if(group.get('id') === this.state.editing) {
               return (
-                <tr key={i}>
-                  <td>{group.get('name')}</td>
-                  <td>NEEDS_API</td>
-                  {/* Not on 0.7
-                  <td>NEEDS_API</td>
-                   */}
-                  <td>
-                    <a href="#" onClick={this.editGroup(group.get('id'))}>
-                      EDIT
-                    </a>
-                    <Button onClick={this.deleteGroup(group.get('id'))}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
-                  </td>
-                </tr>
+                <EditGroup key={i}
+                  name={group.get('name')}
+                  save={this.saveEditedGroup(group.get('id'))}/>
               )
-            })}
+            }
+            return (
+              <tr key={i}>
+                <td>{group.get('name')}</td>
+                <td>{formatUnixTimestamp(group.get('created'))}</td>
+                {/* Not on 0.7
+                <td>NEEDS_API</td>
+                */}
+                <td>
+                  <a href="#" onClick={this.editGroup(group.get('id'))}>
+                    EDIT
+                  </a>
+                  <Button onClick={this.deleteGroup(group.get('id'))}
+                    className="btn-link btn-icon">
+                    <IconTrash/>
+                  </Button>
+                </td>
+              </tr>
+            )
+          })}
           </tbody>
         </Table>
       </div>
@@ -157,8 +169,8 @@ class AccountManagementAccountGroups extends React.Component {
   }
 }
 
-AccountManagementAccountGroups.displayName = 'AccountManagementAccountGroups'
-AccountManagementAccountGroups.propTypes = {
+AccountManagementAccountGroups.displayName  = 'AccountManagementAccountGroups'
+AccountManagementAccountGroups.propTypes    = {
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editGroup: React.PropTypes.func,
