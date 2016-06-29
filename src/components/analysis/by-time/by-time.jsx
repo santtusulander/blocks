@@ -9,11 +9,15 @@ import Legend from './legend'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
-const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal) => {
+const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
-  const formattedValue = formatY(actualVal || positionVal)
+  const val = actualVal || positionVal
+  const formattedValue = formatY(val)
+  const text = formatter ?
+    formatter(date, val) :
+    `${formattedDate} ${formattedValue}`
   return {
-    text: `${formattedDate} ${formattedValue}`,
+    text: text,
     x: xScale(date),
     y: yScale(positionVal),
     top: yScale(positionVal) + 50 > height
@@ -55,14 +59,15 @@ class AnalysisByTime extends React.Component {
   }
 
   moveMouse(xScale, yScale, primaryData, secondaryData) {
-    const configTooltip = (time, positionData, actualData) => configureTooltip(
+    const configTooltip = (time, positionData, actualData, formatter) => configureTooltip(
       time,
       positionData,
       this.props.height,
       this.formatY,
       xScale,
       yScale,
-      actualData
+      actualData,
+      formatter
     )
     return e => {
       const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
@@ -77,7 +82,9 @@ class AnalysisByTime extends React.Component {
       if(primaryData && primaryData.length && primaryData[i]) {
         const tooltipConfig = configTooltip(
           primaryData[i].timestamp,
-          primaryData[i][this.props.dataKey]
+          primaryData[i][this.props.dataKey],
+          null,
+          this.props.formatPrimaryTooltip
         )
         this.setState({
           primaryTooltipText: tooltipConfig.text,
@@ -98,7 +105,8 @@ class AnalysisByTime extends React.Component {
         const tooltipConfig = configTooltip(
           secondaryData[i].timestamp,
           secondaryData[i][this.props.dataKey],
-          realValue
+          realValue,
+          this.props.formatSecondaryTooltip
         )
         this.setState({
           secondaryTooltipText: tooltipConfig.text,
@@ -384,6 +392,8 @@ AnalysisByTime.propTypes = {
   className: React.PropTypes.string,
   comparisonLabel: React.PropTypes.string,
   dataKey: React.PropTypes.string,
+  formatPrimaryTooltip: React.PropTypes.func,
+  formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
   padding: React.PropTypes.number,

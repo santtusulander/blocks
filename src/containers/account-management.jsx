@@ -124,7 +124,6 @@ export class AccountManagement extends Component {
   render() {
     const {
       params: { account },
-      accounts,
       dnsData,
       dnsActions,
       activeRecordType,
@@ -170,18 +169,14 @@ export class AccountManagement extends Component {
     return (
       <PageContainer className="account-management">
         <Content>
-          {this.props.activeAccount && <ManageAccount
+          <ManageAccount
+            toggleModal={toggleModal}
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}
             deleteGroup={this.deleteGroupFromActiveAccount}
             editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}/>
-          }
-
-          {!this.props.activeAccount &&
-            <p className='text-center'><br/>Please, select account.</p>
-          }
 
             {/*
             <ManageSystem
@@ -194,14 +189,11 @@ export class AccountManagement extends Component {
             />
           */ }
 
-          {accountManagementModal === ADD_ACCOUNT &&
             <NewAccountForm
                 id="add-account-form"
                 show={accountManagementModal === ADD_ACCOUNT}
                 onSave={this.addAccount}
-                onCancel={() => toggleModal(null)}
-            />
-          }
+                onCancel={() => toggleModal(null)}/>
         </Content>
       </PageContainer>
     )

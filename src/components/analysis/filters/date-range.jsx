@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 import DateRangeSelect from '../../../components/date-range-select'
+import DateRanges from '../../../constants/date-ranges'
 
 export class FilterDateRange extends React.Component {
 
@@ -15,7 +16,14 @@ export class FilterDateRange extends React.Component {
           <DateRangeSelect
             changeDateRange={this.props.changeDateRange}
             endDate={this.props.endDate}
-            startDate={this.props.startDate}/>
+            startDate={this.props.startDate}
+            availableRanges={[
+              DateRanges.MONTH_TO_DATE,
+              DateRanges.LAST_MONTH,
+              DateRanges.TODAY,
+              DateRanges.YESTERDAY,
+              DateRanges.CUSTOM_TIMERANGE
+            ]}/>
         </div>
       </div>
     )

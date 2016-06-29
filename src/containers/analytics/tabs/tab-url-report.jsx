@@ -10,17 +10,18 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabUrlReport extends React.Component {
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(this.props.params, this.props.filters)
   }
 
   componentWillReceiveProps(nextProps){
     if(changedParamsFiltersQS(this.props, nextProps)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+      this.fetchData(nextProps.params, nextProps.filters)
     }
   }
 
-  fetchData(params, filters, location){
-    const fetchOpts = buildAnalyticsOpts(params, filters, location)
+  fetchData(params, filters){
+    const fetchOpts = buildAnalyticsOpts(params, filters)
+    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
     this.props.reportsActions.fetchURLMetrics(fetchOpts)
   }
 
@@ -29,6 +30,10 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 
   render(){
+    if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
+      <p>No error data found.</p>
+    )
+
     return (
       <AnalysisURLReport fetching={this.props.fetching}
         summary={this.props.fileErrorSummary}

@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 
 import DateRangeSelect from '../date-range-select.jsx'
+import DateRanges from '../../constants/date-ranges'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterPop from '../analysis/filters/pop.jsx'
@@ -46,7 +47,13 @@ const AnalyticsFilters = (props) => {
             }}
             startDate={props.filters.getIn(['dateRange','startDate'])}
             endDate={props.filters.getIn(['dateRange','endDate'])}
-            />
+            availableRanges={[
+              DateRanges.MONTH_TO_DATE,
+              DateRanges.LAST_MONTH,
+              DateRanges.TODAY,
+              DateRanges.YESTERDAY,
+              DateRanges.CUSTOM_TIMERANGE
+            ]}/>
         </div>
       }
 
@@ -112,12 +119,12 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('error-code') &&
         <div className='filter'>
-          <FilterServiceType
+          {/* TODO: Should show error codes filter <FilterError
             serviceTypes={props.filters.get('errorCodes')}
             toggleServiceType={val => {
               props.onFilterChange('errorCodes', val)
             }}
-          />
+          /> */}
         </div>
       }
 
