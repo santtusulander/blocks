@@ -9,7 +9,7 @@ import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
 class AccountManagementManageAccount extends React.Component {
@@ -28,7 +28,6 @@ class AccountManagementManageAccount extends React.Component {
   render() {
     const { account, isAdmin, toggleModal } = this.props
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
-    const services = account.get('services') && SERVICE_TYPES.map(type => account.get('services').includes(type.value))
     return (
       <div className="account-management-manage-account">
         <PageHeader>
@@ -58,7 +57,7 @@ class AccountManagementManageAccount extends React.Component {
               initialValues={{
                 accountName: account.get('name'),
                 brand: 'udn',
-                services: services || [false, true],
+                services: account.get('services'),
                 accountType: accountType && accountType.value
               }}
               onSave={this.props.editAccount}/>

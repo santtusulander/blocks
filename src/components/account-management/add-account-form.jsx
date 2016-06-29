@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { reduxForm } from 'redux-form'
 import {
   Modal,
   Input,
@@ -7,8 +8,8 @@ import {
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper.jsx'
+import CheckboxArray from '../checkboxes.jsx'
 
-import { reduxForm } from 'redux-form'
 import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
 
 import './add-account-form.scss'
@@ -49,6 +50,16 @@ class NewAccountForm extends React.Component {
     this.save = this.save.bind(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
+      const { fields: { services, accountType } } = nextProps
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceValues = activeServiceTypes.map(item => item.value)
+      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
+      services.onChange(checkedServiceTypes)
+    }
+  }
+
   save() {
     if(!Object.keys(errors).length) {
       const {
@@ -64,9 +75,8 @@ class NewAccountForm extends React.Component {
   }
 
   render() {
-
-    const { fields: { accountBrand, accountName, accountType, serviceType }, show, onCancel } = this.props
-
+    const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
+    const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
     return (
       <Modal dialogClassName="add-account-form-sidebar" show={show}>
         <Modal.Header>
@@ -103,7 +113,7 @@ class NewAccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'>Account type</label>
               <SelectWrapper
-                    { ... accountType }
+                    { ...accountType }
                     value={Number(accountType.value)}
                     className="input-select"
                     options={accountTypeOptions}
@@ -113,11 +123,7 @@ class NewAccountForm extends React.Component {
             <hr/>
 
             <label>Service type</label>
-            {SERVICE_TYPES.map((service, i) => <Input {...serviceType}
-              key={i} type="radio"
-              value={service.value} label={service.label}/>
-            )}
-
+            <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
@@ -138,7 +144,8 @@ NewAccountForm.propTypes = {
 }
 
 export default reduxForm({
-  fields: ['accountName', 'accountBrand', 'accountType', 'serviceType'],
+  fields: ['accountName', 'accountBrand', 'accountType', 'services'],
   form: 'new-account',
-  validate
+  validate,
+  initialValues: { services: [] }
 })(NewAccountForm)
