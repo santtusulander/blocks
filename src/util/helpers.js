@@ -1,48 +1,49 @@
+import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
-import {getRoute} from '../routes.jsx'
-import {getDateRange} from '../redux/util.js'
-import {filterNeedsReload} from '../constants/filters.js'
+import { getRoute } from '../routes.jsx'
+import { getDateRange } from '../redux/util.js'
+import { filterNeedsReload } from '../constants/filters.js'
 
 export function formatBytes(bytes) {
-  let formatted = numeral(bytes / 1000000000000000).format('0,0')+' PB'
-  bytes = bytes || 0
+  let formatted = numeral(bytes / 1000000000000000).format('0,0') + ' PB'
+  bytes         = bytes || 0
   if(bytes < 1000) {
-    formatted = numeral(bytes).format('0,0')+' B'
+    formatted = numeral(bytes).format('0,0') + ' B'
   }
   else if(bytes < 1000000) {
-    formatted = numeral(bytes / 1000).format('0,0')+' KB'
+    formatted = numeral(bytes / 1000).format('0,0') + ' KB'
   }
   else if(bytes < 1000000000) {
-    formatted = numeral(bytes / 1000000).format('0,0')+' MB'
+    formatted = numeral(bytes / 1000000).format('0,0') + ' MB'
   }
   else if(bytes < 1000000000000) {
-    formatted = numeral(bytes / 1000000000).format('0,0')+' GB'
+    formatted = numeral(bytes / 1000000000).format('0,0') + ' GB'
   }
   else if(bytes < 1000000000000000) {
-    formatted = numeral(bytes / 1000000000000).format('0,0')+' TB'
+    formatted = numeral(bytes / 1000000000000).format('0,0') + ' TB'
   }
   return formatted
 }
 
 export function formatBitsPerSecond(bits_per_second, decimals) {
-  const digits = decimals ? '0,0.00' : '0,0'
+  const digits    = decimals ? '0,0.00' : '0,0'
   bits_per_second = bits_per_second || 0
-  let formatted = numeral(bits_per_second / 1000000000000000).format(digits)+' Pbps'
+  let formatted   = numeral(bits_per_second / 1000000000000000).format(digits) + ' Pbps'
   if(bits_per_second < 1000) {
-    formatted = numeral(bits_per_second).format(digits)+' bps'
+    formatted = numeral(bits_per_second).format(digits) + ' bps'
   }
   else if(bits_per_second < 1000000) {
-    formatted = numeral(bits_per_second / 1000).format(digits)+' Kbps'
+    formatted = numeral(bits_per_second / 1000).format(digits) + ' Kbps'
   }
   else if(bits_per_second < 1000000000) {
-    formatted = numeral(bits_per_second / 1000000).format(digits)+' Mbps'
+    formatted = numeral(bits_per_second / 1000000).format(digits) + ' Mbps'
   }
   else if(bits_per_second < 1000000000000) {
-    formatted = numeral(bits_per_second / 1000000000).format(digits)+' Gbps'
+    formatted = numeral(bits_per_second / 1000000000).format(digits) + ' Gbps'
   }
   else if(bits_per_second < 1000000000000000) {
-    formatted = numeral(bits_per_second / 1000000000000).format(digits)+' Tbps'
+    formatted = numeral(bits_per_second / 1000000000000).format(digits) + ' Tbps'
   }
   return formatted
 }
@@ -53,15 +54,15 @@ export function filterAccountsByUserName(accounts, username) {
 
     //UNCOMMENT FOR TESTing -- return only limited accounts
     /*return Immutable.fromJS(accounts.toJS().filter( (account) => {
-      return account.id === 4 || account.id === 1
-    }))*/
+     return account.id === 4 || account.id === 1
+     }))*/
   }
 
   return Immutable.fromJS(accounts.toJS().filter(account => {
-    if (account.id < 10000) {
+    if(account.id < 10000) {
       return username === 'UDNdev'
     }
-    else if (account.id < 20000) {
+    else if(account.id < 20000) {
       return username === 'UDNtest'
     }
     else {
@@ -70,16 +71,16 @@ export function filterAccountsByUserName(accounts, username) {
   }));
 }
 
-export function filterMetricsByAccounts(metrics, accounts){
-  return metrics.filter( (metric) => {
-    return accounts.find( (account) => {
+export function filterMetricsByAccounts(metrics, accounts) {
+  return metrics.filter((metric) => {
+    return accounts.find((account) => {
       return account.get('id') === metric.get('account')
     });
   });
 }
 
-export function matchesRegexp(string, pattern){
-  if(!(pattern instanceof RegExp)){
+export function matchesRegexp(string, pattern) {
+  if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
   var testPattern = new RegExp(pattern, 'i');
@@ -101,8 +102,8 @@ export function isSafari() {
 export function removeProps(object, remove) {
   const result = {}
 
-  for (const property in object) {
-    if (object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
+  for(const property in object) {
+    if(object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
       result[property] = object[property];
     }
   }
@@ -113,36 +114,36 @@ export function removeProps(object, remove) {
 /* REFACTOR: this is a quick fix to get tab links from current path
  - takes the last link part out and replaces it with tabName
  */
-export function getTabLink( location, tabName){
+export function getTabLink(location, tabName) {
   let linkArr = location.pathname.split('/')
 
   linkArr.pop()
   linkArr.push(tabName)
 
-  return linkArr.join('/')+location.search
+  return linkArr.join('/') + location.search
 
 }
 /* A helper for returning tabName / url from path - NOT 100% accurate */
-export function getTabName( path ){
+export function getTabName(path) {
   let linkArr = path.split('/')
   return linkArr.pop()
 }
 
 /* Constructs nested link from linkParts -array */
-export function generateNestedLink( base, linkParts ){
+export function generateNestedLink(base, linkParts) {
   //remove nulls
-  linkParts = linkParts.filter( (e) => {
+  linkParts = linkParts.filter((e) => {
     return e
   })
 
   return base + '/' + linkParts.join("/")
 }
 
-export function getAnalyticsUrl( linkType, val, params ){
-  const {brand,account,group} = params
+export function getAnalyticsUrl(linkType, val, params) {
+  const { brand, account, group } = params
   let url
 
-  switch ( linkType ) {
+  switch(linkType) {
     case 'brand':
       url = `${getRoute('analytics')}/${val}`
       break;
@@ -161,8 +162,8 @@ export function getAnalyticsUrl( linkType, val, params ){
 
 }
 
-export function buildAnalyticsOpts(params, filters, location){
-  const {startDate, endDate} = getDateRange(filters)
+export function buildAnalyticsOpts(params, filters, location) {
+  const { startDate, endDate } = getDateRange(filters)
   return {
     account: params.account,
     brand: params.brand,
@@ -173,15 +174,15 @@ export function buildAnalyticsOpts(params, filters, location){
   }
 }
 
-export function filterChangeNeedsReload( currentFilters, nextFilters ) {
-  let changedFilters= [];
+export function filterChangeNeedsReload(currentFilters, nextFilters) {
+  let changedFilters = [];
 
-  currentFilters.map( (filter, i) => {
-    if ( filter !== nextFilters.get(i) )  changedFilters.push(i)
+  currentFilters.map((filter, i) => {
+    if(filter !== nextFilters.get(i))  changedFilters.push(i)
   })
 
-  const reloadNeeded = changedFilters.reduce( (prev, filterName) => {
-    if (filterNeedsReload.includes(filterName)) return true;
+  const reloadNeeded = changedFilters.reduce((prev, filterName) => {
+    if(filterNeedsReload.includes(filterName)) return true;
 
     return false;
   }, false)
@@ -189,14 +190,23 @@ export function filterChangeNeedsReload( currentFilters, nextFilters ) {
   return reloadNeeded;
 }
 
-export function changedParamsFiltersQS(props, nextProps){
-  const params = JSON.stringify(props.params)
+export function changedParamsFiltersQS(props, nextProps) {
+  const params     = JSON.stringify(props.params)
   const prevParams = JSON.stringify(nextProps.params)
 
-  const filterReload = filterChangeNeedsReload( nextProps.filters, props.filters)
+  const filterReload = filterChangeNeedsReload(nextProps.filters, props.filters)
 
   return !(
-    params === prevParams &&
-    !filterReload &&
-    nextProps.location.search === props.location.search)
+  params === prevParams && !filterReload &&
+  nextProps.location.search === props.location.search)
+}
+
+/**
+ * Format unix timestamp to desired format
+ * @param unix
+ * @param format
+ * @returns {*}
+ */
+export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
 }
