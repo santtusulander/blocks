@@ -117,8 +117,8 @@ const AnalyticsViewControl = (props) => {
        />
        */ }
 
-
-      <Nav bsStyle="tabs">
+    {props.params.account &&
+      <Nav bsStyle="tabs" >
         <li>
           <Link to={getTabLink(props.location, 'traffic')}
                 activeClassName='active'>Traffic</Link>
@@ -148,6 +148,7 @@ const AnalyticsViewControl = (props) => {
                 activeClassName='active'>Playback demo</Link>
         </li>
       </Nav>
+    }
     </div>
   )
 }
