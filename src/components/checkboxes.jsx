@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react'
 import { Col, Input } from 'react-bootstrap'
 
 const CheckboxArray = ({ iterable, field }) => {
-  const copy = [...field.value]
   const handleChange = (option, hasValue, index, e) => {
+    const copy = [...field.value]
     if(!hasValue && e.target.checked) {
-      field.onChange([...field.value].concat(option.value))
+      field.onChange(copy.concat(option.value))
     }
     else if(!event.target.checked) {
       copy.splice(index, 1)

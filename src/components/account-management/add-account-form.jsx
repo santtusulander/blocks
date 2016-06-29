@@ -50,6 +50,16 @@ class NewAccountForm extends React.Component {
     this.save = this.save.bind(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
+      const { fields: { services, accountType } } = nextProps
+      const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeValues = checkBoxes.map(item => item.value)
+      const boxesActive = services.value.filter(item => activeValues.includes(item))
+      services.onChange(boxesActive)
+    }
+  }
+
   save() {
     if(!Object.keys(errors).length) {
       const {
@@ -136,5 +146,6 @@ NewAccountForm.propTypes = {
 export default reduxForm({
   fields: ['accountName', 'accountBrand', 'accountType', 'services'],
   form: 'new-account',
-  validate
+  validate,
+  initialValues: { services: [] }
 })(NewAccountForm)
