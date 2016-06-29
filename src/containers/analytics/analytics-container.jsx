@@ -52,8 +52,7 @@ class AnalyticsContainer extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (params !== prevParams ||
-      this.props.location.search !== nextProps.location.search) {
+    if (params !== prevParams ) {
       this.fetchActiveItems(nextProps)
       this.fetchData(nextProps.params)
     }
@@ -79,10 +78,10 @@ class AnalyticsContainer extends React.Component {
         url: getAnalyticsUrl('group', this.props.params.group, this.props.params)
       })
     }
-    if (this.props.location.query.property) {
+    if (this.props.params.property) {
       breadCrumbLinks.push({
-        label: this.props.location.query.property,
-        url: getAnalyticsUrl('property', this.props.location.query.property, this.props.params)
+        label: this.props.params.property,
+        url: getAnalyticsUrl('property', this.props.params.property, this.props.params)
       })
     }
 

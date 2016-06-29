@@ -40,8 +40,8 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     //REFACTOR:
-    if(location.query.property) {
-      this.setState({ metricKey: 'hostMetrics' })
+    if (params.property) {
+      this.setState({metricKey: 'hostMetrics'})
       this.props.trafficActions.fetchTraffic({
         account: params.account,
         group: params.group,
@@ -75,10 +75,13 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   render() {
-    const { traffic } = this.props
-    const peakTraffic = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'peak']) : 0
-    const avgTraffic  = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'average']) : 0
-    const lowTraffic  = !!traffic.size && traffic.first().has('totals') ? traffic.first().getIn(['totals', 'transfer_rates', 'low']) : 0
+    const {traffic} = this.props
+    const peakTraffic = !!traffic.size && traffic.first().has('totals') ?
+      traffic.first().getIn(['totals', 'transfer_rates', 'peak']) : 0
+    const avgTraffic  = !!traffic.size && traffic.first().has('totals') ?
+      traffic.first().getIn(['totals', 'transfer_rates', 'average']) : 0
+    const lowTraffic  = !!traffic.size && traffic.first().has('totals') ?
+      traffic.first().getIn(['totals', 'transfer_rates', 'low']) : 0
 
     return (
       <AnalysisTraffic
@@ -104,6 +107,7 @@ AnalyticsTabTraffic.propTypes = {
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   totalEgress: React.PropTypes.number,
+  traffic: React.PropTypes.instanceOf(Immutable.List),
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List)
@@ -112,6 +116,7 @@ AnalyticsTabTraffic.propTypes = {
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
   metrics: Immutable.Map(),
+  traffic: Immutable.List(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List()
 }
