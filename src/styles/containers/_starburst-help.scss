@@ -30,6 +30,10 @@
   text {
     font-size: 23px;
     fill: $dt-text-color;
+
+    .light-theme & {
+      fill: $lt-text-color;
+    }
   }
 
   .heading {
@@ -41,23 +45,43 @@
     fill: none;
     stroke: rgba($dt-text-color, 0.5);
     stroke-miterlimit: 10;
+
+    .light-theme & {
+      stroke: rgba($lt-text-color, 0.8);
+    }
   }
 
   .pointer-dot {
     fill: rgba($dt-text-color, 0.5);
+
+    .light-theme & {
+      fill: rgba($lt-text-color, 0.8);
+    }
   }
 
   .example-icon {
     circle {
       fill: rgba($pale-blue, 0.2);
+
+      .light-theme & {
+        fill: rgba($pale-blue, 0.6);
+      }
     }
     path {
       fill: $dt-text-color;
+
+      .light-theme & {
+        fill: $lt-text-color;
+      }
     }
     text {
       fill: $dt-text-color;
       font-weight: bold;
       font-size: 32px;
+
+      .light-theme & {
+        fill: $lt-text-color;
+      }
     }
   }
 }
