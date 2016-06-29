@@ -161,7 +161,7 @@ export function getAnalyticsUrl( linkType, val, params ){
 
 }
 
-export function buildAnalyticsOpts(params, filters, location){
+export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   return {
     account: params.account,
