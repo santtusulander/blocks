@@ -21,6 +21,16 @@ function createPropertyOptions(opts) {
   })
 }
 
+const tabs = [
+  {key: 'traffic', label: 'Traffic Overview'},
+  {key: 'visitors', label: 'Unique Visitors'},
+  {key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true},
+  {key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true},
+  {key: 'file-error', label: 'File Error', propertyOnly: true},
+  {key: 'url-report', label: 'URL', propertyOnly: true},
+  {key: 'playback-demo', label: 'Playback demo', hideHierarchy: true}
+]
+
 /* Not USED atm - will be used when filter dropdown is implemented
  function createDropdownOptions ( opts ) {
  return opts.map(opt => {
@@ -52,10 +62,27 @@ const AnalyticsViewControl = (props) => {
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
 
+  let title = "Analytics"
+  if(props.activeTab) {
+    const active = tabs.find(tab => tab.key === props.activeTab)
+    if(active.hideHierarchy) {
+      title = active.label
+    }
+    else if(props.params.property) {
+      title = `Property ${active.label}`
+    }
+    else if(props.params.group) {
+      title = `Group ${active.label}`
+    }
+    else {
+      title = `Account ${active.label}`
+    }
+  }
+
   return (
     <div className='analytics-view-control'>
 
-      <p>ANALYTICS</p>
+      <p>{title}</p>
 
       { /* If account is not selected (Needs to be: UDN ADMIN) */
         !props.params.account &&
@@ -119,34 +146,17 @@ const AnalyticsViewControl = (props) => {
 
     {props.params.account &&
       <Nav bsStyle="tabs" >
-        <li>
-          <Link to={getTabLink(props.location, 'traffic')}
-                activeClassName='active'>Traffic</Link>
-        </li>
-        <li>
-          <Link to={getTabLink(props.location, 'visitors')}
-                activeClassName='active'>Visitors</Link>
-        </li>
-        <li>
-          <Link to={getTabLink(props.location, 'on-off-net')}
-                activeClassName='active'>On/Off net</Link>
-        </li>
-        <li>
-          <Link to={getTabLink(props.location, 'service-providers')}
-                activeClassName='active'>Service Providers</Link>
-        </li>
-        {props.params.property && <li>
-          <Link to={getTabLink(props.location, 'file-error')}
-                activeClassName='active'>File Error</Link>
-        </li>}
-        {props.params.property && <li>
-          <Link to={getTabLink(props.location, 'url-report')}
-                activeClassName='active'>Url Report</Link>
-        </li>}
-        <li>
-          <Link to={getTabLink(props.location, 'playback-demo')}
-                activeClassName='active'>Playback demo</Link>
-        </li>
+        {tabs.reduce((lis, tab) => {
+          if(!tab.propertyOnly || props.params.property) {
+            lis.push(
+              <li key={tab.key}>
+                <Link to={getTabLink(props.location, tab.key)}
+                  activeClassName='active'>{tab.label}</Link>
+              </li>
+            )
+          }
+          return lis
+        }, [])}
       </Nav>
     }
     </div>
@@ -155,6 +165,7 @@ const AnalyticsViewControl = (props) => {
 
 AnalyticsViewControl.propTypes = {
   accounts: PropTypes.instanceOf(Immutable.List),
+  activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
   exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
