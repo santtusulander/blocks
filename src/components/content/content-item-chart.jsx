@@ -25,7 +25,7 @@ function groupData(rawData, groupSize, key) {
     if (key) {
       val = data[key] || 0
     } else {
-      val = data || 0
+      val = typeof data !== 'undefined' ? data : 0
     }
 
     if (!(i % groupSize)) {
