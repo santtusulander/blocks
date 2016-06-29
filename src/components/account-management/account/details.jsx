@@ -156,7 +156,9 @@ class AccountManagementAccountDetails extends React.Component {
 
           <div className="form-group">
             <label className="col-xs-3 control-label">Services</label>
-            <CheckboxArray iterable={checkBoxes} field={services}/>
+            <Col xs={3}>
+              <CheckboxArray iterable={checkBoxes} field={services}/>
+            </Col>
           </div>
 
           <ButtonToolbar className="text-right extra-margin-top">

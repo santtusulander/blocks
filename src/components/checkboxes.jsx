@@ -2,18 +2,18 @@ import React, { PropTypes } from 'react'
 import { Col, Input } from 'react-bootstrap'
 
 const CheckboxArray = ({ iterable, field }) => {
+  const copy = [...field.value]
   const handleChange = (option, hasValue, index, e) => {
     if(!hasValue && e.target.checked) {
       field.onChange([...field.value].concat(option.value))
     }
     else if(!event.target.checked) {
-      const copy = [...field.value]
       copy.splice(index, 1)
       field.onChange(copy)
     }
   }
   return (
-    <Col xs={3}>
+    <div>
       {iterable.map((checkbox, i) => {
         const index = field.value.indexOf(checkbox.value)
         const hasValue = index >= 0
@@ -27,7 +27,7 @@ const CheckboxArray = ({ iterable, field }) => {
           </div>
         )
       })}
-    </Col>
+    </div>
   )
 }
 
