@@ -1,10 +1,10 @@
 import React from 'react'
-import { Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
+import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { reduxForm } from 'redux-form'
 
-import AccountManagementHeader from '../account-management-header.jsx'
 import SelectWrapper from '../../select-wrapper.jsx'
+import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button.js'
 
 // import IconAdd from '../../icons/icon-add.jsx'
@@ -52,6 +52,7 @@ class AccountManagementAccountDetails extends React.Component {
 
   render() {
     const { fields: { accountName, accountType, services } } = this.props
+    const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
     return (
       <div className="account-management-account-details">
         <h2>Details</h2>
@@ -117,7 +118,7 @@ class AccountManagementAccountDetails extends React.Component {
                     </Tooltip>
                     }>
 
-                    <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
+                    <UDNButton bsStyle="link" icon={true}>?</UDNButton>
                   </OverlayTrigger>
                 </span>
               </div>
@@ -155,22 +156,7 @@ class AccountManagementAccountDetails extends React.Component {
 
           <div className="form-group">
             <label className="col-xs-3 control-label">Services</label>
-            <Col xs={3}>
-              {
-                SERVICE_TYPES.map( (option, index) => {
-                  return (
-                    <div key={index} className='checkbox-div'>
-                      <Input
-                        value={option.value}
-                        type='checkbox'
-                        { ...services[index] }
-                        label={option.label}
-                        />
-                    </div>
-                  )
-                })
-              }
-            </Col>
+            <CheckboxArray iterable={checkBoxes} field={services}/>
           </div>
 
           <ButtonToolbar className="text-right extra-margin-top">
@@ -200,7 +186,7 @@ AccountManagementAccountDetails.defaultProps = {
 }
 
 export default reduxForm({
-  fields: ['accountName', 'brand', 'accountType', 'services[]'],
+  fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
 })(AccountManagementAccountDetails)
