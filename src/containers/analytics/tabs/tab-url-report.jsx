@@ -21,6 +21,7 @@ class AnalyticsTabUrlReport extends React.Component {
 
   fetchData(params, filters){
     const fetchOpts = buildAnalyticsOpts(params, filters)
+    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
     this.props.reportsActions.fetchURLMetrics(fetchOpts)
   }
 
