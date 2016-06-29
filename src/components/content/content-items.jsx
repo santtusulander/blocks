@@ -95,7 +95,7 @@ class ContentItems extends React.Component {
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
-        dailyTraffic: this.getDailyTraffic(item)
+        dailyTraffic: this.props.dailyTraffic && this.getDailyTraffic(item)
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
@@ -175,13 +175,14 @@ class ContentItems extends React.Component {
                     const contentMetrics = content.get('metrics')
                     const id = String(item.get('id'))
                     const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
+                    const dailyTraffic = this.props.dailyTraffic && content.get('dailyTraffic').get('detail').reverse()
                     const itemProps = {
                       id: id,
                       linkTo: this.props.nextPageURLBuilder(id),
                       configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
-                      dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
+                      dailyTraffic: dailyTraffic,
                       description: 'Desc',
                       delete: this.props.deleteItem,
                       primaryData: contentMetrics.get('traffic'),
