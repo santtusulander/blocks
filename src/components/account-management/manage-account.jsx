@@ -57,7 +57,7 @@ class AccountManagementManageAccount extends React.Component {
               initialValues={{
                 accountName: account.get('name'),
                 brand: 'udn',
-                services: account.get('services') || [1],
+                services: account.get('services'),
                 accountType: accountType && accountType.value
               }}
               onSave={this.props.editAccount}/>
