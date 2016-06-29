@@ -45,7 +45,7 @@ class AnalyticsTabTraffic extends React.Component {
       this.props.trafficActions.fetchTraffic({
         account: params.account,
         group: params.group,
-        property: location.query.property,
+        property: params.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
