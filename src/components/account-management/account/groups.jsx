@@ -115,7 +115,9 @@ class AccountManagementAccountGroups extends React.Component {
                 Name
               </TableSorter>
               <th>Created On</th>
+              {/* Not on 0.7
               <th>Properties</th>
+              */}
               <th></th>
             </tr>
           </thead>
@@ -133,7 +135,9 @@ class AccountManagementAccountGroups extends React.Component {
                 <tr key={i}>
                   <td>{group.get('name')}</td>
                   <td>NEEDS_API</td>
+                  {/* Not on 0.7
                   <td>NEEDS_API</td>
+                   */}
                   <td>
                     <a href="#" onClick={this.editGroup(group.get('id'))}>
                       EDIT
