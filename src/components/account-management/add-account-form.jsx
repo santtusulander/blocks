@@ -104,6 +104,7 @@ class NewAccountForm extends React.Component {
               <label className='control-label'>Account type</label>
               <SelectWrapper
                     { ... accountType }
+                    value={Number(accountType.value)}
                     className="input-select"
                     options={accountTypeOptions}
               />
