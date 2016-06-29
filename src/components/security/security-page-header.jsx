@@ -10,14 +10,6 @@ const SecurityPageHeader = ({ activeAccount, accounts, fetchAccount }) => {
   return (
     <PageHeader>
       <h1 className="security-header-text">Security</h1>
-      <div className='dns-filter-wrapper'>
-        Account
-        <Select
-          onSelect={changeActiveAccount('udn')}
-          className="dns-dropdowns"
-          value={activeAccount}
-          options={accountOptions}/>
-      </div>
     </PageHeader>
   )}
 
