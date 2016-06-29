@@ -53,10 +53,10 @@ class NewAccountForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
       const { fields: { services, accountType } } = nextProps
-      const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
-      const activeValues = checkBoxes.map(item => item.value)
-      const boxesActive = services.value.filter(item => activeValues.includes(item))
-      services.onChange(boxesActive)
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceValues = activeServiceTypes.map(item => item.value)
+      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
+      services.onChange(checkedServiceTypes)
     }
   }
 
