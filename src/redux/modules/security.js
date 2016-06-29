@@ -111,8 +111,8 @@ export default handleActions({
 }, initialState)
 
 // ACTIONS
-export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, data) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts`, data, {
+export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
