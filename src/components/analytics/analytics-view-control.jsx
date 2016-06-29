@@ -4,7 +4,6 @@ import { Link } from 'react-router'
 import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
 import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
-import Select from '../select'
 
 import { getTabLink, getAnalyticsUrl } from '../../util/helpers.js'
 
