@@ -76,7 +76,8 @@ export function deleteSSLCertificateFailure(state) {
 }
 
 export function certificateToEditChanged(state, action) {
-  return state.merge({ certificateToEdit: action.payload })
+  const { account, group, payload: { certificate } } = action
+  return state.merge({ certificateToEdit: fromJS(certificate).merge({ account, group }) })
 }
 
 export function editSSLCertificateSuccess(state, action) {
@@ -126,13 +127,17 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, o
   return new Promise(res => res(opts))
 })
 
-export const changeCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED)
+export const changeCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED, (brand, account, group, cert) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, {
+  }).then(response => response && { account, group, data: response.data })
+})
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`)
-    .then(response => response ? response.data.map(commonName =>  {
-      return { group, commonName, account: account }
-    }) : null
+    .then(
+      response => response ? response.data.map(commonName => {
+        return { group, commonName, account: account }
+      }) : null
     )
 })
 
