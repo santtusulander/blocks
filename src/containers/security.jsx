@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -23,14 +23,24 @@ import {
 } from '../constants/account-management-modals.js'
 
 export class Security extends React.Component {
+  constructor(props) {
+    super(props)
+    this.fetchData = this.fetchData.bind(this)
+  }
   componentWillMount() {
-    const { accounts, activeAccount, groups, fetchAccountData, params: { subPage } } = this.props
-    fetchAccountData(accounts)
-    switch(subPage) {
+    this.fetchData(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(!is(nextProps.activeAccount, this.props.activeAccount)) {
+      this.fetchData(nextProps)
+    }
+  }
+
+  fetchData(props) {
+    switch(props.params.subPage) {
       case 'ssl-certificate':
-        groups.forEach(group => {
-          this.props.securityActions.fetchSSLCertificates('udn', activeAccount.get('id'), group.get('id'))
-        })
+        props.securityActions.fetchSSLCertificates('udn', props.activeAccount.get('id'))
         break
       // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
       // case 'content-targeting': securityActions.fetchContentTrageting(account)
@@ -99,17 +109,12 @@ export class Security extends React.Component {
   }
 }
 
-Security.defaultProps = {
-  activeAccount: Map({ id: 25, name: 'FooBar' })
-}
-
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
-  fetchAccountData: PropTypes.func,
   fetchListData: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
@@ -130,18 +135,11 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const fetchAccount = bindActionCreators(accountActionCreators, dispatch).fetchAccount
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  function fetchAccountData(accounts) {
-    if(accounts && accounts.isEmpty()) {
-      accountActions.fetchAccounts('udn')
-    }
-  }
-
   return {
-    fetchAccountData: fetchAccountData,
-    fetchAccount: accountActions.fetchAccount,
+    fetchAccount,
     securityActions: securityActions,
     toggleModal: uiActions.toggleAccountManagementModal
   };

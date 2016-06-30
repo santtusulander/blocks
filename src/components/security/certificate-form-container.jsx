@@ -94,12 +94,14 @@ export default reduxForm({
   validate
 }, function mapStateToProps(state) {
   const toEdit = state.security.get('certificateToEdit')
+  const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
+  const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
   return {
     toEdit: !toEdit.isEmpty(),
     initialValues: {
       title: toEdit.get('title'),
-      account: toEdit.get('account'),
-      group: toEdit.get('group')
+      account: toEdit.get('account') || activeAccount,
+      group: toEdit.get('group') || activeGroup
     },
     formValues: getValues(state.form.certificateForm),
     groups: state.group.get('allGroups')
