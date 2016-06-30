@@ -89,8 +89,7 @@ export function certificateToEditReset(state) {
 }
 
 export function fetchSSLCertificateSuccess(state, action) {
-  const { account, group, payload: { certificate } } = action
-  console.log(state.merge({ certificateToEdit: fromJS(certificate).merge({ account, group }) }).toJS())
+  const { account, group, certificate } = action.payload
   return state.merge({ certificateToEdit: fromJS(certificate).merge({ account, group }) })
 }
 
