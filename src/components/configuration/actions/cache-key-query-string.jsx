@@ -71,7 +71,7 @@ class CacheKeyQueryString extends React.Component {
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.props.close}>
-              Save Match
+              Save Action
             </Button>
           </ButtonToolbar>
 
