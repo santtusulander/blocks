@@ -55,8 +55,8 @@ export class Security extends React.Component {
       certificates: sslCertificates,
       onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: () => changeCertificateToEdit(...arguments).then(() => toggleModal(EDIT_CERTIFICATE)),
-      deleteCertificate: () => changeCertificateToEdit(...arguments).then(() => toggleModal(EDIT_CERTIFICATE))
+      editCertificate: (...args) => changeCertificateToEdit(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
+      deleteCertificate: (...args) => changeCertificateToEdit([...args]).then(() => toggleModal(DELETE_CERTIFICATE))
     }
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
