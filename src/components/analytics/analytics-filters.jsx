@@ -9,6 +9,7 @@ import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
+import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
 import './analytics-filters.scss'
 
@@ -100,11 +101,6 @@ const AnalyticsFilters = (props) => {
             Service Types
           </div>
 
-          {/*<FilterChecklistDropdown
-            options={props.filterOptions.get('serviceTypes')}
-            handleCheck={ (val) => { props.onFilterChange('serviceTypes', val)} }
-          />*/}
-
           <FilterServiceType
             serviceTypes={props.filters.get('serviceTypes')}
             toggleServiceType={val => {
@@ -119,12 +115,13 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('error-code') &&
         <div className='filter'>
-          {/* TODO: Should show error codes filter <FilterError
-            serviceTypes={props.filters.get('errorCodes')}
-            toggleServiceType={val => {
-              props.onFilterChange('errorCodes', val)
-            }}
-          /> */}
+          <div className="sidebar-section-header">
+          Status Codes
+          </div>
+          <FilterChecklistDropdown
+               options={ props.filterOptions.get('statusCodes')}
+               handleCheck={ (val) => { console.log(val.toJS()); props.onFilterChange('statusCodes', val.toJS())} }
+          />
         </div>
       }
 
@@ -144,12 +141,14 @@ const AnalyticsFilters = (props) => {
 
 AnalyticsFilters.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
+  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   onFilterChange: React.PropTypes.func,
   showFilters: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsFilters.defaultProps = {
   filters: Immutable.Map(),
+  filterOptions: Immutable.Map(),
   showFilters: Immutable.Map()
 }
 
