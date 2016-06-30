@@ -45,7 +45,7 @@ export class Security extends React.Component {
       activeModal,
       fetchAccount,
       sslCertificates,
-      securityActions: { toggleActiveCertificates, changeCertificateToEdit, deleteSSLCertificate },
+      securityActions: { toggleActiveCertificates, fetchSSLCertificate, deleteSSLCertificate },
       toggleModal,
       params: { subPage }
     } = this.props
@@ -55,8 +55,8 @@ export class Security extends React.Component {
       certificates: sslCertificates,
       onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: (...args) => changeCertificateToEdit(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
-      deleteCertificate: (...args) => changeCertificateToEdit([...args]).then(() => toggleModal(DELETE_CERTIFICATE))
+      editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
+      deleteCertificate: (...args) => fetchSSLCertificate([...args]).then(() => toggleModal(DELETE_CERTIFICATE))
     }
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',

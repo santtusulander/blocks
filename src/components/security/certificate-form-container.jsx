@@ -83,7 +83,7 @@ CertificateFormContainer.propTypes = {
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   title: PropTypes.string,
-  toEdit: PropTypes.number,
+  toEdit: PropTypes.bool,
   toggleModal: PropTypes.func,
   upload: PropTypes.func
 }
@@ -94,10 +94,13 @@ export default reduxForm({
   validate
 }, function mapStateToProps(state) {
   const toEdit = state.security.get('certificateToEdit')
-  const initialValues = toEdit && state.security.get('sslCertificates').find(item => item.get('id') === toEdit)
   return {
-    toEdit,
-    initialValues: initialValues && initialValues.toJS(),
+    toEdit: !toEdit.isEmpty(),
+    initialValues: {
+      title: toEdit.get('title'),
+      account: toEdit.get('account'),
+      group: toEdit.get('group')
+    },
     formValues: getValues(state.form.certificateForm),
     groups: state.group.get('allGroups')
   }
@@ -107,9 +110,9 @@ export default reduxForm({
   return {
     fetchGroups: groupActions.fetchGroups,
     cancel: toggleModal => {
-      securityActions.changeCertificateToEdit(null)
-      dispatch(reset('certificateForm'))
+      securityActions.resetCertificateToEdit(null)
       toggleModal(null)
+      dispatch(reset('certificateForm'))
     },
     upload: (formValues) =>
       securityActions.uploadSSLCertificate(
