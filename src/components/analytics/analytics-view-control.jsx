@@ -22,13 +22,13 @@ function createPropertyOptions(opts) {
 }
 
 const tabs = [
-  {key: 'traffic', label: 'Traffic Overview'},
-  {key: 'visitors', label: 'Unique Visitors'},
-  {key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true},
-  {key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true},
-  {key: 'file-error', label: 'File Error', propertyOnly: true},
-  {key: 'url-report', label: 'URL', propertyOnly: true},
-  {key: 'playback-demo', label: 'Playback demo', hideHierarchy: true}
+  { key: 'traffic', label: 'Traffic Overview' },
+  { key: 'visitors', label: 'Unique Visitors' },
+  { key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true },
+  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true },
+  { key: 'file-error', label: 'File Error', propertyOnly: true },
+  { key: 'url-report', label: 'URL', propertyOnly: true },
+  { key: 'playback-demo', label: 'Playback demo', hideHierarchy: true }
 ]
 
 /* Not USED atm - will be used when filter dropdown is implemented
@@ -104,6 +104,7 @@ const AnalyticsViewControl = (props) => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
         }}
         value={props.params.group}
+        defaultLabel={props.activeAccount.get('name')}
         type={'Group'}
       />
       }
@@ -144,21 +145,21 @@ const AnalyticsViewControl = (props) => {
        />
        */ }
 
-    {props.params.account &&
-      <Nav bsStyle="tabs" >
+      {props.params.account &&
+      <Nav bsStyle="tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             lis.push(
               <li key={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
-                  activeClassName='active'>{tab.label}</Link>
+                      activeClassName='active'>{tab.label}</Link>
               </li>
             )
           }
           return lis
         }, [])}
       </Nav>
-    }
+      }
     </div>
   )
 }
