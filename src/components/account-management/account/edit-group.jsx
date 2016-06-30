@@ -30,7 +30,7 @@ class AccountManagementAccountEditGroup extends React.Component {
 
     return (
       <tr className="edit-row">
-        <td colSpan={3}>
+        <td colSpan={2}>
           <Input type="text" value={this.state.name} onChange={this.editName}
             onClick={this.focusInput}
             placeholder="Enter name" ref="input"/>

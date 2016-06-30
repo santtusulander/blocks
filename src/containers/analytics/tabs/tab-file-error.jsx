@@ -29,6 +29,10 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   render(){
+    if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
+      <p>No error data found.</p>
+    )
+
     return (
       <AnalysisFileError fetching={this.props.fetching}
         summary={this.props.fileErrorSummary}

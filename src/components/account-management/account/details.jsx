@@ -1,10 +1,11 @@
 import React from 'react'
-import { Col, Input, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
-import SelectWrapper from '../../select-wrapper.jsx'
+import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import Immutable from 'immutable'
-
-import UDNButton from '../../button.js'
 import { reduxForm } from 'redux-form'
+
+import SelectWrapper from '../../select-wrapper.jsx'
+import CheckboxArray from '../../checkboxes.jsx'
+import UDNButton from '../../button.js'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
@@ -40,6 +41,16 @@ class AccountManagementAccountDetails extends React.Component {
     this.save = this.save.bind(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
+      const { fields: { services, accountType } } = nextProps
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceValues = activeServiceTypes.map(item => item.value)
+      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
+      services.onChange(checkedServiceTypes)
+    }
+  }
+
   save() {
     if(!Object.keys(errors).length) {
       const { fields: { accountName } } = this.props
@@ -51,11 +62,10 @@ class AccountManagementAccountDetails extends React.Component {
 
   render() {
     const { fields: { accountName, accountType, services } } = this.props
-
+    const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
     return (
       <div className="account-management-account-details">
         <h2>Details</h2>
-
         <form className='form-horizontal'>
 
           <div className="form-group">
@@ -74,17 +84,16 @@ class AccountManagementAccountDetails extends React.Component {
 
                 <span className="input-group-addon brand-tooltip">
                   <ButtonToolbar>
-                  { // Not in 0.7
-                    //   <UDNButton bsStyle="success" icon={true} addNew={true}
-                    //     onClick={this.props.onAdd}>
-                    //     <IconAdd/>
-                    //   </UDNButton>
+                  {/* Not in 0.7
+                      <UDNButton bsStyle="success" icon={true} addNew={true}
+                        onClick={this.props.onAdd}>
+                        <IconAdd/>
+                      </UDNButton>
 
-                    //   <UDNButton bsStyle="primary" icon={true} addNew={true}
-                    //     onClick={this.props.onAdd}>
-                    //     <IconEdit/>
-                    //   </UDNButton>
-                  }
+                      <UDNButton bsStyle="primary" icon={true} addNew={true}
+                        onClick={this.props.onAdd}>
+                        <IconEdit/>
+                      </UDNButton>*/}
 
                     <OverlayTrigger placement="top" overlay={
                       <Tooltip id="tooltip_brand">
@@ -119,7 +128,7 @@ class AccountManagementAccountDetails extends React.Component {
                     </Tooltip>
                     }>
 
-                    <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
+                    <UDNButton bsStyle="link" icon={true}>?</UDNButton>
                   </OverlayTrigger>
                 </span>
               </div>
@@ -134,7 +143,8 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={3}>
               <div className="input-group">
                 <SelectWrapper
-                  { ... accountType }
+                  { ...accountType }
+                  value={Number(accountType.value)}
                   className="input-select"
                   options={accountTypeOptions}
                 />
@@ -157,20 +167,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label">Services</label>
             <Col xs={3}>
-              {
-                SERVICE_TYPES.map( (option, index) => {
-                  return (
-                    <div key={index} className='checkbox-div'>
-                      <Input
-                        value={option.value}
-                        type='checkbox'
-                        { ...services[index] }
-                        label={option.label}
-                        />
-                    </div>
-                  )
-                })
-              }
+              <CheckboxArray iterable={checkBoxes} field={services}/>
             </Col>
           </div>
 
@@ -193,14 +190,15 @@ AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Immutable.Map),
   fields: React.PropTypes.object,
   onAdd: React.PropTypes.func,
-  onSave: React.PropTypes.func
+  onSave: React.PropTypes.func,
+  toggleModal: React.PropTypes.func
 }
 AccountManagementAccountDetails.defaultProps = {
   account: Immutable.Map({})
 }
 
 export default reduxForm({
-  fields: ['accountName', 'brand', 'accountType', 'services[]'],
+  fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
 })(AccountManagementAccountDetails)

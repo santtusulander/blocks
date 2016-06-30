@@ -119,12 +119,12 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('error-code') &&
         <div className='filter'>
-          <FilterServiceType
+          {/* TODO: Should show error codes filter <FilterError
             serviceTypes={props.filters.get('errorCodes')}
             toggleServiceType={val => {
               props.onFilterChange('errorCodes', val)
             }}
-          />
+          /> */}
         </div>
       }
 
