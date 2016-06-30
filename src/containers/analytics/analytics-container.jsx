@@ -153,7 +153,7 @@ class AnalyticsContainer extends React.Component {
     const availableFilters = Immutable.fromJS({
       'traffic': ['date-range', 'service-type'],
       'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net'],
+      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
       'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
       'file-error': ['date-range', 'error-code'],
       'url-report': ['date-range', 'error-code'],
