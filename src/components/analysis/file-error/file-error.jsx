@@ -42,6 +42,7 @@ const AnalysisFileError = props => {
     else serverErrs.push({value: err, code: errorCode})
   })
 
+  //REFACTOR: Shared code with url-report.jsx
   //URL filtering
   //by serviceType
 
