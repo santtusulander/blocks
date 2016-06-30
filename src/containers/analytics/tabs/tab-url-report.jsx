@@ -51,7 +51,8 @@ AnalyticsTabUrlReport.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  reportsActions: React.PropTypes.object
+  reportsActions: React.PropTypes.object,
+  urlMetrics: React.PropTypes.array
 }
 
 AnalyticsTabUrlReport.defaultProps = {
@@ -64,6 +65,7 @@ function mapStateToProps(state) {
   return {
     fetching: state.reports.get('fetching'),
     filters: state.filters.get('filters'),
+    urlMetrics: state.reports.get('urlMetrics'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs')
 

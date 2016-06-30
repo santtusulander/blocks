@@ -71,7 +71,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   export(exporters) {
-    exporters.traffic(this.props.trafficByTime, this.props.filters.get('serviceTypes'))
+    exporters.traffic(this.props.trafficByTime, this.props.serviceTypes)
   }
 
   render() {
@@ -123,7 +123,7 @@ AnalyticsTabTraffic.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    serviceTypes: state.filters.get('serviceTypes'),
+    serviceTypes: state.ui.get('analysisServiceTypes'),
     metrics: state.metrics,
     traffic: state.traffic.get('traffic'),
     trafficByTime: state.traffic.get('byTime'),
