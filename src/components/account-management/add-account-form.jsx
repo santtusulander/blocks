@@ -28,15 +28,14 @@ let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const { accountName, accountBrand, serviceType } = values
-
+  const { accountName, accountBrand, services } = values
   if(!accountName || accountName.length === 0) {
     errors.accountName = 'Account name is required'
   }
   if(!accountBrand || accountBrand.length === 0) {
     errors.accountBrand = 'Account brand is required'
   }
-  if(!serviceType) {
+  if(services && services.length === 0) {
     errors.serviceType = 'Service type is required'
   }
 
@@ -63,22 +62,22 @@ class NewAccountForm extends React.Component {
   save() {
     if(!Object.keys(errors).length) {
       const {
-        fields: { accountBrand, accountName, accountType, serviceType }
+        fields: { accountBrand, accountName, accountType, services }
       } = this.props
       this.props.onSave({
         brand: accountBrand.value,
         name: accountName.value,
         type: accountType.value,
-        serviceType: serviceType.value
+        services: services.value
       })
     }
   }
 
   render() {
-    const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
+    const { fields: { accountBrand, accountName, accountType, services }, onCancel } = this.props
     const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
     return (
-      <Modal dialogClassName="add-account-form-sidebar" show={show}>
+      <Modal dialogClassName="add-account-form-sidebar" show={true}>
         <Modal.Header>
           <h1>Add new account</h1>
           <p>Lorem ipsum</p>
@@ -139,8 +138,7 @@ class NewAccountForm extends React.Component {
 NewAccountForm.propTypes = {
   fields: PropTypes.object,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func,
-  show: PropTypes.bool
+  onSave: PropTypes.func
 }
 
 export default reduxForm({
