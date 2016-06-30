@@ -12,5 +12,9 @@
     @extend .col-md-3;
   }
 
+  /* checkbox labels */
+  .checkbox span {
+    font-size: 13px;
+  }
 }
 
