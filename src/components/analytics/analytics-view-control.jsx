@@ -22,13 +22,13 @@ function createPropertyOptions(opts) {
 }
 
 const tabs = [
-  {key: 'traffic', label: 'Traffic Overview'},
-  {key: 'visitors', label: 'Unique Visitors'},
-  {key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true},
-  {key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true},
-  {key: 'file-error', label: 'File Error', propertyOnly: true},
-  {key: 'url-report', label: 'URL', propertyOnly: true},
-  {key: 'playback-demo', label: 'Playback demo', hideHierarchy: true}
+  { key: 'traffic', label: 'Traffic Overview' },
+  { key: 'visitors', label: 'Unique Visitors' },
+  { key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true },
+  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true },
+  { key: 'file-error', label: 'File Error', propertyOnly: true },
+  { key: 'url-report', label: 'URL', propertyOnly: true },
+  { key: 'playback-demo', label: 'Playback demo', hideHierarchy: true }
 ]
 
 /* Not USED atm - will be used when filter dropdown is implemented
@@ -65,17 +65,19 @@ const AnalyticsViewControl = (props) => {
   let title = "Analytics"
   if(props.activeTab) {
     const active = tabs.find(tab => tab.key === props.activeTab)
-    if(active.hideHierarchy) {
-      title = active.label
-    }
-    else if(props.params.property) {
-      title = `Property ${active.label}`
-    }
-    else if(props.params.group) {
-      title = `Group ${active.label}`
-    }
-    else {
-      title = `Account ${active.label}`
+    if(active) {
+      if(active.hideHierarchy) {
+        title = active.label
+      }
+      else if(props.params.property) {
+        title = `Property ${active.label}`
+      }
+      else if(props.params.group) {
+        title = `Group ${active.label}`
+      }
+      else {
+        title = `Account ${active.label}`
+      }
     }
   }
 
@@ -144,21 +146,21 @@ const AnalyticsViewControl = (props) => {
        />
        */ }
 
-    {props.params.account &&
-      <Nav bsStyle="tabs" >
+      {props.params.account &&
+      <Nav bsStyle="tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             lis.push(
               <li key={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
-                  activeClassName='active'>{tab.label}</Link>
+                      activeClassName='active'>{tab.label}</Link>
               </li>
             )
           }
           return lis
         }, [])}
       </Nav>
-    }
+      }
     </div>
   )
 }
