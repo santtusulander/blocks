@@ -3,8 +3,9 @@ import Immutable from 'immutable'
 
 import Select from '../select.jsx'
 import './udn-admin-toolbar.scss'
+import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
-const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData}) => {
+const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, routes, toggleAccountManagementModal, history}) => {
 
   const accountOptions = accounts.map( account => {
     return [account.get('id'), account.get('name')]
@@ -19,7 +20,20 @@ const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData}) => {
     <div className='udn-admin-toolbar'>
       <Select
         options={accountOptions}
-        onSelect={account => fetchAccountData(account)}
+        onSelect={account => {
+          if(account === 'add') {
+            toggleAccountManagementModal(ADD_ACCOUNT)
+          }
+          else {
+            //FIXME: this is NOT 100% accurate
+            const currentRoute = routes[routes.length - 1].path
+            //replace :account with selected valye
+            const newRoute = currentRoute.replace(/:account/, account )
+
+            history.push( newRoute )
+            //fetchAccountData(account)
+          }
+        }}
         value={activeAccount.get('id')}
       />
 
