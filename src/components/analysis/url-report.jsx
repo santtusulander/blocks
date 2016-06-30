@@ -29,12 +29,28 @@ class AnalysisURLReport extends React.Component {
     })
   }
   render() {
-    const chartHeight = this.props.urls.size * 40 + 40
+
+    //REFACTOR: Shared code with file-error.jsx
+
+    //URL filtering
+    //by serviceType
+    const {serviceTypes, statusCodes, urls} = this.props;
+
+    const filteredUrls = urls.filter( (url) => {
+      return serviceTypes.includes(url.get('service_type'))
+    })
+      //filter by error code
+      .filter( (url) => {
+        return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
+      })
+
+    const chartHeight = urls.size * 40 + 40
+
     return (
       <div className="analysis-url-report">
         <div ref="chartHolder">
           <AnalysisHorizontalBar
-            data={this.props.urls.toJS()}
+            data={filteredUrls.toJS()}
             dataKey="bytes"
             height={chartHeight}
             labelKey="url"
@@ -44,7 +60,7 @@ class AnalysisURLReport extends React.Component {
         </div>
         <h3>HEADER</h3>
         <AnalysisURLList
-          urls={this.props.urls}
+          urls={filteredUrls}
           labelFormat={url => url.get('url')}/>
       </div>
     )
