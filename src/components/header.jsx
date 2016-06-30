@@ -336,6 +336,7 @@ Header.propTypes = {
   handleThemeChange: React.PropTypes.func,
   isAdmin:  React.PropTypes.bool,
   routes: React.PropTypes.array,
+  location: React.PropTypes.object,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,

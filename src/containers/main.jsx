@@ -211,6 +211,7 @@ Main.propTypes = {
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
+  location: React.PropTypes.object,
   routes: React.PropTypes.array,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
