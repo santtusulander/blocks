@@ -106,6 +106,7 @@ const AnalyticsViewControl = (props) => {
           props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
         }}
         value={props.params.group}
+        defaultLabel={props.activeAccount.get('name')}
         type={'Group'}
       />
       }
