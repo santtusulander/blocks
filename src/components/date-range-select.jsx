@@ -54,7 +54,7 @@ export class DateRangeSelect extends React.Component {
       nextState.endDate = nextProps.endDate
       dateChanged = true
     }
-    if(dateChanged && this.state.activeDateRange !== DateRanges.CUSTOM_TIMERANGE) {
+    if(dateChanged) {
       nextState.activeDateRange = this.matchActiveDateRange(nextProps.startDate, nextProps.endDate)
     }
     this.setState(nextState)
