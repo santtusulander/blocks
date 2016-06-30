@@ -27,11 +27,17 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(option) {
+    debugger
     let checked = this.state.checkedResults
+
     let newlist = checked.indexOf(option) === -1 ? checked.push(option) : checked.delete(checked.indexOf(option))
 
     this.setState({ checkedResults: newlist })
-    this.props.handleCheck(this.state.checkedResults)
+    const vals = newlist.map( option => {
+      return option.get('value')
+    })
+
+    this.props.handleCheck(vals)
   }
 
   handleFilter() {
