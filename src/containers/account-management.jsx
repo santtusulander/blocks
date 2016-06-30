@@ -188,12 +188,11 @@ export class AccountManagement extends Component {
               }}
             />
           */ }
-
-            <NewAccountForm
+           {accountManagementModal === ADD_ACCOUNT &&
+              <NewAccountForm
                 id="add-account-form"
-                show={accountManagementModal === ADD_ACCOUNT}
                 onSave={this.addAccount}
-                onCancel={() => toggleModal(null)}/>
+                onCancel={() => toggleModal(null)}/>}
         </Content>
       </PageContainer>
     )

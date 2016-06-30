@@ -65,7 +65,7 @@ function mapStateToProps(state) {
     filters: state.filters.get('filters'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
-    serviceTypes: state.filters.get('serviceTypes'),
+    serviceTypes: state.ui.get('analysisServiceTypes'),
     urlMetrics: state.reports.get('urlMetrics')
 
   }

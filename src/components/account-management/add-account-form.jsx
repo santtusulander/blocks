@@ -35,7 +35,7 @@ const validate = (values) => {
   if(!accountBrand || accountBrand.length === 0) {
     errors.accountBrand = 'Account brand is required'
   }
-  if(services.length === 0) {
+  if(services && services.length === 0) {
     errors.serviceType = 'Service type is required'
   }
 
@@ -62,19 +62,18 @@ class NewAccountForm extends React.Component {
   save() {
     if(!Object.keys(errors).length) {
       const {
-              fields: { accountBrand, accountName, accountType, services }
-            } = this.props
+        fields: { accountBrand, accountName, accountType, services }
+      } = this.props
       this.props.onSave({
         brand: accountBrand.value,
         name: accountName.value,
         type: accountType.value,
-        serviceType: services.value[0]
+        services: services.value
       })
     }
   }
 
   render() {
-
     const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
     const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
 

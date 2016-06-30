@@ -41,6 +41,11 @@ export class Main extends React.Component {
     this.props.fetchAccountData(this.props.activeAccount, this.props.accounts)
   }
 
+  //update account is account prop changed (in url)
+  componentWillReceiveProps(nextProps){
+    if (this.props.params.account !== nextProps.params.account) this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
+  }
+
   activatePurge(property) {
     return e => {
       if(e) {
@@ -128,7 +133,7 @@ export class Main extends React.Component {
     )
     return (
       <div className={classNames}>
-      { this.props.user.get('loggedIn') && 
+      { this.props.user.get('loggedIn') &&
       < Navigation
         activeAccount={this.props.activeAccount}
         activeGroup={this.props.activeGroup}
@@ -150,8 +155,10 @@ export class Main extends React.Component {
             fetchAccountData={this.props.fetchAccountData}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
-            logOut={this.logOut}
+            history={this.props.history}
             location={this.props.location}
+            logOut={this.logOut}
+            routes={this.props.routes}
             pathname={this.props.location.pathname}
             params={this.props.params}
             toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}/>
@@ -205,6 +212,7 @@ Main.propTypes = {
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
+  routes: React.PropTypes.array,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),

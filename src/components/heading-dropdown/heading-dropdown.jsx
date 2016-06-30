@@ -19,10 +19,10 @@ class HeadingDropdown extends Component {
 
   render() {
 
-    const { options, value, type } = this.props
+    const { options, value, type, defaultLabel } = this.props
 
     let className = 'heading-dropdown'
-    let label     = `Please Select ${type ? type : ''}`
+    let label     = defaultLabel ? defaultLabel : `Please Select ${type ? type : ''}`
 
     if(this.props.className) {
       className = className + ' ' + this.props.className
