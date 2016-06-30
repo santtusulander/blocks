@@ -49,18 +49,14 @@ export class Security extends React.Component {
       toggleModal,
       params: { subPage }
     } = this.props
-    const showModalWithItem = (modalToShow, itemID) => {
-      toggleModal(modalToShow)
-      changeCertificateToEdit(itemID)
-    }
     const sslListProps = {
       activeModal,
       activeCertificates,
       certificates: sslCertificates,
-      onCheck: id => toggleActiveCertificates(id),
+      onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: id => showModalWithItem(EDIT_CERTIFICATE, id),
-      deleteCertificate: id => showModalWithItem(DELETE_CERTIFICATE, id)
+      editCertificate: () => changeCertificateToEdit(...arguments).then(() => toggleModal(EDIT_CERTIFICATE)),
+      deleteCertificate: () => changeCertificateToEdit(...arguments).then(() => toggleModal(EDIT_CERTIFICATE))
     }
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',

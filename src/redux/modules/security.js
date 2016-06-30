@@ -12,30 +12,30 @@ const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED'
 
 
-const fakeSSLCertificates = fromJS([
-  {account: 1, id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 2, id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 3, id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 4, id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 5, id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 6, id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 25, id: 7, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 2, id: 8, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 3, id: 9, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 4, id: 10, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 5, id: 11, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 25, id: 12, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 1, id: 13, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 2, id: 14, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 3, id: 15, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 25, id: 16, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 5, id: 17, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 6, id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
-])
+// const fakeSSLCertificates = fromJS([
+//   {account: 1, id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 2, id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 3, id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 4, id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 5, id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 6, id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 25, id: 7, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 2, id: 8, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 3, id: 9, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 4, id: 10, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 5, id: 11, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 25, id: 12, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 1, id: 13, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 2, id: 14, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 3, id: 15, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 25, id: 16, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+//   {account: 5, id: 17, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+//   {account: 6, id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
+// ])
 
 export const initialState = fromJS({
   fetching: false,
-  certificateToEdit: null,
+  certificateToEdit: {},
   activeCertificates: [],
   sslCertificates: []
 })
