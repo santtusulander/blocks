@@ -155,8 +155,8 @@ class AnalyticsContainer extends React.Component {
       'visitors': ['date-range'],
       'on-off-net': ['date-range', 'on-off-net'],
       'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code'],
-      'url-report': ['date-range', 'error-code'],
+      'file-error': ['date-range', 'error-code', 'service-type'],
+      'url-report': ['date-range', 'error-code', 'service-type'],
       'playback-demo': ['video']
     })
     const exportCSV = () => {
