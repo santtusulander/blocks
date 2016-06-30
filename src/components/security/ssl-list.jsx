@@ -31,7 +31,7 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
                 <td>
                   <Input type="checkbox"
                     onChange={() => onCheck(id)}
-                    label={certificate.get('title')}
+                    label={certificate.get('title') || 'NEEDS API'}
                     checked={activeCertificates.includes(id)}/>
                 </td>
                 <td>{certificate.get('commonName')}</td>
