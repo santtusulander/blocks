@@ -37,8 +37,8 @@ class AnalyticsTabUrlReport extends React.Component {
     return (
       <AnalysisURLReport fetching={this.props.fetching}
         summary={this.props.fileErrorSummary}
-        statusCodes={Immutable.List()}
-        serviceTypes={Immutable.fromJS(['http', 'https'])}
+        statusCodes={this.props.filters.get('statusCodes')}
+        serviceTypes={this.props.filters.get('serviceTypes')}
         urls={this.props.fileErrorURLs}/>
     )
   }
