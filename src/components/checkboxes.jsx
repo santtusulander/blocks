@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Col, Input } from 'react-bootstrap'
+import { Input } from 'react-bootstrap'
 
 const CheckboxArray = ({ iterable, field }) => {
   const handleChange = (option, hasValue, index, e) => {
