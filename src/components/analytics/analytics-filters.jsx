@@ -14,7 +14,22 @@ import './analytics-filters.scss'
 
 const serviceProviderOpts = [
   ['all', 'All'],
-  ['option', 'Option']
+  ['vodafone-group', 'Vodafone Group'],
+  ['telstra', 'Telstra'],
+  ['bharti', 'Bharti'],
+  ['singtel', 'Singtel'],
+  ['china-telecom', 'China Telecom'],
+  ['hgc', 'HGC'],
+  ['ais', 'AIS'],
+  ['tot', 'TOT'],
+  ['cht', 'CHT'],
+  ['fet', 'FET'],
+  ['xl-axiata', 'XL Axiata'],
+  ['telkom-indonesia', 'Telkom Indonesia'],
+  ['globe', 'Globe'],
+  ['mobifone', 'Mobifone'],
+  ['sk-bb', 'SK BB'],
+  ['lg-u', 'LG U+]']
 ]
 
 const popOpts = [
