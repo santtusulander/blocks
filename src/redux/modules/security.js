@@ -42,8 +42,8 @@ export const initialState = fromJS({
 
 // REDUCERS
 
-export function fetchSSLCertificatesSuccess(state) {
-  return state.merge({ sslCertificates: fakeSSLCertificates })
+export function fetchSSLCertificatesSuccess(state, action) {
+  return state.merge({ sslCertificates: state.get('sslCertificates').merge(action.payload) })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -53,7 +53,6 @@ export function fetchSSLCertificatesFailure(state) {
 }
 
 export function uploadSSLCertificateSuccess(state, action) {
-  action.payload.id = Math.floor(Math.random() * 500) + 100
   const sslCertificates = state.get('sslCertificates')
   return state.merge({ sslCertificates: sslCertificates.merge(sslCertificates.push(fromJS(action.payload))) })
 }
@@ -82,7 +81,7 @@ export function certificateToEditChanged(state, action) {
 
 export function editSSLCertificateSuccess(state, action) {
   const sslCertificates = state.get('sslCertificates')
-  const itemIndex = sslCertificates.findIndex(item => item.get('id') === state.get('certificateToEdit'))
+  const itemIndex = sslCertificates.findIndex(item => item.get('commonName') === state.get('certificateToEdit'))
   return state.merge({ sslCertificates: sslCertificates.update(itemIndex, item => item.merge(action.payload)) })
 
 }
@@ -96,7 +95,7 @@ export function editSSLCertificateFailure(state) {
 export function activeCertificatesToggled(state, action) {
   let newActiveCertificates = state.get('activeCertificates')
   newActiveCertificates =  newActiveCertificates.includes(action.payload) ?
-    newActiveCertificates.filter(id => id !== action.payload) :
+    newActiveCertificates.filter(commonName => commonName !== action.payload) :
     newActiveCertificates.push(action.payload)
   return state.set('activeCertificates', newActiveCertificates)
 }
@@ -116,8 +115,7 @@ export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOA
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-  .then(parseResponseData)
+  }).then(parseResponseData)
 })
 
 export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, opts => {
@@ -130,8 +128,12 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, o
 
 export const changeCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED)
 
-export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, opts => {
-  return new Promise(res => res(opts))
+export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`)
+    .then(response => response ? response.data.map(commonName =>  {
+      return { group, commonName, account: account }
+    }) : null
+    )
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {

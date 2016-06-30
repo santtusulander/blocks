@@ -24,10 +24,13 @@ import {
 
 export class Security extends React.Component {
   componentWillMount() {
-    this.props.fetchAccountData(this.props.accounts)
-    switch(this.props.params.subPage) {
+    const { accounts, activeAccount, groups, fetchAccountData, params: { subPage } } = this.props
+    fetchAccountData(accounts)
+    switch(subPage) {
       case 'ssl-certificate':
-        this.props.securityActions.fetchSSLCertificates()
+        groups.forEach(group => {
+          this.props.securityActions.fetchSSLCertificates('udn', activeAccount.get('id'), group.get('id'))
+        })
         break
       // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
       // case 'content-targeting': securityActions.fetchContentTrageting(account)
@@ -125,6 +128,7 @@ function mapStateToProps(state) {
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount,
+    groups: state.group.get('allGroups'),
     sslCertificates: state.security.get('sslCertificates').filter(cert => cert.get('account') === activeAccount.get('id'))
   };
 }
