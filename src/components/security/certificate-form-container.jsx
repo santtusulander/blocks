@@ -33,13 +33,9 @@ const validate = values => {
 
 class CertificateFormContainer extends Component {
   componentWillMount() {
-    if(!this.props.fields.account.value) {
-      this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
-    }
-    else {
-      this.props.fetchGroups('udn', this.props.fields.account.value)
-    }
+    this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
+
   componentWillReceiveProps(nextProps) {
     const nextAccountValue = nextProps.fields.account.value
     const thisAccountValue = this.props.fields.account.value
@@ -55,7 +51,6 @@ class CertificateFormContainer extends Component {
         toggleModal(null)
         formValues.account = parseInt(formValues.account)
         formValues.group = parseInt(formValues.group)
-        formValues.commonName = '*.unifieddelivery.net'
         toEdit ? edit(formValues) : upload(formValues)
       }
     }
@@ -112,11 +107,11 @@ export default reduxForm({
   return {
     fetchGroups: groupActions.fetchGroups,
     cancel: toggleModal => {
-      securityActions.resetCertificateToEdit(null)
+      securityActions.resetCertificateToEdit()
       toggleModal(null)
       dispatch(reset('certificateForm'))
     },
-    upload: (formValues) =>
+    upload: formValues =>
       securityActions.uploadSSLCertificate(
         'udn',
         formValues.account,

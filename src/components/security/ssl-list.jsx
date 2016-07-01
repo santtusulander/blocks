@@ -25,7 +25,7 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
         </thead>
         <tbody>
           {!certificates.isEmpty() ? certificates.map((certificate, index) => {
-            const commonName = certificate.get('commonName')
+            const commonName = certificate.get('cn')
             const group = certificate.get('group')
             const account = certificate.get('account')
             return (

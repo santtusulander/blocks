@@ -56,6 +56,7 @@ export class Security extends React.Component {
       fetchAccount,
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate, deleteSSLCertificate },
+      toDelete,
       toggleModal,
       params: { subPage }
     } = this.props
@@ -66,7 +67,7 @@ export class Security extends React.Component {
       onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
       editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
-      deleteCertificate: (...args) => fetchSSLCertificate([...args]).then(() => toggleModal(DELETE_CERTIFICATE))
+      deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
@@ -103,7 +104,8 @@ export class Security extends React.Component {
             onCancel={() => toggleModal(null)}
             onDelete={() => {
               toggleModal(null)
-              deleteSSLCertificate()}}/>}
+              deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+            }}/>}
       </PageContainer>
     )
   }
@@ -119,12 +121,14 @@ Security.propTypes = {
   params: PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
+  toDelete: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func
 }
 
 function mapStateToProps(state) {
-  const activeAccount = state.account.get('activeAccount') || Map({ id: 25, name: 'FooBar' })
+  const activeAccount = state.account.get('activeAccount') || Map({})
   return {
+    toDelete: state.security.get('certificateToEdit'),
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
