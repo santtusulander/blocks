@@ -25,8 +25,8 @@ const fakeSSLCertificates = fromJS([
   // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
   // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
   // {account: 1, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1, notEditable: true},
-  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3, notEditable: true}
+  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1, noEdit: true},
+  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3, noEdit: true}
 ])
 
 export const initialState = fromJS({

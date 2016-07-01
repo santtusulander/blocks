@@ -24,24 +24,24 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
           </tr>
         </thead>
         <tbody>
-          {!certificates.isEmpty() ? certificates.map((certificate, index) => {
-            const commonName = certificate.get('cn')
-            const group = certificate.get('group')
-            const account = certificate.get('account')
+          {!certificates.isEmpty() ? certificates.map((cert, index) => {
+            const commonName = cert.get('cn')
+            const group = cert.get('group')
+            const account = cert.get('account')
             return (
               <tr key={index}>
                 <td>
                   <Input type="checkbox"
                     onChange={() => onCheck(commonName)}
-                    label={certificate.get('title') || 'NEEDS API'}
+                    label={cert.get('title') || 'NEEDS API'}
                     checked={activeCertificates.includes(commonName)}/>
                 </td>
                 <td>{commonName}</td>
                 <td>{group}</td>
                 <td>
                   <ActionLinks
-                    onEdit={() => editCertificate('udn', account, group, commonName)}
-                    onDelete={() => deleteCertificate('udn', account, group, commonName)}/>
+                    onEdit={() => editCertificate('udn', account, group, commonName, cert.get('noEdit'))}
+                    onDelete={() => deleteCertificate('udn', account, group, commonName, cert.get('noEdit'))}/>
                 </td>
               </tr>
             )

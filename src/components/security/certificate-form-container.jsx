@@ -4,7 +4,6 @@ import { reduxForm, getValues, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { List, Map } from 'immutable'
 
-import * as groupActionCreators from '../../redux/modules/group'
 import * as securityActionCreators from '../../redux/modules/security'
 
 import CertificateForm from './certificate-form'
@@ -12,15 +11,15 @@ import CertificateForm from './certificate-form'
 let errors = {}
 const validate = values => {
   errors = {}
-  const { sslCertTitle, privateKey, certificate, account, group } = values
+  const { title, privateKey, certificate, account, group } = values
   if (!account) {
     errors.account = 'Required'
   }
   if (!group || group === '') {
     errors.group = 'Required'
   }
-  if (!sslCertTitle) {
-    errors.sslCertTitle = 'Required'
+  if (!title) {
+    errors.title = 'Required'
   }
   if (!privateKey) {
     errors.privateKey = 'Required'
@@ -48,10 +47,14 @@ class CertificateFormContainer extends Component {
     const buttonFunctions = {
       onCancel: () => cancel(toggleModal),
       onSave: () => {
+        const data = [
+          'udn',
+          Number(formValues.account),
+          Number(formValues.group),
+          { title: formValues.title, private_key: formValues.privateKey, certificate: formValues.certificate }
+        ]
         toggleModal(null)
-        formValues.account = parseInt(formValues.account)
-        formValues.group = parseInt(formValues.group)
-        toEdit ? edit(formValues) : upload(formValues)
+        toEdit ? edit(data) : upload(data)
       }
     }
     return (
@@ -110,18 +113,10 @@ export default reduxForm({
       toggleModal(null)
       dispatch(reset('certificateForm'))
     },
-    upload: formValues =>
-      securityActions.uploadSSLCertificate(
-        'udn',
-        formValues.account,
-        formValues.group,
-        {
-          title: formValues.title,
-          private_key: formValues.privateKey,
-          certificate: formValues.certificate
-        }).then(() => dispatch(reset('certificateForm'))),
-    edit: formValues =>
-      securityActions.editSSLCertificate(formValues).then(() => dispatch(reset('certificateForm')))
+    upload: data =>
+      securityActions.uploadSSLCertificate(...data).then(() => dispatch(reset('certificateForm'))),
+    edit: data =>
+      securityActions.editSSLCertificate(...data).then(() => dispatch(reset('certificateForm')))
   }
 }
 )(CertificateFormContainer)
