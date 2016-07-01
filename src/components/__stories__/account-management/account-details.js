@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import {storiesOf} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import Details from '../../account-management/account/details.jsx'
+import Details from '../../account-management/account/account.jsx'
 
 const reducers = {
   form: formReducer
