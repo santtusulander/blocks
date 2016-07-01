@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -23,11 +23,24 @@ import {
 } from '../constants/account-management-modals.js'
 
 export class Security extends React.Component {
+  constructor(props) {
+    super(props)
+    this.fetchData = this.fetchData.bind(this)
+  }
   componentWillMount() {
-    this.props.fetchAccountData(this.props.accounts)
-    switch(this.props.params.subPage) {
+    this.fetchData(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(!is(nextProps.activeAccount, this.props.activeAccount)) {
+      this.fetchData(nextProps)
+    }
+  }
+
+  fetchData(props) {
+    switch(props.params.subPage) {
       case 'ssl-certificate':
-        this.props.securityActions.fetchSSLCertificates()
+        props.securityActions.fetchSSLCertificates('udn', props.activeAccount.get('id'))
         break
       // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
       // case 'content-targeting': securityActions.fetchContentTrageting(account)
@@ -41,23 +54,21 @@ export class Security extends React.Component {
       activeCertificates,
       activeModal,
       fetchAccount,
+      onDelete,
       sslCertificates,
-      securityActions: { toggleActiveCertificates, changeCertificateToEdit, deleteSSLCertificate },
+      securityActions: { toggleActiveCertificates, fetchSSLCertificate },
+      toDelete,
       toggleModal,
       params: { subPage }
     } = this.props
-    const showModalWithItem = (modalToShow, itemID) => {
-      toggleModal(modalToShow)
-      changeCertificateToEdit(itemID)
-    }
     const sslListProps = {
       activeModal,
       activeCertificates,
       certificates: sslCertificates,
-      onCheck: id => toggleActiveCertificates(id),
+      onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: id => showModalWithItem(EDIT_CERTIFICATE, id),
-      deleteCertificate: id => showModalWithItem(DELETE_CERTIFICATE, id)
+      editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
+      deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
@@ -92,16 +103,10 @@ export class Security extends React.Component {
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
             onCancel={() => toggleModal(null)}
-            onDelete={() => {
-              toggleModal(null)
-              deleteSSLCertificate()}}/>}
+            onDelete={() => onDelete(toDelete)}/>}
       </PageContainer>
     )
   }
-}
-
-Security.defaultProps = {
-  activeAccount: Map({ id: 25, name: 'FooBar' })
 }
 
 Security.propTypes = {
@@ -110,40 +115,45 @@ Security.propTypes = {
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
-  fetchAccountData: PropTypes.func,
   fetchListData: PropTypes.func,
+  onDelete: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
+  toDelete: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func
 }
 
 function mapStateToProps(state) {
-  const activeAccount = state.account.get('activeAccount') || Map({ id: 25, name: 'FooBar' })
+  const activeAccount = state.account.get('activeAccount') || Map({})
   return {
+    toDelete: state.security.get('certificateToEdit'),
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount,
+    groups: state.group.get('allGroups'),
     sslCertificates: state.security.get('sslCertificates').filter(cert => cert.get('account') === activeAccount.get('id'))
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const fetchAccount = bindActionCreators(accountActionCreators, dispatch).fetchAccount
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  function fetchAccountData(accounts) {
-    if(accounts && accounts.isEmpty()) {
-      accountActions.fetchAccounts('udn')
-    }
+  const toggleModal = uiActions.toggleAccountManagementModal
+  function onDelete(toDelete) {
+    toggleModal(null)
+    securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+      .then(() => {
+        securityActions.resetCertificateToEdit()
+      })
   }
-
   return {
-    fetchAccountData: fetchAccountData,
-    fetchAccount: accountActions.fetchAccount,
+    fetchAccount,
+    onDelete,
     securityActions: securityActions,
-    toggleModal: uiActions.toggleAccountManagementModal
+    toggleModal
   };
 }
 

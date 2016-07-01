@@ -4,13 +4,14 @@ import { List } from 'immutable'
 
 import UDNButton from '../button.js'
 
-export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors }) => {
+export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors, editMode }) => {
   const { account, group, title, privateKey, interMediateCert, certificate } = fields
   return (
     <form>
       <div id="accounts">
         <Input type="select"
           label="Account"
+          disabled={editMode}
           { ...account }>
           {!account.value && <option>Please select an account</option>}
           {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
@@ -20,6 +21,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
       <div id="groups">
         <Input type="select"
           label="Assign to Group"
+          disabled={editMode}
           { ...group }>
           {!group.value && <option value="">Please select a group</option>}
           {groups.map((group, i) => <option key={i} value={group.get('id')}>{group.get('name')}</option>)}
