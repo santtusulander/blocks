@@ -44,7 +44,9 @@ export class AccountManagement extends Component {
 
   componentWillMount() {
     const accountId = this.props.params.account
-    if ( accountId && accountId !== 'null' && !this.props.activeAccount) this.props.accountActions.fetchAccount('udn', accountId)
+    if ( accountId && accountId !== 'null' && !this.props.activeAccount) {
+      this.props.accountActions.fetchAccount('udn', accountId)
+    }
   }
 
   editSOARecord() {

@@ -121,6 +121,14 @@ export class Main extends React.Component {
   }
   render() {
     let classNames = 'main-container';
+    let activeAccount = this.props.activeAccount
+    /* If no activeAccount is set, but some accounts have been queried, use the
+       first found. TODO: Is there a better way to pick default account?
+     */
+    if((!activeAccount || !activeAccount.size)
+      && this.props.accounts && this.props.accounts.size) {
+      activeAccount = this.props.accounts.first()
+    }
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
@@ -134,8 +142,8 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
       { this.props.user.get('loggedIn') &&
-      < Navigation
-        activeAccount={this.props.activeAccount}
+      <Navigation
+        activeAccount={activeAccount}
         activeGroup={this.props.activeGroup}
         activeHost={this.props.activeHost}
         params={this.props.params}

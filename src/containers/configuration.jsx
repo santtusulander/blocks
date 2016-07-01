@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
+import * as accountActionCreators from '../redux/modules/account'
+import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
@@ -52,11 +54,11 @@ export class Configuration extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    const {brand, account, group} = this.props.params
+    this.props.accountActions.fetchAccount(brand, account)
+    this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHost(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
+    this.props.hostActions.fetchHost(brand, account, group,
       this.props.location.query.name
     )
   }
@@ -346,10 +348,12 @@ export class Configuration extends React.Component {
 
 Configuration.displayName = 'Configuration'
 Configuration.propTypes = {
+  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
@@ -369,6 +373,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
