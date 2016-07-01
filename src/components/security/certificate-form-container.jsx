@@ -99,13 +99,12 @@ export default reduxForm({
       group: toEdit.get('group') || activeGroup
     },
     formValues: getValues(state.form.certificateForm),
-    groups: state.group.get('allGroups')
+    groups: state.security.get('groups')
   }
 }, function mapDispatchToProps(dispatch) {
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
-    fetchGroups: groupActions.fetchGroups,
+    fetchGroups: securityActions.fetchGroupsForModal,
     cancel: toggleModal => {
       securityActions.resetCertificateToEdit()
       toggleModal(null)

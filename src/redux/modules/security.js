@@ -11,7 +11,7 @@ const SECURITY_SSL_CERTIFICATES_UPLOAD = 'SECURITY_SSL_CERTIFICATES_UPLOAD'
 const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
-
+const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
 
 const fakeSSLCertificates = fromJS([
   // {account: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
@@ -25,11 +25,12 @@ const fakeSSLCertificates = fromJS([
   // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
   // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
   // {account: 1, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1},
-  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3}
+  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1, notEditable: true},
+  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3, notEditable: true}
 ])
 
 export const initialState = fromJS({
+  groups: [],
   fetching: false,
   certificateToEdit: {},
   activeCertificates: [],
@@ -37,6 +38,20 @@ export const initialState = fromJS({
 })
 
 // REDUCERS
+
+export function fetchGroupsSuccess(state, action) {
+  return state.merge({
+    groups: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchGroupsFailure(state) {
+  return state.merge({
+    groups: fromJS([]),
+    fetching: false
+  })
+}
 
 export function fetchSSLCertificatesSuccess(state, action) {
   return state.merge({ sslCertificates: state.get('sslCertificates').merge(action.payload) })
@@ -113,6 +128,7 @@ export function activeCertificatesToggled(state, action) {
 }
 
 export default handleActions({
+  SECURITY_MODAL_GROUPS_FETCH: mapReducers(fetchGroupsSuccess, fetchGroupsFailure),
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
   SECURITY_SSL_CERTIFICATE_FETCH: mapReducers(fetchSSLCertificateSuccess, fetchSSLCertificateFailure),
   SECURITY_ACTIVE_CERTIFICATES_TOGGLED: activeCertificatesToggled,
@@ -146,6 +162,15 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (
 export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, cert) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
     .then(response => response && { account, group, certificate: response.data })
+})
+
+export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
 })
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account) => {
