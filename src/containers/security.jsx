@@ -4,7 +4,6 @@ import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reset } from 'redux-form'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -148,7 +147,6 @@ function mapDispatchToProps(dispatch) {
     securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
       .then(() => {
         securityActions.resetCertificateToEdit()
-        dispatch(reset('certificateForm'))
       })
   }
   return {
