@@ -21,7 +21,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps)) {
+    if( changedParamsFiltersQS(this.props, nextProps) ) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }
