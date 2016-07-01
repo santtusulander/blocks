@@ -17,7 +17,7 @@ const ContentDifferenceTooltip = () => <div>
     <div className="pull-right difference-legend below-avg" />
   </div>
   <div>
-    Data Missing
+    Comparison Data Missing
     <div className="pull-right difference-legend no-data" />
   </div>
 </div>

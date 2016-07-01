@@ -1,48 +1,60 @@
+import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers } from '../util'
+import { mapReducers, urlBase } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
+const SECURITY_SSL_CERTIFICATE_FETCH = 'SECURITY_SSL_CERTIFICATE_FETCH'
 const SECURITY_ACTIVE_CERTIFICATES_TOGGLED = 'SECURITY_ACTIVE_CERTIFICATES_TOGGLED'
 const SECURITY_SSL_CERTIFICATES_UPLOAD = 'SECURITY_SSL_CERTIFICATES_UPLOAD'
 const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
-const SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED'
-
+const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
+const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
 
 const fakeSSLCertificates = fromJS([
-  {account: 1, id: 1, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 2, id: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 3, id: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 4, id: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 5, id: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 6, id: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 25, id: 7, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 2, id: 8, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 3, id: 9, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 4, id: 10, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 5, id: 11, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 25, id: 12, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 1, id: 13, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 2, id: 14, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 3, id: 15, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 25, id: 16, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  {account: 5, id: 17, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 6, id: 18, title: 'SSL 1', commonName: '*.ufd.net', group: 1}
+  // {account: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  // {account: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
+  // {account: 1, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
+  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1, noEdit: true},
+  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3, noEdit: true}
 ])
 
 export const initialState = fromJS({
+  groups: [],
   fetching: false,
-  certificateToEdit: null,
+  certificateToEdit: {},
   activeCertificates: [],
   sslCertificates: []
 })
 
 // REDUCERS
 
-export function fetchSSLCertificatesSuccess(state) {
-  return state.merge({ sslCertificates: fakeSSLCertificates })
+export function fetchGroupsSuccess(state, action) {
+  return state.merge({
+    groups: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchGroupsFailure(state) {
+  return state.merge({
+    groups: fromJS([]),
+    fetching: false
+  })
+}
+
+export function fetchSSLCertificatesSuccess(state, action) {
+  return state.merge({ sslCertificates: state.get('sslCertificates').merge(action.payload) })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -52,14 +64,16 @@ export function fetchSSLCertificatesFailure(state) {
 }
 
 export function uploadSSLCertificateSuccess(state, action) {
-  action.payload.id = Math.floor(Math.random() * 500) + 100
+  const { account, group, certificate } = action.payload
   const sslCertificates = state.get('sslCertificates')
-  return state.merge({ sslCertificates: sslCertificates.merge(sslCertificates.push(fromJS(action.payload))) })
+  return state.merge({ sslCertificates: sslCertificates
+    .merge(sslCertificates.push(fromJS(certificate).merge({ account, group })))
+  })
 }
 
 export function deleteSSLCertificateSuccess(state) {
   const sslCertificates = state.get('sslCertificates')
-  const itemIndex = sslCertificates.findIndex(item => item.get('id') === state.get('certificateToEdit'))
+  const itemIndex = sslCertificates.findIndex(item => item.get('cn') === state.get('certificateToEdit').get('cn'))
   return state.merge({ sslCertificates: sslCertificates.delete(itemIndex) })
 }
 
@@ -75,14 +89,30 @@ export function deleteSSLCertificateFailure(state) {
   })
 }
 
-export function certificateToEditChanged(state, action) {
-  return state.merge({ certificateToEdit: action.payload })
+export function fetchSSLCertificateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function certificateToEditReset(state) {
+  return state.merge({
+    certificateToEdit: {}
+  })
+}
+
+export function fetchSSLCertificateSuccess(state, action) {
+  const { account, group, certificate } = action.payload
+  return state.merge({ certificateToEdit: fromJS(certificate).merge({ account, group }) })
 }
 
 export function editSSLCertificateSuccess(state, action) {
+  const { account, group, certificate } = action.payload
   const sslCertificates = state.get('sslCertificates')
-  const itemIndex = sslCertificates.findIndex(item => item.get('id') === state.get('certificateToEdit'))
-  return state.merge({ sslCertificates: sslCertificates.update(itemIndex, item => item.merge(action.payload)) })
+  const itemIndex = sslCertificates.findIndex(item => item.get('cn') === state.get('certificateToEdit').get('cn'))
+  return state.merge({ sslCertificates: sslCertificates.update(itemIndex,
+    item => item.merge(fromJS(certificate).merge({ account, group }))
+  )})
 
 }
 
@@ -95,40 +125,65 @@ export function editSSLCertificateFailure(state) {
 export function activeCertificatesToggled(state, action) {
   let newActiveCertificates = state.get('activeCertificates')
   newActiveCertificates =  newActiveCertificates.includes(action.payload) ?
-    newActiveCertificates.filter(id => id !== action.payload) :
+    newActiveCertificates.filter(commonName => commonName !== action.payload) :
     newActiveCertificates.push(action.payload)
   return state.set('activeCertificates', newActiveCertificates)
 }
 
 export default handleActions({
+  SECURITY_MODAL_GROUPS_FETCH: mapReducers(fetchGroupsSuccess, fetchGroupsFailure),
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
+  SECURITY_SSL_CERTIFICATE_FETCH: mapReducers(fetchSSLCertificateSuccess, fetchSSLCertificateFailure),
   SECURITY_ACTIVE_CERTIFICATES_TOGGLED: activeCertificatesToggled,
   SECURITY_SSL_CERTIFICATES_UPLOAD: mapReducers(uploadSSLCertificateSuccess, uploadSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_DELETE: mapReducers(deleteSSLCertificateSuccess, deleteSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_EDIT: mapReducers(editSSLCertificateSuccess, editSSLCertificateFailure),
-  SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED: certificateToEditChanged
+  SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset
 }, initialState)
 
 // ACTIONS
-export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, opts => {
-  return new Promise(res => res(opts))
+export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
+  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response && { account, group, certificate: response.data })
 })
 
-export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, opts => {
-  return new Promise(res => res(opts))
+export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, (brand, account, group, cert) => {
+  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
 })
 
-export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, opts => {
-  return new Promise(res => res(opts))
+export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, data, cert) => {
+  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response && { account, group, certificate: response.data })
 })
 
-export const changeCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_CHANGED)
+export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, commonName) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
+    .then(response => response && { account, group, certificate: response.data })
+})
 
-export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, opts => {
-  return new Promise(res => res(opts))
+export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account) => {
+  // return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`)
+  //   .then(response => response && response.data.map(commonName => { return { group, commonName, account } }))
+  return Promise.resolve(fakeSSLCertificates)
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {
   return new Promise(res => res(opts))
 })
 
+export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)

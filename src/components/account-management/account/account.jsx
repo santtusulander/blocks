@@ -11,7 +11,7 @@ import UDNButton from '../../button.js'
 // import IconEdit from '../../icons/icon-edit.jsx'
 import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../../constants/account-management-options'
 
-import './details.scss'
+import './account.scss'
 
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
@@ -65,7 +65,7 @@ class AccountManagementAccountDetails extends React.Component {
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
     return (
       <div className="account-management-account-details">
-        <h2>Details</h2>
+        <h2>Account</h2>
         <form className='form-horizontal'>
 
           <div className="form-group">

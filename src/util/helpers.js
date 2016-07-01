@@ -167,15 +167,14 @@ export function getAnalyticsUrl(linkType, val, params) {
 
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
-  const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
+
   return {
     account: params.account,
     brand: params.brand,
     group: params.group,
     property: params.property,
     startDate: startDate.format('X'),
-    endDate: endDate.format('X'),
-    service_type: serviceType
+    endDate: endDate.format('X')
   }
 }
 

@@ -7,6 +7,12 @@
 
   height: 100%;
 
+  .modal-header {
+    h1 {
+      text-transform: capitalize;
+    }
+  }
+
   .modal-content {
     overflow-y: auto;
     height: 100%;
