@@ -4,6 +4,7 @@ import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { reset } from 'redux-form'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -54,8 +55,9 @@ export class Security extends React.Component {
       activeCertificates,
       activeModal,
       fetchAccount,
+      onDelete,
       sslCertificates,
-      securityActions: { toggleActiveCertificates, fetchSSLCertificate, deleteSSLCertificate },
+      securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       toDelete,
       toggleModal,
       params: { subPage }
@@ -102,10 +104,7 @@ export class Security extends React.Component {
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
             onCancel={() => toggleModal(null)}
-            onDelete={() => {
-              toggleModal(null)
-              deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
-            }}/>}
+            onDelete={() => onDelete(toDelete)}/>}
       </PageContainer>
     )
   }
@@ -118,6 +117,7 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
+  onDelete: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
@@ -142,10 +142,20 @@ function mapDispatchToProps(dispatch) {
   const fetchAccount = bindActionCreators(accountActionCreators, dispatch).fetchAccount
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const toggleModal = uiActions.toggleAccountManagementModal
+  function onDelete(toDelete) {
+    toggleModal(null)
+    securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+      .then(() => {
+        securityActions.resetCertificateToEdit()
+        dispatch(reset('certificateForm'))
+      })
+  }
   return {
     fetchAccount,
+    onDelete,
     securityActions: securityActions,
-    toggleModal: uiActions.toggleAccountManagementModal
+    toggleModal
   };
 }
 
