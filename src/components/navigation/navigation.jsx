@@ -7,7 +7,6 @@ import { generateNestedLink } from '../../util/helpers.js'
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
 import IconContent from '../icons/icon-content.jsx'
-import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconServices from '../icons/icon-services.jsx'
 import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
@@ -38,14 +37,6 @@ const Navigation = (props) => {
   return (
     <nav className='navigation-sidebar'>
       <ul>
-        {/* TODO: the logo should link to the level where they select accounts,
-        for CPs it should link to where they select groups.*/}
-        <li className='logo'>
-          <Link to={`/content/accounts/udn`}>
-            <IconEricsson />
-          </Link>
-        </li>
-
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <li>

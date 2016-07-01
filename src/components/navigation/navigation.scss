@@ -17,7 +17,7 @@ $dark-blue-navi: #070d1e;
 
   box-sizing: border-box;
   position: fixed;
-  top: 10px;
+  top: 70px;
   left: 0;
   z-index: 10000;
   height: 100vh;
@@ -83,12 +83,6 @@ $dark-blue-navi: #070d1e;
           }
 
         }
-      }
-    }
-
-    li.logo {
-      svg {
-        fill: $white;
       }
     }
   }

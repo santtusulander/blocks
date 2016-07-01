@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
+import IconEricsson from './icons/icon-ericsson.jsx'
 import {Breadcrumbs} from '../components/breadcrumbs/breadcrumbs.jsx'
 import UdnAdminToolbar from '../components/udn-admin-toolbar/udn-admin-toolbar.jsx'
 
@@ -108,6 +109,13 @@ class Header extends React.Component {
         </div>
 
         <Nav className='breadcrumb-nav'>
+          {/* TODO: the logo should link to the level where they select accounts,
+           for CPs it should link to where they select groups.*/}
+          <li className='logo'>
+            <Link to={`/content/accounts/udn`}>
+              <IconEricsson />
+            </Link>
+          </li>
 
         { this.props.isUDNAdmin && !contentActive && !analyticsActive &&
           <li>
