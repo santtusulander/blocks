@@ -37,7 +37,7 @@ describe('Cache', () => {
       cases: [[ "foo" ]],
       check_etag: 'aaa',
       honor_origin: 'bbb',
-      max_age: 'ccc',
+      max_age: 123,
       no_store: 'ddd'
     })
     let cache = TestUtils.renderIntoDocument(
@@ -47,7 +47,7 @@ describe('Cache', () => {
     cache.setState({
       checkEtag: 'aaa',
       honorOrigin: 'bbb',
-      maxAge: 'ccc',
+      maxAge: '123',
       noStore: 'ddd'
     })
     cache.saveChanges()

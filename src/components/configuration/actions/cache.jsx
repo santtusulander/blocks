@@ -44,7 +44,7 @@ class Cache extends React.Component {
       this.props.path,
       this.props.set.merge({
         check_etag: this.state.checkEtag,
-        max_age: this.state.maxAge,
+        max_age: parseInt(this.state.maxAge),
         no_store: this.state.noStore,
         honor_origin: this.state.honorOrigin
       })
@@ -125,7 +125,7 @@ class Cache extends React.Component {
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
-              Save Match
+              Save Action
             </Button>
           </ButtonToolbar>
 
