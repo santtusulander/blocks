@@ -6,6 +6,23 @@
   min-width: 1024px;
   border: 0;
 
+  li.logo {
+    height: 60px;
+    display: flex;
+
+    a {
+      flex: 1;
+      padding: 0;
+      margin-right: 15px;
+      align-items: center;
+      display: flex;
+    }
+
+    svg {
+      fill: $white;
+    }
+  }
+
   @include md {
     height: $md-header-total-height;
   }
