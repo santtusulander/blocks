@@ -107,9 +107,12 @@ export function fetchSSLCertificateSuccess(state, action) {
 }
 
 export function editSSLCertificateSuccess(state, action) {
+  const { account, group, certificate } = action.payload
   const sslCertificates = state.get('sslCertificates')
   const itemIndex = sslCertificates.findIndex(item => item.get('cn') === state.get('certificateToEdit').get('cn'))
-  return state.merge({ sslCertificates: sslCertificates.update(itemIndex, item => item.merge(action.payload)) })
+  return state.merge({ sslCertificates: sslCertificates.update(itemIndex,
+    item => item.merge(fromJS(certificate).merge({ account, group }))
+  )})
 
 }
 
@@ -151,7 +154,7 @@ export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELET
   return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
 })
 
-export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, cert, data) => {
+export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, data, cert) => {
   return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
     headers: {
       'Content-Type': 'application/json'
@@ -159,8 +162,8 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (
   }).then(response => response && { account, group, certificate: response.data })
 })
 
-export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, cert) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
+export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, commonName) => {
+  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
     .then(response => response && { account, group, certificate: response.data })
 })
 

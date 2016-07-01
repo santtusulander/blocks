@@ -43,28 +43,32 @@ class CertificateFormContainer extends Component {
     }
   }
   render() {
-    const { title, formValues, upload, edit, cancel, toggleModal, toEdit, ...formProps } = this.props
+    const { title, formValues, upload, toEdit, edit, cancel, toggleModal, ...formProps } = this.props
     const buttonFunctions = {
       onCancel: () => cancel(toggleModal),
       onSave: () => {
+        const cert = toEdit && toEdit.get('cn')
         const data = [
           'udn',
           Number(formValues.account),
           Number(formValues.group),
           { title: formValues.title, private_key: formValues.privateKey, certificate: formValues.certificate }
         ]
+        if(cert) {
+          data.push(cert)
+        }
         toggleModal(null)
-        toEdit ? edit(data) : upload(data)
+        cert ? edit(data) : upload(data)
       }
     }
     return (
       <Modal show={true} dialogClassName="soa-edit-form-sidebar">
         <Modal.Header>
           <h1>{title}</h1>
-          {toEdit && <p>{formProps.fields.title.value}</p>}
+          {!toEdit.isEmpty() && <p>{formProps.fields.title.value}</p>}
         </Modal.Header>
         <Modal.Body>
-          <CertificateForm { ...buttonFunctions }{ ...errors }{ ...formProps }/>
+          <CertificateForm editMode={!toEdit.isEmpty()}{ ...buttonFunctions }{ ...errors }{ ...formProps }/>
         </Modal.Body>
       </Modal>
     )
@@ -81,7 +85,7 @@ CertificateFormContainer.propTypes = {
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   title: PropTypes.string,
-  toEdit: PropTypes.bool,
+  toEdit: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func,
   upload: PropTypes.func
 }
@@ -95,7 +99,7 @@ export default reduxForm({
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
   const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
   return {
-    toEdit: !toEdit.isEmpty(),
+    toEdit,
     initialValues: {
       title: toEdit.get('title'),
       account: toEdit.get('account') || activeAccount,

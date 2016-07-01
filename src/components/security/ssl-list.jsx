@@ -40,8 +40,8 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
                 <td>{group}</td>
                 <td>
                   <ActionLinks
-                    onEdit={() => editCertificate('udn', account, group, commonName, cert.get('noEdit'))}
-                    onDelete={() => deleteCertificate('udn', account, group, commonName, cert.get('noEdit'))}/>
+                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, group, commonName)}
+                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, group, commonName)}/>
                 </td>
               </tr>
             )
