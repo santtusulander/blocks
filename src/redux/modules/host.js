@@ -40,11 +40,10 @@ const defaultPolicy = {policy_rules: [
 
 // REDUCERS
 
-export function createSuccess(state, action) {
-  const newHost = Immutable.fromJS(action.payload)
+export function createSuccess(state, { payload }) {
   return state.merge({
-    activeHost: newHost,
-    allHosts: state.get('allHosts').push(newHost.get('host_id'))
+    activeHost: payload,
+    allHosts: state.get('allHosts').push(payload.get('id'))
   })
 }
 
@@ -173,9 +172,9 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
       }
     }
   )
-  .then((res) => {
+  .then(res => {
     if(res) {
-      return id;
+      return Immutable.fromJS(res.data).set('id', id)
     }
   })
 })
