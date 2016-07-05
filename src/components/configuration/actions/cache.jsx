@@ -10,7 +10,7 @@ class Cache extends React.Component {
     super(props);
 
     this.state = {
-      checkEtag: props.set.get('check_etag'),
+      checkEtag: props.set.get('check_etag') || 'false',
       honorOrigin: props.set.get('honor_origin'),
       maxAge: props.set.get('max_age'),
       noStore: props.set.get('no_store'),
@@ -18,6 +18,7 @@ class Cache extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
+    this.handleEtagChange = this.handleEtagChange.bind(this)
     this.handleTTLTypeChange = this.handleTTLTypeChange.bind(this)
     this.handleToggleChange = this.handleToggleChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
@@ -28,6 +29,9 @@ class Cache extends React.Component {
       stateObj[key] = e.target.value
       this.setState(stateObj)
     }
+  }
+  handleEtagChange(value) {
+    this.setState({checkEtag: value})
   }
   handleTTLTypeChange(value) {
     this.setState({ttlType: value})
@@ -90,9 +94,13 @@ class Cache extends React.Component {
               <label>Honor e-Tag Values</label>
             </Col>
             <Col xs={4}>
-              <Toggle className="pull-right"
+              <Select className="input-select small-select"
+                onSelect={this.handleEtagChange}
                 value={this.state.checkEtag}
-                changeValue={this.handleToggleChange('checkEtag')}/>
+                options={[
+                  ['strong', 'Strong'],
+                  ['weak', 'Weak'],
+                  ['false', 'False']]}/>
             </Col>
           </Row>
 
