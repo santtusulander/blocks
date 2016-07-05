@@ -84,6 +84,7 @@ const AnalyticsViewControl = (props) => {
     }
   }
   const tier = property && 'property' || group && 'group' || account && 'account'
+  const activeItem = property || group || account
   return (
     <div className='analytics-view-control'>
 
@@ -95,10 +96,12 @@ const AnalyticsViewControl = (props) => {
           history={props.history}
           tier={tier}
           items={items}
-          value={property || group || account}
+          activeItem={activeItem}
           onSelect={val => props.history.pushState(null, getAnalyticsUrl(tier, val, props.params))}
           drillable={true}>
-          {property || group || account}
+          <h1>
+            {items.find(item => item[0] === activeItem) && items.find(item => item[0] === activeItem)[1]}
+          </h1>
         </AccountSelector>
       /* If account is not selected (Needs to be: UDN ADMIN)
         !props.params.account &&

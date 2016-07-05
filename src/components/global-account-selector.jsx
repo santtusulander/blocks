@@ -10,14 +10,20 @@ class AccountSelector extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false
+      open: false,
+      secondaryMenuActive: false
     }
+    this.selectOption = this.selectOption.bind(this)
   }
 
   selectOption(e) {
-    console.log(e.target)
+    const { tier, activeItem, onSelect, fetchSecondaryItems } = this.props
     if(e.target.id === 'name') {
-      this.props.onSelect(e.target.getAttribute('data-value'))
+      this.setState({ open: !this.state.open })
+      onSelect(e.target.getAttribute('data-value'))
+    } else {
+      this.setState({ secondaryMenuActive: true })
+      fetchSecondaryItems(tier, params)
     }
   }
 
@@ -30,38 +36,38 @@ class AccountSelector extends Component {
   }
 
   render() {
-    const { items, className, children, drillable } = this.props
-    const classname = classnames({ className })
+    const { ...menuProps } = this.props
+    const classname = classnames({ classname })
     return (
-      <div>
-       <Dropdown id="" className={classname} onSelect={this.selectOption} open={this.state.open}>
-        <span bsRole="toggle">
-          {children}
-        </span>
-        <span className="caret-container">
-          <IconSelectCaret/>
-        </span>
-        <Menu items={this.sortedOptions(items)} showCaret={drillable}/>
-      </Dropdown>
-    </div>
+      <Menu
+        {...menuProps}
+        toggle={() => this.setState({ open: !this.state.open })}
+        open={this.state.open}
+        onSelect={this.selectOption}/>
     )
   }
 }
 
-const Menu = ({ items, showCaret }) => {
+const Menu = ({ items, drillable, classname, children, onSelect, open, toggle }) => {
   return (
-      <Dropdown.Menu>
-        <Input className="header-search-input" type="text" placeholder="Search" />
-        {items.map((option, i) =>
-          <MenuItem key={i}>
-            <span id="name" data-value={option[0]}>{option[1]}</span>
-            {showCaret &&
-              <span className="caret-container" data-value={option[1]}>
-                <IconSelectCaret/>
-              </span>}
-          </MenuItem>
-        )}
-      </Dropdown.Menu>
+     <Dropdown id="" className={classname} onSelect={onSelect} open={open}>
+        <span bsRole="toggle" onClick={toggle}>{children}</span>
+        <span className="caret-container">
+          <IconSelectCaret/>
+        </span>
+        <Dropdown.Menu>
+          <Input className="header-search-input" type="text" placeholder="Search" />
+          {items.map((option, i) =>
+            <MenuItem key={i}>
+              <span id="name" data-value={option[0]}>{option[1]}</span>
+              {drillable &&
+                <span className="caret-container" data-value={option[1]}>
+                  <IconSelectCaret/>
+                </span>}
+            </MenuItem>
+          )}
+        </Dropdown.Menu>
+      </Dropdown>
   )
 }
 
@@ -81,7 +87,16 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-
+  function fetchSecondaryItems(tier, params) {
+    switch(tier) {
+      case 'account': fetchAccounts('udn')
+      case 'group': fetchHosts('udn', params.account, params.group, params.property)
+      case 'property': fetchAccounts('udn', params.account, params.group, params.property)
+    }
+  }
+  return {
+    fetchSecondaryItems:
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountSelector);
