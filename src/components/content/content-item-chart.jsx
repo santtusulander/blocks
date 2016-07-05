@@ -69,12 +69,11 @@ class ContentItemChart extends React.Component {
     const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
     const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
-    const daySlices = this.props.dailyTraffic ?
-      this.props.dailyTraffic.toJS().reduce(slices => {
-        slices.push((dayHours/rayHours)*2)
-        slices.push(1)
-        return slices
-      }, []) : []
+    const daySlices = this.props.dailyTraffic.toJS().reduce(slices => {
+      slices.push((dayHours/rayHours)*2)
+      slices.push(1)
+      return slices
+    }, [])
 
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
@@ -229,7 +228,7 @@ class ContentItemChart extends React.Component {
                 <g className="hover-info">
                   {pie(daySlices).reduce((slices, arc, i) => {
                     if(!(i % 2)) {
-                      const data = this.props.dailyTraffic && this.props.dailyTraffic.get(Math.floor(i / 2))
+                      const data = this.props.dailyTraffic.get(Math.floor(i / 2))
                       if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
                         slices.push(
                           <path key={i} className="day-arc" d={dayArc(arc)}
