@@ -2,15 +2,13 @@ import React, { PropTypes, Component } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 import classnames from 'classnames'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
 
 import IconSelectCaret from './icons/icon-select-caret.jsx'
 
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      secondaryMenuActive: false
-    }
   }
 
   selectOption(e) {
@@ -27,19 +25,16 @@ class AccountSelector extends Component {
   }
 
   render() {
-    const { items, className, children, secondaryMenu } = this.props
-    const cn = classnames({ className })
+    const { items, className, children, drillable } = this.props
+    const classname = classnames({ className })
     return (
       <div>
-       <Dropdown id="" className={cn} onSelect={this.selectOption} open={true}>
+       <Dropdown id="" className={classname} onSelect={this.selectOption} open={true}>
         {children}
         <span className="caret-container">
           <IconSelectCaret/>
         </span>
-        <Menu items={this.sortedOptions(items)} showCaret={secondaryMenu}/>
-      </Dropdown>
-      <Dropdown id="" className={cn} onSelect={this.selectOption} open={this.state.secondaryMenuActive}>
-        <Menu items={this.sortedOptions(items)} showCaret={false}/>
+        <Menu items={this.sortedOptions(items)} showCaret={drillable}/>
       </Dropdown>
     </div>
     )
@@ -72,4 +67,12 @@ AccountSelector.defaultProps = {
   items: List()
 }
 
-export default AccountSelector
+function mapStateToProps(state, ownProps) {
+
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountSelector);
