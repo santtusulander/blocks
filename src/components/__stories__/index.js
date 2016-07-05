@@ -4,7 +4,7 @@ import './export-email-form';
 import './export-file-form';
 import './loading-spinner'
 import './delete-modal'
-import './navigation'
+import './global-account-selector'
 
 
 //account management

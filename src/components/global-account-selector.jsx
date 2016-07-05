@@ -1,15 +1,20 @@
 import React, { PropTypes, Component } from 'react'
-import { Dropdown, MenuItem } from 'react-bootstrap'
+import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 import classnames from 'classnames'
 import { List } from 'immutable'
 
-import IconSelectCaret from '../components/icons/icon-select-caret.jsx'
-
-import './udn-admin-toolbar.scss'
+import IconSelectCaret from './icons/icon-select-caret.jsx'
 
 class AccountSelector extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      secondaryMenuActive: false
+    }
+  }
+
   selectOption(e) {
-    console.log(e.target.getAttribute('data-value'))
+    console.log(e.target)
   }
 
   sortedOptions(items) {
@@ -22,29 +27,43 @@ class AccountSelector extends Component {
   }
 
   render() {
-    const { items, className, children } = this.props
+    const { items, className, children, secondaryMenu } = this.props
     const cn = classnames({ className })
     return (
-     <Dropdown id="" className={cn} onSelect={this.selectOption} open={true}>
-      {children}
-      <span className="caret-container">
-        <IconSelectCaret/>
-      </span>
-      <Dropdown.Menu>
-        {this.sortedOptions(items).map((option, i) =>
-          <MenuItem key={i}>
-            <span data-value={option[0]}>{option[1]}</span>
-            <IconSelectCaret data-value={option[0]}/>
-          </MenuItem>
-        )}
-      </Dropdown.Menu>
-    </Dropdown>
+      <div>
+       <Dropdown id="" className={cn} onSelect={this.selectOption} open={true}>
+        {children}
+        <span className="caret-container">
+          <IconSelectCaret/>
+        </span>
+        <Menu items={this.sortedOptions(items)} showCaret={secondaryMenu}/>
+      </Dropdown>
+      <Dropdown id="" className={cn} onSelect={this.selectOption} open={this.state.secondaryMenuActive}>
+        <Menu items={this.sortedOptions(items)} showCaret={false}/>
+      </Dropdown>
+    </div>
     )
   }
 }
 
+const Menu = ({ items, showCaret }) => {
+  return (
+      <Dropdown.Menu>
+        <Input className="header-search-input" type="text" placeholder="Search" />
+        {items.map((option, i) =>
+          <MenuItem key={i}>
+            <span data-value={option[0]}>{option[1]}</span>
+            {showCaret &&
+              <span className="caret-container" data-value={option[1]}>
+                <IconSelectCaret/>
+              </span>}
+          </MenuItem>
+        )}
+      </Dropdown.Menu>
+  )
+}
+
 AccountSelector.propTypes = {
-  children: PropTypes.array,
   className: PropTypes.string,
   items: PropTypes.instanceOf(List)
 }
