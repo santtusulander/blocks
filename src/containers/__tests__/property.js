@@ -180,7 +180,7 @@ const fakeHost = Immutable.fromJS({
           "edge_configuration": {
             "published_name": "examplffffffe.com",
             "origin_host_name": "sdrgfdg.com",
-            "origin_host_port": "3333"
+            "origin_host_port": 3333
           },
           "configuration_status": {
             "last_edited_by": "Stan Laurel",

@@ -20,7 +20,7 @@ describe('ConfigurationDetails', () => {
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",
-          origin_host_port: "111",
+          origin_host_port: 111,
           host_header: "origin_host_name",
           origin_path_append: "ddd"
         })}/>
@@ -41,7 +41,7 @@ describe('ConfigurationDetails', () => {
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",
-          origin_host_port: "111",
+          origin_host_port: 111,
           host_header: "origin_host_name",
           origin_path_append: "ddd"
         })}/>
