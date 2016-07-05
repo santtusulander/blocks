@@ -20,7 +20,7 @@ import ContentTransition from './transitions/content'
 
 /* TODO: define routes here instead of 'fixed' paths */
 const routes = {
-  analytics: '/v2-analytics',
+  analytics: '/analytics',
   analyticsBrand: ':brand',
   analyticsAccount: ':brand/:account',
   analyticsGroup: ':brand/:account/:group',

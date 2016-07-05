@@ -42,8 +42,8 @@ export class Groups extends React.Component {
     const builtPath = `${brand}/${account}`
     const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
     const analyticsURLBuilder = (...groupID) => {
-      return groupID[0] ? `/v2-analytics/${builtPath}/${groupID[0]}`
-        : `/v2-analytics/${brand}/${account}`
+      return groupID[0] ? `/analytics/${builtPath}/${groupID[0]}`
+        : `/analytics/${brand}/${account}`
     }
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (

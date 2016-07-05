@@ -47,7 +47,7 @@ export class Accounts extends React.Component {
     const filteredMetrics = filterMetricsByAccounts(metrics, filteredAccounts)
 
     const nextPageURLBuilder = (accountID) => `/content/groups/${brand}/${accountID}`
-    const analyticsURLBuilder = (accountID) => `/v2-analytics/${brand}/${accountID}`
+    const analyticsURLBuilder = (accountID) => `/analytics/${brand}/${accountID}`
     return (
       <ContentItems
         analyticsURLBuilder={analyticsURLBuilder}
