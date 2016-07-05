@@ -46,7 +46,8 @@
     }
   }
 
-  .hover-info {
+  .hover-info,
+  .hidden-slices {
     opacity: 0;
     transition: opacity 200ms;
   }

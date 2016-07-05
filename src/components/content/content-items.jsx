@@ -194,7 +194,8 @@ class ContentItems extends React.Component {
                       avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
                       fetchingMetrics: this.props.fetchingMetrics,
                       chartWidth: scaledWidth.toString(),
-                      barMaxHeight: (scaledWidth / 7).toString()
+                      barMaxHeight: (scaledWidth / 7).toString(),
+                      showSlices: this.props.showSlices
                     }
                     return (
                       <ContentItem key={id}
@@ -274,6 +275,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   showAnalyticsLink: React.PropTypes.bool,
+  showSlices: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),

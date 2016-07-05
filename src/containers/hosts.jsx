@@ -102,6 +102,7 @@ export class Hosts extends React.Component {
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}
+        showSlices={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
