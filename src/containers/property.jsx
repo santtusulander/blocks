@@ -371,8 +371,6 @@ export class Property extends React.Component {
                   changeDateRange={this.changeDateRange}
                   availableRanges={[
                     DateRanges.LAST_28,
-                    DateRanges.TODAY,
-                    DateRanges.YESTERDAY,
                     DateRanges.CUSTOM_TIMERANGE
                   ]}/>
               </h3>
