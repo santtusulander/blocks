@@ -167,8 +167,11 @@ module.exports = (
       <Route path=":brand" component={Configurations}/>
     </Route>
     <Route path="/security">
-      <IndexRedirect to="/security/ssl-certificate"/>
-      <Route path=":subPage" component={Security}/>
+      <IndexRedirect to="ssl-certificate"/>
+      <Route path=":subPage">
+        <Route path=":account/:group" component={Security}/>
+        <Route path=":account" component={Security}/>
+      </Route>
     </Route>
     <Route path="/services" component={Services}/>
 
