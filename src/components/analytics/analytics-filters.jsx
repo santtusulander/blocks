@@ -134,8 +134,11 @@ const AnalyticsFilters = (props) => {
           Status Codes
           </div>
           <FilterChecklistDropdown
-               options={ props.filterOptions.get('statusCodes')}
-               handleCheck={ (val) => { console.log(val.toJS()); props.onFilterChange('statusCodes', val.toJS())} }
+            options={props.filterOptions.get('statusCodes')}
+            values={props.filters.get('statusCodes')}
+            handleCheck={val => {
+              console.log(val.toJS());
+              props.onFilterChange('statusCodes', val.toJS())}}
           />
         </div>
       }
