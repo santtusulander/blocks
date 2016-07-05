@@ -21,7 +21,8 @@ export class Accounts extends React.Component {
   componentWillMount() {
     this.props.fetchData(
       this.props.metrics,
-      this.props.accounts)
+      this.props.accounts,
+      this.props.dailyTraffic)
   }
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
@@ -53,6 +54,7 @@ export class Accounts extends React.Component {
         brand={brand}
         className="groups-container"
         contentItems={filteredAccounts}
+        dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
@@ -74,6 +76,7 @@ Accounts.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -89,6 +92,7 @@ Accounts.propTypes = {
 Accounts.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   metrics: Immutable.List()
 }
 
@@ -96,6 +100,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     accounts: state.account.get('allAccounts'),
+    dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
@@ -114,7 +119,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   return {
-    fetchData: (metrics, accounts) => {
+    fetchData: (metrics, accounts, dailyTraffic) => {
       if(accounts.isEmpty()) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
@@ -122,6 +127,13 @@ function mapDispatchToProps(dispatch, ownProps) {
       if(metrics.isEmpty()) {
         metricsActions.startAccountFetching()
         metricsActions.fetchAccountMetrics(metricsOpts)
+      }
+      if(dailyTraffic.isEmpty()) {
+        // TODO: Replace metrics endpoint with traffic endpoint after 0.7
+        // metricsActions.startAccountFetching()
+        // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
+        //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
+        metricsActions.fetchDailyAccountTraffic(metricsOpts)
       }
     },
     accountActions: accountActions,
