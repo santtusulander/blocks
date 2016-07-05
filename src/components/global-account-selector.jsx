@@ -1,36 +1,56 @@
-import React, { Component } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
-import { List, Map } from 'immutable'
+import classnames from 'classnames'
+import { List } from 'immutable'
 
-import Select from '../select.jsx'
+import IconSelectCaret from '../components/icons/icon-select-caret.jsx'
+
 import './udn-admin-toolbar.scss'
 
 class AccountSelector extends Component {
-  render() {
-    const accountOptions = accounts.map( account => [account.get('id'), account.get('name')])
+  selectOption(e) {
+    console.log(e.target.getAttribute('data-value'))
+  }
+
+  sortedOptions(items) {
+    return items.map( item => [item.get('id'), item.get('name')])
       .sort( (a,b) => {
         if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
         if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
         return 0
       })
+  }
+
+  render() {
+    const { items, className, children } = this.props
+    const cn = classnames({ className })
     return (
-     <Dropdown id="" className={className} onSelect={this.selectOption} open>
-        <Dropdown.Menu>
-          {this.props.options.map((options, i) =>
-            <MenuItem key={i} data-value={options[0]}
-              className={this.props.value === options[0] && 'hidden'}>
-              {options[1]}
-            </MenuItem>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
+     <Dropdown id="" className={cn} onSelect={this.selectOption} open={true}>
+      {children}
+      <span className="caret-container">
+        <IconSelectCaret/>
+      </span>
+      <Dropdown.Menu>
+        {this.sortedOptions(items).map((option, i) =>
+          <MenuItem key={i}>
+            <span data-value={option[0]}>{option[1]}</span>
+            <IconSelectCaret data-value={option[0]}/>
+          </MenuItem>
+        )}
+      </Dropdown.Menu>
+    </Dropdown>
     )
   }
 }
 
-UdnAdminToolbar.defaultProps = {
-  accounts: List(),
-  activeAccount: Map()
+AccountSelector.propTypes = {
+  children: PropTypes.array,
+  className: PropTypes.string,
+  items: PropTypes.instanceOf(List)
+}
+
+AccountSelector.defaultProps = {
+  items: List()
 }
 
 export default AccountSelector
