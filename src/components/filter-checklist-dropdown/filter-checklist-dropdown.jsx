@@ -11,7 +11,6 @@ export class FilterChecklistDropdown extends React.Component {
 
     this.state = {
       dropdownOpen: false,
-      checkedResults: this.props.options.filter(item => !!item.get('checked')),
       filteredResults: this.props.options,
       filterValue: ''
     }
@@ -26,17 +25,12 @@ export class FilterChecklistDropdown extends React.Component {
     this.setState({ dropdownOpen: !val })
   }
 
-  handleCheck(option) {
-    let checked = this.state.checkedResults
-
-    let newlist = checked.indexOf(option) === -1 ? checked.push(option) : checked.delete(checked.indexOf(option))
-
-    this.setState({ checkedResults: newlist })
-    const vals = newlist.map( option => {
-      return option.get('value')
-    })
-
-    this.props.handleCheck(vals)
+  handleCheck(optionVal) {
+    const valIndex = this.props.values.indexOf(optionVal)
+    const newVals = valIndex === -1 ?
+      this.props.values.push(optionVal) :
+      this.props.values.delete(valIndex)
+    this.props.handleCheck(newVals)
   }
 
   handleFilter() {
@@ -52,21 +46,30 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleClear() {
-    this.setState({
-      checkedResults: Immutable.List()
-    }, () => this.props.handleCheck(this.state.checkedResults))
+    this.props.handleCheck(Immutable.List())
   }
 
   getLabel() {
-    return this.state.checkedResults.size > 1 ? `${this.state.checkedResults.first().get('label')} and ${this.state.checkedResults.size - 1} more` : this.state.checkedResults.first().get('label')
+    const numVals = this.props.values.size
+    const labels = this.props.options
+      .filter(opt => this.props.values.indexOf(opt.get('value')) !== -1)
+      .map(opt => opt.get('label'))
+    if(!numVals || !labels.size) {
+      return 'Please Select'
+    }
+    else if(numVals === 1) {
+      return labels.first()
+    }
+    else {
+      return `${labels.first()} and ${numVals - 1} more`
+    }
   }
 
   render() {
 
-    const { dropdownOpen, filteredResults, filterValue, checkedResults } = this.state
+    const { dropdownOpen, filteredResults, filterValue } = this.state
 
     let itemList;
-    let label     = checkedResults.size ? this.getLabel() : 'Please Select'
     let className = 'dropdown-select dropdown-filter dropdown-checklist btn-block'
 
     if(this.props.className) {
@@ -82,8 +85,8 @@ export class FilterChecklistDropdown extends React.Component {
             <Input type="checkbox"
                    label={option.get('label')}
                    value={option.get('value')}
-                   checked={checkedResults.indexOf(option) !== -1}
-                   onChange={() => this.handleCheck(option)}/>
+                   checked={this.props.values.indexOf(option.get('value')) !== -1}
+                   onChange={() => this.handleCheck(option.get('value'))}/>
           </li>
         )
       })
@@ -102,7 +105,7 @@ export class FilterChecklistDropdown extends React.Component {
                   className={className}>
           <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
-            {label}
+            {this.getLabel()}
           </Dropdown.Toggle>
           {dropdownOpen &&
           <div className="filter-container">
@@ -135,8 +138,15 @@ export class FilterChecklistDropdown extends React.Component {
 
 FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
+  className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
-  options: React.PropTypes.instanceOf(Immutable)
+  options: React.PropTypes.instanceOf(Immutable.List),
+  values: React.PropTypes.instanceOf(Immutable.List)
+}
+
+FilterChecklistDropdown.defaultProps = {
+  options: Immutable.List(),
+  values: Immutable.List()
 }
 
 module.exports = FilterChecklistDropdown
