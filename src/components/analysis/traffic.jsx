@@ -114,7 +114,7 @@ class AnalysisTraffic extends React.Component {
                             stacked={true}
                             showLegend={true}
                             showTooltip={false}
-                            yAxisCustomFormat={formatBitsPerSecond}
+                            yAxisCustomFormat={(val) => formatBitsPerSecond(val, true)}
                             width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
           }
         </div>
@@ -124,7 +124,7 @@ class AnalysisTraffic extends React.Component {
             <div>Loading...</div> :
             <AnalysisByLocation
               dataKey="average_bits_per_second"
-              tooltipCustomFormat={formatBitsPerSecond}
+              tooltipCustomFormat={(val) => formatBitsPerSecond(val, true)}
               timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 1.6}
