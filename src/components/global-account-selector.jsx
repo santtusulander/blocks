@@ -9,19 +9,24 @@ import IconSelectCaret from './icons/icon-select-caret.jsx'
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      open: false
+    }
   }
 
   selectOption(e) {
     console.log(e.target)
+    if(e.target.id === 'name') {
+      this.props.onSelect(e.target.getAttribute('data-value'))
+    }
   }
 
   sortedOptions(items) {
-    return items.map( item => [item.get('id'), item.get('name')])
-      .sort( (a,b) => {
-        if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
-        if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
-        return 0
-      })
+    return items.sort((a,b) => {
+      if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
+      if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
+      return 0
+    })
   }
 
   render() {
@@ -29,8 +34,10 @@ class AccountSelector extends Component {
     const classname = classnames({ className })
     return (
       <div>
-       <Dropdown id="" className={classname} onSelect={this.selectOption} open={true}>
-        {children}
+       <Dropdown id="" className={classname} onSelect={this.selectOption} open={this.state.open}>
+        <span bsRole="toggle">
+          {children}
+        </span>
         <span className="caret-container">
           <IconSelectCaret/>
         </span>
@@ -47,7 +54,7 @@ const Menu = ({ items, showCaret }) => {
         <Input className="header-search-input" type="text" placeholder="Search" />
         {items.map((option, i) =>
           <MenuItem key={i}>
-            <span data-value={option[0]}>{option[1]}</span>
+            <span id="name" data-value={option[0]}>{option[1]}</span>
             {showCaret &&
               <span className="caret-container" data-value={option[1]}>
                 <IconSelectCaret/>
@@ -68,7 +75,9 @@ AccountSelector.defaultProps = {
 }
 
 function mapStateToProps(state, ownProps) {
+  return {
 
+  }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {

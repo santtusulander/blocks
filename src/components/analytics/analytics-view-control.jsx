@@ -3,8 +3,8 @@ import Immutable from 'immutable'
 import { Link } from 'react-router'
 import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
-import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
-
+//import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
+import AccountSelector from '../global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
@@ -52,10 +52,13 @@ const tabs = [
  */
 const AnalyticsViewControl = (props) => {
 
-  const accountOptions  = createOptions(props.accounts)
-  const groupOptions    = createOptions(props.groups)
-  const propertyOptions = createPropertyOptions(props.properties)
-
+  const {
+    account,
+    group,
+    property } = props.params
+  const items  = property ?
+    createPropertyOptions(props.properties) :
+    createOptions(group ? props.groups : props.accounts)
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
@@ -69,10 +72,10 @@ const AnalyticsViewControl = (props) => {
       if(active.hideHierarchy) {
         title = active.label
       }
-      else if(props.params.property) {
+      else if(property) {
         title = `Property ${active.label}`
       }
-      else if(props.params.group) {
+      else if(group) {
         title = `Group ${active.label}`
       }
       else {
@@ -80,13 +83,24 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-
+  const tier = property && 'property' || group && 'group' || account && 'account'
   return (
     <div className='analytics-view-control'>
 
       <p>{title}</p>
 
-      { /* If account is not selected (Needs to be: UDN ADMIN) */
+      {
+
+        <AccountSelector
+          history={props.history}
+          tier={tier}
+          items={items}
+          value={property || group || account}
+          onSelect={val => props.history.pushState(null, getAnalyticsUrl(tier, val, props.params))}
+          drillable={true}>
+          {property || group || account}
+        </AccountSelector>
+      /* If account is not selected (Needs to be: UDN ADMIN)
         !props.params.account &&
         <HeadingDropdown
           className="heading-dropdown"
@@ -120,7 +134,7 @@ const AnalyticsViewControl = (props) => {
         value={props.params.property}
         type={'Property'}
       />
-      }
+      */}
 
       <ButtonToolbar className="pull-right">
         <Button
