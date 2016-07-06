@@ -9,18 +9,6 @@ import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
-function createOptions(opts) {
-  return opts.map(opt => {
-    return [opt.get('id').toString(), opt.get('name')]
-  })
-}
-
-function createPropertyOptions(opts) {
-  return opts.map(opt => {
-    return [opt, opt]
-  })
-}
-
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview' },
   { key: 'visitors', label: 'Unique Visitors' },

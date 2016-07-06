@@ -18,7 +18,8 @@ class AccountSelector extends Component {
     this.account = null
     this.group = null
     this.state = {
-      open: false
+      open: false,
+      searchValue: ''
     }
     this.selectOption = this.selectOption.bind(this)
   }
@@ -42,9 +43,13 @@ class AccountSelector extends Component {
     this.setInitialTier(params)
     const paramArray = Object.keys(params).map(param => {
       this[param] = params[param]
-      return params[param]}
-    )
+      return params[param]
+    })
     this.props.fetchItems(tier, ...paramArray)
+  }
+
+  onChange(e) {
+    this.setState({ searchValue: e.target.value });
   }
 
   selectOption(e) {
@@ -67,7 +72,7 @@ class AccountSelector extends Component {
             break
         }
         break
-      default:
+      case 'item-bg':
         /**
          * Caret pressed -> should go one tier deeper
          */
@@ -86,7 +91,10 @@ class AccountSelector extends Component {
   }
 
   sortedOptions(items) {
-    return items.sort((a,b) => {
+    const { searchValue } = this.state
+    const itemsToSort = searchValue !== '' ?
+      items.filter(item => item[1].toLowerCase().includes(searchValue.toLowerCase())) : items
+    return itemsToSort.sort((a,b) => {
       if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
       if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
       return 0
@@ -94,19 +102,24 @@ class AccountSelector extends Component {
   }
 
   render() {
-    const { ...menuProps } = this.props
+    const { searchValue, open } = this.state
+    const { items, ...other } = this.props
+    const menuProps = Object.assign(other, {
+      items: this.sortedOptions(items),
+      searchValue,
+      open,
+      toggle: () => this.setState({ open: !this.state.open }),
+      onSelect: this.selectOption,
+      onSearch: e => this.setState({ searchValue: e.target.value })
+    })
     const classname = classnames({ classname })
     return (
-      <Menu
-        {...menuProps}
-        toggle={() => this.setState({ open: !this.state.open })}
-        open={this.state.open}
-        onSelect={this.selectOption}/>
+      <Menu { ...menuProps }/>
     )
   }
 }
 
-const Menu = ({ items, drillable, classname, children, onSelect, open, toggle, previousTier }) => {
+const Menu = ({ items, drillable, classname, children, onSelect, open, toggle, previousTier, searchValue, onSearch}) => {
   return (
      <Dropdown id="" className={classname} onSelect={onSelect} open={open}>
         <span bsRole="toggle" onClick={toggle}>{children}</span>
@@ -115,13 +128,18 @@ const Menu = ({ items, drillable, classname, children, onSelect, open, toggle, p
         </span>
         <Dropdown.Menu>
           <MenuItem>
-            <Input className="header-search-input" type="text" placeholder="Search" />
+            <Input
+              className="header-search-input"
+              type="text"
+              placeholder="Search"
+              value={searchValue}
+              onChange={onSearch}/>
           </MenuItem>
           <MenuItem id="back">
             Back to {previousTier}
           </MenuItem>
           {items.map((option, i) =>
-            <MenuItem key={i} data-value={option[0]}>
+            <MenuItem key={i} data-value={option[0]} id="item-bg">
               <span id="name" data-value={option[0]}>{option[1]}</span>
               {drillable &&
                 <span className="caret-container">
