@@ -38,8 +38,11 @@ const routes = {
   analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content',
-
-  accountManagement: '/account-management'
+  accountManagement: '/account-management',
+  services: '/services',
+  security: '/security',
+  support: '/services',
+  configuration: '/services'
 }
 
 /* helper to get route by name */
@@ -121,7 +124,7 @@ module.exports = (
         <Route path=":brand">
           <Route path=":account">
             <Route path=":group">
-              <Route path="property" component={Property}/>
+              <Route path=":property" component={Property}/>
             </Route>
           </Route>
         </Route>
@@ -131,7 +134,7 @@ module.exports = (
         <Route path=":brand">
           <Route path=":account">
             <Route path=":group">
-              <Route path="property" component={Configuration}/>
+              <Route path=":property" component={Configuration}/>
             </Route>
           </Route>
         </Route>

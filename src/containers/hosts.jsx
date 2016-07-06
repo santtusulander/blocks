@@ -56,14 +56,11 @@ export class Hosts extends React.Component {
         name: host
       })
     })
-    const builtPath = `${brand}/${account}/${group}/property?name=`
     const nextPageURLBuilder = (property) => {
-      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
-      return `/content/property/${builtPath}${encoded}`
+      return `/content/property/${brand}/${account}/${group}/${property}`
     }
     const configURLBuilder = (property) => {
-      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
-      return `/content/configuration/${builtPath}${encoded}`
+      return `/content/configuration/${brand}/${account}/${group}/${property}`
     }
     const analyticsPath = `${brand}/${account}/${group}/property?property=`
     const analyticsURLBuilder = (...property) => {
