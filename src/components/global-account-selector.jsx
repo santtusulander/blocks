@@ -10,12 +10,12 @@ import { fetchHosts } from '../redux/modules/host'
 
 import IconSelectCaret from './icons/icon-select-caret.jsx'
 
+let tier = null
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
-    this.accountId = null
-    this.groupId = null
-    this.tier = null
+    this.account = null
+    this.group = null
     this.state = {
       open: false
     }
@@ -23,32 +23,50 @@ class AccountSelector extends Component {
   }
 
   componentWillMount() {
+    this.fetchByTier()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params !== this.props.params) {
+      this.fetchByTier()
+    }
+  }
+
+  getInitialTier() {
     const { property, group, account } = this.props.params
-    const tier = property && 'property' || group && 'group' || account && 'account'
-    this.tier = tier
-    this.props.fetchItems(tier, this.props.params)
+    return property && 'property' || group && 'group' || account && 'account'
+  }
+
+  fetchByTier() {
+    tier = this.getInitialTier()
+    const params = Object.keys(this.props.params).map(param => {
+      this[param] = this.props.params[param]
+      return this.props.params[param]}
+    )
+    this.props.fetchItems(tier, ...params)
   }
 
   selectOption(e) {
     const { onSelect, fetchItems } = this.props
-    console.log(this.tier)
     if(e.target.id === 'name') {
       this.setState({ open: !this.state.open })
       onSelect(e.target.getAttribute('data-value'))
+      tier = this.getInitialTier()
     } else {
-      switch(this.tier) {
-        case 'property':
-          fetchItems(this.tier, this.accountId, this.groupId)
-          break
+      /**
+       * Caret pressed -> should go one tier deeper
+       */
+      switch(tier) {
         case 'group':
-          this.tier = 'property'
-          this.groupId = e.target.getAttribute('data-value')
-          fetchItems(this.tier, this.accountId)
+          tier = 'property'
+          console.log('group caret case: ', e.target)
+          this.group = e.target.getAttribute('data-value')
+          fetchItems(tier, 'udn', this.account, this.group)
           break
         case 'account':
-          this.tier = 'group'
-          this.accountId = e.target.getAttribute('data-value')
-          fetchItems(this.tier)
+          tier = 'group'
+          this.account = e.target.getAttribute('data-value')
+          fetchItems(tier, 'udn', this.account)
           break
       }
 
@@ -76,7 +94,7 @@ class AccountSelector extends Component {
   }
 }
 
-const Menu = ({ items, drillable, classname, children, onSelect, open, toggle }) => {
+const Menu = ({ items, drillable, classname, children, onSelect, open, toggle, previousTier }) => {
   return (
      <Dropdown id="" className={classname} onSelect={onSelect} open={open}>
         <span bsRole="toggle" onClick={toggle}>{children}</span>
@@ -84,12 +102,17 @@ const Menu = ({ items, drillable, classname, children, onSelect, open, toggle })
           <IconSelectCaret/>
         </span>
         <Dropdown.Menu>
-          <Input className="header-search-input" type="text" placeholder="Search" />
+          <MenuItem>
+            <Input className="header-search-input" type="text" placeholder="Search" />
+          </MenuItem>
+          <MenuItem id="back">
+            Back to {previousTier}
+          </MenuItem>
           {items.map((option, i) =>
-            <MenuItem key={i}>
+            <MenuItem key={i} data-value={option[0]}>
               <span id="name" data-value={option[0]}>{option[1]}</span>
               {drillable &&
-                <span className="caret-container" data-value={option[1]}>
+                <span className="caret-container">
                   <IconSelectCaret/>
                 </span>}
             </MenuItem>
@@ -108,17 +131,15 @@ AccountSelector.defaultProps = {
   items: List()
 }
 
-function mapStateToProps(state, ownProps) {
-  const { property, group, account } = ownProps.params
-  const tier = property && 'property' || group && 'group' || account && 'account'
+function mapStateToProps(state) {
   let items = []
   switch(tier) {
     case 'property':
-      console.log(state[tier].toJS())
-      items = state[tier].get('allHosts').map(property => [property, property]).toJS()
+      console.log(state.host.toJS())
+      items = state.host.get('allHosts').map(property => [property, property]).toJS()
       break
     case 'group':
-      console.log(state[tier].toJS())
+      //console.log(state[tier].toJS())
       items = state[tier].get('allGroups').map(group => [group.get('id'), group.get('name')]).toJS()
       break
     case 'account':
@@ -127,19 +148,22 @@ function mapStateToProps(state, ownProps) {
       break
   }
   return {
-    items,
-    tier
+    items
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  function fetchItems(tier, ...IDs) {
+  function fetchItems(tier, ...params) {
+    console.log(tier)
     switch(tier) {
-      case 'property': dispatch(fetchHosts('udn', ...IDs))
+      case 'property':
+        dispatch(fetchHosts(...params))
         break
-      case 'group': dispatch(fetchGroups('udn', ...IDs))
+      case 'group':
+        dispatch(fetchGroups(...params))
         break
-      case 'account': dispatch(fetchAccounts('udn', ...IDs))
+      case 'account':
+        dispatch(fetchAccounts(...params))
         break
     }
   }
