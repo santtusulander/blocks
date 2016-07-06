@@ -24,56 +24,63 @@ class AccountSelector extends Component {
   }
 
   componentWillMount() {
-    this.fetchByTier()
+    this.fetchByTier(this.props.params)
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.params !== this.props.params) {
-      this.fetchByTier()
+      this.fetchByTier(nextProps.params)
     }
   }
 
-  setInitialTier() {
-    const { property, group, account } = this.props.params
+  setInitialTier(params) {
+    const { property, group, account } = params
     tier = property && 'property' || group && 'group' || account && 'account'
   }
 
-  fetchByTier() {
-    this.setInitialTier()
-    const params = Object.keys(this.props.params).map(param => {
-      this[param] = this.props.params[param]
-      return this.props.params[param]}
+  fetchByTier(params) {
+    this.setInitialTier(params)
+    const paramArray = Object.keys(params).map(param => {
+      this[param] = params[param]
+      return params[param]}
     )
-    this.props.fetchItems(tier, ...params)
+    this.props.fetchItems(tier, ...paramArray)
   }
 
   selectOption(e) {
-    const { onSelect, fetchItems, params: {account } } = this.props
-    if(e.target.id === 'name') {
-      this.setState({ open: !this.state.open })
-      onSelect(e.target.getAttribute('data-value'))
-      this.setInitialTier()
-    } else if(e.target.id === 'back') {
-      switch(tier) {
-        case 'property': fetchItems('group', 'udn', this.account || account)
-          break
-        case 'group': fetchItems('account', 'udn')
-          break
-      }
-    } else {
-      /**
-       * Caret pressed -> should go one tier deeper
-       */
-      switch(tier) {
-        case 'group':
-          this.group = e.target.getAttribute('data-value')
-          fetchItems('property', 'udn', this.account, this.group)
-          break
-        case 'account':
-          this.account = e.target.getAttribute('data-value')
-          fetchItems('group', 'udn', this.account)
-          break
-      }
+    const { onSelect, fetchItems, params: { account, group } } = this.props
+    switch(e.target.id) {
+      case 'name':
+        this.setState({ open: !this.state.open })
+        onSelect(
+          e.target.getAttribute('data-value'),
+          tier,
+          { brand: 'udn', account: this.account || account, group: this.group || group }
+        )
+        break
+      case 'back':
+        switch(tier) {
+          case 'property':
+            fetchItems('group', 'udn', this.account || account)
+            break
+          case 'group': fetchItems('account', 'udn')
+            break
+        }
+        break
+      default:
+        /**
+         * Caret pressed -> should go one tier deeper
+         */
+        switch(tier) {
+          case 'group':
+            this.group = e.target.getAttribute('data-value')
+            fetchItems('property', 'udn', this.account, this.group)
+            break
+          case 'account':
+            this.account = e.target.getAttribute('data-value')
+            fetchItems('group', 'udn', this.account)
+            break
+        }
 
     }
   }

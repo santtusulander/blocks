@@ -80,7 +80,6 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-  const tier = property && 'property' || group && 'group' || account && 'account'
   const activeItem = property || group || account
   return (
     <div className='analytics-view-control'>
@@ -93,7 +92,7 @@ const AnalyticsViewControl = (props) => {
           history={props.history}
           params={props.params}
           activeItem={activeItem}
-          onSelect={val => props.history.pushState(null, getAnalyticsUrl(tier, val, props.params))}
+          onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
           drillable={true}>
           <h1>
             {activeItem}
