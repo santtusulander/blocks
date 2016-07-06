@@ -69,6 +69,26 @@ const AnalyticsViewControl = (props) => {
     }
   }
   const activeItem = property || group || account
+  const topBarTexts = {
+    property: 'Back to Groups',
+    group: 'Account Report',
+    account: 'UDN Admin'
+  }
+
+  const topBarFunc = (tier, fetchItems, IDs) => {
+    const { account } = IDs
+    switch(tier) {
+      case 'property':
+        fetchItems('group', 'udn', account)
+        break
+      case 'group':
+        props.history.pushState(null, getAnalyticsUrl('account', account, { brand: 'udn' }))
+        break
+      case 'account':
+        props.history.pushState(null, getAnalyticsUrl('brand', 'udn', {}))
+        break
+    }
+  }
   return (
     <div className='analytics-view-control'>
 
@@ -77,9 +97,10 @@ const AnalyticsViewControl = (props) => {
       {
 
         <AccountSelector
-          history={props.history}
           params={props.params}
           activeItem={activeItem}
+          topBarTexts={topBarTexts}
+          topBarAction={topBarFunc}
           onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
           drillable={true}>
           <h1>

@@ -145,7 +145,6 @@ export function generateNestedLink(base, linkParts) {
 export function getAnalyticsUrl(linkType, val, params) {
   const { brand, account, group } = params
   let url
-
   switch(linkType) {
     case 'brand':
       url = `${getRoute('analytics')}/${val}`

@@ -1,6 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import classnames from 'classnames'
-import { List } from 'immutable'
 import { connect } from 'react-redux'
 
 import {
@@ -52,8 +50,11 @@ class AccountSelector extends Component {
   }
 
   selectOption(e) {
-    const { onSelect, fetchItems, params: { account, group } } = this.props
+    const { onSelect, topBarAction, fetchItems, params: { account, group, property } } = this.props
     switch(e.target.id) {
+      /**
+       * Item name pressed -> should route to that item
+       */
       case 'name':
         this.setState({ open: !this.state.open })
         onSelect(
@@ -62,14 +63,18 @@ class AccountSelector extends Component {
           { brand: 'udn', account: this.account || account, group: this.group || group }
         )
         break
-      case 'back':
-        switch(tier) {
-          case 'property':
-            fetchItems('group', 'udn', this.account || account)
-            break
-          case 'group': fetchItems('account', 'udn')
-            break
-        }
+      case 'top-bar':
+      /**
+       * top bar pressed -> some action from parent launched
+       */
+        topBarAction(
+          tier,
+          fetchItems,
+          {
+            account: this.account || account,
+            group: this.group || group,
+            property: this.property || property
+          })
         break
       case 'item-bg':
         /**
@@ -103,16 +108,17 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { items, ...other } = this.props
+    const { items, topBarTexts, ...other } = this.props
     const menuProps = Object.assign(other, {
-      items: this.sortedOptions(items),
-      searchValue,
-      open,
       toggle: () => this.setState({ open: !this.state.open }),
+      onSearch: e => this.setState({ searchValue: e.target.value }),
+      items: this.sortedOptions(items),
+      topBarText: topBarTexts[tier],
       onSelect: this.selectOption,
-      onSearch: e => this.setState({ searchValue: e.target.value })
+      searchValue,
+      tier,
+      open
     })
-    const classname = classnames({ classname })
     return (
       <Menu { ...menuProps }/>
     )
@@ -121,8 +127,9 @@ class AccountSelector extends Component {
 
 AccountSelector.propTypes = {
   className: PropTypes.string,
+  drillable: PropTypes.boolean,
   fetchItems: PropTypes.func,
-  items: PropTypes.instanceOf(List),
+  items: PropTypes.array,
   onSelect: PropTypes.func,
   params: PropTypes.object
 }
@@ -138,15 +145,12 @@ function mapDispatchToProps(dispatch) {
   function fetchItems(nextTier, ...params) {
     switch(nextTier) {
       case 'property':
-//        console.log('peroperty fetch:',tier)
         dispatch(fetchHosts(...params))
         break
       case 'group':
-  //    console.log('group fetch:',tier)
         dispatch(fetchGroups(...params))
         break
       case 'account':
-  //   console.log('acc fetch:',tier)
         dispatch(fetchAccounts(...params))
         break
     }
