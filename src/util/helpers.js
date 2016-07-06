@@ -162,7 +162,57 @@ export function getAnalyticsUrl(linkType, val, params) {
   }
 
   return url
+}
 
+export function getContentUrl(linkType, val, params) {
+  const { brand, account, group } = params
+  let url
+
+  switch(linkType) {
+    case 'brand':
+      url = `/content/accounts/${val}`
+      break;
+    case 'account':
+      url = `/content/groups/${brand}/${val}`
+      break;
+    case 'group':
+      url = `/content/hosts/${brand}/${account}/${val}`
+      break;
+    case 'property':
+      url = `/content/property/${brand}/${account}/${group}/${val}`
+      break;
+  }
+
+  return url
+}
+
+export function getAnalyticsUrlFromParams(params) {
+  const { brand, account, group, property } = params,
+    baseUrl = getRoute('analytics')
+
+  if (property) {
+    return `${baseUrl}/content/property/${brand}/${account}/${group}/${property}`
+  } else if (group) {
+    return `${baseUrl}/${brand}/${account}/${group}`
+  } else if (account) {
+    return `${baseUrl}/${brand}/${account}`
+  } else if (brand) {
+    return `${baseUrl}/${brand}`
+  }
+}
+
+export function getContentUrlFromParams(params) {
+  const { brand, account, group, property } = params
+
+  if (property) {
+    return `/content/property/${brand}/${account}/${group}/${property}`
+  } else if (group) {
+    return `/content/hosts/${brand}/${account}/${group}`
+  } else if (account) {
+    return `/content/groups/${brand}/${account}`
+  } else if (brand) {
+    return `/content/accounts/${brand}`
+  }
 }
 
 export function buildAnalyticsOpts(params, filters){
