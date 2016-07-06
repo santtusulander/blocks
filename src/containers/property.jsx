@@ -23,7 +23,7 @@ import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond} from '../util/helpers'
+import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
@@ -279,11 +279,11 @@ export class Property extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               <Link className="btn btn-success btn-icon"
-                to={`/analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${this.props.params.property}`}>
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
                 <IconChart/>
               </Link>
               <Link className="btn btn-success btn-icon"
-                to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${this.props.params.property}`}>
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                 <IconConfiguration/>
               </Link>
             </ButtonToolbar>
