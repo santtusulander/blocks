@@ -104,7 +104,7 @@ const AnalyticsViewControl = (props) => {
           onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
           drillable={true}>
           <h1>
-            {activeItem}
+            {activeItem || "select account"}
           </h1>
         </AccountSelector>
       /* If account is not selected (Needs to be: UDN ADMIN)
