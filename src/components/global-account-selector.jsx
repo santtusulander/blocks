@@ -4,26 +4,54 @@ import classnames from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 
+import { fetchAccounts } from '../redux/modules/account'
+import { fetchGroups } from '../redux/modules/group'
+import { fetchHosts } from '../redux/modules/host'
+
 import IconSelectCaret from './icons/icon-select-caret.jsx'
 
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
+    this.accountId = null
+    this.groupId = null
+    this.tier = null
     this.state = {
-      open: false,
-      secondaryMenuActive: false
+      open: false
     }
     this.selectOption = this.selectOption.bind(this)
   }
 
+  componentWillMount() {
+    const { property, group, account } = this.props.params
+    const tier = property && 'property' || group && 'group' || account && 'account'
+    this.tier = tier
+    this.props.fetchItems(tier, this.props.params)
+  }
+
   selectOption(e) {
-    const { tier, activeItem, onSelect, fetchSecondaryItems } = this.props
+    const { onSelect, fetchItems } = this.props
+    console.log(this.tier)
     if(e.target.id === 'name') {
       this.setState({ open: !this.state.open })
       onSelect(e.target.getAttribute('data-value'))
     } else {
-      this.setState({ secondaryMenuActive: true })
-      fetchSecondaryItems(tier, params)
+      switch(this.tier) {
+        case 'property':
+          fetchItems(this.tier, this.accountId, this.groupId)
+          break
+        case 'group':
+          this.tier = 'property'
+          this.groupId = e.target.getAttribute('data-value')
+          fetchItems(this.tier, this.accountId)
+          break
+        case 'account':
+          this.tier = 'group'
+          this.accountId = e.target.getAttribute('data-value')
+          fetchItems(this.tier)
+          break
+      }
+
     }
   }
 
@@ -81,21 +109,42 @@ AccountSelector.defaultProps = {
 }
 
 function mapStateToProps(state, ownProps) {
+  const { property, group, account } = ownProps.params
+  const tier = property && 'property' || group && 'group' || account && 'account'
+  let items = []
+  switch(tier) {
+    case 'property':
+      console.log(state[tier].toJS())
+      items = state[tier].get('allHosts').map(property => [property, property]).toJS()
+      break
+    case 'group':
+      console.log(state[tier].toJS())
+      items = state[tier].get('allGroups').map(group => [group.get('id'), group.get('name')]).toJS()
+      break
+    case 'account':
+      console.log(state[tier].toJS())
+      items = state[tier].get('allAccounts').map(account => [account.get('id'), account.get('name')]).toJS()
+      break
+  }
   return {
-
+    items,
+    tier
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  function fetchSecondaryItems(tier, params) {
+function mapDispatchToProps(dispatch) {
+  function fetchItems(tier, ...IDs) {
     switch(tier) {
-      case 'account': fetchAccounts('udn')
-      case 'group': fetchHosts('udn', params.account, params.group, params.property)
-      case 'property': fetchAccounts('udn', params.account, params.group, params.property)
+      case 'property': dispatch(fetchHosts('udn', ...IDs))
+        break
+      case 'group': dispatch(fetchGroups('udn', ...IDs))
+        break
+      case 'account': dispatch(fetchAccounts('udn', ...IDs))
+        break
     }
   }
   return {
-    fetchSecondaryItems:
+    fetchItems
   }
 }
 

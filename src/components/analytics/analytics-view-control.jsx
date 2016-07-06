@@ -56,9 +56,6 @@ const AnalyticsViewControl = (props) => {
     account,
     group,
     property } = props.params
-  const items  = property ?
-    createPropertyOptions(props.properties) :
-    createOptions(group ? props.groups : props.accounts)
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
@@ -94,13 +91,12 @@ const AnalyticsViewControl = (props) => {
 
         <AccountSelector
           history={props.history}
-          tier={tier}
-          items={items}
+          params={props.params}
           activeItem={activeItem}
           onSelect={val => props.history.pushState(null, getAnalyticsUrl(tier, val, props.params))}
           drillable={true}>
           <h1>
-            {items.find(item => item[0] === activeItem) && items.find(item => item[0] === activeItem)[1]}
+            activeItem
           </h1>
         </AccountSelector>
       /* If account is not selected (Needs to be: UDN ADMIN)
