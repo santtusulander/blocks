@@ -6,8 +6,10 @@ import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 import IconEricsson from './icons/icon-ericsson.jsx'
-import {Breadcrumbs} from '../components/breadcrumbs/breadcrumbs.jsx'
+import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
 import UdnAdminToolbar from '../components/udn-admin-toolbar/udn-admin-toolbar.jsx'
+import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar, NavItem } from 'react-bootstrap'
 
@@ -27,14 +29,17 @@ class Header extends React.Component {
       userMenuOpen: false
     }
   }
+
   componentDidMount() {
     this.refs.gradient.addEventListener('webkitAnimationEnd', this.resetGradientAnimation)
   }
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.fetching) {
       this.setState({animatingGradient: true})
     }
   }
+
   resetGradientAnimation() {
     const gradient = this.refs.gradient
     gradient.classList.remove('animated')
@@ -46,59 +51,99 @@ class Header extends React.Component {
       this.setState({animatingGradient: false})
     }
   }
+
   handleThemeChange(value) {
     this.props.handleThemeChange(value)
   }
+
   activatePurge(e) {
     e.preventDefault()
     this.props.activatePurge()
   }
+
   toggleAccountMenu() {
     this.setState({accountMenuOpen: !this.state.accountMenuOpen})
   }
+
   toggleUserMenu() {
     this.setState({userMenuOpen: !this.state.userMenuOpen})
   }
+
+  addGroupLink(links, urlMethod) {
+    const activeGroup = this.props.activeGroup ? this.props.activeGroup.get('id').toString() : null,
+      params = this.props.params;
+
+    if (params.group === activeGroup) {
+      links.push({
+        url: urlMethod('group', params.group, params),
+        label:  params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'
+      })
+    }
+  }
+
+  addPropertyLink(links, urlMethod) {
+    const activeProperty = this.props.location.query.name || this.props.params.property,
+      params = this.props.params;
+
+    if (activeProperty) {
+      links.push({
+        url: null,
+        label:  activeProperty
+      })
+    }
+  }
+
+  getBreadcrumbLinks() {
+    let links = [];
+
+    const pathname = this.props.pathname,
+      params = this.props.params,
+      activeAccount = this.props.activeAccount ? this.props.activeAccount.get('id').toString() : null
+
+    if (new RegExp( getRoute('content'), 'g' ).test(pathname)) {
+      this.addPropertyLink(links, getContentUrl);
+      this.addGroupLink(links, getContentUrl);
+
+      links.push({
+        label:  'Content',
+        url: activeAccount && links.length > 0 ? `/content/groups/udn/${params.account}` : null
+      })
+    } else if (new RegExp( getRoute('analytics'), 'g' ).test(pathname)) {
+      this.addPropertyLink(links, getAnalyticsUrl);
+      this.addGroupLink(links, getAnalyticsUrl);
+
+      links.push({
+        label: 'Analytics',
+        url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) : null
+      });
+    } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
+      links.push( {label:  'Account Management'} )
+    } else if (new RegExp( getRoute('services'), 'g' ).test(pathname)) {
+      links.push( {label:  'Services'} )
+    } else if (new RegExp( getRoute('security'), 'g' ).test(pathname)) {
+      links.push( {label:  'Security'} )
+    } else if (new RegExp( getRoute('support'), 'g' ).test(pathname)) {
+      links.push( {label:  'Support'} )
+    } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
+      links.push( {label:  'Configuration'} )
+    }
+
+    return links.reverse();
+  }
+
+  renderBreadcrumb() {
+    return (
+      <li>
+        <Breadcrumbs links={this.getBreadcrumbLinks()}/>
+      </li>
+    );
+  }
+
   render() {
-    let className = 'header'
+    let className = 'header';
     if(this.props.className) {
       className = className + ' ' + this.props.className;
     }
-    const activeAccount = this.props.activeAccount ?
-      this.props.activeAccount.get('id').toString()
-      : null
-    const activeGroup = this.props.activeGroup ?
-      this.props.activeGroup.get('id').toString()
-      : null
-    const activeHost = this.props.location.query.name || this.props.params.property
-
-    const contentActive = new RegExp( getRoute('content'), 'g' ).test(this.props.pathname)
-    const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(this.props.pathname)
-
-    let breadcrumbsLinks = [];
-
-    //create breadcrumbs for content -pages
-    if (contentActive) {
-      /* REFACTOR: isUDNAdmin - create static link to UDN -accounts */
-      if ( this.props.isUDNAdmin ) breadcrumbsLinks.push( {url: `/content/accounts/udn`, label:  'UDN'})
-      if (this.props.params.account === activeAccount) {
-        breadcrumbsLinks.push( {url: `/content/groups/udn/${this.props.params.account}`, label:  this.props.params.account === activeAccount ? this.props.activeAccount.get('name') : 'ACCOUNT'})
-      }
-
-      if (this.props.params.group === activeGroup) {
-        breadcrumbsLinks.push( {url: `/content/hosts/udn/${this.props.params.account}/${this.props.params.group}`, label:  this.props.params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'})
-      }
-
-      if (activeHost) {
-        breadcrumbsLinks.push( {url: `/content/property/udn/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(activeHost).replace(/\./g, "%2e")}`, label:  activeHost})
-      }
-    }
-
-    if ( /(\/account-management)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'Account Management'} )
-    if ( /(\/services)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SERVICES'} )
-    if ( /(\/security)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SECURITY'} )
-    if ( /(\/support)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'SUPPORT'} )
-    if ( /(\/configuration)/.test(this.props.pathname) ) breadcrumbsLinks.push( {url: '', label:  'CONFIGURATION'} )
 
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
@@ -117,7 +162,7 @@ class Header extends React.Component {
             </Link>
           </li>
 
-        { this.props.isUDNAdmin && !contentActive && !analyticsActive &&
+        { /*this.props.isUDNAdmin && !contentActive && !analyticsActive &&
           <li>
             <UdnAdminToolbar
               accounts={this.props.accounts}
@@ -129,124 +174,11 @@ class Header extends React.Component {
               routes={this.props.routes}
             />
           </li>
-        }
+        */}
 
-        { analyticsActive &&
-          <li>
-            <Breadcrumbs links={this.props.breadcrumbs} />
-          </li>
-        }
+        {this.renderBreadcrumb()}
 
-        { !analyticsActive &&
-          <li>
-            <Breadcrumbs links={breadcrumbsLinks} />
-          </li>
-        }
-
-        { /* (showContentBreadcrumbs  && !analyticsActive) &&
-          <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
-            <li className="breadcrumb-back">
-              <Link to={`/content/accounts/udn`} />
-            </li>
-            <li>
-              <Link to={`/content/groups/udn/${this.props.params.account}`}>
-                {activeAccount ?
-                  activeAccount == this.props.params.account ?
-                    this.props.activeAccount.get('name')
-                    : 'ACCOUNT'
-                  : null}
-              </Link>
-            </li>
-            <li>
-              <Link to={`/content/hosts/udn/${this.props.params.account}/${this.props.params.group}`}>
-                {this.props.activeGroup ?
-                  this.props.activeGroup.get('name')
-                  : 'GROUP'}
-              </Link>
-            </li>
-            {/(\/content\/property\/)/.test(this.props.pathname) ? null :
-              <li>
-                <Link to={`/content/property/udn/${this.props.params.account}/${this.props.params.group}/property?name=${encodeURIComponent(activeHost).replace(/\./g, "%2e")}`}>
-                  {activeHost}
-                </Link>
-              </li>
-            }
-            <li className="active">
-              {/(\/content\/property\/)/.test(this.props.pathname) && activeHost}
-              {/(\/content\/configuration\/)/.test(this.props.pathname) && 'Configuration'}
-              {/(\/analytics\/property\/)/.test(this.props.pathname) && 'Analytics'}
-            </li>
-          </ol>
-        */ }
         </Nav>
-
-        { /* NOT NEEDED ANYMORE
-          <Navbar.Header>
-            <Navbar.Brand>
-              <Link to={`/content/accounts/udn`}>Ericsson</Link>
-            </Navbar.Brand>
-          </Navbar.Header>
-          <Nav className="main-nav">
-            <li className="main-nav-item">
-              <Dropdown id="account-menu" ref="accountMenu"
-                open={this.state.accountMenuOpen}
-                onToggle={this.toggleAccountMenu}>
-                <Link id="content-link" className={'main-nav-link' + contentActive}
-                  to={`/content/accounts/udn`}
-                  activeClassName="active">
-                  Content
-                </Link>
-                <Dropdown.Toggle bsStyle='link'/>
-                <Dropdown.Menu className="dropdown-account-menu">
-                  {this.props.accounts ? this.props.accounts.map((account, i) => {
-                    return (
-                      <li key={i}
-                        active={activeAccount === account.get('id')}>
-                        <Link
-                          to={`/content/groups/udn/${account.get('id')}`}
-                          activeClassName="active"
-                          onClick={this.toggleAccountMenu}>
-                          {account.get('name')}
-                        </Link>
-                      </li>
-                    )
-                  }) : ''}
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-            <li className="main-nav-item">
-              {hideConfigurations ?
-                <span id="configurations-link" className="main-nav-link inactive">Configurations</span>
-              :
-                <Link id="configurations-link" className="main-nav-link" to={`/configurations/udn`} activeClassName="active">
-                  Configurations
-                </Link>
-              }
-            </li>
-            <li className="main-nav-item">
-              <Link id="security-link" className="main-nav-link" to={`/security`} activeClassName="active">
-                Security
-              </Link>
-            </li>
-            <li className="main-nav-item">
-              <Link id="services-link" className="main-nav-link" to={`/services`} activeClassName="active">
-                Services
-              </Link>
-            </li>
-            <li className="main-nav-item">
-              {hidePurge ?
-                <span className="main-nav-link inactive">Purge</span>
-              :
-                <a href="#" id="purge-link" className="main-nav-link"
-                  onClick={this.activatePurge}>
-
-                  Purge
-                </a>
-              }
-            </li>
-          </Nav>
-          */ }
-
           <Nav pullRight={true}>
             <li>
               <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
@@ -330,7 +262,8 @@ Header.displayName = 'Header'
 
 Header.defaultProps = {
   /* FOR TEST only */
-  isUDNAdmin: true
+  isUDNAdmin: true,
+  breadcrumbs: null
 }
 
 Header.propTypes = {
