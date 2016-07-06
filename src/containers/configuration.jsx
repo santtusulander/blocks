@@ -54,13 +54,11 @@ export class Configuration extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
-    const {brand, account, group} = this.props.params
+    const {brand, account, group, property} = this.props.params
     this.props.accountActions.fetchAccount(brand, account)
     this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
-    this.props.hostActions.fetchHost(brand, account, group,
-      this.props.location.query.name
-    )
+    this.props.hostActions.fetchHost(brand, account, group, property)
   }
   componentWillReceiveProps(nextProps) {
     if(!this.props.activeHost && nextProps.activeHost) {
@@ -86,7 +84,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.location.query.name,
+      this.props.params.property,
       this.props.activeHost.toJS()
     ).then((action) => {
       if(action.error) {
@@ -118,7 +116,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.location.query.name,
+      this.props.params.property,
       id
     )
   }
@@ -134,7 +132,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.location.query.name,
+      this.props.params.property,
       newHost.toJS()
     )
   }
@@ -146,7 +144,7 @@ export class Configuration extends React.Component {
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      this.props.location.query.name,
+      this.props.params.property,
       newHost.toJS()
     ).then((action) => {
       if(action.error) {
@@ -312,7 +310,7 @@ export class Configuration extends React.Component {
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1>Publish Version</h1>
-              <p>{this.props.location.query.name}</p>
+              <p>{this.props.params.property}</p>
             </Modal.Header>
             <Modal.Body>
               <ConfigurationPublishVersion
@@ -333,7 +331,7 @@ export class Configuration extends React.Component {
                   fetching={this.props.fetching}
                   configurations={this.props.activeHost.get('services').get(0).get('configurations')}
                   activate={this.activateVersion}
-                  propertyName={this.props.location.query.name}
+                  propertyName={this.props.params.property}
                   activeIndex={this.state.activeConfig}
                   addVersion={this.cloneActiveVersion}
                   status={this.props.activeHost.get('status')}
