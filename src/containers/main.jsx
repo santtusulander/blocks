@@ -142,6 +142,7 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
       { this.props.user.get('loggedIn') &&
+        this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
           activeAccount={activeAccount}
