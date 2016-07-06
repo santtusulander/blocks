@@ -143,6 +143,7 @@ export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
+  console.log(brand, account)
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
   .then((res) => {
     if(res) {

@@ -196,6 +196,7 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 })
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
+  console.log('fetching hosts..?????', brand, account, group)
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`)
   .then((res) => {
     if(res) {

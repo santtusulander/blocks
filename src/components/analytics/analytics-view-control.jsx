@@ -3,23 +3,11 @@ import Immutable from 'immutable'
 import { Link } from 'react-router'
 import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
-import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
-
+//import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
+import AccountSelector from '../../containers/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
-
-function createOptions(opts) {
-  return opts.map(opt => {
-    return [opt.get('id').toString(), opt.get('name')]
-  })
-}
-
-function createPropertyOptions(opts) {
-  return opts.map(opt => {
-    return [opt, opt]
-  })
-}
 
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview' },
@@ -52,10 +40,10 @@ const tabs = [
  */
 const AnalyticsViewControl = (props) => {
 
-  const accountOptions  = createOptions(props.accounts)
-  const groupOptions    = createOptions(props.groups)
-  const propertyOptions = createPropertyOptions(props.properties)
-
+  const {
+    account,
+    group,
+    property } = props.params
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
@@ -69,10 +57,10 @@ const AnalyticsViewControl = (props) => {
       if(active.hideHierarchy) {
         title = active.label
       }
-      else if(props.params.property) {
+      else if(property) {
         title = `Property ${active.label}`
       }
-      else if(props.params.group) {
+      else if(group) {
         title = `Group ${active.label}`
       }
       else {
@@ -80,13 +68,25 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-
+  const activeItem = property || group || account
   return (
     <div className='analytics-view-control'>
 
       <p>{title}</p>
 
-      { /* If account is not selected (Needs to be: UDN ADMIN) */
+      {
+
+        <AccountSelector
+          history={props.history}
+          params={props.params}
+          activeItem={activeItem}
+          onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
+          drillable={true}>
+          <h1>
+            {activeItem}
+          </h1>
+        </AccountSelector>
+      /* If account is not selected (Needs to be: UDN ADMIN)
         !props.params.account &&
         <HeadingDropdown
           className="heading-dropdown"
@@ -120,7 +120,7 @@ const AnalyticsViewControl = (props) => {
         value={props.params.property}
         type={'Property'}
       />
-      }
+      */}
 
       <ButtonToolbar className="pull-right">
         <Button

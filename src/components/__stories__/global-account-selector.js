@@ -1,15 +1,21 @@
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import { fromJS } from 'immutable'
+// import {createStore, combineReducers} from 'redux'
+// import {Provider} from 'react-redux'
+
+import AccountSelector from '../global-account-selector.jsx'
 
 const ThemeWrap = require('./theme-wrap.jsx');
 
-import AccountSelector from '../global-account-selector.jsx'
+
+// const reducer = combineReducers({reducer: () => {return {}}});
+// const store = createStore(reducer);
 
 storiesOf('Account selector', module)
   .addDecorator((story) => (
     <ThemeWrap >
-      {story()}
+        {story()}
     </ThemeWrap>
   ))
   .add('default', () => (
