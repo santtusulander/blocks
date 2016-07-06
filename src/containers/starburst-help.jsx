@@ -4,6 +4,9 @@ class StarburstHelp extends React.Component {
   render() {
     return (
       <div className="starburst-help-container">
+        <a href="#" onClick={this.props.history.goBack}>
+          &lt; Back
+        </a>
         <div className="help-example"/>
         <div className="help-detail"/>
         <svg x="0px" y="0px" viewBox="0 0 2061 1271">
@@ -231,6 +234,8 @@ class StarburstHelp extends React.Component {
 }
 
 StarburstHelp.displayName = 'StarburstHelp'
-StarburstHelp.propTypes = {}
+StarburstHelp.propTypes = {
+  history: React.PropTypes.object
+}
 
 module.exports = StarburstHelp
