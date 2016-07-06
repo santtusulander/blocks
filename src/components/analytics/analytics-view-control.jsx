@@ -72,9 +72,9 @@ const AnalyticsViewControl = (props) => {
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Account Report',
-    account: 'UDN Admin'
+    account: 'UDN Admin',
+    brand: 'UDN Admin'
   }
-
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account } = IDs
     switch(tier) {
@@ -84,6 +84,7 @@ const AnalyticsViewControl = (props) => {
       case 'group':
         props.history.pushState(null, getAnalyticsUrl('account', account, { brand: 'udn' }))
         break
+      case 'brand':
       case 'account':
         props.history.pushState(null, getAnalyticsUrl('brand', 'udn', {}))
         break

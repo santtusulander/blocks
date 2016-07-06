@@ -32,8 +32,8 @@ class AccountSelector extends Component {
   }
 
   setInitialTier(params) {
-    const { property, group, account } = params
-    tier = property && 'property' || group && 'group' || account && 'account'
+    const { property, group, account, brand } = params
+    tier = property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
   }
 
   fetchByTier(params) {
@@ -50,7 +50,7 @@ class AccountSelector extends Component {
   }
 
   selectOption(e) {
-    const { onSelect, topBarAction, fetchItems, params: { account, group, property } } = this.props
+    const { onSelect, topBarAction, fetchItems, params: { brand, account, group, property } } = this.props
     switch(e.target.id) {
       /**
        * Item name pressed -> should route to that item
@@ -73,7 +73,8 @@ class AccountSelector extends Component {
           {
             account: this.account || account,
             group: this.group || group,
-            property: this.property || property
+            property: this.property || property,
+            brand: brand
           })
         break
       case 'item-bg':
@@ -85,6 +86,7 @@ class AccountSelector extends Component {
             this.group = e.target.getAttribute('data-value')
             fetchItems('property', 'udn', this.account, this.group)
             break
+          case 'brand':
           case 'account':
             this.account = e.target.getAttribute('data-value')
             fetchItems('group', 'udn', this.account)
@@ -116,7 +118,6 @@ class AccountSelector extends Component {
       topBarText: topBarTexts[tier],
       onSelect: this.selectOption,
       searchValue,
-      tier,
       open
     })
     return (
@@ -131,7 +132,9 @@ AccountSelector.propTypes = {
   fetchItems: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
-  params: PropTypes.object
+  params: PropTypes.object,
+  topBarAction: PropTypes.func,
+  topBarTexts: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -150,6 +153,7 @@ function mapDispatchToProps(dispatch) {
       case 'group':
         dispatch(fetchGroups(...params))
         break
+      case 'brand':
       case 'account':
         dispatch(fetchAccounts(...params))
         break

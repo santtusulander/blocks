@@ -6,10 +6,12 @@ import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import sortOptions from '../../constants/content-item-sort-options'
+import { getContentUrl } from '../../util/helpers'
 
 import AddHost from './add-host'
 import UDNButton from '../button'
 import PageContainer from '../layout/page-container'
+import AccountSelector from '../../containers/global-account-selector'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -18,7 +20,6 @@ import IconAdd from '../icons/icon-add.jsx'
 import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
-
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 const rangeMin = 400
@@ -26,6 +27,13 @@ const rangeMax = 500
 
 let trafficMin = 0
 let trafficMax = 0
+
+const itemSelectorTexts = {
+  property: 'Back to Groups',
+  group: 'Back to Accounts',
+  account: 'UDN Admin',
+  brand: 'UDN Admin'
+}
 
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path)
@@ -72,6 +80,21 @@ class ContentItems extends React.Component {
   createNewItem() {
     this.props.createNewItem(...arguments)
     this.toggleAddItem()
+  }
+  itemSelectorTopBarAction(tier, fetchItems, IDs) {
+    const { account } = IDs
+    switch(tier) {
+      case 'property':
+        fetchItems('group', 'udn', account)
+        break
+      case 'group':
+        fetchItems('account', 'udn')
+        break
+      case 'brand':
+      case 'account':
+        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        break
+    }
   }
   render() {
     const {
@@ -149,7 +172,16 @@ class ContentItems extends React.Component {
               </UDNButton>
             </ButtonToolbar>
             <p>{headerText.summary}</p>
-            <h1>{headerText.label}</h1>
+            <AccountSelector
+              params={this.props.params}
+              topBarTexts={itemSelectorTexts}
+              topBarAction={this.itemSelectorTopBarAction}
+              onSelect={(val, tier, params) => this.props.history.pushState(null, getContentUrl(tier, val, params))}
+              drillable={true}>
+              <h1>
+                {headerText.label}
+              </h1>
+            </AccountSelector>
           </PageHeader>
 
           <div className="container-fluid body-content">
