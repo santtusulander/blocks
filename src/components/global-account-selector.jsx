@@ -4,13 +4,14 @@ import classnames from 'classnames'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 
-import { fetchAccounts } from '../redux/modules/account'
-import { fetchGroups } from '../redux/modules/group'
-import { fetchHosts } from '../redux/modules/host'
+import {
+  fetchAccountsForModal as fetchAccounts,
+  fetchGroupsForModal as fetchGroups,
+  fetchPropertiesForModal as fetchHosts } from '../redux/modules/security'
 
 import IconSelectCaret from './icons/icon-select-caret.jsx'
 
-let tier = null
+let tier
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
@@ -32,13 +33,13 @@ class AccountSelector extends Component {
     }
   }
 
-  getInitialTier() {
+  setInitialTier() {
     const { property, group, account } = this.props.params
-    return property && 'property' || group && 'group' || account && 'account'
+    tier = property && 'property' || group && 'group' || account && 'account'
   }
 
   fetchByTier() {
-    tier = this.getInitialTier()
+    this.setInitialTier()
     const params = Object.keys(this.props.params).map(param => {
       this[param] = this.props.params[param]
       return this.props.params[param]}
@@ -47,26 +48,30 @@ class AccountSelector extends Component {
   }
 
   selectOption(e) {
-    const { onSelect, fetchItems } = this.props
+    const { onSelect, fetchItems, params: {account } } = this.props
     if(e.target.id === 'name') {
       this.setState({ open: !this.state.open })
       onSelect(e.target.getAttribute('data-value'))
-      tier = this.getInitialTier()
+      this.setInitialTier()
+    } else if(e.target.id === 'back') {
+      switch(tier) {
+        case 'property': fetchItems('group', 'udn', this.account || account)
+          break
+        case 'group': fetchItems('account', 'udn')
+          break
+      }
     } else {
       /**
        * Caret pressed -> should go one tier deeper
        */
       switch(tier) {
         case 'group':
-          tier = 'property'
-          console.log('group caret case: ', e.target)
           this.group = e.target.getAttribute('data-value')
-          fetchItems(tier, 'udn', this.account, this.group)
+          fetchItems('property', 'udn', this.account, this.group)
           break
         case 'account':
-          tier = 'group'
           this.account = e.target.getAttribute('data-value')
-          fetchItems(tier, 'udn', this.account)
+          fetchItems('group', 'udn', this.account)
           break
       }
 
@@ -124,7 +129,8 @@ const Menu = ({ items, drillable, classname, children, onSelect, open, toggle, p
 
 AccountSelector.propTypes = {
   className: PropTypes.string,
-  items: PropTypes.instanceOf(List)
+  items: PropTypes.instanceOf(List),
+  params: PropTypes.object
 }
 
 AccountSelector.defaultProps = {
@@ -132,40 +138,29 @@ AccountSelector.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  let items = []
-  switch(tier) {
-    case 'property':
-      console.log(state.host.toJS())
-      items = state.host.get('allHosts').map(property => [property, property]).toJS()
-      break
-    case 'group':
-      //console.log(state[tier].toJS())
-      items = state[tier].get('allGroups').map(group => [group.get('id'), group.get('name')]).toJS()
-      break
-    case 'account':
-      console.log(state[tier].toJS())
-      items = state[tier].get('allAccounts').map(account => [account.get('id'), account.get('name')]).toJS()
-      break
-  }
+  const items = state.security.get('groups').map(item => [item.get('id'), item.get('name')]).toJS()
   return {
     items
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  function fetchItems(tier, ...params) {
-    console.log(tier)
-    switch(tier) {
+  function fetchItems(nextTier, ...params) {
+    switch(nextTier) {
       case 'property':
+//        console.log('peroperty fetch:',tier)
         dispatch(fetchHosts(...params))
         break
       case 'group':
+  //    console.log('group fetch:',tier)
         dispatch(fetchGroups(...params))
         break
       case 'account':
+  //   console.log('acc fetch:',tier)
         dispatch(fetchAccounts(...params))
         break
     }
+    tier = nextTier
   }
   return {
     fetchItems
