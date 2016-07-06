@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
-import { generateNestedLink } from '../../util/helpers.js'
+import { generateNestedLink, getAnalyticsUrlFromParams, getContentUrlFromParams } from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -14,21 +14,10 @@ import IconSupport from '../icons/icon-support.jsx'
 import './navigation.scss'
 
 const Navigation = (props) => {
-  const activeAccountId = props.activeAccount && props.activeAccount.get('id') || null;
-  const activeGroupId = props.activeGroup && props.activeGroup.get('id') || null;
-
-  //const activeHostId = props.activeHost && props.activeHost.get('id') || null;
-
-  //const contentUrl = activeGroupId ? `${ getRoute('content') }/groups/udn/${activeAccountId}/${activeGroupId}` : activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
-  const contentUrl = activeAccountId ? `${ getRoute('content') }/groups/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
-    //: activeAccountId ? `${ getRoute('content') }/accounts/udn/${activeAccountId}` : `${ getRoute('content') }/accounts/udn`
-
-  //Analytics should always default to account level analytics, and not depend on the content leaf.
-  const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', activeAccountId, activeGroupId] )
-
-  //Alternative -- create from url -params (if deep link is needed)
-  //const {account, host, group, property} = props.params;
-  //const analyticsUrl = generateNestedLink( getRoute('analytics'), ['udn', account, group, property] )
+  const params = props.params,
+    activeAccountId = params.account || null,
+    activeGroupId = params.group || null,
+    activePropertyName = params.property || null
 
   /* REFACTOR: temp fix to show active nav item  */
   const contentActive = new RegExp( getRoute('content'), 'g' ).test(props.pathname) ? ' active' : ''
@@ -40,7 +29,7 @@ const Navigation = (props) => {
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <li>
-          <Link to={contentUrl} activeClassName="active" className={'main-nav-link' + contentActive}>
+          <Link to={getContentUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + contentActive}>
             <IconContent />
             <span>Content</span>
           </Link>
@@ -48,7 +37,7 @@ const Navigation = (props) => {
 
         { /* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <li>
-          <Link to={analyticsUrl} activeClassName="active" className={'main-nav-link' + analyticsActive} >
+          <Link to={getAnalyticsUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
             <IconAnalytics />
             <span>Analytics</span>
           </Link>
