@@ -6,7 +6,7 @@ class StarburstHelp extends React.Component {
       <div className="starburst-help-container">
         <div className="help-example"/>
         <div className="help-detail"/>
-        <svg x="0px" y="0px" viewBox="0 0 2061.3 1071.9">
+        <svg x="0px" y="0px" viewBox="0 0 2061 1271">
           {/* Date labels */}
           <text transform="matrix(1 0 0 1 851.9116 373.5339)">
             Today
@@ -104,61 +104,61 @@ class StarburstHelp extends React.Component {
           </g>
           {/* Action Buttons */}
           <g>
-            <text transform="matrix(1 0 0 1 0.659 677.3898)"
+            <text transform="matrix(1 0 0 1 0 877)"
               className="heading">
               Action Buttons
             </text>
             {/* Pointer */}
             <line className="pointer"
-              x1="764.3" y1="837.7" x2="184.2" y2="837.6"/>
-            <circle className="pointer-dot" cx="764.1" cy="837.7" r="3.8"/>
+              x1="764" y1="837" x2="184" y2="1037"/>
+            <circle className="pointer-dot" cx="764" cy="837" r="3.8"/>
             {/* Description */}
-            <text transform="matrix(1 0 0 1 82.8377 745.1872)">
+            <text transform="matrix(1 0 0 1 82 945)">
               Metrics
             </text>
-            <text transform="matrix(1 0 0 1 82.8377 843.2785)">
+            <text transform="matrix(1 0 0 1 82 1043)">
               Settings
             </text>
-            <text transform="matrix(1 0 0 1 82.8377 942.3439)">
+            <text transform="matrix(1 0 0 1 82 1142)">
               Help
             </text>
             {/* Metrics Icon */}
             <g className="example-icon">
-              <circle cx="30" cy="740.2" r="30"/>
-              <path d="M21.7,740.2c0.1,0,0.1,0,0.1,0v11.6c0,0-0.1,0-0.1,0h-4.4c-0.1,0-0.1,0-0.1,0v-11.6c0,0,0.1,0,0.1,0
+              <circle cx="30" cy="940" r="30"/>
+              <path d="M21,940c0.1,0,0.1,0,0.1,0v11.6c0,0-0.1,0-0.1,0h-4.4c-0.1,0-0.1,0-0.1,0v-11.6c0,0,0.1,0,0.1,0
                 H21.7z"/>
-              <path d="M32.2,728.5c0.1,0,0.1,0,0.1,0.1v23.2c0,0-0.1,0.1-0.1,0.1h-4.4c-0.1,0-0.1,0-0.1-0.1v-23.2
+              <path d="M32,928c0.1,0,0.1,0,0.1,0.1v23.2c0,0-0.1,0.1-0.1,0.1h-4.4c-0.1,0-0.1,0-0.1-0.1v-23.2
                 c0,0,0.1-0.1,0.1-0.1H32.2z"/>
-              <path d="M42.7,734.4c0.1,0,0.1,0,0.1,0v17.4c0,0-0.1,0-0.1,0h-4.4c-0.1,0-0.1,0-0.1,0v-17.4c0,0,0.1,0,0.1,0
+              <path d="M42,934c0.1,0,0.1,0,0.1,0v17.4c0,0-0.1,0-0.1,0h-4.4c-0.1,0-0.1,0-0.1,0v-17.4c0,0,0.1,0,0.1,0
                 H42.7z"/>
             </g>
             {/* Settings Icon*/}
             <g className="example-icon">
-              <circle cx="30" cy="837.7" r="30"/>
-              <path d="M45.8,835.8l-2.1-6l-4.8,0.4c0,0,0-0.1-0.1-0.1l1-4.9l-5.7-2.8l-3.1,3.7c-0.1,0-0.1,0-0.2,0c0,0,0,0,0,0
-                l-2.8-4.3l-6,2.1l0.4,5c0,0,0,0,0,0l-5-1.1l-2.8,5.7l3.8,3.2c0,0.1,0,0.1,0,0.2l-4.3,2.8l2.1,6l5.1-0.5c0,0,0,0,0,0l-1.1,5.1
-                l5.7,2.8l3.3-4c0,0,0.1,0,0.1,0l2.9,4.4l6-2.1l-0.5-5.3l5.1,1.1l2.8-5.7l-3.8-3.2L45.8,835.8z M30,844.3c-3.7,0-6.6-3-6.6-6.6
-                c0-3.7,3-6.6,6.6-6.6c3.7,0,6.6,3,6.6,6.6C36.6,841.3,33.7,844.3,30,844.3z"/>
+              <circle cx="30" cy="1037" r="30"/>
+              <path d="M45,1035.8l-2.1-6l-4.8,0.4c0,0,0-0.1-0.1-0.1l1-4.9l-5.7-2.8l-3.1,3.7c-0.1,0-0.1,0-0.2,0c0,0,0,0,0,0
+                l-2.8-4.3l-6,2.1l0.4,5c0,0,0,0,0,0l-5-1.1l-2.8,5.7l3.8,3.2c0,0.1,0,0.1,0,0.2l-4.3,2.10l2.1,6l5.1-0.5c0,0,0,0,0,0l-1.1,5.1
+                l5.7,2.8l3.3-4c0,0,0.1,0,0.1,0l2.9,4.4l6-2.1l-0.5-5.3l5.1,1.1l2.8-5.7l-3.8-3.2L45.8,1035.8z M30,1044.3c-3.7,0-6.6-3-6.6-6.6
+                c0-3.7,3-6.6,6.6-6.6c3.7,0,6.6,3,6.6,6.6C36.6,1041.3,33.7,1044.3,30,1044.3z"/>
             </g>
             {/* Help Icon */}
             <g className="example-icon">
-              <circle cx="30" cy="934.1" r="30"/>
-              <text transform="matrix(1 0 0 1 22.8575 945.8971)">
+              <circle cx="30" cy="1134" r="30"/>
+              <text transform="matrix(1 0 0 1 22 1145)">
                 ?
               </text>
             </g>
           </g>
           {/* Starburst */}
           <g>
-            <text transform="matrix(1 0 0 1 0.6595 309.4319)"
+            <text transform="matrix(1 0 0 1 0 309)"
               className="heading">
               Starburst
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="832.2" y1="563.1" x2="464.7" y2="374.9"/>
-            <circle className="pointer-dot" cx="832.1" cy="563" r="3.8"/>
+            <line className="pointer" x1="832" y1="563" x2="464" y2="374"/>
+            <circle className="pointer-dot" cx="832" cy="563" r="3.8"/>
             {/* Description */}
-            <text transform="matrix(1 0 0 1 0.659 353.5385)">
+            <text transform="matrix(1 0 0 1 0 353)">
               <tspan x="0" y="0">
                 Average bandwidth for the prior 4 weeks
               </tspan>
@@ -172,17 +172,56 @@ class StarburstHelp extends React.Component {
           </g>
           {/* Day Wedge */}
           <g>
-            <text transform="matrix(1 0 0 1 438.6732 184.3342)"
+            <text transform="matrix(1 0 0 1 438 184)"
               className="heading">
               Day Wedge
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="886.3" y1="417.5"
-              x2="697.1" y2="256.3"/>
-            <circle className="pointer-dot" cx="886.2" cy="417.4" r="3.8"/>
+            <line className="pointer" x1="886" y1="417"
+              x2="697" y2="256"/>
+            <circle className="pointer-dot" cx="886" cy="417" r="3.8"/>
             {/* Descrition */}
-            <text transform="matrix(1 0 0 1 440.6727 228.4406)">
+            <text transform="matrix(1 0 0 1 440 228)">
               Each wedge represents one day of data
+            </text>
+          </g>
+          {/* TTFB */}
+          <g>
+            <text transform="matrix(1 0 0 1 1038 1104)"
+              className="heading">
+              TTFB (Time to First Byte)
+            </text>
+            {/* Pointer */}
+            <line className="pointer" x1="935" y1="772"
+              x2="1197" y2="1066"/>
+            <circle className="pointer-dot" cx="935" cy="772" r="3.8"/>
+            {/* Descrition */}
+            <text transform="matrix(1 0 0 1 1040 1148)">
+              <tspan x="0" y="0">
+                The latency between the first request for
+              </tspan>
+              <tspan x="0" y="28">
+                content and the serving of the response.
+              </tspan>
+            </text>
+          </g>
+          {/* Cache Hit Rate */}
+          <g>
+            <text transform="matrix(1 0 0 1 0 609)"
+              className="heading">
+              Cache Hit Rate
+            </text>
+            {/* Pointer */}
+            <line className="pointer" x1="795" y1="745" x2="514" y2="650"/>
+            <circle className="pointer-dot" cx="795" cy="745" r="3.8"/>
+            {/* Description */}
+            <text transform="matrix(1 0 0 1 0 653)">
+              <tspan x="0" y="0">
+                Percentage of requests served out from the edge
+              </tspan>
+              <tspan x="0" y="28">
+                cache without needing to go back to the origin.
+              </tspan>
             </text>
           </g>
         </svg>
