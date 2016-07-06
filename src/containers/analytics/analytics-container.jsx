@@ -17,7 +17,7 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
-import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
+import { getTabName } from '../../util/helpers.js'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 
 
@@ -34,7 +34,6 @@ function getNameById( list, id ) {
 }
 
 class AnalyticsContainer extends React.Component {
-
   constructor(props){
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
@@ -52,40 +51,10 @@ class AnalyticsContainer extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (params !== prevParams ) {
+    if (params !== prevParams) {
       this.fetchActiveItems(nextProps)
       this.fetchData(nextProps.params)
     }
-  }
-
-  setBreadcrumbs() {
-    let breadCrumbLinks = []
-    if (this.props.params.brand) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.brands, this.props.params.brand),
-        url: getAnalyticsUrl('brand', this.props.params.brand, this.props.params)
-      })
-    }
-    if (this.props.params.account) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.accounts, this.props.params.account),
-        url: getAnalyticsUrl('account', this.props.params.account, this.props.params)
-      })
-    }
-    if (this.props.params.group) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.groups, this.props.params.group),
-        url: getAnalyticsUrl('group', this.props.params.group, this.props.params)
-      })
-    }
-    if (this.props.params.property) {
-      breadCrumbLinks.push({
-        label: this.props.params.property,
-        url: getAnalyticsUrl('property', this.props.params.property, this.props.params)
-      })
-    }
-
-    this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
   }
 
   fetchActiveItems(props) {
@@ -119,11 +88,6 @@ class AnalyticsContainer extends React.Component {
       /*No need use promise-array to wait for properties as breadcrumbs for property is only its ID (www....)*/
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
-
-    //Set breadcrumbs when finished (breadcrumbs need brand/account/group names)
-    Promise.all(promises).then(() => {
-      this.setBreadcrumbs()
-    });
   }
 
   onFilterChange( filterName, filterValue){
@@ -226,8 +190,7 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  propertyActions: React.PropTypes.object,
-  uiActions: React.PropTypes.object
+  propertyActions: React.PropTypes.object
 }
 
 AnalyticsContainer.defaultProps = {
@@ -259,8 +222,7 @@ function mapDispatchToProps(dispatch) {
     // brandActions: bindActionCreators(brandActionCreators, dispatch)
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     propertyActions: bindActionCreators(propertyActionCreators, dispatch),
-    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch)
   }
 }
 
