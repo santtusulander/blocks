@@ -35,6 +35,13 @@ const routes = {
   analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content',
+  contentBrand: 'accounts/:brand',
+  contentAccount: 'groups/:brand/:account',
+  contentGroup: 'hosts/:brand/:account/:group',
+  contentProperty: 'property/:brand/:account/:group/:property',
+  contentPropertyAnalytics: 'property/:brand/:account/:group/:property/analytics',
+  contentPropertyConfiguration: 'property/:brand/:account/:group/:property/configuration',
+
   accountManagement: '/account-management',
   services: '/services',
   security: '/security',
@@ -100,42 +107,17 @@ module.exports = (
 
     {/* Content - routes */}
     <Route path={routes.content}>
+      <IndexRedirect to={routes.contentBrand.replace(':brand', 'udn')} />
       <Route component={ContentTransition}>
-        <Route path="accounts">
-          <Route path=":brand" component={Accounts}/>
-        </Route>
-        <Route path="groups">
-          <Route path=":brand">
-            <Route path=":account" component={Groups}/>
-          </Route>
-        </Route>
-        <Route path="hosts">
-          <Route path=":brand">
-            <Route path=":account">
-              <Route path=":group" component={Hosts}/>
-            </Route>
-          </Route>
-        </Route>
+        <Route path={routes.contentBrand} component={Accounts}/>
+        <Route path={routes.contentAccount} component={Groups}/>
+        <Route path={routes.contentGroup} component={Hosts}/>
       </Route>
-      <Route path="property">
-        <Route path=":brand">
-          <Route path=":account">
-            <Route path=":group">
-              <Route path=":property" component={Property}/>
-            </Route>
-          </Route>
+      <Route path={routes.contentProperty} component={Property} />
+      <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
+        {getAnalyticsTabRoutes()}
         </Route>
-      </Route>
-
-      <Route path="configuration">
-        <Route path=":brand">
-          <Route path=":account">
-            <Route path=":group">
-              <Route path=":property" component={Configuration}/>
-            </Route>
-          </Route>
-        </Route>
-      </Route>
+      <Route path={routes.contentPropertyConfiguration} component={Configuration} />
     </Route>
 
     <Route path="/configurations">
