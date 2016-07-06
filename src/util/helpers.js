@@ -191,7 +191,7 @@ export function getAnalyticsUrlFromParams(params) {
     baseUrl = getRoute('analytics')
 
   if (property) {
-    return `${baseUrl}/content/property/${brand}/${account}/${group}/${property}`
+    return `${baseUrl}/${brand}/${account}/${group}/${property}`
   } else if (group) {
     return `${baseUrl}/${brand}/${account}/${group}`
   } else if (account) {
