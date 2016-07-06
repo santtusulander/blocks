@@ -139,10 +139,13 @@ export class Main extends React.Component {
       this.props.accounts,
       this.props.username
     )
+    const { history } = this.context
+
     return (
       <div className={classNames}>
       { this.props.user.get('loggedIn') &&
       <Navigation
+        history={history}
         activeAccount={activeAccount}
         activeGroup={this.props.activeGroup}
         activeHost={this.props.activeHost}
@@ -230,6 +233,9 @@ Main.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
+}
+Main.contextTypes = {
+  history: React.PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {

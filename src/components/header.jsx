@@ -81,13 +81,14 @@ class Header extends React.Component {
     }
   }
 
-  addPropertyLink(links, urlMethod) {
-    const activeProperty = this.props.location.query.name || this.props.params.property,
-      params = this.props.params;
+  addPropertyLink(links, urlMethod, isLastLink) {
+    const activeProperty = this.props.params.property,
+      params = this.props.params,
+      { history } = this.context;
 
     if (activeProperty) {
       links.push({
-        url: null,
+        url: !isLastLink ? urlMethod('property', activeProperty, params) :null,
         label:  activeProperty
       })
     }
@@ -97,25 +98,55 @@ class Header extends React.Component {
     let links = [];
 
     const pathname = this.props.pathname,
+      { history } = this.context,
       params = this.props.params,
       activeAccount = this.props.activeAccount ? this.props.activeAccount.get('id').toString() : null
 
-    if (new RegExp( getRoute('content'), 'g' ).test(pathname)) {
-      this.addPropertyLink(links, getContentUrl);
-      this.addGroupLink(links, getContentUrl);
+    if (history.isActive(getRoute('content'))) {
+      const buildContentUrl = (routeName) => {
+        const baseUrl = getRoute('content'),
+          route = getRoute(routeName)
+            .replace(':brand', params.brand)
+            .replace(':account', params.account)
+            .replace(':group', params.group)
+            .replace(':property', params.property)
+
+
+        return `${baseUrl}/${route}`
+      }
+
+      let propertyLinkIsLast = true
+      if (history.isActive(buildContentUrl('contentPropertyAnalytics'))) {
+        links.push({
+          label:  'Analytics'
+        })
+
+        propertyLinkIsLast = false
+      }
+
+      if (history.isActive(buildContentUrl('contentPropertyConfiguration'))) {
+        links.push({
+          label:  'Configuration'
+        })
+
+        propertyLinkIsLast = false
+      }
+
+      this.addPropertyLink(links, getContentUrl, propertyLinkIsLast)
+      this.addGroupLink(links, getContentUrl)
 
       links.push({
         label:  'Content',
         url: activeAccount && links.length > 0 ? `/content/groups/udn/${params.account}` : null
       })
-    } else if (new RegExp( getRoute('analytics'), 'g' ).test(pathname)) {
-      this.addPropertyLink(links, getAnalyticsUrl);
-      this.addGroupLink(links, getAnalyticsUrl);
+    } else if (history.isActive(getRoute('analytics'))) {
+      this.addPropertyLink(links, getAnalyticsUrl)
+      this.addGroupLink(links, getAnalyticsUrl)
 
       links.push({
         label: 'Analytics',
         url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) : null
-      });
+      })
     } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
       links.push( {label:  'Account Management'} )
     } else if (new RegExp( getRoute('services'), 'g' ).test(pathname)) {
@@ -128,7 +159,7 @@ class Header extends React.Component {
       links.push( {label:  'Configuration'} )
     }
 
-    return links.reverse();
+    return links.reverse()
   }
 
   renderBreadcrumb() {
@@ -140,9 +171,9 @@ class Header extends React.Component {
   }
 
   render() {
-    let className = 'header';
+    let className = 'header'
     if(this.props.className) {
-      className = className + ' ' + this.props.className;
+      className = className + ' ' + this.props.className
     }
 
     return (
@@ -283,6 +314,10 @@ Header.propTypes = {
   pathname: React.PropTypes.string,
   theme: React.PropTypes.string,
   toggleAccountManagementModal: React.PropTypes.func
+}
+
+Header.contextTypes = {
+  history: React.PropTypes.object.isRequired
 }
 
 module.exports = Header;

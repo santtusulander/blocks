@@ -15,13 +15,13 @@ import './navigation.scss'
 
 const Navigation = (props) => {
   const params = props.params,
+    history = props.history,
     activeAccountId = params.account || null,
     activeGroupId = params.group || null,
     activePropertyName = params.property || null
 
-  /* REFACTOR: temp fix to show active nav item  */
-  const contentActive = new RegExp( getRoute('content'), 'g' ).test(props.pathname) ? ' active' : ''
-  const analyticsActive = new RegExp( getRoute('analytics'), 'g' ).test(props.pathname) ? ' active' : ''
+  const contentActive = history.isActive(getRoute('content')) ? ' active' : '',
+    analyticsActive = history.isActive(getRoute('analytics')) ? ' active' : ''
 
   return (
     <nav className='navigation-sidebar'>
