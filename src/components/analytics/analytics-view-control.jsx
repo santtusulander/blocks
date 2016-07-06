@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
-import AccountSelector from '../global-account-selector.jsx'
+import AccountSelector from '../../containers/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
