@@ -9,12 +9,16 @@ class ConfigurationDetails extends React.Component {
     super(props);
 
     this.handleChange = this.handleChange.bind(this)
+    this.handleNumericChange = this.handleNumericChange.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.originHostValue = ''
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
+  }
+  handleNumericChange(path) {
+    return e => this.props.changeValue(path, parseInt(e.target.value))
   }
   handleSelectChange(path) {
     return value => {
@@ -91,7 +95,7 @@ class ConfigurationDetails extends React.Component {
             </OverlayTrigger>
           }
           value={this.props.edgeConfiguration.get('origin_host_port')}
-          onChange={this.handleChange(
+          onChange={this.handleNumericChange(
             ['edge_configuration', 'origin_host_port']
           )}/>
 

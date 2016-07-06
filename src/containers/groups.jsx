@@ -23,7 +23,7 @@ export class Groups extends React.Component {
      * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
      **/
     //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
-    this.props.fetchData()
+      this.props.fetchData()
     //}
   }
   deleteGroup(id) {
@@ -42,8 +42,8 @@ export class Groups extends React.Component {
     const builtPath = `${brand}/${account}`
     const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
     const analyticsURLBuilder = (...groupID) => {
-      return groupID[0] ? `/v2-analytics/${builtPath}/${groupID[0]}`
-        : `/v2-analytics/${brand}/${account}`
+      return groupID[0] ? `/analytics/${builtPath}/${groupID[0]}`
+        : `/analytics/${brand}/${account}`
     }
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
@@ -54,6 +54,7 @@ export class Groups extends React.Component {
         brand={brand}
         className="groups-container"
         contentItems={this.props.groups}
+        dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -76,6 +77,7 @@ Groups.displayName = 'Groups'
 Groups.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -91,6 +93,7 @@ Groups.propTypes = {
 Groups.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
+  dailyTraffic: Immutable.List(),
   groups: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List()
@@ -100,6 +103,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: state.group.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
