@@ -95,7 +95,7 @@ class ContentItems extends React.Component {
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
-        dailyTraffic: this.props.dailyTraffic && this.getDailyTraffic(item)
+        dailyTraffic: this.getDailyTraffic(item)
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
@@ -175,14 +175,13 @@ class ContentItems extends React.Component {
                     const contentMetrics = content.get('metrics')
                     const id = String(item.get('id'))
                     const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
-                    const dailyTraffic = this.props.dailyTraffic && content.get('dailyTraffic').get('detail').reverse()
                     const itemProps = {
                       id: id,
                       linkTo: this.props.nextPageURLBuilder(id),
                       configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
-                      dailyTraffic: dailyTraffic,
+                      dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                       description: 'Desc',
                       delete: this.props.deleteItem,
                       primaryData: contentMetrics.get('traffic'),
@@ -195,7 +194,8 @@ class ContentItems extends React.Component {
                       avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
                       fetchingMetrics: this.props.fetchingMetrics,
                       chartWidth: scaledWidth.toString(),
-                      barMaxHeight: (scaledWidth / 7).toString()
+                      barMaxHeight: (scaledWidth / 7).toString(),
+                      showSlices: this.props.showSlices
                     }
                     return (
                       <ContentItem key={id}
@@ -275,6 +275,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   showAnalyticsLink: React.PropTypes.bool,
+  showSlices: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),

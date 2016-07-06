@@ -66,9 +66,9 @@ export class Hosts extends React.Component {
     const analyticsURLBuilder = (...property) => {
       if(property[0]) {
         const encoded = encodeURIComponent(property[0]).replace(/\./g, "%2e")
-        return `/v2-analytics/${analyticsPath}${encoded}`
+        return `/analytics/${analyticsPath}${encoded}`
       }
-      return `/v2-analytics/${brand}/${account}/${group}`
+      return `/analytics/${brand}/${account}/${group}`
     }
     const breadcrumbs = [
       {
@@ -99,6 +99,7 @@ export class Hosts extends React.Component {
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}
+        showSlices={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}

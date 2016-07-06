@@ -279,7 +279,7 @@ export class Property extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               <Link className="btn btn-success btn-icon"
-                to={`/v2-analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${this.props.params.property}`}>
+                to={`/analytics/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${this.props.params.property}`}>
                 <IconChart/>
               </Link>
               <Link className="btn btn-success btn-icon"
@@ -374,8 +374,6 @@ export class Property extends React.Component {
                   changeDateRange={this.changeDateRange}
                   availableRanges={[
                     DateRanges.LAST_28,
-                    DateRanges.TODAY,
-                    DateRanges.YESTERDAY,
                     DateRanges.CUSTOM_TIMERANGE
                   ]}/>
               </h3>

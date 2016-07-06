@@ -69,12 +69,11 @@ class ContentItemChart extends React.Component {
     const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
     const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
-    const daySlices = this.props.dailyTraffic ?
-      this.props.dailyTraffic.toJS().reduce(slices => {
-        slices.push((dayHours/rayHours)*2)
-        slices.push(1)
-        return slices
-      }, []) : []
+    const daySlices = this.props.dailyTraffic.toJS().reduce(slices => {
+      slices.push((dayHours/rayHours)*2)
+      slices.push(1)
+      return slices
+    }, [])
 
     const primaryMax = d3.max(primaryData, d => {
       return d || 0
@@ -156,7 +155,9 @@ class ContentItemChart extends React.Component {
       minTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('low'), true)
       const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
       tooltipDate = sliceStart.format('MMM D')
-      link = `${this.props.linkTo}&startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
+      if(this.props.showSlices) {
+        link = `${this.props.linkTo}&startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
+      }
     }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
@@ -226,10 +227,10 @@ class ContentItemChart extends React.Component {
               transitionLeaveTimeout={250}>
               <svg className="content-item-chart-svg difference-arc"
                 viewBox={differenceArcViewBox}>
-                <g className="hover-info">
+                <g className={this.props.showSlices ? 'hover-info' : 'hidden-slices'}>
                   {pie(daySlices).reduce((slices, arc, i) => {
                     if(!(i % 2)) {
-                      const data = this.props.dailyTraffic && this.props.dailyTraffic.get(Math.floor(i / 2))
+                      const data = this.props.dailyTraffic.get(Math.floor(i / 2))
                       if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
                         slices.push(
                           <path key={i} className="day-arc" d={dayArc(arc)}
@@ -333,6 +334,7 @@ ContentItemChart.propTypes = {
   name: React.PropTypes.string,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
+  showSlices: React.PropTypes.bool,
   timeToFirstByte: React.PropTypes.string
 }
 ContentItemChart.defaultProps = {

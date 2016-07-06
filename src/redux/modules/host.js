@@ -79,11 +79,8 @@ export function fetchSuccess(state, action) {
     }
     return config;
   })
-  if(!host.services[0].active_configurations ||
-     !host.services[0].active_configurations.length) {
-    host.services[0].active_configurations = [{
-      config_id: host.services[0].configurations[0].config_id
-    }]
+  if(!host.services[0].active_configurations) {
+    host.services[0].active_configurations = []
   }
   return state.merge({
     activeHost: Immutable.fromJS(host),
