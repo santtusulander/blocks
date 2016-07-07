@@ -17,7 +17,7 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
-import {getTabName, getAnalyticsUrl} from '../../util/helpers.js'
+import { getTabName } from '../../util/helpers.js'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 
 
@@ -34,7 +34,6 @@ function getNameById( list, id ) {
 }
 
 class AnalyticsContainer extends React.Component {
-
   constructor(props){
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
@@ -52,40 +51,10 @@ class AnalyticsContainer extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (params !== prevParams ) {
+    if (params !== prevParams) {
       this.fetchActiveItems(nextProps)
       this.fetchData(nextProps.params)
     }
-  }
-
-  setBreadcrumbs() {
-    let breadCrumbLinks = []
-    if (this.props.params.brand) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.brands, this.props.params.brand),
-        url: getAnalyticsUrl('brand', this.props.params.brand, this.props.params)
-      })
-    }
-    if (this.props.params.account) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.accounts, this.props.params.account),
-        url: getAnalyticsUrl('account', this.props.params.account, this.props.params)
-      })
-    }
-    if (this.props.params.group) {
-      breadCrumbLinks.push({
-        label: getNameById(this.props.groups, this.props.params.group),
-        url: getAnalyticsUrl('group', this.props.params.group, this.props.params)
-      })
-    }
-    if (this.props.params.property) {
-      breadCrumbLinks.push({
-        label: this.props.params.property,
-        url: getAnalyticsUrl('property', this.props.params.property, this.props.params)
-      })
-    }
-
-    this.props.uiActions.setBreadcrumbs( breadCrumbLinks )
   }
 
   fetchActiveItems(props) {
@@ -119,11 +88,6 @@ class AnalyticsContainer extends React.Component {
       /*No need use promise-array to wait for properties as breadcrumbs for property is only its ID (www....)*/
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
-
-    //Set breadcrumbs when finished (breadcrumbs need brand/account/group names)
-    Promise.all(promises).then(() => {
-      this.setBreadcrumbs()
-    });
   }
 
   onFilterChange( filterName, filterValue){
@@ -131,6 +95,68 @@ class AnalyticsContainer extends React.Component {
       filterName: filterName,
       filterValue: filterValue
     } )
+  }
+
+  renderFilters() {
+    const params = this.props.params
+
+    if (!params.account) {
+      return null
+    }
+
+    const {
+      filterOptions,
+      filters,
+      location: { pathname, query: { property } }
+    } = this.props
+
+    /* TODO: should  be moved to consts ? */
+    const availableFilters = Immutable.fromJS({
+      'traffic': ['date-range', 'service-type'],
+      'visitors': ['date-range'],
+      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
+      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+      'file-error': ['date-range', 'error-code', 'service-type'],
+      'url-report': ['date-range', 'error-code', 'service-type'],
+      'playback-demo': ['video']
+    })
+
+    return (
+      <AnalyticsFilters
+        onFilterChange={this.onFilterChange}
+        filters={filters}
+        filterOptions={filterOptions}
+        showFilters={availableFilters.get(getTabName(pathname))}
+      />
+    )
+  }
+
+  renderContent(children, filters) {
+    const params = this.props.params,
+      locations = this.props.location
+
+    if (!params.account) {
+      return (
+        <div className='analytics-tab-container'>
+          <p className='text-center'>Please select an account<br/>
+            from top left to see analytics</p>
+        </div>
+      )
+    }
+
+    return (
+      <div className='analytics-tab-container'>
+        {
+          /* Render tab -content */
+          children && React.cloneElement(children, {
+            params: params,
+            ref: 'tab',
+            filters: filters,
+            location: location
+          } )
+        }
+      </div>
+    )
   }
 
   render(){
@@ -148,17 +174,6 @@ class AnalyticsContainer extends React.Component {
       activeGroup,
       location: { pathname, query: { property } }
     } = this.props
-
-    /* TODO: should  be moved to consts ? */
-    const availableFilters = Immutable.fromJS({
-      'traffic': ['date-range', 'service-type'],
-      'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
-      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code', 'service-type'],
-      'url-report': ['date-range', 'error-code', 'service-type'],
-      'playback-demo': ['video']
-    })
     const exportCSV = () => {
       const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
       const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
@@ -182,28 +197,8 @@ class AnalyticsContainer extends React.Component {
               activeTab={getTabName(pathname)}
             />
           </PageHeader>
-
-
-          <AnalyticsFilters
-            onFilterChange={this.onFilterChange}
-            filters={filters}
-            filterOptions={filterOptions}
-            showFilters={availableFilters.get(getTabName(pathname))}
-          />
-
-          <div className='analytics-tab-container'>
-
-          {
-            /* Render tab -content */
-            children && React.cloneElement(children, {
-              params: params,
-              ref: 'tab',
-              filters: filters,
-              location: this.props.location
-            } )
-          }
-
-          </div>
+          {this.renderFilters()}
+          {this.renderContent(children, filters)}
         </Content>
       </PageContainer>
     )
@@ -226,8 +221,7 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  propertyActions: React.PropTypes.object,
-  uiActions: React.PropTypes.object
+  propertyActions: React.PropTypes.object
 }
 
 AnalyticsContainer.defaultProps = {
@@ -259,8 +253,7 @@ function mapDispatchToProps(dispatch) {
     // brandActions: bindActionCreators(brandActionCreators, dispatch)
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     propertyActions: bindActionCreators(propertyActionCreators, dispatch),
-    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch)
   }
 }
 

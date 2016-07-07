@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
+import forEach from 'lodash/foreach';
 
 import AccountManagement from './containers/account-management'
 import Accounts from './containers/accounts'
@@ -13,6 +14,7 @@ import Property from './containers/property'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
+import Support from './containers/support'
 import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
 
@@ -21,10 +23,10 @@ import ContentTransition from './transitions/content'
 /* TODO: define routes here instead of 'fixed' paths */
 const routes = {
   analytics: '/analysis',
-  analyticsBrand: ':brand',
-  analyticsAccount: ':brand/:account',
-  analyticsGroup: ':brand/:account/:group',
-  analyticsProperty: ':brand/:account/:group/:property',
+  analyticsBrand: '/analysis/:brand',
+  analyticsAccount: '/analysis/:brand/:account',
+  analyticsGroup: '/analysis/:brand/:account/:group',
+  analyticsProperty: '/analysis/:brand/:account/:group/:property',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
@@ -35,13 +37,57 @@ const routes = {
   analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content',
+  contentBrand: '/content/:brand',
+  contentAccount: '/content/:brand/:account',
+  contentGroup: '/content/:brand/:account/:group',
+  contentProperty: '/content/:brand/:account/:group/:property',
+  contentPropertyAnalytics: '/content/:brand/:account/:group/:property/analytics',
+  contentPropertyConfiguration: '/content/:brand/:account/:group/:property/configuration',
 
-  accountManagement: '/account-management'
+  accountManagement: '/account-management',
+  accountManagementBrand: '/account-management/:brand',
+  accountManagementAccount: '/account-management/:brand/:account',
+
+  services: '/services',
+  servicesBrand: '/services/:brand',
+  servicesAccount: '/services/:brand/:account',
+
+  security: '/security',
+  securityBrand: '/security/:brand',
+  securityAccount: '/security/:brand/:account',
+  securityGroup: '/security/:brand/:account/:group',
+
+  securityTabSslCertificate: 'ssl-certificate',
+  securityTabContentTargeting: 'content-targeting',
+  securityTabTokenAuthentication: 'token-authentication',
+
+  support: '/support',
+  supportBrand: '/support/:brand',
+  supportAccount: '/support/:brand/:account',
+
+  configuration: '/services'
 }
 
-/* helper to get route by name */
-export function getRoute(name) {
-  return routes[name]
+/**
+ *
+ * @param {string} name
+ * @param {Object} params
+ * @returns {string}
+ */
+export function getRoute(name, params) {
+  if (!routes[name]) {
+    throw new Error('Unknown route "%s"', name)
+  }
+
+  let route = routes[name]
+
+  if (params) {
+    forEach(params, (value, key) => {
+      route = route.replace(`:${key}`, value)
+    })
+  }
+
+  return route
 }
 
 //Analytics v2
@@ -73,7 +119,7 @@ function getAnalyticsTabRoutes() {
 
 module.exports = (
   <Route path="/" component={Main}>
-    <IndexRedirect to="/content/accounts/udn" />
+    <IndexRedirect to={getRoute('content', { brand: 'udn' })} />
     <Route path="starburst-help" component={StarburstHelp}/>
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
@@ -97,55 +143,60 @@ module.exports = (
 
     {/* Content - routes */}
     <Route path={routes.content}>
+      <IndexRedirect to={getRoute('contentBrand', { brand: 'udn' })} />
       <Route component={ContentTransition}>
-        <Route path="accounts">
-          <Route path=":brand" component={Accounts}/>
-        </Route>
-        <Route path="groups">
-          <Route path=":brand">
-            <Route path=":account" component={Groups}/>
-          </Route>
-        </Route>
-        <Route path="hosts">
-          <Route path=":brand">
-            <Route path=":account">
-              <Route path=":group" component={Hosts}/>
-            </Route>
-          </Route>
-        </Route>
+        <Route path={routes.contentBrand} component={Accounts}/>
+        <Route path={routes.contentAccount} component={Groups}/>
+        <Route path={routes.contentGroup} component={Hosts}/>
       </Route>
-      <Route path="property">
-        <Route path=":brand">
-          <Route path=":account">
-            <Route path=":group">
-              <Route path="property" component={Property}/>
-            </Route>
-          </Route>
-        </Route>
+      <Route path={routes.contentProperty} component={Property} />
+      <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
+        {getAnalyticsTabRoutes()}
       </Route>
-
-      <Route path="configuration">
-        <Route path=":brand">
-          <Route path=":account">
-            <Route path=":group">
-              <Route path="property" component={Configuration}/>
-            </Route>
-          </Route>
-        </Route>
-      </Route>
+      <Route path={routes.contentPropertyConfiguration} component={Configuration} />
     </Route>
 
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
     </Route>
-    <Route path="/security">
-      <IndexRedirect to="/security/ssl-certificate"/>
-      <Route path=":subPage" component={Security}/>
-    </Route>
-    <Route path="/services" component={Services}/>
 
-    {/* TODO: This is temporary until the user api is managing permissions */}
-    <Route path="/account-management/:account" component={AccountManagement}/>
-    <Route path="/account-management" component={AccountManagement}/>
+    {/* Security - routes */}
+    <Route path={routes.security}>
+      <IndexRedirect to={getRoute('securityBrand', { brand: 'udn' })} />
+      <Route path={routes.securityBrand} component={Security} />
+      <Route path={routes.securityAccount} component={Security}>
+        <IndexRedirect to={routes.securityTabSslCertificate} />
+        <Route path={routes.securityTabSslCertificate} component={Security}/>
+        <Route path={routes.securityTabContentTargeting} component={Security}/>
+         <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+      </Route>
+      <Route path={routes.securityGroup} component={Security}>
+        <IndexRedirect to={routes.securityTabSslCertificate} />
+        <Route path={routes.securityTabSslCertificate} component={Security}/>
+        <Route path={routes.securityTabContentTargeting} component={Security}/>
+        <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+      </Route>
+    </Route>
+
+    {/* Services - routes */}
+    <Route path={routes.services}>
+      <IndexRedirect to={getRoute('servicesBrand', { brand: 'udn' })} />
+      <Route path={routes.servicesBrand} component={Services}/>
+      <Route path={routes.servicesAccount} component={Services}/>
+    </Route>
+
+    {/* Support - routes */}
+    <Route path={routes.support}>
+      <IndexRedirect to={getRoute('supportBrand', { brand: 'udn' })} />
+      <Route path={routes.supportBrand} component={Support}/>
+      <Route path={routes.supportAccount} component={Support}/>
+    </Route>
+
+    {/* Account management - routes */}
+    <Route path={routes.accountManagement}>
+      <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
+      <Route path={routes.accountManagementBrand} component={AccountManagement}/>
+      <Route path={routes.accountManagementAccount} component={AccountManagement}/>
+    </Route>
   </Route>
 );

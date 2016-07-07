@@ -17,10 +17,14 @@ $dark-blue-navi: #070d1e;
 
   box-sizing: border-box;
   position: fixed;
-  top: 70px;
+  top: $header-total-height;
   left: 0;
   z-index: 10000;
   height: 100vh;
+
+  @include md {
+    top: $md-header-total-height;
+  }
 
   ul {
     margin: 0;
