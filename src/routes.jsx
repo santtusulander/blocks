@@ -44,6 +44,8 @@ const routes = {
   contentPropertyConfiguration: ':brand/:account/:group/:property/configuration',
 
   accountManagement: '/account-management',
+  accountManagementBrand: '/account-management/:brand',
+  accountManagementAccount: '/account-management/:brand/:account',
   services: '/services',
   security: '/security',
   support: '/services',
@@ -141,6 +143,7 @@ module.exports = (
     <Route path="/configurations">
       <Route path=":brand" component={Configurations}/>
     </Route>
+
     <Route path="/security">
       <IndexRedirect to="ssl-certificate"/>
       <Route path=":subPage">
@@ -150,8 +153,11 @@ module.exports = (
     </Route>
     <Route path="/services" component={Services}/>
 
-    {/* TODO: This is temporary until the user api is managing permissions */}
-    <Route path="/account-management/:account" component={AccountManagement}/>
-    <Route path="/account-management" component={AccountManagement}/>
+    {/* Analytics - routes */}
+    <Route path={routes.accountManagement}>
+      <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
+      <Route path={routes.accountManagementBrand} component={AccountManagement}/>
+      <Route path={routes.accountManagementAccount} component={AccountManagement}/>
+    </Route>
   </Route>
 );

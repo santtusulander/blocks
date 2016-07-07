@@ -222,6 +222,18 @@ export function getContentUrlFromParams(params) {
   }
 }
 
+export function getAccountManagementUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('accountManagementAccount', params)
+  } else if (brand) {
+    return getRoute('accountManagementBrand', params)
+  } else {
+    return getRoute('accountManagementBrand', { brand: 'udn' })
+  }
+}
+
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()

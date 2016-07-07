@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
-import { generateNestedLink, getAnalyticsUrlFromParams, getContentUrlFromParams } from '../../util/helpers.js'
+import { getAccountManagementUrlFromParams, getAnalyticsUrlFromParams, getContentUrlFromParams } from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -59,7 +59,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={accountManagementUrl} activeClassName="active">
+          <Link to={getAccountManagementUrlFromParams(params)} activeClassName="active">
             <IconAccount />
             <span>Account</span>
           </Link>

@@ -43,9 +43,12 @@ export class AccountManagement extends Component {
   }
 
   componentWillMount() {
-    const accountId = this.props.params.account
-    if ( accountId && accountId !== 'null' && !this.props.activeAccount) {
-      this.props.accountActions.fetchAccount('udn', accountId)
+    // TODO: add support for brand level account management.
+    const accountId = this.props.params.account;
+    if (accountId) {
+      this.props.accountActions.fetchAccount(this.props.params.brand, accountId);
+    } else {
+      this.props.accountActions.clearActiveAccount();
     }
   }
 
@@ -55,7 +58,6 @@ export class AccountManagement extends Component {
     const data = getValues(soaFormData)
     dnsActions.editSOA({ id: activeDomain.get('id'), data })
     toggleModal(null)
-
   }
 
   changeActiveAccount(account) {

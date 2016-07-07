@@ -11,7 +11,8 @@ const ACCOUNT_FETCHED = 'ACCOUNT_FETCHED'
 const ACCOUNT_FETCHED_ALL = 'ACCOUNT_FETCHED_ALL'
 const ACCOUNT_START_FETCH = 'ACCOUNT_START_FETCH'
 const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
-const ACTIVE_ACCOUNT_CHANGED = 'ACTIVE_ACCOUNT_CHANGED'
+const ACCOUNT_CHANGE_ACTIVE = 'ACCOUNT_CHANGE_ACTIVE'
+const ACCOUNT_CLEAR_ACTIVE = 'ACCOUNT_CLEAR_ACTIVE'
 
 const emptyAccounts = Immutable.fromJS({
   activeAccount: undefined,
@@ -98,6 +99,10 @@ export function changeActive(state, action) {
   return state.set('activeAccount', action.payload)
 }
 
+export function clearActive(state) {
+  return state.delete('activeAccount')
+}
+
 // REDUCERS
 
 export default handleActions({
@@ -107,7 +112,8 @@ export default handleActions({
   ACCOUNT_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   ACCOUNT_START_FETCH: startFetch,
   ACCOUNT_UPDATED: mapReducers(updateSuccess, updateFailure),
-  ACTIVE_ACCOUNT_CHANGED: changeActive
+  ACCOUNT_CHANGE_ACTIVE: changeActive,
+  ACCOUNT_CLEAR_ACTIVE: clearActive
 }, emptyAccounts)
 
 // ACTIONS
@@ -147,6 +153,6 @@ export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) 
   .then(parseResponseData)
 })
 
+export const clearActiveAccount = createAction(ACCOUNT_CLEAR_ACTIVE)
 export const startFetching = createAction(ACCOUNT_START_FETCH)
-
-export const changeActiveAccount = createAction(ACTIVE_ACCOUNT_CHANGED)
+export const changeActiveAccount = createAction(ACCOUNT_CHANGE_ACTIVE)
