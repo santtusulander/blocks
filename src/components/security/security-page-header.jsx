@@ -21,7 +21,7 @@ const SecurityPageHeader = ({ params, history }) => {
     <PageHeader>
       <p>Security</p>
       <AccountSelector
-        params={{ brand: params.brand, account: params.account }}
+        params={{ brand: params.brand, account: params.account, group: params.group }}
         topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin', group: 'Account report' }}
         topBarAction={topBarAction}
         onSelect={(...params) => history.pushState(null, getUrl('/security', ...params))}
