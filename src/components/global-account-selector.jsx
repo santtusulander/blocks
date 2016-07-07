@@ -3,8 +3,8 @@ import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
 import IconSelectCaret from './icons/icon-select-caret.jsx'
 
-const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch}) =>
-  <Dropdown id="" onSelect={onSelect} open={open}>
+const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
+  <Dropdown id="" onSelect={onSelect} open={open} className="global-account-selector">
     <span bsRole="toggle" onClick={toggle}>{children}</span>
     <Dropdown.Menu>
       <MenuItem>
@@ -15,13 +15,13 @@ const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, t
           value={searchValue}
           onChange={onSearch}/>
       </MenuItem>
-      {topBarText && <MenuItem id="top-bar">{topBarText}</MenuItem>}
+      {topBarText && <MenuItem id="top-bar" className="top-bar-link">{topBarText}</MenuItem>}
       {items.map((option, i) =>
         <MenuItem key={i} data-value={option[0]} id="item-bg">
-          <span id="name" data-value={option[0]}>{option[1]}</span>
+          <span id="name" className="name" data-value={option[0]}>{option[1]}</span>
           {drillable &&
-            <span className="caret-container">
-              <IconSelectCaret/>
+            <span className="caret-container" data-value={option[0]} onClick={onCaretClick}>
+              <span className="caret" data-value={option[0]}></span>
             </span>}
         </MenuItem>
       )}

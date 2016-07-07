@@ -26,7 +26,8 @@ class Header extends React.Component {
     this.state = {
       animatingGradient: false,
       accountMenuOpen: false,
-      userMenuOpen: false
+      userMenuOpen: false,
+      dropdownText: 'UDN Admin'
     }
   }
 
@@ -163,7 +164,11 @@ class Header extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const itemSelectorFunc = (...params) => {
+    const itemSelectorFunc = (entityType, entityId, params, entityName) => {
+      this.setState({
+        dropdownText: entityName
+      })
+
       if(history.isActive('/content')) {
         history.pushState(null, getContentUrl(...params))
       } else if(history.isActive('/analysis')){
@@ -193,23 +198,9 @@ class Header extends React.Component {
             onSelect={(...params) => itemSelectorFunc(...params)}
             drillable={false}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <p>{"UDN Admin"}</p>
+                <p>{this.state.dropdownText}</p>
             </Dropdown.Toggle>
           </AccountSelector>
-
-        { /*this.props.isUDNAdmin && !contentActive && !analyticsActive &&
-          <li>
-            <UdnAdminToolbar
-              accounts={this.props.accounts}
-              activeAccount={this.props.activeAccount}
-              toggleAccountManagementModal={this.props.toggleAccountManagementModal}
-              fetchAccountData={this.props.fetchAccountData}
-              location={this.props.location}
-              history={this.props.history}
-              routes={this.props.routes}
-            />
-          </li>
-        */}
 
         {this.renderBreadcrumb()}
 
