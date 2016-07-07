@@ -197,6 +197,8 @@ export function getAnalyticsUrlFromParams(params) {
     return `${baseUrl}/${brand}/${account}`
   } else if (brand) {
     return `${baseUrl}/${brand}`
+  } else {
+    return `${baseUrl}/udn`
   }
 }
 
@@ -211,6 +213,8 @@ export function getContentUrlFromParams(params) {
     return `/content/groups/${brand}/${account}`
   } else if (brand) {
     return `/content/accounts/${brand}`
+  } else {
+    return `/content/accounts/udn`
   }
 }
 

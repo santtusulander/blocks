@@ -13,7 +13,7 @@ export const Breadcrumbs = props => {
         const active = index === lastLink ? { className: 'active' } : null
         return (
           <li { ...active } key={index}>
-            {link.url ? <Link to={link.url}>{link.label}</Link> : link.label}
+            {link.url ? <Link to={link.url}>{link.label}</Link> : <span>{link.label}</span> }
           </li>
         )
       })}

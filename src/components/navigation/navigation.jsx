@@ -21,7 +21,8 @@ const Navigation = (props) => {
     activePropertyName = params.property || null
 
   const contentActive = history.isActive(getRoute('content')) ? ' active' : '',
-    analyticsActive = history.isActive(getRoute('analytics')) ? ' active' : ''
+    analyticsActive = history.isActive(getRoute('analytics')) ? ' active' : '',
+    accountManagementUrl = getRoute('accountManagement') + (activeAccountId ? `/${activeAccountId}` : '')
 
   return (
     <nav className='navigation-sidebar'>
@@ -58,7 +59,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={ `${getRoute('accountManagement')}/${activeAccountId}`} activeClassName="active">
+          <Link to={accountManagementUrl} activeClassName="active">
             <IconAccount />
             <span>Account</span>
           </Link>
