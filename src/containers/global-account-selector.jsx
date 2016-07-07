@@ -53,14 +53,15 @@ class AccountSelector extends Component {
     const { onSelect, topBarAction, fetchItems, params: { brand, account, group, property } } = this.props
     switch(e.target.id) {
       /**
-       * Item name pressed -> should route to that item
+       * Item name pressed -> should route to that item. Since the same menu items are displayed
+       * in brand and account tiers, in both cases 'account' gets passed
        */
       case 'name':
         this.setState({ open: !this.state.open })
         onSelect(
+          tier === 'brand' ? 'account' : tier,
           e.target.getAttribute('data-value'),
-          tier,
-          { brand: 'udn', account: this.account || account, group: this.group || group }
+          { brand, account: this.account || account, group: this.group || group }
         )
         break
       /**
@@ -74,7 +75,7 @@ class AccountSelector extends Component {
             account: this.account || account,
             group: this.group || group,
             property: this.property || property,
-            brand: brand
+            brand
           })
         break
         /**
@@ -129,7 +130,7 @@ class AccountSelector extends Component {
 
 AccountSelector.propTypes = {
   className: PropTypes.string,
-  drillable: PropTypes.boolean,
+  drillable: PropTypes.bool,
   fetchItems: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,

@@ -37,7 +37,6 @@ AccountSelector.propTypes = {
   onSelect: PropTypes.func,
   open: PropTypes.bool,
   searchValue: PropTypes.string,
-  tiers: PropTypes.arrays,
   toggle: PropTypes.func
 }
 

@@ -5,7 +5,7 @@ import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../../containers/global-account-selector.jsx'
-import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
+import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
 
@@ -43,13 +43,13 @@ const AnalyticsViewControl = (props) => {
   const {
     account,
     group,
-    property } = props.params
+    property
+  } = props.params
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
-
   let title = "Analytics"
   if(props.activeTab) {
     const active = tabs.find(tab => tab.key === props.activeTab)
@@ -69,11 +69,15 @@ const AnalyticsViewControl = (props) => {
     }
   }
   const activeItem = property || group || account
+  const isContentAnalytics = props.history.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Account Report',
     account: 'UDN Admin',
     brand: 'UDN Admin'
+  }
+  if(property && isContentAnalytics) {
+    delete topBarTexts.property
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account, brand } = IDs
@@ -99,10 +103,14 @@ const AnalyticsViewControl = (props) => {
 
         <AccountSelector
           params={props.params}
-          activeItem={activeItem}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
-          onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
+          onSelect={(...params) => {
+            const url = isContentAnalytics ?
+              `${getContentUrl(...params)}/analytics` :
+              getAnalyticsUrl(...params)
+            props.history.pushState(null, url)
+          }}
           drillable={true}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{activeItem || "select account"}</h1>

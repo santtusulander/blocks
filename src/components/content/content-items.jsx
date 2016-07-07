@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonToolbar } from 'react-bootstrap'
+import { Modal, ButtonToolbar, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -53,7 +53,7 @@ class ContentItems extends React.Component {
     this.state = {
       addItem: false
     }
-
+    this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
     this.toggleAddItem = this.toggleAddItem.bind(this)
     this.createNewItem = this.createNewItem.bind(this)
@@ -176,11 +176,13 @@ class ContentItems extends React.Component {
               params={this.props.params}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(val, tier, params) => this.props.history.pushState(null, getContentUrl(tier, val, params))}
+              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
               drillable={true}>
-              <h1>
-                {headerText.label}
-              </h1>
+              <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <h1>
+                  {headerText.label}
+                </h1>
+              </Dropdown.Toggle>
             </AccountSelector>
           </PageHeader>
 

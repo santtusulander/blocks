@@ -317,7 +317,7 @@ export class Property extends React.Component {
               params={this.props.params}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(val, tier, params) => this.props.history.pushState(null, getContentUrl(tier, val, params))}
+              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
               drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>{this.props.params.property}</h1>
