@@ -142,6 +142,28 @@ export function generateNestedLink(base, linkParts) {
   return base + '/' + linkParts.join("/")
 }
 
+export function getUrl(linkType, baseUrl, val, params) {
+  const { brand, account, group } = params;
+
+  let url
+  switch(linkType) {
+    case 'brand':
+      url = `${baseUrl}/${val}`
+      break;
+    case 'account':
+      url = `${baseUrl}/${brand}/${val}`
+      break;
+    case 'group':
+      url = `${baseUrl}/${brand}/${account}/${val}`
+      break;
+    case 'property':
+      url = `${baseUrl}/${brand}/${account}/${group}/${val}`
+      break;
+  }
+
+  return url
+}
+
 export function getAnalyticsUrl(linkType, val, params) {
   const { brand, account, group } = params,
     baseUrl = getRoute('analytics')
