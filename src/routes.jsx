@@ -55,6 +55,7 @@ const routes = {
   security: '/security',
   securityBrand: '/security/:brand',
   securityAccount: '/security/:brand/:account',
+  securityGroup: '/security/:brand/:account/:group',
 
   securityTabSslCertificate: 'ssl-certificate',
   securityTabContentTargeting: 'content-targeting',
@@ -165,8 +166,15 @@ module.exports = (
       <Route path={routes.securityBrand} component={Security} />
       <Route path={routes.securityAccount} component={Security}>
         <IndexRedirect to={routes.securityTabSslCertificate} />
-        <Route path=":subPage">
-        </Route>
+        <Route path={routes.securityTabSslCertificate} component={Security}/>
+        <Route path={routes.securityTabContentTargeting} component={Security}/>
+         <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+      </Route>
+      <Route path={routes.securityGroup} component={Security}>
+        <IndexRedirect to={routes.securityTabSslCertificate} />
+        <Route path={routes.securityTabSslCertificate} component={Security}/>
+        <Route path={routes.securityTabContentTargeting} component={Security}/>
+        <Route path={routes.securityTabTokenAuthentication} component={Security}/>
       </Route>
     </Route>
 

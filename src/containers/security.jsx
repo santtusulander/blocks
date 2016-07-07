@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getRoute } from '../routes.jsx'
 
+import { getTabName, getUrl } from '../util/helpers'
+
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -51,7 +53,7 @@ export class Security extends React.Component {
 
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
-    const subPage = params.subPage
+
     if (!params.account) {
       return (
         <Content className="tab-bodies">
@@ -60,6 +62,10 @@ export class Security extends React.Component {
         </Content>
       )
     }
+
+    const { pathname } = this.props.location;
+    const subPage = getTabName(pathname);
+
     return (
       <div>
         <Nav bsStyle="tabs" className="system-nav">
