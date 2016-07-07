@@ -143,20 +143,22 @@ export function generateNestedLink(base, linkParts) {
 }
 
 export function getAnalyticsUrl(linkType, val, params) {
-  const { brand, account, group } = params
+  const { brand, account, group } = params,
+    baseUrl = getRoute('analytics')
+
   let url
   switch(linkType) {
     case 'brand':
-      url = `${getRoute('analytics')}/${val}`
+      url = `${baseUrl}/${val}`
       break;
     case 'account':
-      url = `${getRoute('analytics')}/${brand}/${val}`
+      url = `${baseUrl}/${brand}/${val}`
       break;
     case 'group':
-      url = `${getRoute('analytics')}/${brand}/${account}/${val}`
+      url = `${baseUrl}/${brand}/${account}/${val}`
       break;
     case 'property':
-      url = `${getRoute('analytics')}/${brand}/${account}/${group}/${val}`
+      url = `${baseUrl}/${brand}/${account}/${group}/${val}`
       break;
   }
 
@@ -164,21 +166,22 @@ export function getAnalyticsUrl(linkType, val, params) {
 }
 
 export function getContentUrl(linkType, val, params) {
-  const { brand, account, group } = params
-  let url
+  const { brand, account, group } = params,
+    baseUrl = getRoute('content')
 
+  let url
   switch(linkType) {
     case 'brand':
-      url = `/content/accounts/${val}`
+      url = `${baseUrl}/${val}`
       break;
     case 'account':
-      url = `/content/groups/${brand}/${val}`
+      url = `${baseUrl}/${brand}/${val}`
       break;
     case 'group':
-      url = `/content/hosts/${brand}/${account}/${val}`
+      url = `${baseUrl}/${brand}/${account}/${val}`
       break;
     case 'property':
-      url = `/content/property/${brand}/${account}/${group}/${val}`
+      url = `${baseUrl}/${brand}/${account}/${group}/${val}`
       break;
   }
 
@@ -203,18 +206,19 @@ export function getAnalyticsUrlFromParams(params) {
 }
 
 export function getContentUrlFromParams(params) {
-  const { brand, account, group, property } = params
+  const { brand, account, group, property } = params,
+    baseUrl = getRoute('content')
 
   if (property) {
-    return `/content/property/${brand}/${account}/${group}/${property}`
+    return `${baseUrl}/${brand}/${account}/${group}/${property}`
   } else if (group) {
-    return `/content/hosts/${brand}/${account}/${group}`
+    return `${baseUrl}/${brand}/${account}/${group}`
   } else if (account) {
-    return `/content/groups/${brand}/${account}`
+    return `${baseUrl}/${brand}/${account}`
   } else if (brand) {
-    return `/content/accounts/${brand}`
+    return `${baseUrl}/${brand}`
   } else {
-    return `/content/accounts/udn`
+    return `${baseUrl}/udn`
   }
 }
 

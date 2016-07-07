@@ -237,6 +237,9 @@ Main.propTypes = {
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
+Main.contextTypes = {
+  history: React.PropTypes.object.isRequired
+}
 
 function mapStateToProps(state) {
   return {
