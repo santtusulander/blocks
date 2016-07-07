@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
+import forEach from 'lodash/foreach';
 
 import AccountManagement from './containers/account-management'
 import Accounts from './containers/accounts'
@@ -35,12 +36,12 @@ const routes = {
   analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content',
-  contentBrand: 'accounts/:brand',
-  contentAccount: 'groups/:brand/:account',
-  contentGroup: 'hosts/:brand/:account/:group',
-  contentProperty: 'property/:brand/:account/:group/:property',
-  contentPropertyAnalytics: 'property/:brand/:account/:group/:property/analytics',
-  contentPropertyConfiguration: 'property/:brand/:account/:group/:property/configuration',
+  contentBrand: ':brand',
+  contentAccount: ':brand/:account',
+  contentGroup: ':brand/:account/:group',
+  contentProperty: ':brand/:account/:group/:property',
+  contentPropertyAnalytics: ':brand/:account/:group/:property/analytics',
+  contentPropertyConfiguration: ':brand/:account/:group/:property/configuration',
 
   accountManagement: '/account-management',
   services: '/services',
@@ -49,9 +50,26 @@ const routes = {
   configuration: '/services'
 }
 
-/* helper to get route by name */
-export function getRoute(name) {
-  return routes[name]
+/**
+ *
+ * @param {string} name
+ * @param {Object} params
+ * @returns {string}
+ */
+export function getRoute(name, params) {
+  if (!routes[name]) {
+    throw new Error('Unknown route "%s"', name)
+  }
+
+  let route = routes[name]
+
+  if (params) {
+    forEach(params, (value, key) => {
+      route = route.replace(`:${key}`, value)
+    })
+  }
+
+  return route
 }
 
 //Analytics v2
@@ -83,7 +101,7 @@ function getAnalyticsTabRoutes() {
 
 module.exports = (
   <Route path="/" component={Main}>
-    <IndexRedirect to="/content/accounts/udn" />
+    <IndexRedirect to={getRoute('contentBrand', { brand: 'udn' })} />
     <Route path="starburst-help" component={StarburstHelp}/>
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
@@ -107,7 +125,7 @@ module.exports = (
 
     {/* Content - routes */}
     <Route path={routes.content}>
-      <IndexRedirect to={routes.contentBrand.replace(':brand', 'udn')} />
+      <IndexRedirect to={getRoute('contentBrand', { brand: 'udn' })} />
       <Route component={ContentTransition}>
         <Route path={routes.contentBrand} component={Accounts}/>
         <Route path={routes.contentAccount} component={Groups}/>

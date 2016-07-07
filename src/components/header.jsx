@@ -188,7 +188,7 @@ class Header extends React.Component {
           {/* TODO: the logo should link to the level where they select accounts,
            for CPs it should link to where they select groups.*/}
           <li className='logo'>
-            <Link to={`/content/accounts/udn`}>
+            <Link to={getRoute('content', { brand: 'udn' })}>
               <IconEricsson />
             </Link>
           </li>

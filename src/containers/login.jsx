@@ -3,6 +3,8 @@ import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import { getContentUrl } from '../util/helpers'
+
 import * as userActionCreators from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
 
@@ -42,7 +44,7 @@ export class Login extends React.Component {
     //     this.setState({loginError: action.payload.message})
     //   }
     // })
-    this.props.history.pushState(null, `/content/accounts/udn/`)
+    this.props.history.pushState(null, getContentUrl('brand', 'udn', {}));
   }
   onSubmit(e) {
     e.preventDefault()
