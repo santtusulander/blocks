@@ -25,6 +25,22 @@ class AccountManagementManageAccount extends React.Component {
   changeTab(newTab) {
     this.setState({activeTab: newTab})
   }
+  renderTabs() {
+    const params = this.props.params;
+
+    if (!params.account) {
+      return null
+    }
+
+    return (
+      <Nav bsStyle="tabs" className="system-nav"
+           activeKey={this.state.activeTab} onSelect={this.changeTab}>
+        <NavItem eventKey="account">Account</NavItem>
+        <NavItem eventKey="groups">Groups</NavItem>
+        <NavItem eventKey="users">Users</NavItem>
+      </Nav>
+    )
+  }
   render() {
     const { account, isAdmin, toggleModal } = this.props
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
@@ -41,12 +57,7 @@ class AccountManagementManageAccount extends React.Component {
             </UDNButton>
           </h1>
         </PageHeader>
-        <Nav bsStyle="tabs" className="system-nav"
-          activeKey={this.state.activeTab} onSelect={this.changeTab}>
-          <NavItem eventKey="account">Account</NavItem>
-          <NavItem eventKey="groups">Groups</NavItem>
-          <NavItem eventKey="users">Users</NavItem>
-        </Nav>
+        {this.renderTabs()}
         <div className="tab-bodies">
           {account.isEmpty() && <p className='text-center'><br/>Please select an account.</p>}
           {this.state.activeTab === 'account' && !account.isEmpty() &&

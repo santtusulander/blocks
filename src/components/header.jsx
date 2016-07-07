@@ -75,7 +75,7 @@ class Header extends React.Component {
 
     if (params.group === activeGroup) {
       links.push({
-        url: urlMethod('group', params.group, params),
+        url: params.property ? urlMethod('group', params.group, params) : null,
         label:  params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'
       })
     }
@@ -99,24 +99,11 @@ class Header extends React.Component {
 
     const pathname = this.props.pathname,
       { history } = this.context,
-      params = this.props.params,
-      activeAccount = this.props.activeAccount ? this.props.activeAccount.get('id').toString() : null
+      params = this.props.params
 
     if (history.isActive(getRoute('content'))) {
-      const buildContentUrl = (routeName) => {
-        const baseUrl = getRoute('content'),
-          route = getRoute(routeName)
-            .replace(':brand', params.brand)
-            .replace(':account', params.account)
-            .replace(':group', params.group)
-            .replace(':property', params.property)
-
-
-        return `${baseUrl}/${route}`
-      }
-
       let propertyLinkIsLast = true
-      if (history.isActive(buildContentUrl('contentPropertyAnalytics'))) {
+      if (history.isActive(getRoute('contentPropertyAnalytics', params))) {
         links.push({
           label:  'Analytics'
         })
@@ -124,7 +111,7 @@ class Header extends React.Component {
         propertyLinkIsLast = false
       }
 
-      if (history.isActive(buildContentUrl('contentPropertyConfiguration'))) {
+      if (history.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
           label:  'Configuration'
         })
@@ -137,7 +124,7 @@ class Header extends React.Component {
 
       links.push({
         label:  'Content',
-        url: activeAccount && links.length > 0 ? `/content/groups/udn/${params.account}` : null
+        url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
       })
     } else if (history.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)

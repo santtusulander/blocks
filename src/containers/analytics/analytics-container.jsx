@@ -97,6 +97,68 @@ class AnalyticsContainer extends React.Component {
     } )
   }
 
+  renderFilters() {
+    const params = this.props.params
+
+    if (!params.account) {
+      return null
+    }
+
+    const {
+      filterOptions,
+      filters,
+      location: { pathname, query: { property } }
+    } = this.props
+
+    /* TODO: should  be moved to consts ? */
+    const availableFilters = Immutable.fromJS({
+      'traffic': ['date-range', 'service-type'],
+      'visitors': ['date-range'],
+      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
+      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+      'file-error': ['date-range', 'error-code', 'service-type'],
+      'url-report': ['date-range', 'error-code', 'service-type'],
+      'playback-demo': ['video']
+    })
+
+    return (
+      <AnalyticsFilters
+        onFilterChange={this.onFilterChange}
+        filters={filters}
+        filterOptions={filterOptions}
+        showFilters={availableFilters.get(getTabName(pathname))}
+      />
+    )
+  }
+
+  renderContent(children, filters) {
+    const params = this.props.params,
+      locations = this.props.location
+
+    if (!params.account) {
+      return (
+        <div className='analytics-tab-container'>
+          <p className='text-center'>Please select an account<br/>
+            from top left to see analytics</p>
+        </div>
+      )
+    }
+
+    return (
+      <div className='analytics-tab-container'>
+        {
+          /* Render tab -content */
+          children && React.cloneElement(children, {
+            params: params,
+            ref: 'tab',
+            filters: filters,
+            location: location
+          } )
+        }
+      </div>
+    )
+  }
+
   render(){
     const {
       params,
@@ -112,17 +174,6 @@ class AnalyticsContainer extends React.Component {
       activeGroup,
       location: { pathname, query: { property } }
     } = this.props
-
-    /* TODO: should  be moved to consts ? */
-    const availableFilters = Immutable.fromJS({
-      'traffic': ['date-range', 'service-type'],
-      'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
-      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code', 'service-type'],
-      'url-report': ['date-range', 'error-code', 'service-type'],
-      'playback-demo': ['video']
-    })
     const exportCSV = () => {
       const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
       const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
@@ -146,28 +197,8 @@ class AnalyticsContainer extends React.Component {
               activeTab={getTabName(pathname)}
             />
           </PageHeader>
-
-
-          <AnalyticsFilters
-            onFilterChange={this.onFilterChange}
-            filters={filters}
-            filterOptions={filterOptions}
-            showFilters={availableFilters.get(getTabName(pathname))}
-          />
-
-          <div className='analytics-tab-container'>
-
-          {
-            /* Render tab -content */
-            children && React.cloneElement(children, {
-              params: params,
-              ref: 'tab',
-              filters: filters,
-              location: this.props.location
-            } )
-          }
-
-          </div>
+          {this.renderFilters()}
+          {this.renderContent(children, filters)}
         </Content>
       </PageContainer>
     )

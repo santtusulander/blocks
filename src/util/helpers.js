@@ -183,6 +183,12 @@ export function getContentUrl(linkType, val, params) {
     case 'property':
       url = `${baseUrl}/${brand}/${account}/${group}/${val}`
       break;
+    case 'propertyAnalytics':
+      url = `${baseUrl}/${brand}/${account}/${group}/${val}/analytics`
+      break;
+    case 'propertyConfiguration':
+      url = `${baseUrl}/${brand}/${account}/${group}/${val}/configuration`
+      break;
   }
 
   return url
@@ -231,6 +237,42 @@ export function getAccountManagementUrlFromParams(params) {
     return getRoute('accountManagementBrand', params)
   } else {
     return getRoute('accountManagementBrand', { brand: 'udn' })
+  }
+}
+
+export function getServicesUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('servicesAccount', params)
+  } else if (brand) {
+    return getRoute('servicesBrand', params)
+  } else {
+    return getRoute('servicesBrand', { brand: 'udn' })
+  }
+}
+
+export function getSupportUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('supportAccount', params)
+  } else if (brand) {
+    return getRoute('supportBrand', params)
+  } else {
+    return getRoute('supportBrand', { brand: 'udn' })
+  }
+}
+
+export function getSecurityUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('securityAccount', params)
+  } else if (brand) {
+    return getRoute('securityBrand', params)
+  } else {
+    return getRoute('securityBrand', { brand: 'udn' })
   }
 }
 
