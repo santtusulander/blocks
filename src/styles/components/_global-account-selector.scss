@@ -1,0 +1,55 @@
+.global-account-selector {
+  .dropdown-menu {
+    max-height: 500px !important;
+    width: 270px !important;
+    overflow-y: auto !important;
+
+    li {
+      display: flex;
+
+      a {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        padding: 0 20px;
+        width: 100%;
+        align-items: center;
+      }
+    }
+
+    .form-group {
+      padding: 0;
+      flex: 1;
+
+      input {
+        border-radius: 20px;
+      }
+    }
+  }
+
+  .back-text {
+    font-weight: bold;
+
+    .caret {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 5px solid $pale-blue;
+      margin-left: -10px;
+      margin-right: 10px;
+    }
+  }
+
+  .name {
+    flex: 1;
+  }
+
+  .caret-container {
+    width: auto;
+
+    .caret {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid $pale-blue;
+    }
+  }
+}

@@ -1,25 +1,13 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link } from 'react-router'
-import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
+import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 
-import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
-
-import { getTabLink, getTabName, getAnalyticsUrl } from '../../util/helpers.js'
+//import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
+import AccountSelector from '../../containers/global-account-selector.jsx'
+import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 
 import './analytics-view-control.scss'
-
-function createOptions(opts) {
-  return opts.map(opt => {
-    return [opt.get('id').toString(), opt.get('name')]
-  })
-}
-
-function createPropertyOptions(opts) {
-  return opts.map(opt => {
-    return [opt, opt]
-  })
-}
 
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview' },
@@ -52,16 +40,16 @@ const tabs = [
  */
 const AnalyticsViewControl = (props) => {
 
-  const accountOptions  = createOptions(props.accounts)
-  const groupOptions    = createOptions(props.groups)
-  const propertyOptions = createPropertyOptions(props.properties)
-
+  const {
+    account,
+    group,
+    property
+  } = props.params
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
-
   let title = "Analytics"
   if(props.activeTab) {
     const active = tabs.find(tab => tab.key === props.activeTab)
@@ -69,10 +57,10 @@ const AnalyticsViewControl = (props) => {
       if(active.hideHierarchy) {
         title = active.label
       }
-      else if(props.params.property) {
+      else if(property) {
         title = `Property ${active.label}`
       }
-      else if(props.params.group) {
+      else if(group) {
         title = `Group ${active.label}`
       }
       else {
@@ -80,13 +68,60 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-
+  let activeItem = property
+  if(group && props.activeGroup) {
+    activeItem = props.activeGroup.get('name')
+  }
+  else if(account && props.activeAccount) {
+    activeItem = props.activeAccount.get('name')
+  }
+  const isContentAnalytics = props.history.isActive('/content')
+  const topBarTexts = {
+    property: 'Back to Groups',
+    group: 'Account Report',
+    account: 'UDN Admin',
+    brand: 'UDN Admin'
+  }
+  if(property && isContentAnalytics) {
+    delete topBarTexts.property
+  }
+  const topBarFunc = (tier, fetchItems, IDs) => {
+    const { account, brand } = IDs
+    switch(tier) {
+      case 'property':
+        fetchItems('group', 'udn', account)
+        break
+      case 'group':
+        props.history.pushState(null, getAnalyticsUrl('account', account, { brand }))
+        break
+      case 'brand':
+      case 'account':
+        props.history.pushState(null, getAnalyticsUrl('brand', 'udn', {}))
+        break
+    }
+  }
   return (
     <div className='analytics-view-control'>
 
       <p>{title}</p>
 
-      { /* If account is not selected (Needs to be: UDN ADMIN) */
+      {
+
+        <AccountSelector
+          params={props.params}
+          topBarTexts={topBarTexts}
+          topBarAction={topBarFunc}
+          onSelect={(...params) => {
+            const url = isContentAnalytics ?
+              `${getContentUrl(...params)}/analytics` :
+              getAnalyticsUrl(...params)
+            props.history.pushState(null, url)
+          }}>
+          <Dropdown.Toggle bsStyle="link" className="header-toggle">
+              <h1>{activeItem || "select account"}</h1>
+          </Dropdown.Toggle>
+        </AccountSelector>
+      /* If account is not selected (Needs to be: UDN ADMIN)
         !props.params.account &&
         <HeadingDropdown
           className="heading-dropdown"
@@ -120,7 +155,7 @@ const AnalyticsViewControl = (props) => {
         value={props.params.property}
         type={'Property'}
       />
-      }
+      */}
 
       <ButtonToolbar className="pull-right">
         <Button

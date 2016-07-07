@@ -16,6 +16,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
+import AccountSelector from './global-account-selector'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
@@ -23,7 +24,7 @@ import AnalysisByTime from '../components/analysis/by-time'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond} from '../util/helpers'
+import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
@@ -45,6 +46,13 @@ function safeFormattedEndDate(date) {
   return date || endOfThisDay().format('X')
 }
 
+const itemSelectorTexts = {
+  property: 'Back to Groups',
+  group: 'Back to Accounts',
+  account: 'UDN Admin',
+  brand: 'UDN Admin'
+}
+
 export class Property extends React.Component {
   constructor(props) {
     super(props)
@@ -57,6 +65,7 @@ export class Property extends React.Component {
       propertyMenuOpen: false
     }
 
+    this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.savePurge = this.savePurge.bind(this)
@@ -69,7 +78,7 @@ export class Property extends React.Component {
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
-    this.fetchData(this.props.location.query)
+    this.fetchData(this.props.params, this.props.location.query)
   }
   componentDidMount() {
     this.measureContainers()
@@ -77,18 +86,21 @@ export class Property extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {
+    const prevParams = JSON.stringify(this.props.params)
+    const params = JSON.stringify(nextProps.params)
+
     const newQuery = nextProps.location.query
     const oldQuery = this.props.location.query
-    if(newQuery.name !== oldQuery.name) {
-      this.fetchHost(newQuery.name)
-      this.fetchData(newQuery)
+    if(params !== prevParams) {
+      this.fetchHost(nextProps.params.property)
+      this.fetchData(nextProps.params, newQuery)
     }
     else if(newQuery.startDate !== oldQuery.startDate ||
       newQuery.endDate !== oldQuery.endDate) {
       this.setState({
         activeSlice: null
       }, () => {
-        this.fetchData(newQuery)
+        this.fetchData(nextProps.params, newQuery)
       })
     }
     this.measureContainers()
@@ -111,9 +123,24 @@ export class Property extends React.Component {
     }, () => {
       this.props.history.pushState(
         null,
-        `${pathname}?name=${query.name}&startDate=${fStartDate}&endDate=${fEndDate}`
+        `${pathname}?startDate=${fStartDate}&endDate=${fEndDate}`
       )
     })
+  }
+  itemSelectorTopBarAction(tier, fetchItems, IDs) {
+    const { account } = IDs
+    switch(tier) {
+      case 'property':
+        fetchItems('group', 'udn', account)
+        break
+      case 'group':
+        fetchItems('account', 'udn')
+        break
+      case 'brand':
+      case 'account':
+        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        break
+    }
   }
   fetchHost(property) {
     this.props.hostActions.startFetching()
@@ -124,18 +151,18 @@ export class Property extends React.Component {
       property
     )
   }
-  fetchData(queryParams) {
-    const {brand, account, group} = this.props.params
+  fetchData(params, queryParams) {
+    const {brand, account, group, property} = this.props.params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
-      this.fetchHost(queryParams.name)
+      this.fetchHost(property)
     }
     Promise.all([
       this.props.visitorsActions.fetchByCountry({
         account: account,
         group: group,
-        property: queryParams.name,
+        property: property,
         startDate: startDate,
         endDate: endDate,
         granularity: 'day',
@@ -157,7 +184,7 @@ export class Property extends React.Component {
       group: group,
       startDate: startDate,
       endDate: endDate,
-      property: queryParams.name,
+      property: property,
       list_children: 'false'
     }
     this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
@@ -276,35 +303,26 @@ export class Property extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
               <Link className="btn btn-success btn-icon"
-                to={`/analysis/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${this.props.location.query.name}`}>
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
                 <IconChart/>
               </Link>
               <Link className="btn btn-success btn-icon"
-                to={`/content/configuration/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${this.props.location.query.name}`}>
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                 <IconConfiguration/>
               </Link>
             </ButtonToolbar>
 
             <p>PROPERTY SUMMARY</p>
-            <Dropdown id="dropdown-content"
-              open={this.state.propertyMenuOpen}
-              onToggle={this.togglePropertyMenu}>
+            <AccountSelector
+              params={this.props.params}
+              topBarTexts={itemSelectorTexts}
+              topBarAction={this.itemSelectorTopBarAction}
+              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+              drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <h1>{this.props.location.query.name}</h1>
+                <h1>{this.props.params.property}</h1>
               </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {this.props.properties.map(
-                  (property, i) =>
-                    property !== this.props.location.query.name ?
-                    <li key={i}>
-                      <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/property?name=${property}`}
-                        onClick={this.togglePropertyMenu}>
-                        {property}
-                      </Link>
-                    </li> : null
-                ).toJS()}
-              </Dropdown.Menu>
-            </Dropdown>
+            </AccountSelector>
           </PageHeader>
           <div className="container-fluid">
 

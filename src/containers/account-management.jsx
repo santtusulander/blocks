@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is, fromJS } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -11,9 +11,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import AccountManagementSidebar from '../components/account-management/account-management-sidebar'
 import ManageAccount from '../components/account-management/manage-account'
-import ManageSystem from '../components/account-management/manage-system'
 
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
 import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
@@ -43,9 +41,12 @@ export class AccountManagement extends Component {
   }
 
   componentWillMount() {
-    const accountId = this.props.params.account
-    if ( accountId && accountId !== 'null' && !this.props.activeAccount) {
-      this.props.accountActions.fetchAccount('udn', accountId)
+    // TODO: add support for brand level account management.
+    const accountId = this.props.params.account;
+    if (accountId) {
+      this.props.accountActions.fetchAccount(this.props.params.brand, accountId);
+    } else {
+      this.props.accountActions.clearActiveAccount();
     }
   }
 
@@ -55,7 +56,6 @@ export class AccountManagement extends Component {
     const data = getValues(soaFormData)
     dnsActions.editSOA({ id: activeDomain.get('id'), data })
     toggleModal(null)
-
   }
 
   changeActiveAccount(account) {
@@ -126,6 +126,7 @@ export class AccountManagement extends Component {
   render() {
     const {
       params: { account },
+      params,
       dnsData,
       dnsActions,
       activeRecordType,
@@ -145,7 +146,6 @@ export class AccountManagement extends Component {
         ttl: '3600'
       }
     }
-
     const soaFormInitialValues = dnsData && {
       initialValues:
         dnsData
@@ -178,7 +178,10 @@ export class AccountManagement extends Component {
             deleteGroup={this.deleteGroupFromActiveAccount}
             editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
-            groups={this.props.groups}/>
+            groups={this.props.groups}
+            params={params}
+            history={this.props.history}
+          />
 
             {/*
             <ManageSystem

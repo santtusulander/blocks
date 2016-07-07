@@ -38,12 +38,14 @@ export class Main extends React.Component {
   componentWillMount() {
     this.props.userActions.checkToken()
 
-    this.props.fetchAccountData(this.props.activeAccount, this.props.accounts)
+    this.props.fetchAccountData(this.props.activeAccount || this.props.params.account, this.props.accounts)
   }
 
   //update account is account prop changed (in url)
   componentWillReceiveProps(nextProps){
-    if (this.props.params.account !== nextProps.params.account) this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
+    if (this.props.params.account !== nextProps.params.account) {
+      this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
+    }
   }
 
   activatePurge(property) {
@@ -139,12 +141,15 @@ export class Main extends React.Component {
       this.props.accounts,
       this.props.username
     )
+    const { history } = this.context
+
     return (
       <div className={classNames}>
       { this.props.user.get('loggedIn') &&
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
+          history={history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
@@ -233,6 +238,9 @@ Main.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
+}
+Main.contextTypes = {
+  history: React.PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {

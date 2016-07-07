@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
@@ -48,6 +50,7 @@ export class Hosts extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
+    const params = this.props.params
     const { brand, account, group } = this.props.params
     const { activeAccount, activeGroup } = this.props
     const properties = this.props.hosts.map(host => {
@@ -56,22 +59,14 @@ export class Hosts extends React.Component {
         name: host
       })
     })
-    const builtPath = `${brand}/${account}/${group}/property?name=`
     const nextPageURLBuilder = (property) => {
-      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
-      return `/content/property/${builtPath}${encoded}`
+      return getContentUrl('property', property, params)
     }
     const configURLBuilder = (property) => {
-      const encoded = encodeURIComponent(property).replace(/\./g, "%2e")
-      return `/content/configuration/${builtPath}${encoded}`
+      return getContentUrl('propertyConfiguration', property, params)
     }
-    const analyticsPath = `${brand}/${account}/${group}/property?property=`
-    const analyticsURLBuilder = (...property) => {
-      if(property[0]) {
-        const encoded = encodeURIComponent(property[0]).replace(/\./g, "%2e")
-        return `/analysis/${analyticsPath}${encoded}`
-      }
-      return `/analysis/${brand}/${account}/${group}`
+    const analyticsURLBuilder = (property) => {
+      return getContentUrl('propertyAnalytics', property, params)
     }
     const breadcrumbs = [
       {
@@ -88,6 +83,8 @@ export class Hosts extends React.Component {
         activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
+        params={this.props.params}
+        history={this.props.history}
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}

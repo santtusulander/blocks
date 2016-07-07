@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -39,11 +41,12 @@ export class Groups extends React.Component {
   render() {
     const { brand, account } = this.props.params
     const { activeAccount, activeGroup } = this.props
-    const builtPath = `${brand}/${account}`
-    const nextPageURLBuilder = (groupID) => `/content/hosts/${builtPath}/${groupID}`
+
+    const nextPageURLBuilder = (groupID) => {
+      return getContentUrl('group', groupID, this.props.params)
+    }
     const analyticsURLBuilder = (...groupID) => {
-      return groupID[0] ? `/analysis/${builtPath}/${groupID[0]}`
-        : `/analysis/${brand}/${account}`
+      return getAnalyticsUrl('group', groupID, this.props.params)
     }
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
     return (
@@ -52,6 +55,8 @@ export class Groups extends React.Component {
         activeGroup={activeGroup}
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
+        params={this.props.params}
+        history={this.props.history}
         className="groups-container"
         contentItems={this.props.groups}
         dailyTraffic={this.props.dailyTraffic}
