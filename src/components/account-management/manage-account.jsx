@@ -2,6 +2,7 @@ import React from 'react'
 import { Nav, NavItem, Dropdown } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import { getRoute } from '../../routes.jsx'
 import PageHeader from '../layout/page-header'
 import Account from './account/account'
 import Groups from './account/groups'
@@ -45,24 +46,17 @@ class AccountManagementManageAccount extends React.Component {
     )
   }
   render() {
-    const { account, isAdmin, toggleModal } = this.props
+    const { account, isAdmin, toggleModal, history } = this.props
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
-    const itemSelectorFunc = (...params) => {
-      if(history.isActive('/content')) {
-        history.pushState(null, getUrl('/account-management', ...params))
-      } else if(history.isActive('/analysis')){
-        history.pushState(null, getUrl('/account-management', ...params))
-      }
-    }
     return (
       <div className="account-management-manage-account">
         <PageHeader>
           <AccountSelector
             params={{ brand: 'udn' }}
-            restricedTo="brand"
+            restrictedTo="brand"
             topBarTexts={{ brand: 'UDN Admin' }}
-            topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-            onSelect={(...params) => itemSelectorFunc(...params)}>
+            topBarAction={() => history.pushState(null, getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
+            onSelect={(...params) => history.pushState(null, getUrl(getRoute('accountManagement'), ...params))}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{account.get('name') || 'No active account'}</h1>
             </Dropdown.Toggle>

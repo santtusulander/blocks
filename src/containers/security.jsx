@@ -4,7 +4,6 @@ import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getRoute } from '../routes.jsx'
 
 import { getTabName, getSecurityUrlFromParams } from '../util/helpers'
 
@@ -125,7 +124,12 @@ export class Security extends React.Component {
     return (
       <PageContainer className="account-management">
          <div className="account-management-system-users">
-          <SecurityPageHeader history={history} params={this.props.params} accounts={accounts} fetchAccount={fetchAccount}/>
+          <SecurityPageHeader
+            history={history}
+            params={this.props.params}
+            accounts={accounts}
+            activeAccount={activeAccount.get('name')}
+            fetchAccount={fetchAccount}/>
            {this.renderContent(certificateFormProps, sslListProps)}
         </div>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}

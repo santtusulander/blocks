@@ -8,7 +8,7 @@ import IconAlerts from '../components/icons/icon-alerts.jsx'
 import IconEricsson from './icons/icon-ericsson.jsx'
 import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../containers/global-account-selector.jsx'
-import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+import { getAnalyticsUrl, getContentUrl, getUrl } from '../util/helpers.js'
 
 
 import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
@@ -83,8 +83,7 @@ class Header extends React.Component {
 
   addPropertyLink(links, urlMethod, isLastLink) {
     const activeProperty = this.props.params.property,
-      params = this.props.params,
-      { history } = this.context;
+      params = this.props.params
 
     if (activeProperty) {
       links.push({
@@ -158,10 +157,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const {
-      history,
-      activeAccount
-    } = this.props
+    const { activeAccount } = this.props, { history } = this.context
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -169,8 +165,12 @@ class Header extends React.Component {
     const itemSelectorFunc = (...params) => {
       if(history.isActive('/content')) {
         history.pushState(null, getContentUrl(...params))
-      } else if(history.isActive('/analysis')){
+      } else if(history.isActive('/analysis')) {
         history.pushState(null, getAnalyticsUrl(...params))
+      } else if(history.isActive('/account-management')) {
+        history.pushState(null, getUrl('/account-management', ...params))
+      } else if(history.isActive('/security')) {
+        history.pushState(null, getUrl('/security', ...params))
       }
     }
     return (
