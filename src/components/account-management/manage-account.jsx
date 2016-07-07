@@ -57,7 +57,6 @@ class AccountManagementManageAccount extends React.Component {
     return (
       <div className="account-management-manage-account">
         <PageHeader>
-        <h1>
           <AccountSelector
             params={{ brand: 'udn' }}
             restricedTo="brand"
@@ -65,17 +64,16 @@ class AccountManagementManageAccount extends React.Component {
             topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
             onSelect={(...params) => itemSelectorFunc(...params)}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              {account.get('name') || 'No active account'}
+              <h1>{account.get('name') || 'No active account'}</h1>
             </Dropdown.Toggle>
         </AccountSelector>
-            <UDNButton bsStyle="success"
-              pageHeaderBtn={true}
-              icon={true}
-              addNew={true}
-              onClick={() => toggleModal(ADD_ACCOUNT)}>
-              <IconAdd/>
-            </UDNButton>
-          </h1>
+        <UDNButton bsStyle="success"
+                   pageHeaderBtn={true}
+                   icon={true}
+                   addNew={true}
+                   onClick={() => toggleModal(ADD_ACCOUNT)}>
+          <IconAdd/>
+        </UDNButton>
         </PageHeader>
         {this.renderTabs()}
         <div className="tab-bodies">
