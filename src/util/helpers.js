@@ -258,6 +258,18 @@ export function getSupportUrlFromParams(params) {
   }
 }
 
+export function getSecurityUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('securityAccount', params)
+  } else if (brand) {
+    return getRoute('securityBrand', params)
+  } else {
+    return getRoute('securityBrand', { brand: 'udn' })
+  }
+}
+
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()

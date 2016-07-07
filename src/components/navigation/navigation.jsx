@@ -7,7 +7,8 @@ import {
   getAnalyticsUrlFromParams,
   getContentUrlFromParams,
   getServicesUrlFromParams,
-  getSupportUrlFromParams
+  getSupportUrlFromParams,
+  getSecurityUrlFromParams
 } from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
@@ -51,7 +52,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={`/security`} activeClassName="active">
+          <Link to={getSecurityUrlFromParams(params)} activeClassName="active">
             <IconSecurity />
             <span>Security</span>
           </Link>

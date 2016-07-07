@@ -53,8 +53,12 @@ const routes = {
   servicesAccount: '/services/:brand/:account',
 
   security: '/security',
-  securityBrand: '/services/:brand',
-  securityAccount: '/services/:brand/:account',
+  securityBrand: '/security/:brand',
+  securityAccount: '/security/:brand/:account',
+
+  securityTabSslCertificate: 'ssl-certificate',
+  securityTabContentTargeting: 'content-targeting',
+  securityTabTokenAuthentication: 'token-authentication',
 
   support: '/support',
   supportBrand: '/support/:brand',
@@ -155,11 +159,14 @@ module.exports = (
       <Route path=":brand" component={Configurations}/>
     </Route>
 
-    <Route path="/security">
-      <IndexRedirect to="ssl-certificate"/>
-      <Route path=":subPage">
-        <Route path=":account/:group" component={Security}/>
-        <Route path=":account" component={Security}/>
+    {/* Security - routes */}
+    <Route path={routes.security}>
+      <IndexRedirect to={getRoute('securityBrand', { brand: 'udn' })} />
+      <Route path={routes.securityBrand} component={Security} />
+      <Route path={routes.securityAccount} component={Security}>
+        <IndexRedirect to={routes.securityTabSslCertificate} />
+        <Route path=":subPage">
+        </Route>
       </Route>
     </Route>
 

@@ -4,6 +4,7 @@ import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { getRoute } from '../routes.jsx'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -47,6 +48,43 @@ export class Security extends React.Component {
       default: break
     }
   }
+
+  renderContent(certificateFormProps, sslListProps) {
+    const params = this.props.params
+
+    if (!params.account) {
+      return (
+        <Content className="tab-bodies">
+          <p className='text-center'>Please select an account<br/>
+            from top left to see security</p>
+        </Content>
+      )
+    }
+
+    const subPage = params.subPage
+
+    return (
+      <div>
+        <Nav bsStyle="tabs" className="system-nav">
+          <li className="navbar">
+            <Link to={getRoute('securityAccount', params) + '/ssl-certificate'} activeClassName="active">SSL CERTIFICATE</Link>
+          </li>
+          <li className="navbar">
+            <Link to={getRoute('securityAccount', params) + '/token-authentication'} activeClassName="active">TOKEN AUTHENTICATION</Link>
+          </li>
+          <li className="navbar">
+            <Link to={getRoute('securityAccount', params) + '/content-targeting'} activeClassName="active">CONTENT TARGETING</Link>
+          </li>
+        </Nav>
+        <Content className="tab-bodies">
+          {subPage === 'ssl-certificate' && <SSLList { ...sslListProps }/>}
+          {subPage === 'token-authentication' && <h3>token-authentication</h3>}
+          {subPage === 'content-targeting' && <h3>content-targeting</h3>}
+        </Content>
+      </div>
+    )
+  }
+
   render() {
     const {
       accounts,
@@ -61,6 +99,15 @@ export class Security extends React.Component {
       toggleModal,
       params: { subPage }
     } = this.props
+
+    const certificateFormProps = {
+      title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
+      activeAccount,
+      accounts,
+      fetchAccount,
+      toggleModal
+    }
+
     const sslListProps = {
       activeModal,
       activeCertificates,
@@ -70,33 +117,12 @@ export class Security extends React.Component {
       editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
-    const certificateFormProps = {
-      title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
-      activeAccount,
-      accounts,
-      fetchAccount,
-      toggleModal
-    }
+
     return (
       <PageContainer className="account-management">
          <div className="account-management-system-users">
           <SecurityPageHeader activeAccount={activeAccount.get('id')} accounts={accounts} fetchAccount={fetchAccount}/>
-          <Nav bsStyle="tabs" className="system-nav">
-            <li className="navbar">
-              <Link to="/security/ssl-certificate" activeClassName="active">SSL CERTIFICATE</Link>
-            </li>
-            <li className="navbar">
-              <Link to="/security/token-authentication" activeClassName="active">TOKEN AUTHENTICATION</Link>
-            </li>
-            <li className="navbar">
-              <Link to="/security/content-targeting" activeClassName="active">CONTENT TARGETING</Link>
-            </li>
-          </Nav>
-          <Content className="tab-bodies">
-            {subPage === 'ssl-certificate' && <SSLList { ...sslListProps }/>}
-            {subPage === 'token-authentication' && <h3>token-authentication</h3>}
-            {subPage === 'content-targeting' && <h3>content-targeting</h3>}
-          </Content>
+           {this.renderContent(certificateFormProps, sslListProps)}
         </div>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}

@@ -128,6 +128,7 @@ export class AccountManagement extends Component {
   render() {
     const {
       params: { account },
+      params,
       dnsData,
       dnsActions,
       activeRecordType,
@@ -147,7 +148,6 @@ export class AccountManagement extends Component {
         ttl: '3600'
       }
     }
-
     const soaFormInitialValues = dnsData && {
       initialValues:
         dnsData
@@ -180,7 +180,9 @@ export class AccountManagement extends Component {
             deleteGroup={this.deleteGroupFromActiveAccount}
             editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
-            groups={this.props.groups}/>
+            groups={this.props.groups}
+            params={params}
+          />
 
             {/*
             <ManageSystem
