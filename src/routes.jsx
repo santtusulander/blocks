@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
-import forEach from 'lodash/foreach';
 
 import AccountManagement from './containers/account-management'
 import Accounts from './containers/accounts'
@@ -82,7 +81,7 @@ export function getRoute(name, params) {
   let route = routes[name]
 
   if (params) {
-    forEach(params, (value, key) => {
+    Object.entries(params).forEach(([key, value]) => {
       route = route.replace(`:${key}`, value)
     })
   }
