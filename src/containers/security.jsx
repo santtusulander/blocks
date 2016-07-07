@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getRoute } from '../routes.jsx'
 
-import { getTabName, getUrl } from '../util/helpers'
+import { getTabName, getSecurityUrlFromParams } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -65,18 +65,19 @@ export class Security extends React.Component {
 
     const { pathname } = this.props.location;
     const subPage = getTabName(pathname);
+    const securityBaseUrl = getSecurityUrlFromParams(params);
 
     return (
       <div>
         <Nav bsStyle="tabs" className="system-nav">
           <li className="navbar">
-            <Link to={getRoute('securityAccount', params) + '/ssl-certificate'} activeClassName="active">SSL CERTIFICATE</Link>
+            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active">SSL CERTIFICATE</Link>
           </li>
           <li className="navbar">
-            <Link to={getRoute('securityAccount', params) + '/token-authentication'} activeClassName="active">TOKEN AUTHENTICATION</Link>
+            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active">TOKEN AUTHENTICATION</Link>
           </li>
           <li className="navbar">
-            <Link to={getRoute('securityAccount', params) + '/content-targeting'} activeClassName="active">CONTENT TARGETING</Link>
+            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active">CONTENT TARGETING</Link>
           </li>
         </Nav>
         <Content className="tab-bodies">
