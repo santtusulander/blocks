@@ -75,7 +75,7 @@ class Header extends React.Component {
 
     if (params.group === activeGroup) {
       links.push({
-        url: urlMethod('group', params.group, params),
+        url: params.property ? urlMethod('group', params.group, params) : null,
         label:  params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'
       })
     }
@@ -99,8 +99,7 @@ class Header extends React.Component {
 
     const pathname = this.props.pathname,
       { history } = this.context,
-      params = this.props.params,
-      activeAccount = this.props.activeAccount ? this.props.activeAccount.get('id').toString() : null
+      params = this.props.params
 
     if (history.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
@@ -125,7 +124,7 @@ class Header extends React.Component {
 
       links.push({
         label:  'Content',
-        url: activeAccount && links.length > 0 ? `/content/groups/udn/${params.account}` : null
+        url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
       })
     } else if (history.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)

@@ -151,7 +151,7 @@ module.exports = (
       <Route path={routes.contentProperty} component={Property} />
       <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
         {getAnalyticsTabRoutes()}
-        </Route>
+      </Route>
       <Route path={routes.contentPropertyConfiguration} component={Configuration} />
     </Route>
 
