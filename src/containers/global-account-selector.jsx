@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { connect } from 'react-redux'
 
 import {
   fetchAccountsForModal as fetchAccounts,
@@ -8,15 +7,17 @@ import {
 
 import Menu from '../components/global-account-selector'
 
-let tier
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
+    this.tier
     this.account = null
     this.group = null
+    this.fetchItems = this.fetchItems.bind(this)
     this.state = {
       open: false,
-      searchValue: ''
+      searchValue: '',
+      items: []
     }
     this.selectOption = this.selectOption.bind(this)
   }
@@ -33,7 +34,7 @@ class AccountSelector extends Component {
 
   setInitialTier(params) {
     const { property, group, account, brand } = params
-    tier = property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
+    this.tier = property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
   }
 
   fetchByTier(params) {
@@ -42,15 +43,36 @@ class AccountSelector extends Component {
       this[param] = params[param]
       return params[param]
     })
-    this.props.fetchItems(tier, ...paramArray)
+    this.fetchItems(this.tier, ...paramArray)
   }
 
   onChange(e) {
     this.setState({ searchValue: e.target.value });
   }
 
+  fetchItems(nextTier, ...params) {
+    switch(nextTier) {
+      case 'property':
+        fetchHosts(...params).payload
+          .then(res => {
+            res && this.setState({ items: res.data.map(item => [item, item]) })
+          })
+        break
+      case 'group':
+        fetchGroups(...params).payload
+          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+        break
+      case 'brand':
+      case 'account':
+        fetchAccounts(...params).payload
+          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+        break
+    }
+    this.tier = nextTier
+  }
+
   selectOption(e) {
-    const { onSelect, topBarAction, fetchItems, params: { brand, account, group, property } } = this.props
+    const { onSelect, topBarAction, params: { brand, account, group, property } } = this.props
     switch(e.target.id) {
       /**
        * Item name pressed -> should route to that item. Since the same menu items are displayed
@@ -59,7 +81,7 @@ class AccountSelector extends Component {
       case 'name':
         this.setState({ open: !this.state.open })
         onSelect(
-          tier === 'brand' ? 'account' : tier,
+          this.tier === 'brand' ? 'account' : this.tier,
           e.target.getAttribute('data-value'),
           { brand, account: this.account || account, group: this.group || group }
         )
@@ -69,8 +91,8 @@ class AccountSelector extends Component {
        */
       case 'top-bar':
         topBarAction(
-          tier,
-          fetchItems,
+          this.tier,
+          this.fetchItems,
           {
             account: this.account || account,
             group: this.group || group,
@@ -82,23 +104,23 @@ class AccountSelector extends Component {
          * Caret pressed -> should go one tier deeper
          */
       case 'item-bg':
-        switch(tier) {
+        switch(this.tier) {
           case 'group':
             this.group = e.target.getAttribute('data-value')
-            fetchItems('property', 'udn', this.account, this.group)
+            this.fetchItems('property', 'udn', this.account, this.group)
             break
           case 'brand':
           case 'account':
             this.account = e.target.getAttribute('data-value')
-            fetchItems('group', 'udn', this.account)
+            this.fetchItems('group', 'udn', this.account)
             break
         }
 
     }
   }
 
-  sortedOptions(items) {
-    const { searchValue } = this.state
+  sortedOptions() {
+    const { searchValue, items } = this.state
     const itemsToSort = searchValue !== '' ?
       items.filter(item => item[1].toLowerCase().includes(searchValue.toLowerCase())) :
       items
@@ -111,13 +133,13 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { items, topBarTexts, drillable, ...other } = this.props
+    const { topBarTexts, drillable, ...other } = this.props
     const menuProps = Object.assign(other, {
       toggle: () => this.setState({ open: !this.state.open }),
       onSearch: e => this.setState({ searchValue: e.target.value }),
-      drillable: tier === 'property' ? false : drillable,
-      items: this.sortedOptions(items),
-      topBarText: topBarTexts[tier],
+      drillable: this.tier === 'property' ? false : drillable,
+      items: this.sortedOptions(),
+      topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,
       searchValue,
       open
@@ -129,7 +151,6 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
-  className: PropTypes.string,
   drillable: PropTypes.bool,
   fetchItems: PropTypes.func,
   items: PropTypes.array,
@@ -139,32 +160,4 @@ AccountSelector.propTypes = {
   topBarTexts: PropTypes.object
 }
 
-function mapStateToProps(state) {
-  const items = state.security.get('groups').map(item => [item.get('id'), item.get('name')]).toJS()
-  return {
-    items
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  function fetchItems(nextTier, ...params) {
-    switch(nextTier) {
-      case 'property':
-        dispatch(fetchHosts(...params))
-        break
-      case 'group':
-        dispatch(fetchGroups(...params))
-        break
-      case 'brand':
-      case 'account':
-        dispatch(fetchAccounts(...params))
-        break
-    }
-    tier = nextTier
-  }
-  return {
-    fetchItems
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AccountSelector);
+export default AccountSelector

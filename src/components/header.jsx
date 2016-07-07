@@ -179,7 +179,7 @@ class Header extends React.Component {
     const itemSelectorFunc = (...params) => {
       if(history.isActive('/content')) {
         history.pushState(null, getContentUrl(...params))
-      } else if(history.isActive('/analytics')){
+      } else if(history.isActive('/analysis')){
         history.pushState(null, getAnalyticsUrl(...params))
       }
     }
@@ -200,7 +200,7 @@ class Header extends React.Component {
             </Link>
           </li>
           <AccountSelector
-            params={{brand: 'udn'}}
+            params={{ brand: 'udn' }}
             topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
             topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
             onSelect={(...params) => itemSelectorFunc(...params)}

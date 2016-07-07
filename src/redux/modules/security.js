@@ -40,7 +40,6 @@ export const initialState = fromJS({
 // REDUCERS
 
 export function fetchGroupsSuccess(state, action) {
-  console.log(action)
   return state.merge({
     groups: fromJS(action.payload.data),
     fetching: false
@@ -182,7 +181,7 @@ export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATE
 export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)
 
 /**
- *
+ * These are for the item selector, will not be dispatched
  */
 export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
@@ -196,5 +195,4 @@ export const fetchAccountsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (
 
 export const fetchPropertiesForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account, group) => {
   return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`)
-  .then(res => res && { data: res.data.map(item => { return { id: item, name: item } })})
 })
