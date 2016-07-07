@@ -144,14 +144,17 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
       { this.props.user.get('loggedIn') &&
-      <Navigation
-        history={history}
-        activeAccount={activeAccount}
-        activeGroup={this.props.activeGroup}
-        activeHost={this.props.activeHost}
-        params={this.props.params}
-        pathname={this.props.location.pathname}
-        />
+        this.props.location.pathname !== '/login' &&
+        this.props.location.pathname !== '/starburst-help' ?
+        <Navigation
+          history={history}
+          activeAccount={activeAccount}
+          activeGroup={this.props.activeGroup}
+          activeHost={this.props.activeHost}
+          params={this.props.params}
+          pathname={this.props.location.pathname}
+          />
+        : ''
       }
         {this.props.location.pathname !== '/login' &&
           this.props.location.pathname !== '/starburst-help' ?
@@ -233,9 +236,6 @@ Main.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
-}
-Main.contextTypes = {
-  history: React.PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
