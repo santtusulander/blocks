@@ -290,3 +290,34 @@ label {
   margin-bottom: 10px;
   color: $red;
 }
+
+.search-input {
+  height: $header-btn-height;
+  padding: 10px 0 10px 50px;
+  margin-top: ($bar-height - $header-btn-height) / 2;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: $header-btn-height / 2;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+
+  @include lg {
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+
+  @include md {
+    height: $md-header-btn-height;
+    margin-top: ($md-bar-height - $md-header-btn-height) / 2;
+    border-radius: $md-header-btn-height / 2;
+  }
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-search.svg');
+  }
+
+  .light-theme & {
+    background-image: url('../assets/icons/lt-icon-search.svg');
+  }
+}
