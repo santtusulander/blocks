@@ -63,10 +63,10 @@ class AccountSelector extends Component {
           { brand: 'udn', account: this.account || account, group: this.group || group }
         )
         break
-      case 'top-bar':
       /**
-       * top bar pressed -> some action from parent launched
+       * top bar pressed -> calls to function from parent with desired effects
        */
+      case 'top-bar':
         topBarAction(
           tier,
           fetchItems,
@@ -77,10 +77,10 @@ class AccountSelector extends Component {
             brand: brand
           })
         break
-      case 'item-bg':
         /**
          * Caret pressed -> should go one tier deeper
          */
+      case 'item-bg':
         switch(tier) {
           case 'group':
             this.group = e.target.getAttribute('data-value')
@@ -110,10 +110,11 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { items, topBarTexts, ...other } = this.props
+    const { items, topBarTexts, drillable, ...other } = this.props
     const menuProps = Object.assign(other, {
       toggle: () => this.setState({ open: !this.state.open }),
       onSearch: e => this.setState({ searchValue: e.target.value }),
+      drillable: tier === 'property' ? false : drillable,
       items: this.sortedOptions(items),
       topBarText: topBarTexts[tier],
       onSelect: this.selectOption,

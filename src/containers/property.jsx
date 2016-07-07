@@ -16,6 +16,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
+import AccountSelector from './global-account-selector'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
@@ -45,6 +46,13 @@ function safeFormattedEndDate(date) {
   return date || endOfThisDay().format('X')
 }
 
+const itemSelectorTexts = {
+  property: 'Back to Groups',
+  group: 'Back to Accounts',
+  account: 'UDN Admin',
+  brand: 'UDN Admin'
+}
+
 export class Property extends React.Component {
   constructor(props) {
     super(props)
@@ -57,6 +65,7 @@ export class Property extends React.Component {
       propertyMenuOpen: false
     }
 
+    this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.savePurge = this.savePurge.bind(this)
@@ -117,6 +126,21 @@ export class Property extends React.Component {
         `${pathname}?startDate=${fStartDate}&endDate=${fEndDate}`
       )
     })
+  }
+  itemSelectorTopBarAction(tier, fetchItems, IDs) {
+    const { account } = IDs
+    switch(tier) {
+      case 'property':
+        fetchItems('group', 'udn', account)
+        break
+      case 'group':
+        fetchItems('account', 'udn')
+        break
+      case 'brand':
+      case 'account':
+        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        break
+    }
   }
   fetchHost(property) {
     this.props.hostActions.startFetching()
@@ -289,25 +313,16 @@ export class Property extends React.Component {
             </ButtonToolbar>
 
             <p>PROPERTY SUMMARY</p>
-            <Dropdown id="dropdown-content"
-              open={this.state.propertyMenuOpen}
-              onToggle={this.togglePropertyMenu}>
+            <AccountSelector
+              params={this.props.params}
+              topBarTexts={itemSelectorTexts}
+              topBarAction={this.itemSelectorTopBarAction}
+              onSelect={(val, tier, params) => this.props.history.pushState(null, getContentUrl(tier, val, params))}
+              drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>{this.props.params.property}</h1>
               </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {this.props.properties.map(
-                  (property, i) =>
-                    property !== this.props.params.property ?
-                    <li key={i}>
-                      <Link to={`/content/property/${this.props.params.brand}/${this.props.params.account}/${this.props.params.group}/${property}`}
-                        onClick={this.togglePropertyMenu}>
-                        {property}
-                      </Link>
-                    </li> : null
-                ).toJS()}
-              </Dropdown.Menu>
-            </Dropdown>
+            </AccountSelector>
           </PageHeader>
           <div className="container-fluid">
 

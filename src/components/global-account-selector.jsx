@@ -6,9 +6,6 @@ import IconSelectCaret from './icons/icon-select-caret.jsx'
 const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch}) =>
   <Dropdown id="" onSelect={onSelect} open={open}>
     <span bsRole="toggle" onClick={toggle}>{children}</span>
-    <span className="caret-container">
-      <IconSelectCaret/>
-    </span>
     <Dropdown.Menu>
       <MenuItem>
         <Input

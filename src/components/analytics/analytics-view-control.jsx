@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link } from 'react-router'
-import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
+import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../../containers/global-account-selector.jsx'
@@ -76,13 +76,13 @@ const AnalyticsViewControl = (props) => {
     brand: 'UDN Admin'
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
-    const { account } = IDs
+    const { account, brand } = IDs
     switch(tier) {
       case 'property':
         fetchItems('group', 'udn', account)
         break
       case 'group':
-        props.history.pushState(null, getAnalyticsUrl('account', account, { brand: 'udn' }))
+        props.history.pushState(null, getAnalyticsUrl('account', account, { brand }))
         break
       case 'brand':
       case 'account':
@@ -104,9 +104,9 @@ const AnalyticsViewControl = (props) => {
           topBarAction={topBarFunc}
           onSelect={(val, tier, params) => props.history.pushState(null, getAnalyticsUrl(tier, val, params))}
           drillable={true}>
-          <h1>
-            {activeItem || "select account"}
-          </h1>
+          <Dropdown.Toggle bsStyle="link" className="header-toggle">
+              <h1>{activeItem || "select account"}</h1>
+          </Dropdown.Toggle>
         </AccountSelector>
       /* If account is not selected (Needs to be: UDN ADMIN)
         !props.params.account &&
