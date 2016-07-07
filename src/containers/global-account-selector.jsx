@@ -85,21 +85,14 @@ class AccountSelector extends Component {
        */
       case 'name':
         this.setState({ open: !this.state.open })
-        const entityId = e.target.getAttribute('data-value');
-
-        let entityName;
-        forEach(this.state.items, (item, i) => {
-          if (item[0] == entityId) {
-            entityName = item[1]
-            return false
-          }
-        })
-
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
-          entityId,
-          { brand, account: this.account || account, group: this.group || group },
-          entityName
+          e.target.getAttribute('data-value'),
+          {
+            brand,
+            account: this.account || account,
+            group: this.group || group
+          }
         )
         break
       /**

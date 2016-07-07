@@ -26,8 +26,7 @@ class Header extends React.Component {
     this.state = {
       animatingGradient: false,
       accountMenuOpen: false,
-      userMenuOpen: false,
-      dropdownText: 'UDN Admin'
+      userMenuOpen: false
     }
   }
 
@@ -159,16 +158,15 @@ class Header extends React.Component {
   }
 
   render() {
-    const { history } = this.props
+    const {
+      history,
+      activeAccount
+    } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const itemSelectorFunc = (entityType, entityId, params, entityName) => {
-      this.setState({
-        dropdownText: entityName
-      })
-
+    const itemSelectorFunc = (...params) => {
       if(history.isActive('/content')) {
         history.pushState(null, getContentUrl(...params))
       } else if(history.isActive('/analysis')){
@@ -198,7 +196,7 @@ class Header extends React.Component {
             onSelect={(...params) => itemSelectorFunc(...params)}
             drillable={false}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <p>{this.state.dropdownText}</p>
+              {activeAccount ? activeAccount.get('name') : 'UDN Admin'}
             </Dropdown.Toggle>
           </AccountSelector>
 
