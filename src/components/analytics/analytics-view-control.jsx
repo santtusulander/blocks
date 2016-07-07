@@ -68,7 +68,13 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-  const activeItem = property || group || account
+  let activeItem = property
+  if(group && props.activeGroup) {
+    activeItem = props.activeGroup.get('name')
+  }
+  else if(account && props.activeAccount) {
+    activeItem = props.activeAccount.get('name')
+  }
   const isContentAnalytics = props.history.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
