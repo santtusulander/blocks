@@ -14,6 +14,7 @@ import Property from './containers/property'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
+import Support from './containers/support'
 import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
 
@@ -46,9 +47,19 @@ const routes = {
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
   accountManagementAccount: '/account-management/:brand/:account',
+
   services: '/services',
+  servicesBrand: '/services/:brand',
+  servicesAccount: '/services/:brand/:account',
+
   security: '/security',
-  support: '/services',
+  securityBrand: '/services/:brand',
+  securityAccount: '/services/:brand/:account',
+
+  support: '/support',
+  supportBrand: '/support/:brand',
+  supportAccount: '/support/:brand/:account',
+
   configuration: '/services'
 }
 
@@ -151,9 +162,22 @@ module.exports = (
         <Route path=":account" component={Security}/>
       </Route>
     </Route>
-    <Route path="/services" component={Services}/>
 
-    {/* Analytics - routes */}
+    {/* Services - routes */}
+    <Route path={routes.services}>
+      <IndexRedirect to={getRoute('servicesBrand', { brand: 'udn' })} />
+      <Route path={routes.servicesBrand} component={Services}/>
+      <Route path={routes.servicesAccount} component={Services}/>
+    </Route>
+
+    {/* Support - routes */}
+    <Route path={routes.support}>
+      <IndexRedirect to={getRoute('supportBrand', { brand: 'udn' })} />
+      <Route path={routes.supportBrand} component={Support}/>
+      <Route path={routes.supportAccount} component={Support}/>
+    </Route>
+
+    {/* Account management - routes */}
     <Route path={routes.accountManagement}>
       <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
       <Route path={routes.accountManagementBrand} component={AccountManagement}/>

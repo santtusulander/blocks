@@ -234,6 +234,30 @@ export function getAccountManagementUrlFromParams(params) {
   }
 }
 
+export function getServicesUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('servicesAccount', params)
+  } else if (brand) {
+    return getRoute('servicesBrand', params)
+  } else {
+    return getRoute('servicesBrand', { brand: 'udn' })
+  }
+}
+
+export function getSupportUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('supportAccount', params)
+  } else if (brand) {
+    return getRoute('supportBrand', params)
+  } else {
+    return getRoute('supportBrand', { brand: 'udn' })
+  }
+}
+
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()

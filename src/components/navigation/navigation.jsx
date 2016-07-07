@@ -2,7 +2,13 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
-import { getAccountManagementUrlFromParams, getAnalyticsUrlFromParams, getContentUrlFromParams } from '../../util/helpers.js'
+import {
+  getAccountManagementUrlFromParams,
+  getAnalyticsUrlFromParams,
+  getContentUrlFromParams,
+  getServicesUrlFromParams,
+  getSupportUrlFromParams
+} from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -52,7 +58,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={`/services`} activeClassName="active">
+          <Link to={getServicesUrlFromParams(params)} activeClassName="active">
             <IconServices />
             <span>Services</span>
           </Link>
@@ -66,7 +72,7 @@ const Navigation = (props) => {
         </li>
 
         <li>
-          <Link to={'/support'} activeClassName="active">
+          <Link to={getSupportUrlFromParams(params)} activeClassName="active">
             <IconSupport />
             <span>Support</span>
           </Link>
