@@ -158,7 +158,10 @@ class Header extends React.Component {
   }
 
   render() {
-    const { history } = this.props
+    const {
+      history,
+      activeAccount
+    } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -193,23 +196,9 @@ class Header extends React.Component {
             onSelect={(...params) => itemSelectorFunc(...params)}
             restrictedTo="brand">
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <p>{"UDN Admin"}</p>
+              {activeAccount ? activeAccount.get('name') : 'UDN Admin'}
             </Dropdown.Toggle>
           </AccountSelector>
-
-        { /*this.props.isUDNAdmin && !contentActive && !analyticsActive &&
-          <li>
-            <UdnAdminToolbar
-              accounts={this.props.accounts}
-              activeAccount={this.props.activeAccount}
-              toggleAccountManagementModal={this.props.toggleAccountManagementModal}
-              fetchAccountData={this.props.fetchAccountData}
-              location={this.props.location}
-              history={this.props.history}
-              routes={this.props.routes}
-            />
-          </li>
-        */}
 
         {this.renderBreadcrumb()}
 

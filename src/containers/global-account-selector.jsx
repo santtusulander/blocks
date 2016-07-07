@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react'
+import forEach from 'lodash/foreach'
 
 import {
   fetchAccountsForModal as fetchAccounts,
@@ -10,16 +11,20 @@ import Menu from '../components/global-account-selector'
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
-    this.tier
+
+    this.tier = null
     this.account = null
     this.group = null
+
     this.fetchItems = this.fetchItems.bind(this)
+    this.selectOption = this.selectOption.bind(this)
+    this.onCaretClick = this.onCaretClick.bind(this)
+
     this.state = {
       open: false,
       searchValue: '',
       items: []
     }
-    this.selectOption = this.selectOption.bind(this)
   }
 
   componentWillMount() {
@@ -79,11 +84,17 @@ class AccountSelector extends Component {
        * in brand and account tiers, in both cases 'account' gets passed
        */
       case 'name':
-        this.setState({ open: !this.state.open })
+      case 'menu-item':
+        this.setState({ open: false })
+
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
           e.target.getAttribute('data-value'),
-          { brand, account: this.account || account, group: this.group || group }
+          {
+            brand,
+            account: this.account || account,
+            group: this.group || group
+          }
         )
         break
       /**
@@ -100,22 +111,20 @@ class AccountSelector extends Component {
             brand
           })
         break
-        /**
-         * Caret pressed -> should go one tier deeper
-         */
-      case 'item-bg':
-        switch(this.tier) {
-          case 'group':
-            this.group = e.target.getAttribute('data-value')
-            this.fetchItems('property', 'udn', this.account, this.group)
-            break
-          case 'brand':
-          case 'account':
-            this.account = e.target.getAttribute('data-value')
-            this.fetchItems('group', 'udn', this.account)
-            break
-        }
+    }
+  }
 
+  onCaretClick(e) {
+    switch(this.tier) {
+      case 'group':
+        this.group = e.target.getAttribute('data-value')
+        this.fetchItems('property', 'udn', this.account, this.group)
+        break
+      case 'brand':
+      case 'account':
+        this.account = e.target.getAttribute('data-value')
+        this.fetchItems('group', 'udn', this.account)
+        break
     }
   }
 
@@ -142,7 +151,8 @@ class AccountSelector extends Component {
       topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,
       searchValue,
-      open
+      open,
+      onCaretClick: this.onCaretClick
     })
     return (
       <Menu { ...menuProps }/>
