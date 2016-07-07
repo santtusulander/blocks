@@ -133,11 +133,11 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { topBarTexts, drillable, ...other } = this.props
+    const { topBarTexts, restrictedTo, ...other } = this.props
     const menuProps = Object.assign(other, {
       toggle: () => this.setState({ open: !this.state.open }),
       onSearch: e => this.setState({ searchValue: e.target.value }),
-      drillable: this.tier === 'property' ? false : drillable,
+      drillable: restrictedTo && this.tier === restrictedTo || this.tier === 'property' ? false : true,
       items: this.sortedOptions(),
       topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,
@@ -151,11 +151,11 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
-  drillable: PropTypes.bool,
   fetchItems: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
   params: PropTypes.object,
+  restrictedTo: PropTypes.string,
   topBarAction: PropTypes.func,
   topBarTexts: PropTypes.object
 }

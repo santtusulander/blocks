@@ -51,7 +51,7 @@ export class Security extends React.Component {
 
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
-
+    const subPage = params.subPage
     if (!params.account) {
       return (
         <Content className="tab-bodies">
@@ -60,9 +60,6 @@ export class Security extends React.Component {
         </Content>
       )
     }
-
-    const subPage = params.subPage
-
     return (
       <div>
         <Nav bsStyle="tabs" className="system-nav">
@@ -97,7 +94,7 @@ export class Security extends React.Component {
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       toDelete,
       toggleModal,
-      params: { subPage }
+      history
     } = this.props
 
     const certificateFormProps = {
@@ -121,7 +118,7 @@ export class Security extends React.Component {
     return (
       <PageContainer className="account-management">
          <div className="account-management-system-users">
-          <SecurityPageHeader activeAccount={activeAccount.get('id')} accounts={accounts} fetchAccount={fetchAccount}/>
+          <SecurityPageHeader history={history} params={this.props.params} accounts={accounts} fetchAccount={fetchAccount}/>
            {this.renderContent(certificateFormProps, sslListProps)}
         </div>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}

@@ -188,10 +188,10 @@ class Header extends React.Component {
           </li>
           <AccountSelector
             params={{ brand: 'udn' }}
-            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+            topBarTexts={{ brand: 'UDN Admin' }}
             topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
             onSelect={(...params) => itemSelectorFunc(...params)}
-            drillable={false}>
+            restrictedTo="brand">
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <p>{"UDN Admin"}</p>
             </Dropdown.Toggle>

@@ -110,8 +110,7 @@ const AnalyticsViewControl = (props) => {
               `${getContentUrl(...params)}/analytics` :
               getAnalyticsUrl(...params)
             props.history.pushState(null, url)
-          }}
-          drillable={true}>
+          }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{activeItem || "select account"}</h1>
           </Dropdown.Toggle>
