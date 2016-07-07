@@ -171,12 +171,18 @@ class Header extends React.Component {
   }
 
   render() {
-    const { history, params } = this.props
+    const { history } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-
+    const itemSelectorFunc = (...params) => {
+      if(history.isActive('/content')) {
+        history.pushState(null, getContentUrl(...params))
+      } else if(history.isActive('/analytics')){
+        history.pushState(null, getAnalyticsUrl(...params))
+      }
+    }
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -196,8 +202,8 @@ class Header extends React.Component {
           <AccountSelector
             params={{brand: 'udn'}}
             topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-            topBarAction={() => history.pushState(null, getContentUrl('brand', 'udn', {}))}
-            onSelect={(...params) => history.pushState(null, getContentUrl(...params))}
+            topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+            onSelect={(...params) => itemSelectorFunc(...params)}
             drillable={false}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <p>{"UDN Admin"}</p>
