@@ -1,17 +1,37 @@
 import React, { PropTypes } from 'react'
+import { Dropdown } from 'react-bootstrap'
 import { List } from 'immutable'
 
+import { AccountSelector } from '../../containers/global-account-selector.jsx'
 import PageHeader from '../layout/page-header'
-import Select from '../select.jsx'
 
-const SecurityPageHeader = ({ activeAccount, accounts, fetchAccount }) => {
-  const changeActiveAccount = brand => id => fetchAccount(brand, id)
-  const accountOptions = accounts.map(account => [account.get('id'), account.get('name')]).toJS()
+const topBarAction = (tier, fetch) => {
+  switch(tier) {
+    case 'group': fetch('account', 'udn')
+      break
+    case 'account':
+    case 'brand': history.pushState(null, getUrl('/security', 'brand', 'udn', {}))
+      break
+  }
+}
+
+const SecurityPageHeader = ({ params, history }) => {
   return (
     <PageHeader>
-      <h1 className="security-header-text">Security</h1>
+      <p>Security</p>
+      <AccountSelector
+        params={params}
+        topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin', group: 'Account report' }}
+        topBarAction={topBarAction}
+        onSelect={(...params) => history.pushState(null, getUrl('/security', ...params))}
+        drillable={!params.group}>
+        <Dropdown.Toggle bsStyle="link" className="header-toggle">
+          <h1>{activeItem || "select account"}</h1>
+        </Dropdown.Toggle>
+      </AccountSelector>
     </PageHeader>
-  )}
+  )
+}
 
 SecurityPageHeader.propTypes = {
   accountOptions: PropTypes.array,
