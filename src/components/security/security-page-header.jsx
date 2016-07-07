@@ -17,7 +17,6 @@ const topBarAction = (tier, fetch) => {
 }
 
 const SecurityPageHeader = ({ params, history }) => {
-  console.log(!params.group)
   return (
     <PageHeader>
       <p>Security</p>

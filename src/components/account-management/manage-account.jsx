@@ -1,5 +1,5 @@
 import React from 'react'
-import { Nav, NavItem } from 'react-bootstrap'
+import { Nav, NavItem, Dropdown } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import PageHeader from '../layout/page-header'
@@ -9,6 +9,9 @@ import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 
+import AccountSelector from '../../containers/global-account-selector.jsx'
+
+import { getUrl } from '../../util/helpers.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
@@ -44,10 +47,27 @@ class AccountManagementManageAccount extends React.Component {
   render() {
     const { account, isAdmin, toggleModal } = this.props
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
+    const itemSelectorFunc = (...params) => {
+      if(history.isActive('/content')) {
+        history.pushState(null, getUrl('/account-management', ...params))
+      } else if(history.isActive('/analysis')){
+        history.pushState(null, getUrl('/account-management', ...params))
+      }
+    }
     return (
       <div className="account-management-manage-account">
         <PageHeader>
-          <h1>{account.get('name') || 'No active account'}
+        <h1>
+          <AccountSelector
+            params={{ brand: 'udn' }}
+            restricedTo="brand"
+            topBarTexts={{ brand: 'UDN Admin' }}
+            topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+            onSelect={(...params) => itemSelectorFunc(...params)}>
+            <Dropdown.Toggle bsStyle="link" className="header-toggle">
+              {account.get('name') || 'No active account'}
+            </Dropdown.Toggle>
+        </AccountSelector>
             <UDNButton bsStyle="success"
               pageHeaderBtn={true}
               icon={true}

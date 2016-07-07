@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import forEach from 'lodash/foreach'
 
 import {
   fetchAccountsForModal as fetchAccounts,
