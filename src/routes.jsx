@@ -22,10 +22,10 @@ import ContentTransition from './transitions/content'
 /* TODO: define routes here instead of 'fixed' paths */
 const routes = {
   analytics: '/analysis',
-  analyticsBrand: ':brand',
-  analyticsAccount: ':brand/:account',
-  analyticsGroup: ':brand/:account/:group',
-  analyticsProperty: ':brand/:account/:group/:property',
+  analyticsBrand: '/analysis/:brand',
+  analyticsAccount: '/analysis/:brand/:account',
+  analyticsGroup: '/analysis/:brand/:account/:group',
+  analyticsProperty: '/analysis/:brand/:account/:group/:property',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
@@ -36,12 +36,12 @@ const routes = {
   analyticsTabPlaybackDemo: 'playback-demo',
 
   content: '/content',
-  contentBrand: ':brand',
-  contentAccount: ':brand/:account',
-  contentGroup: ':brand/:account/:group',
-  contentProperty: ':brand/:account/:group/:property',
-  contentPropertyAnalytics: ':brand/:account/:group/:property/analytics',
-  contentPropertyConfiguration: ':brand/:account/:group/:property/configuration',
+  contentBrand: '/content/:brand',
+  contentAccount: '/content/:brand/:account',
+  contentGroup: '/content/:brand/:account/:group',
+  contentProperty: '/content/:brand/:account/:group/:property',
+  contentPropertyAnalytics: '/content/:brand/:account/:group/:property/analytics',
+  contentPropertyConfiguration: '/content/:brand/:account/:group/:property/configuration',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
@@ -103,7 +103,7 @@ function getAnalyticsTabRoutes() {
 
 module.exports = (
   <Route path="/" component={Main}>
-    <IndexRedirect to={getRoute('contentBrand', { brand: 'udn' })} />
+    <IndexRedirect to={getRoute('content', { brand: 'udn' })} />
     <Route path="starburst-help" component={StarburstHelp}/>
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
