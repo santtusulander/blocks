@@ -110,6 +110,17 @@ class AnalyticsContainer extends React.Component {
       location: { pathname, query: { property } }
     } = this.props
 
+    /* TODO: should  be moved to consts ? */
+    const availableFilters = Immutable.fromJS({
+      'traffic': ['date-range', 'service-type'],
+      'visitors': ['date-range'],
+      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
+      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+      'file-error': ['date-range', 'error-code', 'service-type'],
+      'url-report': ['date-range', 'error-code', 'service-type'],
+      'playback-demo': ['video']
+    })
+
     return (
       <AnalyticsFilters
         onFilterChange={this.onFilterChange}
@@ -163,17 +174,6 @@ class AnalyticsContainer extends React.Component {
       activeGroup,
       location: { pathname, query: { property } }
     } = this.props
-
-    /* TODO: should  be moved to consts ? */
-    const availableFilters = Immutable.fromJS({
-      'traffic': ['date-range', 'service-type'],
-      'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
-      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code', 'service-type'],
-      'url-report': ['date-range', 'error-code', 'service-type'],
-      'playback-demo': ['video']
-    })
     const exportCSV = () => {
       const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
       const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`

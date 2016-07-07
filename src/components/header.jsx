@@ -103,20 +103,8 @@ class Header extends React.Component {
       activeAccount = this.props.activeAccount ? this.props.activeAccount.get('id').toString() : null
 
     if (history.isActive(getRoute('content'))) {
-      const buildContentUrl = (routeName) => {
-        const baseUrl = getRoute('content'),
-          route = getRoute(routeName)
-            .replace(':brand', params.brand)
-            .replace(':account', params.account)
-            .replace(':group', params.group)
-            .replace(':property', params.property)
-
-
-        return `${baseUrl}/${route}`
-      }
-
       let propertyLinkIsLast = true
-      if (history.isActive(buildContentUrl('contentPropertyAnalytics'))) {
+      if (history.isActive(getRoute('contentPropertyAnalytics', params))) {
         links.push({
           label:  'Analytics'
         })
@@ -124,7 +112,7 @@ class Header extends React.Component {
         propertyLinkIsLast = false
       }
 
-      if (history.isActive(buildContentUrl('contentPropertyConfiguration'))) {
+      if (history.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
           label:  'Configuration'
         })
