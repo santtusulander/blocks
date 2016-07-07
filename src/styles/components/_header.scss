@@ -22,6 +22,21 @@
     }
   }
 
+  .global-account-selector {
+    display: flex;
+
+    &__toggle {
+      display: flex;
+      margin: 20px 20px 20px 0;
+      border-right: 1px solid $silver-60;
+      padding: 0 15px 0 10px;
+
+      .dropdown-toggle {
+        text-transform: uppercase;
+      }
+    }
+  }
+
   @include md {
     height: $md-header-total-height;
   }
