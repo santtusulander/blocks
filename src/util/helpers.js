@@ -220,6 +220,7 @@ export function getContentUrlFromParams(params) {
 
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
+  const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
 
   return {
     account: params.account,
@@ -227,7 +228,8 @@ export function buildAnalyticsOpts(params, filters){
     group: params.group,
     property: params.property,
     startDate: startDate.format('X'),
-    endDate: endDate.format('X')
+    endDate: endDate.format('X'),
+    service_type: serviceType
   }
 }
 

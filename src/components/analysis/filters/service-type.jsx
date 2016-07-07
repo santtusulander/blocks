@@ -25,10 +25,10 @@ export class FilterServiceType extends React.Component {
         <div className="sidebar-content">
           <Input type="checkbox" label="HTTP"
             checked={this.props.serviceTypes.includes('http')}
-            onChange={ () => { this.props.toggleServiceType('http')} } />
+            onChange={this.toggleServiceType('http') } />
           <Input type="checkbox" label="HTTPS"
             checked={this.props.serviceTypes.includes('https')}
-            onChange={ () => { this.props.toggleServiceType('https') } }/>
+            onChange={this.toggleServiceType('https') }/>
         </div>
       </div>
     );
