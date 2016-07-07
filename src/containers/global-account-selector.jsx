@@ -26,7 +26,7 @@ class AccountSelector extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.params !== this.props.params) {
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchByTier(nextProps.params)
     }
   }

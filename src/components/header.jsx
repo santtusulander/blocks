@@ -7,11 +7,11 @@ import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 import IconEricsson from './icons/icon-ericsson.jsx'
 import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
-import UdnAdminToolbar from '../components/udn-admin-toolbar/udn-admin-toolbar.jsx'
+import AccountSelector from '../containers/global-account-selector.jsx'
 import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
 
 
-import { Button, Dropdown, Input, MenuItem, Nav, Navbar, NavItem } from 'react-bootstrap'
+import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   constructor(props) {
@@ -171,6 +171,7 @@ class Header extends React.Component {
   }
 
   render() {
+    const { history, params } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -192,6 +193,16 @@ class Header extends React.Component {
               <IconEricsson />
             </Link>
           </li>
+          <AccountSelector
+            params={{brand: 'udn'}}
+            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+            topBarAction={() => history.pushState(null, getContentUrl('brand', 'udn', {}))}
+            onSelect={(...params) => history.pushState(null, getContentUrl(...params))}
+            drillable={false}>
+            <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <p>{"UDN Admin"}</p>
+            </Dropdown.Toggle>
+          </AccountSelector>
 
         { /*this.props.isUDNAdmin && !contentActive && !analyticsActive &&
           <li>
