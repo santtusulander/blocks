@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {shallow} from 'enzyme'
-jest.unmock('../details.jsx')
+jest.unmock('../account.jsx')
 
 import Account from '../account.jsx'
 

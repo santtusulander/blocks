@@ -88,8 +88,8 @@ export function getRoute(name, params) {
   let route = routes[name]
 
   if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      route = route.replace(`:${key}`, value)
+    Object.keys(params).forEach(key => {
+      route = route.replace(`:${key}`, params[key])
     })
   }
 

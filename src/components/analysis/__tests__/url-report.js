@@ -16,19 +16,28 @@ const fakeData = Immutable.fromJS([
   {
     url: 'www.abc.com',
     bytes: 1000,
-    requests: 287536
+    requests: 287536,
+    service_type: 'http'
   },
   {
     url: 'www.cdg.com/123.mp4',
     bytes: 3000,
-    requests: 343456
+    requests: 343456,
+    service_type: 'http'
   }
 ])
+
+const serviceTypes = Immutable.List(['http'])
+const statusCodes = Immutable.List(['All'])
 
 describe('AnalysisURLReport', () => {
   it('should show urls in the table', () => {
     const renderer = TestUtils.createRenderer()
-    renderer.render(<AnalysisURLReport urls={fakeData}/>);
+    renderer.render(
+      <AnalysisURLReport urls={fakeData}
+        serviceTypes={serviceTypes}
+        statusCodes={statusCodes}/>
+    );
     const result = renderer.getRenderOutput()
     const urlList = result.props.children[2]
     expect(urlList.type).toEqual(URLList)
@@ -36,7 +45,11 @@ describe('AnalysisURLReport', () => {
   })
   it('should show urls in the bar chart', () => {
     const renderer = TestUtils.createRenderer()
-    renderer.render(<AnalysisURLReport urls={fakeData}/>);
+    renderer.render(
+      <AnalysisURLReport urls={fakeData}
+        serviceTypes={serviceTypes}
+        statusCodes={statusCodes}/>
+    );
     const result = renderer.getRenderOutput()
     const barChart = result.props.children[0].props.children
     expect(barChart.type).toEqual(HorizontalBar)
