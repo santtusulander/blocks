@@ -22,6 +22,14 @@
     }
   }
 
+  .breadcrumb-nav {
+    height: $header-total-height - $header-gradient-height;
+
+    @include md {
+      height: $md-header-total-height - $header-gradient-height;
+    }
+  }
+
   .global-account-selector {
     display: flex;
 

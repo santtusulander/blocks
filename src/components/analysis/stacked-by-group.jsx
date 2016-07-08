@@ -19,27 +19,6 @@ class AnalysisStackedByGroup extends React.Component {
       tooltipY: 0
     }
 
-    this.moveMouse = this.moveMouse.bind(this)
-    this.deactivateTooltip = this.deactivateTooltip.bind(this)
-  }
-  moveMouse(xScale, yScale, data, xOffset) {
-    return e => {
-      const bounds = this.refs.chart.getBoundingClientRect()
-      const xGroup = xScale.invert(e.pageX - bounds.left)
-      const d = data[closestGroup(data, xGroup, 1) - 1]
-      if(d) {
-        this.setState({
-          tooltipText: `${d.group} ${formatBytes(d.bytes)}`,
-          tooltipX: xScale(d.groupIndex) + xOffset,
-          tooltipY: yScale(d.bytes)
-        })
-      }
-    }
-  }
-  deactivateTooltip() {
-    this.setState({
-      tooltipText: null
-    })
   }
   render() {
     if(!this.props.width || !this.props.datasets) {
@@ -99,9 +78,7 @@ class AnalysisStackedByGroup extends React.Component {
           viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
-          ref='chart'
-          onMouseMove={this.moveMouse(xScale, yScale, totals, xOffset)}
-          onMouseOut={this.deactivateTooltip}>
+          ref='chart' >
           {this.props.datasets ? this.props.datasets.map((dataset, dataSetIndex) => {
             const xPos = xScale(dataSetIndex) + xOffset
             return (

@@ -16,7 +16,7 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
-import AccountSelector from './global-account-selector'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'

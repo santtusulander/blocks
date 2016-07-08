@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
-import IconSelectCaret from './icons/icon-select-caret.jsx'
-
 const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
-  <Dropdown id="" onSelect={onSelect} open={open} className="global-account-selector">
+  <Dropdown id="" onSelect={onSelect} open={open} onToggle={toggle} className="global-account-selector">
     <div className="global-account-selector__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
       <MenuItem>

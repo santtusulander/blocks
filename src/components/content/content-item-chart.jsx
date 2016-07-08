@@ -156,7 +156,7 @@ class ContentItemChart extends React.Component {
       const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
       tooltipDate = sliceStart.format('MMM D')
       if(this.props.showSlices) {
-        link = `${this.props.linkTo}&startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
+        link = `${this.props.linkTo}?startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
       }
     }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
