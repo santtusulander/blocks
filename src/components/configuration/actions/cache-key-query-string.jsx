@@ -10,15 +10,18 @@ class CacheKeyQueryString extends React.Component {
     super(props);
 
     this.state = {
-      activeFilter: 'include_all_query_parameters'
+      activeFilter: 'include_all_query_parameters',
+      queryArgs: Immutable.List()
     }
 
-    this.handleChange = this.handleChange.bind(this)
+    this.handleChangeArg = this.handleChangeArg.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
+  handleChangeArg(index) {
     return e => {
-      this.props.changeValue(path, e.target.value)
+      const newArgs = this.state.queryArgs.set(index, e.target.value)
+      this.setState({queryArgs: newArgs})
     }
   }
   handleSelectChange(path) {
@@ -29,10 +32,30 @@ class CacheKeyQueryString extends React.Component {
       this.props.changeValue(path, value)
     }
   }
+  saveChanges() {
+    let newName = [
+      {field: 'request_host'},
+      {field: 'request_path'}
+    ]
+    if(this.state.activeFilter === 'include_all_query_parameters') {
+      newName.push({field: 'request_query'})
+    }
+    else if(this.state.activeFilter === 'include_some_parameters') {
+      this.state.queryArgs.forEach(queryArg => newName.push({
+        field: 'request_query_arg',
+        field_detail: queryArg
+      }))
+    }
+    console.log(newName)
+    this.props.changeValue(
+      this.props.path,
+      Immutable.fromJS({name: newName})
+    )
+    this.props.close()
+  }
   render() {
     const hasContainingRule =
-      this.state.activeFilter === 'include_some_parameters' ||
-      this.state.activeFilter === 'ignore_some_parameters'
+      this.state.activeFilter === 'include_some_parameters'
     return (
       <div>
         <Modal.Header>
@@ -52,17 +75,14 @@ class CacheKeyQueryString extends React.Component {
                 options={[
                   ['include_all_query_parameters', 'Include all query parameters'],
                   ['ignore_all_query_parameters', 'Ignore all query parameters'],
-                  ['include_some_parameters', 'Include some parameters'],
-                  ['ignore_some_parameters', 'Ignore some parameters']]}/>
+                  ['include_some_parameters', 'Include some parameters']]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
               <Input type="text" label="Query Name"
                 placeholder="Enter Query Name"
-                onChange={this.handleChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_key_value']
-                )}/>
+                onChange={this.handleChangeArg(0)}/>
             </Panel>
           </div>
 
@@ -70,7 +90,7 @@ class CacheKeyQueryString extends React.Component {
             <Button bsStyle="default" onClick={this.props.close}>
               Cancel
             </Button>
-            <Button bsStyle="primary" onClick={this.props.close}>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
               Save Action
             </Button>
           </ButtonToolbar>
