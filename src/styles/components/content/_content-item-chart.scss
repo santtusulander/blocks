@@ -239,6 +239,10 @@
     font-weight: 500;
     line-height: 1em;
     word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
   }
 
   .content-item-toolbar {
