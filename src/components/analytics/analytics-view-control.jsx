@@ -68,8 +68,12 @@ const AnalyticsViewControl = (props) => {
       }
     }
   }
-  let activeItem = property
-  if(group && props.activeGroup) {
+
+  let activeItem;
+  if (property) {
+    activeItem = property
+  }
+  else if(group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
   }
   else if(account && props.activeAccount) {
