@@ -218,7 +218,13 @@ export class Configuration extends React.Component {
               <AccountSelector
                 params={this.props.params}
                 topBarTexts={{}}
-                onSelect={(...params) => this.props.history.pushState(null, `${getUrl('/content', ...params)}/configuration`)}
+                onSelect={(tier, value, params) => {
+                  const { brand, account, group } = params, { hostActions } = this.props
+                  hostActions.startFetching()
+                  hostActions.fetchHost(brand, account, group, value).then(() => {
+                    this.props.history.pushState(null, `${getUrl('/content', tier, value, params)}/configuration`)
+                  })
+                }}
                 drillable={true}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{this.props.params.property}</h1>
