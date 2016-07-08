@@ -12,6 +12,7 @@ const HOST_FETCHED_ALL = 'HOST_FETCHED_ALL'
 const HOST_START_FETCH = 'HOST_START_FETCH'
 const HOST_UPDATED = 'HOST_UPDATED'
 const ACTIVE_HOST_CHANGED = 'ACTIVE_HOST_CHANGED'
+const HOST_CLEAR_FETCHED = 'HOST_CLEAR_FETCHED'
 
 const emptyHosts = Immutable.Map({
   activeHost: undefined,
@@ -130,6 +131,10 @@ export function changeActive(state, action) {
   return state.set('activeHost', action.payload)
 }
 
+export function clearFetched(state) {
+  return state.set('allHosts', Immutable.List())
+}
+
 export default handleActions({
   HOST_CREATED: createSuccess,
   HOST_DELETED: mapReducers(deleteSuccess, deleteFailure),
@@ -137,7 +142,8 @@ export default handleActions({
   HOST_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   HOST_START_FETCH: startFetch,
   HOST_UPDATED: mapReducers(updateSuccess, updateFailure),
-  ACTIVE_HOST_CHANGED: changeActive
+  ACTIVE_HOST_CHANGED: changeActive,
+  HOST_CLEAR_FETCHED: clearFetched
 }, emptyHosts)
 
 // ACTIONS
@@ -215,5 +221,5 @@ export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id,
 })
 
 export const startFetching = createAction(HOST_START_FETCH)
-
 export const changeActiveHost = createAction(ACTIVE_HOST_CHANGED)
+export const clearFetchedHosts = createAction(HOST_CLEAR_FETCHED)
