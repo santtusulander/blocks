@@ -7,7 +7,7 @@ import Select from '../components/select'
 import IconAlerts from '../components/icons/icon-alerts.jsx'
 import IconEricsson from './icons/icon-ericsson.jsx'
 import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
-import AccountSelector from '../containers/global-account-selector.jsx'
+import AccountSelector from './global-account-selector/global-account-selector.jsx'
 import { getAnalyticsUrl, getContentUrl, getUrl } from '../util/helpers.js'
 
 

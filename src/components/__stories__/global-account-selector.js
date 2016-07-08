@@ -4,7 +4,7 @@ import { fromJS } from 'immutable'
 // import {createStore, combineReducers} from 'redux'
 // import {Provider} from 'react-redux'
 
-import AccountSelector from '../global-account-selector.jsx'
+import AccountSelector from './selector-component.jsx'
 
 const ThemeWrap = require('./theme-wrap.jsx');
 

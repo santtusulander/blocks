@@ -14,7 +14,7 @@ import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
-import AccountSelector from './global-account-selector'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
 
 import ConfigurationDetails from '../components/configuration/details'
