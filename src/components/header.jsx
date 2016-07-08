@@ -196,7 +196,7 @@ class Header extends React.Component {
             onSelect={(...params) => itemSelectorFunc(...params)}
             restrictedTo="brand">
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              {activeAccount ? activeAccount.get('name') : 'UDN Admin'}
+              {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
             </Dropdown.Toggle>
           </AccountSelector>
 
