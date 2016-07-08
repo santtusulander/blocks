@@ -186,6 +186,10 @@
     background-color: transparent;
     border: 1px solid rgba($pale-blue, 0.5);
     text-transform: uppercase;
+
+    &.dropdown-toggle {
+      text-transform: none;
+    }
   }
 
   .small-select {
