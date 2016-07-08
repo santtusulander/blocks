@@ -6,6 +6,7 @@ import { getValues } from 'redux-form';
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
+import * as hostActionCreators from '../redux/modules/host'
 import * as dnsActionCreators from '../redux/modules/dns'
 import * as uiActionCreators from '../redux/modules/ui'
 
@@ -72,7 +73,9 @@ export class AccountManagement extends Component {
       'udn',
       this.props.activeAccount.get('id'),
       name
-    )
+    ).then(() => {
+      this.props.hostActions.clearFetchedHosts()
+    })
   }
 
   deleteGroupFromActiveAccount(groupId) {
@@ -111,7 +114,10 @@ export class AccountManagement extends Component {
         ).then(() => {
           this.showNotification(`Account ${data.name} created.`)
           this.props.toggleModal(null)
-        }).then(() => this.props.groupActions.fetchGroups(data.brand, action.payload.id))
+        }).then(() => {
+          this.props.groupActions.fetchGroups(data.brand, action.payload.id)
+          this.props.hostActions.clearFetchedHosts()
+        })
       }
     )
   }
@@ -218,6 +224,7 @@ AccountManagement.propTypes = {
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  hostActions: PropTypes.object,
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
@@ -240,6 +247,7 @@ function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   /* This is fetched by main - container as we should always have account
@@ -259,6 +267,7 @@ function mapDispatchToProps(dispatch) {
     dnsActions: dnsActions,
     //fetchAccountData: fetchAccountData,
     groupActions: groupActions,
+    hostActions: hostActions,
     uiActions: uiActions
   };
 }
