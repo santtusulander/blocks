@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -14,7 +14,7 @@ import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
-
+import AccountSelector from './global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
 
 import ConfigurationDetails from '../components/configuration/details'
@@ -27,6 +27,8 @@ import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
+
+import { getUrl } from '../util/helpers'
 
 export class Configuration extends React.Component {
   constructor(props) {
@@ -212,8 +214,16 @@ export class Configuration extends React.Component {
                   Versions
                 </Button>
               </ButtonToolbar>
-
-              <h1>{activeConfig.get('config_name') || activeConfig.get('config_id')}</h1>
+              <p>CONFIGURATION</p>
+              <AccountSelector
+                params={this.props.params}
+                topBarTexts={{}}
+                onSelect={(...params) => this.props.history.pushState(null, `${getUrl('/content', ...params)}/configuration`)}
+                drillable={true}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>{this.props.params.property}</h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
               <p className="text-sm">
                 <span className="right-separator">
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
