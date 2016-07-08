@@ -10,7 +10,7 @@ import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 
-import AccountSelector from '../../containers/global-account-selector.jsx'
+import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
 import { getUrl } from '../../util/helpers.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'

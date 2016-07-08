@@ -3,9 +3,9 @@ import React, { PropTypes, Component } from 'react'
 import {
   fetchAccountsForModal as fetchAccounts,
   fetchGroupsForModal as fetchGroups,
-  fetchPropertiesForModal as fetchHosts } from '../redux/modules/security'
+  fetchPropertiesForModal as fetchHosts } from '../../redux/modules/security.js'
 
-import Menu from '../components/global-account-selector'
+import Menu from './selector-component.jsx'
 
 class AccountSelector extends Component {
   constructor(props) {

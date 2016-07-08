@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Map, List, is } from 'immutable'
+import { Map, List } from 'immutable'
 import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -34,15 +34,16 @@ export class Security extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!is(nextProps.activeAccount, this.props.activeAccount)) {
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchData(nextProps)
     }
   }
 
   fetchData(props) {
-    switch(props.params.subPage) {
+    const { location: { pathname }, params: { brand, account, group } } = props
+    switch(getTabName(pathname)) {
       case 'ssl-certificate':
-        props.securityActions.fetchSSLCertificates('udn', props.activeAccount.get('id'))
+        props.securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
         break
       // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
       // case 'content-targeting': securityActions.fetchContentTrageting(account)
@@ -52,7 +53,8 @@ export class Security extends React.Component {
 
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
-
+    const subPage = getTabName(this.props.location.pathname)
+    const securityBaseUrl = getSecurityUrlFromParams(params);
     if (!params.account) {
       return (
         <Content className="tab-bodies">
@@ -61,11 +63,6 @@ export class Security extends React.Component {
         </Content>
       )
     }
-
-    const { pathname } = this.props.location;
-    const subPage = getTabName(pathname);
-    const securityBaseUrl = getSecurityUrlFromParams(params);
-
     return (
       <div>
         <Nav bsStyle="tabs" className="system-nav">
@@ -150,6 +147,8 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
+  history: PropTypes.object,
+  location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
@@ -158,16 +157,17 @@ Security.propTypes = {
   toggleModal: PropTypes.func
 }
 
-function mapStateToProps(state) {
-  const activeAccount = state.account.get('activeAccount') || Map({})
+function mapStateToProps(state, ownProps) {
   return {
     toDelete: state.security.get('certificateToEdit'),
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount,
+    activeAccount: state.account.get('activeAccount') || Map({}),
     groups: state.group.get('allGroups'),
-    sslCertificates: state.security.get('sslCertificates').filter(cert => cert.get('account') === activeAccount.get('id'))
+    sslCertificates: state.security.get('sslCertificates').filter(cert =>
+      ownProps.params.group ? cert.get('group') === Number(ownProps.params.group) : false
+    )
   };
 }
 
