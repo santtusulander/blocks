@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Map, List, is } from 'immutable'
+import { Map, List } from 'immutable'
 import { Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'

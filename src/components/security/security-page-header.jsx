@@ -6,7 +6,7 @@ const SecurityPageHeader = ({ activeAccount }) => {
   return (
     <PageHeader>
       <p>SECURITY</p>
-      <h1>{activeAccount}</h1>
+      <h1>{activeAccount || 'select account'}</h1>
     </PageHeader>
   )
 }
