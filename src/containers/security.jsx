@@ -166,9 +166,7 @@ function mapStateToProps(state, ownProps) {
     activeAccount: state.account.get('activeAccount') || Map({}),
     groups: state.group.get('allGroups'),
     sslCertificates: state.security.get('sslCertificates').filter(cert =>
-      ownProps.params.group ?
-        cert.get('group') === Number(ownProps.params.group) :
-        cert.get('account') === Number(ownProps.params.account)
+      ownProps.params.group ? cert.get('group') === Number(ownProps.params.group) : false
     )
   };
 }

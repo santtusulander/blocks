@@ -13,8 +13,6 @@ const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
 const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
 
-const fakeSSLCertificates = fromJS([])
-
 export const initialState = fromJS({
   groups: [],
   fetching: false,
@@ -158,7 +156,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
   const groupRequestUrl = `${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`
   return group ? axios.get(groupRequestUrl).then(response =>
     response && response.data.map(cn => { return { group, cn, account } })) :
-    Promise.resolve(fakeSSLCertificates)
+    Promise.resolve([])
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {
