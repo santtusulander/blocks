@@ -14,7 +14,7 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
+    if( this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps) ) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
     }
   }

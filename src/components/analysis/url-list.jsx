@@ -55,14 +55,20 @@ class AnalysisURLList extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredURLs = urls.filter(
-      url => url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
-    )
+    const filteredURLs = urls.filter((url, i) => {
+        if (i >= 15) {
+          return false;
+        }
+
+        return url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
+      })
     const sortedURLs = this.sortedData(
       filteredURLs,
       this.state.sortBy,
       this.state.sortDir
     )
+
+
     return (
       <div>
         <Input className="search-input" type="text"

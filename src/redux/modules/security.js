@@ -13,22 +13,6 @@ const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
 const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
 
-const fakeSSLCertificates = fromJS([
-  // {account: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 6, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 2, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  // {account: 3, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 4, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  // {account: 5, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 25, title: 'SSL 1', commonName: '*.ufd.net', group: 1},
-  // {account: 1, title: 'SSL 2', commonName: '*.unifieddelivery.net', group: 3},
-  {account: 1, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 1, noEdit: true},
-  {account: 2, title: 'PLACEHOLDER SSL', cn: 'placeholder.cert', group: 3, noEdit: true}
-])
-
 export const initialState = fromJS({
   groups: [],
   fetching: false,
@@ -168,10 +152,11 @@ export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, 
 })
 
 
-export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account) => {
-  // return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`)
-  //   .then(response => response && response.data.map(commonName => { return { group, commonName, account } }))
-  return Promise.resolve(fakeSSLCertificates)
+export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
+  const groupRequestUrl = `${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`
+  return group ? axios.get(groupRequestUrl).then(response =>
+    response && response.data.map(cn => { return { group, cn, account } })) :
+    Promise.resolve([])
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {

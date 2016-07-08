@@ -40,11 +40,15 @@ class AnalysisURLReport extends React.Component {
       return serviceTypes.includes(url.get('service_type'))
     })
       //filter by error code
-      .filter( (url) => {
+      .filter((url, i) => {
+        if (i >= 15) {
+          return false;
+        }
+
         return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
       })
 
-    const chartHeight = urls.size * 40 + 40
+    const chartHeight = filteredUrls.size * 40 + 40
 
     return (
       <div className="analysis-url-report">
