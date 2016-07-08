@@ -9,9 +9,27 @@ class CacheKeyQueryString extends React.Component {
   constructor(props) {
     super(props);
 
+    const currentNames = props.set.get('name')
+    let queryArgs = Immutable.List([''])
+    let activeFilter = 'ignore_all_query_parameters'
+    if(currentNames) {
+      if(currentNames.find(name => name.get('field') === 'request_query')) {
+        activeFilter = 'include_all_query_parameters'
+      }
+      else {
+        const currentQueryArgs = currentNames
+          .filter(name => name.get('field') === 'request_query_arg')
+          .map(name => name.get('field_detail'))
+        if(currentQueryArgs.size) {
+          queryArgs = currentQueryArgs.push('')
+          activeFilter = 'include_some_parameters'
+        }
+      }
+    }
+
     this.state = {
-      activeFilter: 'include_all_query_parameters',
-      queryArgs: Immutable.List()
+      activeFilter: activeFilter,
+      queryArgs: queryArgs
     }
 
     this.handleChangeArg = this.handleChangeArg.bind(this)
@@ -20,17 +38,15 @@ class CacheKeyQueryString extends React.Component {
   }
   handleChangeArg(index) {
     return e => {
-      const newArgs = this.state.queryArgs.set(index, e.target.value)
+      let newArgs = this.state.queryArgs.set(index, e.target.value)
+      if(newArgs.last()) {
+        newArgs = newArgs.push('')
+      }
       this.setState({queryArgs: newArgs})
     }
   }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
-    }
+  handleSelectChange(value) {
+    this.setState({activeFilter: value})
   }
   saveChanges() {
     let newName = [
@@ -41,12 +57,15 @@ class CacheKeyQueryString extends React.Component {
       newName.push({field: 'request_query'})
     }
     else if(this.state.activeFilter === 'include_some_parameters') {
-      this.state.queryArgs.forEach(queryArg => newName.push({
-        field: 'request_query_arg',
-        field_detail: queryArg
-      }))
+      this.state.queryArgs.forEach(queryArg => {
+        if(queryArg) {
+          newName.push({
+            field: 'request_query_arg',
+            field_detail: queryArg
+          })
+        }
+      })
     }
-    console.log(newName)
     this.props.changeValue(
       this.props.path,
       Immutable.fromJS({name: newName})
@@ -68,9 +87,7 @@ class CacheKeyQueryString extends React.Component {
             <div className="form-group">
               <label className="control-label">Cache Key</label>
               <Select className="input-select"
-                onSelect={this.handleSelectChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_key']
-                )}
+                onSelect={this.handleSelectChange}
                 value={this.state.activeFilter}
                 options={[
                   ['include_all_query_parameters', 'Include all query parameters'],
@@ -80,9 +97,14 @@ class CacheKeyQueryString extends React.Component {
 
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
-              <Input type="text" label="Query Name"
-                placeholder="Enter Query Name"
-                onChange={this.handleChangeArg(0)}/>
+              {this.state.queryArgs.map((queryArg, i) => {
+                return (
+                  <Input type="text" label="Query Name" key={i}
+                    placeholder="Enter Query Name"
+                    value={queryArg}
+                    onChange={this.handleChangeArg(i)}/>
+                )
+              })}
             </Panel>
           </div>
 
