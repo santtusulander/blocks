@@ -75,13 +75,19 @@ const fakeActiveGroup = Immutable.fromJS(
   {"id": 1}
 )
 
-const fakeLocation = {query: {name: 'www.abc.com'}}
+const fakeLocation = {pathname: ''}
+
+const fakeParams = {brand: 'aaa', account: 'bbb', group: 'ccc', property: 'ddd'}
+
+const fakeFetchAccountData = jest.genMockFunction()
 
 describe('Main', () => {
   it('should exist', () => {
     let main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation} uiActions={uiActionsMaker()}
-        userActions={userActionsMaker()} theme="dark" />
+        userActions={userActionsMaker()} theme="dark"
+        params={fakeParams}
+        fetchAccountData={fakeFetchAccountData} />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
   });
@@ -93,7 +99,9 @@ describe('Main', () => {
         userActions={userActionsMaker()}
         purgeActions = {purgeActionsMaker()}
         activePurge={fakePurge}
-        theme="dark" />
+        theme="dark"
+        params={fakeParams}
+        fetchAccountData={fakeFetchAccountData} />
     );
     expect(main.state.activePurge).toBe(null);
     main.activatePurge(1)()
@@ -111,7 +119,9 @@ describe('Main', () => {
         activeAccount={fakeActiveAccount}
         activeGroup={fakeActiveGroup}
         purgeActions={purgeActions}
-        hostActions={hostActionsMaker()}/>
+        hostActions={hostActionsMaker()}
+        params={fakeParams}
+        fetchAccountData={fakeFetchAccountData}/>
     );
     main.activatePurge(fakeProperties.get(0))()
     main.saveActivePurge()
@@ -126,7 +136,9 @@ describe('Main', () => {
     let main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
         userActions={userActionsMaker()}
-        viewingChart={true} />
+        viewingChart={true}
+        params={fakeParams}
+        fetchAccountData={fakeFetchAccountData} />
     );
     let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
     expect(ReactDOM.findDOMNode(container).className).toContain('chart-view');
@@ -142,7 +154,9 @@ describe('Main', () => {
         uiActions={uiActionsMaker()}
         theme="dark"
         userActions={userActions}
-        history={fakeHistory} />
+        history={fakeHistory}
+        params={fakeParams}
+        fetchAccountData={fakeFetchAccountData} />
     )
     main.logOut()
     expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/login')

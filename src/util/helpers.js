@@ -251,9 +251,13 @@ export function getContentUrlFromParams(params) {
 }
 
 export function getAccountManagementUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group, property } = params
 
-  if (account) {
+  if (property) {
+    return getRoute('accountManagementProperty', params)
+  } else if (group) {
+    return getRoute('accountManagementGroup', params)
+  } else if (account) {
     return getRoute('accountManagementAccount', params)
   } else if (brand) {
     return getRoute('accountManagementBrand', params)
@@ -263,9 +267,13 @@ export function getAccountManagementUrlFromParams(params) {
 }
 
 export function getServicesUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group, property } = params
 
-  if (account) {
+  if (property) {
+    return getRoute('servicesProperty', params)
+  } else if (group) {
+    return getRoute('servicesGroup', params)
+  } else if (account) {
     return getRoute('servicesAccount', params)
   } else if (brand) {
     return getRoute('servicesBrand', params)
@@ -275,9 +283,13 @@ export function getServicesUrlFromParams(params) {
 }
 
 export function getSupportUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group, property } = params
 
-  if (account) {
+  if (property) {
+    return getRoute('supportProperty', params)
+  } else if (group) {
+    return getRoute('supportGroup', params)
+  } else if (account) {
     return getRoute('supportAccount', params)
   } else if (brand) {
     return getRoute('supportBrand', params)
@@ -287,9 +299,11 @@ export function getSupportUrlFromParams(params) {
 }
 
 export function getSecurityUrlFromParams(params) {
-  const { brand, account, group } = params
+  const { brand, account, group, property } = params
 
-  if (group) {
+  if (property) {
+    return getRoute('securityProperty', params)
+  } else if (group) {
     return getRoute('securityGroup', params)
   } else if (account) {
     return getRoute('securityAccount', params)
