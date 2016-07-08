@@ -145,7 +145,7 @@ export class Main extends React.Component {
 
     return (
       <div className={classNames}>
-      { this.props.user.get('loggedIn') &&
+      {this.props.user.get('loggedIn') &&
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
@@ -224,23 +224,34 @@ Main.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
+  fetchAccountData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
-  routes: React.PropTypes.array,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   userActions: React.PropTypes.object,
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 Main.contextTypes = {
   history: React.PropTypes.object.isRequired
+}
+Main.defaultProps = {
+  accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  activeHost: Immutable.Map(),
+  activePurge: Immutable.Map(),
+  properties: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {

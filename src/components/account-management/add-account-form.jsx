@@ -78,7 +78,7 @@ class NewAccountForm extends React.Component {
     const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
 
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
-    
+
     // TODO: Check me after more brands have been added
     const currentBrand = 'UDN'
 
@@ -154,8 +154,8 @@ export default reduxForm({
   form: 'new-account',
   validate,
   initialValues: {
-    accountBrand: brandOptions[0][0],
-    accountType: accountTypeOptions[0][0],
+    accountBrand: brandOptions.length ? brandOptions[0][0] : '',
+    accountType: accountTypeOptions.length ? accountTypeOptions[0][0] : '',
     services: []
   }
 })(NewAccountForm)
