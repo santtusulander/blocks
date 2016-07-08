@@ -9,30 +9,72 @@ class CacheKeyQueryString extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      activeFilter: 'include_all_query_parameters'
+    const currentNames = props.set.get('name')
+    let queryArgs = Immutable.List([''])
+    let activeFilter = 'ignore_all_query_parameters'
+    if(currentNames) {
+      if(currentNames.find(name => name.get('field') === 'request_query')) {
+        activeFilter = 'include_all_query_parameters'
+      }
+      else {
+        const currentQueryArgs = currentNames
+          .filter(name => name.get('field') === 'request_query_arg')
+          .map(name => name.get('field_detail'))
+        if(currentQueryArgs.size) {
+          queryArgs = currentQueryArgs.push('')
+          activeFilter = 'include_some_parameters'
+        }
+      }
     }
 
-    this.handleChange = this.handleChange.bind(this)
+    this.state = {
+      activeFilter: activeFilter,
+      queryArgs: queryArgs
+    }
+
+    this.handleChangeArg = this.handleChangeArg.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
   }
-  handleChange(path) {
+  handleChangeArg(index) {
     return e => {
-      this.props.changeValue(path, e.target.value)
+      let newArgs = this.state.queryArgs.set(index, e.target.value)
+      if(newArgs.last()) {
+        newArgs = newArgs.push('')
+      }
+      this.setState({queryArgs: newArgs})
     }
   }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
+  handleSelectChange(value) {
+    this.setState({activeFilter: value})
+  }
+  saveChanges() {
+    let newName = [
+      {field: 'request_host'},
+      {field: 'request_path'}
+    ]
+    if(this.state.activeFilter === 'include_all_query_parameters') {
+      newName.push({field: 'request_query'})
     }
+    else if(this.state.activeFilter === 'include_some_parameters') {
+      this.state.queryArgs.forEach(queryArg => {
+        if(queryArg) {
+          newName.push({
+            field: 'request_query_arg',
+            field_detail: queryArg
+          })
+        }
+      })
+    }
+    this.props.changeValue(
+      this.props.path,
+      Immutable.fromJS({name: newName})
+    )
+    this.props.close()
   }
   render() {
     const hasContainingRule =
-      this.state.activeFilter === 'include_some_parameters' ||
-      this.state.activeFilter === 'ignore_some_parameters'
+      this.state.activeFilter === 'include_some_parameters'
     return (
       <div>
         <Modal.Header>
@@ -45,24 +87,24 @@ class CacheKeyQueryString extends React.Component {
             <div className="form-group">
               <label className="control-label">Cache Key</label>
               <Select className="input-select"
-                onSelect={this.handleSelectChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_key']
-                )}
+                onSelect={this.handleSelectChange}
                 value={this.state.activeFilter}
                 options={[
                   ['include_all_query_parameters', 'Include all query parameters'],
                   ['ignore_all_query_parameters', 'Ignore all query parameters'],
-                  ['include_some_parameters', 'Include some parameters'],
-                  ['ignore_some_parameters', 'Ignore some parameters']]}/>
+                  ['include_some_parameters', 'Include some parameters']]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={hasContainingRule}>
-              <Input type="text" label="Query Name"
-                placeholder="Enter Query Name"
-                onChange={this.handleChange(
-                  ['edge_configuration', 'cache_rule', 'actions', 'cache_key_value']
-                )}/>
+              {this.state.queryArgs.map((queryArg, i) => {
+                return (
+                  <Input type="text" label="Query Name" key={i}
+                    placeholder="Enter Query Name"
+                    value={queryArg}
+                    onChange={this.handleChangeArg(i)}/>
+                )
+              })}
             </Panel>
           </div>
 
@@ -70,7 +112,7 @@ class CacheKeyQueryString extends React.Component {
             <Button bsStyle="default" onClick={this.props.close}>
               Cancel
             </Button>
-            <Button bsStyle="primary" onClick={this.props.close}>
+            <Button bsStyle="primary" onClick={this.saveChanges}>
               Save Action
             </Button>
           </ButtonToolbar>
