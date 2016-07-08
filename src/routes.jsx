@@ -46,15 +46,20 @@ const routes = {
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
   accountManagementAccount: '/account-management/:brand/:account',
+  accountManagementGroup: '/account-management/:brand/:account/:group',
+  accountManagementProperty: '/account-management/:brand/:account/:group/:property',
 
   services: '/services',
   servicesBrand: '/services/:brand',
   servicesAccount: '/services/:brand/:account',
+  servicesGroup: '/services/:brand/:account/:group',
+  servicesProperty: '/services/:brand/:account/:group/:property',
 
   security: '/security',
   securityBrand: '/security/:brand',
   securityAccount: '/security/:brand/:account',
   securityGroup: '/security/:brand/:account/:group',
+  securityProperty: '/security/:brand/:account/:group/:property',
 
   securityTabSslCertificate: 'ssl-certificate',
   securityTabContentTargeting: 'content-targeting',
@@ -63,6 +68,8 @@ const routes = {
   support: '/support',
   supportBrand: '/support/:brand',
   supportAccount: '/support/:brand/:account',
+  supportGroup: '/support/:brand/:account/:group',
+  supportProperty: '/support/:brand/:account/:group/:property',
 
   configuration: '/services'
 }
@@ -175,6 +182,12 @@ module.exports = (
         <Route path={routes.securityTabContentTargeting} component={Security}/>
         <Route path={routes.securityTabTokenAuthentication} component={Security}/>
       </Route>
+      <Route path={routes.securityProperty} component={Security}>
+        <IndexRedirect to={routes.securityTabSslCertificate} />
+        <Route path={routes.securityTabSslCertificate} component={Security}/>
+        <Route path={routes.securityTabContentTargeting} component={Security}/>
+        <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+      </Route>
     </Route>
 
     {/* Services - routes */}
@@ -182,6 +195,8 @@ module.exports = (
       <IndexRedirect to={getRoute('servicesBrand', { brand: 'udn' })} />
       <Route path={routes.servicesBrand} component={Services}/>
       <Route path={routes.servicesAccount} component={Services}/>
+      <Route path={routes.servicesGroup} component={Services}/>
+      <Route path={routes.servicesProperty} component={Services}/>
     </Route>
 
     {/* Support - routes */}
@@ -189,6 +204,8 @@ module.exports = (
       <IndexRedirect to={getRoute('supportBrand', { brand: 'udn' })} />
       <Route path={routes.supportBrand} component={Support}/>
       <Route path={routes.supportAccount} component={Support}/>
+      <Route path={routes.supportGroup} component={Support}/>
+      <Route path={routes.supportProperty} component={Support}/>
     </Route>
 
     {/* Account management - routes */}
@@ -196,6 +213,8 @@ module.exports = (
       <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
       <Route path={routes.accountManagementBrand} component={AccountManagement}/>
       <Route path={routes.accountManagementAccount} component={AccountManagement}/>
+      <Route path={routes.accountManagementGroup} component={AccountManagement}/>
+      <Route path={routes.accountManagementProperty} component={AccountManagement}/>
     </Route>
   </Route>
 );
