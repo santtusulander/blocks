@@ -66,7 +66,7 @@ export class Hosts extends React.Component {
       return getContentUrl('propertyConfiguration', property, params)
     }
     const analyticsURLBuilder = (property) => {
-      return getAnalyticsUrl('group', params.group, params)
+      return getAnalyticsUrl('property', property, params)
     }
     const breadcrumbs = [
       {
