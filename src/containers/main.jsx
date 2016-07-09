@@ -37,8 +37,11 @@ export class Main extends React.Component {
   }
   componentWillMount() {
     this.props.userActions.checkToken()
+    const accountId = this.props.activeAccount.size ?
+      this.props.activeAccount.get('id') :
+      this.props.params.account
 
-    this.props.fetchAccountData(this.props.activeAccount || this.props.params.account, this.props.accounts)
+    this.props.fetchAccountData(accountId, this.props.accounts)
   }
 
   //update account is account prop changed (in url)
