@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react'
+import ReactDOM from 'react-dom'
 
 import {
   fetchAccountsForModal as fetchAccounts,
@@ -18,6 +19,7 @@ class AccountSelector extends Component {
     this.fetchItems = this.fetchItems.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
+    this.handleClick = this.handleClick.bind(this)
 
     this.state = {
       open: false,
@@ -28,6 +30,21 @@ class AccountSelector extends Component {
 
   componentWillMount() {
     this.fetchByTier(this.props.params)
+    document.addEventListener('click', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, false)
+  }
+
+  handleClick(e) {
+    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+      return
+    }
+
+    if (this.state.open) {
+      this.setState({ open: false });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
