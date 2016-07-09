@@ -86,7 +86,6 @@ class AccountSelector extends Component {
        */
       case 'name':
       case 'menu-item':
-        this.setState({ open: false })
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
           e.target.getAttribute('data-value'),
