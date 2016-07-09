@@ -70,7 +70,7 @@ class Header extends React.Component {
   }
 
   addGroupLink(links, urlMethod) {
-    const activeGroup = this.props.activeGroup ? this.props.activeGroup.get('id').toString() : null,
+    const activeGroup = this.props.activeGroup.size ? this.props.activeGroup.get('id').toString() : null,
       params = this.props.params;
 
     if (params.group === activeGroup) {
