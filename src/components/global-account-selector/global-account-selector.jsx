@@ -65,7 +65,6 @@ class AccountSelector extends Component {
       this[param] = params[param]
       return params[param]
     })
-    this.setState({ open: false })
     this.fetchItems(this.tier, ...paramArray)
   }
 
