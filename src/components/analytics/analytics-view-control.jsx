@@ -82,7 +82,7 @@ const AnalyticsViewControl = (props) => {
   const isContentAnalytics = props.history.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
-    group: 'Account Report',
+    group: 'Back to Accounts',
     account: 'UDN Admin',
     brand: 'UDN Admin'
   }
@@ -93,10 +93,10 @@ const AnalyticsViewControl = (props) => {
     const { account, brand } = IDs
     switch(tier) {
       case 'property':
-        fetchItems('group', 'udn', account)
+        fetchItems('group', brand, account)
         break
       case 'group':
-        props.history.pushState(null, getAnalyticsUrl('account', account, { brand }))
+        fetchItems('account', brand)
         break
       case 'brand':
       case 'account':

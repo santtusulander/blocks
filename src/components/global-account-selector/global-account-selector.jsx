@@ -31,6 +31,7 @@ class AccountSelector extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.state.open && this.setState({ open: false })
     if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchByTier(nextProps.params)
     }
@@ -47,6 +48,7 @@ class AccountSelector extends Component {
       this[param] = params[param]
       return params[param]
     })
+    this.setState({ open: false })
     this.fetchItems(this.tier, ...paramArray)
   }
 
@@ -85,7 +87,6 @@ class AccountSelector extends Component {
       case 'name':
       case 'menu-item':
         this.setState({ open: false })
-
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
           e.target.getAttribute('data-value'),
