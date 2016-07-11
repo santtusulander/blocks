@@ -62,7 +62,7 @@ class CertificateFormContainer extends Component {
       }
     }
     return (
-      <Modal show={true} dialogClassName="add-account-form-sidebar">
+      <Modal show={true} dialogClassName="modal-form-panel">
         <Modal.Header>
           <h1>{title}</h1>
           {!toEdit.isEmpty() && <p>{formProps.fields.title.value}</p>}
