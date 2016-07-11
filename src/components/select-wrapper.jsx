@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react';
 
 import Select from './select.jsx'
 
-const SelectWrapper = (props) => {
-  
+const SelectWrapper = ({ className, onChange, disabled, options, value }) => {
   return (
       <Select
-        className={ props.className }
-        onSelect={ e => props.onChange( e ) }
-        options={ props.options }
-        value={ props.value }
+        disabled={disabled || false}
+        className={className}
+        onSelect={e => onChange(e)}
+        options={options}
+        value={value}
       />
   )
 }
