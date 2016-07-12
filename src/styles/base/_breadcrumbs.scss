@@ -4,12 +4,12 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .breadcrumb {
-  float: left;
-
+  display: flex;
   padding: 0;
   margin-bottom: 0;
   text-transform: uppercase;
   background-color: transparent;
+  width: 100%;
 
   :not(.header) > .container-fluid > & {
     position: absolute;
@@ -28,7 +28,7 @@
   }
 
   > li {
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
 
     .header & {
@@ -44,6 +44,15 @@
         height: auto;
         line-height: 1;
       }
+    }
+
+    > a,
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      max-width: 350px;
     }
 
     &.breadcrumb-back {

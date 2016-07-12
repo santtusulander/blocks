@@ -148,11 +148,71 @@ class Header extends React.Component {
     return links.reverse()
   }
 
+  /**
+   * Render method for breadcrumbs.
+   */
   renderBreadcrumb() {
     return (
-      <li>
+      <li className="header__breadcrumb">
         <Breadcrumbs links={this.getBreadcrumbLinks()}/>
       </li>
+    );
+  }
+
+  /**
+   * Render method for user menu.
+   */
+  renderUserMenu() {
+    return (
+      <Dropdown.Menu className="dropdown-user-menu">
+        <li className="dropdown-user-menu-container">
+          <ul>
+            <MenuItem header={true} className="dropdown-main-header">
+              <div id="user-menu-username" className="user-menu-item">test</div>
+            </MenuItem>
+            <MenuItem eventKey="1">
+              <div className="user-menu-item">
+                <div className="helper-header">Company</div>
+                Ericsson
+              </div>
+            </MenuItem>
+            <MenuItem eventKey="2">
+              <div className="user-menu-item">
+                <div className="helper-header">Role</div>
+                UDN Admin
+              </div>
+            </MenuItem>
+            <li className="menu-item-theme">
+              <div className="menuitem">
+                <div className="user-menu-item">
+                  <div className="helper-header helper-ui-theme">UI Theme</div>
+                  <Select className="btn-block"
+                          onSelect={this.handleThemeChange}
+                          value={this.props.theme}
+                          options={[
+                                ['dark', 'Ericsson Dark Theme'],
+                                ['light', 'Ericsson Light Theme']]}/>
+                </div>
+              </div>
+            </li>
+            <li>
+              <Link
+                id="account-management"
+                to={`/account-management`} activeClassName="active"
+                onClick={this.toggleUserMenu}>
+                <div className="user-menu-item">
+                  Account Management
+                </div>
+              </Link>
+            </li>
+          </ul>
+        </li>
+        <li className="bottom-item" eventKey="5">
+          <a id="log-out" href="#" onClick={this.props.logOut}>
+            <div className="user-menu-item">Log Out</div>
+          </a>
+        </li>
+      </Dropdown.Menu>
     );
   }
 
@@ -177,33 +237,33 @@ class Header extends React.Component {
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
           className={this.state.animatingGradient ?
-            'header-gradient animated' :
-            'header-gradient'}>
+            'header__gradient animated' :
+            'header__gradient'}>
         </div>
-
-        <Nav className='breadcrumb-nav'>
-          {/* TODO: the logo should link to the level where they select accounts,
-           for CPs it should link to where they select groups.*/}
-          <li className='logo'>
-            <Link to={getRoute('content', { brand: 'udn' })}>
-              <IconEricsson />
-            </Link>
-          </li>
-          <AccountSelector
-            params={{ brand: 'udn' }}
-            topBarTexts={{ brand: 'UDN Admin' }}
-            topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-            onSelect={(...params) => itemSelectorFunc(...params)}
-            restrictedTo="brand">
-            <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
-            </Dropdown.Toggle>
-          </AccountSelector>
-
-        {this.renderBreadcrumb()}
-
-        </Nav>
-          <Nav pullRight={true}>
+        <div className="header__content">
+          <Nav className="header__left">
+            {/* TODO: the logo should link to the level where they select accounts,
+             for CPs it should link to where they select groups.*/}
+            <li className="header__logo">
+              <Link className="logo" to={getRoute('content', { brand: 'udn' })}>
+                <IconEricsson />
+              </Link>
+            </li>
+            <li className="header__account-selector">
+              <AccountSelector
+                params={{ brand: 'udn' }}
+                topBarTexts={{ brand: 'UDN Admin' }}
+                topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+                onSelect={(...params) => itemSelectorFunc(...params)}
+                restrictedTo="brand">
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
+                </Dropdown.Toggle>
+              </AccountSelector>
+            </li>
+            {this.renderBreadcrumb()}
+          </Nav>
+          <Nav className="header__right" pullRight={true}>
             <li>
               <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
                 <IconAlerts />
@@ -225,58 +285,11 @@ class Header extends React.Component {
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="dropdown-user-menu">
-                  <li className="dropdown-user-menu-container">
-                    <ul>
-                      <MenuItem header={true} className="dropdown-main-header">
-                        <div id="user-menu-username" className="user-menu-item">test</div>
-                      </MenuItem>
-                      <MenuItem eventKey="1">
-                        <div className="user-menu-item">
-                          <div className="helper-header">Company</div>
-                          Ericsson
-                        </div>
-                      </MenuItem>
-                      <MenuItem eventKey="2">
-                        <div className="user-menu-item">
-                          <div className="helper-header">Role</div>
-                          UDN Admin
-                        </div>
-                      </MenuItem>
-                      <li className="menu-item-theme">
-                        <div className="menuitem">
-                          <div className="user-menu-item">
-                            <div className="helper-header helper-ui-theme">UI Theme</div>
-                            <Select className="btn-block"
-                              onSelect={this.handleThemeChange}
-                              value={this.props.theme}
-                              options={[
-                                ['dark', 'Ericsson Dark Theme'],
-                                ['light', 'Ericsson Light Theme']]}/>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <Link
-                          id="account-management"
-                          to={`/account-management`} activeClassName="active"
-                          onClick={this.toggleUserMenu}>
-                          <div className="user-menu-item">
-                            Account Management
-                          </div>
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="bottom-item" eventKey="5">
-                    <a id="log-out" href="#" onClick={this.props.logOut}>
-                      <div className="user-menu-item">Log Out</div>
-                    </a>
-                  </li>
-                </Dropdown.Menu>
+                {this.renderUserMenu()}
               </Dropdown>
             </li>
           </Nav>
+        </div>
       </Navbar>
     );
   }
