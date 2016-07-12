@@ -44,6 +44,8 @@ DeleteModal.propTypes = {
 export default reduxForm({
   fields: ['delField'],
   form: 'deleteModal',
-  validate: ({ delField }) => submitDisabled = delField !== 'delete' && delField !== 'Delete' ? true : false
+  validate: ({ delField }) => {
+    submitDisabled = !delField || delField.toLowerCase() !== 'delete'
+  }
 })(DeleteModal)
 
