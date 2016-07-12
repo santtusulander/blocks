@@ -106,12 +106,14 @@ export class AccountManagement extends Component {
   addAccount(data) {
     return this.props.accountActions.createAccount(data.brand, data.name).then(
       action => {
+        const { payload: { id } } = action, { brand } = data
         return this.props.accountActions.updateAccount(
           data.brand,
-          action.payload.id,
+          id,
           { name: data.name }
           // TODO: should be "data" above but API does not support all fields
         ).then(() => {
+          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
           this.showNotification(`Account ${data.name} created.`)
           this.props.toggleModal(null)
         }).then(() => {
