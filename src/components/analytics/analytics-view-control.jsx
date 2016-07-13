@@ -51,8 +51,9 @@ const AnalyticsViewControl = (props) => {
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
   let title = "Analytics"
+  let active
   if(props.activeTab) {
-    const active = tabs.find(tab => tab.key === props.activeTab)
+    active = tabs.find(tab => tab.key === props.activeTab)
     if(active) {
       if(active.hideHierarchy) {
         title = active.label
@@ -116,9 +117,12 @@ const AnalyticsViewControl = (props) => {
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
           onSelect={(...params) => {
-            const url = isContentAnalytics ?
+            let url = isContentAnalytics ?
               `${getContentUrl(...params)}/analytics` :
               getAnalyticsUrl(...params)
+            if(active && !isContentAnalytics) {
+              url = `${url}/${active.key}`
+            }
             props.history.pushState(null, url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
