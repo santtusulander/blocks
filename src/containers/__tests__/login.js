@@ -113,6 +113,6 @@ describe('Login', () => {
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/accounts/udn/')
+    expect(fakehistory.push.mock.calls[0][1]).toBe('/content/accounts/udn/')
   })
 })

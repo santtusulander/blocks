@@ -159,6 +159,6 @@ describe('Main', () => {
         fetchAccountData={fakeFetchAccountData} />
     )
     main.logOut()
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/login')
+    expect(fakehistory.push.mock.calls[0][1]).toBe('/login')
   });
 })

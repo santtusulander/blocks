@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import { Modal, ButtonToolbar, Dropdown } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -92,7 +92,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -176,7 +176,7 @@ class ContentItems extends React.Component {
               params={this.props.params}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
               drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>
@@ -326,4 +326,4 @@ ContentItems.defaultProps = {
   sortValuePath: Immutable.List()
 }
 
-module.exports = ContentItems
+export default withRouter(ContentItems)

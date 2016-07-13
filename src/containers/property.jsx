@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
@@ -115,14 +116,13 @@ export class Property extends React.Component {
     return endDate.diff(startDate)+60000
   }
   changeDateRange (startDate, endDate) {
-    const {query, pathname} = this.props.location
+    const { pathname } = this.props.location
     const fStartDate = safeMomentStartDate(startDate).format('X')
     const fEndDate = safeMomentEndDate(endDate).format('X')
     this.setState({
       activeSlice: null
     }, () => {
-      this.props.history.pushState(
-        null,
+      this.props.router.push(
         `${pathname}?startDate=${fStartDate}&endDate=${fEndDate}`
       )
     })
@@ -138,7 +138,7 @@ export class Property extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -317,7 +317,7 @@ export class Property extends React.Component {
               params={this.props.params}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
               drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>{this.props.params.property}</h1>
@@ -528,4 +528,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Property);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Property));
