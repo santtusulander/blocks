@@ -25,7 +25,7 @@ export class Groups extends React.Component {
      * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
      **/
     //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
-      this.props.fetchData()
+    this.props.fetchData()
     //}
   }
   deleteGroup(id) {
@@ -39,7 +39,7 @@ export class Groups extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    const { brand, account } = this.props.params
+    const { brand } = this.props.params
     const { activeAccount, activeGroup } = this.props
 
     const nextPageURLBuilder = (groupID) => {
@@ -67,6 +67,7 @@ export class Groups extends React.Component {
         ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : 'Loading...'}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        selectionStartTier="group"
         showAnalyticsLink={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
@@ -88,6 +89,7 @@ Groups.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   sortDirection: React.PropTypes.number,

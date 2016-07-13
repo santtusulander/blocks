@@ -88,6 +88,7 @@ export class Security extends React.Component {
   render() {
     const {
       accounts,
+      groups,
       activeAccount,
       activeCertificates,
       activeModal,
@@ -109,6 +110,7 @@ export class Security extends React.Component {
     }
 
     const sslListProps = {
+      groups,
       activeModal,
       activeCertificates,
       certificates: sslCertificates,
