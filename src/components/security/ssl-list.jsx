@@ -5,7 +5,7 @@ import { List } from 'immutable'
 import ActionLinks from '../account-management/action-links.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
-const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
+const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
   return (
     <div>
       <AccountManagementHeader title={`${certificates.size} Certificates`} onAdd={uploadCertificate}/>
@@ -26,7 +26,7 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
         <tbody>
           {!certificates.isEmpty() ? certificates.map((cert, index) => {
             const commonName = cert.get('cn')
-            const group = cert.get('group')
+            const group = groups.size ? groups.filter(group => group.get('id') === cert.get('group')).first().get('name') : cert.get('group')
             const account = cert.get('account')
             return (
               <tr key={index}>
