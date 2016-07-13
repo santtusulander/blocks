@@ -26,7 +26,7 @@ class Select extends Component {
       label = currentSelection[1]
     }
     return (
-      <Dropdown id="" className={className}
+      <Dropdown id="" disabled={this.props.disabled || false} className={className}
         onSelect={this.selectOption}>
         <Dropdown.Toggle noCaret={true}>
           <IconSelectCaret/>
@@ -47,6 +47,7 @@ class Select extends Component {
 Select.displayName = 'Select'
 Select.propTypes = {
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   onSelect: PropTypes.func,
   options: PropTypes.array,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
