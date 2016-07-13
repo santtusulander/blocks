@@ -16,35 +16,8 @@ class AnalysisStackedByTime extends React.Component {
       tooltipX: 0,
       tooltipY: 0
     }
+  }
 
-    this.moveMouse = this.moveMouse.bind(this)
-    this.deactivateTooltip = this.deactivateTooltip.bind(this)
-  }
-  moveMouse(xScale, yScale, data) {
-    return e => {
-      const bounds = this.refs.chart.getBoundingClientRect()
-      const xDate = xScale.invert(e.pageX - bounds.left)
-      const i = closestDate(data, xDate, 1)
-      const d0 = data[i - 1]
-      const d1 = data[i]
-      let d = d0;
-      if(d1) {
-        d = xDate - d0.timestamp.getTime() > d1.timestamp.getTime() - xDate ? d1 : d0
-      }
-      if(d) {
-        this.setState({
-          tooltipText: `${moment(d.timestamp).format('MMM D')} ${numeral(d.bytes).format('0,0')}`,
-          tooltipX: xScale(d.timestamp),
-          tooltipY: yScale(d.bytes)
-        })
-      }
-    }
-  }
-  deactivateTooltip() {
-    this.setState({
-      tooltipText: null
-    })
-  }
   render() {
     if(!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
@@ -93,9 +66,7 @@ class AnalysisStackedByTime extends React.Component {
           viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
-          ref='chart'
-          onMouseMove={this.moveMouse(xScale, yScale, totals)}
-          onMouseOut={this.deactivateTooltip}>
+          ref='chart'>
           {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
             return dataset.map((day, i) => {
               const newTotal = columnHeights[i] ? columnHeights[i] + day.bytes : day.bytes
