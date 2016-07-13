@@ -33,6 +33,13 @@ class AccountSelector extends Component {
     document.addEventListener('click', this.handleClick, false)
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.state.open && this.setState({ open: false })
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+      this.fetchByTier(nextProps.params)
+    }
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClick, false)
   }
@@ -47,16 +54,9 @@ class AccountSelector extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state.open && this.setState({ open: false })
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
-      this.fetchByTier(nextProps.params)
-    }
-  }
-
   setInitialTier(params) {
     const { property, group, account, brand } = params
-    this.tier = property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
+    this.tier = this.props.startTier || property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
   }
 
   fetchByTier(params) {
@@ -181,6 +181,7 @@ AccountSelector.propTypes = {
   onSelect: PropTypes.func,
   params: PropTypes.object,
   restrictedTo: PropTypes.string,
+  startTier: PropTypes.string,
   topBarAction: PropTypes.func,
   topBarTexts: PropTypes.object
 }
