@@ -144,7 +144,8 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal,
       onDelete,
-      history
+      history,
+      activeAccount
     } = this.props
 
     const isAdmin = !account
@@ -204,7 +205,8 @@ export class AccountManagement extends Component {
             show={true}/>}
           {accountManagementModal === DELETE_ACCOUNT &&
           <DeleteModal
-            itemToDelete="Account"
+            itemToDelete={activeAccount.get('name')}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => onDelete(brand, account, history)}/>}
         </Content>
