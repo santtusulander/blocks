@@ -70,7 +70,7 @@ class AccountManagementManageAccount extends React.Component {
                      onClick={() => toggleModal(ADD_ACCOUNT)}>
             <IconAdd/>
           </UDNButton>
-          <UDNButton bsStyle="success"
+          <UDNButton bsStyle="secondary"
                      pageHeaderBtn={true}
                      icon={true}
                      addNew={true}
