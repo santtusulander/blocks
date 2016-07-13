@@ -3,7 +3,12 @@ import { Button, ButtonToolbar, Modal, Input } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
 let submitDisabled
-const DeleteModal = ({ itemToDelete, onDelete, onCancel, fields: { delField } }) => {
+const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { delField } }) => {
+  if (!description) {
+    description = `Please confirm by writing "delete" below, and pressing the delete button.
+          This ${itemToDelete} will be removed immediately. This action can't be undone`;
+  }
+
   return (
     <Modal show={true} className="delete-modal">
       <Modal.Header  className="delete-modal-header">
@@ -12,8 +17,7 @@ const DeleteModal = ({ itemToDelete, onDelete, onCancel, fields: { delField } })
       </Modal.Header>
       <Modal.Body className="delete-modal-body">
         <p>
-          {`Please confirm by writing "delete" below, and pressing the delete button.
-          This ${itemToDelete} will be removed immediately. This action can't be undone`}
+          {description}
         </p>
         <Input type="text" label="Type 'delete'" placeholder="Delete"{ ...delField }/>
       </Modal.Body>
