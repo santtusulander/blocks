@@ -43,7 +43,8 @@ class AccountManagementAccountDetails extends React.Component {
     this.state = { workSaved: true }
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    console.log(this.props)
     this.props.router.setRouteLeaveHook(
       this.props.route,
       () => this.props.dirty

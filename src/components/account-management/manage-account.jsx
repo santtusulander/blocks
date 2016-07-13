@@ -47,7 +47,7 @@ class AccountManagementManageAccount extends React.Component {
     )
   }
   render() {
-    const { account, isAdmin, toggleModal, router } = this.props
+    const { account, isAdmin, toggleModal, router, route } = this.props
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
     return (
       <div className="account-management-manage-account">
@@ -76,6 +76,7 @@ class AccountManagementManageAccount extends React.Component {
           {this.state.activeTab === 'account' && !account.isEmpty() &&
             <Account
               toggleModal={toggleModal}
+              route={route}
               account={account}
               isAdmin={isAdmin}
               initialValues={{
