@@ -41,16 +41,6 @@ export class AccountManagement extends Component {
     this.showNotification = this.showNotification.bind(this)
   }
 
-  componentWillMount() {
-    // TODO: add support for brand level account management.
-    const accountId = this.props.params.account;
-    if (accountId) {
-      this.props.accountActions.fetchAccount(this.props.params.brand, accountId);
-    } else {
-      this.props.accountActions.clearActiveAccount();
-    }
-  }
-
   editSOARecord() {
     const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
     const activeDomain = dnsData.get('activeDomain')
