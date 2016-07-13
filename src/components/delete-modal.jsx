@@ -20,7 +20,7 @@ const DeleteModal = ({ itemToDelete, onDelete, onCancel, fields: { delField } })
 
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
-          <Button onClick={onCancel} className="btn-outline">Close</Button>
+          <Button onClick={onCancel} className="btn-outline">Cancel</Button>
           <Button onClick={onDelete}
             bsStyle="primary"
             className="delete-modal-submit"
