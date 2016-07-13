@@ -83,7 +83,7 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${urlBase}/AAA/tokens`,
+  return loginAxios.post(`${urlBase}/v1/tokens`,
     {
       "username": username,// superuser
       "brand_id": "UDN",
@@ -117,7 +117,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
 })
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
-//   return axios.post(`${urlBase}/AAA/tokens`, {
+//   return axios.post(`${urlBase}/v1/tokens`, {
 //     "username": "superuser",
 //     "brand_id": "UDN",
 //     "password": "Video4All!",

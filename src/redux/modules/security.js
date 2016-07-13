@@ -169,15 +169,16 @@ export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_E
  * These are for the item selector, will not be dispatched
  */
 export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups`)
+  return axios.get(`${urlBase}/v1/brands/${brand}/accounts/${account}/groups`)
   .then(res => res && res.data);
 })
 
 export const fetchAccountsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts`)
+  console.log('wut')
+  return axios.get(`${urlBase}/v1/brands/${brand}/accounts`)
   .then(res => res && res.data);
 })
 
 export const fetchPropertiesForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account, group) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+  return axios.get(`${urlBase}/v1/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
 })
