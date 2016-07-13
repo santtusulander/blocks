@@ -178,6 +178,7 @@ export class AccountManagement extends Component {
       <PageContainer className="account-management">
         <Content>
           <ManageAccount
+            route={this.props.route}
             toggleModal={toggleModal}
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}

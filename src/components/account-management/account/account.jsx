@@ -2,6 +2,7 @@ import React from 'react'
 import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { reduxForm } from 'redux-form'
+import { withRouter } from 'react-router'
 
 import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
@@ -39,6 +40,14 @@ class AccountManagementAccountDetails extends React.Component {
     super(props)
 
     this.save = this.save.bind(this)
+    this.state = { workSaved: true }
+  }
+
+  componentWillMount() {
+    this.props.router.setRouteLeaveHook(
+      this.props.route,
+      () => this.props.dirty
+    )
   }
 
   componentWillReceiveProps(nextProps) {
@@ -201,4 +210,4 @@ export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
-})(AccountManagementAccountDetails)
+})(withRouter(AccountManagementAccountDetails))
