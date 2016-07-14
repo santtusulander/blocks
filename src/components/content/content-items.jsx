@@ -81,14 +81,16 @@ class ContentItems extends React.Component {
   }
   createNewItem() {
     this.props.createNewItem(...arguments).then((response) => {
-      console.log('THEN', response);
       if (response.error) {
-
+        this.props.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+        })
       } else {
         this.toggleAddItem()
       }
     })
-
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
@@ -327,7 +329,9 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
-  viewingChart: React.PropTypes.bool
+  viewingChart: React.PropTypes.bool,
+  showInfoDialog: React.PropTypes.func,
+  hideInfoDialog: React.PropTypes.func
 }
 ContentItems.defaultProps = {
   activeAccount: Immutable.Map(),

@@ -105,7 +105,9 @@ export class Hosts extends React.Component {
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         type='property'
-        viewingChart={this.props.viewingChart}/>
+        viewingChart={this.props.viewingChart}
+        showInfoDialog={this.props.uiActions.showInfoDialog}
+        hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
     )
   }
 }
