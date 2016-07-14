@@ -467,7 +467,6 @@ Property.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
-  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,

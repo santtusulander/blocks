@@ -158,7 +158,6 @@ Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
-  history: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
   userActions: React.PropTypes.object
 }

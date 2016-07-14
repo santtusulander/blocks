@@ -132,8 +132,7 @@ class AnalyticsContainer extends React.Component {
   }
 
   renderContent(children, filters) {
-    const params = this.props.params,
-      locations = this.props.location
+    const params = this.props.params
 
     if (!params.account) {
       return (
@@ -167,8 +166,6 @@ class AnalyticsContainer extends React.Component {
       accounts,
       groups,
       properties,
-      history,
-      filterOptions,
       filters,
       activeAccount,
       activeGroup,
@@ -193,7 +190,6 @@ class AnalyticsContainer extends React.Component {
               properties={properties}
               params={params}
               location={this.props.location}
-              history={history}
               activeTab={getTabName(pathname)}
             />
           </PageHeader>
@@ -217,7 +213,6 @@ AnalyticsContainer.propTypes = {
   filtersActions: React.PropTypes.object,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  history: React.PropTypes.object,
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),

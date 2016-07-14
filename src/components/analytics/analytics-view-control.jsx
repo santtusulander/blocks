@@ -80,7 +80,7 @@ const AnalyticsViewControl = (props) => {
   else if(account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
-  const isContentAnalytics = props.history.isActive('/content')
+  const isContentAnalytics = props.router.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Back to Accounts',
@@ -215,7 +215,6 @@ AnalyticsViewControl.propTypes = {
   brands: PropTypes.instanceOf(Immutable.List),
   exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
-  history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List)

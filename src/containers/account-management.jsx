@@ -187,7 +187,6 @@ export class AccountManagement extends Component {
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}
             params={params}
-            history={this.props.history}
           />
 
             {/*

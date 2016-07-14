@@ -59,7 +59,6 @@ export class Accounts extends React.Component {
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         params={this.props.params}
-        history={this.props.history}
         className="groups-container"
         contentItems={filteredAccounts}
         dailyTraffic={this.props.dailyTraffic}
