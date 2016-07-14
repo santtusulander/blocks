@@ -63,15 +63,6 @@ describe('AnalysisStackedByTime', () => {
     expect(div.textContent).toContain('Loading');
   });
 
-  it('should deactivate tooltip', () => {
-    let stacks = TestUtils.renderIntoDocument(
-      <AnalysisStackedByTime />
-    );
-    stacks.state.tooltipText = "foo"
-    stacks.deactivateTooltip()
-    expect(stacks.state.tooltipText).toBe(null);
-  });
-
   it('should have data lines', () => {
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
