@@ -105,6 +105,7 @@ export class Hosts extends React.Component {
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         type='property'
+        user={this.props.user}
         viewingChart={this.props.viewingChart}/>
     )
   }
@@ -119,6 +120,7 @@ Hosts.propTypes = {
   fetchMetricsData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
+  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
@@ -126,6 +128,7 @@ Hosts.propTypes = {
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 Hosts.defaultProps = {
@@ -134,7 +137,8 @@ Hosts.defaultProps = {
   dailyTraffic: Immutable.List(),
   hosts: Immutable.List(),
   metrics: Immutable.List(),
-  sortValuePath: Immutable.List()
+  sortValuePath: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -148,6 +152,7 @@ function mapStateToProps(state) {
     metrics: state.metrics.get('hostMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
+    user: state.user,
     viewingChart: state.ui.get('viewingChart')
   };
 }

@@ -178,7 +178,8 @@ class ContentItems extends React.Component {
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
               onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
-              drillable={true}>
+              drillable={true}
+              user={this.props.user}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>
                   {headerText.label}
@@ -310,6 +311,7 @@ ContentItems.propTypes = {
   ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
+  params: React.PropTypes.object,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
   showSlices: React.PropTypes.bool,
@@ -318,6 +320,7 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 ContentItems.defaultProps = {
@@ -326,7 +329,8 @@ ContentItems.defaultProps = {
   contentItems: Immutable.List(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
-  sortValuePath: Immutable.List()
+  sortValuePath: Immutable.List(),
+  user: Immutable.Map()
 }
 
 module.exports = ContentItems
