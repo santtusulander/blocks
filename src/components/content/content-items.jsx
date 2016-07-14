@@ -36,14 +36,15 @@ const itemSelectorTexts = {
 }
 
 const sortContent = (path, direction) => (item1, item2) => {
-  const val1 = item1.getIn(path)
-  const val2 = item2.getIn(path)
+  const val1 = item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
+  const val2 = item2.getIn(path).toLowerCase && item2.getIn(path).toLowerCase() || item2.getIn(path)
   if(val1 > val2) {
     return direction
   }
   else if(val1 < val2) {
     return -1 * direction
   }
+  return 0
 }
 
 class ContentItems extends React.Component {
