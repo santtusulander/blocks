@@ -11,7 +11,8 @@ class Select extends Component {
     this.selectedOption = ''
   }
   selectOption(e) {
-    this.props.onSelect(e.target.getAttribute('data-value'))
+    const value = e.target.getAttribute('data-value')
+    this.props.onSelect(this.props.numericValues ? Number(value) : value)
   }
   render() {
     let className = 'dropdown-select'

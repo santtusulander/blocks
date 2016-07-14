@@ -52,7 +52,7 @@ class NewAccountForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
       const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
@@ -75,7 +75,7 @@ class NewAccountForm extends React.Component {
 
   render() {
     const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
-    const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+    const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
 
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
