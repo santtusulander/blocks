@@ -312,6 +312,7 @@ ContentItems.propTypes = {
   ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
+  params: React.PropTypes.object,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
   showSlices: React.PropTypes.bool,
