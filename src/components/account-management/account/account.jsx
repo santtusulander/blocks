@@ -66,7 +66,7 @@ class AccountManagementAccountDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
       const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
@@ -84,7 +84,7 @@ class AccountManagementAccountDetails extends React.Component {
 
   render() {
     const { fields: { accountName, accountType, services } } = this.props
-    const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
+    const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
       <div className="account-management-account-details">
         <h2>Account</h2>
