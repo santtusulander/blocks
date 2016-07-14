@@ -122,7 +122,11 @@ const AnalyticsViewControl = (props) => {
               `${getContentUrl(...params)}/analytics` :
               getAnalyticsUrl(...params)
             if(active && !isContentAnalytics) {
-              url = `${url}/${active.key}`
+              let tab = active.key
+              if(active.propertyOnly && params[0] !== 'property') {
+                tab = ''
+              }
+              url = `${url}/${tab}`
             }
             props.history.pushState(null, url)
           }}>
