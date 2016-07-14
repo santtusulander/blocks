@@ -7,6 +7,7 @@ import { withRouter } from 'react-router'
 import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button.js'
+import InfoModal from '../../info-modal.jsx'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
@@ -38,29 +39,14 @@ const validate = values => {
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
     super(props)
-
+    this.shouldLeave = this.shouldLeave.bind(this)
     this.save = this.save.bind(this)
-    this.state = { workSaved: true }
+    this.state = { showModal: false, next: '', leaving: false }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { router, route } = this.props
-    router.setRouteLeaveHook(
-      route,
-      () => {
-        const { fields, account } = this.props
-        const services = fields.services.value
-        if(!is(fromJS(services), account.get('services'))) {
-          return false
-        }
-        for(const key in fields) {
-          if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
-            return false
-          }
-        }
-        return true
-      }
-    )
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -80,6 +66,27 @@ class AccountManagementAccountDetails extends React.Component {
         name: accountName.value
       })
     }
+  }
+
+  shouldLeave({ pathname }) {
+    const { fields, account } = this.props
+    const services = fields.services.value
+    if(!is(fromJS(services), account.get('services'))) {
+      this.setState({ showModal: true, next: pathname })
+      return this.state.leaving
+    }
+    for(const key in fields) {
+      if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
+        this.setState({ showModal: true, next: pathname })
+        return this.state.leaving
+      }
+    }
+    return true
+  }
+
+  leavePage() {
+    Promise.resolve(this.setState({ leaving: true }))
+      .then(() => this.props.router.push(this.state.next))
   }
 
   render() {
@@ -203,6 +210,12 @@ class AccountManagementAccountDetails extends React.Component {
             </UDNButton>
           </ButtonToolbar>
         </form>
+        {this.state.showModal &&
+          <InfoModal title="Warning" content="You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?">
+            <UDNButton onClick={this.leavePage.bind(this)} bsStyle="primary">Continue</UDNButton>
+            <UDNButton onClick={() => this.setState({ showModal: false })} bsStyle="primary">Stay</UDNButton>
+          </InfoModal>
+        }
       </div>
     )
   }
