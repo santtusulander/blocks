@@ -1,7 +1,7 @@
 import React from 'react'
-import { Nav, NavItem, Dropdown } from 'react-bootstrap'
+import { Nav, Dropdown } from 'react-bootstrap'
 import Immutable from 'immutable'
-import { withRouter } from 'react-router'
+import { withRouter, Link } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
 import PageHeader from '../layout/page-header'
@@ -11,45 +11,68 @@ import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
+import Content from '../layout/content'
 
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
-import { getUrl } from '../../util/helpers.js'
+import { getUrl, getAccountManagementUrlFromParams, getTabName } from '../../util/helpers.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../../constants/account-management-modals.js'
 
 class AccountManagementManageAccount extends React.Component {
   constructor(props) {
-    super(props);
-
-    this.state = {
-      activeTab: 'account'
-    }
-
-    this.changeTab = this.changeTab.bind(this)
+    super(props)
+    this.renderTabs = this.renderTabs.bind(this)
   }
-  changeTab(newTab) {
-    this.setState({activeTab: newTab})
-  }
-  renderTabs() {
+  renderTabs(detailsTabProps, groupsTabProps, usersTabProps) {
     const params = this.props.params;
-
+    const subPage = getTabName(this.props.location.pathname)
+    const baseUrl = getAccountManagementUrlFromParams(params);
     if (!params.account) {
       return null
     }
 
     return (
-      <Nav bsStyle="tabs" className="system-nav"
-           activeKey={this.state.activeTab} onSelect={this.changeTab}>
-        <NavItem eventKey="account">Account</NavItem>
-        <NavItem eventKey="groups">Groups</NavItem>
-        <NavItem eventKey="users">Users</NavItem>
-      </Nav>
+      <div>
+        <Nav bsStyle="tabs" className="system-nav">
+          <li className="navbar">
+            <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/groups'} activeClassName="active">GROUPS</Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+          </li>
+        </Nav>
+        <Content className="tab-bodies">
+          {subPage === 'details' && <Account { ...detailsTabProps }/>}
+          {subPage === 'groups' && <Groups { ...groupsTabProps }/>}
+          {subPage === 'users' && <Users { ...usersTabProps }/>}
+       </Content>
+      </div>
     )
   }
   render() {
-    const { account, isAdmin, toggleModal, router, route } = this.props
+    const { account, isAdmin, toggleModal, router, route, params, addGroup, editGroup, deleteGroup, groups } = this.props
+    const subPage = getTabName(this.props.location.pathname)
+    const baseUrl = getAccountManagementUrlFromParams(params);
     const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
+    const usersTabProps = { account, isAdmin }
+    const groupsTabProps = { addGroup, deleteGroup, editGroup, groups }
+    const detailsTabProps = {
+      toggleModal,
+      route,
+      account,
+      isAdmin,
+      initialValues: {
+        accountName: account.get('name'),
+        brand: 'udn',
+        services: account.get('services'),
+        accountType: accountType && accountType.value
+      },
+      onSave: this.props.editAccount
+    }
     return (
       <div className="account-management-manage-account">
         <PageHeader>
@@ -57,8 +80,8 @@ class AccountManagementManageAccount extends React.Component {
             params={{ brand: 'udn' }}
             restrictedTo="brand"
             topBarTexts={{ brand: 'UDN Admin' }}
-            topBarAction={() => router.push(getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
-            onSelect={(...params) => router.push(getUrl(getRoute('accountManagement'), ...params))}>
+            topBarAction={() => router.push(`${baseUrl}/${subPage}`)}
+            onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{account.get('name') || 'No active account'}</h1>
             </Dropdown.Toggle>
@@ -80,36 +103,7 @@ class AccountManagementManageAccount extends React.Component {
           </UDNButton>
         </div>
         </PageHeader>
-        {this.renderTabs()}
-        <div className="tab-bodies">
-          {account.isEmpty() && <p className='text-center'><br/>Please select an account.</p>}
-          {this.state.activeTab === 'account' && !account.isEmpty() &&
-            <Account
-              toggleModal={toggleModal}
-              route={route}
-              account={account}
-              isAdmin={isAdmin}
-              initialValues={{
-                accountName: account.get('name'),
-                brand: 'udn',
-                services: account.get('services'),
-                accountType: accountType && accountType.value
-              }}
-              onSave={this.props.editAccount}/>
-          }
-          {this.state.activeTab === 'groups' && !account.isEmpty() &&
-            <Groups
-              addGroup={this.props.addGroup}
-              deleteGroup={this.props.deleteGroup}
-              editGroup={this.props.editGroup}
-              groups={this.props.groups}/>
-          }
-          {this.state.activeTab === 'users' && !account.isEmpty() &&
-            <Users
-              account={account}
-              isAdmin={isAdmin}/>
-          }
-        </div>
+        {this.renderTabs(detailsTabProps, groupsTabProps, usersTabProps)}
       </div>
     );
   }

@@ -49,6 +49,10 @@ const routes = {
   accountManagementGroup: '/account-management/:brand/:account/:group',
   accountManagementProperty: '/account-management/:brand/:account/:group/:property',
 
+  accountManagementTabDetails: 'details',
+  accountManagementTabGroups: 'groups',
+  accountManagementTabUsers: 'users',
+
   services: '/services',
   servicesBrand: '/services/:brand',
   servicesAccount: '/services/:brand/:account',
@@ -212,9 +216,24 @@ module.exports = (
     <Route path={routes.accountManagement}>
       <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
       <Route path={routes.accountManagementBrand} component={AccountManagement}/>
-      <Route path={routes.accountManagementAccount} component={AccountManagement}/>
-      <Route path={routes.accountManagementGroup} component={AccountManagement}/>
-      <Route path={routes.accountManagementProperty} component={AccountManagement}/>
+      <Route path={routes.accountManagementAccount} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagement}/>
+      </Route>
+      <Route path={routes.accountManagementGroup} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagement}/>
+      </Route>
+      <Route path={routes.accountManagementProperty} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagement}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagement}/>
+      </Route>
     </Route>
   </Route>
 );

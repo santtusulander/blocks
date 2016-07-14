@@ -44,18 +44,24 @@ class AccountManagementAccountDetails extends React.Component {
     this.state = { showModal: false, next: '', leaving: false }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { router, route } = this.props
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
-      const { fields: { services, accountType } } = nextProps
+    const { fields: { accountType, services } } = nextProps
+    if(accountType.value !== this.props.fields.accountType.value && services.value !== '') {
       const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
+    }
+  }
+
+  componentWillUpdate() {
+    if(this.state.leaving) {
+      this.setState({ showModal: false })
     }
   }
 
@@ -72,20 +78,22 @@ class AccountManagementAccountDetails extends React.Component {
     const { fields, account } = this.props
     const services = fields.services.value
     if(!is(fromJS(services), account.get('services'))) {
-      this.setState({ showModal: true, next: pathname })
-      return this.state.leaving
+      const leaving = this.state.leaving
+      this.setState({ showModal: true, next: pathname, leaving: false })
+      return leaving
     }
     for(const key in fields) {
       if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
-        this.setState({ showModal: true, next: pathname })
-        return this.state.leaving
+        const leaving = this.state.leaving
+        this.setState({ showModal: true, next: pathname, leaving: false })
+        return leaving
       }
     }
     return true
   }
 
   leavePage() {
-    Promise.resolve(this.setState({ leaving: true }))
+    Promise.resolve(this.setState({ leaving: true, showModal: false }))
       .then(() => this.props.router.push(this.state.next))
   }
 
@@ -174,7 +182,7 @@ class AccountManagementAccountDetails extends React.Component {
                 <SelectWrapper
                   { ...accountType }
                   numericValues={true}
-                  value={Number(accountType.value)}
+                  value={accountType.value}
                   className="input-select"
                   options={accountTypeOptions}
                 />
