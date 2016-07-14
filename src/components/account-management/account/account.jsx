@@ -77,7 +77,8 @@ class AccountManagementAccountDetails extends React.Component {
   shouldLeave({ pathname }) {
     const { fields, account } = this.props
     const services = fields.services.value
-    if(!is(fromJS(services), account.get('services'))) {
+    if(account.get('services') && !is(fromJS(services), account.get('services')) ||
+      !account.get('services') && fromJS(services).size) {
       const leaving = this.state.leaving
       this.setState({ showModal: true, next: pathname, leaving: false })
       return leaving
