@@ -44,8 +44,9 @@ export class Main extends React.Component {
     this.props.fetchAccountData(accountId, this.props.accounts)
   }
 
-  //update account is account prop changed (in url)
+  //update account if account prop changed (in url) or clear active if there is no account in route
   componentWillReceiveProps(nextProps){
+    !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
     if (this.props.params.account !== nextProps.params.account) {
       this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
     }

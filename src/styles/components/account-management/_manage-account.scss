@@ -1,4 +1,15 @@
+.account-management-manage-account {
+  &__actions {
+    float: right;
+    margin: 0 -5px;
+
+    button {
+      margin: 0 5px;
+    }
+  }
+}
+
+
 .page-header-button {
-  float: right;
   margin-top: -6px;
 }

@@ -14,8 +14,11 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import ManageAccount from '../components/account-management/manage-account'
 
+import { getRoute } from '../routes'
+import { getUrl } from '../util/helpers'
+import DeleteModal from '../components/delete-modal'
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import { ADD_ACCOUNT } from '../constants/account-management-modals.js'
+import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
 
@@ -39,16 +42,6 @@ export class AccountManagement extends Component {
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
-  }
-
-  componentWillMount() {
-    // TODO: add support for brand level account management.
-    const accountId = this.props.params.account;
-    if (accountId) {
-      this.props.accountActions.fetchAccount(this.props.params.brand, accountId);
-    } else {
-      this.props.accountActions.clearActiveAccount();
-    }
   }
 
   editSOARecord() {
@@ -106,12 +99,14 @@ export class AccountManagement extends Component {
   addAccount(data) {
     return this.props.accountActions.createAccount(data.brand, data.name).then(
       action => {
+        const { payload: { id } } = action, { brand } = data
         return this.props.accountActions.updateAccount(
           data.brand,
-          action.payload.id,
+          id,
           { name: data.name }
           // TODO: should be "data" above but API does not support all fields
         ).then(() => {
+          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
           this.showNotification(`Account ${data.name} created.`)
           this.props.toggleModal(null)
         }).then(() => {
@@ -131,13 +126,16 @@ export class AccountManagement extends Component {
 
   render() {
     const {
-      params: { account },
+      params: { brand, account },
       params,
       dnsData,
       dnsActions,
       activeRecordType,
       accountManagementModal,
-      toggleModal
+      toggleModal,
+      onDelete,
+      history,
+      activeAccount
     } = this.props
 
     const isAdmin = !account
@@ -189,22 +187,18 @@ export class AccountManagement extends Component {
             params={params}
           />
 
-            {/*
-            <ManageSystem
-              dnsList={dnsListProps}
-              brandsList={{
-                accountManagementModal: accountManagementModal,
-                brands: [],
-                toggleModal: toggleModal
-              }}
-            />
-          */ }
-           {accountManagementModal === ADD_ACCOUNT &&
-              <NewAccountForm
-                id="add-account-form"
-                onSave={this.addAccount}
-                onCancel={() => toggleModal(null)}
-                show={true}/>}
+          {accountManagementModal === ADD_ACCOUNT &&
+          <NewAccountForm
+            id="add-account-form"
+            onSave={this.addAccount}
+            onCancel={() => toggleModal(null)}
+            show={true}/>}
+          {accountManagementModal === DELETE_ACCOUNT &&
+          <DeleteModal
+            itemToDelete={activeAccount.get('name')}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
+            onCancel={() => toggleModal(null)}
+            onDelete={() => onDelete(brand, account, history)}/>}
         </Content>
       </PageContainer>
     )
@@ -228,7 +222,8 @@ AccountManagement.propTypes = {
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object
+  uiActions: PropTypes.object,
+  onDelete: PropTypes.func
 }
 
 function mapStateToProps(state) {
@@ -249,26 +244,29 @@ function mapDispatchToProps(dispatch) {
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const toggleModal = uiActions.toggleAccountManagementModal
 
-  /* This is fetched by main - container as we should always have account
-    function fetchAccountData(account, accounts) {
-    if(accounts && accounts.isEmpty()) {
-      accountActions.fetchAccounts('udn')
-    }
-    if(account) {
-      accountActions.fetchAccount('udn', account)
-      groupActions.fetchGroups('udn', account)
-    }
-  }*/
+  function onDelete(brandId, accountId, history) {
+    // Hide the delete modal.
+    toggleModal(null)
+
+    // Delete the account.
+    accountActions.deleteAccount(brandId, accountId)
+      .then(() => {
+        // Clear active account and redirect user to brand level account management.
+        accountActions.clearActiveAccount()
+        history.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      })
+  }
 
   return {
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
-    //fetchAccountData: fetchAccountData,
     groupActions: groupActions,
     hostActions: hostActions,
-    uiActions: uiActions
+    uiActions: uiActions,
+    onDelete: onDelete
   };
 }
 

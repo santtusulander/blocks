@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Input, ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 
+import SelectWrapper from '../select-wrapper.jsx'
 import UDNButton from '../button.js'
 
 export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors, editMode }) => {
@@ -9,23 +10,21 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
   return (
     <form>
       <div id="accounts">
-        <Input type="select"
-          label="Account"
+        <SelectWrapper
+          { ...account }
           disabled={editMode}
-          { ...account }>
-          {!account.value && <option>Please select an account</option>}
-          {accounts.map((account, i) => <option key={i} value={account.get('id')}>{account.get('name')}</option>)}
-        </Input>
+          value={Number(account.value)}
+          className="input-select"
+          options={accounts.map(account => [account.get('id'), account.get('name')])}/>
         <hr/>
       </div>
       <div id="groups">
-        <Input type="select"
-          label="Assign to Group"
+        <SelectWrapper
+          { ...group }
           disabled={editMode}
-          { ...group }>
-          {!group.value && <option value="">Please select a group</option>}
-          {groups.map((group, i) => <option key={i} value={group.get('id')}>{group.get('name')}</option>)}
-        </Input>
+          value={Number(group.value)}
+          className="input-select"
+          options={groups.map(group => [group.get('id'), group.get('name')])}/>
         <hr/>
       </div>
       <div id="sslCertTitle">

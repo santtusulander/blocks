@@ -174,6 +174,7 @@ class ContentItems extends React.Component {
             <p>{headerText.summary}</p>
             <AccountSelector
               params={this.props.params}
+              startTier={this.props.selectionStartTier}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
               onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
@@ -305,9 +306,11 @@ ContentItems.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
+  history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
+  selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
   showSlices: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
