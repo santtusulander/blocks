@@ -26,7 +26,8 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
         <tbody>
           {!certificates.isEmpty() ? certificates.map((cert, index) => {
             const commonName = cert.get('cn')
-            const group = groups.size ? groups.filter(group => group.get('id') === cert.get('group')).first().get('name') : cert.get('group')
+            const groupID = cert.get('group')
+            const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
             const account = cert.get('account')
             return (
               <tr key={index}>
@@ -37,11 +38,11 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
                     checked={activeCertificates.includes(commonName)}/>
                 </td>
                 <td>{commonName}</td>
-                <td>{group}</td>
+                <td>{groupName}</td>
                 <td>
                   <ActionLinks
-                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, group, commonName)}
-                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, group, commonName)}/>
+                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
+                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
                 </td>
               </tr>
             )
