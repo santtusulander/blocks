@@ -75,6 +75,7 @@ class AccountManagementManageAccount extends React.Component {
           {account.isEmpty() && <p className='text-center'><br/>Please select an account.</p>}
           {this.state.activeTab === 'account' && !account.isEmpty() &&
             <Account
+              params={this.props.params}
               toggleModal={toggleModal}
               route={route}
               account={account}

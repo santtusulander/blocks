@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
-import Immutable from 'immutable'
+import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
@@ -43,18 +43,30 @@ class AccountManagementAccountDetails extends React.Component {
     this.state = { workSaved: true }
   }
 
-  componentDidMount() {
-    console.log(this.props)
-    this.props.router.setRouteLeaveHook(
-      this.props.route,
-      () => this.props.dirty
+  componentWillMount() {
+    const { router, route } = this.props
+    router.setRouteLeaveHook(
+      route,
+      () => {
+        const { fields, account } = this.props
+        const services = fields.services.value
+        if(!is(fromJS(services), account.get('services'))) {
+          return false
+        }
+        for(const key in fields) {
+          if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
+            return false
+          }
+        }
+        return true
+      }
     )
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
       const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
@@ -72,7 +84,7 @@ class AccountManagementAccountDetails extends React.Component {
 
   render() {
     const { fields: { accountName, accountType, services } } = this.props
-    const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+    const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(Number(accountType.value)))
     return (
       <div className="account-management-account-details">
         <h2>Account</h2>
@@ -197,14 +209,14 @@ class AccountManagementAccountDetails extends React.Component {
 
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
-  account: React.PropTypes.instanceOf(Immutable.Map),
+  account: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
   toggleModal: React.PropTypes.func
 }
 AccountManagementAccountDetails.defaultProps = {
-  account: Immutable.Map({})
+  account: Map({})
 }
 
 export default reduxForm({
