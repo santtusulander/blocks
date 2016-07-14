@@ -154,7 +154,7 @@ class AccountManagementAccountGroups extends React.Component {
                   <a href="#" onClick={this.editGroup(group.get('id'))}>
                     EDIT
                   </a>
-                  <Button onClick={this.deleteGroup(group.get('id'))}
+                  <Button onClick={this.deleteGroup(group)}
                     className="btn-link btn-icon">
                     <IconTrash/>
                   </Button>
