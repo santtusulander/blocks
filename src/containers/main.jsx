@@ -174,7 +174,8 @@ export class Main extends React.Component {
             routes={this.props.routes}
             pathname={this.props.location.pathname}
             params={this.props.params}
-            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}/>
+            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
+            user={this.props.user}/>
           : ''
         }
         <div className="content-container">{this.props.children}</div>

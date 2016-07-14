@@ -317,6 +317,7 @@ export class Property extends React.Component {
               params={this.props.params}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
+              user={this.props.user}
               onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
               drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
@@ -480,6 +481,7 @@ Property.propTypes = {
   trafficActions: React.PropTypes.object,
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   visitorsActions: React.PropTypes.object,
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
@@ -495,6 +497,7 @@ Property.defaultProps = {
     history: []
   }),
   properties: Immutable.List(),
+  user: Immutable.Map(),
   visitorsByCountry: Immutable.Map()
 }
 
@@ -510,6 +513,7 @@ function mapStateToProps(state) {
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
     trafficFetching: state.traffic.get('fetching'),
+    user: state.user,
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
   };

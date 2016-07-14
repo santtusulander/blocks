@@ -116,12 +116,17 @@ const AnalyticsViewControl = (props) => {
           params={props.params}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
+          user={props.user}
           onSelect={(...params) => {
             let url = isContentAnalytics ?
               `${getContentUrl(...params)}/analytics` :
               getAnalyticsUrl(...params)
             if(active && !isContentAnalytics) {
-              url = `${url}/${active.key}`
+              let tab = active.key
+              if(active.propertyOnly && params[0] !== 'property') {
+                tab = ''
+              }
+              url = `${url}/${tab}`
             }
             props.history.pushState(null, url)
           }}>
@@ -218,7 +223,8 @@ AnalyticsViewControl.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(Immutable.List)
+  properties: PropTypes.instanceOf(Immutable.List),
+  user: PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsViewControl.defaultProps = {
@@ -226,7 +232,8 @@ AnalyticsViewControl.defaultProps = {
   brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),
-  params: {}
+  params: {},
+  user: Immutable.Map()
 }
 
 export default AnalyticsViewControl

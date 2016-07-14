@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
+import Immutable from 'immutable'
 
 import {
   fetchAccountsForModal as fetchAccounts,
@@ -7,6 +8,7 @@ import {
   fetchPropertiesForModal as fetchHosts } from '../../redux/modules/security.js'
 
 import Menu from './selector-component.jsx'
+import {filterAccountsByUserName} from '../../util/helpers'
 
 class AccountSelector extends Component {
   constructor(props) {
@@ -87,7 +89,19 @@ class AccountSelector extends Component {
       case 'brand':
       case 'account':
         fetchAccounts(...params).payload
-          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+          .then(res => {
+            if(res && res.data) {
+              const filteredAccounts = this.props.user.get('username') ?
+                filterAccountsByUserName(
+                  Immutable.fromJS(res.data),
+                  this.props.user.get('username')
+                ).toJS() :
+                res.data
+              this.setState({
+                items: filteredAccounts.map(item => [item.id, item.name])
+              })
+            }
+          })
         break
     }
     this.tier = nextTier
@@ -170,7 +184,7 @@ class AccountSelector extends Component {
       onCaretClick: this.onCaretClick
     })
     return (
-      <Menu { ...menuProps }/>
+      <Menu {...menuProps}/>
     )
   }
 }
@@ -183,7 +197,11 @@ AccountSelector.propTypes = {
   restrictedTo: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
-  topBarTexts: PropTypes.object
+  topBarTexts: PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map)
+}
+AccountSelector.defaultProps = {
+  user: Immutable.Map({})
 }
 
 export default AccountSelector

@@ -118,7 +118,7 @@ export function generateNestedLink(base, linkParts) {
   return base + '/' + linkParts.join("/")
 }
 
-export function getUrl(baseUrl, linkType, val, params = {}) {
+export function getUrl(baseUrl, linkType, val, params) {
   const { brand, account, group } = params;
 
   let url
