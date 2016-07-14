@@ -30,7 +30,7 @@ export class Hosts extends React.Component {
     this.props.fetchMetricsData()
   }
   createNewHost(id, deploymentMode) {
-    this.props.hostActions.createHost(
+    return this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,

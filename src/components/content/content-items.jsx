@@ -21,6 +21,8 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
+import InfoModal from '../info-modal.jsx'
+import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -78,8 +80,15 @@ class ContentItems extends React.Component {
     })
   }
   createNewItem() {
-    this.props.createNewItem(...arguments)
-    this.toggleAddItem()
+    this.props.createNewItem(...arguments).then((response) => {
+      console.log('THEN', response);
+      if (response.error) {
+
+      } else {
+        this.toggleAddItem()
+      }
+    })
+
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
