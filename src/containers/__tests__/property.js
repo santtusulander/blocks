@@ -2,6 +2,15 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    formatBitsPerSecond: jest.genMockFunction(),
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction()
+  }
+})
+
 jest.autoMockOff()
 
 jest.dontMock('../property.jsx')
@@ -64,7 +73,7 @@ function visitorsActionsMaker() {
   }
 }
 
-const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
+const urlParams = {brand: 'udn', account: '1', group: '2', property: 'www.abc.com', version: '1'}
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
 

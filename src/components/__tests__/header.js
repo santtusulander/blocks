@@ -2,6 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction()
+  }
+})
+
+jest.mock('../../routes', () => {
+  return {
+    getRoute: jest.genMockFunction()
+  }
+})
+
 jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
 
 jest.dontMock('../header.jsx')

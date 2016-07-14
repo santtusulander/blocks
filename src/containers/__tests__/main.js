@@ -6,7 +6,16 @@ import Immutable from 'immutable'
 jest.mock('../../util/helpers', () => {
   return {
     filterAccountsByUserName: jest.genMockFunction()
-      .mockImplementation(accounts => accounts)
+      .mockImplementation(accounts => accounts),
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction()
+  }
+})
+
+jest.mock('../../routes', () => {
+  return {
+    getRoute: jest.genMockFunction()
   }
 })
 
