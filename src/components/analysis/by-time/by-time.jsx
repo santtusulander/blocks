@@ -201,6 +201,7 @@ class AnalysisByTime extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
+    let hourTicks = xScale.ticks(9)
     let dayTicks = xScale.ticks(d3.time.day.utc, this.props.xAxisTickFrequency || 1)
     if (dayTicks.length > 12) {
       dayTicks = xScale.ticks(12)
@@ -272,6 +273,19 @@ class AnalysisByTime extends React.Component {
                 y1={0} y2={this.props.height}/>
             </g>
             : null}
+          { // Show hour ticks only when date range is 1 day
+            this.props.axes && endDate - startDate <= 24*60*60*1000 ?
+            hourTicks.map((tick, i) => {
+              return (
+                <g key={i}>
+                  <text x={xScale(tick)} y={this.props.height -  1.5 * this.props.padding}>
+                    {moment.utc(tick).format('HH[:]mm')}
+                  </text>
+                </g>
+              )
+            })
+            : null
+          }
           {this.props.axes ?
             dayTicks.map((tick, i) => {
               return (
