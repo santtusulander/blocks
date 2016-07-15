@@ -77,7 +77,7 @@ class AnalysisURLReport extends React.Component {
             padding={20}
             xAxisCustomFormat={xAxisCustomFormat}/>
         </div>
-        <h3>HEADER</h3>
+        <h3>All URLs</h3>
         <AnalysisURLList
           urls={filteredUrls}
           labelFormat={url => url.get('url')}/>
