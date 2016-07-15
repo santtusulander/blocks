@@ -44,8 +44,12 @@ class AccountSelector extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.state.open && this.setState({ open: false })
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+    const { canGetEdited, params } = this.props, { items } = this.state
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
+    }
+    else if(nextProps.canGetEdited && canGetEdited && nextProps.canGetEdited !== canGetEdited) {
+      this.setState({ items: items.map(item => item[1] === canGetEdited ? [item[0], nextProps.canGetEdited] : item) })
     }
   }
 
@@ -199,6 +203,7 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
+  canGetEdited: PropTypes.string,
   fetchItems: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
