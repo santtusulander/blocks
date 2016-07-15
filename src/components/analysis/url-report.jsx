@@ -63,10 +63,11 @@ class AnalysisURLReport extends React.Component {
     return (
       <div className="analysis-url-report">
         <div className="chart-holder" ref="chartHolder">
-          <div className="data-selector">
+          <header>
+            <h3>15 Top URLs</h3>
             <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
             <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
-          </div>
+          </header>
           <AnalysisHorizontalBar
             data={filteredUrls.toJS()}
             dataKey={dataKey}
