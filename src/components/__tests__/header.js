@@ -75,15 +75,6 @@ describe('Header', () => {
     expect(ReactDOM.findDOMNode(gradient).className).not.toContain('animated');
   });
 
-  it('should call purge function when link is clicked', () => {
-    let header = TestUtils.renderIntoDocument(
-      <Header theme="dark" activatePurge={activatePurge} location={fakeLocation} />
-    );
-    let mainNavLinks = TestUtils.scryRenderedDOMComponentsWithClass(header, 'main-nav-link');
-    TestUtils.Simulate.click(mainNavLinks[4]);
-    expect(activatePurge.mock.calls.length).toEqual(1);
-  });
-
   it('should call theme handling function when link is clicked', () => {
     let header = TestUtils.renderIntoDocument(
       <Header theme="dark" handleThemeChange={handleThemeChange} location={fakeLocation} />
