@@ -30,7 +30,7 @@ export class Hosts extends React.Component {
     this.props.fetchMetricsData()
   }
   createNewHost(id, deploymentMode) {
-    this.props.hostActions.createHost(
+    return this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -106,7 +106,9 @@ export class Hosts extends React.Component {
         toggleChartView={this.props.uiActions.toggleChartView}
         type='property'
         user={this.props.user}
-        viewingChart={this.props.viewingChart}/>
+        viewingChart={this.props.viewingChart}
+        showInfoDialog={this.props.uiActions.showInfoDialog}
+        hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
     )
   }
 }

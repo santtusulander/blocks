@@ -48,6 +48,13 @@ export function createSuccess(state, { payload }) {
   })
 }
 
+export function createFailure(state, { payload }) {
+  return state.merge({
+    activeHost: null,
+    fetching: false
+  })
+}
+
 export function deleteSuccess(state, action) {
   let newAllHosts = state.get('allHosts')
     .filterNot(group => {
@@ -136,7 +143,7 @@ export function clearFetched(state) {
 }
 
 export default handleActions({
-  HOST_CREATED: createSuccess,
+  HOST_CREATED: mapReducers(createSuccess, createFailure),
   HOST_DELETED: mapReducers(deleteSuccess, deleteFailure),
   HOST_FETCHED: mapReducers(fetchSuccess, fetchFailure),
   HOST_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),

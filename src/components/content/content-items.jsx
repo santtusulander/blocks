@@ -21,6 +21,8 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
+import InfoModal from '../info-modal.jsx'
+import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -80,8 +82,17 @@ class ContentItems extends React.Component {
     })
   }
   createNewItem() {
-    this.props.createNewItem(...arguments)
-    this.toggleAddItem()
+    this.props.createNewItem(...arguments).then((response) => {
+      if (response.error) {
+        this.props.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+        })
+      } else {
+        this.toggleAddItem()
+      }
+    })
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
@@ -309,6 +320,7 @@ ContentItems.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
+  hideInfoDialog: React.PropTypes.func,
   history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
@@ -316,6 +328,7 @@ ContentItems.propTypes = {
   params: React.PropTypes.object,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
+  showInfoDialog: React.PropTypes.func,
   showSlices: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
