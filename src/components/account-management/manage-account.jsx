@@ -53,8 +53,9 @@ class AccountManagementManageAccount extends React.Component {
       <div className="account-management-manage-account">
         <PageHeader>
           <AccountSelector
-            params={{ brand: 'udn' }}
-            restrictedTo="brand"
+            params={{ brand: this.props.params.brand, account: this.props.params.account }}
+            restrictedTo="account"
+            canGetEdited={account.get('name')}
             user={this.props.user}
             topBarTexts={{ brand: 'UDN Admin' }}
             topBarAction={() => history.pushState(null, getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
