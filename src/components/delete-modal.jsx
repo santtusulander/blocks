@@ -19,7 +19,7 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
         <p>
           {description}
         </p>
-        <Input type="text" label="Type 'delete'" placeholder="Delete"{ ...delField }/>
+        <Input type="text" label="Type 'delete'" placeholder="delete"{ ...delField }/>
       </Modal.Body>
 
       <Modal.Footer className="delete-modal-footer">
