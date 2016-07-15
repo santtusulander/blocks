@@ -1,0 +1,20 @@
+.chart-holder {
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
+  .analysis-horizontal-bar {
+    background: none;
+  }
+
+  .data-selector {
+    float: right;
+    .form-group {
+      display: inline-block;
+    }
+  }
+}

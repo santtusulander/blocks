@@ -62,9 +62,11 @@ class AnalysisURLReport extends React.Component {
 
     return (
       <div className="analysis-url-report">
-        <div ref="chartHolder">
-          <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
-          <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+        <div className="chart-holder" ref="chartHolder">
+          <div className="data-selector">
+            <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
+            <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+          </div>
           <AnalysisHorizontalBar
             data={filteredUrls.toJS()}
             dataKey={dataKey}
