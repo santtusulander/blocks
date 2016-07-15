@@ -11,14 +11,25 @@ describe('ConfigurationPublishVersion', () => {
     );
     expect(TestUtils.isCompositeComponent(publish)).toBeTruthy();
   });
-  it('should save changes', () => {
+
+  it('should not save changes if no publish target is defined', () => {
     let saveChanges = jest.genMockFunction()
-    let hideAction = jest.genMockFunction()
     let publish = TestUtils.renderIntoDocument(
       <ConfigurationPublishVersion
-        saveChanges={saveChanges}
-        hideAction={hideAction}/>
+        saveChanges={saveChanges}/>
     )
+    let btns = TestUtils.scryRenderedDOMComponentsWithTag(publish, 'button')
+    TestUtils.Simulate.click(btns[1])
+    expect(saveChanges.mock.calls.length).toEqual(0)
+  })
+
+  it('should save changes if publish target is defined', () => {
+    let saveChanges = jest.genMockFunction()
+    let publish = TestUtils.renderIntoDocument(
+      <ConfigurationPublishVersion
+        saveChanges={saveChanges}/>
+    )
+    publish.setPublishTarget('2')()
     let btns = TestUtils.scryRenderedDOMComponentsWithTag(publish, 'button')
     TestUtils.Simulate.click(btns[1])
     expect(saveChanges.mock.calls.length).toEqual(1)
