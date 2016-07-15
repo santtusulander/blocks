@@ -25,7 +25,6 @@ const emptyUser = Immutable.Map({
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
   localStorage.setItem('EricssonUDNUserName', action.payload.username)
-  console.log(action.payload.token)
 
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
@@ -86,7 +85,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   return loginAxios.post(`${urlBase}/v1/tokens`,
     {
       "username": username,// superuser
-      "brand_id": "UDN",
+      "brand_id": "udn",
       "password": password,// Video4All!
       "account_id": 1
     },
@@ -119,7 +118,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
 //   return axios.post(`${urlBase}/v1/tokens`, {
 //     "username": "superuser",
-//     "brand_id": "UDN",
+//     "brand_id": "udn",
 //     "password": "Video4All!",
 //     "account_id": 1}
 //   })

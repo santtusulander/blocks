@@ -58,7 +58,7 @@ export function fetchFailure(state) {
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allAccounts: Immutable.fromJS(action.payload.data),
+    allAccounts: Immutable.fromJS(action.payload),
     fetching: false
   })
 }

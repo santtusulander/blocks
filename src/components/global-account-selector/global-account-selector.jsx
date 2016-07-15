@@ -84,19 +84,19 @@ class AccountSelector extends Component {
         break
       case 'group':
         fetchGroups(...params).payload
-          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+          .then(res => res && this.setState({ items: res.map(item => [item.id, item.name]) }))
         break
       case 'brand':
       case 'account':
         fetchAccounts(...params).payload
           .then(res => {
-            if(res && res.data) {
+            if(res) {
               const filteredAccounts = this.props.user.get('username') ?
                 filterAccountsByUserName(
-                  Immutable.fromJS(res.data),
+                  Immutable.fromJS(res),
                   this.props.user.get('username')
                 ).toJS() :
-                res.data
+                res
               this.setState({
                 items: filteredAccounts.map(item => [item.id, item.name])
               })

@@ -341,3 +341,8 @@ export function changedParamsFiltersQS(props, nextProps) {
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
   return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
 }
+
+export function filterAccountsByUserName (accounts) {
+  // placeholder for now
+  return accounts
+}

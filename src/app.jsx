@@ -30,15 +30,15 @@ axios.defaults.timeout = 30000
 axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  if(error && error.status === 401) {
-    if(!location.href.includes('/login')) {
-      location.href='/login'
-    }
-  } else {
-    store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
-  }
-
-  return Promise.reject(error);
+  // if(error && error.status === 401) {
+  //   if(!location.href.includes('/login')) {
+  //     location.href='/login'
+  //   }
+  // } else {
+  //   store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
+  // }
+  //
+  // return Promise.reject(error);
 });
 
 ReactDOM.render(

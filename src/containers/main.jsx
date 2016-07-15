@@ -146,7 +146,7 @@ export class Main extends React.Component {
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
-          history={history}
+          history={this.props.history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}

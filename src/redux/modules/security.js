@@ -127,7 +127,7 @@ export default handleActions({
 
 // ACTIONS
 export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`, data, {
+  return axios.post(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -135,11 +135,11 @@ export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOA
 })
 
 export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, (brand, account, group, cert) => {
-  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
+  return axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
 })
 
 export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, data, cert) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
+  return axios.put(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -147,13 +147,13 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (
 })
 
 export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, commonName) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
     .then(response => response && { account, group, certificate: response.data })
 })
 
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
-  const groupRequestUrl = `${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/certs`
+  const groupRequestUrl = `${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`
   return group ? axios.get(groupRequestUrl).then(response =>
     response && response.data.map(cn => { return { group, cn, account } })) :
     Promise.resolve([])
@@ -174,7 +174,6 @@ export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (br
 })
 
 export const fetchAccountsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand) => {
-  console.log('wut')
   return axios.get(`${urlBase}/v1/brands/${brand}/accounts`)
   .then(res => res && res.data);
 })
