@@ -17,7 +17,6 @@ import Navigation from '../components/navigation/navigation.jsx'
 import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
-import { filterAccountsByUserName } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -141,19 +140,13 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
-    const filteredAccounts = filterAccountsByUserName(
-      this.props.accounts,
-      this.props.username
-    )
-    const { history } = this.context
-
     return (
       <div className={classNames}>
       {this.props.user.get('loggedIn') &&
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
-          history={history}
+          history={this.props.history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}

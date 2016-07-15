@@ -37,7 +37,7 @@ axios.interceptors.response.use(function (response) {
   } else {
     store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
   }
-
+  
   return Promise.reject(error);
 });
 

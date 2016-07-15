@@ -21,8 +21,11 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
+    '/v2*': {
+      target: 'http://aaa.ams.cdx-test.unifieddeliverynetwork.net:7999'
+    },
     '/VCDN*': {
-      target: 'http://api.cdx-dev.unifieddeliverynetwork.net'
+      target: 'http://api.cdx-test.unifieddeliverynetwork.net'
     },
     /*'/VCDN*': {
       target: 'http://localhost:8080'

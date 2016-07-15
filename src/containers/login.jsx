@@ -44,7 +44,7 @@ export class Login extends React.Component {
     //     this.setState({loginError: action.payload.message})
     //   }
     // })
-    this.props.history.pushState(null, getContentUrl('brand', 'udn', {}));
+    this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
   }
   onSubmit(e) {
     e.preventDefault()
