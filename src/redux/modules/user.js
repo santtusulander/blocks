@@ -43,7 +43,7 @@ export function userLoggedInFailure(){
 export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
   localStorage.removeItem('EricssonUDNUserName')
-  axios.defaults.headers.common['X-Auth-Token'] = ''
+  delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.set('loggedIn', false)
 }
@@ -53,7 +53,7 @@ export function userStartFetch(state){
 }
 
 export function userTokenChecked(state, action){
-  if(action.payload) {
+  if(action.payload && action.payload.token) {
     localStorage.setItem('EricssonUDNUserToken', action.payload.token)
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
@@ -65,7 +65,7 @@ export function userTokenChecked(state, action){
   else {
     localStorage.removeItem('EricssonUDNUserToken')
     localStorage.removeItem('EricssonUDNUserName')
-    axios.defaults.headers.common['X-Auth-Token'] = ''
+    delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
   }
@@ -82,7 +82,7 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${urlBase}/v1/tokens`,
+  return loginAxios.post(`${urlBase}/v2/tokens`,
     {
       "username": username,// superuser
       "brand_id": "udn",
@@ -116,7 +116,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
 })
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
-//   return axios.post(`${urlBase}/v1/tokens`, {
+//   return axios.post(`${urlBase}/v2/tokens`, {
 //     "username": "superuser",
 //     "brand_id": "udn",
 //     "password": "Video4All!",

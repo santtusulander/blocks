@@ -58,7 +58,7 @@ export function fetchFailure(state) {
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allAccounts: Immutable.fromJS(action.payload),
+    allAccounts: Immutable.fromJS(action.payload.data),
     fetching: false
   })
 }
@@ -119,7 +119,7 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(ACCOUNT_CREATED, (brand, name) => {
-  return axios.post(`${urlBase}/v1/brands/${brand}/accounts`, {name: name}, {
+  return axios.post(`${urlBase}/v2/brands/${brand}/accounts`, {name: name}, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -128,24 +128,24 @@ export const createAccount = createAction(ACCOUNT_CREATED, (brand, name) => {
 })
 
 export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
-  return axios.delete(`${urlBase}/v1/brands/${brand}/accounts/${id}`)
+  return axios.delete(`${urlBase}/v2/brands/${brand}/accounts/${id}`)
   .then(() => {
     return {id: id}
   });
 })
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
-  return axios.get(`${urlBase}/v1/brands/${brand}/accounts/${id}`)
+  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${id}`)
   .then(parseResponseData);
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
-  return axios.get(`${urlBase}/v1/brands/${brand}/accounts`)
+  return axios.get(`${urlBase}/v2/brands/${brand}/accounts`)
   .then(parseResponseData);
 })
 
 export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) => {
-  return axios.put(`${urlBase}/v1/brands/${brand}/accounts/${id}`, account, {
+  return axios.put(`${urlBase}/v2/brands/${brand}/accounts/${id}`, account, {
     headers: {
       'Content-Type': 'application/json'
     }

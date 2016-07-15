@@ -71,7 +71,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchContent = createAction(CONTENT_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/v1/brands/${brand}/content`)
+  return axios.get(`${urlBase}/v2/brands/${brand}/content`)
   .then((res) => {
     if(res) {
       return res.data;
