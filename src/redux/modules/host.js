@@ -149,7 +149,7 @@ export default handleActions({
 // ACTIONS
 
 export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
+  return axios.post(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
     {
       services:[
         {
@@ -183,14 +183,14 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
 })
 
 export const deleteHost = createAction(HOST_DELETED, (brand, account, group, id) => {
-  return axios.delete(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
+  return axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
   .then(() => {
     return {id: id}
   });
 })
 
 export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -199,7 +199,7 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 })
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -208,7 +208,7 @@ export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group)
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
-  return axios.put(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host, {
+  return axios.put(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, host, {
     headers: {
       'Content-Type': 'application/json'
     }

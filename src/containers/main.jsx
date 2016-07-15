@@ -17,7 +17,6 @@ import Navigation from '../components/navigation/navigation.jsx'
 import ErrorModal from '../components/error-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
-import { filterAccountsByUserName } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -141,11 +140,6 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
-    const filteredAccounts = filterAccountsByUserName(
-      this.props.accounts,
-      this.props.username
-    )
-
     return (
       <div className={classNames}>
       {this.props.user.get('loggedIn') &&

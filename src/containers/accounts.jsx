@@ -10,7 +10,7 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
+import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
@@ -36,7 +36,6 @@ export class Accounts extends React.Component {
     const { brand } = this.props.params
     const {
       accounts,
-      user,
       fetching,
       fetchingMetrics,
       metrics,
@@ -45,8 +44,7 @@ export class Accounts extends React.Component {
       viewingChart,
       uiActions } = this.props
 
-    const filteredAccounts = filterAccountsByUserName(accounts, user.get('username'))
-    const filteredMetrics = filterMetricsByAccounts(metrics, filteredAccounts)
+    const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
 
     const nextPageURLBuilder = (accountID) => {
       return getContentUrl('account', accountID, this.props.params)
@@ -61,7 +59,7 @@ export class Accounts extends React.Component {
         params={this.props.params}
         history={this.props.history}
         className="groups-container"
-        contentItems={filteredAccounts}
+        contentItems={accounts}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}

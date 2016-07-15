@@ -98,7 +98,7 @@ export default handleActions({
 // ACTIONS
 
 export const createPurge = createAction(PURGE_CREATED, (brand, account, group, property, newPurge) => {
-  return axios.post(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge, {
+  return axios.post(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -112,7 +112,7 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
 })
 
 export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, property, id) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge/${id}`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge/${id}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -121,7 +121,7 @@ export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, pr
 })
 
 export const fetchAllPurges = createAction(PURGE_FETCHED_ALL, (brand, account, group, property) => {
-  return axios.get(`${urlBase}/VCDN/v2/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`)
   .then((res) => {
     if(res) {
       return res.data;
