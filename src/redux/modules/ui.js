@@ -15,8 +15,8 @@ const UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED = 'UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED
 
 const UI_SHOW_ERROR_DIALOG = 'UI_SHOW_ERROR_DIALOG'
 const UI_HIDE_ERROR_DIALOG = 'UI_HIDE_ERROR_DIALOG'
-
-const UI_SET_BREADCRUMBS = 'UI_SET_BREADCRUMBS'
+const UI_SHOW_INFO_DIALOG = 'UI_SHOW_INFO_DIALOG'
+const UI_HIDE_INFO_DIALOG = 'UI_HIDE_INFO_DIALOG'
 
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
@@ -41,7 +41,8 @@ export const defaultUI = fromJS({
   analysisErrorStatusCodes: STATUS_CODES,
   analysisSPChartType: 'bar',
   showErrorDialog: false,
-  breadcrumbs: []
+  showInfoDialog: false,
+  infoDialogOptions: null
 })
 
 // REDUCERS
@@ -100,6 +101,17 @@ export function errorDialogHidden(state) {
   return state.set('showErrorDialog', false);
 }
 
+export function infoDialogShown(state, actions) {
+  return state.merge({
+    showInfoDialog: true,
+    infoDialogOptions: fromJS(actions.payload)
+  })
+}
+
+export function infoDialogHidden(state) {
+  return state.set('showInfoDialog', false);
+}
+
 export function analysisStatusCodeToggled(state, action) {
   if(action.payload === STATUS_CODES) {
     return state.get('analysisErrorStatusCodes').size === STATUS_CODES.length ?
@@ -113,10 +125,6 @@ export function analysisStatusCodeToggled(state, action) {
   return state.set('analysisErrorStatusCodes', newStatusCodes)
 }
 
-export function setBreadcrumbValues(state, action) {
-  return state.set('breadcrumbs', action.payload)
-}
-
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
   UI_THEME_CHANGED: themeChanged,
@@ -128,9 +136,9 @@ export default handleActions({
   UI_CONTENT_ITEM_SORTED: contentItemSorted,
   UI_SHOW_ERROR_DIALOG: errorDialogShown,
   UI_HIDE_ERROR_DIALOG: errorDialogHidden,
-  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled,
-
-  UI_SET_BREADCRUMBS: setBreadcrumbValues
+  UI_SHOW_INFO_DIALOG: infoDialogShown,
+  UI_HIDE_INFO_DIALOG: infoDialogHidden,
+  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled
 }, defaultUI)
 
 // ACTIONS
@@ -146,5 +154,5 @@ export const changeSPChartType = createAction(UI_ANALYSIS_SP_CHART_CHANGED)
 export const sortContentItems = createAction(UI_CONTENT_ITEM_SORTED)
 export const showErrorDialog = createAction(UI_SHOW_ERROR_DIALOG)
 export const hideErrorDialog = createAction(UI_HIDE_ERROR_DIALOG)
-
-export const setBreadcrumbs = createAction(UI_SET_BREADCRUMBS)
+export const showInfoDialog = createAction(UI_SHOW_INFO_DIALOG)
+export const hideInfoDialog = createAction(UI_HIDE_INFO_DIALOG)

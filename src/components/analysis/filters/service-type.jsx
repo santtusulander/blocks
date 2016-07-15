@@ -1,8 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Input } from 'react-bootstrap'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {Input, Button} from 'react-bootstrap'
 
-export class FilterServiceType extends React.Component {
+import * as uiActionCreators from '../../../redux/modules/ui'
+
+class FilterServiceType extends React.Component {
   constructor(props) {
     super(props);
 
@@ -12,7 +16,11 @@ export class FilterServiceType extends React.Component {
     return () => {
       // TODO: Maybe some general error messaging box?
       if(this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
-        alert('There must be at least one service type selected.')
+        this.props.uiActions.showInfoDialog({
+          title: 'Error',
+          content: 'There must be at least one service type selected.',
+          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+        });
       }
       else {
         this.props.toggleServiceType(type)
@@ -44,4 +52,9 @@ FilterServiceType.defaultProps = {
   serviceTypes: Immutable.List()
 }
 
-module.exports = FilterServiceType
+function mapDispatchToProps(dispatch) {
+  return {
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  }
+}
+export default connect(null, mapDispatchToProps)(FilterServiceType)

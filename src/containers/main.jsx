@@ -15,6 +15,7 @@ import Header from '../components/header'
 import Navigation from '../components/navigation/navigation.jsx'
 
 import ErrorModal from '../components/error-modal'
+import InfoModal from '../components/info-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
 
@@ -192,7 +193,13 @@ export class Main extends React.Component {
           : ''
         }
 
-        <ErrorModal showErrorDialog={this.props.showErrorDialog} uiActions={this.props.uiActions} />
+        <ErrorModal
+          showErrorDialog={this.props.showErrorDialog}
+          uiActions={this.props.uiActions}/>
+        <InfoModal
+          showErrorDialog={this.props.showInfoDialog}
+          uiActions={this.props.uiActions}
+          {...infoDialogOptions}/>
 
         <ReactCSSTransitionGroup
           component="div"
@@ -269,6 +276,8 @@ function mapStateToProps(state) {
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
     showErrorDialog: state.ui.get('showErrorDialog'),
+    showInfoDialog: state.ui.get('showInfoDialog'),
+    infoDialogOptions: state.ui.get('infoDialogOptions'),
     theme: state.ui.get('theme'),
     user: state.user,
     username: state.user.get('username'),
