@@ -109,10 +109,8 @@ export class Property extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   dateDiff() {
-    const startDate = safeMomentStartDate(this.props.location.query.startDate)
-    const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    // Add a minute since endDate is 1 minute less than a full day
-    return endDate.diff(startDate)+60000
+    // Comparison history is always from 28 days before
+   return 28*24*60*60*1000;
   }
   changeDateRange (startDate, endDate) {
     const {query, pathname} = this.props.location

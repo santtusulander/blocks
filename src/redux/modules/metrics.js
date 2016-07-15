@@ -24,7 +24,7 @@ const HOST_METRICS_FETCHED = 'HOST_METRICS_FETCHED'
 const ACCOUNT_DAILY_TRAFFIC_FETCHED = 'ACCOUNT_DAILY_TRAFFIC_FETCHED'
 const ACCOUNT_HOURLY_TRAFFIC_FETCHED = 'ACCOUNT_HOURLY_TRAFFIC_FETCHED'
 const GROUP_DAILY_TRAFFIC_FETCHED = 'GROUP_DAILY_TRAFFIC_FETCHED'
-const GROUP_HOURLY_TRAFFIC_FETCHED = 'GROUP_HOURLY_TRAFFIC_FETCHED'
+//const GROUP_HOURLY_TRAFFIC_FETCHED = 'GROUP_HOURLY_TRAFFIC_FETCHED'
 const HOST_DAILY_TRAFFIC_FETCHED = 'HOST_DAILY_TRAFFIC_FETCHED'
 const HOST_HOURLY_TRAFFIC_FETCHED = 'HOST_HOURLY_TRAFFIC_FETCHED'
 
@@ -223,13 +223,12 @@ export const fetchDailyGroupTraffic = createAction(GROUP_DAILY_TRAFFIC_FETCHED, 
 })
 
 export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, opts => {
-  const dateDiff = moment(opts.endDate, 'X').diff(moment(opts.startDate, 'X')) + 1
   const nowOpts = Object.assign({}, {
     granularity: 'hour'
   }, opts)
   const historyOpts = Object.assign({}, nowOpts, {
-    startDate: moment(opts.startDate, 'X').subtract(dateDiff, 'ms').format('X'),
-    endDate: moment(opts.endDate, 'X').subtract(dateDiff, 'ms').format('X')
+    startDate: moment(opts.startDate, 'X').subtract(28, 'days').format('X'),
+    endDate: moment(opts.endDate, 'X').subtract(28, 'days').format('X')
   })
   return Promise.all([
     axios.get(`${analyticsBase()}/traffic${qsBuilder(nowOpts)}`),
