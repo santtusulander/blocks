@@ -62,6 +62,7 @@ class AccountManagementManageAccount extends React.Component {
     const groupsTabProps = { addGroup, deleteGroup, editGroup, groups }
     const detailsTabProps = {
       toggleModal,
+      params,
       route,
       account,
       isAdmin,

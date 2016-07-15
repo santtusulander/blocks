@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import { Map, is, fromJS } from 'immutable'
-import { reduxForm } from 'redux-form'
+import { reduxForm, reset } from 'redux-form'
 import { withRouter } from 'react-router'
 
 import SelectWrapper from '../../select-wrapper.jsx'
@@ -23,7 +23,6 @@ const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [ e.value, e.label]
 });
 
-
 let errors = {}
 
 const validate = values => {
@@ -35,6 +34,10 @@ const validate = values => {
   return errors;
 
 }
+
+/**
+ * Jos menee toiselle tabille niin account ei enää vaihdu koskaan.
+ */
 
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
@@ -65,6 +68,10 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clear('account-details')
+  }
+
   save() {
     if(!Object.keys(errors).length) {
       const { fields: { accountName } } = this.props
@@ -77,6 +84,7 @@ class AccountManagementAccountDetails extends React.Component {
   shouldLeave({ pathname }) {
     const { fields, account } = this.props
     const services = fields.services.value
+    console.log(fields.accountName.value, account.get('id'), this.props.params.account)
     if(account.get('services') && !is(fromJS(services), account.get('services')) ||
       !account.get('services') && fromJS(services).size) {
       const leaving = this.state.leaving
@@ -94,7 +102,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   leavePage() {
-    Promise.resolve(this.setState({ leaving: true, showModal: false }))
+    Promise.resolve(this.setState({ leaving: true }))
       .then(() => this.props.router.push(this.state.next))
   }
 
@@ -246,4 +254,4 @@ export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
-})(withRouter(AccountManagementAccountDetails))
+}, null, { clear: reset })(withRouter(AccountManagementAccountDetails))
