@@ -10,6 +10,13 @@ import {
 import Menu from './selector-component.jsx'
 import {filterAccountsByUserName} from '../../util/helpers'
 
+const tierHierarchy = [
+  'property',
+  'group',
+  'account',
+  'brand'
+]
+
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
@@ -175,7 +182,9 @@ class AccountSelector extends Component {
     const menuProps = Object.assign(other, {
       toggle: () => this.setState({ open: !this.state.open }),
       onSearch: e => this.setState({ searchValue: e.target.value }),
-      drillable: restrictedTo && this.tier === restrictedTo || this.tier === 'property' ? false : true,
+      drillable: restrictedTo
+        && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
+        || this.tier === 'property' ? false : true,
       items: this.sortedOptions(),
       topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,

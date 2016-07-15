@@ -157,7 +157,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount } = this.props, { history } = this.context
+    const { activeAccount, params: { account, brand } } = this.props, { history } = this.context
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -190,12 +190,12 @@ class Header extends React.Component {
             </Link>
           </li>
           <AccountSelector
-            params={{ brand: 'udn' }}
-            topBarTexts={{ brand: 'UDN Admin' }}
+            params={{ brand, account }}
+            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
             topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
             user={this.props.user}
             onSelect={(...params) => itemSelectorFunc(...params)}
-            restrictedTo="brand">
+            restrictedTo="account">
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
               {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
             </Dropdown.Toggle>
