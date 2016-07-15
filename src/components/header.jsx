@@ -97,7 +97,7 @@ class Header extends React.Component {
     let links = [];
 
     const pathname = this.props.pathname,
-      { history } = this.context,
+      { history } = this.props,
       params = this.props.params
 
     if (history.isActive(getRoute('content'))) {
@@ -157,7 +157,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount } = this.props, { history } = this.context
+    const { activeAccount, history } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -307,6 +307,7 @@ Header.propTypes = {
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
+  history: React.PropTypes.object,
   isAdmin:  React.PropTypes.bool,
   location: React.PropTypes.object,
   logOut: React.PropTypes.func,
@@ -316,10 +317,6 @@ Header.propTypes = {
   theme: React.PropTypes.string,
   toggleAccountManagementModal: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map)
-}
-
-Header.contextTypes = {
-  history: React.PropTypes.object.isRequired
 }
 
 module.exports = Header;

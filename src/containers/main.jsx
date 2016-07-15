@@ -145,7 +145,6 @@ export class Main extends React.Component {
       this.props.accounts,
       this.props.username
     )
-    const { history } = this.context
 
     return (
       <div className={classNames}>
@@ -153,7 +152,7 @@ export class Main extends React.Component {
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
-          history={history}
+          history={this.props.history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
@@ -245,9 +244,6 @@ Main.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
-}
-Main.contextTypes = {
-  history: React.PropTypes.object.isRequired
 }
 Main.defaultProps = {
   accounts: Immutable.List(),
