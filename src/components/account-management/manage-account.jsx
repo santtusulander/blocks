@@ -56,7 +56,7 @@ class AccountManagementManageAccount extends React.Component {
             params={{ brand: this.props.params.brand, account: this.props.params.account }}
             restrictedTo="account"
             user={this.props.user}
-            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+            topBarTexts={{ brand: 'UDN Admin' }}
             topBarAction={() => history.pushState(null, getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
             onSelect={(...params) => history.pushState(null, getUrl(getRoute('accountManagement'), ...params))}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
