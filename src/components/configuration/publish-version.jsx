@@ -6,7 +6,7 @@ class ConfigurationPublishVersion extends React.Component {
     super(props);
 
     this.state = {
-      publishTarget: 'staging'
+      publishTarget: ''
     }
 
     this.setPublishTarget = this.setPublishTarget.bind(this)
@@ -47,7 +47,7 @@ class ConfigurationPublishVersion extends React.Component {
           </Button>
           <Button bsStyle="primary"
             onClick={this.handleSave}
-            disabled={this.props.publishing}>
+            disabled={this.props.publishing || !this.state.publishTarget}>
             {this.props.publishing ? 'PUBLISHING...' : 'PUBLISH'}
           </Button>
         </ButtonToolbar>

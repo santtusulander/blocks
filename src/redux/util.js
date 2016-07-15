@@ -34,21 +34,21 @@ export function mapReducers(next, err) {
 }
 
 export function qsBuilder(params) {
-  const qs = Object.keys(params).map(key => {
+  const qs = Object.keys(params).reduce((arr, key) => {
 
     //remove undefined values
-    if (params[key] === undefined ) return
+    if (params[key] === undefined) return arr
 
     let param = key
 
-    if(key == 'startDate') {
+    if(key === 'startDate') {
       param = 'start'
     }
-    else if(key == 'endDate') {
+    else if (key === 'endDate') {
       param = 'end'
     }
-    return `${param}=${params[key]}`
-  })
+    return [...arr, `${param}=${params[key]}`]
+  }, [])
   return qs.length ? '?'+qs.join('&') : ''
 }
 

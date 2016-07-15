@@ -1,6 +1,5 @@
 import moment from 'moment'
 import numeral from 'numeral'
-import Immutable from 'immutable'
 import { getRoute } from '../routes.jsx'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
@@ -50,29 +49,6 @@ export function formatBitsPerSecond(bits_per_second, decimals) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 4)).format(digits) + ' Tbps'
   }
   return formatted
-}
-
-export function filterAccountsByUserName(accounts, username) {
-  if(username === 'test') {
-    return accounts
-
-    //UNCOMMENT FOR TESTing -- return only limited accounts
-    /*return Immutable.fromJS(accounts.toJS().filter( (account) => {
-     return account.id === 4 || account.id === 1
-     }))*/
-  }
-
-  return Immutable.fromJS(accounts.toJS().filter(account => {
-    if(account.id < 10000) {
-      return username === 'UDNdev'
-    }
-    else if(account.id < 20000) {
-      return username === 'UDNtest'
-    }
-    else {
-      return username === 'UDNprod' || username === 'UDNstag' || username === 'diomedes'
-    }
-  }));
 }
 
 export function filterMetricsByAccounts(metrics, accounts) {
@@ -142,7 +118,7 @@ export function generateNestedLink(base, linkParts) {
   return base + '/' + linkParts.join("/")
 }
 
-export function getUrl(baseUrl, linkType, val, params = {}) {
+export function getUrl(baseUrl, linkType, val, params) {
   const { brand, account, group } = params;
 
   let url
@@ -364,4 +340,9 @@ export function changedParamsFiltersQS(props, nextProps) {
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
   return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
+}
+
+export function filterAccountsByUserName (accounts) {
+  // placeholder for now
+  return accounts
 }

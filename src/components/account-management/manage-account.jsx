@@ -53,8 +53,10 @@ class AccountManagementManageAccount extends React.Component {
       <div className="account-management-manage-account">
         <PageHeader>
           <AccountSelector
-            params={{ brand: 'udn' }}
-            restrictedTo="brand"
+            params={{ brand: this.props.params.brand, account: this.props.params.account }}
+            restrictedTo="account"
+            canGetEdited={account.get('name')}
+            user={this.props.user}
             topBarTexts={{ brand: 'UDN Admin' }}
             topBarAction={() => history.pushState(null, getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
             onSelect={(...params) => history.pushState(null, getUrl(getRoute('accountManagement'), ...params))}>
@@ -123,11 +125,13 @@ AccountManagementManageAccount.propTypes = {
   editGroup: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   isAdmin: React.PropTypes.bool,
-  toggleModal: React.PropTypes.func
+  toggleModal: React.PropTypes.func,
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 AccountManagementManageAccount.defaultProps = {
   account: Immutable.Map({}),
-  groups: Immutable.List([])
+  groups: Immutable.List([]),
+  user: Immutable.Map({})
 }
 
 module.exports = AccountManagementManageAccount

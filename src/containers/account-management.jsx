@@ -18,7 +18,7 @@ import { getRoute } from '../routes'
 import { getUrl } from '../util/helpers'
 import DeleteModal from '../components/delete-modal'
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals.js'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
 
@@ -27,7 +27,8 @@ export class AccountManagement extends Component {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null
+      activeAccount: props.params.account || null,
+      groupToDelete: null
     }
 
     this.notificationTimeout = null
@@ -42,6 +43,7 @@ export class AccountManagement extends Component {
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
   }
 
   editSOARecord() {
@@ -61,6 +63,12 @@ export class AccountManagement extends Component {
     console.log('dnsEditOnSave()')
   }
 
+  showDeleteGroupModal(group) {
+    this.setState({ groupToDelete: group });
+
+    this.props.toggleModal(DELETE_GROUP);
+  }
+
   addGroupToActiveAccount(name) {
     return this.props.groupActions.createGroup(
       'udn',
@@ -71,12 +79,14 @@ export class AccountManagement extends Component {
     })
   }
 
-  deleteGroupFromActiveAccount(groupId) {
+  deleteGroupFromActiveAccount(group) {
     return this.props.groupActions.deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
-      groupId
-    )
+      group.get('id')
+    ).then(() => {
+      this.props.toggleModal(null)
+    })
   }
 
   editGroupInActiveAccount(groupId, name) {
@@ -179,7 +189,7 @@ export class AccountManagement extends Component {
             toggleModal={toggleModal}
             account={this.props.activeAccount}
             addGroup={this.addGroupToActiveAccount}
-            deleteGroup={this.deleteGroupFromActiveAccount}
+            deleteGroup={this.showDeleteGroupModal}
             editAccount={this.editAccount}
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}
@@ -199,6 +209,12 @@ export class AccountManagement extends Component {
             description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => onDelete(brand, account, history)}/>}
+          {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
+          <DeleteModal
+            itemToDelete={this.state.groupToDelete.get('name')}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            onCancel={() => toggleModal(null)}
+            onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
         </Content>
       </PageContainer>
     )

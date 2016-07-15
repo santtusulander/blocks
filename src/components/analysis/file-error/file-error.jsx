@@ -1,6 +1,6 @@
-import React, { PropTypes } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { List, Map } from 'immutable'
+import React, {PropTypes} from 'react'
+import {Col, Row} from 'react-bootstrap'
+import {List, Map} from 'immutable'
 
 import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
@@ -18,6 +18,16 @@ function hasKeys( val, keyList ) {
   })
 
   return found;
+}
+
+function sortByCode(error1, error2) {
+  if(error1.code > error2.code) {
+    return 1;
+  }
+  else if (error1.code < error2.code) {
+    return -1;
+  }
+  return 0;
 }
 
 const AnalysisFileError = props => {
@@ -41,6 +51,8 @@ const AnalysisFileError = props => {
     if ( errorCode < 500 ) clientErrs.push({value: err, code: errorCode})
     else serverErrs.push({value: err, code: errorCode})
   })
+  clientErrs = clientErrs.sort(sortByCode)
+  serverErrs = serverErrs.sort(sortByCode)
 
   //REFACTOR: Shared code with url-report.jsx
   //URL filtering

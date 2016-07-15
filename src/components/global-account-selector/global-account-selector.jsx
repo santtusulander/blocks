@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
+import Immutable from 'immutable'
 
 import {
   fetchAccountsForModal as fetchAccounts,
@@ -7,6 +8,14 @@ import {
   fetchPropertiesForModal as fetchHosts } from '../../redux/modules/security.js'
 
 import Menu from './selector-component.jsx'
+import {filterAccountsByUserName} from '../../util/helpers'
+
+const tierHierarchy = [
+  'property',
+  'group',
+  'account',
+  'brand'
+]
 
 class AccountSelector extends Component {
   constructor(props) {
@@ -35,8 +44,12 @@ class AccountSelector extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.state.open && this.setState({ open: false })
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+    const { canGetEdited, params } = this.props, { items } = this.state
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
+    }
+    else if(nextProps.canGetEdited && canGetEdited && nextProps.canGetEdited !== canGetEdited) {
+      this.setState({ items: items.map(item => item[1] === canGetEdited ? [item[0], nextProps.canGetEdited] : item) })
     }
   }
 
@@ -87,7 +100,19 @@ class AccountSelector extends Component {
       case 'brand':
       case 'account':
         fetchAccounts(...params).payload
-          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+          .then(res => {
+            if(res && res.data) {
+              const filteredAccounts = this.props.user.get('username') ?
+                filterAccountsByUserName(
+                  Immutable.fromJS(res.data),
+                  this.props.user.get('username')
+                ).toJS() :
+                res.data
+              this.setState({
+                items: filteredAccounts.map(item => [item.id, item.name])
+              })
+            }
+          })
         break
     }
     this.tier = nextTier
@@ -161,7 +186,9 @@ class AccountSelector extends Component {
     const menuProps = Object.assign(other, {
       toggle: () => this.setState({ open: !this.state.open }),
       onSearch: e => this.setState({ searchValue: e.target.value }),
-      drillable: restrictedTo && this.tier === restrictedTo || this.tier === 'property' ? false : true,
+      drillable: restrictedTo
+        && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
+        || this.tier === 'property' ? false : true,
       items: this.sortedOptions(),
       topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,
@@ -170,12 +197,13 @@ class AccountSelector extends Component {
       onCaretClick: this.onCaretClick
     })
     return (
-      <Menu { ...menuProps }/>
+      <Menu {...menuProps}/>
     )
   }
 }
 
 AccountSelector.propTypes = {
+  canGetEdited: PropTypes.string,
   fetchItems: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
@@ -183,7 +211,11 @@ AccountSelector.propTypes = {
   restrictedTo: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
-  topBarTexts: PropTypes.object
+  topBarTexts: PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map)
+}
+AccountSelector.defaultProps = {
+  user: Immutable.Map({})
 }
 
 export default AccountSelector
