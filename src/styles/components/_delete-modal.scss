@@ -34,10 +34,16 @@
   .delete-modal-footer {
     padding-left: 41px;
     padding-right: 41px;
-    background-color: #19476c;
+    .dark-theme & {
+      background-color: #19476c;
+    }
+    .light-theme & {
+      background-color: #fff;
+    }
 
     .delete-modal-submit {
       background-color: #7b0663;
+      text-transform: uppercase;
     }
   }
 }
