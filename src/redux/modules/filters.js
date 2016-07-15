@@ -18,7 +18,22 @@ const initialState = Immutable.fromJS({
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
     serviceProviders: [{label: 'All', value: 'all'} ],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
-    statusCodes: [{label: 'All', value: 'All'}, {label: '500', value: '500'}, {label: '404', value: '404'}]
+    statusCodes: [
+      {label: 'All', value: 'All'},
+      {label: '400', value: '400'},
+      {label: '401', value: '401'},
+      {label: '402', value: '402'},
+      {label: '403', value: '403'},
+      {label: '404', value: '404'},
+      {label: '405', value: '405'},
+      {label: '411', value: '411'},
+      {label: '412', value: '412'},
+      {label: '413', value: '413'},
+      {label: '500', value: '500'},
+      {label: '501', value: '501'},
+      {label: '502', value: '502'},
+      {label: '503', value: '503'}
+    ]
   }
 })
 
