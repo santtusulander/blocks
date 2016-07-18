@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
 import { Map, is, fromJS } from 'immutable'
-import { reduxForm, reset } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
 import SelectWrapper from '../../select-wrapper.jsx'
@@ -35,21 +35,12 @@ const validate = values => {
 
 }
 
-/**
- * Jos menee toiselle tabille niin account ei enää vaihdu koskaan.
- */
-
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
     super(props)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.save = this.save.bind(this)
     this.state = { showModal: false, next: '', leaving: false }
-  }
-
-  componentWillMount() {
-    const { router, route } = this.props
-    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,10 +59,6 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.clear('account-details')
-  }
-
   save() {
     if(!Object.keys(errors).length) {
       const { fields: { accountName } } = this.props
@@ -84,7 +71,6 @@ class AccountManagementAccountDetails extends React.Component {
   shouldLeave({ pathname }) {
     const { fields, account } = this.props
     const services = fields.services.value
-    console.log(fields.accountName.value, account.get('id'), this.props.params.account)
     if(account.get('services') && !is(fromJS(services), account.get('services')) ||
       !account.get('services') && fromJS(services).size) {
       const leaving = this.state.leaving
@@ -161,7 +147,7 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={8}>
               <div className="input-group">
                 <input
-                  { ... accountName }
+                  {...accountName}
                   type="text"
                   placeholder="Enter Account Name"
                   className="form-control"/>
@@ -189,7 +175,7 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={3}>
               <div className="input-group">
                 <SelectWrapper
-                  { ...accountType }
+                  {...accountType}
                   numericValues={true}
                   value={accountType.value}
                   className="input-select"
@@ -254,4 +240,4 @@ export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
-}, null, { clear: reset })(withRouter(AccountManagementAccountDetails))
+})(withRouter(AccountManagementAccountDetails))

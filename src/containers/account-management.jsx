@@ -195,10 +195,8 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
-                params={{ brand: 'udn' }}
-                restrictedTo="brand"
                 topBarTexts={{ brand: 'UDN Admin' }}
-                topBarAction={() => router.push(`${baseUrl}/${subPage}`)}
+                topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                 canGetEdited={activeAccount.get('name')}
                 user={this.props.user}>
