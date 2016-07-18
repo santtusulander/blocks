@@ -120,7 +120,7 @@ export class AccountManagement extends Component {
     } = this.props
 
     const subPage = getTabName(this.props.location.pathname)
-    const isAdmin = !activeAccount;
+    const isAdmin = !account;
     const baseUrl = getAccountManagementUrlFromParams(params)
     const activeDomain = dnsData && dnsData.get('activeDomain')
     const accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
@@ -205,7 +205,7 @@ export class AccountManagement extends Component {
                 </UDNButton>
               </div>
             </PageHeader>
-            <Nav bsStyle="tabs" className="system-nav">
+            {account && <div><Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
                 <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
               </li>
@@ -218,7 +218,7 @@ export class AccountManagement extends Component {
             </Nav>
             <Content className="tab-bodies">
               {this.props.children && React.cloneElement(this.props.children, childProps)}
-            </Content>
+            </Content></div>}
           </div>
 
           {accountManagementModal === ADD_ACCOUNT &&
