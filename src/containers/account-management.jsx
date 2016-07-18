@@ -6,7 +6,7 @@ import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Dropdown, Nav } from 'react-bootstrap'
 import { getRoute } from '../routes'
-import { getUrl, getTabName, getAccountManagementUrlFromParams } from '../util/helpers'
+import { getUrl, getAccountManagementUrlFromParams } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -120,6 +120,20 @@ export class AccountManagement extends Component {
     this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
+  getTabName() {
+    const router = this.props.router,
+      baseUrl = getAccountManagementUrlFromParams(this.props.params)
+    if (router.isActive(`${baseUrl}/details`)) {
+      return 'details';
+    } else if (router.isActive(`${baseUrl}/groups`)) {
+      return 'groups';
+    } else if (router.isActive(`${baseUrl}/users`)) {
+      return 'users';
+    }
+
+    return '';
+  }
+
   render() {
     const {
       params: { brand, account },
@@ -135,11 +149,11 @@ export class AccountManagement extends Component {
       router
     } = this.props
 
-    const subPage = getTabName(this.props.location.pathname)
-    const isAdmin = !account;
-    const baseUrl = getAccountManagementUrlFromParams(params)
-    const activeDomain = dnsData && dnsData.get('activeDomain')
-    const accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
+    const subPage = this.getTabName(),
+      isAdmin = !account,
+      baseUrl = getAccountManagementUrlFromParams(params),
+      activeDomain = dnsData && dnsData.get('activeDomain'),
+      accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
@@ -195,10 +209,12 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
+                params={{ brand: 'udn' }}
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                 canGetEdited={activeAccount.get('name')}
+                restrictedTo="brand"
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
