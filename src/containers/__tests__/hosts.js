@@ -5,6 +5,14 @@ import Immutable from 'immutable'
 import {shallow,mount} from 'enzyme'
 import jsdom from 'jsdom'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction()
+  }
+})
+
 jest.autoMockOff()
 jest.dontMock('../hosts.jsx')
 const Hosts = require('../hosts.jsx').Hosts
@@ -60,7 +68,8 @@ describe('Hosts', () => {
   it('should exist', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
@@ -69,21 +78,25 @@ describe('Hosts', () => {
   });
 
   it('should request data on mount', () => {
-    const fetchData = jest.genMockFunction()
+    const fetchMetricsData = jest.genMockFunction()
+    const fetchGroupData = jest.genMockFunction()
     TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchData={fetchData}
+        fetchGroupData={fetchGroupData}
+        fetchMetricsData={fetchMetricsData}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
     )
-    expect(fetchData.mock.calls.length).toBe(1)
+    expect(fetchGroupData.mock.calls.length).toBe(1)
+    expect(fetchMetricsData.mock.calls.length).toBe(1)
   });
 
   it('should show a loading message', () => {
     let hosts = mount(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         fetching={true}
         fetchingMetrics={true}
         params={urlParams}/>
@@ -97,7 +110,8 @@ describe('Hosts', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()}
         uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         hosts={Immutable.List(['1','2'])}
         metrics={fakeMetrics}
         params={urlParams}
@@ -111,7 +125,8 @@ describe('Hosts', () => {
   it('should show existing hosts as lists', () => {
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         hosts={Immutable.List(['1','2'])}
         metrics={fakeMetrics}
         params={urlParams}
@@ -126,7 +141,8 @@ describe('Hosts', () => {
     const hostActions = hostActionsMaker()
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )
@@ -138,7 +154,8 @@ describe('Hosts', () => {
     const hostActions = hostActionsMaker()
     let hosts = TestUtils.renderIntoDocument(
       <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchGroupData={jest.genMockFunction()}
+        fetchMetricsData={jest.genMockFunction()}
         hosts={Immutable.List()}
         params={urlParams}/>
     )

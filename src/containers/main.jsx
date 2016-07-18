@@ -249,9 +249,6 @@ Main.propTypes = {
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
-Main.contextTypes = {
-  history: React.PropTypes.object.isRequired
-}
 Main.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),

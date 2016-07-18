@@ -13,7 +13,8 @@ const fakeAccount = Immutable.fromJS({
 describe('ManageAccount', () => {
   it('should exist', () => {
     const manageAccount = TestUtils.renderIntoDocument(
-      <ManageAccount account={fakeAccount}/>
+      <ManageAccount account={fakeAccount}
+        params={{account: fakeAccount}}/>
     )
     expect(TestUtils.isCompositeComponent(manageAccount)).toBeTruthy()
   })
