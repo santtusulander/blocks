@@ -104,7 +104,7 @@ class NewAccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'>Brand</label>
               <SelectWrapper
-                { ... accountBrand }
+                {... accountBrand}
                 className="input-select"
                 value={accountBrand.value}
                 options={brandOptions}
@@ -118,7 +118,7 @@ class NewAccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'>Account type</label>
               <SelectWrapper
-                { ...accountType }
+                {...accountType}
                 value={Number(accountType.value)}
                 className="input-select"
                 options={accountTypeOptions}
