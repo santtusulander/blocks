@@ -19,14 +19,14 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
         <p>
           {description}
         </p>
-        <Input type="text" label="Type 'delete'" placeholder="Delete"{ ...delField }/>
+        <Input type="text" label="Type 'delete'" placeholder="delete"{ ...delField }/>
       </Modal.Body>
 
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
           <Button onClick={onCancel} className="btn-outline">Cancel</Button>
           <Button onClick={onDelete}
-            bsStyle="primary"
+            bsStyle="secondary"
             className="delete-modal-submit"
             disabled={submitDisabled}>
             Delete

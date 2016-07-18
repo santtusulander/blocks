@@ -23,13 +23,10 @@ const emptyUser = Immutable.Map({
 // REDUCERS
 
 export function userLoggedInSuccess(state, action){
-  // TODO: Real auth will return a token or set a cookie
-  const token = btoa(`${action.payload.username}:${action.payload.password}`)
-
-  localStorage.setItem('EricssonUDNUserToken', token)
+  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
   localStorage.setItem('EricssonUDNUserName', action.payload.username)
 
-  axios.defaults.headers.common['Authorization'] = 'Basic ' + token
+  axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
     loggedIn: true,
@@ -39,26 +36,26 @@ export function userLoggedInSuccess(state, action){
 
 }
 
-export function userLoggedInFailure(state){
+export function userLoggedInFailure(){
   return emptyUser
 }
 
-export function userLoggedOutSuccess(state, action){
+export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
   localStorage.removeItem('EricssonUDNUserName')
-  axios.defaults.headers.common['Authorization'] = 'Basic 000'
+  delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.set('loggedIn', false)
 }
 
-export function userStartFetch(state, action){
+export function userStartFetch(state){
   return state.set('fetching', true)
 }
 
 export function userTokenChecked(state, action){
-  if(action.payload) {
+  if(action.payload && action.payload.token) {
     localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-    axios.defaults.headers.common['Authorization'] = 'Basic ' + action.payload.token
+    axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.merge({
       loggedIn: true,
@@ -68,7 +65,7 @@ export function userTokenChecked(state, action){
   else {
     localStorage.removeItem('EricssonUDNUserToken')
     localStorage.removeItem('EricssonUDNUserName')
-    axios.defaults.headers.common['Authorization'] = 'Basic 000'
+    delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
   }
@@ -85,14 +82,22 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.get(`${urlBase}/VCDN/v2/udn/accounts`, {
-    headers: {
-      'Authorization': 'Basic ' + btoa(`${username}:${password}`)
+  return loginAxios.post(`${urlBase}/v2/tokens`,
+    {
+      "username": username,// superuser
+      "brand_id": "udn",
+      "password": password,// Video4All!
+      "account_id": 1
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }
-  })
+  )
   .then((res) => {
     if(res) {
-      return {username: username, password: password}
+      return {username: username, token: res.data}
     }
   }, (res) => {
     throw new Error(res.data.message)
@@ -109,3 +114,17 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     username: localStorage.getItem('EricssonUDNUserName')
   }
 })
+//
+// export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
+//   return axios.post(`${urlBase}/v2/tokens`, {
+//     "username": "superuser",
+//     "brand_id": "udn",
+//     "password": "Video4All!",
+//     "account_id": 1}
+//   })
+//   .then((res) => {
+//     if(res.data) {
+//       return res.data
+//     }
+//   })
+// })

@@ -10,7 +10,7 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterAccountsByUserName, filterMetricsByAccounts } from '../util/helpers'
+import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
@@ -36,7 +36,6 @@ export class Accounts extends React.Component {
     const { brand } = this.props.params
     const {
       accounts,
-      username,
       fetching,
       fetchingMetrics,
       metrics,
@@ -45,8 +44,7 @@ export class Accounts extends React.Component {
       viewingChart,
       uiActions } = this.props
 
-    const filteredAccounts = filterAccountsByUserName(accounts, username)
-    const filteredMetrics = filterMetricsByAccounts(metrics, filteredAccounts)
+    const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
 
     const nextPageURLBuilder = (accountID) => {
       return getContentUrl('account', accountID, this.props.params)
@@ -60,7 +58,7 @@ export class Accounts extends React.Component {
         brand={brand}
         params={this.props.params}
         className="groups-container"
-        contentItems={filteredAccounts}
+        contentItems={accounts}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}
@@ -73,6 +71,7 @@ export class Accounts extends React.Component {
         sortValuePath={sortValuePath}
         toggleChartView={uiActions.toggleChartView}
         type='account'
+        user={this.props.user}
         viewingChart={viewingChart}/>
     )
   }
@@ -87,20 +86,22 @@ Accounts.propTypes = {
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
+  history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
-  username: React.PropTypes.string,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 Accounts.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
   dailyTraffic: Immutable.List(),
-  metrics: Immutable.List()
+  metrics: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -114,7 +115,7 @@ function mapStateToProps(state) {
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),
-    username: state.user.get('username')
+    user: state.user
   };
 }
 

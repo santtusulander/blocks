@@ -20,10 +20,10 @@ class AnalyticsTabVisitors extends React.Component {
 
   fetchData(params, filters, location){
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
-    this.props.visitorsActions.fetchByBrowser(fetchOpts)
-    this.props.visitorsActions.fetchByCountry(fetchOpts)
+    this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: 'day'})
+    this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: 'day'})
     this.props.visitorsActions.fetchByTime(fetchOpts)
-    this.props.visitorsActions.fetchByOS(fetchOpts)
+    this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: 'day'})
   }
 
   export(exporters) {

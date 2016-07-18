@@ -156,7 +156,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, router } = this.props
+    const { activeAccount, router, params: { account, brand } } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -189,11 +189,13 @@ class Header extends React.Component {
             </Link>
           </li>
           <AccountSelector
-            params={{ brand: 'udn' }}
-            topBarTexts={{ brand: 'UDN Admin' }}
+            params={{ brand, account }}
+            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
             topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+            canGetEdited={activeAccount.get('name')}
+            user={this.props.user}
             onSelect={(...params) => itemSelectorFunc(...params)}
-            restrictedTo="brand">
+            restrictedTo="account">
             <Dropdown.Toggle bsStyle="link" className="header-toggle">
               {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
             </Dropdown.Toggle>
@@ -228,7 +230,9 @@ class Header extends React.Component {
                   <li className="dropdown-user-menu-container">
                     <ul>
                       <MenuItem header={true} className="dropdown-main-header">
-                        <div id="user-menu-username" className="user-menu-item">test</div>
+                        <div id="user-menu-username" className="user-menu-item">
+                          {this.props.user.get('username')}
+                        </div>
                       </MenuItem>
                       <MenuItem eventKey="1">
                         <div className="user-menu-item">
@@ -284,9 +288,14 @@ class Header extends React.Component {
 Header.displayName = 'Header'
 
 Header.defaultProps = {
+  accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  activeHost: Immutable.Map(),
+  breadcrumbs: null,
   /* FOR TEST only */
   isUDNAdmin: true,
-  breadcrumbs: null
+  user: Immutable.Map()
 }
 
 Header.propTypes = {
@@ -299,13 +308,14 @@ Header.propTypes = {
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
   isAdmin:  React.PropTypes.bool,
-  routes: React.PropTypes.array,
   location: React.PropTypes.object,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
-  toggleAccountManagementModal: React.PropTypes.func
+  toggleAccountManagementModal: React.PropTypes.func,
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 export default withRouter(Header);

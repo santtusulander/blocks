@@ -20,18 +20,21 @@ import IconAdd from '../components/icons/icon-add'
 import IconTrash from '../components/icons/icon-trash'
 import PageHeader from '../components/layout/page-header'
 import DeleteModal from '../components/delete-modal'
-import NewAccountForm from '../components/account-management/add-account-form'
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import NewAccountForm from '../components/account-management/add-account-form.jsx'
 import UDNButton from '../components/button.js'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../constants/account-management-options'
-import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      groupToDelete: null
+    }
+
     this.notificationTimeout = null
 
     this.editSOARecord = this.editSOARecord.bind(this)
@@ -42,6 +45,7 @@ export class AccountManagement extends Component {
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
   }
 
   editSOARecord() {
@@ -56,6 +60,12 @@ export class AccountManagement extends Component {
     console.log('dnsEditOnSave()')
   }
 
+  showDeleteGroupModal(group) {
+    this.setState({ groupToDelete: group });
+
+    this.props.toggleModal(DELETE_GROUP);
+  }
+
   addGroupToActiveAccount(name) {
     return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
       .then(() => {
@@ -63,8 +73,14 @@ export class AccountManagement extends Component {
       })
   }
 
-  deleteGroupFromActiveAccount(groupId) {
-    return this.props.groupActions.deleteGroup('udn', this.props.activeAccount.get('id'), groupId)
+  deleteGroupFromActiveAccount(group) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      group.get('id')
+    ).then(() => {
+      this.props.toggleModal(null)
+    })
   }
 
   editGroupInActiveAccount(groupId, name) {
@@ -183,7 +199,9 @@ export class AccountManagement extends Component {
                 restrictedTo="brand"
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${baseUrl}/${subPage}`)}
-                onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}>
+                onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
+                canGetEdited={account.get('name')}
+                user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
                 </Dropdown.Toggle>
@@ -233,6 +251,12 @@ export class AccountManagement extends Component {
             description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => onDelete(brand, account, history)}/>}
+          {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
+          <DeleteModal
+            itemToDelete={this.state.groupToDelete.get('name')}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            onCancel={() => toggleModal(null)}
+            onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
         </Content>
       </PageContainer>
     )

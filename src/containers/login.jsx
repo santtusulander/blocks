@@ -45,7 +45,7 @@ export class Login extends React.Component {
     //     this.setState({loginError: action.payload.message})
     //   }
     // })
-    this.props.router.push(getContentUrl('brand', 'udn', {}));
+    this.props.router.push(getContentUrl('brand', 'udn', {}))
   }
   onSubmit(e) {
     e.preventDefault()

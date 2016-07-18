@@ -26,4 +26,4 @@ AnalysisFileErrorDataBox.defaultProps = {
   errs: []
 }
 
-module.exports = AnalysisFileErrorDataBox
+export default AnalysisFileErrorDataBox

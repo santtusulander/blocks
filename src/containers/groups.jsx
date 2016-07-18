@@ -73,6 +73,7 @@ export class Groups extends React.Component {
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         type='group'
+        user={this.props.user}
         viewingChart={this.props.viewingChart}/>
     )
   }
@@ -94,6 +95,7 @@ Groups.propTypes = {
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 Groups.defaultProps = {
@@ -102,7 +104,8 @@ Groups.defaultProps = {
   dailyTraffic: Immutable.List(),
   groups: Immutable.List(),
   metrics: Immutable.List(),
-  sortValuePath: Immutable.List()
+  sortValuePath: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -116,6 +119,7 @@ function mapStateToProps(state) {
     metrics: state.metrics.get('groupMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
+    user: state.user,
     viewingChart: state.ui.get('viewingChart')
   };
 }

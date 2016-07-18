@@ -191,6 +191,7 @@ class AnalyticsContainer extends React.Component {
               params={params}
               location={this.props.location}
               activeTab={getTabName(pathname)}
+              user={this.props.user}
             />
           </PageHeader>
           {this.renderFilters()}
@@ -216,7 +217,8 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  propertyActions: React.PropTypes.object
+  propertyActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsContainer.defaultProps = {
@@ -224,7 +226,8 @@ AnalyticsContainer.defaultProps = {
   brands: Immutable.List(),
   filters: Immutable.Map(),
   groups: Immutable.List(),
-  properties: Immutable.List()
+  properties: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -237,7 +240,8 @@ function mapStateToProps(state) {
     groups: state.group.get('allGroups'),
     properties: state.host.get('allHosts'),
     filters: state.filters.get('filters'),
-    filterOptions: state.filters.get('filterOptions')
+    filterOptions: state.filters.get('filterOptions'),
+    user: state.user
   }
 }
 

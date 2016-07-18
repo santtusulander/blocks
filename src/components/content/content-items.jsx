@@ -21,6 +21,7 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
+import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -36,14 +37,16 @@ const itemSelectorTexts = {
 }
 
 const sortContent = (path, direction) => (item1, item2) => {
-  const val1 = item1.getIn(path)
-  const val2 = item2.getIn(path)
-  if(val1 > val2) {
+  const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
+  const val2 = item2.getIn(path) && item2.getIn(path).toLowerCase && item2.getIn(path).toLowerCase() || item2.getIn(path)
+
+  if(val1 > val2 || val2 === undefined) {
     return direction
   }
-  else if(val1 < val2) {
+  else if(val1 < val2 || val1 === undefined) {
     return -1 * direction
   }
+  return 0
 }
 
 class ContentItems extends React.Component {
@@ -78,8 +81,17 @@ class ContentItems extends React.Component {
     })
   }
   createNewItem() {
-    this.props.createNewItem(...arguments)
-    this.toggleAddItem()
+    this.props.createNewItem(...arguments).then((response) => {
+      if (response.error) {
+        this.props.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+        })
+      } else {
+        this.toggleAddItem()
+      }
+    })
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
@@ -178,7 +190,7 @@ class ContentItems extends React.Component {
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
               onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-              drillable={true}>
+              user={this.props.user}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>
                   {headerText.label}
@@ -306,18 +318,22 @@ ContentItems.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
+  hideInfoDialog: React.PropTypes.func,
   history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
+  params: React.PropTypes.object,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
+  showInfoDialog: React.PropTypes.func,
   showSlices: React.PropTypes.bool,
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 ContentItems.defaultProps = {
@@ -326,7 +342,8 @@ ContentItems.defaultProps = {
   contentItems: Immutable.List(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
-  sortValuePath: Immutable.List()
+  sortValuePath: Immutable.List(),
+  user: Immutable.Map()
 }
 
 export default withRouter(ContentItems)
