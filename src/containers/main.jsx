@@ -126,6 +126,8 @@ export class Main extends React.Component {
     this.props.uiActions.changeNotification()
   }
   render() {
+    const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
+
     let classNames = 'main-container';
     let activeAccount = this.props.activeAccount
     /* If no activeAccount is set, but some accounts have been queried, use the
@@ -141,6 +143,7 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
+
     return (
       <div className={classNames}>
       {this.props.user.get('loggedIn') &&
