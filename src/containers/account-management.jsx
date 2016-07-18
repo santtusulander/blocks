@@ -5,7 +5,8 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Dropdown, Nav } from 'react-bootstrap'
-import UDNButton from '../components/button.js'
+import { getRoute } from '../routes'
+import { getUrl, getTabName, getAccountManagementUrlFromParams } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -15,28 +16,20 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import IconAdd from '../components/icons/icon-add.jsx'
-import IconTrash from '../components/icons/icon-trash.jsx'
-
-import { getRoute } from '../routes'
-import { getUrl, getTabName, getAccountManagementUrlFromParams } from '../util/helpers.js'
-import DeleteModal from '../components/delete-modal'
-import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import AccountSelector from '../components/global-account-selector/global-account-selector.jsx'
+import IconAdd from '../components/icons/icon-add'
+import IconTrash from '../components/icons/icon-trash'
 import PageHeader from '../components/layout/page-header'
+import DeleteModal from '../components/delete-modal'
+import NewAccountForm from '../components/account-management/add-account-form'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
+import UDNButton from '../components/button.js'
+
 import { ACCOUNT_TYPES } from '../constants/account-management-options'
-
-import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals.js'
-
-//import AccountManagementFormContainer from '../components/account-management/form-container'
+import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      activeAccount: props.params.account || null
-    }
 
     this.notificationTimeout = null
 
@@ -144,8 +137,7 @@ export class AccountManagement extends Component {
       onDelete,
       history,
       activeAccount,
-      router,
-      route
+      router
     } = this.props
 
     const subPage = getTabName(this.props.location.pathname)
@@ -189,9 +181,9 @@ export class AccountManagement extends Component {
       deleteGroup: this.deleteGroupFromActiveAccount,
       editGroup: this.editGroupInActiveAccount,
       groups: this.props.groups,
+      account: activeAccount,
       toggleModal,
       params,
-      account: activeAccount,
       isAdmin,
       onSave: this.props.editAccount,
       initialValues: {
@@ -202,22 +194,9 @@ export class AccountManagement extends Component {
       }
     }
 
-
     return (
       <PageContainer className="account-management">
         <Content>
-          {/*<ManageAccount
-            location={this.props.location}
-            route={this.props.route}
-            toggleModal={toggleModal}
-            account={this.props.activeAccount}
-            addGroup={this.addGroupToActiveAccount}
-            deleteGroup={this.deleteGroupFromActiveAccount}
-            editAccount={this.editAccount}
-            editGroup={this.editGroupInActiveAccount}
-            groups={this.props.groups}
-            params={params}
-          />*/}
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
@@ -282,7 +261,6 @@ export class AccountManagement extends Component {
 }
 
 AccountManagement.displayName = 'AccountManagement'
-
 AccountManagement.propTypes = {
   accountActions: PropTypes.object,
   accountManagementModal: PropTypes.string,
@@ -301,7 +279,6 @@ AccountManagement.propTypes = {
   uiActions: PropTypes.object,
   onDelete: PropTypes.func
 }
-
 AccountManagement.defaultProps = {
   activeAccount: Map({})
 }
