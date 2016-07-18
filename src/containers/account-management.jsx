@@ -173,7 +173,7 @@ export class AccountManagement extends Component {
     }
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
-      deleteGroup: this.deleteGroupFromActiveAccount,
+      deleteGroup: this.showDeleteGroupModal,
       editGroup: this.editGroupInActiveAccount,
       groups: this.props.groups,
       account: activeAccount,
@@ -200,7 +200,7 @@ export class AccountManagement extends Component {
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${baseUrl}/${subPage}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                canGetEdited={account.get('name')}
+                canGetEdited={activeAccount.get('name')}
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
