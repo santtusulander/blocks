@@ -3,6 +3,9 @@ import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
+import { withRouter, Link } from 'react-router'
+import { Dropdown, Nav } from 'react-bootstrap'
+import UDNButton from '../components/button.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -12,12 +15,17 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import ManageAccount from '../components/account-management/manage-account'
+import IconAdd from '../components/icons/icon-add.jsx'
+import IconTrash from '../components/icons/icon-trash.jsx'
 
 import { getRoute } from '../routes'
-import { getUrl } from '../util/helpers'
+import { getUrl, getTabName, getAccountManagementUrlFromParams } from '../util/helpers.js'
 import DeleteModal from '../components/delete-modal'
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
+import AccountSelector from '../components/global-account-selector/global-account-selector.jsx'
+import PageHeader from '../components/layout/page-header'
+import { ACCOUNT_TYPES } from '../constants/account-management-options'
+
 import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
@@ -135,11 +143,16 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       history,
-      activeAccount
+      activeAccount,
+      router,
+      route
     } = this.props
 
-    const isAdmin = !account
+    const subPage = getTabName(this.props.location.pathname)
+    const isAdmin = !activeAccount;
+    const baseUrl = getAccountManagementUrlFromParams(params)
     const activeDomain = dnsData && dnsData.get('activeDomain')
+    const accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
@@ -171,11 +184,29 @@ export class AccountManagement extends Component {
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
     }
+    const childProps = {
+      addGroup: this.addGroupToActiveAccount,
+      deleteGroup: this.deleteGroupFromActiveAccount,
+      editGroup: this.editGroupInActiveAccount,
+      groups: this.props.groups,
+      toggleModal,
+      params,
+      account: activeAccount,
+      isAdmin,
+      onSave: this.props.editAccount,
+      initialValues: {
+        accountName: activeAccount.get('name'),
+        brand: 'udn',
+        services: activeAccount.get('services'),
+        accountType: accountType && accountType.value
+      }
+    }
+
 
     return (
       <PageContainer className="account-management">
         <Content>
-          <ManageAccount
+          {/*<ManageAccount
             location={this.props.location}
             route={this.props.route}
             toggleModal={toggleModal}
@@ -186,7 +217,51 @@ export class AccountManagement extends Component {
             editGroup={this.editGroupInActiveAccount}
             groups={this.props.groups}
             params={params}
-          />
+          />*/}
+          <div className="account-management-manage-account">
+            <PageHeader>
+              <AccountSelector
+                params={{ brand: 'udn' }}
+                restrictedTo="brand"
+                topBarTexts={{ brand: 'UDN Admin' }}
+                topBarAction={() => router.push(`${baseUrl}/${subPage}`)}
+                onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>{activeAccount.get('name') || 'No active account'}</h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
+              <div className="account-management-manage-account__actions">
+                <UDNButton bsStyle="success"
+                           pageHeaderBtn={true}
+                           icon={true}
+                           addNew={true}
+                           onClick={() => toggleModal(ADD_ACCOUNT)}>
+                  <IconAdd/>
+                </UDNButton>
+                <UDNButton bsStyle="secondary"
+                           pageHeaderBtn={true}
+                           icon={true}
+                           addNew={true}
+                           onClick={() => toggleModal(DELETE_ACCOUNT)}>
+                  <IconTrash/>
+                </UDNButton>
+              </div>
+            </PageHeader>
+            <Nav bsStyle="tabs" className="system-nav">
+              <li className="navbar">
+                <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/groups'} activeClassName="active">GROUPS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+              </li>
+            </Nav>
+            <Content className="tab-bodies">
+              {this.props.children && React.cloneElement(this.props.children, childProps)}
+            </Content>
+          </div>
 
           {accountManagementModal === ADD_ACCOUNT &&
           <NewAccountForm
@@ -225,6 +300,10 @@ AccountManagement.propTypes = {
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
   onDelete: PropTypes.func
+}
+
+AccountManagement.defaultProps = {
+  activeAccount: Map({})
 }
 
 function mapStateToProps(state) {
@@ -271,4 +350,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountManagement)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagement))

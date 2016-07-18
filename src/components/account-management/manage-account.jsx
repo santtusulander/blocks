@@ -28,6 +28,7 @@ class AccountManagementManageAccount extends React.Component {
     const params = this.props.params;
     const subPage = getTabName(this.props.location.pathname)
     const baseUrl = getAccountManagementUrlFromParams(params);
+
     if (!params.account) {
       return null
     }
@@ -104,7 +105,7 @@ class AccountManagementManageAccount extends React.Component {
           </UDNButton>
         </div>
         </PageHeader>
-        {this.renderTabs(detailsTabProps, groupsTabProps, usersTabProps)}
+        {/*this.renderTabs(detailsTabProps, groupsTabProps, usersTabProps)*/}
       </div>
     );
   }
