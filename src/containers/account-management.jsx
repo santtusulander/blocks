@@ -31,6 +31,7 @@ export class AccountManagement extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {}
     this.notificationTimeout = null
 
     this.editSOARecord = this.editSOARecord.bind(this)
