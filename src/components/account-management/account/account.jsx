@@ -53,9 +53,11 @@ class AccountManagementAccountDetails extends React.Component {
 
   save() {
     if(!Object.keys(errors).length) {
-      const { fields: { accountName } } = this.props
+      const { fields: { accountName, accountType, services } } = this.props
       this.props.onSave(this.props.account.get('id'), {
-        name: accountName.value
+        name: accountName.value,
+        provider_type: Number(accountType.value),
+        services: services.value
       })
     }
   }
