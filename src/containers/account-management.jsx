@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Dropdown, Nav } from 'react-bootstrap'
+import { Dropdown, Nav, Button } from 'react-bootstrap'
 import { getRoute } from '../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../util/helpers'
 
@@ -85,6 +85,9 @@ export class AccountManagement extends Component {
 
   editGroupInActiveAccount(groupId, name) {
     return this.props.groupActions.updateGroup('udn', this.props.activeAccount.get('id'), groupId, {name: name})
+      .then(() => {
+        this.showNotification('Group updates saved.')
+      })
   }
 
   editAccount(accountId, data) {
@@ -144,7 +147,6 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal,
       onDelete,
-      history,
       activeAccount,
       router
     } = this.props
@@ -194,7 +196,8 @@ export class AccountManagement extends Component {
       toggleModal,
       params,
       isAdmin,
-      onSave: this.props.editAccount,
+      onSave: this.editAccount,
+      uiActions: this.props.uiActions,
       initialValues: {
         accountName: activeAccount.get('name'),
         brand: 'udn',
@@ -209,12 +212,12 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
-                params={{ brand: 'udn' }}
+                params={{ brand: 'udn', account }}
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                 canGetEdited={activeAccount.get('name')}
-                restrictedTo="brand"
+                restrictedTo="account"
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
@@ -264,7 +267,7 @@ export class AccountManagement extends Component {
             itemToDelete={activeAccount.get('name')}
             description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
-            onDelete={() => onDelete(brand, account, history)}/>}
+            onDelete={() => onDelete(brand, account, router)}/>}
           {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
           <DeleteModal
             itemToDelete={this.state.groupToDelete.get('name')}
@@ -320,16 +323,24 @@ function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
 
-  function onDelete(brandId, accountId, history) {
+  function onDelete(brandId, accountId, router) {
     // Hide the delete modal.
     toggleModal(null)
 
     // Delete the account.
     accountActions.deleteAccount(brandId, accountId)
-      .then(() => {
-        // Clear active account and redirect user to brand level account management.
-        accountActions.clearActiveAccount()
-        history.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      .then((response) => {
+        if (!response.error) {
+          // Clear active account and redirect user to brand level account management.
+          accountActions.clearActiveAccount()
+          router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+        } else {
+          uiActions.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            buttons:  <Button onClick={uiActions.hideInfoDialog} bsStyle="primary" >OK</Button>
+          })
+        }
       })
   }
 

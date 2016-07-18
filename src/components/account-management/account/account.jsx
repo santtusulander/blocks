@@ -40,7 +40,7 @@ class AccountManagementAccountDetails extends React.Component {
     super(props)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.save = this.save.bind(this)
-    this.state = { showModal: false, next: '', leaving: false }
+    this.isLeaving = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,10 +53,9 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
-  componentWillUpdate() {
-    if(this.state.leaving) {
-      this.setState({ showModal: false })
-    }
+  componentWillMount() {
+    const { router, route } = this.props
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   save() {
@@ -68,28 +67,44 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
-  shouldLeave({ pathname }) {
+  isDirty() {
     const { fields, account } = this.props
     const services = fields.services.value
-    if(account.get('services') && !is(fromJS(services), account.get('services')) ||
+
+    if (account.get('services') && !is(fromJS(services), account.get('services')) ||
       !account.get('services') && fromJS(services).size) {
-      const leaving = this.state.leaving
-      this.setState({ showModal: true, next: pathname, leaving: false })
-      return leaving
+      return true;
     }
+
     for(const key in fields) {
       if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
-        const leaving = this.state.leaving
-        this.setState({ showModal: true, next: pathname, leaving: false })
-        return leaving
+        return true;
       }
     }
-    return true
+
+    return false;
   }
 
-  leavePage() {
-    Promise.resolve(this.setState({ leaving: true }))
-      .then(() => this.props.router.push(this.state.next))
+  shouldLeave({ pathname }) {
+    if (!this.isLeaving && this.isDirty()) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Warning',
+        content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',
+        buttons:  [
+          <UDNButton key="button-1" onClick={() => {
+            //this.leavePage()
+            this.isLeaving = true
+            this.props.router.push(pathname)
+            this.props.uiActions.hideInfoDialog()
+          }} bsStyle="primary">Continue</UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+        ]
+      })
+
+      return false;
+    }
+
+    return true
   }
 
   render() {
@@ -213,12 +228,6 @@ class AccountManagementAccountDetails extends React.Component {
             </UDNButton>
           </ButtonToolbar>
         </form>
-        {this.state.showModal &&
-          <InfoModal title="Warning" content="You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?">
-            <UDNButton onClick={this.leavePage.bind(this)} bsStyle="primary">Continue</UDNButton>
-            <UDNButton onClick={() => this.setState({ showModal: false })} bsStyle="primary">Stay</UDNButton>
-          </InfoModal>
-        }
       </div>
     )
   }
