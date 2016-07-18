@@ -244,7 +244,10 @@ AccountManagementAccountDetails.propTypes = {
   fields: React.PropTypes.object,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  toggleModal: React.PropTypes.func
+  route: React.PropTypes.object,
+  router: React.PropTypes.object,
+  toggleModal: React.PropTypes.func,
+  uiActions: React.PropTypes.object
 }
 AccountManagementAccountDetails.defaultProps = {
   account: Map({})
