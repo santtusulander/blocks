@@ -106,25 +106,14 @@ export class AccountManagement extends Component {
     ).then(() => this.showNotification('Account detail updates saved.'))
   }
 
-  addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name).then(
+  addAccount(brand, data) {
+    return this.props.accountActions.createAccount(brand, data).then(
       action => {
-        const { payload: { id } } = action, { brand } = data
-        return this.props.accountActions.updateAccount(
-          data.brand,
-          id,
-          { name: data.name }
-          // TODO: should be "data" above but API does not support all fields
-        ).then(() => {
-          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-          this.showNotification(`Account ${data.name} created.`)
-          this.props.toggleModal(null)
-        }).then(() => {
-          this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-          this.props.hostActions.clearFetchedHosts()
-        })
-      }
-    )
+        this.props.history.pushState(null, `/account-management/${brand}/${action.payload.id}`)
+        this.showNotification(`Account ${data.name} created.`)
+        this.props.toggleModal(null)
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   showNotification(message) {

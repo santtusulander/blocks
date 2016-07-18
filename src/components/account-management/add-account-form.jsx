@@ -64,10 +64,9 @@ class NewAccountForm extends React.Component {
       const {
         fields: { accountBrand, accountName, accountType, services }
       } = this.props
-      this.props.onSave({
-        brand: accountBrand.value,
+      this.props.onSave(accountBrand.value, {
         name: accountName.value,
-        type: accountType.value,
+        provider_type: Number(accountType.value),
         services: services.value
       })
     }
