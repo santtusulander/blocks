@@ -307,7 +307,7 @@ function mapStateToProps(state) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: state.account.get('activeAccount') || Map({}),
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),

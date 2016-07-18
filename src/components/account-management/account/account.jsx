@@ -42,6 +42,11 @@ class AccountManagementAccountDetails extends React.Component {
     this.isLeaving = false;
   }
 
+  componentWillMount() {
+    const { router, route } = this.props
+    router.setRouteLeaveHook(route, this.shouldLeave)
+  }
+
   componentWillReceiveProps(nextProps) {
     const { fields: { accountType, services } } = nextProps
     if(accountType.value !== this.props.fields.accountType.value && services.value !== '') {
@@ -52,9 +57,10 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
-  componentWillMount() {
-    const { router, route } = this.props
-    router.setRouteLeaveHook(route, this.shouldLeave)
+  componentWillUpdate() {
+    if(this.isLeaving) {
+      this.isLeaving = false
+    }
   }
 
   save() {
