@@ -35,8 +35,6 @@ export class AccountManagement extends Component {
     this.notificationTimeout = null
 
     this.editSOARecord = this.editSOARecord.bind(this)
-    this.changeActiveAccount = this.changeActiveAccount.bind(this)
-
     this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
@@ -54,67 +52,48 @@ export class AccountManagement extends Component {
     toggleModal(null)
   }
 
-  changeActiveAccount(account) {
-    this.setState({ activeAccount: account })
-    //this.props.fetchAccountData(account)
-  }
-
-  dnsEditOnSave(){
+  dnsEditOnSave() {
     console.log('dnsEditOnSave()')
   }
 
   addGroupToActiveAccount(name) {
-    return this.props.groupActions.createGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      name
-    ).then(() => {
-      this.props.hostActions.clearFetchedHosts()
-    })
+    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
+      .then(() => {
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   deleteGroupFromActiveAccount(groupId) {
-    return this.props.groupActions.deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      groupId
-    )
+    return this.props.groupActions.deleteGroup('udn', this.props.activeAccount.get('id'), groupId)
   }
 
   editGroupInActiveAccount(groupId, name) {
-    return this.props.groupActions.updateGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      groupId,
-      {name: name}
-    )
+    return this.props.groupActions.updateGroup('udn', this.props.activeAccount.get('id'), groupId, {name: name})
   }
 
   editAccount(accountId, data) {
-    return this.props.accountActions.updateAccount(
-      'udn',
-      accountId,
-      data
-    ).then(() => this.showNotification('Account detail updates saved.'))
+    return this.props.accountActions.updateAccount('udn', accountId, data)
+      .then(() => {
+        this.showNotification('Account detail updates saved.')
+      })
   }
 
   addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name).then(
-      action => {
-        const { payload: { id } } = action, { brand } = data
-        return this.props.accountActions.updateAccount(
-          data.brand,
-          id,
-          { name: data.name }
-          // TODO: should be "data" above but API does not support all fields
-        ).then(() => {
-          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-          this.showNotification(`Account ${data.name} created.`)
-          this.props.toggleModal(null)
-        }).then(() => {
-          this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-          this.props.hostActions.clearFetchedHosts()
-        })
+    return this.props.accountActions.createAccount(data.brand, data.name)
+      .then(action => {
+        const { payload: { id } } = action,
+          { brand } = data
+
+        return this.props.accountActions.updateAccount(data.brand, id, { name: data.name })
+          .then(() => {
+            this.props.history.pushState(null, `/account-management/${brand}/${id}`)
+            this.showNotification(`Account ${data.name} created.`)
+            this.props.toggleModal(null)
+          })
+          .then(() => {
+            this.props.groupActions.fetchGroups(data.brand, action.payload.id)
+            this.props.hostActions.clearFetchedHosts()
+          })
       }
     )
   }
@@ -122,8 +101,7 @@ export class AccountManagement extends Component {
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(
-      this.props.uiActions.changeNotification, 10000)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   render() {
