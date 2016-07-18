@@ -7,7 +7,6 @@ import { withRouter } from 'react-router'
 import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button.js'
-import InfoModal from '../../info-modal.jsx'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
