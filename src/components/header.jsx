@@ -95,13 +95,7 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-
-<<<<<<< HEAD
     const { router, pathname } = this.props,
-=======
-    const pathname = this.props.pathname,
-      { history } = this.props,
->>>>>>> 3d969bfba23c1af03e6537e61fa904d19b4688f7
       params = this.props.params
 
     if (router.isActive(getRoute('content'))) {
@@ -318,6 +312,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   toggleAccountManagementModal: React.PropTypes.func,
