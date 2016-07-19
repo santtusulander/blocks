@@ -108,10 +108,6 @@ export class Property extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
-  dateDiff() {
-    // Comparison history is always from 28 days before
-    return 28*24*60*60*1000;
-  }
   getEmptyHourlyTraffic(startDate, endDate) {
     let hourlyTraffic = [];
     for (var t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
@@ -280,7 +276,7 @@ export class Property extends React.Component {
       [] :
       this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
         return {
-          timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
+          timestamp: moment(hour.get('timestamp'), 'X').add(28, 'days').toDate(),
           bits_per_second: hour.getIn(['transfer_rates','average'])
         }
       }).toJS()
@@ -299,7 +295,7 @@ export class Property extends React.Component {
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
       const formattedDate = moment.utc(date)
-        .subtract(this.dateDiff(), 'ms')
+        .subtract(28, 'days')
         .format('MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
