@@ -4,7 +4,7 @@ import {reducer as form} from 'redux-form'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 
-import InlineAdd from '../inline-edit.jsx'
+import InlineAdd from '../inline-add.jsx'
 
 const stateReducer = combineReducers({ form })
 const store = createStore(stateReducer)
@@ -31,7 +31,7 @@ storiesOf('Inline Add', module)
             }}
             fields={['a', 'b']}
             cancel={action('cancel pressed')}
-            save={action('save pressed')}>
+            save={(vals) => console.log(vals)}>
             <input id='a' type="text"/>
             <input id='b' type="text"/>
         </InlineAdd>

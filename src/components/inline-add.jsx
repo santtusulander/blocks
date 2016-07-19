@@ -1,10 +1,11 @@
 import React, { PropTypes, Children, cloneElement } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, getValues } from 'redux-form'
 
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
-const EditableRow = ({ save, cancel, children, fields, invalid }) => {
+const EditableRow = ({ save, cancel, children, fields, invalid, values }) => {
+  const onSave = () => save(values)
   return (
     <tr className="edit-row">
       {Children.map(children, child =>
@@ -12,14 +13,9 @@ const EditableRow = ({ save, cancel, children, fields, invalid }) => {
           {cloneElement(child, { ...fields[child.props.id] })}
           {fields[child.props.id].error && <div className="error-msg">{fields[child.props.id].error}</div>}
         </td>
-        // <div>
-        //   {cloneElement(child, { ...fields[child.props.id] })}
-        //   <div>{fields[child.props.id].error}</div>
-        //   {fields[child.props.id].error && <div className="error-msg">{fields[child.props.id].error}</div>}
-        // </div>
       )}
       <td>
-        <UDNButton bsStyle="primary" disabled={invalid} onClick={save}>
+        <UDNButton bsStyle="primary" disabled={invalid} onClick={onSave}>
           SAVE
         </UDNButton>
         <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
@@ -30,4 +26,4 @@ const EditableRow = ({ save, cancel, children, fields, invalid }) => {
   )
 }
 
-export default reduxForm({ form: 'inline-add' })(EditableRow)
+export default reduxForm({ form: 'inlineAdd' }, state => { values: getValues(state.form.inlineAdd) })(EditableRow)
