@@ -29,8 +29,8 @@ import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 
-const endOfThisDay = () => moment().utc().endOf('day')
-const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
+const endOfThisDay = () => moment().utc().endOf('hour')
+const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
 
 // default dates to last 28 days
 function safeMomentStartDate(date) {
