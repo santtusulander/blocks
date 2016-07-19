@@ -149,14 +149,26 @@ export class Configuration extends React.Component {
       this.props.params.property,
       newHost.toJS()
     ).then((action) => {
-      if(action.error) {
-        this.togglePublishModal()
-        this.showNotification('Publishing configurations failed: ' +
-          action.payload.status + ' ' +
-          action.payload.statusText)
+      // env === 1 is retiring
+      if(env === 1) {
+        if(action.error) {
+          this.showNotification('Retiring configurations failed: ' +
+            action.payload.status + ' ' +
+            action.payload.statusText)
+        } else {
+          this.showNotification('Configurations succesfully retired')
+        }
+      // env !== 1 is publishing
       } else {
-        this.togglePublishModal()
-        this.showNotification('Configurations succesfully published')
+        if(action.error) {
+          this.togglePublishModal()
+          this.showNotification('Publishing configurations failed: ' +
+            action.payload.status + ' ' +
+            action.payload.statusText)
+        } else {
+          this.togglePublishModal()
+          this.showNotification('Configurations succesfully published')
+        }
       }
     })
   }
