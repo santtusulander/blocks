@@ -156,49 +156,52 @@ class ContentItems extends React.Component {
       <PageContainer className={`${this.props.className} content-subcontainer`}>
         <Content>
           <PageHeader>
-            <ButtonToolbar className="pull-right">
-              {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-              <UDNButton bsStyle="primary"
-                icon={true}
-                addNew={true}
-                hidden={createNewItem === undefined}
-                onClick={this.toggleAddItem}>
-                <IconAdd/>
-              </UDNButton>
-              <Select
-                onSelect={this.handleSortChange}
-                value={currentValue}
-                options={sortOptions.map(opt => [opt.value, opt.label])}/>
-              <UDNButton bsStyle="primary"
-                icon={true}
-                toggleView={true}
-                hidden={viewingChart}
-                onClick={this.props.toggleChartView}>
-                <IconItemChart/>
-              </UDNButton>
-              <UDNButton bsStyle="primary"
-                icon={true}
-                toggleView={true}
-                hidden={!viewingChart}
-                onClick={this.props.toggleChartView}>
-                <IconItemList/>
-              </UDNButton>
-            </ButtonToolbar>
             <p>{headerText.summary}</p>
-            <AccountSelector
-              params={this.props.params}
-              startTier={this.props.selectionStartTier}
-              topBarTexts={itemSelectorTexts}
-              topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
-              drillable={true}
-              user={this.props.user}>
-              <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <h1>
-                  {headerText.label}
-                </h1>
-              </Dropdown.Toggle>
-            </AccountSelector>
+
+            <div className="content-layout__header">
+              <AccountSelector
+                params={this.props.params}
+                startTier={this.props.selectionStartTier}
+                topBarTexts={itemSelectorTexts}
+                topBarAction={this.itemSelectorTopBarAction}
+                onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+                drillable={true}
+                user={this.props.user}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>
+                    {headerText.label}
+                  </h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
+              <ButtonToolbar>
+                {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           addNew={true}
+                           hidden={createNewItem === undefined}
+                           onClick={this.toggleAddItem}>
+                  <IconAdd/>
+                </UDNButton>
+                <Select
+                  onSelect={this.handleSortChange}
+                  value={currentValue}
+                  options={sortOptions.map(opt => [opt.value, opt.label])}/>
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           toggleView={true}
+                           hidden={viewingChart}
+                           onClick={this.props.toggleChartView}>
+                  <IconItemChart/>
+                </UDNButton>
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           toggleView={true}
+                           hidden={!viewingChart}
+                           onClick={this.props.toggleChartView}>
+                  <IconItemList/>
+                </UDNButton>
+              </ButtonToolbar>
+            </div>
           </PageHeader>
 
           <div className="container-fluid body-content">

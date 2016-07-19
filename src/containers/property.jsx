@@ -298,30 +298,31 @@ export class Property extends React.Component {
       <PageContainer className="property-container">
         <Content>
           <PageHeader>
-            <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-              <Link className="btn btn-success btn-icon"
-                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
-                <IconChart/>
-              </Link>
-              <Link className="btn btn-success btn-icon"
-                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
-                <IconConfiguration/>
-              </Link>
-            </ButtonToolbar>
-
             <p>PROPERTY SUMMARY</p>
-            <AccountSelector
-              params={this.props.params}
-              topBarTexts={itemSelectorTexts}
-              topBarAction={this.itemSelectorTopBarAction}
-              user={this.props.user}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
-              drillable={true}>
-              <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <h1>{this.props.params.property}</h1>
-              </Dropdown.Toggle>
-            </AccountSelector>
+            <div className="content-layout__header">
+              <AccountSelector
+                params={this.props.params}
+                topBarTexts={itemSelectorTexts}
+                topBarAction={this.itemSelectorTopBarAction}
+                user={this.props.user}
+                onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+                drillable={true}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>{this.props.params.property}</h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
+              <ButtonToolbar>
+                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+                <Link className="btn btn-success btn-icon"
+                      to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                  <IconChart/>
+                </Link>
+                <Link className="btn btn-success btn-icon"
+                      to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
+                  <IconConfiguration/>
+                </Link>
+              </ButtonToolbar>
+            </div>
           </PageHeader>
           <div className="container-fluid">
 
