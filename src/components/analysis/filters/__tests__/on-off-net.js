@@ -6,7 +6,9 @@ const OnOffNet = require('../on-off-net.jsx')
 
 describe('FilterOnOffNet', () => {
   it('should exist', () => {
-    const filter = TestUtils.renderIntoDocument(<OnOffNet/>)
-    expect(TestUtils.isCompositeComponent(filter)).toBeTruthy()
+    const renderer = TestUtils.createRenderer()
+    renderer.render(<OnOffNet/>);
+    const filter = renderer.getRenderOutput()
+    expect(filter.type).toEqual('div');
   })
 })

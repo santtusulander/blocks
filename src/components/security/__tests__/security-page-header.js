@@ -18,7 +18,13 @@ describe('SecurityPageHeader', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should pass account options to dropdown', () => {
-    expect(subject().find('Select').prop('options')).toEqual([ [ 1, 'aaa' ], [ 2, 'bbb' ] ])
+  it('should show active account name', () => {
+    props = { activeAccount: 'foo' }
+    expect(subject().find('h1').props().children).toEqual('foo')
+  })
+
+  it('should show placeholder if no active account defined', () => {
+    props = { activeAccount: '' }
+    expect(subject().find('h1').props().children).toEqual('select account')
   })
 })

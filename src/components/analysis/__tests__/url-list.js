@@ -33,7 +33,7 @@ describe('URLList', () => {
     const renderer = TestUtils.createRenderer()
     renderer.render(<URLList />);
     const result = renderer.getRenderOutput()
-    expect(result.type).toEqual('table')
+    expect(result.type).toEqual('div')
   })
   it('should have a row for each url', () => {
     const renderer = TestUtils.createRenderer()
@@ -43,7 +43,7 @@ describe('URLList', () => {
         labelFormat={jest.genMockFunction()}/>
     )
     const result = renderer.getRenderOutput()
-    expect(result.props.children[1].props.children.length).toEqual(3)
+    expect(result.props.children[1].props.children[1].props.children.length).toEqual(3)
   })
   it('should use the label formatter', () => {
     const renderer = TestUtils.createRenderer()
@@ -54,6 +54,6 @@ describe('URLList', () => {
         labelFormat={labelFormatter}/>
     )
     expect(labelFormatter.mock.calls.length).toEqual(3)
-    expect(labelFormatter.mock.calls[0][0].toJS()).toEqual(fakeURLs.get(0).toJS())
+    expect(labelFormatter.mock.calls[0][0].toJS()).toEqual(fakeURLs.get(2).toJS())
   })
 })

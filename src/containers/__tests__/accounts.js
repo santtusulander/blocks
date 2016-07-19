@@ -8,9 +8,20 @@ import jsdom from 'jsdom'
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
 
+jest.mock('../../util/helpers', () => {
+  return {
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction(),
+    filterAccountsByUserName: jest.genMockFunction(),
+    filterMetricsByAccounts: jest.genMockFunction()
+  }
+})
+
 jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
+const ContentItems = require('../../components/content/content-items.jsx')
 const ContentItemChart = require('../../components/content/content-item-chart.jsx')
 const ContentItemList = require('../../components/content/content-item-list.jsx')
 
@@ -130,7 +141,7 @@ describe('Accounts', () => {
     expect(accounts.find('LoadingSpinner').length).toBe(1)
   });
 
-  it('should show existing accounts as charts', () => {
+  it('should render contentItems component', () => {
     let accounts = TestUtils.renderIntoDocument(
       <Accounts
         accountActions={accountActionsMaker()}
@@ -140,30 +151,10 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
-        username="test"
-        viewingChart={true}/>
+        username="test"/>
     )
-    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemChart)
+    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItems)
     expect(child.length).toBe(1)
-    expect(child[0].props.id).toBe('1')
-  });
-
-  it('should show existing accounts as lists', () => {
-    let accounts = TestUtils.renderIntoDocument(
-      <Accounts
-        accountActions={accountActionsMaker()}
-        uiActions={uiActionsMaker()}
-        metricsActions={metricsActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        accounts={fakeAccounts}
-        params={urlParams}
-        metrics={fakeMetrics}
-        username="test"
-        viewingChart={false}/>
-    )
-    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItemList)
-    expect(child.length).toBe(1)
-    expect(child[0].props.id).toBe('1')
   });
 
   it('should delete an account when clicked', () => {

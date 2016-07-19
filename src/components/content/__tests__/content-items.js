@@ -86,58 +86,6 @@ describe('ContentItems', () => {
     expect(contentItems.is('PageContainer')).toBeTruthy();
   })
 
-  it('should show breadcrumbs', () => {
-    let contentItems = shallow(
-      <ContentItems
-        account={'account'}
-        activeAccount={Immutable.Map()}
-        activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
-        brand={'brand'}
-        breadcrumbs={fakeLinks}
-        className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
-        contentItems={fakeItems}
-        fetching={true}
-        fetchingMetrics={true}
-        headerText={fakeHeader}
-        metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
-        showAnalyticsLink={true}
-        sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
-        type='property'
-        viewingChart={true}/>
-    );
-    expect(contentItems.find('Breadcrumbs').length).toBe(1);
-  });
-
-  it('should not show breadcrumbs', () => {
-    let contentItems = shallow(
-      <ContentItems
-        account={'account'}
-        activeAccount={Immutable.Map()}
-        activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
-        className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
-        contentItems={fakeItems}
-        fetching={true}
-        fetchingMetrics={true}
-        headerText={fakeHeader}
-        metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
-        showAnalyticsLink={false}
-        sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
-        type='property'
-        viewingChart={true}/>
-    );
-    expect(contentItems.find('Breadcrumbs').length).toBe(0);
-  });
-
   it('should show analytics link', () => {
     let contentItems = shallow(
       <ContentItems
