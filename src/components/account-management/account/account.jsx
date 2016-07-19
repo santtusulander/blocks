@@ -1,7 +1,8 @@
 import React from 'react'
 import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
-import Immutable from 'immutable'
+import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
+import { withRouter } from 'react-router'
 
 import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
@@ -21,7 +22,6 @@ const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [ e.value, e.label]
 });
 
-
 let errors = {}
 
 const validate = values => {
@@ -37,17 +37,29 @@ const validate = values => {
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
     super(props)
-
+    this.shouldLeave = this.shouldLeave.bind(this)
     this.save = this.save.bind(this)
+    this.isLeaving = false;
+  }
+
+  componentWillMount() {
+    const { router, route } = this.props
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
-      const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+    const { fields: { accountType, services } } = nextProps
+    if(accountType.value !== this.props.fields.accountType.value && services.value !== '') {
+      const activeServiceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
+    }
+  }
+
+  componentWillUpdate() {
+    if(this.isLeaving) {
+      this.isLeaving = false
     }
   }
 
@@ -60,9 +72,49 @@ class AccountManagementAccountDetails extends React.Component {
     }
   }
 
+  isDirty() {
+    const { fields, account } = this.props
+    const services = fields.services.value
+
+    if (account.get('services') && !is(fromJS(services), account.get('services')) ||
+      !account.get('services') && fromJS(services).size) {
+      return true;
+    }
+
+    for(const key in fields) {
+      if(key !== 'services' && fields[key].value !== fields[key].initialValue) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  shouldLeave({ pathname }) {
+    if (!this.isLeaving && this.isDirty()) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Warning',
+        content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',
+        buttons:  [
+          <UDNButton key="button-1" onClick={() => {
+            //this.leavePage()
+            this.isLeaving = true
+            this.props.router.push(pathname)
+            this.props.uiActions.hideInfoDialog()
+          }} bsStyle="primary">Continue</UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+        ]
+      })
+
+      return false;
+    }
+
+    return true
+  }
+
   render() {
     const { fields: { accountName, accountType, services } } = this.props
-    const checkBoxes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+    const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
       <div className="account-management-account-details">
         <h2>Account</h2>
@@ -115,7 +167,7 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={8}>
               <div className="input-group">
                 <input
-                  { ... accountName }
+                  {...accountName}
                   type="text"
                   placeholder="Enter Account Name"
                   className="form-control"/>
@@ -143,8 +195,9 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={3}>
               <div className="input-group">
                 <SelectWrapper
-                  { ...accountType }
-                  value={Number(accountType.value)}
+                  {...accountType}
+                  numericValues={true}
+                  value={accountType.value}
                   className="input-select"
                   options={accountTypeOptions}
                 />
@@ -187,18 +240,21 @@ class AccountManagementAccountDetails extends React.Component {
 
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
-  account: React.PropTypes.instanceOf(Immutable.Map),
+  account: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  toggleModal: React.PropTypes.func
+  route: React.PropTypes.object,
+  router: React.PropTypes.object,
+  toggleModal: React.PropTypes.func,
+  uiActions: React.PropTypes.object
 }
 AccountManagementAccountDetails.defaultProps = {
-  account: Immutable.Map({})
+  account: Map({})
 }
 
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details',
   validate
-})(AccountManagementAccountDetails)
+})(withRouter(AccountManagementAccountDetails))

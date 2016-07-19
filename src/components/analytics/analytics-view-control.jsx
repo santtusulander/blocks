@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
@@ -80,7 +80,7 @@ const AnalyticsViewControl = (props) => {
   else if(account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
-  const isContentAnalytics = props.history.isActive('/content')
+  const isContentAnalytics = props.router.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Back to Accounts',
@@ -101,7 +101,7 @@ const AnalyticsViewControl = (props) => {
         break
       case 'brand':
       case 'account':
-        props.history.pushState(null, getAnalyticsUrl('brand', 'udn', {}))
+        props.router.push(getAnalyticsUrl('brand', 'udn', {}))
         break
     }
   }
@@ -128,7 +128,7 @@ const AnalyticsViewControl = (props) => {
               }
               url = `${url}/${tab}`
             }
-            props.history.pushState(null, url)
+            props.router.push(url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{activeItem || "select account"}</h1>
@@ -140,7 +140,7 @@ const AnalyticsViewControl = (props) => {
           className="heading-dropdown"
           options={accountOptions}
           onSelect={val => {
-            props.history.pushState(null, getAnalyticsUrl('account', val, props.params))
+            props.router.push(getAnalyticsUrl('account', val, props.params))
           }}
           value={props.params.group}
           type={'Account'}
@@ -151,7 +151,7 @@ const AnalyticsViewControl = (props) => {
       <HeadingDropdown
         options={groupOptions}
         onSelect={val => {
-          props.history.pushState(null, getAnalyticsUrl('group', val, props.params))
+          props.router.push(getAnalyticsUrl('group', val, props.params))
         }}
         value={props.params.group}
         defaultLabel={props.activeAccount.get('name')}
@@ -163,7 +163,7 @@ const AnalyticsViewControl = (props) => {
       <HeadingDropdown
         options={propertyOptions}
         onSelect={val => {
-          props.history.pushState(null, getAnalyticsUrl('property', val, props.params))
+          props.router.push(getAnalyticsUrl('property', val, props.params))
         }}
         value={props.params.property}
         type={'Property'}
@@ -183,14 +183,14 @@ const AnalyticsViewControl = (props) => {
        <FilterDropdown
        options={ groupDropdownOptions }
        handleSelect={ (val) => {
-       props.history.pushState(null, getAnalyticsUrl('group', val, props.params) )
+       props.router.push(getAnalyticsUrl('group', val, props.params) )
        } }
        />
 
        <FilterDropdown
        options={ propertyDropdownOptions }
        handleSelect={ (val) => {
-       props.history.pushState(null, getAnalyticsUrl('property', val, props.params) )
+       props.router.push(getAnalyticsUrl('property', val, props.params) )
        } }
        />
        */ }
@@ -220,7 +220,6 @@ AnalyticsViewControl.propTypes = {
   brands: PropTypes.instanceOf(Immutable.List),
   exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
-  history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
@@ -236,4 +235,4 @@ AnalyticsViewControl.defaultProps = {
   user: Immutable.Map()
 }
 
-export default AnalyticsViewControl
+export default withRouter(AnalyticsViewControl)

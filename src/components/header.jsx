@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 
 import { getRoute } from '../routes.jsx'
 import Select from '../components/select'
@@ -95,14 +95,12 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-
-    const pathname = this.props.pathname,
-      { history } = this.props,
+    const { router, pathname } = this.props,
       params = this.props.params
 
-    if (history.isActive(getRoute('content'))) {
+    if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
-      if (history.isActive(getRoute('contentPropertyAnalytics', params))) {
+      if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
         links.push({
           label:  'Analytics'
         })
@@ -110,7 +108,7 @@ class Header extends React.Component {
         propertyLinkIsLast = false
       }
 
-      if (history.isActive(getRoute('contentPropertyConfiguration', params))) {
+      if (router.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
           label:  'Configuration'
         })
@@ -125,7 +123,7 @@ class Header extends React.Component {
         label:  'Content',
         url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
       })
-    } else if (history.isActive(getRoute('analytics'))) {
+    } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)
       this.addGroupLink(links, getAnalyticsUrl)
 
@@ -157,20 +155,20 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, history, params: { account, brand } } = this.props
+    const { activeAccount, router, params: { account, brand } } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
     const itemSelectorFunc = (...params) => {
-      if(history.isActive('/content')) {
-        history.pushState(null, getContentUrl(...params))
-      } else if(history.isActive('/analysis')) {
-        history.pushState(null, getAnalyticsUrl(...params))
-      } else if(history.isActive('/account-management')) {
-        history.pushState(null, getUrl('/account-management', ...params))
-      } else if(history.isActive('/security')) {
-        history.pushState(null, getUrl('/security', ...params))
+      if(router.isActive('/content')) {
+        router.push(getContentUrl(...params))
+      } else if(router.isActive('/analysis')) {
+        router.push(getAnalyticsUrl(...params))
+      } else if(router.isActive('/account-management')) {
+        router.push(getUrl('/account-management', ...params))
+      } else if(router.isActive('/security')) {
+        router.push(getUrl('/security', ...params))
       }
     }
     return (
@@ -314,10 +312,11 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   toggleAccountManagementModal: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Header;
+export default withRouter(Header);

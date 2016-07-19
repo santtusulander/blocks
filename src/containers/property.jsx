@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
@@ -113,14 +114,13 @@ export class Property extends React.Component {
    return 28*24*60*60*1000;
   }
   changeDateRange (startDate, endDate) {
-    const {query, pathname} = this.props.location
+    const { pathname } = this.props.location
     const fStartDate = safeMomentStartDate(startDate).format('X')
     const fEndDate = safeMomentEndDate(endDate).format('X')
     this.setState({
       activeSlice: null
     }, () => {
-      this.props.history.pushState(
-        null,
+      this.props.router.push(
         `${pathname}?startDate=${fStartDate}&endDate=${fEndDate}`
       )
     })
@@ -136,7 +136,7 @@ export class Property extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -316,7 +316,7 @@ export class Property extends React.Component {
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
               user={this.props.user}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
               drillable={true}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>{this.props.params.property}</h1>
@@ -466,7 +466,6 @@ Property.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
-  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,
@@ -530,4 +529,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Property);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Property));

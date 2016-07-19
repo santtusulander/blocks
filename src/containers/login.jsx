@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
 import { getContentUrl } from '../util/helpers'
@@ -38,13 +39,13 @@ export class Login extends React.Component {
     // this.props.accountActions.fetchAccounts('udn').then(action => {
     //   if(!action.error && action.payload.data.length) {
     //     const firstId = action.payload.data[0].id
-    //     this.props.history.pushState(null, `/content/groups/udn/${firstId}`)
+    //     this.props.router.push(`/content/groups/udn/${firstId}`)
     //   }
     //   else {
     //     this.setState({loginError: action.payload.message})
     //   }
     // })
-    this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+    this.props.router.push(getContentUrl('brand', 'udn', {}))
   }
   onSubmit(e) {
     e.preventDefault()
@@ -157,7 +158,6 @@ Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
-  history: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
   userActions: React.PropTypes.object
 }
@@ -176,4 +176,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

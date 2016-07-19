@@ -97,8 +97,7 @@ export class Security extends React.Component {
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       toDelete,
-      toggleModal,
-      history
+      toggleModal
     } = this.props
 
     const certificateFormProps = {
@@ -124,7 +123,6 @@ export class Security extends React.Component {
       <PageContainer className="account-management">
          <div className="account-management-system-users">
           <SecurityPageHeader
-            history={history}
             params={this.props.params}
             accounts={accounts}
             activeAccount={activeAccount.get('name')}
@@ -149,7 +147,6 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
-  history: PropTypes.object,
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,

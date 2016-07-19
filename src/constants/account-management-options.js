@@ -4,8 +4,8 @@ export const ACCOUNT_TYPES = [
 ]
 
 export const SERVICE_TYPES = [
-  { value: 0, label: 'UDN Network Partner - On-Net', accountType: 3 },
-  { value: 1, label: 'Media Delivery', accountType: 1 }
+  { value: 0, label: 'UDN Network Partner - On-Net', accountTypes: [3] },
+  { value: 1, label: 'Media Delivery', accountTypes: [1, 3] }
   // Not in 0.7 { value: 'storage', label: 'Storage', accountType: 3 }
 ]
 

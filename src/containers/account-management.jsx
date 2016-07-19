@@ -3,6 +3,10 @@ import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
+import { withRouter, Link } from 'react-router'
+import { Dropdown, Nav, Button } from 'react-bootstrap'
+import { getRoute } from '../routes'
+import { getUrl, getAccountManagementUrlFromParams } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -12,30 +16,28 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import ManageAccount from '../components/account-management/manage-account'
-
-import { getRoute } from '../routes'
-import { getUrl } from '../util/helpers'
+import IconAdd from '../components/icons/icon-add'
+import IconTrash from '../components/icons/icon-trash'
+import PageHeader from '../components/layout/page-header'
 import DeleteModal from '../components/delete-modal'
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
+import UDNButton from '../components/button.js'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 
-//import AccountManagementFormContainer from '../components/account-management/form-container'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
+import { ACCOUNT_TYPES } from '../constants/account-management-options'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeAccount: props.params.account || null,
       groupToDelete: null
     }
 
     this.notificationTimeout = null
 
     this.editSOARecord = this.editSOARecord.bind(this)
-    this.changeActiveAccount = this.changeActiveAccount.bind(this)
-
     this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
@@ -54,12 +56,7 @@ export class AccountManagement extends Component {
     toggleModal(null)
   }
 
-  changeActiveAccount(account) {
-    this.setState({ activeAccount: account })
-    //this.props.fetchAccountData(account)
-  }
-
-  dnsEditOnSave(){
+  dnsEditOnSave() {
     console.log('dnsEditOnSave()')
   }
 
@@ -70,13 +67,10 @@ export class AccountManagement extends Component {
   }
 
   addGroupToActiveAccount(name) {
-    return this.props.groupActions.createGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      name
-    ).then(() => {
-      this.props.hostActions.clearFetchedHosts()
-    })
+    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
+      .then(() => {
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   deleteGroupFromActiveAccount(group) {
@@ -90,39 +84,35 @@ export class AccountManagement extends Component {
   }
 
   editGroupInActiveAccount(groupId, name) {
-    return this.props.groupActions.updateGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      groupId,
-      {name: name}
-    )
+    return this.props.groupActions.updateGroup('udn', this.props.activeAccount.get('id'), groupId, {name: name})
+      .then(() => {
+        this.showNotification('Group updates saved.')
+      })
   }
 
   editAccount(accountId, data) {
-    return this.props.accountActions.updateAccount(
-      'udn',
-      accountId,
-      data
-    ).then(() => this.showNotification('Account detail updates saved.'))
+    return this.props.accountActions.updateAccount('udn', accountId, data)
+      .then(() => {
+        this.showNotification('Account detail updates saved.')
+      })
   }
 
   addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name).then(
-      action => {
-        const { payload: { id } } = action, { brand } = data
-        return this.props.accountActions.updateAccount(
-          data.brand,
-          id,
-          { name: data.name }
-          // TODO: should be "data" above but API does not support all fields
-        ).then(() => {
-          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-          this.showNotification(`Account ${data.name} created.`)
-          this.props.toggleModal(null)
-        }).then(() => {
-          this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-          this.props.hostActions.clearFetchedHosts()
-        })
+    return this.props.accountActions.createAccount(data.brand, data.name)
+      .then(action => {
+        const { payload: { id } } = action,
+          { brand } = data
+
+        return this.props.accountActions.updateAccount(data.brand, id, { name: data.name })
+          .then(() => {
+            this.props.history.pushState(null, `/account-management/${brand}/${id}`)
+            this.showNotification(`Account ${data.name} created.`)
+            this.props.toggleModal(null)
+          })
+          .then(() => {
+            this.props.groupActions.fetchGroups(data.brand, action.payload.id)
+            this.props.hostActions.clearFetchedHosts()
+          })
       }
     )
   }
@@ -130,8 +120,21 @@ export class AccountManagement extends Component {
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(
-      this.props.uiActions.changeNotification, 10000)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
+  }
+
+  getTabName() {
+    const router = this.props.router,
+      baseUrl = getAccountManagementUrlFromParams(this.props.params)
+    if (router.isActive(`${baseUrl}/details`)) {
+      return 'details';
+    } else if (router.isActive(`${baseUrl}/groups`)) {
+      return 'groups';
+    } else if (router.isActive(`${baseUrl}/users`)) {
+      return 'users';
+    }
+
+    return '';
   }
 
   render() {
@@ -144,12 +147,15 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal,
       onDelete,
-      history,
-      activeAccount
+      activeAccount,
+      router
     } = this.props
 
-    const isAdmin = !account
-    const activeDomain = dnsData && dnsData.get('activeDomain')
+    const subPage = this.getTabName(),
+      isAdmin = !account,
+      baseUrl = getAccountManagementUrlFromParams(params),
+      activeDomain = dnsData && dnsData.get('activeDomain'),
+      accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     /* TODO: remove - TEST ONLY */
     const dnsInitialValues = {
@@ -181,21 +187,74 @@ export class AccountManagement extends Component {
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
     }
+    const childProps = {
+      addGroup: this.addGroupToActiveAccount,
+      deleteGroup: this.showDeleteGroupModal,
+      editGroup: this.editGroupInActiveAccount,
+      groups: this.props.groups,
+      account: activeAccount,
+      toggleModal,
+      params,
+      isAdmin,
+      onSave: this.editAccount,
+      uiActions: this.props.uiActions,
+      initialValues: {
+        accountName: activeAccount.get('name'),
+        brand: 'udn',
+        services: activeAccount.get('services'),
+        accountType: accountType && accountType.value
+      }
+    }
 
     return (
       <PageContainer className="account-management">
         <Content>
-          <ManageAccount
-            toggleModal={toggleModal}
-            account={this.props.activeAccount}
-            addGroup={this.addGroupToActiveAccount}
-            deleteGroup={this.showDeleteGroupModal}
-            editAccount={this.editAccount}
-            editGroup={this.editGroupInActiveAccount}
-            groups={this.props.groups}
-            params={params}
-            history={history}
-          />
+          <div className="account-management-manage-account">
+            <PageHeader>
+              <AccountSelector
+                params={{ brand: 'udn', account }}
+                topBarTexts={{ brand: 'UDN Admin' }}
+                topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
+                onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
+                canGetEdited={activeAccount.get('name')}
+                restrictedTo="account"
+                user={this.props.user}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>{activeAccount.get('name') || 'No active account'}</h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
+              <div className="account-management-manage-account__actions">
+                <UDNButton bsStyle="success"
+                           pageHeaderBtn={true}
+                           icon={true}
+                           addNew={true}
+                           onClick={() => toggleModal(ADD_ACCOUNT)}>
+                  <IconAdd/>
+                </UDNButton>
+                <UDNButton bsStyle="secondary"
+                           pageHeaderBtn={true}
+                           icon={true}
+                           addNew={true}
+                           onClick={() => toggleModal(DELETE_ACCOUNT)}>
+                  <IconTrash/>
+                </UDNButton>
+              </div>
+            </PageHeader>
+            {account && <div><Nav bsStyle="tabs" className="system-nav">
+              <li className="navbar">
+                <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/groups'} activeClassName="active">GROUPS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+              </li>
+            </Nav>
+            <Content className="tab-bodies">
+              {this.props.children && React.cloneElement(this.props.children, childProps)}
+            </Content></div>}
+          </div>
 
           {accountManagementModal === ADD_ACCOUNT &&
           <NewAccountForm
@@ -208,7 +267,7 @@ export class AccountManagement extends Component {
             itemToDelete={activeAccount.get('name')}
             description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
-            onDelete={() => onDelete(brand, account, history)}/>}
+            onDelete={() => onDelete(brand, account, router)}/>}
           {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
           <DeleteModal
             itemToDelete={this.state.groupToDelete.get('name')}
@@ -222,7 +281,6 @@ export class AccountManagement extends Component {
 }
 
 AccountManagement.displayName = 'AccountManagement'
-
 AccountManagement.propTypes = {
   accountActions: PropTypes.object,
   accountManagementModal: PropTypes.string,
@@ -241,12 +299,15 @@ AccountManagement.propTypes = {
   uiActions: PropTypes.object,
   onDelete: PropTypes.func
 }
+AccountManagement.defaultProps = {
+  activeAccount: Map({})
+}
 
 function mapStateToProps(state) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: state.account.get('activeAccount') || Map({}),
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
@@ -262,16 +323,24 @@ function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
 
-  function onDelete(brandId, accountId, history) {
+  function onDelete(brandId, accountId, router) {
     // Hide the delete modal.
     toggleModal(null)
 
     // Delete the account.
     accountActions.deleteAccount(brandId, accountId)
-      .then(() => {
-        // Clear active account and redirect user to brand level account management.
-        accountActions.clearActiveAccount()
-        history.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      .then((response) => {
+        if (!response.error) {
+          // Clear active account and redirect user to brand level account management.
+          accountActions.clearActiveAccount()
+          router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+        } else {
+          uiActions.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            buttons:  <Button onClick={uiActions.hideInfoDialog} bsStyle="primary" >OK</Button>
+          })
+        }
       })
   }
 
@@ -286,4 +355,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountManagement)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagement))

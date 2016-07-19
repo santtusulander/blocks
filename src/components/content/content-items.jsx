@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import { Modal, ButtonToolbar, Dropdown } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -21,7 +21,6 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import InfoModal from '../info-modal.jsx'
 import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
@@ -105,7 +104,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -190,8 +189,7 @@ class ContentItems extends React.Component {
               startTier={this.props.selectionStartTier}
               topBarTexts={itemSelectorTexts}
               topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
-              drillable={true}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
               user={this.props.user}>
               <Dropdown.Toggle bsStyle="link" className="header-toggle">
                 <h1>
@@ -348,4 +346,4 @@ ContentItems.defaultProps = {
   user: Immutable.Map()
 }
 
-module.exports = ContentItems
+export default withRouter(ContentItems)
