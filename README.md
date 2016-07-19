@@ -51,9 +51,27 @@ $ npm run dist
 ```
 
 ### Unit Testing
+Run all unit tests:
+
 ```shell
 $ npm test
 ```
+
+Run a subset of the unit tests based on a provided regular expression:
+
+```shell
+$ npm test -- [RegExp]
+$ npm test -- service-provider.js
+$ npm test -- containers/.+?/config
+```
+
+Run all units without printing stack traces:
+
+```shell
+$ npm test -- --noStackTrace
+```
+
+NOTE: `npm test` is basically just an alias for the `jest` CLI. Execute `$ npm test -- --help` to see a list of all supported CLI options.
 
 ### End to End Testing
 

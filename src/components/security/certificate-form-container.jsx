@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Modal } from 'react-bootstrap'
-import { reduxForm, getValues, reset } from 'redux-form'
+import { reduxForm, getValues, reset, change } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { List, Map } from 'immutable'
 
@@ -39,7 +39,7 @@ class CertificateFormContainer extends Component {
     const nextAccountValue = nextProps.fields.account.value
     const thisAccountValue = this.props.fields.account.value
     if(nextAccountValue && nextAccountValue !== thisAccountValue) {
-      this.props.fetchGroups('udn', parseInt(nextAccountValue))
+      this.props.fetchGroups('udn', nextAccountValue)()
     }
   }
   render() {
@@ -62,7 +62,7 @@ class CertificateFormContainer extends Component {
       }
     }
     return (
-      <Modal show={true} dialogClassName="soa-edit-form-sidebar">
+      <Modal show={true} dialogClassName="modal-form-panel">
         <Modal.Header>
           <h1>{title}</h1>
           {!toEdit.isEmpty() && <p>{formProps.fields.title.value}</p>}
@@ -111,7 +111,10 @@ export default reduxForm({
 }, function mapDispatchToProps(dispatch) {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
-    fetchGroups: securityActions.fetchGroupsForModal,
+    fetchGroups: (...params) => {
+      securityActions.fetchGroupsForModal(...params)
+      return () => dispatch(change('certificateForm', 'group', null))
+    },
     cancel: toggleModal => {
       securityActions.resetCertificateToEdit()
       toggleModal(null)

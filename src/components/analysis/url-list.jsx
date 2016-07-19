@@ -56,12 +56,12 @@ class AnalysisURLList extends React.Component {
       activeDirection: this.state.sortDir
     }
     const filteredURLs = urls.filter((url, i) => {
-        if (i >= 15) {
-          return false;
-        }
+      if (i >= 15) {
+        return false;
+      }
 
-        return url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
-      })
+      return url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
+    })
     const sortedURLs = this.sortedData(
       filteredURLs,
       this.state.sortBy,
@@ -127,4 +127,4 @@ AnalysisURLList.defaultProps = {
   urls: Immutable.List()
 }
 
-module.exports = AnalysisURLList
+export default AnalysisURLList

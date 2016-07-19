@@ -49,7 +49,7 @@ class AnalysisHorizontalBar extends React.Component {
               x2={xScale(url[this.props.dataKey])}
               y1={yScale(i)}
               y2={yScale(i)}/>
-            <text x={xScale(20)} y={yScale(i) + 4}>
+            <text x={xScale(0)} y={yScale(i) + 4}>
               {url[this.props.labelKey]}
             </text>
           </g>)}

@@ -71,8 +71,8 @@ describe('AnalysisOnOffNetReport', () => {
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}/>
     );
-    expect(numeral.mock.calls.length).toBe(16)
-    expect(numeral.mock.calls[0]).toEqual([0.2])
-    expect(numeralFormatMock.mock.calls[0][0]).toBe('0,0%')
+    expect(numeral.mock.calls.length).toBe(8)
+    expect(numeral.mock.calls[0]).toEqual([0.5])
+    expect(numeralFormatMock.mock.calls[0][0]).toBe('0%')
   });
 })

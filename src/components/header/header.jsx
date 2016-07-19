@@ -97,7 +97,7 @@ class Header extends React.Component {
     let links = [];
 
     const pathname = this.props.pathname,
-      { history } = this.context,
+      { history } = this.props,
       params = this.props.params
 
     if (history.isActive(getRoute('content'))) {
@@ -217,7 +217,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount } = this.props, { history } = this.context
+    const { activeAccount, history, params: { account, brand } } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -245,17 +245,19 @@ class Header extends React.Component {
             {/* TODO: the logo should link to the level where they select accounts,
              for CPs it should link to where they select groups.*/}
             <li className="header__logo">
-              <Link className="logo" to={getRoute('content', { brand: 'udn' })}>
+              <Link to={getRoute('content', { brand: 'udn' })} className="logo">
                 <IconEricsson />
               </Link>
             </li>
             <li className="header__account-selector">
               <AccountSelector
-                params={{ brand: 'udn' }}
-                topBarTexts={{ brand: 'UDN Admin' }}
+                params={{ brand, account }}
+                topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+                canGetEdited={activeAccount.get('name')}
+                user={this.props.user}
                 onSelect={(...params) => itemSelectorFunc(...params)}
-                restrictedTo="brand">
+                restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
                 </Dropdown.Toggle>
@@ -298,9 +300,14 @@ class Header extends React.Component {
 Header.displayName = 'Header'
 
 Header.defaultProps = {
+  accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  activeHost: Immutable.Map(),
+  breadcrumbs: null,
   /* FOR TEST only */
   isUDNAdmin: true,
-  breadcrumbs: null
+  user: Immutable.Map()
 }
 
 Header.propTypes = {
@@ -312,18 +319,16 @@ Header.propTypes = {
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
+  history: React.PropTypes.object,
   isAdmin:  React.PropTypes.bool,
-  routes: React.PropTypes.array,
   location: React.PropTypes.object,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
-  toggleAccountManagementModal: React.PropTypes.func
-}
-
-Header.contextTypes = {
-  history: React.PropTypes.object.isRequired
+  toggleAccountManagementModal: React.PropTypes.func,
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Header;

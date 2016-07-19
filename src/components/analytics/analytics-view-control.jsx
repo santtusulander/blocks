@@ -51,8 +51,9 @@ const AnalyticsViewControl = (props) => {
    const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
    */
   let title = "Analytics"
+  let active
   if(props.activeTab) {
-    const active = tabs.find(tab => tab.key === props.activeTab)
+    active = tabs.find(tab => tab.key === props.activeTab)
     if(active) {
       if(active.hideHierarchy) {
         title = active.label
@@ -112,10 +113,18 @@ const AnalyticsViewControl = (props) => {
           params={props.params}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
+          user={props.user}
           onSelect={(...params) => {
-            const url = isContentAnalytics ?
+            let url = isContentAnalytics ?
               `${getContentUrl(...params)}/analytics` :
               getAnalyticsUrl(...params)
+            if(active && !isContentAnalytics) {
+              let tab = active.key
+              if(active.propertyOnly && params[0] !== 'property') {
+                tab = ''
+              }
+              url = `${url}/${tab}`
+            }
             props.history.pushState(null, url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
@@ -160,7 +169,8 @@ AnalyticsViewControl.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(Immutable.List)
+  properties: PropTypes.instanceOf(Immutable.List),
+  user: PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsViewControl.defaultProps = {
@@ -168,7 +178,8 @@ AnalyticsViewControl.defaultProps = {
   brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),
-  params: {}
+  params: {},
+  user: Immutable.Map()
 }
 
 export default AnalyticsViewControl

@@ -21,10 +21,15 @@ describe('Host Module', () => {
     const state = Immutable.fromJS({
       allHosts: []
     });
-    const newState = createSuccess(state, {payload: {host_id: 1}});
+    const payload = Immutable.fromJS(
+      {
+        id: 1
+      }
+    );
+    const newState = createSuccess(state, {payload});
     const expectedState = Immutable.fromJS({
       allHosts: [1],
-      activeHost: {host_id: 1}
+      activeHost: {id: 1}
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });
@@ -51,23 +56,23 @@ describe('Host Module', () => {
     const state = Immutable.fromJS({
       activeHost: null
     });
-    const payload = { payload: { services: [{ configurations: [{ config_id: 1 }] }] } }
+    const payload = { payload: { services: [{ configurations: [{ config_id: 1 }], active_configurations: [{ config_id: 1 }] }] } }
     const newState = fetchSuccess(state, payload);
     const expectedState = Immutable.fromJS({
-      fetching: false,
       activeHost: {
         services: [
           {
-            active_configurations: [{ config_id: 1 }],
             configurations: [{
               config_id: 1,
               default_policy: {policy_rules:[]},
               request_policy: {policy_rules:[]},
               response_policy: {policy_rules:[]}
-            }]
+            }],
+            active_configurations: [{ config_id: 1 }]
           }
         ]
-      }
+      },
+      fetching: false
     })
     expect(Immutable.is(expectedState, newState)).toBeTruthy();
   });

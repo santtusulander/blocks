@@ -80,7 +80,7 @@ class NewAccountForm extends React.Component {
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
     // TODO: Check me after more brands have been added
-    const currentBrand = 'UDN'
+    const currentBrand = 'udn'
 
     return (
       <Modal dialogClassName="add-account-form-sidebar" show={show}>

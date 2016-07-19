@@ -9,12 +9,13 @@ import Groups from './account/groups'
 import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
+import IconTrash from '../icons/icon-trash.jsx'
 
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
 import { getUrl } from '../../util/helpers.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
-import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
+import { ADD_ACCOUNT, DELETE_ACCOUNT } from '../../constants/account-management-modals.js'
 
 class AccountManagementManageAccount extends React.Component {
   constructor(props) {
@@ -52,8 +53,10 @@ class AccountManagementManageAccount extends React.Component {
       <div className="account-management-manage-account">
         <PageHeader>
           <AccountSelector
-            params={{ brand: 'udn' }}
-            restrictedTo="brand"
+            params={{ brand: this.props.params.brand, account: this.props.params.account }}
+            restrictedTo="account"
+            canGetEdited={account.get('name')}
+            user={this.props.user}
             topBarTexts={{ brand: 'UDN Admin' }}
             topBarAction={() => history.pushState(null, getUrl(getRoute('accountManagement'), 'brand', 'udn', {}))}
             onSelect={(...params) => history.pushState(null, getUrl(getRoute('accountManagement'), ...params))}>
@@ -61,13 +64,22 @@ class AccountManagementManageAccount extends React.Component {
               <h1>{account.get('name') || 'No active account'}</h1>
             </Dropdown.Toggle>
         </AccountSelector>
-        <UDNButton bsStyle="success"
-                   pageHeaderBtn={true}
-                   icon={true}
-                   addNew={true}
-                   onClick={() => toggleModal(ADD_ACCOUNT)}>
-          <IconAdd/>
-        </UDNButton>
+        <div className="account-management-manage-account__actions">
+          <UDNButton bsStyle="success"
+                     pageHeaderBtn={true}
+                     icon={true}
+                     addNew={true}
+                     onClick={() => toggleModal(ADD_ACCOUNT)}>
+            <IconAdd/>
+          </UDNButton>
+          <UDNButton bsStyle="secondary"
+                     pageHeaderBtn={true}
+                     icon={true}
+                     addNew={true}
+                     onClick={() => toggleModal(DELETE_ACCOUNT)}>
+            <IconTrash/>
+          </UDNButton>
+        </div>
         </PageHeader>
         {this.renderTabs()}
         <div className="tab-bodies">
@@ -107,16 +119,19 @@ AccountManagementManageAccount.displayName = 'AccountManagementManageAccount'
 AccountManagementManageAccount.propTypes = {
   account: React.PropTypes.instanceOf(Immutable.Map),
   addGroup: React.PropTypes.func,
+  deleteAccount: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editAccount: React.PropTypes.func,
   editGroup: React.PropTypes.func,
   groups: React.PropTypes.instanceOf(Immutable.List),
   isAdmin: React.PropTypes.bool,
-  toggleModal: React.PropTypes.func
+  toggleModal: React.PropTypes.func,
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 AccountManagementManageAccount.defaultProps = {
   account: Immutable.Map({}),
-  groups: Immutable.List([])
+  groups: Immutable.List([]),
+  user: Immutable.Map({})
 }
 
 module.exports = AccountManagementManageAccount

@@ -4,13 +4,13 @@ export default [
   {
     value: 'traffic_high_to_low',
     label: 'Traffic High to Low',
-    path: Immutable.List(['metrics', 'totalTraffic']),
+    path: Immutable.List(['dailyTraffic', 'totals', 'transfer_rates', 'average']),
     direction: -1
   },
   {
     value: 'traffic_low_to_high',
     label: 'Traffic Low to High',
-    path: Immutable.List(['metrics', 'totalTraffic']),
+    path: Immutable.List(['dailyTraffic', 'totals', 'transfer_rates', 'average']),
     direction: 1
   },
   {

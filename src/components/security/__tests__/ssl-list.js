@@ -24,7 +24,7 @@ describe('SSLList', () => {
   })
 
   it('should list certificates', () => {
-    const list = shallow(<SSLList certificates={fakeCerts} activeCertificates={fromJS([])}/>)
+    const list = shallow(<SSLList groups={[]} certificates={fakeCerts} activeCertificates={fromJS([])}/>)
     expect(list.find('tbody tr').length).toBe(3)
   })
 })

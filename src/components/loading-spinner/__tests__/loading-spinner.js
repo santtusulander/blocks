@@ -12,9 +12,9 @@ describe('LoadingSpinner', () => {
     expect(spinner.find('.loading-spinner').length).toBe(1)
   })
 
-  it('should have 2 SVGs', () => {
+  it('should have 2 DIVs', () => {
     const spinner = shallow(<LoadingSpinner />)
 
-    expect(spinner.find('svg').length).toBe(2)
+    expect(spinner.find('div').length).toBe(2)
   })
 })

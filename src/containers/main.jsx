@@ -15,9 +15,9 @@ import Header from '../components/header'
 import Navigation from '../components/navigation/navigation.jsx'
 
 import ErrorModal from '../components/error-modal'
+import InfoModal from '../components/info-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
-import { filterAccountsByUserName } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -44,8 +44,9 @@ export class Main extends React.Component {
     this.props.fetchAccountData(accountId, this.props.accounts)
   }
 
-  //update account is account prop changed (in url)
+  //update account if account prop changed (in url) or clear active if there is no account in route
   componentWillReceiveProps(nextProps){
+    !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
     if (this.props.params.account !== nextProps.params.account) {
       this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
     }
@@ -125,6 +126,8 @@ export class Main extends React.Component {
     this.props.uiActions.changeNotification()
   }
   render() {
+    const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
+
     let classNames = 'main-container';
     let activeAccount = this.props.activeAccount
     /* If no activeAccount is set, but some accounts have been queried, use the
@@ -140,11 +143,6 @@ export class Main extends React.Component {
     const firstProperty = this.props.properties && this.props.properties.size ?
       this.props.properties.get(0)
       : null
-    const filteredAccounts = filterAccountsByUserName(
-      this.props.accounts,
-      this.props.username
-    )
-    const { history } = this.context
 
     return (
       <div className={classNames}>
@@ -152,7 +150,7 @@ export class Main extends React.Component {
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
-          history={history}
+          history={this.props.history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
@@ -180,7 +178,8 @@ export class Main extends React.Component {
             routes={this.props.routes}
             pathname={this.props.location.pathname}
             params={this.props.params}
-            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}/>
+            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
+            user={this.props.user}/>
           : ''
         }
         <div className="content-container">{this.props.children}</div>
@@ -197,7 +196,13 @@ export class Main extends React.Component {
           : ''
         }
 
-        <ErrorModal showErrorDialog={this.props.showErrorDialog} uiActions={this.props.uiActions} />
+        <ErrorModal
+          showErrorDialog={this.props.showErrorDialog}
+          uiActions={this.props.uiActions}/>
+        <InfoModal
+          showErrorDialog={this.props.showInfoDialog}
+          uiActions={this.props.uiActions}
+          {...infoDialogOptions}/>
 
         <ReactCSSTransitionGroup
           component="div"
@@ -244,9 +249,6 @@ Main.propTypes = {
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
-Main.contextTypes = {
-  history: React.PropTypes.object.isRequired
-}
 Main.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
@@ -274,6 +276,8 @@ function mapStateToProps(state) {
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
     showErrorDialog: state.ui.get('showErrorDialog'),
+    showInfoDialog: state.ui.get('showInfoDialog'),
+    infoDialogOptions: state.ui.get('infoDialogOptions'),
     theme: state.ui.get('theme'),
     user: state.user,
     username: state.user.get('username'),

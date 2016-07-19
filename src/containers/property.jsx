@@ -109,10 +109,8 @@ export class Property extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   dateDiff() {
-    const startDate = safeMomentStartDate(this.props.location.query.startDate)
-    const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    // Add a minute since endDate is 1 minute less than a full day
-    return endDate.diff(startDate)+60000
+    // Comparison history is always from 28 days before
+   return 28*24*60*60*1000;
   }
   changeDateRange (startDate, endDate) {
     const {query, pathname} = this.props.location
@@ -306,6 +304,7 @@ export class Property extends React.Component {
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
+                user={this.props.user}
                 onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
                 drillable={true}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
@@ -481,6 +480,7 @@ Property.propTypes = {
   trafficActions: React.PropTypes.object,
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   visitorsActions: React.PropTypes.object,
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
@@ -496,6 +496,7 @@ Property.defaultProps = {
     history: []
   }),
   properties: Immutable.List(),
+  user: Immutable.Map(),
   visitorsByCountry: Immutable.Map()
 }
 
@@ -511,6 +512,7 @@ function mapStateToProps(state) {
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
     trafficFetching: state.traffic.get('fetching'),
+    user: state.user,
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
   };

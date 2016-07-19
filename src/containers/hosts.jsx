@@ -30,7 +30,7 @@ export class Hosts extends React.Component {
     this.props.fetchMetricsData()
   }
   createNewHost(id, deploymentMode) {
-    this.props.hostActions.createHost(
+    return this.props.hostActions.createHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -65,7 +65,7 @@ export class Hosts extends React.Component {
     const configURLBuilder = (property) => {
       return getContentUrl('propertyConfiguration', property, params)
     }
-    const analyticsURLBuilder = (property) => {
+    const analyticsURLBuilder = (...property) => {
       return getAnalyticsUrl('property', property, params)
     }
     const breadcrumbs = [
@@ -105,7 +105,10 @@ export class Hosts extends React.Component {
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         type='property'
-        viewingChart={this.props.viewingChart}/>
+        user={this.props.user}
+        viewingChart={this.props.viewingChart}
+        showInfoDialog={this.props.uiActions.showInfoDialog}
+        hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
     )
   }
 }
@@ -119,6 +122,7 @@ Hosts.propTypes = {
   fetchMetricsData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
+  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
@@ -126,6 +130,7 @@ Hosts.propTypes = {
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
+  user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
 Hosts.defaultProps = {
@@ -134,7 +139,8 @@ Hosts.defaultProps = {
   dailyTraffic: Immutable.List(),
   hosts: Immutable.List(),
   metrics: Immutable.List(),
-  sortValuePath: Immutable.List()
+  sortValuePath: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -148,6 +154,7 @@ function mapStateToProps(state) {
     metrics: state.metrics.get('hostMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
+    user: state.user,
     viewingChart: state.ui.get('viewingChart')
   };
 }

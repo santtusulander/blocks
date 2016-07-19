@@ -7,7 +7,7 @@ options:
   #output-file: 'sass-lint-report.html'
 
 files:
-  include: './src/**/*.s+(a|c)ss'
+  include: 'src/**/*.s+(a|c)ss'
   ignore:
   - 'node_modules/**'
   - 'vendor/**/*'
@@ -25,7 +25,7 @@ rules:
   border-zero: 2
 
   # Prefer hexadecimal color codes over color keywords
-  no-color-keyword: 2
+  no-color-keywords: 2
 
   # Prefer // comments over /* ... */
   no-css-comments: 2
