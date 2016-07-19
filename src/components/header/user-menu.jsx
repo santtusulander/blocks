@@ -1,6 +1,10 @@
 import React from 'react'
+import { Dropdown, MenuItem } from 'react-bootstrap'
+import { Link } from 'react-router'
 
-const UserMenu = (theme, handleThemeChange, logout, toggleUserMenu) => {
+import Select from '../select'
+
+const UserMenu = ({theme, handleThemeChange, logout, toggleUserMenu}) => {
   return (
     <Dropdown.Menu className="dropdown-user-menu">
       <li className="dropdown-user-menu-container">
@@ -46,12 +50,19 @@ const UserMenu = (theme, handleThemeChange, logout, toggleUserMenu) => {
         </ul>
       </li>
       <li className="bottom-item" eventKey="5">
-        <a id="log-out" href="#" onClick={logOut}>
+        <a id="log-out" href="#" onClick={logout}>
           <div className="user-menu-item">Log Out</div>
         </a>
       </li>
     </Dropdown.Menu>
   );
+}
+
+UserMenu.propTypes = {
+  handleThemeChange: React.PropTypes.func,
+  logout: React.PropTypes.func,
+  theme: React.PropTypes.string,
+  toggleUserMenu: React.PropTypes.func
 }
 
 export default UserMenu
