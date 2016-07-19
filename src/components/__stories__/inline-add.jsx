@@ -22,9 +22,12 @@ storiesOf('Inline Add', module)
     <table>
       <tbody>
         <InlineAdd
-            validate={({a, b}) => {
-              console.log(a)
-              console.log(b)
+            validate={({ a }) => {
+              let errors = {}
+              if( a && a.length > 3) {
+                errors.a = 'no go'
+              }
+              return errors
             }}
             fields={['a', 'b']}
             cancel={action('cancel pressed')}
