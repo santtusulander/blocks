@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -60,6 +60,7 @@ export class AccountManagement extends Component {
   }
 
   dnsEditOnSave(){
+    // eslint-disable-next-line no-console
     console.log('dnsEditOnSave()')
   }
 
@@ -106,25 +107,14 @@ export class AccountManagement extends Component {
     ).then(() => this.showNotification('Account detail updates saved.'))
   }
 
-  addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name).then(
+  addAccount(brand, data) {
+    return this.props.accountActions.createAccount(brand, data).then(
       action => {
-        const { payload: { id } } = action, { brand } = data
-        return this.props.accountActions.updateAccount(
-          data.brand,
-          id,
-          { name: data.name }
-          // TODO: should be "data" above but API does not support all fields
-        ).then(() => {
-          this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-          this.showNotification(`Account ${data.name} created.`)
-          this.props.toggleModal(null)
-        }).then(() => {
-          this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-          this.props.hostActions.clearFetchedHosts()
-        })
-      }
-    )
+        this.props.history.pushState(null, `/account-management/${brand}/${action.payload.id}`)
+        this.showNotification(`Account ${data.name} created.`)
+        this.props.toggleModal(null)
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   showNotification(message) {
@@ -138,49 +128,12 @@ export class AccountManagement extends Component {
     const {
       params: { brand, account },
       params,
-      dnsData,
-      dnsActions,
-      activeRecordType,
       accountManagementModal,
       toggleModal,
       onDelete,
       history,
       activeAccount
     } = this.props
-
-    const isAdmin = !account
-    const activeDomain = dnsData && dnsData.get('activeDomain')
-
-    /* TODO: remove - TEST ONLY */
-    const dnsInitialValues = {
-      initialValues: {
-        recordType: 'MX',
-        recordName: 'mikkotest',
-        targetValue: '11.22.33.44',
-        ttl: '3600'
-      }
-    }
-    const soaFormInitialValues = dnsData && {
-      initialValues:
-        dnsData
-          .get('domains')
-          .find(domain => is(activeDomain.get('id'), domain.get('id')))
-          .get('SOARecord').toJS()
-    }
-    const dnsListProps = {
-      soaEditOnSave: this.editSOARecord,
-      modalActive: this.state.modalVisible,
-      //changeActiveDomain: dnsActions.changeActiveDomain,
-      activeDomain: activeDomain,
-      domains: dnsData && dnsData.get('domains'),
-      changeRecordType: dnsActions.changeActiveRecordType,
-      activeRecordType: activeRecordType,
-      dnsEditOnSave: this.dnsEditOnSave,
-      accountManagementModal: accountManagementModal,
-      toggleModal: toggleModal,
-      dnsFormInitialValues: dnsInitialValues,
-      soaFormInitialValues: soaFormInitialValues
-    }
 
     return (
       <PageContainer className="account-management">
@@ -234,12 +187,13 @@ AccountManagement.propTypes = {
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  history: PropTypes.object,
   hostActions: PropTypes.object,
+  onDelete: PropTypes.func,
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object,
-  onDelete: PropTypes.func
+  uiActions: PropTypes.object
 }
 
 function mapStateToProps(state) {
