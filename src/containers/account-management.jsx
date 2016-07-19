@@ -18,7 +18,8 @@ import { getRoute } from '../routes'
 import { getUrl } from '../util/helpers'
 import DeleteModal from '../components/delete-modal'
 import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
+import GroupEditForm from '../components/account-management/group-edit-form.jsx'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP } from '../constants/account-management-modals.js'
 
 //import AccountManagementFormContainer from '../components/account-management/form-container'
 
@@ -44,6 +45,7 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+    this.showEditGroupModal = this.showEditGroupModal.bind(this)
   }
 
   editSOARecord() {
@@ -89,13 +91,21 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, name) {
+  editGroupInActiveAccount(groupId, data) {
+    console.log(groupId, data);
+    /*const {groupId, name} = data
     return this.props.groupActions.updateGroup(
       'udn',
       this.props.activeAccount.get('id'),
       groupId,
       {name: name}
-    )
+    )*/
+  }
+
+  showEditGroupModal(group) {
+    console.log(group.toJS())
+    this.setState({groupToUpdate: group})
+    this.props.toggleModal(EDIT_GROUP)
   }
 
   editAccount(accountId, data) {
@@ -182,6 +192,8 @@ export class AccountManagement extends Component {
       soaFormInitialValues: soaFormInitialValues
     }
 
+    console.log('groupToEdit:', this.state.groupToUpdate && this.state.groupToUpdate.toJS())
+
     return (
       <PageContainer className="account-management">
         <Content>
@@ -191,7 +203,7 @@ export class AccountManagement extends Component {
             addGroup={this.addGroupToActiveAccount}
             deleteGroup={this.showDeleteGroupModal}
             editAccount={this.editAccount}
-            editGroup={this.editGroupInActiveAccount}
+            editGroup={this.showEditGroupModal}
             groups={this.props.groups}
             params={params}
             history={history}
@@ -215,6 +227,15 @@ export class AccountManagement extends Component {
             description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
+          <GroupEditForm
+            id="group-edit-form"
+            onSave={(data) => this.editGroupInActiveAccount(this.state.groupToUpdate.get('id'), data)}
+            onCancel={() => toggleModal(null)}
+            show={true}
+            initialValues={
+              this.state.groupToUpdate.toJS()
+            }/>}
         </Content>
       </PageContainer>
     )

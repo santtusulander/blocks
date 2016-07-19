@@ -1,0 +1,49 @@
+@import "../../styles/components/modal-form-panel";
+
+.group-edit-form-sidebar {
+  @extend .modal-form-panel;
+
+  .input-group.add-members {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .members-list {
+    list-style: none;
+    padding: 0;
+    &__member{
+      padding: 10px 0px 10px 20px;
+      background: #12577A;
+      width: 100%;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &__name {
+        flex-grow: 1;
+      }
+
+      &__actions {
+        float: right;
+        margin-top: -8px;
+        order: 2;
+        button {
+          display: inline;
+          height: 30px;
+          &.delete-button {
+            height: 24px;
+          }
+        }
+      }
+
+      &--new {
+        background: #097BA1;
+      }
+
+      &--delete {
+        background: #18466A;
+      }
+    }
+  }
+}

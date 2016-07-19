@@ -7,6 +7,9 @@ import IconAdd from '../../icons/icon-add.jsx'
 import IconTrash from '../../icons/icon-trash.jsx'
 import TableSorter from '../../table-sorter'
 import EditGroup from './edit-group'
+import GroupEditForm from '../group-edit-form.jsx'
+
+import {EDIT_GROUP} from '../../../constants/account-management-modals'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -151,7 +154,7 @@ class AccountManagementAccountGroups extends React.Component {
                 <td>NEEDS_API</td>
                 */}
                 <td>
-                  <a href="#" onClick={this.editGroup(group.get('id'))}>
+                  <a href="#" onClick={() => this.props.editGroup(group)}>
                     EDIT
                   </a>
                   <Button onClick={this.deleteGroup(group)}
@@ -174,7 +177,8 @@ AccountManagementAccountGroups.propTypes    = {
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editGroup: React.PropTypes.func,
-  groups: React.PropTypes.instanceOf(Immutable.List)
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  toggleModal: React.PropTypes.func
 }
 AccountManagementAccountGroups.defaultProps = {
   groups: Immutable.List([])
