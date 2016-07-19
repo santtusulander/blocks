@@ -108,12 +108,18 @@ export class Property extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
-  dateDiff() {
-    // Comparison history is always from 28 days before
-   return 28*24*60*60*1000;
+  getEmptyHourlyTraffic(startDate, endDate) {
+    let hourlyTraffic = [];
+    for (var t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
+      hourlyTraffic.push({
+        bits_per_second: 0,
+        timestamp: moment(t, 'X').toDate()
+      })
+    }
+    return hourlyTraffic
   }
   changeDateRange (startDate, endDate) {
-    const {query, pathname} = this.props.location
+    const {pathname} = this.props.location
     const fStartDate = safeMomentStartDate(startDate).format('X')
     const fEndDate = safeMomentEndDate(endDate).format('X')
     this.setState({
@@ -265,20 +271,20 @@ export class Property extends React.Component {
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
-    const metrics_traffic = !totals ?
-      [] :
-      this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
-        return {
-          timestamp: moment(hour.get('timestamp'), 'X').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates','average'])
-        }
-      }).toJS()
     // Add time difference to the historical data so it matches up
     const historical_traffic = !this.props.hourlyTraffic.get('history').size ?
       [] :
       this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
         return {
-          timestamp: moment(hour.get('timestamp'), 'X').add(this.dateDiff(), 'ms').toDate(),
+          timestamp: moment(hour.get('timestamp'), 'X').add(28, 'days').toDate(),
+          bits_per_second: hour.getIn(['transfer_rates','average'])
+        }
+      }).toJS()
+    const metrics_traffic = !totals ?
+      !historical_traffic.length ? [] : this.getEmptyHourlyTraffic(startDate, endDate) :
+      this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
+        return {
+          timestamp: moment(hour.get('timestamp'), 'X').toDate(),
           bits_per_second: hour.getIn(['transfer_rates','average'])
         }
       }).toJS()
@@ -289,7 +295,7 @@ export class Property extends React.Component {
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
       const formattedDate = moment.utc(date)
-        .subtract(this.dateDiff(), 'ms')
+        .subtract(28, 'days')
         .format('MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
