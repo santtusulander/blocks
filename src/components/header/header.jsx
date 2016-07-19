@@ -2,17 +2,16 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link } from 'react-router'
 
-import { getRoute } from '../routes.jsx'
-import Select from '../components/select'
+import { getRoute } from '../../routes.jsx'
 import UserMenu from './user-menu'
-import IconAlerts from '../components/icons/icon-alerts.jsx'
-import IconEricsson from './icons/icon-ericsson.jsx'
-import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
-import AccountSelector from './global-account-selector/global-account-selector.jsx'
-import { getAnalyticsUrl, getContentUrl, getUrl } from '../util/helpers.js'
+import IconAlerts from '../icons/icon-alerts.jsx'
+import IconEricsson from '../icons/icon-ericsson.jsx'
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
+import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import { getAnalyticsUrl, getContentUrl, getUrl } from '../../util/helpers.js'
 
 
-import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
+import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   constructor(props) {
@@ -231,7 +230,6 @@ class Header extends React.Component {
                   className="btn-icon btn-round btn-user-menu"
                   noCaret={true} id="user-dropdown">
                 </Dropdown.Toggle>
-                {this.renderUserMenu()}
                 <UserMenu
                   theme={this.props.theme}
                   handleThemeChange={this.handleThemeChange}
