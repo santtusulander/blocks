@@ -9,6 +9,7 @@ const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
+const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -16,6 +17,7 @@ const loginAxios = axios.create()
 // TODO: This is all fake and insecure until Keystone sign on is ready
 
 const emptyUser = Immutable.Map({
+  allGroups: Immutable.List(),
   fetching: false,
   loggedIn: false
 })
@@ -38,6 +40,20 @@ export function userLoggedInSuccess(state, action){
 
 export function userLoggedInFailure(){
   return emptyUser
+}
+
+export function fetchAllSuccess(state, action) {
+  return state.merge({
+    allUsers: Immutable.fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchAllFailure(state) {
+  return state.merge({
+    allUsers: Immutable.List(),
+    fetching: false
+  })
 }
 
 export function userLoggedOutSuccess(state){
@@ -75,7 +91,8 @@ export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
-  USER_TOKEN_CHECKED: userTokenChecked
+  USER_TOKEN_CHECKED: userTokenChecked,
+  USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
 }, emptyUser)
 
 // ACTIONS
@@ -113,6 +130,24 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     token: localStorage.getItem('EricssonUDNUserToken') || null,
     username: localStorage.getItem('EricssonUDNUserName')
   }
+})
+
+export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accountId = null, groupId = null) => {
+  let query = ''
+  if (groupId && accountId && brandId) {
+    query = `?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`
+  } else if (accountId && brandId) {
+    query = `?brand_id=${brandId}&account_id=${accountId}`
+  } else if (brandId) {
+    query = `?brand_id=${brandId}`
+  }
+
+  return axios.get(`${urlBase}/v2/users${query}`)
+    .then((res) => {
+      if(res) {
+        return res.data;
+      }
+    });
 })
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
