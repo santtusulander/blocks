@@ -11,7 +11,7 @@ import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
-import Header from '../components/header'
+import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
 
 import ErrorModal from '../components/error-modal'
