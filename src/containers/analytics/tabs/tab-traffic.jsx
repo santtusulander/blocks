@@ -101,7 +101,6 @@ class AnalyticsTabTraffic extends React.Component {
 
 AnalyticsTabTraffic.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
-  history: React.PropTypes.object,
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.Map),
   metricsActions: React.PropTypes.object,

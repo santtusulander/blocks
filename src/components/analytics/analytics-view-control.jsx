@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
@@ -80,7 +80,7 @@ const AnalyticsViewControl = (props) => {
   else if(account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
-  const isContentAnalytics = props.history.isActive('/content')
+  const isContentAnalytics = props.router.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Back to Accounts',
@@ -101,7 +101,7 @@ const AnalyticsViewControl = (props) => {
         break
       case 'brand':
       case 'account':
-        props.history.pushState(null, getAnalyticsUrl('brand', 'udn', {}))
+        props.router.push(getAnalyticsUrl('brand', 'udn', {}))
         break
     }
   }
@@ -125,7 +125,7 @@ const AnalyticsViewControl = (props) => {
               }
               url = `${url}/${tab}`
             }
-            props.history.pushState(null, url)
+            props.router.push(url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
               <h1>{activeItem || "select account"}</h1>
@@ -166,7 +166,6 @@ AnalyticsViewControl.propTypes = {
   brands: PropTypes.instanceOf(Immutable.List),
   exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
-  history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
@@ -182,4 +181,4 @@ AnalyticsViewControl.defaultProps = {
   user: Immutable.Map()
 }
 
-export default AnalyticsViewControl
+export default withRouter(AnalyticsViewControl)

@@ -3,13 +3,10 @@ import Immutable from 'immutable'
 
 import RolesList from '../roles-list.jsx'
 
-import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../../constants/roles.js'
-
 const fakeRoles = Immutable.fromJS([
-  { id: 1, roleName: 'Role name #1', roles: [ ROLE_UDN, ROLE_CONTENT_PROVIDER ]  },
-  { id: 2, roleName: 'Role name #2', roles: [ ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER ]  },
-  { id: 3, roleName: 'Role name #3', roles: [ ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER ]  },
-  { id: 4, roleName: 'Role name #4', roles: [ ROLE_UDN, ROLE_SERVICE_PROVIDER ]  }
+  { id: 1, name: 'UDN', parentRoles: []  },
+  { id: 2, name: 'Content Provider', parentRoles: [1, 2]  },
+  { id: 3, name: 'Service Provider', parentRoles: [1]  }
 ])
 
 class AccountManagementSystemRoles extends React.Component {
@@ -39,7 +36,11 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesList roles={fakeRoles} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole} onAdd={this.showAddNewRoleDialog} showAddNewDialog={this.state.showAddNewDialog} />
+        <RolesList roles={fakeRoles}
+          onCancel={this.hideAddNewRoleDialog}
+          onSave={this.saveRole}
+          onAdd={this.showAddNewRoleDialog}
+          showAddNewDialog={this.state.showAddNewDialog} />
       </div>
     )
   }
