@@ -6,15 +6,23 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
+import {List, fromJS} from 'immutable'
 
-import SelectWrapper from '../select-wrapper.jsx'
+import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
-import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
 
 import './group-edit-form.scss'
 
 let errors = {}
+
+// TODO: For testing purposes. Remove these.
+const users = [
+  {value: 1, label: 'foo@example.com', toAdd: true},
+  {value: 2, label: 'bar@example.com'},
+  {value: 3, label: 'baz@example.com'}
+]
+const values = List([1])
 
 const validate = (values) => {
   const {name} = values
@@ -34,15 +42,10 @@ class GroupEditForm extends React.Component {
   }
 
   componentWillMount() {
-    const currentMembers = [
-      {id: 1, email: 'foo@example.com', toAdd:true},
-      {id: 2, email: 'bar@example.com'},
-      {id: 3, email: 'baz@example.com', toDelete:true}
-    ];
-
     this.setState({
-      selectedMembers: currentMembers.slice(0),
-      currentMembers: currentMembers.slice(0)
+      currentMembers: users,
+      users: users,
+      usersToAdd: values
     })
   }
 
@@ -68,12 +71,15 @@ class GroupEditForm extends React.Component {
   }
 
   render() {
-    const { fields: {name, members, users}, show, onCancel } = this.props
+    const { fields: {name}, show, onCancel } = this.props
 
     // TODO: Check me after more brands have been added
     const currentBrand = 'udn'
-    const usersOptions = [[1, 'foo@NEEDS_API'], [2, 'bar@NEEDS_API']]
-    const membersOptions = this.state.currentMembers
+    const membersOptions = [
+      {value: 1, label: 'foo@example.com', toAdd: true},
+      {value: 2, label: 'bar@example.com'},
+      {value: 3, label: 'baz@example.com', toDelete: true}
+    ]
 
 
     return (
@@ -95,15 +101,15 @@ class GroupEditForm extends React.Component {
             <div className='error-msg'>{name.error}</div>}
 
             <hr/>
-            <div className="form-group">
+            <div className="form-group add-members">
               <label className="control-label">Add Members</label>
-                <div className="input-group add-members">
-                  <SelectWrapper
-                    {...users}
-                    className="input-select"
-                    options={usersOptions}
-                  />
-              </div>
+              <FilterChecklistDropdown
+                options={fromJS(users)}
+                values={this.state.usersToAdd || List()}
+                handleCheck={val => {
+                  this.setState({usersToAdd: val})
+                }}
+              />
             </div>
 
             <div className="form-group">
@@ -115,9 +121,9 @@ class GroupEditForm extends React.Component {
                   className += val.toDelete ? 'members-list__member--delete ' : ''
                   return(
                     <li key={key} className={className}>
-                      <span className="members-list__member__name">NEEDS_API {val.email}</span>
+                      <span className="members-list__member__label">NEEDS_API {val.label}</span>
                       <span className="members-list__member__actions">
-                      {val.toAdd && <Button bsStyle="link" className="new-label">NEW</Button>}
+                      {val.toAdd && <span className="members-list__member__actions__new">NEW</span>}
                       {val.toDelete ? <Button bsStyle="link" className="undo-label">UNDO</Button> : <Button bsStyle="link" className="delete-button"><IconClose width="20" height="20"/></Button>}
                       </span>
                     </li>
