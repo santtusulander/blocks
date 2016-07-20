@@ -120,12 +120,12 @@ class AccountManagementAccountGroups extends React.Component {
     return (
       <div className="account-management-account-groups">
         <Row className="header-btn-row">
-          <Col sm={8}>
+          <Col sm={6}>
             <h3>
               {this.props.groups.size} Group{this.props.groups.size === 1 ? '' : 's'}
             </h3>
           </Col>
-          <Col sm={4} className="text-right">
+          <Col sm={6} className="text-right">
             <Input
               type="text"
               className="search-input"
