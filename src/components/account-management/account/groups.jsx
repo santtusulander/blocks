@@ -117,12 +117,13 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
+    const numHiddenGroups = this.props.groups.size - sortedGroups.size;
     return (
       <div className="account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
-              {this.props.groups.size} Group{this.props.groups.size === 1 ? '' : 's'}
+              {sortedGroups.size} Group{this.props.groups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
             </h3>
           </Col>
           <Col sm={6} className="text-right">
