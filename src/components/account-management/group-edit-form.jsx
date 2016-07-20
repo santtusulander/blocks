@@ -62,10 +62,9 @@ class GroupEditForm extends React.Component {
         fields: { name/*, members*/ }
       } = this.props
       this.props.onSave({
-        name: name
+        name: name.value
       })
     }
-    this.props.onSave(this.props.fields)
   }
 
   render() {

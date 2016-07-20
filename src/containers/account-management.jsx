@@ -93,13 +93,15 @@ export class AccountManagement extends Component {
 
   editGroupInActiveAccount(groupId, data) {
     console.log(groupId, data);
-    /*const {groupId, name} = data
     return this.props.groupActions.updateGroup(
       'udn',
       this.props.activeAccount.get('id'),
       groupId,
-      {name: name}
-    )*/
+      data
+    ).then(() => {
+      this.props.toggleModal(null)
+      this.showNotification('Group detail updates saved.')
+    })
   }
 
   showEditGroupModal(group) {
@@ -233,6 +235,7 @@ export class AccountManagement extends Component {
             onSave={(data) => this.editGroupInActiveAccount(this.state.groupToUpdate.get('id'), data)}
             onCancel={() => toggleModal(null)}
             show={true}
+            // NEEDS_API users={}
             initialValues={
               this.state.groupToUpdate.toJS()
             }/>}
