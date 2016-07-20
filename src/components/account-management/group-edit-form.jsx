@@ -18,11 +18,11 @@ let errors = {}
 
 // TODO: For testing purposes. Remove these.
 const users = [
-  {value: 1, label: 'foo@example.com', toAdd: true},
+  {value: 1, label: 'foo@example.com'},
   {value: 2, label: 'bar@example.com'},
   {value: 3, label: 'baz@example.com'}
 ]
-const values = List([1])
+const values = List()
 
 const validate = (values) => {
   const {name} = values
@@ -43,6 +43,7 @@ class GroupEditForm extends React.Component {
 
   componentWillMount() {
     this.setState({
+      initialMembers: [2,3],
       currentMembers: [2,3],
       users: users,
       usersToAdd: values
@@ -75,12 +76,28 @@ class GroupEditForm extends React.Component {
 
     // TODO: Check me after more brands have been added
     const currentBrand = 'udn'
-    const membersOptions = [
+    /*const membersOptions = [
       {value: 1, label: 'foo@example.com', toAdd: true},
       {value: 2, label: 'bar@example.com'},
       {value: 3, label: 'baz@example.com', toDelete: true}
-    ]
-
+    ]*/
+    let currentMembers = this.state.usersToAdd.map((id) => {
+      return {...(this.state.users.find(user => user.value === id)), toAdd:true}
+    }).toJS()
+    console.log('usersToAdd added', currentMembers)
+    currentMembers = [...currentMembers, ...(this.state.currentMembers.map((id) => {
+      return this.state.users.find((user) => user.value === id)
+    }))]
+    currentMembers.sort((val1, val2) => {
+      if(val2.toAdd && !val1.toAdd || val1.toDelete && !val2.toDelete) {
+        return 1;
+      }
+      if(val1.toAdd && !val2.toAdd || val2.toDelete && !val1.toDelete) {
+        return -1
+      }
+      return 0;
+    })
+    console.log('everything', currentMembers)
 
     return (
       <Modal dialogClassName="group-edit-form-sidebar" show={show}>
@@ -105,12 +122,12 @@ class GroupEditForm extends React.Component {
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
                 options={fromJS(users.reduce((arr, user) => {
-                  if(this.state.currentMembers.indexOf(user.value) === -1) {
+                  if(this.state.initialMembers.indexOf(user.value) === -1) {
                     return [...arr, user]
                   }
                   return arr;
                 }, []))}
-                values={this.state.usersToAdd || List()}
+                values={fromJS(this.state.usersToAdd) || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
                 }}
@@ -118,14 +135,14 @@ class GroupEditForm extends React.Component {
             </div>
 
             <div className="form-group">
-              <label className="control-label">{`Current Members ${this.state.currentMembers.length}`}</label>
+              <label className="control-label">{`Current Members (${currentMembers.length})`}</label>
               <ul className="members-list">
-                {membersOptions.map((val, key) => {
+                {currentMembers.map((val) => {
                   let className = 'members-list__member '
                   className += val.toAdd ? 'members-list__member--new ' : ''
                   className += val.toDelete ? 'members-list__member--delete ' : ''
                   return(
-                    <li key={key} className={className}>
+                    <li key={val.value} className={className}>
                       <span className="members-list__member__label">NEEDS_API {val.label}</span>
                       <span className="members-list__member__actions">
                       {val.toAdd && <span className="members-list__member__actions__new">NEW</span>}
