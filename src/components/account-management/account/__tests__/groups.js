@@ -7,9 +7,9 @@ const Groups = require('../groups.jsx')
 const EditGroup = require('../edit-group.jsx')
 
 const fakeGroups = Immutable.fromJS([
-  {id: 1, name: 'aaa'},
-  {id: 2, name: 'ccc'},
-  {id: 3, name: 'bbb'}
+  {id: 1, name: 'aaa', created: new Date().getTime()},
+  {id: 2, name: 'ccc', created: new Date().getTime()  + 1},
+  {id: 3, name: 'bbb', created: new Date().getTime()  - 1}
 ])
 
 describe('AccountManagementAccountGroups', () => {
@@ -25,12 +25,20 @@ describe('AccountManagementAccountGroups', () => {
     )
     expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'tr').length).toBe(4)
   })
-  it('should sort groups', () => {
+  it('should sort groups by name', () => {
     const groups = TestUtils.renderIntoDocument(
       <Groups groups={fakeGroups}/>
     )
     expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
     groups.changeSort('name', -1)
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
+  })
+  it('should sort groups by date', () => {
+    const groups = TestUtils.renderIntoDocument(
+      <Groups groups={fakeGroups}/>
+    )
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
+    groups.changeSort('created', -1)
     expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
   })
   it('should show a row for adding a group', () => {
