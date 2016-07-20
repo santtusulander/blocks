@@ -73,4 +73,12 @@ describe('AccountManagementAccountGroups', () => {
     expect(editGroup.mock.calls[0][0]).toBe(1)
     expect(editGroup.mock.calls[0][1]).toBe('zzz')
   })
+  it('should search groups', () => {
+    const groups = TestUtils.renderIntoDocument(
+      <Groups groups={fakeGroups}/>
+    )
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
+    groups.changeSearch({target: {value: 'ccc'}})
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
+  })
 })
