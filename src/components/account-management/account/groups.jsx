@@ -146,12 +146,12 @@ class AccountManagementAccountGroups extends React.Component {
               <TableSorter {...sorterProps} column="name">
                 Name
               </TableSorter>
-              <th>Members</th>
-              <th>Created On</th>
+              <th width="20%">Members</th>
+              <th width="20%">Created On</th>
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th></th>
+              <th width="1%"></th>
             </tr>
           </thead>
           <tbody>
