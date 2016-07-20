@@ -15,6 +15,14 @@ function labelParentRoles(childRole, allRoles) {
   })
 }
 
+function labelPermissions(role, permissions) {
+  return role.get('permissions').map(id => {
+    return permissions
+      .find(permission => permission.get('id') === id)
+      .get('name')
+  })
+}
+
 export const RolesList = props => {
 
   if (!props.roles || props.roles.length == 0) {
@@ -51,7 +59,7 @@ export const RolesList = props => {
                   {role.get('name')}
                 </td>
                 <td>
-                  Permissions here
+                  {labelPermissions(role, props.permissions).join(', ')}
                 </td>
                 <td>
                   {labelParentRoles(role, props.roles).join(', ')}
@@ -61,8 +69,8 @@ export const RolesList = props => {
                 </td>
                 <td>
                   <ActionLinks
-                    onEdit={() => this.props.onEdit(role.get('id'))}
-                    onDelete={() => this.props.onDelete(role.get('id'))}/>
+                    onEdit={() => props.onEdit(role.get('id'))}
+                    onDelete={() => props.onDelete(role.get('id'))}/>
                 </td>
               </tr>
             );
@@ -85,13 +93,13 @@ RolesList.propTypes = {
   onDelete: React.PropTypes.func,
   onEdit: React.PropTypes.func,
   onSave: React.PropTypes.func,
+  permissions: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
   showAddNewDialog: React.PropTypes.bool
 }
 RolesList.defaultProps = {
-  account: Immutable.Map({}),
-  groups: Immutable.List([]),
-  user: Immutable.Map({})
+  permissions: Immutable.List([]),
+  roles: Immutable.List([])
 }
 
 export default RolesList
