@@ -87,11 +87,6 @@ class GroupEditForm extends React.Component {
 
     // TODO: Check me after more brands have been added
     const currentBrand = 'udn'
-    /*const membersOptions = [
-      {value: 1, label: 'foo@example.com', toAdd: true},
-      {value: 2, label: 'bar@example.com'},
-      {value: 3, label: 'baz@example.com', toDelete: true}
-    ]*/
     const currentMembers = this.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.value)) {
         return [{...user, toAdd: true}, ...members]
