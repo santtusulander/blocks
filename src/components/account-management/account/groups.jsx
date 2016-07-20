@@ -123,7 +123,7 @@ class AccountManagementAccountGroups extends React.Component {
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
-              {sortedGroups.size} Group{this.props.groups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
+              {sortedGroups.size} Group{sortedGroups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
             </h3>
           </Col>
           <Col sm={6} className="text-right">
