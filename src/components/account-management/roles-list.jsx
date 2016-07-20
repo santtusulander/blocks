@@ -61,8 +61,8 @@ export const RolesList = props => {
                 </td>
                 <td>
                   <ActionLinks
-                    onEdit={() => this.props.onEdit(role.get('id'))}
-                    onDelete={() => this.props.onDelete(role.get('id'))}/>
+                    onEdit={() => props.onEdit(role.get('id'))}
+                    onDelete={() => props.onDelete(role.get('id'))}/>
                 </td>
               </tr>
             );
