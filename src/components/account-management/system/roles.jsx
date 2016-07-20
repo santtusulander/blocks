@@ -39,7 +39,11 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesList roles={fakeRoles} onCancel={this.hideAddNewRoleDialog} onSave={this.saveRole} onAdd={this.showAddNewRoleDialog} showAddNewDialog={this.state.showAddNewDialog} />
+        <RolesList roles={fakeRoles}
+          onCancel={this.hideAddNewRoleDialog}
+          onSave={this.saveRole}
+          onAdd={this.showAddNewRoleDialog}
+          showAddNewDialog={this.state.showAddNewDialog} />
       </div>
     )
   }

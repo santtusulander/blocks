@@ -10,6 +10,8 @@ import Users from './account/users'
 import UDNButton from '../button.js'
 import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
+// TODO: Move after refactor
+import Roles from './system/roles'
 
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
@@ -43,6 +45,7 @@ class AccountManagementManageAccount extends React.Component {
         <NavItem eventKey="account">Account</NavItem>
         <NavItem eventKey="groups">Groups</NavItem>
         <NavItem eventKey="users">Users</NavItem>
+        <NavItem eventKey="roles">Roles</NavItem>
       </Nav>
     )
   }
@@ -108,6 +111,9 @@ class AccountManagementManageAccount extends React.Component {
             <Users
               account={account}
               isAdmin={isAdmin}/>
+          }
+          {this.state.activeTab === 'roles' && !account.isEmpty() &&
+            <Roles/>
           }
         </div>
       </div>

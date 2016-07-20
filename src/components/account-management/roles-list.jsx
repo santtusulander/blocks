@@ -1,47 +1,23 @@
 import React from 'react'
-import { Input } from 'react-bootstrap'
-
-
+import Immutable from 'immutable'
 
 import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
+import ActionLinks from './action-links.jsx'
 
 import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../constants/roles.js'
 
 import './roles-list.scss';
 
-export const RolesListRow = (props) => {
-
-  const { role } = props
-
-  return (
-    <tr className='roles-list-row'>
-        <td>
-          { role.get('roleName') }
-        </td>
-        <td>
-          <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_UDN ) } />
-          </div>
-        </td>
-
-        <td>
-          <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_CONTENT_PROVIDER ) } />
-          </div>
-        </td>
-
-        <td>
-          <div className='checkbox-container'>
-            <Input type='checkbox' label=' ' checked={ role.get('roles').contains( ROLE_SERVICE_PROVIDER ) } />
-          </div>
-        </td>
-    </tr>
-  )
+function labelChildRoles(parentRole, allRoles) {
+  return parentRole.get('roles').map(role => {
+    return allRoles
+      .find(possibleChild => possibleChild.get('id') === role.get('id'))
+      .get('roleName')
+  })
 }
 
-
-export const RolesList = (props) => {
+export const RolesList = props => {
 
   if (!props.roles || props.roles.length == 0) {
     return (
@@ -51,37 +27,73 @@ export const RolesList = (props) => {
     )
   }
 
-  const tableRows = props.roles.map( (role, i) => {
-    return (
-      <RolesListRow key={i} { ... role } role={ role } onEdit={props.onEdit} onDelete={props.onDelete}  />
-    );
-  });
-
   return (
     <div className='roles-list'>
 
-      <AccountManagementHeader title={ `${props.roles.count() } Roles` } onAdd={props.onAdd}/>
+      <AccountManagementHeader
+        title={`${props.roles.count() } Roles`}
+        onAdd={props.onAdd}/>
 
       <table className="table table-striped">
         <thead>
           <tr>
             <th>Role</th>
-            <th className='checkbox-container'>Udn</th>
-            <th className='checkbox-container'>Content Provider</th>
-            <th className='checkbox-container'>Service Provider</th>
+            <th>Permissions</th>
+            <th>Available To</th>
+            <th>Assigned To</th>
+            <th></th>
           </tr>
         </thead>
 
         <tbody>
-          { tableRows }
+          {props.roles.map( (role, i) => {
+            return (
+              <tr className='roles-list-row' key={i}>
+                <td>
+                  {role.get('roleName')}
+                </td>
+                <td>
+                  Permissions here
+                </td>
+                <td>
+                  {labelChildRoles(role, props.roles).join(', ')}
+                </td>
+                <td>
+                  NEEDS API
+                </td>
+                <td>
+                  <ActionLinks
+                    onEdit={() => this.props.onEdit(role.get('id'))}
+                    onDelete={() => this.props.onDelete(role.get('id'))}/>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
 
       </table>
 
-      <RolesEditForm show={props.showAddNewDialog} onCancel={props.onCancel} onSave={props.onSave}/>
+      <RolesEditForm
+        show={props.showAddNewDialog}
+        onCancel={props.onCancel}
+        onSave={props.onSave}/>
 
     </div>
   )
+}
+RolesList.propTypes = {
+  onAdd: React.PropTypes.func,
+  onCancel: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
+  onEdit: React.PropTypes.func,
+  onSave: React.PropTypes.func,
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  showAddNewDialog: React.PropTypes.bool
+}
+RolesList.defaultProps = {
+  account: Immutable.Map({}),
+  groups: Immutable.List([]),
+  user: Immutable.Map({})
 }
 
 export default RolesList
