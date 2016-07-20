@@ -37,27 +37,17 @@ const validate = (values) => {
 class GroupEditForm extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
+    this.users = this.props.users || users;
+    this.initialMembers = this.props.members || [2,3]
     this.save = this.save.bind(this)
   }
 
   componentWillMount() {
     this.setState({
-      initialMembers: [2,3],
-      currentMembers: [2,3],
-      users: users,
-      usersToAdd: values
+      usersToAdd: List(),
+      members: this.initialMembers,
+      usersToDelete: List()
     })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    /*if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
-      const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
-      const activeServiceValues = activeServiceTypes.map(item => item.value)
-      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
-      services.onChange(checkedServiceTypes)
-    }*/
   }
 
   save() {
@@ -71,6 +61,27 @@ class GroupEditForm extends React.Component {
     }
   }
 
+  deleteMember(userId) {
+    // New members will be just removed from the new members list
+    if (this.state.usersToAdd.includes(userId)) {
+      this.setState({
+        usersToAdd: this.state.usersToAdd.take(this.state.usersToAdd.keyOf(userId)) // keyOf
+      })
+    }
+    // Existing members will be added to the to be deleted list
+    else {
+      this.setState({
+        usersToDelete: this.state.usersToDelete.push(userId)
+      })
+    }
+  }
+
+  undoDelete(userId) {
+    this.setState({
+      usersToDelete: this.state.usersToDelete.take(this.state.usersToDelete.keyOf(userId))
+    })
+  }
+
   render() {
     const { fields: {name}, show, onCancel } = this.props
 
@@ -81,23 +92,25 @@ class GroupEditForm extends React.Component {
       {value: 2, label: 'bar@example.com'},
       {value: 3, label: 'baz@example.com', toDelete: true}
     ]*/
-    let currentMembers = this.state.usersToAdd.map((id) => {
-      return {...(this.state.users.find(user => user.value === id)), toAdd:true}
-    }).toJS()
-    console.log('usersToAdd added', currentMembers)
-    currentMembers = [...currentMembers, ...(this.state.currentMembers.map((id) => {
-      return this.state.users.find((user) => user.value === id)
-    }))]
-    currentMembers.sort((val1, val2) => {
-      if(val2.toAdd && !val1.toAdd || val1.toDelete && !val2.toDelete) {
-        return 1;
+    const currentMembers = this.users.reduce((members, user) => {
+      if (this.state.usersToAdd.includes(user.value)) {
+        return [{...user, toAdd: true}, ...members]
       }
-      if(val1.toAdd && !val2.toAdd || val2.toDelete && !val1.toDelete) {
-        return -1
+      if (this.state.usersToDelete.includes(user.value)) {
+        return [...members, {...user, toDelete: true}]
       }
-      return 0;
-    })
-    console.log('everything', currentMembers)
+      if (this.state.members.includes(user.value)) {
+        return [...members, user]
+      }
+      return members
+    }, [])
+
+    const addMembersOptions = fromJS(this.users.reduce((arr, user) => {
+      if(this.initialMembers.indexOf(user.value) === -1) {
+        return [...arr, user]
+      }
+      return arr;
+    }, []))
 
     return (
       <Modal dialogClassName="group-edit-form-sidebar" show={show}>
@@ -121,12 +134,7 @@ class GroupEditForm extends React.Component {
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
-                options={fromJS(users.reduce((arr, user) => {
-                  if(this.state.initialMembers.indexOf(user.value) === -1) {
-                    return [...arr, user]
-                  }
-                  return arr;
-                }, []))}
+                options={addMembersOptions}
                 values={fromJS(this.state.usersToAdd) || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
@@ -135,7 +143,7 @@ class GroupEditForm extends React.Component {
             </div>
 
             <div className="form-group">
-              <label className="control-label">{`Current Members (${currentMembers.length})`}</label>
+              <label className="control-label">{`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}</label>
               <ul className="members-list">
                 {currentMembers.map((val) => {
                   let className = 'members-list__member '
@@ -146,7 +154,7 @@ class GroupEditForm extends React.Component {
                       <span className="members-list__member__label">NEEDS_API {val.label}</span>
                       <span className="members-list__member__actions">
                       {val.toAdd && <span className="members-list__member__actions__new">NEW</span>}
-                      {val.toDelete ? <Button bsStyle="link" className="undo-label">UNDO</Button> : <Button bsStyle="link" className="delete-button"><IconClose width="20" height="20"/></Button>}
+                      {val.toDelete ? <Button bsStyle="link" className="undo-label" onClick={() => this.undoDelete(val.value)}>UNDO</Button> : <Button bsStyle="link" className="delete-button" onClick={() => this.deleteMember(val.value)}><IconClose width="20" height="20"/></Button>}
                       </span>
                     </li>
                   )
