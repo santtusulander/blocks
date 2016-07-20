@@ -183,6 +183,12 @@ class AccountManagementAccountGroups extends React.Component {
           })}
           </tbody>
         </Table>
+
+        {
+          sortedGroups.size === 0 &&
+          this.state.search.length > 0 &&
+          <div className="text-center">No groups found with the search term "{this.state.search}"</div>
+        }
       </div>
     )
   }
