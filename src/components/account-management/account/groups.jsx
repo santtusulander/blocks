@@ -146,6 +146,7 @@ class AccountManagementAccountGroups extends React.Component {
               <TableSorter {...sorterProps} column="name">
                 Name
               </TableSorter>
+              <th>Members</th>
               <th>Created On</th>
               {/* Not on 0.7
               <th>Properties</th>
@@ -166,6 +167,7 @@ class AccountManagementAccountGroups extends React.Component {
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
+                <td>NEEDS_API</td>
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
