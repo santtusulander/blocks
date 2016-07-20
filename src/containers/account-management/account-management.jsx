@@ -56,7 +56,13 @@ export class AccountManagement extends Component {
     toggleModal(null)
   }
 
-  dnsEditOnSave() {
+  changeActiveAccount(account) {
+    this.setState({ activeAccount: account })
+    //this.props.fetchAccountData(account)
+  }
+
+  dnsEditOnSave(){
+    // eslint-disable-next-line no-console
     console.log('dnsEditOnSave()')
   }
 
@@ -97,24 +103,14 @@ export class AccountManagement extends Component {
       })
   }
 
-  addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name)
-      .then(action => {
-        const { payload: { id } } = action,
-          { brand } = data
-
-        return this.props.accountActions.updateAccount(data.brand, id, { name: data.name })
-          .then(() => {
-            this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-            this.showNotification(`Account ${data.name} created.`)
-            this.props.toggleModal(null)
-          })
-          .then(() => {
-            this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-            this.props.hostActions.clearFetchedHosts()
-          })
-      }
-    )
+  addAccount(brand, data) {
+    return this.props.accountActions.createAccount(brand, data).then(
+      action => {
+        this.props.router.push(`/account-management/${brand}/${action.payload.id}`)
+        this.showNotification(`Account ${data.name} created.`)
+        this.props.toggleModal(null)
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   showNotification(message) {
@@ -141,14 +137,12 @@ export class AccountManagement extends Component {
     const {
       params: { brand, account },
       params,
-      dnsData,
-      dnsActions,
-      activeRecordType,
       accountManagementModal,
       toggleModal,
       onDelete,
       activeAccount,
-      router
+      router,
+      dnsData
     } = this.props
 
     const subPage = this.getTabName(),
@@ -158,7 +152,7 @@ export class AccountManagement extends Component {
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     /* TODO: remove - TEST ONLY */
-    const dnsInitialValues = {
+    /*const dnsInitialValues = {
       initialValues: {
         recordType: 'MX',
         recordName: 'mikkotest',
@@ -186,7 +180,7 @@ export class AccountManagement extends Component {
       toggleModal: toggleModal,
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
-    }
+    }*/
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
@@ -292,12 +286,13 @@ AccountManagement.propTypes = {
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  history: PropTypes.object,
   hostActions: PropTypes.object,
+  onDelete: PropTypes.func,
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object,
-  onDelete: PropTypes.func
+  uiActions: PropTypes.object
 }
 AccountManagement.defaultProps = {
   activeAccount: Map({})

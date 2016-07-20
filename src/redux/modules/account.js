@@ -118,8 +118,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createAccount = createAction(ACCOUNT_CREATED, (brand, name) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts`, {name: name}, {
+export const createAccount = createAction(ACCOUNT_CREATED, (brand, account) => {
+  return axios.post(`${urlBase}/v2/brands/${brand}/accounts`, account, {
     headers: {
       'Content-Type': 'application/json'
     }
