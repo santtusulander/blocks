@@ -105,6 +105,7 @@ const AnalyticsViewControl = (props) => {
         break
     }
   }
+
   return (
     <div className="analytics-view-control">
       <p className="analytics-view-control__title">{title}</p>
@@ -131,14 +132,16 @@ const AnalyticsViewControl = (props) => {
               <h1>{activeItem || "select account"}</h1>
           </Dropdown.Toggle>
         </AccountSelector>
-        <ButtonToolbar>
-          <Button
-            bsStyle="primary"
-            disabled={getTabName(props.location.pathname) === 'playback-demo'}
-            onClick={props.exportCSV}>
-            Export
-          </Button>
-        </ButtonToolbar>
+        {props.params.account &&
+          <ButtonToolbar>
+            <Button
+              bsStyle="primary"
+              disabled={getTabName(props.location.pathname) === 'playback-demo'}
+              onClick={props.exportCSV}>
+              Export
+            </Button>
+          </ButtonToolbar>
+        }
       </div>
 
       {props.params.account &&
