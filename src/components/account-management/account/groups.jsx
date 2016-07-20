@@ -15,6 +15,7 @@ class AccountManagementAccountGroups extends React.Component {
     this.state = {
       adding: false,
       editing: null,
+      search: '',
       sortBy: 'name',
       sortDir: 1
     }
@@ -27,6 +28,7 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveEditedGroup = this.saveEditedGroup.bind(this)
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
+    this.changeSearch    = this.changeSearch.bind(this)
   }
 
   componentDidMount() {
@@ -91,6 +93,12 @@ class AccountManagementAccountGroups extends React.Component {
         return 1 * sortDir
       }
       return 0
+    })
+  }
+
+  changeSearch(e) {
+    this.setState({
+      search: e.target.value
     })
   }
 
