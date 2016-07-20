@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -141,7 +141,8 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router
+      router,
+      dnsData
     } = this.props
 
     const subPage = this.getTabName(),
@@ -151,7 +152,7 @@ export class AccountManagement extends Component {
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     /* TODO: remove - TEST ONLY */
-    const dnsInitialValues = {
+    /*const dnsInitialValues = {
       initialValues: {
         recordType: 'MX',
         recordName: 'mikkotest',
@@ -179,7 +180,7 @@ export class AccountManagement extends Component {
       toggleModal: toggleModal,
       dnsFormInitialValues: dnsInitialValues,
       soaFormInitialValues: soaFormInitialValues
-    }
+    }*/
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,

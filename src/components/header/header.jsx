@@ -1,9 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-
 import { getRoute } from '../../routes.jsx'
-import { Link } from 'react-router'
 import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
 import UserMenu from './user-menu'
