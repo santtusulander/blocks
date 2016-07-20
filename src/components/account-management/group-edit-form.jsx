@@ -43,7 +43,7 @@ class GroupEditForm extends React.Component {
 
   componentWillMount() {
     this.setState({
-      currentMembers: users,
+      currentMembers: [2,3],
       users: users,
       usersToAdd: values
     })
@@ -104,7 +104,12 @@ class GroupEditForm extends React.Component {
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
-                options={fromJS(users)}
+                options={fromJS(users.reduce((arr, user) => {
+                  if(this.state.currentMembers.indexOf(user.value) === -1) {
+                    return [...arr, user]
+                  }
+                  return arr;
+                }, []))}
                 values={this.state.usersToAdd || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
