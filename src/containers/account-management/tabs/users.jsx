@@ -1,18 +1,24 @@
 import React from 'react'
-import Immutable from 'immutable'
-import {Table, Button, Row, Col} from 'react-bootstrap'
+import { List, fromJS } from 'immutable'
+import { Table, Button, Row, Col } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter, Link } from 'react-router'
 
-import IconAdd from '../../icons/icon-add.jsx'
-import IconTrash from '../../icons/icon-trash.jsx'
-import TableSorter from '../../table-sorter'
+import * as userActionCreators from '../../../redux/modules/user'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
-const fakeUsers = Immutable.fromJS([
+import IconAdd from '../../../components/icons/icon-add.jsx'
+import IconTrash from '../../../components/icons/icon-trash.jsx'
+import TableSorter from '../../../components/table-sorter'
+
+const fakeUsers = fromJS([
   { id: '1', name: 'Name 1', role: 'Role 1', group: 'Group 1' },
   { id: '2', name: 'Name 2', role: 'Role 2', group: 'Group 2' },
   { id: '3', name: 'Name 3', role: 'Role 3', group: 'Group 3'}
 ]);
 
-class AccountManagementAccountUsers extends React.Component {
+export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
 
@@ -129,10 +135,21 @@ class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
-  users: React.PropTypes.instanceOf(Immutable.List)
-}
-AccountManagementAccountUsers.defaultProps = {
-  users: Immutable.List([])
+  users: React.PropTypes.instanceOf(List)
 }
 
-module.exports = AccountManagementAccountUsers
+function mapStateToProps(state) {
+  return {
+    users: state.user.get('allUsers')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+

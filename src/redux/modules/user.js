@@ -17,13 +17,12 @@ const loginAxios = axios.create()
 // TODO: This is all fake and insecure until Keystone sign on is ready
 
 const emptyUser = Immutable.Map({
-  allGroups: Immutable.List(),
+  allUsers: Immutable.List(),
   fetching: false,
   loggedIn: false
 })
 
 // REDUCERS
-
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
   localStorage.setItem('EricssonUDNUserName', action.payload.username)
@@ -35,7 +34,6 @@ export function userLoggedInSuccess(state, action){
     fetching: false,
     username: action.payload.username
   })
-
 }
 
 export function userLoggedInFailure(){
@@ -44,7 +42,7 @@ export function userLoggedInFailure(){
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allUsers: Immutable.fromJS(action.payload.data),
+    allUsers: Immutable.fromJS(action.payload),
     fetching: false
   })
 }

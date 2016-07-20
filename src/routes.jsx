@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
-import AccountManagement from './containers/account-management'
+import AccountManagement from './containers/account-management/account-management'
 import AccountManagementAccount from './components/account-management/account/account'
-import AccountManagementUsers from './components/account-management/account/users'
+import AccountManagementUsers from './containers/account-management/tabs/users'
 import AccountManagementGroups from './components/account-management/account/groups'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
