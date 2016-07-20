@@ -1,7 +1,6 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import { formatUnixTimestamp} from '../../../../util/helpers'
 
 jest.dontMock('../groups.jsx')
 const Groups = require('../groups.jsx')
