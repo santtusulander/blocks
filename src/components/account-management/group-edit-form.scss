@@ -30,11 +30,16 @@
         &__new{
           display: inline;
           height: 30px;
+
           &.delete-button {
             height: 24px;
             .icon:hover {
               stroke: $pale-blue;
             }
+          }
+
+          &:focus {
+            outline: none;
           }
         }
         &__new {
