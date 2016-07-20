@@ -5,15 +5,13 @@ import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
 import ActionLinks from './action-links.jsx'
 
-import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../constants/roles.js'
-
 import './roles-list.scss';
 
-function labelChildRoles(parentRole, allRoles) {
-  return parentRole.get('roles').map(role => {
+function labelParentRoles(childRole, allRoles) {
+  return childRole.get('parentRoles').map(id => {
     return allRoles
-      .find(possibleChild => possibleChild.get('id') === role.get('id'))
-      .get('roleName')
+      .find(possibleParent => possibleParent.get('id') === id)
+      .get('name')
   })
 }
 
@@ -50,13 +48,13 @@ export const RolesList = props => {
             return (
               <tr className='roles-list-row' key={i}>
                 <td>
-                  {role.get('roleName')}
+                  {role.get('name')}
                 </td>
                 <td>
                   Permissions here
                 </td>
                 <td>
-                  {labelChildRoles(role, props.roles).join(', ')}
+                  {labelParentRoles(role, props.roles).join(', ')}
                 </td>
                 <td>
                   NEEDS API
