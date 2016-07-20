@@ -2,6 +2,9 @@ import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
 import AccountManagement from './containers/account-management'
+import AccountManagementAccount from './components/account-management/account/account'
+import AccountManagementUsers from './components/account-management/account/users'
+import AccountManagementGroups from './components/account-management/account/groups'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
@@ -48,6 +51,10 @@ const routes = {
   accountManagementAccount: '/account-management/:brand/:account',
   accountManagementGroup: '/account-management/:brand/:account/:group',
   accountManagementProperty: '/account-management/:brand/:account/:group/:property',
+
+  accountManagementTabDetails: 'details',
+  accountManagementTabGroups: 'groups',
+  accountManagementTabUsers: 'users',
 
   services: '/services',
   servicesBrand: '/services/:brand',
@@ -212,9 +219,24 @@ module.exports = (
     <Route path={routes.accountManagement}>
       <IndexRedirect to={getRoute('accountManagementBrand', { brand: 'udn' })} />
       <Route path={routes.accountManagementBrand} component={AccountManagement}/>
-      <Route path={routes.accountManagementAccount} component={AccountManagement}/>
-      <Route path={routes.accountManagementGroup} component={AccountManagement}/>
-      <Route path={routes.accountManagementProperty} component={AccountManagement}/>
+      <Route path={routes.accountManagementAccount} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagementAccount}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagementGroups}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagementUsers}/>
+      </Route>
+      <Route path={routes.accountManagementGroup} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagementAccount}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagementGroups}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagementUsers}/>
+      </Route>
+      <Route path={routes.accountManagementProperty} component={AccountManagement}>
+        <IndexRedirect to={routes.accountManagementTabDetails}/>
+        <Route path={routes.accountManagementTabDetails} component={AccountManagementAccount}/>
+        <Route path={routes.accountManagementTabGroups} component={AccountManagementGroups}/>
+        <Route path={routes.accountManagementTabUsers} component={AccountManagementUsers}/>
+      </Route>
     </Route>
   </Route>
 );
