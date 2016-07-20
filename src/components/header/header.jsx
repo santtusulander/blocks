@@ -1,17 +1,15 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Link } from 'react-router'
-
 import { getRoute } from '../../routes.jsx'
+import { Link } from 'react-router'
+import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
+
 import UserMenu from './user-menu'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getAnalyticsUrl, getContentUrl, getUrl } from '../../util/helpers.js'
-
-
-import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
 class Header extends React.Component {
   constructor(props) {
@@ -223,20 +221,13 @@ class Header extends React.Component {
                 type="text" placeholder="Search" />
             </li>
             <li>
-              <Dropdown id="user-menu" pullRight={true}
+              <UserMenu
                 open={this.state.userMenuOpen}
-                onToggle={this.toggleUserMenu}>
-                <Dropdown.Toggle bsStyle="primary"
-                  className="btn-icon btn-round btn-user-menu"
-                  noCaret={true} id="user-dropdown">
-                </Dropdown.Toggle>
-                <UserMenu
-                  theme={this.props.theme}
-                  handleThemeChange={this.handleThemeChange}
-                  toggleUserMenu={this.toggleUserMenu}
-                  logout={this.props.logOut}
-                />
-              </Dropdown>
+                theme={this.props.theme}
+                handleThemeChange={this.handleThemeChange}
+                onToggle={this.toggleUserMenu}
+                logout={this.props.logOut}
+              />
             </li>
           </Nav>
         </div>
