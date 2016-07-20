@@ -3,8 +3,7 @@
 .group-edit-form-sidebar {
   @extend .modal-form-panel;
 
-  .input-group.add-members {
-    width: 100%;
+  .add-members {
     margin-bottom: 30px;
   }
 
@@ -20,21 +19,29 @@
       align-items: center;
       justify-content: space-between;
 
-      &__name {
+      &__label {
         flex-grow: 1;
       }
 
       &__actions {
-        float: right;
-        margin-top: -8px;
         order: 2;
-        button {
+        margin-top: -8px;
+        button,
+        &__new{
           display: inline;
           height: 30px;
           &.delete-button {
             height: 24px;
+            .icon:hover {
+              stroke: $pale-blue;
+            }
           }
         }
+        &__new {
+          position: relative;
+          top: 5px;
+        }
+
       }
 
       &--new {
@@ -43,6 +50,17 @@
 
       &--delete {
         background: #18466A;
+
+        .members-list__member__label {
+          text-decoration: line-through;
+          color: #70889B;
+        }
+      }
+    }
+    .light-theme & {
+      color: #FFF;
+      .icon {
+        stroke: #FFF;
       }
     }
   }
