@@ -1,7 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Table, Button, Row, Col} from 'react-bootstrap'
+import {Table, Button, Row, Col, Input} from 'react-bootstrap'
 
+import InlineAdd from '../../inline-add.jsx'
 import IconAdd from '../../icons/icon-add.jsx'
 import IconTrash from '../../icons/icon-trash.jsx'
 import TableSorter from '../../table-sorter'
@@ -96,6 +97,18 @@ class AccountManagementAccountUsers extends React.Component {
             </tr>
           </thead>
           <tbody>
+             <InlineAdd
+              validate={({ a }) => {
+                let errors = {}
+                if( a && a.length > 3) {
+                  errors.a = 'no go'
+                }
+                return errors
+              }}
+              fields={['a', 'b', 'c']}
+              inputs={[[ <Input id='a' className="half" type="text"/> ], [ <Input id='b' type="text"/>, <Input id='c' type="text"/> ], []]}
+              cancel={() => {}}
+              save={vals => console.log(vals)}/>
             {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>

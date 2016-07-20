@@ -6,7 +6,7 @@ import IconClose from './icons/icon-close'
 
 const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
   return (
-    <tr className="edit-row">
+    <tr className="inline-add-row">
       {inputs.map((cell, index) =>
         <td key={index}>
           {cell.map((input, index) =>
@@ -18,7 +18,7 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
         </td>
       )}
       <td>
-        <UDNButton bsStyle="primary" disabled={invalid} onClick={() => save(values)}>
+        <UDNButton disabled={invalid} onClick={() => save(values)}>
           SAVE
         </UDNButton>
         <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
