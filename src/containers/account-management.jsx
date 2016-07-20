@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -56,7 +56,13 @@ export class AccountManagement extends Component {
     toggleModal(null)
   }
 
-  dnsEditOnSave() {
+  changeActiveAccount(account) {
+    this.setState({ activeAccount: account })
+    //this.props.fetchAccountData(account)
+  }
+
+  dnsEditOnSave(){
+    // eslint-disable-next-line no-console
     console.log('dnsEditOnSave()')
   }
 
@@ -97,24 +103,14 @@ export class AccountManagement extends Component {
       })
   }
 
-  addAccount(data) {
-    return this.props.accountActions.createAccount(data.brand, data.name)
-      .then(action => {
-        const { payload: { id } } = action,
-          { brand } = data
-
-        return this.props.accountActions.updateAccount(data.brand, id, { name: data.name })
-          .then(() => {
-            this.props.history.pushState(null, `/account-management/${brand}/${id}`)
-            this.showNotification(`Account ${data.name} created.`)
-            this.props.toggleModal(null)
-          })
-          .then(() => {
-            this.props.groupActions.fetchGroups(data.brand, action.payload.id)
-            this.props.hostActions.clearFetchedHosts()
-          })
-      }
-    )
+  addAccount(brand, data) {
+    return this.props.accountActions.createAccount(brand, data).then(
+      action => {
+        this.props.router.push(`/account-management/${brand}/${action.payload.id}`)
+        this.showNotification(`Account ${data.name} created.`)
+        this.props.toggleModal(null)
+        this.props.hostActions.clearFetchedHosts()
+      })
   }
 
   showNotification(message) {
@@ -141,9 +137,6 @@ export class AccountManagement extends Component {
     const {
       params: { brand, account },
       params,
-      dnsData,
-      dnsActions,
-      activeRecordType,
       accountManagementModal,
       toggleModal,
       onDelete,
@@ -292,12 +285,13 @@ AccountManagement.propTypes = {
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  history: PropTypes.object,
   hostActions: PropTypes.object,
+  onDelete: PropTypes.func,
   params: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object,
-  onDelete: PropTypes.func
+  uiActions: PropTypes.object
 }
 AccountManagement.defaultProps = {
   activeAccount: Map({})

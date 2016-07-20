@@ -106,12 +106,9 @@ const AnalyticsViewControl = (props) => {
     }
   }
   return (
-    <div className='analytics-view-control'>
-
-      <p>{title}</p>
-
-      {
-
+    <div className="analytics-view-control">
+      <p className="analytics-view-control__title">{title}</p>
+      <div className="analytics-view-control__header">
         <AccountSelector
           params={props.params}
           topBarTexts={topBarTexts}
@@ -134,66 +131,15 @@ const AnalyticsViewControl = (props) => {
               <h1>{activeItem || "select account"}</h1>
           </Dropdown.Toggle>
         </AccountSelector>
-      /* If account is not selected (Needs to be: UDN ADMIN)
-        !props.params.account &&
-        <HeadingDropdown
-          className="heading-dropdown"
-          options={accountOptions}
-          onSelect={val => {
-            props.router.push(getAnalyticsUrl('account', val, props.params))
-          }}
-          value={props.params.group}
-          type={'Account'}
-        />
-      }
-
-      {groupOptions.count() > 0 &&
-      <HeadingDropdown
-        options={groupOptions}
-        onSelect={val => {
-          props.router.push(getAnalyticsUrl('group', val, props.params))
-        }}
-        value={props.params.group}
-        defaultLabel={props.activeAccount.get('name')}
-        type={'Group'}
-      />
-      }
-
-      {propertyOptions.count() > 0 &&
-      <HeadingDropdown
-        options={propertyOptions}
-        onSelect={val => {
-          props.router.push(getAnalyticsUrl('property', val, props.params))
-        }}
-        value={props.params.property}
-        type={'Property'}
-      />
-      */}
-
-      <ButtonToolbar className="pull-right">
-        <Button
-          bsStyle="primary"
-          disabled={getTabName(props.location.pathname) === 'playback-demo'}
-          onClick={props.exportCSV}>
-          Export
-        </Button>
-      </ButtonToolbar>
-
-      { /* TODO: Implement filtered dropdown, when possible (component fixed)
-       <FilterDropdown
-       options={ groupDropdownOptions }
-       handleSelect={ (val) => {
-       props.router.push(getAnalyticsUrl('group', val, props.params) )
-       } }
-       />
-
-       <FilterDropdown
-       options={ propertyDropdownOptions }
-       handleSelect={ (val) => {
-       props.router.push(getAnalyticsUrl('property', val, props.params) )
-       } }
-       />
-       */ }
+        <ButtonToolbar>
+          <Button
+            bsStyle="primary"
+            disabled={getTabName(props.location.pathname) === 'playback-demo'}
+            onClick={props.exportCSV}>
+            Export
+          </Button>
+        </ButtonToolbar>
+      </div>
 
       {props.params.account &&
       <Nav bsStyle="tabs">

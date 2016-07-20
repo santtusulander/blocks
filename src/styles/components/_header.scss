@@ -6,12 +6,17 @@
   min-width: 1024px;
   border: 0;
 
-  li.logo {
+  &__content {
     display: flex;
+    flex-wrap: nowrap;
+  }
 
-    a {
+  &__logo {
+    display: flex !important;
+
+    .logo {
       flex: 1;
-      padding: 0;
+      padding: 0 !important;
       margin-right: 15px;
       align-items: center;
       display: flex;
@@ -22,12 +27,24 @@
     }
   }
 
-  .breadcrumb-nav {
+  &__account-selector {
+    display: flex;
+  }
+
+  &__left {
     height: $header-total-height - $header-gradient-height;
+    flex: 1;
+    display: flex;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
 
     @include md {
       height: $md-header-total-height - $header-gradient-height;
     }
+  }
+
+  &__right {
+    display: flex;
   }
 
   .global-account-selector {
@@ -43,6 +60,10 @@
         text-transform: uppercase;
       }
     }
+  }
+
+  &__breadcrumb {
+    flex: 1;
   }
 
   @include md {
@@ -124,29 +145,29 @@
       background-size: 20px 20px;
     }
   }
-}
 
-.header-gradient {
-  height: $header-gradient-height;
-  margin: 0 -15px;
-  background: linear-gradient(
-    to right,
-    $gradient-lime,
-    $gradient-green-haze,
-    $gradient-bondi-blue,
-    $gradient-navy,
-    $gradient-magenta,
-    $gradient-lime,
-    $gradient-green-haze,
-    $gradient-bondi-blue,
-    $gradient-navy,
-    $gradient-magenta
-  );
-  background-position: 100% 50%;
-  background-size: 225% 200%;
+  &__gradient {
+    height: $header-gradient-height;
+    margin: 0 -15px;
+    background: linear-gradient(
+        to right,
+        $gradient-lime,
+        $gradient-green-haze,
+        $gradient-bondi-blue,
+        $gradient-navy,
+        $gradient-magenta,
+        $gradient-lime,
+        $gradient-green-haze,
+        $gradient-bondi-blue,
+        $gradient-navy,
+        $gradient-magenta
+    );
+    background-position: 100% 50%;
+    background-size: 225% 200%;
 
-  &.animated {
-    animation: HeaderAnimation 1s linear 1;
+    &.animated {
+      animation: HeaderAnimation 1s linear 1;
+    }
   }
 }
 

@@ -1,4 +1,20 @@
 .global-account-selector {
+  &__toggle {
+    display: flex;
+  }
+
+  .dropdown-toggle {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    :first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .dropdown-menu {
     max-height: 500px !important;
     width: 270px !important;

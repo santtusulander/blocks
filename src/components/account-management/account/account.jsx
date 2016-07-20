@@ -65,9 +65,11 @@ class AccountManagementAccountDetails extends React.Component {
 
   save() {
     if(!Object.keys(errors).length) {
-      const { fields: { accountName } } = this.props
+      const { fields: { accountName, accountType, services } } = this.props
       this.props.onSave(this.props.account.get('id'), {
-        name: accountName.value
+        name: accountName.value,
+        provider_type: Number(accountType.value),
+        services: services.value
       })
     }
   }
@@ -196,8 +198,7 @@ class AccountManagementAccountDetails extends React.Component {
               <div className="input-group">
                 <SelectWrapper
                   {...accountType}
-                  numericValues={true}
-                  value={accountType.value}
+                  value={Number(accountType.value)}
                   className="input-select"
                   options={accountTypeOptions}
                 />
