@@ -172,6 +172,7 @@ AnalyticsViewControl.propTypes = {
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
+  router: React.PropTypes.object,
   user: PropTypes.instanceOf(Immutable.Map)
 }
 
