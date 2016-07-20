@@ -9,9 +9,10 @@ import { getRoute } from '../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
+import * as dnsActionCreators from '../redux/modules/dns'
 import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
-import * as dnsActionCreators from '../redux/modules/dns'
+import * as permissionsActionCreators from '../redux/modules/permissions'
 import * as rolesActionCreators from '../redux/modules/roles'
 import * as uiActionCreators from '../redux/modules/ui'
 
@@ -50,6 +51,7 @@ export class AccountManagement extends Component {
   }
 
   componentWillMount() {
+    this.props.permissionsActions.fetchPermissions()
     this.props.rolesActions.fetchRoles()
   }
 
@@ -203,7 +205,8 @@ export class AccountManagement extends Component {
         services: activeAccount.get('services'),
         accountType: accountType && accountType.value
       },
-      roles: this.props.roles
+      roles: this.props.roles,
+      permissions: this.props.permissions
     }
 
     return (
@@ -316,6 +319,8 @@ AccountManagement.propTypes = {
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
+  permissions: PropTypes.instanceOf(List),
+  permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
   soaFormData: PropTypes.object,
@@ -337,6 +342,7 @@ function mapStateToProps(state) {
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
+    permissions: state.permissions.get('permissions'),
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm
   };
@@ -347,6 +353,7 @@ function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
+  const permissionsActions = bindActionCreators(permissionsActionCreators, dispatch)
   const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
@@ -378,6 +385,7 @@ function mapDispatchToProps(dispatch) {
     dnsActions: dnsActions,
     groupActions: groupActions,
     hostActions: hostActions,
+    permissionsActions: permissionsActions,
     rolesActions: rolesActions,
     uiActions: uiActions,
     onDelete: onDelete
