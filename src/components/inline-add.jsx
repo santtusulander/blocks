@@ -1,4 +1,5 @@
 import React, { PropTypes, cloneElement } from 'react'
+import { Tooltip } from 'react-bootstrap'
 import { reduxForm, getValues } from 'redux-form'
 
 import UDNButton from './button'
@@ -9,10 +10,13 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
     <tr className="inline-add-row">
       {inputs.map((cell, index) =>
         <td key={index}>
-          {cell.map(({input, style}, index) =>
+          {cell.map(({ input, style }, index) =>
             <div {...{ style }} key={index}>
               {cloneElement(input, { ...fields[input.props.id] })}
-              {fields[input.props.id].error && <div className="error-msg">{fields[input.props.id].error}</div>}
+              {fields[input.props.id] && fields[input.props.id].error &&
+                <Tooltip placement="bottom" className="in" id="tooltip-bottom">
+                  {fields[input.props.id].error}
+                </Tooltip>}
             </div>
           )}
         </td>

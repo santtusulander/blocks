@@ -14,10 +14,10 @@ const fakeUsers = Immutable.fromJS([
 ]);
 
 /**
- * The style field is meant for positional styling of the element.
+ * The style-field is meant for positional styling of the element.
  */
 const addRowInputs = [
-  [ { input: <Input id='a' type="text"/> } ],
+  [ { input: <Input id='a' type="text"/> }, { input: <Input type="text"/> } ],
   [
     { input: <Input id='b' type="text"/>, style: { float: 'left' } },
     { input: <Input id='c' type="text"/>, style: { float: 'right' } }
