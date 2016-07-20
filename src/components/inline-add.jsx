@@ -9,8 +9,8 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
     <tr className="inline-add-row">
       {inputs.map((cell, index) =>
         <td key={index}>
-          {cell.map((input, index) =>
-            <div key={index}>
+          {cell.map(({input, style}, index) =>
+            <div {...{ style }} key={index}>
               {cloneElement(input, { ...fields[input.props.id] })}
               {fields[input.props.id].error && <div className="error-msg">{fields[input.props.id].error}</div>}
             </div>
@@ -18,12 +18,14 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
         </td>
       )}
       <td>
-        <UDNButton disabled={invalid} onClick={() => save(values)}>
-          SAVE
-        </UDNButton>
-        <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
-          <IconClose/>
-        </UDNButton>
+        <div className='action-links cell-text-center'>
+          <UDNButton disabled={invalid} onClick={() => save(values)}>
+            SAVE
+          </UDNButton>
+          <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
+            <IconClose/>
+          </UDNButton>
+        </div>
       </td>
     </tr>
   )

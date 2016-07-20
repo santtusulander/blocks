@@ -13,6 +13,18 @@ const fakeUsers = Immutable.fromJS([
   { id: '3', name: 'Name 3', role: 'Role 3', group: 'Group 3'}
 ]);
 
+/**
+ * The style field is meant for positional styling of the element.
+ */
+const addRowInputs = [
+  [ { input: <Input id='a' type="text"/> } ],
+  [
+    { input: <Input id='b' type="text"/>, style: { float: 'left' } },
+    { input: <Input id='c' type="text"/>, style: { float: 'right' } }
+  ],
+  []
+]
+
 class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
@@ -106,7 +118,7 @@ class AccountManagementAccountUsers extends React.Component {
                 return errors
               }}
               fields={['a', 'b', 'c']}
-              inputs={[[ <Input id='a' className="half" type="text"/> ], [ <Input id='b' type="text"/>, <Input id='c' type="text"/> ], []]}
+              inputs={addRowInputs}
               cancel={() => {}}
               save={vals => console.log(vals)}/>
             {sortedUsers.map((user, i) => {
