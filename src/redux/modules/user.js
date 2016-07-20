@@ -1,6 +1,5 @@
-import {createAction} from 'redux-actions'
+import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
 import {urlBase, mapReducers} from '../util'
