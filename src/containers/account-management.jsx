@@ -234,7 +234,7 @@ export class AccountManagement extends Component {
                 </UDNButton>
               </div>
             </PageHeader>
-            {account && <div><Nav bsStyle="tabs" className="system-nav">
+            {account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
                 <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
               </li>
@@ -244,10 +244,30 @@ export class AccountManagement extends Component {
               <li className="navbar">
                 <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
               </li>
-            </Nav>
+            </Nav>}
+            {!account && <Nav bsStyle="tabs" className="system-nav">
+              <li className="navbar">
+                <Link to={baseUrl + '/accounts'} activeClassName="active">ACCOUNTS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
+              </li>
+              <li className="navbar">
+                <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
+              </li>
+            </Nav>}
             <Content className="tab-bodies">
               {this.props.children && React.cloneElement(this.props.children, childProps)}
-            </Content></div>}
+            </Content>
           </div>
 
           {accountManagementModal === ADD_ACCOUNT &&
