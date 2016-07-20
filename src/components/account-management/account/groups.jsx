@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import { Input, Table, Button, Row, Col } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
 
 import IconAdd from '../../icons/icon-add.jsx'
@@ -122,6 +122,13 @@ class AccountManagementAccountGroups extends React.Component {
             </h3>
           </Col>
           <Col sm={4} className="text-right">
+            <Input
+              type="text"
+              className="search-input"
+              groupClassName="search-input-group"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
             <Button bsStyle="success" className="btn-icon btn-add-new"
               onClick={this.addGroup}>
               <IconAdd />

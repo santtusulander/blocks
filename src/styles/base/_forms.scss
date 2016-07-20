@@ -321,3 +321,17 @@ label {
     background-image: url('../assets/icons/lt-icon-search.svg');
   }
 }
+
+.search-input-group {
+
+  .header-btn-row & {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    margin-right: 1em;
+
+    > .search-input {
+      width: 16em;
+    }
+  }
+}
