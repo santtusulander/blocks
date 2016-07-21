@@ -74,7 +74,7 @@ export class Configuration extends React.Component {
     return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
   changeValue(path, value) {
-    this.props.hostActions.changeActiveHost(
+    return this.props.hostActions.changeActiveHost(
       this.props.activeHost.setIn(
         ['services', 0, 'configurations', this.state.activeConfig],
         this.getActiveConfig().setIn(path, value)
@@ -193,6 +193,7 @@ export class Configuration extends React.Component {
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
+    console.log(activeConfig.toJS())
 
     return (
       <PageContainer className="configuration-container">
