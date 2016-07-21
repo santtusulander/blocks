@@ -16,7 +16,7 @@ import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 
 /**
- * Each sub-array contains elements per <td>. If no inputs are needed for a <td>, insert empty array [].
+ * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
  * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
  * To get values from input fields, the input elements' IDs must match the field prop's array items.
  */

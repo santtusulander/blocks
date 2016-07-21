@@ -18,7 +18,15 @@ class InlineAdd extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
   handleClick(e) {
-    this && !findDOMNode(this).contains(e.target) && this.props.unmount()
+    console.log(findDOMNode(this), Object(e.target), findDOMNode(this).contains(e.target))
+
+    let target = e.target
+    if (target.getAttribute('role') === 'menuitem') {
+      target = target.parentNode.parentNode.parentNode
+      console.log(target);
+    }
+
+    !findDOMNode(this).contains(target) && this.props.unmount()
   }
   render() {
     const { save, cancel, inputs, fields, invalid, values } = this.props
