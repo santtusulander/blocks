@@ -3,12 +3,6 @@ import Immutable from 'immutable'
 
 import RolesList from '../roles-list.jsx'
 
-const fakeRoles = Immutable.fromJS([
-  { id: 1, name: 'UDN', parentRoles: []  },
-  { id: 2, name: 'Content Provider', parentRoles: [1, 2]  },
-  { id: 3, name: 'Service Provider', parentRoles: [1]  }
-])
-
 class AccountManagementSystemRoles extends React.Component {
   constructor(props){
     super(props)
@@ -36,7 +30,8 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesList roles={fakeRoles}
+        <RolesList roles={this.props.roles}
+          permissions={this.props.permissions}
           onCancel={this.hideAddNewRoleDialog}
           onSave={this.saveRole}
           onAdd={this.showAddNewRoleDialog}
@@ -47,6 +42,13 @@ class AccountManagementSystemRoles extends React.Component {
 }
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
-AccountManagementSystemRoles.propTypes = {}
+AccountManagementSystemRoles.propTypes = {
+  permissions: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.List)
+}
+AccountManagementSystemRoles.defaultProps = {
+  permissions: Immutable.List(),
+  roles: Immutable.List()
+}
 
 module.exports = AccountManagementSystemRoles

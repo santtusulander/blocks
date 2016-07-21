@@ -5,27 +5,29 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Dropdown, Nav, Button } from 'react-bootstrap'
-import { getRoute } from '../routes'
-import { getUrl, getAccountManagementUrlFromParams } from '../util/helpers'
+import { getRoute } from '../../routes'
+import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as hostActionCreators from '../redux/modules/host'
-import * as dnsActionCreators from '../redux/modules/dns'
-import * as uiActionCreators from '../redux/modules/ui'
+import * as accountActionCreators from '../../redux/modules/account'
+import * as dnsActionCreators from '../../redux/modules/dns'
+import * as groupActionCreators from '../../redux/modules/group'
+import * as hostActionCreators from '../../redux/modules/host'
+import * as permissionsActionCreators from '../../redux/modules/permissions'
+import * as rolesActionCreators from '../../redux/modules/roles'
+import * as uiActionCreators from '../../redux/modules/ui'
 
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import IconAdd from '../components/icons/icon-add'
-import IconTrash from '../components/icons/icon-trash'
-import PageHeader from '../components/layout/page-header'
-import DeleteModal from '../components/delete-modal'
-import NewAccountForm from '../components/account-management/add-account-form.jsx'
-import UDNButton from '../components/button.js'
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import PageContainer from '../../components/layout/page-container'
+import Content from '../../components/layout/content'
+import IconAdd from '../../components/icons/icon-add'
+import IconTrash from '../../components/icons/icon-trash'
+import PageHeader from '../../components/layout/page-header'
+import DeleteModal from '../../components/delete-modal'
+import NewAccountForm from '../../components/account-management/add-account-form.jsx'
+import UDNButton from '../../components/button.js'
+import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../constants/account-management-modals.js'
-import { ACCOUNT_TYPES } from '../constants/account-management-options'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../../constants/account-management-modals.js'
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -46,6 +48,11 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+  }
+
+  componentWillMount() {
+    this.props.permissionsActions.fetchPermissions()
+    this.props.rolesActions.fetchRoles()
   }
 
   editSOARecord() {
@@ -197,7 +204,9 @@ export class AccountManagement extends Component {
         brand: 'udn',
         services: activeAccount.get('services'),
         accountType: accountType && accountType.value
-      }
+      },
+      roles: this.props.roles,
+      permissions: this.props.permissions
     }
 
     return (
@@ -310,12 +319,19 @@ AccountManagement.propTypes = {
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
+  permissions: PropTypes.instanceOf(List),
+  permissionsActions: PropTypes.object,
+  roles: PropTypes.instanceOf(List),
+  rolesActions: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object
 }
 AccountManagement.defaultProps = {
-  activeAccount: Map({})
+  activeAccount: Map(),
+  dnsData: Map(),
+  groups: List(),
+  roles: List()
 }
 
 function mapStateToProps(state) {
@@ -326,6 +342,8 @@ function mapStateToProps(state) {
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
+    permissions: state.permissions.get('permissions'),
+    roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm
   };
 }
@@ -335,6 +353,8 @@ function mapDispatchToProps(dispatch) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
+  const permissionsActions = bindActionCreators(permissionsActionCreators, dispatch)
+  const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
 
@@ -365,6 +385,8 @@ function mapDispatchToProps(dispatch) {
     dnsActions: dnsActions,
     groupActions: groupActions,
     hostActions: hostActions,
+    permissionsActions: permissionsActions,
+    rolesActions: rolesActions,
     uiActions: uiActions,
     onDelete: onDelete
   };
