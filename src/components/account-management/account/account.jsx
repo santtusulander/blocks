@@ -198,7 +198,7 @@ class AccountManagementAccountDetails extends React.Component {
               <div className="input-group">
                 <SelectWrapper
                   {...accountType}
-                  value={Number(accountType.value)}
+                  numericValues={true}
                   className="input-select"
                   options={accountTypeOptions}
                 />
