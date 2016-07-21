@@ -18,15 +18,25 @@ class InlineAdd extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
   handleClick(e) {
-    console.log(findDOMNode(this), Object(e.target), findDOMNode(this).contains(e.target))
+    // This is for checking if the event target is a menu item inside a bootstrap dropdown.
+    // We need to have a special case for the dropdowns,
+    // because for some weird reason the dropdown menu is not inside this component after menu item is clicked.
+    const checkIfDropdownMenuItem = (element) => {
+      if (element.getAttribute('role') === 'menuitem' && element.parentNode && element.parentNode.parentNode) {
+        const parent = element.parentNode.parentNode
+        if (parent.className.search('dropdown') > -1) {
+          return true
+        }
+      }
 
-    let target = e.target
-    if (target.getAttribute('role') === 'menuitem') {
-      target = target.parentNode.parentNode.parentNode
-      console.log(target);
+      return false
     }
 
-    !findDOMNode(this).contains(target) && this.props.unmount()
+    if (checkIfDropdownMenuItem(e.target)) {
+      return
+    }
+
+    !findDOMNode(this).contains(e.target) && this.props.unmount()
   }
   render() {
     const { save, cancel, inputs, fields, invalid, values } = this.props
