@@ -1,0 +1,136 @@
+@import '../../styles/base/colors';
+
+$support-border-width:       0.2em;
+$support-padding-horizontal: 5em;
+$support-padding-vertical:   2.5em;
+
+$support-priority-width:  2em;
+$support-priority-normal: $pale-blue;
+$support-priority-low:    $gradient-teal;
+$support-priority-medium: $yellow;
+$support-priority-high:   $red;
+
+
+.support-ticket-panel {
+  position: relative;
+  padding-top: $support-padding-vertical;
+  padding-right: $support-padding-horizontal;
+  padding-bottom: $support-padding-vertical;
+  padding-left: $support-priority-width + $support-padding-horizontal;
+  font-size: 1rem;
+  background-color: rgba($pale-blue, 0.2);
+  box-shadow: 0 0.2em 0.2em rgba($black, 0.75);
+
+  // Colored priority bar on the left
+  > #{&}-priority {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $support-priority-width;
+    background-color: $support-priority-normal;
+    border-right: $support-border-width solid rgba($black, 0.6);
+
+    &.low {
+      background-color: $support-priority-low;
+    }
+
+    &.medium {
+      background-color: $support-priority-medium;
+    }
+
+    &.high {
+      background-color: $support-priority-high;
+    }
+  }
+
+  // Header
+  > header {
+    padding-bottom: 1.5em;
+    border-bottom: $support-border-width solid rgba($pale-blue, 0.2);
+  }
+
+  // Ticket title and excerpt
+  #{&}-body {
+    padding: 2em 0 1em;
+
+    h2 {
+      font-size: 4em;
+      font-weight: bold;
+      color: $white;
+    }
+
+    p {
+      font-size: 2.5em;
+    }
+  }
+
+  // Footer
+  > footer {
+    padding-top: 1.5em;
+    border-top: $support-border-width solid rgba($pale-blue, 0.2);
+  }
+
+  // Remove gutter on grid cols
+  .row > div {
+    padding: 0;
+  }
+
+  // Ticket type icon
+  #{&}-type {
+    display: inline-block;
+    margin-right: 1.5em;
+    vertical-align: middle;
+
+    .icon {
+      width: 3em;
+      height: 3em;
+      transform: none;
+    }
+  }
+
+  // Ticket number
+  #{&}-number {
+    position: relative;
+    top: 0.15em;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  // Workflow status indicator
+  #{&}-workflow {
+    display: inline-block;
+    padding: 0.5em 1em;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1;
+    color: $white;
+    text-transform: uppercase;
+    background-color: $pale-blue;
+    border-radius: 0.2em;
+  }
+
+  // Person assigned to the ticket
+  #{&}-assignee {
+    font-size: 2em;
+  }
+
+  #{&}-assignee-value {
+    font-weight: bold;
+  }
+
+  // Comment counter
+  #{&}-comments {
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1;
+
+    .icon {
+      width: 2.3333em;
+      height: 2.1333em;
+      transform: none;
+    }
+  }
+
+}
