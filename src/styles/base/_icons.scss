@@ -54,6 +54,7 @@ $icon-two-tone-primary: $dark-blue;
     }
 
     .primary {
+      color: $icon-two-tone-primary;
       fill: $icon-two-tone-primary;
     }
 
@@ -63,6 +64,7 @@ $icon-two-tone-primary: $dark-blue;
       }
 
       .primary {
+        color: $icon-two-tone-base;
         fill: $icon-two-tone-base;
       }
     }
