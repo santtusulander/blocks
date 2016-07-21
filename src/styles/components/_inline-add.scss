@@ -1,0 +1,56 @@
+.inline-add-row {
+  background-color: $pale-blue !important;
+
+  .form-group {
+    padding-bottom: 0;
+  }
+
+  input {
+    height: 40px;
+    padding: 5px 0;
+    background-color: $pale-blue;
+    color: $white;
+
+    &::placeholder {
+      color: $white;
+    }
+  }
+
+  .btn-default {
+    &,
+    &:active {
+      color: $white;
+      background-color: rgba($black, 0.2);
+    }
+  }
+
+  .btn-primary {
+    &,
+    &:hover {
+      color: $white !important;
+      fill: $white !important;
+      stroke: $white !important;
+    }
+  }
+}
+
+.trailing-item {
+  padding-left: 20px;
+  display: inline;
+}
+
+.half-width-item {
+  width: 45%;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+    float: right;
+}
+
+.inline-add-dropdown {
+  height: 40px
+}
