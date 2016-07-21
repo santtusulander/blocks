@@ -21,22 +21,12 @@ class InlineAdd extends Component {
     // This is for checking if the event target is a menu item inside a bootstrap dropdown.
     // We need to have a special case for the dropdowns,
     // because for some weird reason the dropdown menu is not inside this component after menu item is clicked.
-    const checkIfDropdownMenuItem = (element) => {
-      if (element.getAttribute('role') === 'menuitem' && element.parentNode && element.parentNode.parentNode) {
-        const parent = element.parentNode.parentNode
-        if (parent.className.search('dropdown') > -1) {
-          return true
-        }
-      }
-
-      return false
-    }
-
-    if (checkIfDropdownMenuItem(e.target)) {
-      return
-    }
-
-    !findDOMNode(this).contains(e.target) && this.props.unmount()
+    const checkIfDropdownMenuItem = element =>
+      element.getAttribute('role') === 'menuitem' &&
+      element.parentNode &&
+      element.parentNode.parentNode &&
+      element.parentNode.parentNode.className.search('dropdown') > -1 ? true : false
+    !findDOMNode(this).contains(e.target) && !checkIfDropdownMenuItem(e.target) && this.props.unmount()
   }
   render() {
     const { save, cancel, inputs, fields, invalid, values } = this.props
