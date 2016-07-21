@@ -62,7 +62,24 @@ export class SupportTicketPanel extends React.Component {
 }
 
 SupportTicketPanel.displayName = 'SupportTicketPanel'
+SupportTicketPanel.defaultProps = {
+  assignee: '',
+  body: '',
+  comments: '',
+  number: '',
+  status: '',
+  title: '',
+  type: ''
+}
+
 SupportTicketPanel.propTypes = {
+  assignee: React.PropTypes.string,
+  body: React.PropTypes.string,
+  comments: React.PropTypes.string,
+  number: React.PropTypes.string,
+  status: React.PropTypes.string,
+  title: React.PropTypes.string,
+  type: React.PropTypes.string
 }
 
 module.exports = SupportTicketPanel
