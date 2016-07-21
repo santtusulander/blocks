@@ -15,7 +15,7 @@ export class SupportTicketPanel extends React.Component {
     return (
       <div className="support-ticket-panel">
         <div className="support-ticket-panel-priority"></div>
-        <Grid componentClass="header" fluid="true">
+        <Grid componentClass="header" fluid={true}>
           <Row>
             <Col xs={6}>
               <span className="support-ticket-panel-type">
@@ -41,7 +41,7 @@ export class SupportTicketPanel extends React.Component {
         </div>
 
         <footer>
-          <Grid componentClass="header" fluid="true">
+          <Grid componentClass="header" fluid={true}>
             <Row>
               <Col xs={6}>
                 <div className="support-ticket-panel-assignee">
