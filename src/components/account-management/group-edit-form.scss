@@ -1,10 +1,11 @@
-@import "../../styles/components/modal-form-panel";
+@import '../../styles/components/modal-form-panel';
 
 .group-edit-form-sidebar {
   @extend .modal-form-panel;
 
   .add-members {
     margin-bottom: 30px;
+
     .dropdown-menu {
       // Prevent checklist dropdown to hide behind the footer
       z-index: 1061;
@@ -12,14 +13,15 @@
   }
 
   .members-list {
-    list-style: none;
     padding: 0;
-    &__member{
-      padding: 10px 0px 10px 20px;
-      background: #12577A;
-      width: 100%;
-      margin: 0 0 8px;
+    list-style: none;
+
+    &__member {
       display: flex;
+      width: 100%;
+      padding: 10px 0 10px 20px;
+      margin: 0 0 8px;
+      background: #12577a;
       align-items: center;
       justify-content: space-between;
 
@@ -28,15 +30,17 @@
       }
 
       &__actions {
-        order: 2;
         margin-top: -8px;
+        order: 2;
+
         button,
-        &__new{
+        &__new {
           display: inline;
           height: 30px;
 
           &.delete-button {
             height: 24px;
+
             .icon:hover {
               stroke: $pale-blue;
             }
@@ -46,6 +50,7 @@
             outline: none;
           }
         }
+
         &__new {
           position: relative;
           top: 5px;
@@ -54,22 +59,24 @@
       }
 
       &--new {
-        background: #097BA1;
+        background: #097ba1;
       }
 
       &--delete {
-        background: #18466A;
+        background: #18466a;
 
         .members-list__member__label {
+          color: #70889b;
           text-decoration: line-through;
-          color: #70889B;
         }
       }
     }
+
     .light-theme & {
-      color: #FFF;
+      color: #fff;
+
       .icon {
-        stroke: #FFF;
+        stroke: #fff;
       }
     }
   }

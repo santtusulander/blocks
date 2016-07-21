@@ -7,9 +7,6 @@ import IconAdd from '../../icons/icon-add.jsx'
 import IconTrash from '../../icons/icon-trash.jsx'
 import TableSorter from '../../table-sorter'
 import EditGroup from './edit-group'
-import GroupEditForm from '../group-edit-form.jsx'
-
-import {EDIT_GROUP} from '../../../constants/account-management-modals'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {

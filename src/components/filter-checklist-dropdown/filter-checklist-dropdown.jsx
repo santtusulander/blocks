@@ -1,5 +1,5 @@
 import React from 'react'
-import Immutable, {List, fromJS} from 'immutable'
+import {List} from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 

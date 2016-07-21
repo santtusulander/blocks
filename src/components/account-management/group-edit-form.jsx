@@ -46,7 +46,7 @@ class GroupEditForm extends React.Component {
         fields: { name }
       } = this.props
       // TODO: enable this when API is ready
-      const members = this.getMembers()
+      //const members = this.getMembers()
       this.props.onSave({
         name: name.value
       })
@@ -75,7 +75,6 @@ class GroupEditForm extends React.Component {
   }
 
   getMembers() {
-    console.log(this.state.usersToDelete, this.props.members)
     return this.state.usersToAdd.concat(this.props.members).reduce((arr, user) => {
       if (!this.state.usersToDelete.includes(user)) {
         return arr.push(user)
@@ -86,7 +85,6 @@ class GroupEditForm extends React.Component {
 
   isEdited() {
     const {fields: {name}} = this.props
-    console.log('name.touched', name, 'getMembers', this.getMembers(), 'props.members', this.props.members, this.props.members.equals(this.getMembers()))
     return name.value !== name.initialValue || !this.getMembers().equals(this.props.members)
   }
 
@@ -180,9 +178,11 @@ class GroupEditForm extends React.Component {
 
 GroupEditForm.propTypes = {
   fields: PropTypes.object,
+  members: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  users: PropTypes.array
 }
 
 GroupEditForm.defaultProps = {
