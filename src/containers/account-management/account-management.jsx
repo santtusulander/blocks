@@ -192,7 +192,6 @@ export class AccountManagement extends Component {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
       editGroup: this.editGroupInActiveAccount,
-      groups: this.props.groups,
       account: activeAccount,
       toggleModal,
       params,

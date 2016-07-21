@@ -2,11 +2,17 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Input, Table, Button, Row, Col } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter } from 'react-router'
 
-import IconAdd from '../../icons/icon-add.jsx'
-import IconTrash from '../../icons/icon-trash.jsx'
-import TableSorter from '../../table-sorter'
-import EditGroup from './edit-group'
+import * as userActionCreators from '../../../redux/modules/user'
+import * as groupActionCreators from '../../../redux/modules/group'
+
+import IconAdd from '../../../components/icons/icon-add.jsx'
+import IconTrash from '../../../components/icons/icon-trash.jsx'
+import TableSorter from '../../../components/table-sorter'
+import EditGroup from '../../../components/account-management/account/edit-group'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -29,6 +35,14 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
+  }
+  componentWillMount() {
+    const { brand, account } = this.props.params
+    this.props.userActions.fetchUsers(brand, account)
+
+    if (!this.props.groups.toJS().length) {
+      this.props.groupActions.fetchGroups(brand, account);
+    }
   }
 
   componentDidMount() {
@@ -58,6 +72,7 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
+  // TODO: Now that this is a container, no need to pass this in
   deleteGroup(group) {
     return () => this.props.deleteGroup(group)
   }
@@ -70,10 +85,12 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
+  // TODO: Now that this is a container, no need to pass this in
   saveEditedGroup(group) {
     return name => this.props.editGroup(group, name).then(this.cancelAdding)
   }
 
+  // TODO: Now that this is a container, no need to pass this in
   saveNewGroup(name) {
     this.props.addGroup(name).then(this.cancelAdding)
   }
@@ -204,10 +221,29 @@ AccountManagementAccountGroups.propTypes    = {
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editGroup: React.PropTypes.func,
-  groups: React.PropTypes.instanceOf(Immutable.List)
+  groupActions: React.PropTypes.object,
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  params: React.PropTypes.object,
+  userActions: React.PropTypes.object,
+  users: React.PropTypes.instanceOf(Immutable.List)
 }
 AccountManagementAccountGroups.defaultProps = {
-  groups: Immutable.List([])
+  groups: Immutable.List(),
+  users: Immutable.List()
 }
 
-module.exports = AccountManagementAccountGroups
+function mapStateToProps(state) {
+  return {
+    users: state.user.get('allUsers'),
+    groups: state.group.get('allGroups')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountGroups))

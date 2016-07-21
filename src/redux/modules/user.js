@@ -40,8 +40,12 @@ export function userLoggedInFailure(){
 }
 
 export function fetchAllSuccess(state, action) {
+  // TODO: Temporarily make JSON look like multiple groups are supported
+  const users = Immutable.fromJS(action.payload).map(
+    user => user.set('groups', Immutable.List([user.get('group_id')]))
+  )
   return state.merge({
-    allUsers: Immutable.fromJS(action.payload),
+    allUsers: users,
     fetching: false
   })
 }
