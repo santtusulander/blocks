@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
+import classNames from 'classnames'
 
 import IconComments from '../icons/icon-comments'
 import IconIncident from '../icons/icon-incident'
@@ -32,27 +33,28 @@ export class SupportTicketPanel extends React.Component {
 
   render() {
     const TicketTypeIcon = this.createTypeIcon(this.props.type);
+    const priorityClassName = classNames('support-ticket-panel-priority', this.props.priority);
 
     return (
       <div className="support-ticket-panel">
-        <div className="support-ticket-panel-priority"></div>
+        <div className={priorityClassName}></div>
         <Grid componentClass="header" fluid={true}>
           <Row>
             <Col xs={6}>
               <span className="support-ticket-panel-type">
                 {TicketTypeIcon && <TicketTypeIcon />}
               </span>
-              <span className="support-ticket-panel-number">#1-5424</span>
+              <span className="support-ticket-panel-number">{this.props.number}</span>
             </Col>
             <Col xs={6} className="text-right">
-              <div className="support-ticket-panel-workflow">Open</div>
+              <div className="support-ticket-panel-workflow">{this.props.status}</div>
             </Col>
           </Row>
         </Grid>
 
         <div className="support-ticket-panel-body">
-          <h2>Poor Performance</h2>
-          <p>My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom...</p>
+          <h2>{this.props.title}</h2>
+          <p>{this.props.body}</p>
         </div>
 
         <footer>
@@ -60,12 +62,12 @@ export class SupportTicketPanel extends React.Component {
             <Row>
               <Col xs={6}>
                 <div className="support-ticket-panel-assignee">
-                  Assignee: <span className="support-ticket-panel-assignee-value">Pending</span>
+                  Assignee: <span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
               </div>
               </Col>
               <Col xs={6} className="text-right">
                 <span className="support-ticket-panel-comments">
-                  <IconComments count="3" />
+                  <IconComments count={this.props.comments} />
                 </span>
               </Col>
             </Row>
@@ -82,6 +84,7 @@ SupportTicketPanel.defaultProps = {
   body: '',
   comments: '',
   number: '',
+  priority: 'normal',
   status: '',
   title: '',
   type: ''
@@ -92,6 +95,7 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
+  priority: React.PropTypes.string,
   status: React.PropTypes.string,
   title: React.PropTypes.string,
   type: React.PropTypes.string
