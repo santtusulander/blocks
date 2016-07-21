@@ -1,5 +1,5 @@
 import React, { PropTypes, cloneElement } from 'react'
-import { Tooltip } from 'react-bootstrap'
+import { Tooltip, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm, getValues } from 'redux-form'
 
 import UDNButton from './button'
@@ -9,9 +9,9 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
   return (
     <tr className="inline-add-row">
       {inputs.map((cell, index) =>
-        <td key={index}>
-          {cell.map(({ input, style }, index) =>
-            <div {...{ style }} key={index}>
+        <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
+          {cell.map(({ input, positionClass }, index) =>
+            <div className={positionClass} key={index}>
               {cloneElement(input, { ...fields[input.props.id] })}
               {fields[input.props.id] && fields[input.props.id].error &&
                 <Tooltip placement="bottom" className="in" id="tooltip-bottom">
@@ -19,18 +19,17 @@ const InlineAdd = ({ save, cancel, inputs, fields, invalid, values }) => {
                 </Tooltip>}
             </div>
           )}
+          {index === inputs.length - 1 &&
+            <ButtonToolbar className="pull-right">
+              <UDNButton disabled={invalid} onClick={() => save(values)}>
+                SAVE
+              </UDNButton>
+              <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
+                <IconClose/>
+              </UDNButton>
+            </ButtonToolbar>}
         </td>
       )}
-      <td>
-        <div className='action-links cell-text-center'>
-          <UDNButton disabled={invalid} onClick={() => save(values)}>
-            SAVE
-          </UDNButton>
-          <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
-            <IconClose/>
-          </UDNButton>
-        </div>
-      </td>
     </tr>
   )
 }

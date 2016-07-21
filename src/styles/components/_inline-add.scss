@@ -1,25 +1,39 @@
-  .inline-add-row {
-    background-color: $pale-blue !important;
+.inline-add-row {
+  background-color: $pale-blue !important;
 
-    .form-group {
-      padding-bottom: 0;
-    }
+  .form-group {
+    padding-bottom: 0;
+  }
 
-    input {
-      max-width: initial;
-      height: auto;
-      padding: 5px 0;
-      background-color: $pale-blue;
+  input {
+    height: 40px;
+    padding: 5px 0;
+    background-color: $pale-blue;
+    color: $white;
+
+    &::placeholder {
       color: $white;
-
-      &::placeholder {
-        color: rgba($white, 0.8);
-      }
-    }
-
-    button,
-    button:hover {
-      color: $white;
-      background-color: rgba($black, 0.2);
     }
   }
+
+  button,
+  button:hover {
+    color: $white;
+    background-color: rgba($black, 0.2);
+  }
+}
+
+.trailing-item {
+  padding: 30px;
+  display: inline;
+}
+
+.half-width-item {
+  width: 45%;
+  &.left {
+    float: left;
+  }
+  &.right {
+    float: right;
+  }
+}

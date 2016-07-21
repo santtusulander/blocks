@@ -14,13 +14,18 @@ const fakeUsers = Immutable.fromJS([
 ]);
 
 /**
- * The style-field is meant for positional styling of the element.
+ * Each sub-array contains elements per <td>. If no inputs are needed for a <td>, insert empty array [].
+ * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
+ * To get values from input fields, the input elements' IDs must match the field prop's array items.
  */
-const addRowInputs = [
-  [ { input: <Input id='a' type="text"/> }, { input: <Input type="text"/> } ],
+const inlineAddInputs = [
   [
-    { input: <Input id='b' type="text"/>, style: { float: 'left' } },
-    { input: <Input id='c' type="text"/>, style: { float: 'right' } }
+    { input: <Input id='a' placeholder=" Name" type="text"/>, positionClass: 'half-width-item left' },
+    { input: <Button>Do something</Button>, positionClass: 'trailing-item'}
+  ],
+  [
+    { input: <Input id='b' placeholder=" Some" type="text"/>, positionClass: 'half-width-item left' },
+    { input: <Input id='c' placeholder=" Things" type="text"/>, positionClass: 'half-width-item right' }
   ],
   []
 ]
@@ -48,6 +53,21 @@ class AccountManagementAccountUsers extends React.Component {
   deleteUser(user) {
     return () => console.log("Delete user " + user);
   }
+
+  validateInlineAdd({ a, b, c }) {
+    let errors = {}
+    if( a && a.length > 0) {
+      errors.a = 'insert validation'
+    }
+    if( b && b.length > 0) {
+      errors.b = 'insert validation'
+    }
+    if( c && c.length > 0) {
+      errors.c = 'insert validation'
+    }
+    return errors
+  }
+
   editUser(user) {
     return e => {
       console.log("Edit user " + user);
@@ -103,22 +123,16 @@ class AccountManagementAccountUsers extends React.Component {
               <TableSorter {...sorterProps} column="name">
                 Name
               </TableSorter>
-              <th>Role</th>
-              <th>Groups</th>
-              <th></th>
+              <th width="30%">ROLE</th>
+              <th width="30%">GROUPS</th>
+              <th width="10%"></th>
             </tr>
           </thead>
           <tbody>
              <InlineAdd
-              validate={({ a }) => {
-                let errors = {}
-                if( a && a.length > 3) {
-                  errors.a = 'no go'
-                }
-                return errors
-              }}
+              validate={this.validateInlineAdd}
               fields={['a', 'b', 'c']}
-              inputs={addRowInputs}
+              inputs={inlineAddInputs}
               cancel={() => {}}
               save={vals => console.log(vals)}/>
             {sortedUsers.map((user, i) => {
