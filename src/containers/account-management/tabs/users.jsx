@@ -163,13 +163,13 @@ export class AccountManagementAccountUsers extends React.Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="email" width="30%">
+              <TableSorter {...sorterProps} column="email" width="20%">
                 Email
               </TableSorter>
-              <th>Password</th>
-              <th>Role</th>
-              <th>Groups</th>
-              <th></th>
+              <th width="20%">Password</th>
+              <th width="20%">Role</th>
+              <th width="20%">Groups</th>
+              <th width="10%"></th>
             </tr>
           </thead>
           <tbody>

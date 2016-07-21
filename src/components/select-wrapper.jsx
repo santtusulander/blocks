@@ -19,7 +19,7 @@ SelectWrapper.propTypes = {
   numericValues: PropTypes.bool,
   onChange: PropTypes.func,
   options: PropTypes.array,
-  value: PropTypes.value
+  value: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ])
 };
 
 SelectWrapper.defaultProps = {
