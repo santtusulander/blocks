@@ -7,8 +7,12 @@ class AccountManagementSystemRoles extends React.Component {
   constructor(props){
     super(props)
 
-    this.state = {showAddNewDialog: false}
+    this.state = {
+      editRole: null,
+      showAddNewDialog: false
+    }
 
+    this.editRole = this.editRole.bind(this)
     this.showAddNewRoleDialog = this.showAddNewRoleDialog.bind(this)
     this.hideAddNewRoleDialog = this.hideAddNewRoleDialog.bind(this)
     this.saveRole = this.saveRole.bind(this)
@@ -22,6 +26,13 @@ class AccountManagementSystemRoles extends React.Component {
     this.setState({showAddNewDialog: false})
   }
 
+  editRole(id) {
+    this.showAddNewRoleDialog()
+    this.setState({
+      editRole: this.props.roles.find(role => role.get('id') === id)
+    })
+  }
+
   saveRole(){
     console.log('SaveRole()');
     this.hideAddNewRoleDialog();
@@ -30,11 +41,14 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <div className="account-management-system-roles">
-        <RolesList roles={this.props.roles}
+        <RolesList
+          editRole={this.state.editRole}
+          roles={this.props.roles}
           permissions={this.props.permissions}
           onCancel={this.hideAddNewRoleDialog}
           onSave={this.saveRole}
           onAdd={this.showAddNewRoleDialog}
+          onEdit={this.editRole}
           showAddNewDialog={this.state.showAddNewDialog} />
       </div>
     )
