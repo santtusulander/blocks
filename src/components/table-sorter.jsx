@@ -15,6 +15,7 @@ class TableSorter extends React.Component {
     this.props.activateSort(this.props.column, direction, this.props.sortFunc)
   }
   render() {
+    const width = this.props.width
     let caret = ''
     if(this.props.column === this.props.activeColumn) {
       if(this.props.activeDirection < 0) {
@@ -25,7 +26,7 @@ class TableSorter extends React.Component {
       }
     }
     return (
-      <th className="table-sorter">
+      <th className="table-sorter" {...{ width }}>
         <a href="#"  className={caret ? ' active' : ''} onClick={this.activateSort}>
           {this.props.children}{caret}
         </a>
@@ -41,7 +42,8 @@ TableSorter.propTypes = {
   children: React.PropTypes.node,
   column: React.PropTypes.string,
   reversed: React.PropTypes.bool,
-  sortFunc: React.PropTypes.string
+  sortFunc: React.PropTypes.string,
+  width: React.PropTypes.string
 };
 
 module.exports = TableSorter;
