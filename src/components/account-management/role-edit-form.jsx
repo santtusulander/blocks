@@ -83,7 +83,7 @@ const RolesEditForm = (props) => {
           const selected = props.editRole.get('permissions').includes(permission.get('id'))
           let rowClasses = "toggle-row clearfix"
           if(selected) {
-            rowClasses += ' on'
+            rowClasses += ' yes'
           }
           return (
             <div className={rowClasses} key={i}>
