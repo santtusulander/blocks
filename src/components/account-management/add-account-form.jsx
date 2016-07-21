@@ -52,7 +52,7 @@ class NewAccountForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
       const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
       const activeServiceValues = activeServiceTypes.map(item => item.value)
       const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
       services.onChange(checkedServiceTypes)
@@ -64,10 +64,9 @@ class NewAccountForm extends React.Component {
       const {
         fields: { accountBrand, accountName, accountType, services }
       } = this.props
-      this.props.onSave({
-        brand: accountBrand.value,
+      this.props.onSave(accountBrand.value, {
         name: accountName.value,
-        type: accountType.value,
+        provider_type: Number(accountType.value),
         services: services.value
       })
     }
@@ -75,7 +74,7 @@ class NewAccountForm extends React.Component {
 
   render() {
     const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
-    const serviceTypes = SERVICE_TYPES.filter(item => item.accountType === Number(accountType.value))
+    const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
 
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
@@ -105,7 +104,7 @@ class NewAccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'>Brand</label>
               <SelectWrapper
-                { ... accountBrand }
+                {... accountBrand}
                 className="input-select"
                 value={accountBrand.value}
                 options={brandOptions}
@@ -119,7 +118,8 @@ class NewAccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'>Account type</label>
               <SelectWrapper
-                { ...accountType }
+                {...accountType}
+                numericValues={true}
                 value={Number(accountType.value)}
                 className="input-select"
                 options={accountTypeOptions}

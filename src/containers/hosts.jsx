@@ -84,7 +84,6 @@ export class Hosts extends React.Component {
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         params={this.props.params}
-        history={this.props.history}
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}

@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import { Input, Table, Button, Row, Col } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
 
 import IconAdd from '../../icons/icon-add.jsx'
@@ -15,6 +15,7 @@ class AccountManagementAccountGroups extends React.Component {
     this.state = {
       adding: false,
       editing: null,
+      search: '',
       sortBy: 'name',
       sortDir: 1
     }
@@ -27,6 +28,7 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveEditedGroup = this.saveEditedGroup.bind(this)
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
+    this.changeSearch    = this.changeSearch.bind(this)
   }
 
   componentDidMount() {
@@ -94,26 +96,44 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
+  changeSearch(e) {
+    this.setState({
+      search: e.target.value
+    })
+  }
+
   render() {
+    const groups = this.props.groups;
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
+    const filteredGroups = groups.filter((group) => {
+      return group.get('name').toLowerCase().includes(this.state.search.toLowerCase())
+    })
     const sortedGroups = this.sortedData(
-      this.props.groups,
+      filteredGroups,
       this.state.sortBy,
       this.state.sortDir
     )
+    const numHiddenGroups = this.props.groups.size - sortedGroups.size;
     return (
       <div className="account-management-account-groups">
         <Row className="header-btn-row">
-          <Col sm={8}>
+          <Col sm={6}>
             <h3>
-              {this.props.groups.size} Group{this.props.groups.size === 1 ? '' : 's'}
+              {sortedGroups.size} Group{sortedGroups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
             </h3>
           </Col>
-          <Col sm={4} className="text-right">
+          <Col sm={6} className="text-right">
+            <Input
+              type="text"
+              className="search-input"
+              groupClassName="search-input-group"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
             <Button bsStyle="success" className="btn-icon btn-add-new"
               onClick={this.addGroup}>
               <IconAdd />
@@ -126,11 +146,14 @@ class AccountManagementAccountGroups extends React.Component {
               <TableSorter {...sorterProps} column="name">
                 Name
               </TableSorter>
-              <th>Created On</th>
+              <th width="20%">Members</th>
+              <TableSorter {...sorterProps} column="created">
+                Created On
+              </TableSorter>
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th></th>
+              <th width="1%"></th>
             </tr>
           </thead>
           <tbody>
@@ -146,6 +169,7 @@ class AccountManagementAccountGroups extends React.Component {
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
+                <td>NEEDS_API</td>
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
@@ -164,6 +188,12 @@ class AccountManagementAccountGroups extends React.Component {
           })}
           </tbody>
         </Table>
+
+        {
+          sortedGroups.size === 0 &&
+          this.state.search.length > 0 &&
+          <div className="text-center">No groups found with the search term "{this.state.search}"</div>
+        }
       </div>
     )
   }

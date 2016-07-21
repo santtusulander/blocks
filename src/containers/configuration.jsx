@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
 import moment from 'moment'
@@ -149,14 +150,26 @@ export class Configuration extends React.Component {
       this.props.params.property,
       newHost.toJS()
     ).then((action) => {
-      if(action.error) {
-        this.togglePublishModal()
-        this.showNotification('Publishing configurations failed: ' +
-          action.payload.status + ' ' +
-          action.payload.statusText)
+      // env === 1 is retiring
+      if(env === 1) {
+        if(action.error) {
+          this.showNotification('Retiring configurations failed: ' +
+            action.payload.status + ' ' +
+            action.payload.statusText)
+        } else {
+          this.showNotification('Configurations succesfully retired')
+        }
+      // env !== 1 is publishing
       } else {
-        this.togglePublishModal()
-        this.showNotification('Configurations succesfully published')
+        if(action.error) {
+          this.togglePublishModal()
+          this.showNotification('Publishing configurations failed: ' +
+            action.payload.status + ' ' +
+            action.payload.statusText)
+        } else {
+          this.togglePublishModal()
+          this.showNotification('Configurations succesfully published')
+        }
       }
     })
   }
@@ -223,7 +236,7 @@ export class Configuration extends React.Component {
                   const { brand, account, group } = params, { hostActions } = this.props
                   hostActions.startFetching()
                   hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.history.pushState(null, `${getUrl('/content', tier, value, params)}/configuration`)
+                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
                   })
                 }}
                 drillable={true}>
@@ -404,4 +417,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Configuration);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Configuration));

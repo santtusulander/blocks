@@ -32,8 +32,8 @@ const CheckboxArray = ({ iterable, field }) => {
 }
 
 CheckboxArray.propTypes = {
-  iterable: PropTypes.array,
-  field: PropTypes.object
+  field: PropTypes.object,
+  iterable: PropTypes.array
 }
 
 export default CheckboxArray

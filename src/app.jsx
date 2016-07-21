@@ -1,8 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Router from 'react-router'
-import createBrowserHistory from 'history/lib/createBrowserHistory'
+import { Router, browserHistory } from 'react-router'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
@@ -46,7 +45,7 @@ axios.interceptors.response.use(function (response) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router onUpdate={LogPageView} history={createBrowserHistory()}>
+    <Router onUpdate={LogPageView} history={browserHistory}>
       {routes}
     </Router>
   </Provider>, document.getElementById('content')

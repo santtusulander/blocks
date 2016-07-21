@@ -11,7 +11,7 @@ import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 
-import Header from '../components/header'
+import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
 
 import ErrorModal from '../components/error-modal'
@@ -114,7 +114,7 @@ export class Main extends React.Component {
   }
   logOut() {
     this.props.userActions.logOut()
-    this.props.history.pushState(null, '/login')
+    this.props.router.push('/login')
   }
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
@@ -150,7 +150,6 @@ export class Main extends React.Component {
         this.props.location.pathname !== '/login' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
-          history={this.props.history}
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
@@ -172,7 +171,6 @@ export class Main extends React.Component {
             fetchAccountData={this.props.fetchAccountData}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
-            history={this.props.history}
             location={this.props.location}
             logOut={this.logOut}
             routes={this.props.routes}
@@ -234,7 +232,6 @@ Main.propTypes = {
   children: React.PropTypes.node,
   fetchAccountData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
@@ -249,6 +246,7 @@ Main.propTypes = {
   username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
+
 Main.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
