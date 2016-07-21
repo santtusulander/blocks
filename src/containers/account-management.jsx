@@ -29,7 +29,8 @@ export class AccountManagement extends Component {
 
     this.state = {
       activeAccount: props.params.account || null,
-      groupToDelete: null
+      groupToDelete: null,
+      groupToUpdate: null
     }
 
     this.notificationTimeout = null
@@ -92,7 +93,6 @@ export class AccountManagement extends Component {
   }
 
   editGroupInActiveAccount(groupId, data) {
-    console.log(groupId, data);
     return this.props.groupActions.updateGroup(
       'udn',
       this.props.activeAccount.get('id'),

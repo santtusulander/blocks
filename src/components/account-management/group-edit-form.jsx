@@ -16,14 +16,6 @@ import './group-edit-form.scss'
 
 let errors = {}
 
-// TODO: For testing purposes. Remove these.
-const users = [
-  {value: 1, label: 'foo@example.com'},
-  {value: 2, label: 'bar@example.com'},
-  {value: 3, label: 'baz@example.com'}
-]
-const values = List()
-
 const validate = (values) => {
   const {name} = values
   errors = {}
@@ -37,15 +29,13 @@ const validate = (values) => {
 class GroupEditForm extends React.Component {
   constructor(props) {
     super(props)
-    this.users = this.props.users || users;
-    this.initialMembers = this.props.members || [2,3]
+
     this.save = this.save.bind(this)
   }
 
   componentWillMount() {
     this.setState({
       usersToAdd: List(),
-      members: this.initialMembers,
       usersToDelete: List()
     })
   }
@@ -53,8 +43,15 @@ class GroupEditForm extends React.Component {
   save() {
     if(!Object.keys(errors).length) {
       const {
-        fields: { name/*, members*/ }
+        fields: { name }
       } = this.props
+      // TODO: enable this when API is ready
+      const members = this.state.usersToAdd.concat(this.props.members).reduce((arr, user) => {
+        if (this.state.usersToDelete.keyOf(user) !== -1) {
+          return arr.push(user)
+        }
+        return arr
+      }, List())
       this.props.onSave({
         name: name.value
       })
@@ -87,21 +84,21 @@ class GroupEditForm extends React.Component {
 
     // TODO: Check me after more brands have been added
     const currentBrand = 'udn'
-    const currentMembers = this.users.reduce((members, user) => {
+    const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.value)) {
         return [{...user, toAdd: true}, ...members]
       }
       if (this.state.usersToDelete.includes(user.value)) {
         return [...members, {...user, toDelete: true}]
       }
-      if (this.state.members.includes(user.value)) {
+      if (this.props.members.includes(user.value)) {
         return [...members, user]
       }
       return members
     }, [])
 
-    const addMembersOptions = fromJS(this.users.reduce((arr, user) => {
-      if(this.initialMembers.indexOf(user.value) === -1) {
+    const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
+      if(!this.props.members.includes(user.value)) {
         return [...arr, user]
       }
       return arr;
@@ -130,7 +127,7 @@ class GroupEditForm extends React.Component {
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
                 options={addMembersOptions}
-                values={fromJS(this.state.usersToAdd) || List()}
+                values={this.state.usersToAdd || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
                 }}
@@ -174,6 +171,18 @@ GroupEditForm.propTypes = {
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
+}
+
+GroupEditForm.defaultProps = {
+  // TODO: FOR TESTING ONLY - REMOVE ME
+  users: [
+    {value: 1, label: 'foo@example.com'},
+    {value: 2, label: 'bar@example.com'},
+    {value: 3, label: 'baz@example.com'},
+    {value: 4, label: 'foz@example.com'}
+  ],
+  // TODO: FOR TESTING ONLY - REMOVE ME
+  members: List([2,3])
 }
 
 export default reduxForm({
