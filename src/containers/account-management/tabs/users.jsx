@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, fromJS } from 'immutable'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import { Table, Button, Row, Col, Modal } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter, Link } from 'react-router'
@@ -12,6 +12,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import IconAdd from '../../../components/icons/icon-add.jsx'
 import IconTrash from '../../../components/icons/icon-trash.jsx'
 import TableSorter from '../../../components/table-sorter'
+import AddUserForm from '../../../components/account-management/add-user-form'
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -19,13 +20,15 @@ export class AccountManagementAccountUsers extends React.Component {
 
     this.state = {
       sortBy: 'email',
-      sortDir: 1
+      sortDir: 1,
+      showAddItemModal: false
     }
 
     this.changeSort = this.changeSort.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
+    this.addUser = this.addUser.bind(this)
   }
   componentWillMount() {
     const { brand, account, group } = this.props.params
@@ -89,6 +92,11 @@ export class AccountManagementAccountUsers extends React.Component {
   }
   getEmailForUser(user) {
     return user.get('email') || user.get('username')
+  }
+  addUser() {
+    this.setState({
+      showAddItemModal: true
+    })
   }
   render() {
     const sorterProps = {
@@ -158,6 +166,12 @@ export class AccountManagementAccountUsers extends React.Component {
             })}
           </tbody>
         </Table>
+        <AddUserForm
+          show={this.state.showAddItemModal}
+          dialogClassName="configuration-sidebar"
+          onCancel={() => {
+            this.setState({ showAddItemModal: false })
+          }}/>
       </div>
     )
   }
