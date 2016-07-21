@@ -11,7 +11,28 @@ import IconTask from '../icons/icon-task'
 import './support-ticket-panel.scss'
 
 export class SupportTicketPanel extends React.Component {
+
+  /**
+   * Return an icon component based on a provided type string.
+   *
+   * @param  {string} type      The type of the ticket.
+   * @return {React.Component}  The icon component or null if a matching component wasn't found.
+   */
+  createTypeIcon(type) {
+    let iconTypeComponents = {
+      'task'        : IconTask,
+      'problem'     : IconProblem,
+      'question'    : IconQuestion,
+      'integration' : IconIntegration,
+      'incident'    : IconIncident
+    }
+
+    return iconTypeComponents[type] || null;
+  }
+
   render() {
+    const TicketTypeIcon = this.createTypeIcon(this.props.type);
+
     return (
       <div className="support-ticket-panel">
         <div className="support-ticket-panel-priority"></div>
@@ -19,13 +40,7 @@ export class SupportTicketPanel extends React.Component {
           <Row>
             <Col xs={6}>
               <span className="support-ticket-panel-type">
-                <IconTask />
-                {/*
-                <IconQuestion />
-                <IconProblem />
-                <IconIntegration />
-                <IconIncident />
-                */}
+                {TicketTypeIcon && <TicketTypeIcon />}
               </span>
               <span className="support-ticket-panel-number">#1-5424</span>
             </Col>
