@@ -31,11 +31,11 @@ const inlineAddInputs = [
   ],
   [ {
     input: <SelectWrapper
-          id='d'
-          numericValues={true}
-          className=" inline-add-dropdown"
-          options={[1, 2, 3 ,4, 5].map(item => [item, item])}/>
-    , positionClass: 'half-width-item left'
+        id='d'
+        numericValues={true}
+        className=" inline-add-dropdown"
+        options={[1, 2, 3 ,4, 5].map(item => [item, item])}/>
+    , positionClass: 'left'
   } ],
   []
 ]
