@@ -1,4 +1,5 @@
 @import '../../styles/base/colors';
+@import '../../styles/base/variables';
 
 $support-border-width:       0.2em;
 $support-padding-horizontal: 5em;
@@ -132,5 +133,18 @@ $support-priority-high:   $red;
       transform: none;
     }
   }
+}
 
+// NOTE: This component is proportionally scalable simply by changing the
+// font-size on the component container. This is due to the use of ems for sizing.
+@include lg {
+  .support-ticket-panel {
+    font-size: 0.8rem;
+  }
+}
+
+@include md {
+  .support-ticket-panel {
+    font-size: 0.7rem;
+  }
 }
