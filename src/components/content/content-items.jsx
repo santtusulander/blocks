@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import { Modal, ButtonToolbar, Dropdown } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -21,7 +21,6 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import InfoModal from '../info-modal.jsx'
 import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
@@ -105,7 +104,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.history.pushState(null, getContentUrl('brand', 'udn', {}))
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -156,49 +155,51 @@ class ContentItems extends React.Component {
       <PageContainer className={`${this.props.className} content-subcontainer`}>
         <Content>
           <PageHeader>
-            <ButtonToolbar className="pull-right">
-              {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-              <UDNButton bsStyle="primary"
-                icon={true}
-                addNew={true}
-                hidden={createNewItem === undefined}
-                onClick={this.toggleAddItem}>
-                <IconAdd/>
-              </UDNButton>
-              <Select
-                onSelect={this.handleSortChange}
-                value={currentValue}
-                options={sortOptions.map(opt => [opt.value, opt.label])}/>
-              <UDNButton bsStyle="primary"
-                icon={true}
-                toggleView={true}
-                hidden={viewingChart}
-                onClick={this.props.toggleChartView}>
-                <IconItemChart/>
-              </UDNButton>
-              <UDNButton bsStyle="primary"
-                icon={true}
-                toggleView={true}
-                hidden={!viewingChart}
-                onClick={this.props.toggleChartView}>
-                <IconItemList/>
-              </UDNButton>
-            </ButtonToolbar>
             <p>{headerText.summary}</p>
-            <AccountSelector
-              params={this.props.params}
-              startTier={this.props.selectionStartTier}
-              topBarTexts={itemSelectorTexts}
-              topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.history.pushState(null, getContentUrl(...params))}
-              drillable={true}
-              user={this.props.user}>
-              <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                <h1>
-                  {headerText.label}
-                </h1>
-              </Dropdown.Toggle>
-            </AccountSelector>
+
+            <div className="content-layout__header">
+              <AccountSelector
+                params={this.props.params}
+                startTier={this.props.selectionStartTier}
+                topBarTexts={itemSelectorTexts}
+                topBarAction={this.itemSelectorTopBarAction}
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
+                user={this.props.user}>
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <h1>
+                    {headerText.label}
+                  </h1>
+                </Dropdown.Toggle>
+              </AccountSelector>
+              <ButtonToolbar>
+                {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           addNew={true}
+                           hidden={createNewItem === undefined}
+                           onClick={this.toggleAddItem}>
+                  <IconAdd/>
+                </UDNButton>
+                <Select
+                  onSelect={this.handleSortChange}
+                  value={currentValue}
+                  options={sortOptions.map(opt => [opt.value, opt.label])}/>
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           toggleView={true}
+                           hidden={viewingChart}
+                           onClick={this.props.toggleChartView}>
+                  <IconItemChart/>
+                </UDNButton>
+                <UDNButton bsStyle="primary"
+                           icon={true}
+                           toggleView={true}
+                           hidden={!viewingChart}
+                           onClick={this.props.toggleChartView}>
+                  <IconItemList/>
+                </UDNButton>
+              </ButtonToolbar>
+            </div>
           </PageHeader>
 
           <div className="container-fluid body-content">
@@ -348,4 +349,4 @@ ContentItems.defaultProps = {
   user: Immutable.Map()
 }
 
-module.exports = ContentItems
+export default withRouter(ContentItems)

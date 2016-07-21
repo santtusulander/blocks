@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router'
 
-import './breadcrumbs.scss'
-
 export const Breadcrumbs = props => {
   const links = props.links
   const lastLink = links && links.length - 1

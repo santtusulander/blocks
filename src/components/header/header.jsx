@@ -1,17 +1,15 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
+import { getRoute } from '../../routes.jsx'
+import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
-import { getRoute } from '../routes.jsx'
-import Select from '../components/select'
-import IconAlerts from '../components/icons/icon-alerts.jsx'
-import IconEricsson from './icons/icon-ericsson.jsx'
-import { Breadcrumbs } from '../components/breadcrumbs/breadcrumbs.jsx'
-import AccountSelector from './global-account-selector/global-account-selector.jsx'
-import { getAnalyticsUrl, getContentUrl, getUrl } from '../util/helpers.js'
-
-
-import { Button, Dropdown, Input, MenuItem, Nav, Navbar } from 'react-bootstrap'
+import UserMenu from './user-menu'
+import IconAlerts from '../icons/icon-alerts.jsx'
+import IconEricsson from '../icons/icon-ericsson.jsx'
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
+import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import { getAnalyticsUrl, getContentUrl, getUrl } from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -95,14 +93,12 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-
-    const pathname = this.props.pathname,
-      { history } = this.props,
+    const { router, pathname } = this.props,
       params = this.props.params
 
-    if (history.isActive(getRoute('content'))) {
+    if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
-      if (history.isActive(getRoute('contentPropertyAnalytics', params))) {
+      if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
         links.push({
           label:  'Analytics'
         })
@@ -110,7 +106,7 @@ class Header extends React.Component {
         propertyLinkIsLast = false
       }
 
-      if (history.isActive(getRoute('contentPropertyConfiguration', params))) {
+      if (router.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
           label:  'Configuration'
         })
@@ -125,7 +121,7 @@ class Header extends React.Component {
         label:  'Content',
         url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
       })
-    } else if (history.isActive(getRoute('analytics'))) {
+    } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)
       this.addGroupLink(links, getAnalyticsUrl)
 
@@ -148,64 +144,67 @@ class Header extends React.Component {
     return links.reverse()
   }
 
+  /**
+   * Render method for breadcrumbs.
+   */
   renderBreadcrumb() {
     return (
-      <li>
+      <li className="header__breadcrumb">
         <Breadcrumbs links={this.getBreadcrumbLinks()}/>
       </li>
     );
   }
 
   render() {
-    const { activeAccount, history, params: { account, brand } } = this.props
+    const { activeAccount, router, params: { account, brand } } = this.props
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
     const itemSelectorFunc = (...params) => {
-      if(history.isActive('/content')) {
-        history.pushState(null, getContentUrl(...params))
-      } else if(history.isActive('/analysis')) {
-        history.pushState(null, getAnalyticsUrl(...params))
-      } else if(history.isActive('/account-management')) {
-        history.pushState(null, getUrl('/account-management', ...params))
-      } else if(history.isActive('/security')) {
-        history.pushState(null, getUrl('/security', ...params))
+      if(router.isActive('/content')) {
+        router.push(getContentUrl(...params))
+      } else if(router.isActive('/analysis')) {
+        router.push(getAnalyticsUrl(...params))
+      } else if(router.isActive('/account-management')) {
+        router.push(getUrl('/account-management', ...params))
+      } else if(router.isActive('/security')) {
+        router.push(getUrl('/security', ...params))
       }
     }
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
           className={this.state.animatingGradient ?
-            'header-gradient animated' :
-            'header-gradient'}>
+            'header__gradient animated' :
+            'header__gradient'}>
         </div>
-
-        <Nav className='breadcrumb-nav'>
-          {/* TODO: the logo should link to the level where they select accounts,
-           for CPs it should link to where they select groups.*/}
-          <li className='logo'>
-            <Link to={getRoute('content', { brand: 'udn' })}>
-              <IconEricsson />
-            </Link>
-          </li>
-          <AccountSelector
-            params={{ brand, account }}
-            topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-            topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-            canGetEdited={activeAccount.get('name')}
-            user={this.props.user}
-            onSelect={(...params) => itemSelectorFunc(...params)}
-            restrictedTo="account">
-            <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
-            </Dropdown.Toggle>
-          </AccountSelector>
-
-        {this.renderBreadcrumb()}
-
-        </Nav>
-          <Nav pullRight={true}>
+        <div className="header__content">
+          <Nav className="header__left">
+            {/* TODO: the logo should link to the level where they select accounts,
+             for CPs it should link to where they select groups.*/}
+            <li className="header__logo">
+              <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+                <IconEricsson />
+              </Link>
+            </li>
+            <li className="header__account-selector">
+              <AccountSelector
+                params={{ brand, account }}
+                topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+                topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+                canGetEdited={activeAccount.get('name')}
+                user={this.props.user}
+                onSelect={(...params) => itemSelectorFunc(...params)}
+                restrictedTo="account">
+                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
+                </Dropdown.Toggle>
+              </AccountSelector>
+            </li>
+            {this.renderBreadcrumb()}
+          </Nav>
+          <Nav className="header__right" pullRight={true}>
             <li>
               <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
                 <IconAlerts />
@@ -220,67 +219,16 @@ class Header extends React.Component {
                 type="text" placeholder="Search" />
             </li>
             <li>
-              <Dropdown id="user-menu" pullRight={true}
+              <UserMenu
                 open={this.state.userMenuOpen}
-                onToggle={this.toggleUserMenu}>
-                <Dropdown.Toggle bsStyle="primary"
-                  className="btn-icon btn-round btn-user-menu"
-                  noCaret={true} id="user-dropdown">
-                </Dropdown.Toggle>
-                <Dropdown.Menu className="dropdown-user-menu">
-                  <li className="dropdown-user-menu-container">
-                    <ul>
-                      <MenuItem header={true} className="dropdown-main-header">
-                        <div id="user-menu-username" className="user-menu-item">
-                          {this.props.user.get('username')}
-                        </div>
-                      </MenuItem>
-                      <MenuItem eventKey="1">
-                        <div className="user-menu-item">
-                          <div className="helper-header">Company</div>
-                          Ericsson
-                        </div>
-                      </MenuItem>
-                      <MenuItem eventKey="2">
-                        <div className="user-menu-item">
-                          <div className="helper-header">Role</div>
-                          UDN Admin
-                        </div>
-                      </MenuItem>
-                      <li className="menu-item-theme">
-                        <div className="menuitem">
-                          <div className="user-menu-item">
-                            <div className="helper-header helper-ui-theme">UI Theme</div>
-                            <Select className="btn-block"
-                              onSelect={this.handleThemeChange}
-                              value={this.props.theme}
-                              options={[
-                                ['dark', 'Ericsson Dark Theme'],
-                                ['light', 'Ericsson Light Theme']]}/>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <Link
-                          id="account-management"
-                          to={`/account-management`} activeClassName="active"
-                          onClick={this.toggleUserMenu}>
-                          <div className="user-menu-item">
-                            Account Management
-                          </div>
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="bottom-item" eventKey="5">
-                    <a id="log-out" href="#" onClick={this.props.logOut}>
-                      <div className="user-menu-item">Log Out</div>
-                    </a>
-                  </li>
-                </Dropdown.Menu>
-              </Dropdown>
+                theme={this.props.theme}
+                handleThemeChange={this.handleThemeChange}
+                onToggle={this.toggleUserMenu}
+                logout={this.props.logOut}
+              />
             </li>
           </Nav>
+        </div>
       </Navbar>
     );
   }
@@ -308,16 +256,16 @@ Header.propTypes = {
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
-  history: React.PropTypes.object,
   isAdmin:  React.PropTypes.bool,
   location: React.PropTypes.object,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
   toggleAccountManagementModal: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Header;
+export default withRouter(Header);

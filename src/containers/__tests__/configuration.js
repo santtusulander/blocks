@@ -520,6 +520,29 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
+    config.togglePublishModal = jest.genMockFunction()
+    config.changeActiveVersionEnvironment(2)
+    expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
+    expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
+      .configuration_status.deployment_status).toBe(2)
+    expect(config.togglePublishModal.mock.calls.length).toBe(1)
+  })
+
+  it("should not show publish modal if version is retired", () => {
+    const hostActions = hostActionsMaker()
+    const uiActions = uiActionsMaker()
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
+        activeHost={fakeHost}
+        params={urlParams} location={fakeLocation}
+        uiActions={uiActions}/>
+    );
+    config.togglePublishModal = jest.genMockFunction()
     config.changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
@@ -527,5 +550,6 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(1)
+    expect(config.togglePublishModal.mock.calls.length).toBe(0)
   })
 })

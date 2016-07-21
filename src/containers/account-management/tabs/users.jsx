@@ -1,17 +1,18 @@
 import React from 'react'
-import Immutable from 'immutable'
-import {Table, Button, Row, Col, Input} from 'react-bootstrap'
+import { List } from 'immutable'
+import { Table, Button, Row, Col, Input } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter } from 'react-router'
 
-import InlineAdd from '../../inline-add.jsx'
-import IconAdd from '../../icons/icon-add.jsx'
-import IconTrash from '../../icons/icon-trash.jsx'
-import TableSorter from '../../table-sorter'
+import * as userActionCreators from '../../../redux/modules/user'
+import * as groupActionCreators from '../../../redux/modules/group'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
-const fakeUsers = Immutable.fromJS([
-  { id: '1', name: 'Name 1', role: 'Role 1', group: 'Group 1' },
-  { id: '2', name: 'Name 2', role: 'Role 2', group: 'Group 2' },
-  { id: '3', name: 'Name 3', role: 'Role 3', group: 'Group 3'}
-]);
+import InlineAdd from '../../../components/inline-add.jsx'
+import IconAdd from '../../../components/icons/icon-add.jsx'
+import IconTrash from '../../../components/icons/icon-trash.jsx'
+import TableSorter from '../../../components/table-sorter'
 
 /**
  * Each sub-array contains elements per <td>. If no inputs are needed for a <td>, insert empty array [].
@@ -30,12 +31,12 @@ const inlineAddInputs = [
   []
 ]
 
-class AccountManagementAccountUsers extends React.Component {
+export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      sortBy: 'name',
+      sortBy: 'email',
       sortDir: 1
     }
 
@@ -43,6 +44,14 @@ class AccountManagementAccountUsers extends React.Component {
     this.deleteUser = this.deleteUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
+  }
+  componentWillMount() {
+    const { brand, account, group } = this.props.params
+    this.props.userActions.fetchUsers(brand, account, group)
+
+    if (!this.props.groups.toJS().length) {
+      this.props.groupActions.fetchGroups(brand, account);
+    }
   }
   changeSort(column, direction) {
     this.setState({
@@ -91,6 +100,29 @@ class AccountManagementAccountUsers extends React.Component {
       return 0
     })
   }
+  getGroupsForUser(user) {
+    const groupId = user.get('group_id')
+    let groups = []
+
+    this.props.groups.forEach((group, i) => {
+      if (group.get('id') === groupId) {
+        groups.push(group.get('name'))
+      }
+    })
+
+    if (!groups.length) {
+      return <em>User has no groups</em>
+    }
+
+    return groups.length < 6 ? groups.join(', ') : `${groups.length} Groups`
+  }
+  getRolesForUser(user) {
+    const roles = user.get('roles');
+    return roles.size < 6 ? roles.join(', ') : `${roles.size} Roles`
+  }
+  getEmailForUser(user) {
+    return user.get('email') || user.get('username')
+  }
   render() {
     const sorterProps = {
       activateSort: this.changeSort,
@@ -98,7 +130,7 @@ class AccountManagementAccountUsers extends React.Component {
       activeDirection: this.state.sortDir
     }
     const sortedUsers = this.sortedData(
-      fakeUsers,
+      this.props.users,
       this.state.sortBy,
       this.state.sortDir
     )
@@ -120,11 +152,12 @@ class AccountManagementAccountUsers extends React.Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="name">
-                Name
+              <TableSorter {...sorterProps} column="email">
+                Email
               </TableSorter>
-              <th width="30%">ROLE</th>
-              <th width="30%">GROUPS</th>
+              <th width="30%">Password</th>
+              <th width="30%">Role</th>
+              <th width="30%">Groups</th>
               <th width="10%"></th>
             </tr>
           </thead>
@@ -139,13 +172,16 @@ class AccountManagementAccountUsers extends React.Component {
               return (
                 <tr key={i}>
                   <td>
-                    {user.get('name')}
+                    {this.getEmailForUser(user)}
                   </td>
                   <td>
-                    {user.get('role')}
+                    ********
                   </td>
                   <td>
-                    {user.get('group')}
+                    {this.getRolesForUser(user)}
+                  </td>
+                  <td>
+                    {this.getGroupsForUser(user)}
                   </td>
                   <td>
                     <a href="#" onClick={this.editUser(user.get('id'))}>
@@ -168,10 +204,23 @@ class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
-  users: React.PropTypes.instanceOf(Immutable.List)
-}
-AccountManagementAccountUsers.defaultProps = {
-  users: Immutable.List([])
+  users: React.PropTypes.instanceOf(List)
 }
 
-module.exports = AccountManagementAccountUsers
+function mapStateToProps(state) {
+  return {
+    users: state.user.get('allUsers'),
+    groups: state.group.get('allGroups')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+
