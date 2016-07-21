@@ -1,5 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import Immutable from 'immutable'
 // import { Provider } from 'react-redux'
 // import { createStore } from 'redux'
 
@@ -11,7 +12,9 @@ describe('Security', () => {
   beforeEach(() => {
     props = {
       fetchAccountData: jest.genMockFunction(),
+      activeAccount: Immutable.Map({name: 'foo'}),
       params: { subPage: 'a' },
+      location: {pathname: 'bar'},
       securityActions: {
         toggleActiveCertificates: jest.genMockFunction(),
         changeCertificateToEdit: jest.genMockFunction(),

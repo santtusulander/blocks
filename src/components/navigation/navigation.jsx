@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 
 import { getRoute } from '../../routes.jsx'
 import {
@@ -22,13 +22,13 @@ import './navigation.scss'
 
 const Navigation = (props) => {
   const params = props.params,
-    history = props.history,
+    router = props.router,
     activeAccountId = params.account || null,
     activeGroupId = params.group || null,
     activePropertyName = params.property || null
 
-  const contentActive = history.isActive(getRoute('content')) ? ' active' : '',
-    analyticsActive = history.isActive(getRoute('analytics')) ? ' active' : '',
+  const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
+    analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : '',
     accountManagementUrl = getRoute('accountManagement') + (activeAccountId ? `/${activeAccountId}` : '')
 
   return (
@@ -83,4 +83,4 @@ const Navigation = (props) => {
   )
 }
 
-export default Navigation
+export default withRouter(Navigation)

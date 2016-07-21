@@ -3,6 +3,22 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    filterAccountsByUserName: jest.genMockFunction()
+      .mockImplementation(accounts => accounts),
+    getAnalyticsUrl: jest.genMockFunction(),
+    getContentUrl: jest.genMockFunction(),
+    removeProps: jest.genMockFunction()
+  }
+})
+
+jest.mock('../../routes', () => {
+  return {
+    getRoute: jest.genMockFunction()
+  }
+})
+
 jest.autoMockOff()
 
 jest.dontMock('../main.jsx')
@@ -43,6 +59,14 @@ function userActionsMaker(cbResponse) {
   }
 }
 
+function fakeHistoryMaker() {
+  return {
+    createHref: jest.genMockFunction(),
+    isActive: jest.genMockFunction(),
+    pushState: jest.genMockFunction()
+  }
+}
+
 const fakeProperties = Immutable.fromJS([
   {
     "account_id": 1, "group_id": 1,
@@ -68,6 +92,16 @@ const fakeActiveGroup = Immutable.fromJS(
   {"id": 1}
 )
 
+const fakeHost = Immutable.fromJS({
+  "services": [{
+    "configurations": [{
+      "edge_configuration": {
+        "published_name": "examplffffffe.com"
+      }
+    }]
+  }]
+})
+
 const fakeLocation = {pathname: ''}
 
 const fakeParams = {brand: 'aaa', account: 'bbb', group: 'ccc', property: 'ddd'}
@@ -80,6 +114,7 @@ describe('Main', () => {
       <Main location={fakeLocation} uiActions={uiActionsMaker()}
         userActions={userActionsMaker()} theme="dark"
         params={fakeParams}
+        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData} />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
@@ -94,6 +129,7 @@ describe('Main', () => {
         activePurge={fakePurge}
         theme="dark"
         params={fakeParams}
+        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData} />
     );
     expect(main.state.activePurge).toBe(null);
@@ -111,9 +147,11 @@ describe('Main', () => {
         activePurge={fakePurge}
         activeAccount={fakeActiveAccount}
         activeGroup={fakeActiveGroup}
+        activeHost={fakeHost}
         purgeActions={purgeActions}
         hostActions={hostActionsMaker()}
         params={fakeParams}
+        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData}/>
     );
     main.activatePurge(fakeProperties.get(0))()
@@ -130,6 +168,7 @@ describe('Main', () => {
       <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
         userActions={userActionsMaker()}
         viewingChart={true}
+        history={fakeHistoryMaker()}
         params={fakeParams}
         fetchAccountData={fakeFetchAccountData} />
     );
@@ -139,9 +178,7 @@ describe('Main', () => {
 
   it('handles a successful log out attempt', () => {
     const userActions = userActionsMaker({})
-    const fakeHistory = {
-      pushState: jest.genMockFunction()
-    }
+    const fakeHistory = fakeHistoryMaker()
     const main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation}
         uiActions={uiActionsMaker()}
@@ -152,6 +189,6 @@ describe('Main', () => {
         fetchAccountData={fakeFetchAccountData} />
     )
     main.logOut()
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/login')
+    expect(fakehistory.push.mock.calls[0][1]).toBe('/login')
   });
 })

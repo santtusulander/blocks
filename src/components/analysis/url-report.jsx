@@ -4,16 +4,20 @@ import Immutable from 'immutable'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
+import {Input} from 'react-bootstrap'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      chartWidth: 100
+      chartWidth: 100,
+      dataKey: "bytes",
+      xAxisCustomFormat: formatBytes
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+    this.selectDataType = this.selectDataType.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -28,6 +32,12 @@ class AnalysisURLReport extends React.Component {
       chartWidth: this.refs.chartHolder.clientWidth
     })
   }
+  selectDataType(event) {
+    this.setState({
+      dataKey: event.target.value,
+      xAxisCustomFormat: event.target.value === 'bytes' ? formatBytes : null
+    })
+  }
   render() {
 
     //REFACTOR: Shared code with file-error.jsx
@@ -35,7 +45,7 @@ class AnalysisURLReport extends React.Component {
     //URL filtering
     //by serviceType
     const {serviceTypes, statusCodes, urls} = this.props;
-
+    const {dataKey, xAxisCustomFormat} = this.state;
     const filteredUrls = urls.filter( (url) => {
       return serviceTypes.includes(url.get('service_type'))
     })
@@ -52,17 +62,22 @@ class AnalysisURLReport extends React.Component {
 
     return (
       <div className="analysis-url-report">
-        <div ref="chartHolder">
+        <div className="chart-holder" ref="chartHolder">
+          <header>
+            <h3>15 Top URLs</h3>
+            <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
+            <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+          </header>
           <AnalysisHorizontalBar
             data={filteredUrls.toJS()}
-            dataKey="bytes"
+            dataKey={dataKey}
             height={chartHeight}
             labelKey="url"
             width={this.state.chartWidth}
             padding={20}
-            xAxisCustomFormat={formatBytes}/>
+            xAxisCustomFormat={xAxisCustomFormat}/>
         </div>
-        <h3>HEADER</h3>
+        <h3>All URLs</h3>
         <AnalysisURLList
           urls={filteredUrls}
           labelFormat={url => url.get('url')}/>

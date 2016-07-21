@@ -31,7 +31,19 @@ function uiActionsMaker() {
   }
 }
 
-const urlParams = {brand: 'udn', account: '1', group: '2', version: '1'}
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.genMockFunction()
+  }
+}
+
+function groupActionsMaker() {
+  return {
+    fetchGroup: jest.genMockFunction()
+  }
+}
+
+const urlParams = {brand: 'udn', account: '1', group: '2', property: 'www.abc.com', version: '1'}
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
 
@@ -230,6 +242,8 @@ describe('Configuration', () => {
   it('should exist', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -240,6 +254,8 @@ describe('Configuration', () => {
     const hostActions = hostActionsMaker()
     TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions} fetching={true}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         params={urlParams} location={fakeLocation}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
@@ -251,6 +267,8 @@ describe('Configuration', () => {
   it('should initially render details subcomponent', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -273,6 +291,8 @@ describe('Configuration', () => {
   it('should render defaults subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -299,6 +319,8 @@ describe('Configuration', () => {
   it('should render policies subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -325,6 +347,8 @@ describe('Configuration', () => {
   it('should render performance subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -351,6 +375,8 @@ describe('Configuration', () => {
   it('should render security subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -377,6 +403,8 @@ describe('Configuration', () => {
   it('should render certificates subcomponent when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -403,6 +431,8 @@ describe('Configuration', () => {
   it('should render performance change log when tab is clicked', () => {
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActionsMaker()}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -430,6 +460,8 @@ describe('Configuration', () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -446,6 +478,8 @@ describe('Configuration', () => {
     const uiActions = uiActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
@@ -462,6 +496,8 @@ describe('Configuration', () => {
     const hostActions = hostActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -478,10 +514,35 @@ describe('Configuration', () => {
     const uiActions = uiActionsMaker()
     let config = TestUtils.renderIntoDocument(
       <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
+    config.togglePublishModal = jest.genMockFunction()
+    config.changeActiveVersionEnvironment(2)
+    expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
+    expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
+    expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
+      .configuration_status.deployment_status).toBe(2)
+    expect(config.togglePublishModal.mock.calls.length).toBe(1)
+  })
+
+  it("should not show publish modal if version is retired", () => {
+    const hostActions = hostActionsMaker()
+    const uiActions = uiActionsMaker()
+    let config = TestUtils.renderIntoDocument(
+      <Configuration hostActions={hostActions}
+        accountActions={accountActionsMaker()}
+        groupActions={groupActionsMaker()}
+        activeHost={fakeHost}
+        params={urlParams} location={fakeLocation}
+        uiActions={uiActions}/>
+    );
+    config.togglePublishModal = jest.genMockFunction()
     config.changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
@@ -489,5 +550,6 @@ describe('Configuration', () => {
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(1)
+    expect(config.togglePublishModal.mock.calls.length).toBe(0)
   })
 })

@@ -297,10 +297,10 @@ label {
   margin-top: ($bar-height - $header-btn-height) / 2;
   margin-right: 10px;
   margin-left: 10px;
-  border-radius: $header-btn-height / 2;
   background-position: 15px center;
   background-repeat: no-repeat;
   background-size: 20px 20px;
+  border-radius: $header-btn-height / 2;
 
   @include lg {
     margin-right: 5px;
@@ -319,5 +319,19 @@ label {
 
   .light-theme & {
     background-image: url('../assets/icons/lt-icon-search.svg');
+  }
+}
+
+.search-input-group {
+
+  .header-btn-row & {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    margin-right: 1em;
+
+    > .search-input {
+      width: 16em;
+    }
   }
 }

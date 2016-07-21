@@ -1,6 +1,13 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
+jest.mock('../../util/helpers', () => {
+  return {
+    getContentUrl: jest.genMockFunction()
+      .mockImplementation(val => '/path/after/login')
+  }
+})
+
 jest.dontMock('../login.jsx')
 const Login = require('../login.jsx').Login
 
@@ -113,6 +120,6 @@ describe('Login', () => {
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/content/accounts/udn/')
+    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/path/after/login')
   })
 })
