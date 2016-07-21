@@ -49,6 +49,7 @@ Select.displayName = 'Select'
 Select.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  numericValues: PropTypes.bool,
   onSelect: PropTypes.func,
   options: PropTypes.array,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])

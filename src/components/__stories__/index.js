@@ -6,6 +6,7 @@ import './loading-spinner'
 import './delete-modal'
 //import './global-account-selector'
 import './info-modal'
+import './inline-add'
 
 //account management
 import './account-management/account-details'
