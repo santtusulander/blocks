@@ -18,7 +18,8 @@ SelectWrapper.propTypes = {
   disabled: PropTypes.bool,
   numericValues: PropTypes.bool,
   onChange: PropTypes.func,
-  options: PropTypes.array
+  options: PropTypes.array,
+  value: PropTypes.value
 };
 
 SelectWrapper.defaultProps = {
