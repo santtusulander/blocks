@@ -156,6 +156,14 @@ label {
   }
 }
 
+.checkbox-div {
+
+  &.inline {
+    display: inline-block;
+    margin-right: 50px;
+  }
+}
+
 .checkbox {
   margin: 0;
 
