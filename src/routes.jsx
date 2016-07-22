@@ -14,6 +14,7 @@ import AccountManagementServices from './components/account-management/system/se
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
+import ForgotPassword from './containers/forgot-password'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
@@ -150,6 +151,7 @@ module.exports = (
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
+    <Route path="/forgot-password" component={ForgotPassword}/>
 
     {/* Analytics - routes */}
     <Route path={routes.analytics}>
