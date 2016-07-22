@@ -106,7 +106,7 @@ export class Login extends React.Component {
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
             {this.state.loginError ?
-              <div className="login-error">
+              <div className="login-info">
                 <p>{this.state.loginError}</p>
               </div>
               : ''
