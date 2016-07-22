@@ -23,10 +23,11 @@ import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
 import NewAccountForm from '../../components/account-management/add-account-form.jsx'
+import GroupEditForm from '../../components/account-management/group-edit-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP } from '../../constants/account-management-modals.js'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP } from '../../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 
 export class AccountManagement extends Component {
@@ -34,7 +35,8 @@ export class AccountManagement extends Component {
     super(props)
 
     this.state = {
-      groupToDelete: null
+      groupToDelete: null,
+      groupToUpdate: null
     }
 
     this.notificationTimeout = null
@@ -48,6 +50,7 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+    this.showEditGroupModal = this.showEditGroupModal.bind(this)
   }
 
   componentWillMount() {
@@ -96,11 +99,21 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, name) {
-    return this.props.groupActions.updateGroup('udn', this.props.activeAccount.get('id'), groupId, {name: name})
-      .then(() => {
-        this.showNotification('Group updates saved.')
-      })
+  editGroupInActiveAccount(groupId, data) {
+    return this.props.groupActions.updateGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      groupId,
+      data
+    ).then(() => {
+      this.props.toggleModal(null)
+      this.showNotification('Group detail updates saved.')
+    })
+  }
+
+  showEditGroupModal(group) {
+    this.setState({groupToUpdate: group})
+    this.props.toggleModal(EDIT_GROUP)
   }
 
   editAccount(accountId, data) {
@@ -191,7 +204,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
-      editGroup: this.editGroupInActiveAccount,
+      editGroup: this.showEditGroupModal,
       groups: this.props.groups,
       account: activeAccount,
       toggleModal,
@@ -297,6 +310,16 @@ export class AccountManagement extends Component {
             description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
+          <GroupEditForm
+            id="group-edit-form"
+            onSave={(data) => this.editGroupInActiveAccount(this.state.groupToUpdate.get('id'), data)}
+            onCancel={() => toggleModal(null)}
+            show={true}
+            // NEEDS_API users={}
+            initialValues={
+              this.state.groupToUpdate.toJS()
+            }/>}
         </Content>
       </PageContainer>
     )

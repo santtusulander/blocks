@@ -12,7 +12,7 @@ import './analytics-view-control.scss'
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview' },
   { key: 'visitors', label: 'Unique Visitors' },
-  { key: 'on-off-net', label: 'Service Provider On/Off net', hideHierarchy: true },
+  { key: 'on-off-net', label: 'Service Provider On/Off Net', hideHierarchy: true },
   { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true },
   { key: 'file-error', label: 'File Error', propertyOnly: true },
   { key: 'url-report', label: 'URL', propertyOnly: true },

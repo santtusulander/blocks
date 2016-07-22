@@ -175,7 +175,7 @@ class AccountManagementAccountGroups extends React.Component {
                 <td>NEEDS_API</td>
                 */}
                 <td>
-                  <a href="#" onClick={this.editGroup(group.get('id'))}>
+                  <a href="#" onClick={() => this.props.editGroup(group)}>
                     EDIT
                   </a>
                   <Button onClick={this.deleteGroup(group)}
@@ -204,7 +204,8 @@ AccountManagementAccountGroups.propTypes    = {
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editGroup: React.PropTypes.func,
-  groups: React.PropTypes.instanceOf(Immutable.List)
+  groups: React.PropTypes.instanceOf(Immutable.List),
+  toggleModal: React.PropTypes.func
 }
 AccountManagementAccountGroups.defaultProps = {
   groups: Immutable.List([])

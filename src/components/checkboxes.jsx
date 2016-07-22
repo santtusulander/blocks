@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 
-const CheckboxArray = ({ iterable, field, headerText }) => {
+const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   const handleChange = (option, hasValue, index, e) => {
     const copy = [...field.value]
     if (!hasValue && e.target.checked) {
@@ -52,6 +52,12 @@ const CheckboxArray = ({ iterable, field, headerText }) => {
     classNames.push('checkbox-array--table')
   }
 
+  let checkboxDivClassName = ['checkbox-div']
+  if (inline) {
+    checkboxDivClassName .push('inline')
+  }
+  checkboxDivClassName.join(' ')
+
   return (
     <div className={classNames.join(' ')}>
       { headerText &&
@@ -68,10 +74,11 @@ const CheckboxArray = ({ iterable, field, headerText }) => {
           const index = field.value.indexOf(checkbox.value)
           const hasValue = index >= 0
           return (
-            <div key={i} className="checkbox-div">
+            <div key={i} className={checkboxDivClassName}>
               <Input
                 type="checkbox"
                 checked={hasValue}
+                disabled={disabled}
                 label={checkbox.label}
                 onChange={e => handleChange(checkbox, hasValue, index, e)}/>
             </div>
@@ -83,8 +90,10 @@ const CheckboxArray = ({ iterable, field, headerText }) => {
 }
 
 CheckboxArray.propTypes = {
+  disabled: PropTypes.bool,
   field: PropTypes.object,
   headerText: PropTypes.string,
+  inline: PropTypes.bool,
   iterable: PropTypes.array
 }
 

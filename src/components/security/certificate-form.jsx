@@ -11,18 +11,20 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
     <form>
       <div id="accounts">
         <SelectWrapper
-          { ...account }
+          {...account}
           disabled={editMode}
-          value={Number(account.value)}
+          numericValues={true}
+          value={account.value}
           className="input-select"
           options={accounts.map(account => [account.get('id'), account.get('name')])}/>
         <hr/>
       </div>
       <div id="groups">
         <SelectWrapper
-          { ...group }
+          {...group}
           disabled={editMode}
-          value={Number(group.value)}
+          numericValues={true}
+          value={group.value}
           className="input-select"
           options={groups.map(group => [group.get('id'), group.get('name')])}/>
         <hr/>
@@ -30,7 +32,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
       <div id="sslCertTitle">
         <Input type="text"
           label="SSL Cert Title"
-          { ...title }/>
+          {...title}/>
         {title.touched && title.error && <div className="error-msg">{title.error}</div>}
         <hr/>
       </div>
@@ -38,7 +40,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
         <Input type="textarea"
           label="Private Key*"
           className="fixed-size-textarea"
-          { ...privateKey }/>
+          {...privateKey}/>
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
         <hr/>
       </div>
@@ -46,14 +48,14 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
         <Input type="textarea"
           className="fixed-size-textarea"
           label="Intermediate Certificate (optional)"
-        { ...interMediateCert }/>
+        {...interMediateCert}/>
         <hr/>
       </div>
       <div id="certificate">
         <Input type="textarea"
           label="Certificate*"
           className="fixed-size-textarea"
-          { ...certificate }/>
+          {...certificate}/>
         {certificate.touched && certificate.error && <div className="error-msg">{certificate.error}</div>}
       </div>
       <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
@@ -77,6 +79,7 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
 
 CertificateForm.propTypes = {
   accounts: PropTypes.instanceOf(List),
+  editMode: PropTypes.bool,
   errors: PropTypes.object,
   fields: PropTypes.object,
   groups: PropTypes.instanceOf(List),

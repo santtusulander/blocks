@@ -8,11 +8,14 @@ import InputConnector from '../../input-connector'
 class Matcher extends React.Component {
   constructor(props) {
     super(props);
+    const fieldDetail = props.match.get('field_detail')
+    const caseKey = props.match.get('cases').get(0).get(0)
+    const containsVal = fieldDetail ? caseKey : ''
 
     this.state = {
-      activeFilter: 'exists',
-      containsVal: '',
-      val: props.match.get('cases').get(0).get(0)
+      activeFilter: containsVal && containsVal !== '.*' ? 'contains' : 'exists',
+      containsVal: containsVal,
+      val: fieldDetail ? fieldDetail : caseKey
     }
 
     this.handleValChange = this.handleValChange.bind(this)
@@ -33,10 +36,25 @@ class Matcher extends React.Component {
     })
   }
   saveChanges() {
-    this.props.changeValue(
-      this.props.path.concat(['cases', 0, 0]),
-      this.state.val
-    )
+    // matches with a contain value put val in field_detail and use containsVal
+    // as child key
+    if(this.props.contains) {
+      // for now the api only supports Contains or Exists
+      const caseKey = this.state.activeFilter === 'contains' ?
+        this.state.containsVal :
+        '.*'
+      const newMatch = this.props.match
+        .set('field_detail', this.state.val)
+        .setIn(['cases', 0, 0], caseKey)
+      this.props.changeValue(this.props.path, newMatch)
+    }
+    // if there's no contain value, use val as the child key
+    else {
+      this.props.changeValue(
+        this.props.path.concat(['cases', 0, 0]),
+        this.state.val
+      )
+    }
     this.props.close()
   }
   render() {

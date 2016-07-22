@@ -27,12 +27,17 @@ export default handleActions({
 export const fetchPermissions = createAction(PERMISSIONS_FETCHED, () => {
   return Promise.resolve({data: [
     {id: 1, name: 'Content'},
-    {id: 2, name: 'CP Analytics'},
-    {id: 3, name: 'SP Analytics'},
-    {id: 4, name: 'Security'},
-    {id: 5, name: 'Services'},
-    {id: 6, name: 'Account'},
-    {id: 7, name: 'Config'},
-    {id: 8, name: 'Support'}
+    {id: 2, name: 'Analytics'},
+    {id: 3, name: 'Analytics: CP: Traffic'},
+    {id: 4, name: 'Analytics: CP: Unique Visitors'},
+    {id: 5, name: 'Analytics: CP: SP Contribution'},
+    {id: 6, name: 'Analytics: CP: File Error'},
+    {id: 7, name: 'Analytics: CP: URL'},
+    {id: 8, name: 'Analytics: SP: On/Off Net'},
+    {id: 9, name: 'Security'},
+    {id: 10, name: 'Services'},
+    {id: 11, name: 'Account'},
+    {id: 12, name: 'Config'},
+    {id: 13, name: 'Support'}
   ]})
 })
