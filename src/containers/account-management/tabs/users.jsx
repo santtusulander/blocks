@@ -27,8 +27,8 @@ export class AccountManagementAccountUsers extends React.Component {
     this.changeSort = this.changeSort.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.editUser = this.editUser.bind(this)
+    this.saveUser = this.saveUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
-    this.editUser = this.editUser.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
   }
   componentWillMount() {
@@ -99,6 +99,29 @@ export class AccountManagementAccountUsers extends React.Component {
       userToEdit: null,
       showEditModal: false
     })
+  }
+  saveUser(user) {
+    // Get the username from the user we have in state for editing purposes.
+    //user.username = this.state.userToEdit.get('username')
+
+    user = {
+      ...this.state.userToEdit.toJS(),
+      ...user
+    }
+
+    console.log(user);
+
+    this.props.userActions.updateUser(user)
+      .then((response) => {
+        if (!response.error) {
+          this.showNotification('Updates to user saved.')
+          
+          this.setState({
+            userToEdit: null,
+            showEditModal: false
+          })
+        }
+      })
   }
   render() {
     const sorterProps = {
@@ -173,7 +196,9 @@ export class AccountManagementAccountUsers extends React.Component {
             show={this.state.showEditModal}
             user={this.state.userToEdit}
             groups={this.props.groups}
-            onCancel={this.cancelUserEdit}/>
+            onCancel={this.cancelUserEdit}
+            onSave={this.saveUser}
+          />
         }
       </div>
     )

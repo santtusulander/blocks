@@ -20,8 +20,6 @@ class UserEditModal extends React.Component {
       groups: [user.get('group_id')]
     } : {}
 
-    console.log(initialValues)
-
     return (
       <Modal dialogClassName="user-form-sidebar" show={show}>
         <Modal.Header>

@@ -12,16 +12,14 @@ let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const { accountName, accountBrand, services } = values
+  const { email, role, groups } = values
 
-  if(!accountName || accountName.length === 0) {
-    errors.accountName = 'Account name is required'
+  if(!email || email.length === 0) {
+    errors.email = 'Email is required'
   }
-  if(!accountBrand || accountBrand.length === 0) {
-    errors.accountBrand = 'Account brand is required'
-  }
-  if(services && services.length === 0) {
-    errors.serviceType = 'Service type is required'
+
+  if(!role || role.length === 0) {
+    errors.role = 'Role is required'
   }
 
   return errors;
@@ -36,7 +34,15 @@ class UserEditForm extends React.Component {
   }
 
   save() {
+    const {
+      fields: { email, groups, role }
+    } = this.props
 
+    this.props.onSave({
+      email: email.value,
+      //roles: [role.value],
+      group_id: groups.value.length ? groups.value[0].value : 0
+    })
   }
 
   resetPassword() {
@@ -107,13 +113,13 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   groupOptions: PropTypes.array,
-  roleOptions: PropTypes.array,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func
+  onSave: PropTypes.func,
+  roleOptions: PropTypes.array
 }
 
 export default reduxForm({
   form: 'user-form',
   fields: ['email', 'role', 'groups'],
-  validate: validate,
+  validate: validate
 })(UserEditForm)
