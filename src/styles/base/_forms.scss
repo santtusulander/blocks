@@ -161,11 +161,11 @@ label {
     .checkbox-array__header {
       font-weight: normal;
       border: 0;
-      height: 50px;
+      height: $btn-height;
       text-transform: uppercase;
 
       @include md {
-        height: $md-btn-height;
+        height: 50px;
       }
 
       .dark-theme & {

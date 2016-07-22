@@ -60,10 +60,13 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
-        <div className="form-group">
+        <div className="form-group password-reset">
           <label className="control-label">Password</label>
           <div>
-            <span className="user-password">********</span> <Button onClick={this.resetPassword}>Reset</Button>
+            <span className="user-password">********</span>
+            <Button
+              bsStyle="primary"
+              onClick={this.resetPassword}>Reset</Button>
           </div>
         </div>
 

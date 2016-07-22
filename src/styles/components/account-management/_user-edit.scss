@@ -7,10 +7,24 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .user-password {
-    display: inline-block;
-    margin-right: 15px;
-    line-height: 40px;
-    vertical-align: sub;
+  .password-reset {
+    .user-password {
+      display: inline-block;
+      margin-right: 15px;
+      line-height: 40px;
+      vertical-align: sub;
+    }
+
+    button.btn-primary {
+      .dark-theme & {
+        color: $dt-text-color;
+        background-color: rgba($black, 0.2);
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+        background-color: $white;
+      }
+    }
   }
 }
