@@ -159,6 +159,7 @@ Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   loggedIn: React.PropTypes.bool,
+  router: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
 
