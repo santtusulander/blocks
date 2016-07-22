@@ -89,7 +89,10 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
-        <CheckboxArray iterable={groupOptions} field={groups} headerText="Groups"/>
+        <CheckboxArray
+          iterable={groupOptions}
+          field={groups}
+          headerText="Groups"/>
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
