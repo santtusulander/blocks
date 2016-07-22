@@ -148,6 +148,8 @@ export class Main extends React.Component {
       <div className={classNames}>
       {this.props.user.get('loggedIn') &&
         this.props.location.pathname !== '/login' &&
+        this.props.location.pathname !== '/forgot-password' &&
+        this.props.location.pathname !== '/set-password' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
           activeAccount={activeAccount}
@@ -158,7 +160,10 @@ export class Main extends React.Component {
           />
         : ''
       }
-        {this.props.location.pathname !== '/login' &&
+        {this.props.user.get('loggedIn') &&
+          this.props.location.pathname !== '/login' &&
+          this.props.location.pathname !== '/forgot-password' &&
+          this.props.location.pathname !== '/set-password' &&
           this.props.location.pathname !== '/starburst-help' ?
           <Header
             accounts={this.props.accounts}
