@@ -47,8 +47,13 @@ const CheckboxArray = ({ iterable, field, headerText }) => {
     return allChecked
   }
 
+  let classNames = ['checkbox-array']
+  if (headerText) {
+    classNames.push('checkbox-array--table')
+  }
+
   return (
-    <div className="checkbox-array">
+    <div className={classNames.join(' ')}>
       { headerText &&
       <div className="checkbox-array__header">
         <Input
