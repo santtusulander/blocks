@@ -23,6 +23,7 @@ import Property from './containers/property'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
+import SetPassword from './containers/set-password'
 import Support from './containers/support'
 import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
@@ -151,6 +152,7 @@ module.exports = (
     <Route path="styleguide" component={Styleguide}/>
     <Route path="configure/purge" component={Purge}/>
     <Route path="/login" component={Login}/>
+    <Route path="/set-password" component={SetPassword}/>
     <Route path="/forgot-password" component={ForgotPassword}/>
 
     {/* Analytics - routes */}
