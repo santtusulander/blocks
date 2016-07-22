@@ -159,8 +159,6 @@ export class AccountManagementAccountUsers extends React.Component {
       ...user
     }
 
-    console.log(user);
-
     this.props.userActions.updateUser(user)
       .then((response) => {
         if (!response.error) {
