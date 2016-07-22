@@ -52,6 +52,7 @@
 // Components
 // ==========
 
+@import "components/modal-form-panel";
 @import 'components/account-sidebar';
 @import 'components/confirmation';
 @import 'components/datepicker';
@@ -73,6 +74,7 @@
 @import 'components/account-management/user-list';
 @import 'components/account-management/groups';
 @import 'components/account-management/manage-account';
+@import 'components/account-management/user-edit';
 // Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
