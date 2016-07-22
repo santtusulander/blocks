@@ -15,6 +15,14 @@
     }
   }
 
+  .modal-content {
+    min-height: 710px;
+
+    @include md {
+      min-height: 520px;
+    }
+  }
+
   .modal-body {
     padding: 110px 120px 90px;
 
@@ -96,6 +104,22 @@
 
   &.login-label-password::after {
     content: 'PASSWORD';
+  }
+
+  &.login-label-confirm::after {
+    content: 'CONFIRM';
+  }
+
+  &.login-label-email::after {
+    content: 'EMAIL';
+  }
+
+  &.login-label-password.valid::after,
+  &.login-label-confirm.valid::after {
+    padding-left: 26px;
+    color: $green;
+    background: url('../assets/icons/icon-valid.svg') left center no-repeat;
+    background-size: 17px 16px;
   }
 }
 
