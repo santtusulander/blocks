@@ -9,6 +9,7 @@ import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
 import * as accountActionCreators from '../../redux/modules/account'
+import * as userActionCreators from '../../redux/modules/user'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
@@ -27,13 +28,13 @@ import GroupEditForm from '../../components/account-management/group-edit-form.j
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP } from '../../constants/account-management-modals.js'
+import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP, DELETE_USER } from '../../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
-
+    this.userToDelete = null
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -80,6 +81,15 @@ export class AccountManagement extends Component {
     this.setState({ groupToDelete: group });
 
     this.props.toggleModal(DELETE_GROUP);
+  }
+
+  showDeleteUserModal(user) {
+    this.userToDelete = user
+    this.props.toggleModal(DELETE_GROUP);
+  }
+
+  deleteUser() {
+
   }
 
   addGroupToActiveAccount(name) {
@@ -204,6 +214,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
+      deleteUser: this.showDeleteUserModal(),
       editGroup: this.showEditGroupModal,
       groups: this.props.groups,
       account: activeAccount,
@@ -307,9 +318,15 @@ export class AccountManagement extends Component {
           {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
           <DeleteModal
             itemToDelete={this.state.groupToDelete.get('name')}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {accountManagementModal === DELETE_USER &&
+          <DeleteModal
+            itemToDelete={this.userToDelete}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            onCancel={() => toggleModal(null)}
+            onDelete={() => this.deleteUser(this.userToDelete)}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupEditForm
             id="group-edit-form"
@@ -411,7 +428,7 @@ function mapDispatchToProps(dispatch) {
     permissionsActions: permissionsActions,
     rolesActions: rolesActions,
     uiActions: uiActions,
-    onDelete: onDelete
+    onDelete
   };
 }
 
