@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
+import { withRouter } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -309,4 +310,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Main));

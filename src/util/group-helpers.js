@@ -4,7 +4,7 @@
  * @param {List} groups
  * @returns {Array}
  */
-export function getOptions(groups) {
+export function getCheckboxArrayOptions(groups) {
   let options = []
 
   groups.forEach(group => {

@@ -6,11 +6,9 @@ import {
   Button
 } from 'react-bootstrap'
 import CheckboxArray from '../../checkboxes.jsx'
-
-
+import SelectWrapper from '../../select-wrapper.jsx'
 
 let errors = {}
-
 const validate = (values) => {
   errors = {}
 
@@ -47,7 +45,12 @@ class UserEditForm extends React.Component {
   }
 
   render() {
-    const { fields: { email, groups }, groupOptions, onCancel } = this.props
+    const {
+      fields: { email, groups, role },
+      groupOptions,
+      roleOptions,
+      onCancel
+    } = this.props
 
     return (
       <form>
@@ -72,24 +75,22 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
+        <div className='form-group'>
+          <label className='control-label'>Role</label>
+          <SelectWrapper
+            {...role}
+            className="input-select"
+            value={role.value}
+            options={roleOptions}
+          />
+        </div>
+        {role.touched && role.error &&
+        <div className='error-msg'>{role.error}</div>}
+
+        <hr/>
+
         <CheckboxArray iterable={groupOptions} field={groups} headerText="Groups"/>
 
-        {/*<div className='form-group'>
-         <label className='control-label'>Brand</label>
-         <SelectWrapper
-         {... accountBrand}
-         className="input-select"
-         value={accountBrand.value}
-         options={brandOptions}
-         />
-         </div>
-         {accountBrand.touched && accountBrand.error &&
-         <div className='error-msg'>{accountBrand.error}</div>}
-
-         <hr/>
-
-         <label>Service type</label>
-         <CheckboxArray iterable={serviceTypes} field={services}/>*/}
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
           <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
@@ -103,12 +104,13 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   groupOptions: PropTypes.array,
+  roleOptions: PropTypes.array,
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
 
 export default reduxForm({
   form: 'user-form',
-  fields: ['email', 'groups'],
+  fields: ['email', 'role', 'groups'],
   validate: validate,
 })(UserEditForm)
