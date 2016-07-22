@@ -12,33 +12,9 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import SelectWrapper from '../../../components/select-wrapper'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
+import IconSupport from '../../../components/icons/icon-support'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
-
-/**
- * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
- * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
- * To get values from input fields, the input elements' IDs must match the field prop's array items.
- */
-const inlineAddInputs = [
-  [
-    { input: <Input id='a' placeholder=" Name" type="text"/>, positionClass: 'half-width-item left' },
-    { input: <Button>Do something</Button>, positionClass: 'trailing-item'}
-  ],
-  [
-    { input: <Input id='b' placeholder=" Some" type="text"/>, positionClass: 'half-width-item left' },
-    { input: <Input id='c' placeholder=" Things" type="text"/>, positionClass: 'half-width-item right' }
-  ],
-  [ {
-    input: <SelectWrapper
-        id='d'
-        numericValues={true}
-        className=" inline-add-dropdown"
-        options={[1, 2, 3 ,4, 5].map(item => [item, item])}/>
-    , positionClass: 'left'
-  } ],
-  []
-]
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -49,6 +25,7 @@ export class AccountManagementAccountUsers extends React.Component {
       sortDir: 1,
       addingNew: false
     }
+    this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.editUser = this.editUser.bind(this)
@@ -75,18 +52,38 @@ export class AccountManagementAccountUsers extends React.Component {
   deleteUser(user) {
     return () => console.log("Delete user " + user);
   }
-  validateInlineAdd({ a, b, c }) {
+
+  checkForEmpty(fields, customConditions) {
     let errors = {}
-    if( a && a.length > 0) {
-      errors.a = 'insert validation'
-    }
-    if( b && b.length > 0) {
-      errors.b = 'insert validation'
-    }
-    if( c && c.length > 0) {
-      errors.c = 'insert validation'
+    for(const fieldName in fields) {
+      const field = fields[fieldName]
+      if(field === '') {
+        errors[fieldName] = 'Required'
+      }
+      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
+        errors[fieldName] = customConditions[fieldName].errorText
+      }
     }
     return errors
+  }
+
+  validateInlineAdd({ email, password, confirmPw }) {
+    console.log(confirmPw && password && confirmPw.length === password.length && confirmPw !== password)
+    const conditions = {
+      confirmPw: {
+        condition: confirmPw && password && confirmPw.length === password.length && confirmPw !== password,
+        errorText: 'Passwords don\'t match!'
+      },
+      email: {
+        condition: email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i.test(email),
+        errorText: 'invalid email!'
+      },
+      password: {
+        condition: password && password.length > 30,
+        errorText: 'Password too long!'
+      }
+    }
+    return this.checkForEmpty({ email, password, confirmPw }, conditions)
   }
   editUser(user) {
     return e => {
@@ -111,6 +108,56 @@ export class AccountManagementAccountUsers extends React.Component {
       return 0
     })
   }
+
+  getInlineAddFields() {
+    /**
+     * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
+     * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
+     * To get values from input fields, the input elements' IDs must match the field prop's array items.
+     */
+    return [
+      [
+        { input: <Input id='email' placeholder=" Email" type="text"/>, positionClass: 'left' },
+      ],
+      [
+        {
+          input: <Input id='password' placeholder=" Password" type="text"/>,
+          positionClass: 'half-width-item left'
+        },
+        {
+          input: <Input id='confirmPw' placeholder=" Confirm password" type="text"/>,
+          positionClass: 'half-width-item right'
+        }
+      ],
+      [
+        {
+          input: <SelectWrapper
+            id='roles'
+            className=" inline-add-dropdown"
+            options={['SuperUser', 'Support'].map(item => [item, item])}/>
+          , positionClass: 'left'
+        },
+        {
+          input:
+            <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
+              <IconSupport/>
+            </Button>,
+          positionClass: 'trailing-item'
+        }
+      ],
+      [
+        {
+          input: <SelectWrapper
+            id='group_id'
+            numericValues={true}
+            className=" inline-add-dropdown"
+            options={this.props.groups.map(group => [ group.get('id'), group.get('name') ]).toJS()}/>,
+          positionClass: 'left'
+        }
+      ]
+    ]
+  }
+
   getGroupsForUser(user) {
     const groupId = user.get('group_id')
     let groups = []
@@ -175,11 +222,11 @@ export class AccountManagementAccountUsers extends React.Component {
           <tbody>
             {this.state.addingNew && <InlineAdd
               validate={this.validateInlineAdd}
-              fields={['a', 'b', 'c', 'd']}
-              inputs={inlineAddInputs}
+              fields={['email', 'password', 'confirmPw', 'roles', 'groups']}
+              inputs={this.getInlineAddFields()}
               cancel={() => {}}
               unmount={() => this.setState({ addingNew: false })}
-              save={vals => console.log(vals)}/>}
+              save={this.newUser}/>}
             {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
