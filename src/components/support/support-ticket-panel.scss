@@ -1,7 +1,7 @@
 @import '../../styles/base/colors';
 @import '../../styles/base/variables';
 
-$support-border-width:       0.2em;
+$support-border-width:       2px;
 $support-padding-horizontal: 5em;
 $support-padding-vertical:   2.5em;
 
@@ -21,6 +21,10 @@ $support-priority-high:   $red;
   font-size: 1rem;
   background-color: rgba($pale-blue, 0.2);
   box-shadow: 0 0.2em 0.2em rgba($black, 0.75);
+
+  &.closed {
+    background-color: darken(rgba($pale-blue, 0.2), 15);
+  }
 
   // Colored priority bar on the left
   > #{&}-priority {
@@ -43,6 +47,10 @@ $support-priority-high:   $red;
     &.high {
       background-color: $support-priority-high;
     }
+  }
+
+  &.closed > #{&}-priority {
+    border-right-color: rgba($black, 0.8);
   }
 
   // Header
@@ -110,6 +118,10 @@ $support-priority-high:   $red;
     text-transform: uppercase;
     background-color: $pale-blue;
     border-radius: 0.2em;
+  }
+
+  &.closed #{&}-workflow {
+    background-color: rgba($black, 0.2);
   }
 
   // Person assigned to the ticket

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import classNames from 'classnames'
+import { List } from 'immutable'
 
 import IconComments from '../icons/icon-comments'
 import IconIncident from '../icons/icon-incident'
@@ -12,6 +13,12 @@ import IconTask from '../icons/icon-task'
 import './support-ticket-panel.scss'
 
 export class SupportTicketPanel extends React.Component {
+
+  constructor(props) {
+    super(props);
+    const closedClassNames = List(['closed', 'resolved']);
+    this.isClosed = closedClassNames.includes(this.props.status.toLowerCase());
+  }
 
   /**
    * Return an icon component based on a provided type string.
@@ -33,11 +40,13 @@ export class SupportTicketPanel extends React.Component {
 
   render() {
     const TicketTypeIcon = this.createTypeIcon(this.props.type);
-    const priorityClassName = classNames('support-ticket-panel-priority', this.props.priority);
+    const priorityClass = (this.isClosed) ? 'normal' : this.props.priority;
+    const priorityClassNames = classNames('support-ticket-panel-priority', priorityClass);
+    const statusClassNames = classNames({'support-ticket-panel': true, 'closed': this.isClosed});
 
     return (
-      <div className="support-ticket-panel">
-        <div className={priorityClassName}></div>
+      <div className={statusClassNames}>
+        <div className={priorityClassNames}></div>
         <Grid componentClass="header" fluid={true}>
           <Row>
             <Col xs={6}>

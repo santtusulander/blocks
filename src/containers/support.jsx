@@ -26,8 +26,19 @@ export class Support extends React.Component {
               body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
               comments="3"
               number="#1-5424"
-              status="Open"
-              title="Poor Performance" />
+              status="open"
+              title="Poor Performance"
+              priority="high" />
+
+            <SupportTicketPanel
+              type="task"
+              assignee="Pending"
+              body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
+              comments="3"
+              number="#1-5424"
+              status="closed"
+              title="Poor Performance"
+              priority="high" />
           </div>
         </Content>
       </PageContainer>
