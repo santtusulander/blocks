@@ -2,10 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import {reduxForm} from 'redux-form'
 
-import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { Modal, Input, ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import CheckboxArray from '../checkboxes'
-import Toggle from '../toggle'
+import PermissionSelection from '../permission-selection'
 
 import './role-edit-form.scss'
 
@@ -37,7 +37,8 @@ const RolesEditForm = (props) => {
   }).toArray()
 
   const field = {
-    value: props.editRole.get('parentRoles')
+    value: props.editRole.get('parentRoles'),
+    onChange: () => null
   }
 
   return (
@@ -79,24 +80,33 @@ const RolesEditForm = (props) => {
 
         <label>Permissions</label>
 
-        {props.permissions.map((permission, i) => {
-          const selected = props.editRole.get('permissions').includes(permission.get('id'))
-          let rowClasses = "toggle-row clearfix"
-          if(selected) {
-            rowClasses += ' yes'
-          }
-          return (
-            <div className={rowClasses} key={i}>
-              <span className="toggle-row-label">{permission.get('name')}</span>
-              {/*TODO: Enable in the future when roles are editable*/}
-              <Toggle
-                className="pull-right"
-                changeValue={() => null}
-                value={selected}
-                readonly={true}/>
-            </div>
-          )
-        })}
+        <Table className="table-striped">
+          <thead>
+            <tr>
+              <th colSpan="3">PERMISSION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.permissions.map((permission, i) => {
+              const permissions = props.editRole.get('permissions').get('resources').find((rule, key) => key === permission.get('id'))
+              return (
+                <tr key={i}>
+                  <td className="no-border">
+                    {permission.get('name')}
+                  </td>
+                  <td>
+                    {/*TODO: Remove disabled prop in the future when roles are editable*/}
+                    <PermissionSelection
+                      className="pull-right"
+                      onChange={() => null}
+                      disabled={true}
+                      permissions={permissions}/>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline"
