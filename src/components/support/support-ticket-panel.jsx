@@ -90,14 +90,8 @@ function createTypeIcon(type) {
 
 SupportTicketPanel.displayName = 'SupportTicketPanel'
 SupportTicketPanel.defaultProps = {
-  assignee: '',
-  body: '',
-  comments: '',
-  number: '',
-  priority: 'normal',
-  status: '',
-  title: '',
-  type: ''
+  assignee: 'Pending',
+  priority: 'normal'
 }
 
 SupportTicketPanel.propTypes = {
@@ -105,7 +99,7 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
-  priority: React.PropTypes.string,
+  priority: React.PropTypes.oneOf(['normal', 'low', 'medium', 'high']),
   status: React.PropTypes.string,
   title: React.PropTypes.string,
   type: React.PropTypes.string

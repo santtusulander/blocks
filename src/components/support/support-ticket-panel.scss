@@ -33,8 +33,12 @@ $support-priority-high:   $red;
     bottom: 0;
     left: 0;
     width: $support-priority-width;
-    background-color: $support-priority-normal;
     border-right: $support-border-width solid rgba($black, 0.6);
+
+    &,
+    &.normal {
+      background-color: $support-priority-normal;
+    }
 
     &.low {
       background-color: $support-priority-low;
