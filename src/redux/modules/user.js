@@ -93,7 +93,7 @@ export default handleActions({
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
-  USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -102,10 +102,8 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
-      "username": username,// superuser
-      "brand_id": "udn",
-      "password": password,// Video4All!
-      "account_id": 1
+      "username": username,// super@vidscale.com
+      "password": password// Video4All!
     },
     {
       headers: {
