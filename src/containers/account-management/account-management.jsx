@@ -390,6 +390,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
+  const userActions = bindActionCreators(userActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
@@ -420,6 +421,7 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
+    userActions: userActions.deleteUser,
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
