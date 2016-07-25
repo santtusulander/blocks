@@ -2,13 +2,14 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
 
-import {urlBase, mapReducers} from '../util'
+import {urlBase, mapReducers, parseResponseData} from '../util'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
+const USER_UPDATED = 'USER_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -22,6 +23,27 @@ const emptyUser = Immutable.Map({
 })
 
 // REDUCERS
+export function updateSuccess(state, action) {
+  const updatedUser = Immutable.fromJS(action.payload)
+  const currIndex = state.get('allUsers').findIndex(
+    user => user.get('email') === updatedUser.get('email')
+  )
+  const updatedUsers = currIndex !== -1 ?
+    state.get('allUsers').set(currIndex, updatedUser)
+    : state.get('allUsers')
+
+  return state.merge({
+    allUsers: updatedUsers,
+    fetching: false
+  })
+}
+
+export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
   localStorage.setItem('EricssonUDNUserName', action.payload.username)
@@ -40,12 +62,8 @@ export function userLoggedInFailure(){
 }
 
 export function fetchAllSuccess(state, action) {
-  // TODO: Temporarily make JSON look like multiple groups are supported
-  const users = Immutable.fromJS(action.payload).map(
-    user => user.set('groups', Immutable.List([user.get('group_id')]))
-  )
   return state.merge({
-    allUsers: users,
+    allUsers: Immutable.fromJS(action.payload),
     fetching: false
   })
 }
@@ -93,7 +111,8 @@ export default handleActions({
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
-  USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure)
+  USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  USER_UPDATED: mapReducers(updateSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -148,6 +167,16 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
       }
     });
 })
+
+export const updateUser = createAction(USER_UPDATED, user => {
+  return axios.put(`${urlBase}/v2/users/${user.email}`, user, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
 //   return axios.post(`${urlBase}/v2/tokens`, {

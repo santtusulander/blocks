@@ -84,8 +84,9 @@ export class AccountManagement extends Component {
 
   addGroupToActiveAccount(name) {
     return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
-      .then(() => {
+      .then(action => {
         this.props.hostActions.clearFetchedHosts()
+        return action.payload
       })
   }
 

@@ -50,6 +50,13 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params.account !== this.props.params.account) {
+      const { brand, account } = nextProps.params
+      this.props.userActions.fetchUsers(brand, account)
+    }
+  }
+
   cancelAdding() {
     this.setState({
       adding: false,
@@ -92,8 +99,20 @@ class AccountManagementAccountGroups extends React.Component {
   }
 
   // TODO: Now that this is a container, no need to pass this in
-  saveNewGroup(name) {
-    this.props.addGroup(name).then(this.cancelAdding)
+  saveNewGroup() {
+    this.props.addGroup(this.state.newName)
+      .then(newGroup => {
+        return Promise.all(this.state.newUsers.map(email => {
+          const foundUser = this.props.users
+            .find(user => user.get('email') === email)
+          const newUser = {
+            group_id: foundUser.get('group_id').push(newGroup.id).toJS(),
+            email: email
+          }
+          return this.props.userActions.updateUser(newUser)
+        }))
+      })
+      .then(this.cancelAdding)
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -163,8 +182,8 @@ class AccountManagementAccountGroups extends React.Component {
             values={this.state.newUsers}
             handleCheck={this.changeNewUsers}
             options={this.props.users.map(user => Immutable.Map({
-              label: user.get('username'),
-              value: user.get('username')
+              label: user.get('email') || 'No Email',
+              value: user.get('email')
             }))}/>,
           positionClass: 'left'
         }
@@ -219,10 +238,17 @@ class AccountManagementAccountGroups extends React.Component {
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
+            const userEmails = this.props.users
+              .filter(user => {
+                if(user.get('group_id') && user.get('group_id').size) {
+                  return user.get('group_id').indexOf(group.get('id')) !== -1
+                }
+              })
+              .map(user => user.get('email'))
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
-                <td>NEEDS_API</td>
+                <td>{userEmails.size ? userEmails.join(', ') : 'No members'}</td>
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
