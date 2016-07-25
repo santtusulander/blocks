@@ -33,7 +33,7 @@ $support-priority-high:   $red;
     bottom: 0;
     left: 0;
     width: $support-priority-width;
-    border-right: $support-border-width solid rgba($black, 0.6);
+    box-shadow: $support-border-width 0 0 rgba($black, 0.4);
 
     &,
     &.normal {
