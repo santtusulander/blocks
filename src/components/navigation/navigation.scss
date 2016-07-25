@@ -66,9 +66,10 @@ $dark-blue-navi: #070d1e;
         span {
           display: block;
           font-size: $navigation-sidebar-font-size;
-          line-height: 0;
+          line-height: 1;
           text-align: center;
           opacity: 0;
+          transform: scale(0);
           transition: all $navigation-transition-time;
         }
 
@@ -92,8 +93,8 @@ $dark-blue-navi: #070d1e;
     li {
       a {
         span {
-          line-height: 1;
           opacity: 1;
+          transform: scale(1);
           transition: all $navigation-transition-time;
         }
 
