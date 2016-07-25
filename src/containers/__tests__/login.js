@@ -96,7 +96,7 @@ describe('Login', () => {
     TestUtils.Simulate.submit(form)
     expect(userActions.logIn.mock.calls[0][0]).toBe('aaa')
     expect(userActions.logIn.mock.calls[0][1]).toBe('bbb')
-    const errorMsg = TestUtils.findRenderedDOMComponentWithClass(login, 'login-error')
+    const errorMsg = TestUtils.findRenderedDOMComponentWithClass(login, 'login-info')
     expect(errorMsg.textContent).toContain('Test fail')
   })
 
@@ -109,17 +109,17 @@ describe('Login', () => {
         ]
       }
     })
-    const fakeHistory = {
-      pushState: jest.genMockFunction()
+    const fakeRouter = {
+      push: jest.genMockFunction()
     }
     const login = TestUtils.renderIntoDocument(
       <Login userActions={userActions}
         accountActions={accountActions}
-        history={fakeHistory}/>
+        router={fakeRouter}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeHistory.pushState.mock.calls[0][1]).toBe('/path/after/login')
+    expect(fakeRouter.push.mock.calls[0][0]).toBe('/path/after/login')
   })
 })
