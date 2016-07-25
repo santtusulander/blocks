@@ -27,7 +27,6 @@ export class AccountManagementAccountUsers extends React.Component {
     }
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
-    this.deleteUser = this.deleteUser.bind(this)
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
@@ -50,22 +49,22 @@ export class AccountManagementAccountUsers extends React.Component {
       sortDir: direction
     })
   }
-  deleteUser(user) {
-    return () => console.log("Delete user " + user);
-  }
 
   newUser({ password, email, roles, group_id }) {
-    const { userActions: { createUser } } = this.props
+    const { userActions: { createUser }, params: { brand, account } } = this.props
     const requestBody = {
       password,
       email,
       roles: [roles],
-      group_id: [group_id]
+      first_name: 'notSet',
+      last_name: 'notSet',
+      brand_id: brand,
+      account_id: Number(account)
     }
     if(group_id) {
       requestBody.group_id = [ group_id ]
     }
-    createUser(requestBody)
+    createUser(requestBody).then(() => this.setState({ addingNew: false }))
   }
 
   checkForEmpty(fields, customConditions) {
@@ -128,7 +127,8 @@ export class AccountManagementAccountUsers extends React.Component {
     /**
      * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
      * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
-     * To get values from input fields, the input elements' IDs must match the fields-prop's array items.
+     * To get values from input fields, the input elements' IDs must match the inline add component's
+     * fields-prop's array items.
      *
      */
     return [
@@ -262,7 +262,7 @@ export class AccountManagementAccountUsers extends React.Component {
                     <a href="#" onClick={this.editUser(user.get('id'))}>
                       EDIT
                     </a>
-                    <Button onClick={() => this.props.deleteUser(user.get('username'))}
+                    <Button onClick={() => this.props.deleteUser(this.getEmailForUser(user))}
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>

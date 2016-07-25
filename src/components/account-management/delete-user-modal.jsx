@@ -20,7 +20,7 @@ const DeleteUserModal = ({ itemToDelete, onDelete, onCancel }) =>
           <Button onClick={onCancel} className="btn-outline">Cancel</Button>
           <Button onClick={onDelete}
                   bsStyle="secondary"
-                  className="delete-modal-submit">
+                  className="delete-modal-submit delete-user-submit">
             Delete
           </Button>
         </ButtonToolbar>

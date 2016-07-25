@@ -23,18 +23,25 @@ import IconAdd from '../../components/icons/icon-add'
 import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
+import DeleteUserModal from '../../components/account-management/delete-user-modal'
 import NewAccountForm from '../../components/account-management/add-account-form.jsx'
 import GroupEditForm from '../../components/account-management/group-edit-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP, DELETE_USER } from '../../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import {
+  ADD_ACCOUNT,
+  DELETE_ACCOUNT,
+  DELETE_GROUP,
+  EDIT_GROUP,
+  DELETE_USER
+} from '../../constants/account-management-modals.js'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
-    this.userToDelete = null
+    this.userToDelete = ''
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -51,7 +58,9 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+    this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.deleteUser = this.deleteUser.bind(this)
   }
 
   componentWillMount() {
@@ -85,11 +94,13 @@ export class AccountManagement extends Component {
 
   showDeleteUserModal(user) {
     this.userToDelete = user
-    this.props.toggleModal(DELETE_GROUP);
+    this.props.toggleModal(DELETE_USER);
   }
 
   deleteUser() {
-
+    const { userActions: { deleteUser } } = this.props
+    deleteUser(this.userToDelete)
+      .then(() => this.props.toggleModal(null))
   }
 
   addGroupToActiveAccount(name) {
@@ -322,11 +333,10 @@ export class AccountManagement extends Component {
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
           {accountManagementModal === DELETE_USER &&
-          <DeleteModal
+          <DeleteUserModal
             itemToDelete={this.userToDelete}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
-            onDelete={() => this.deleteUser(this.userToDelete)}/>}
+            onDelete={this.deleteUser}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupEditForm
             id="group-edit-form"
@@ -421,7 +431,7 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
-    userActions: userActions.deleteUser,
+    userActions: userActions,
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,

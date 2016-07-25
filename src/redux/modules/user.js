@@ -70,7 +70,7 @@ export function userStartFetch(state){
 export function deleteUserSuccess(state, action) {
   const newAllUsers = state.get('allUsers')
     .filterNot(user => {
-      return user.get('username') === action.payload.user
+      return user.get('email') === action.payload
     })
   return state.merge({
     allUsers: newAllUsers,
@@ -128,9 +128,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
       "username": username,// superuser
-      "brand_id": "udn",
       "password": password,// Video4All!
-      "account_id": 1
     },
     {
       headers: {
@@ -182,7 +180,11 @@ export const deleteUser = createAction(USER_DELETED, user =>
 
 export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
-    .then(res => res)
+    .then(res => {
+      if(res) {
+        return res.data
+      }
+    })
 )
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {

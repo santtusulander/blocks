@@ -30,7 +30,7 @@ class InlineAdd extends Component {
     !findDOMNode(this).contains(e.target) && !checkIfDropdownMenuItem(e.target) && this.props.unmount()
   }
   render() {
-    const { save, cancel, inputs, fields, invalid, values } = this.props
+    const { save, cancel, inputs, fields, invalid, values, unmount } = this.props
     return (
       <tr className="inline-add-row">
         {inputs.map((cell, index) =>
@@ -49,7 +49,7 @@ class InlineAdd extends Component {
                 <UDNButton disabled={invalid} onClick={() => save(values)}>
                   SAVE
                 </UDNButton>
-                <UDNButton bsStyle="primary" onClick={cancel} icon={true}>
+                <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
                   <IconClose/>
                 </UDNButton>
               </ButtonToolbar>}
