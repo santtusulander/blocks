@@ -16,11 +16,13 @@ function labelParentRoles(childRole, allRoles) {
 }
 
 function labelPermissions(role, permissions) {
-  return role.get('permissions').map(id => {
-    return permissions
-      .find(permission => permission.get('id') === id)
-      .get('name')
-  })
+  return role.get('permissions').get('resources')
+    .filter(rule => rule.find((rule) => rule.get('allowed') === true))
+    .map((rule, key) => {
+      return permissions
+        .find(permission => permission.get('id') === key)
+        .get('name')
+    })
 }
 
 export const RolesList = props => {
