@@ -68,7 +68,6 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   validateInlineAdd({ email, password, confirmPw }) {
-    console.log(confirmPw && password && confirmPw.length === password.length && confirmPw !== password)
     const conditions = {
       confirmPw: {
         condition: confirmPw && password && confirmPw.length === password.length && confirmPw !== password,
@@ -117,7 +116,7 @@ export class AccountManagementAccountUsers extends React.Component {
      */
     return [
       [
-        { input: <Input id='email' placeholder=" Email" type="text"/>, positionClass: 'left' },
+        { input: <Input id='email' placeholder=" Email" type="text"/> },
       ],
       [
         {
