@@ -24,6 +24,39 @@ import {
   Tabs
 } from 'react-bootstrap';
 
+import IconAccount       from '../components/icons/icon-account'
+import IconAdd           from '../components/icons/icon-add'
+import IconAlerts        from '../components/icons/icon-alerts'
+import IconAnalytics     from '../components/icons/icon-analytics'
+import IconArrowDown     from '../components/icons/icon-arrow-down'
+import IconArrowRight    from '../components/icons/icon-arrow-left'
+import IconArrowUp       from '../components/icons/icon-arrow-up'
+import IconChart         from '../components/icons/icon-chart'
+import IconClose         from '../components/icons/icon-close'
+import IconComments      from '../components/icons/icon-comments'
+import IconConfiguration from '../components/icons/icon-configuration'
+import IconContent       from '../components/icons/icon-content'
+import IconDelete        from '../components/icons/icon-delete'
+import IconEdit          from '../components/icons/icon-edit'
+import IconEmail         from '../components/icons/icon-email'
+import IconEricsson      from '../components/icons/icon-ericsson'
+import IconEye           from '../components/icons/icon-eye'
+import IconHeaderCaret   from '../components/icons/icon-header-caret'
+import IconIncident      from '../components/icons/icon-incident'
+import IconIntegration   from '../components/icons/icon-integration'
+import IconItemChart     from '../components/icons/icon-item-chart'
+import IconItemList      from '../components/icons/icon-item-list'
+import IconPassword      from '../components/icons/icon-password'
+import IconProblem       from '../components/icons/icon-problem'
+import IconQuestion      from '../components/icons/icon-question'
+import IconSecurity      from '../components/icons/icon-security'
+import IconSelectCaret   from '../components/icons/icon-select-caret'
+import IconServices      from '../components/icons/icon-services'
+import IconSupport       from '../components/icons/icon-support'
+import IconTask          from '../components/icons/icon-task'
+import IconTrash         from '../components/icons/icon-trash'
+
+
 class Styleguide extends React.Component {
   render() {
     return (
@@ -321,6 +354,165 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
 
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+
+
+          <h1 className="page-header">Icons</h1>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconAccount />
+            <br />
+            IconAccount
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconAdd />
+            <br />
+            IconAdd
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconAlerts />
+            <br />
+            IconAlerts
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconAnalytics />
+            <br />
+            IconAnalytics
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowDown />
+            <br />
+            IconArrowDown
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowRight />
+            <br />
+            IconArrowRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowUp />
+            <br />
+            IconArrowUp
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChart />
+            <br />
+            IconChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconClose />
+            <br />
+            IconClose
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconComments count="13" />
+            <br />
+            IconComments
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconConfiguration />
+            <br />
+            IconConfiguration
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconContent />
+            <br />
+            IconContent
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconDelete />
+            <br />
+            IconDelete
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconEdit />
+            <br />
+            IconEdit
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconEmail />
+            <br />
+            IconEmail
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconEricsson />
+            <br />
+            IconEricsson
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconEye />
+            <br />
+            IconEye
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconHeaderCaret />
+            <br />
+            IconHeaderCaret
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconIncident />
+            <br />
+            IconIncident
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconIntegration />
+            <br />
+            IconIntegration
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconItemChart />
+            <br />
+            IconItemChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconItemList />
+            <br />
+            IconItemList
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconPassword />
+            <br />
+            IconPassword
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconProblem />
+            <br />
+            IconProblem
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconQuestion />
+            <br />
+            IconQuestion
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconSecurity />
+            <br />
+            IconSecurity
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconSelectCaret />
+            <br />
+            IconSelectCaret
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconServices />
+            <br />
+            IconServices
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconSupport />
+            <br />
+            IconSupport
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconTask />
+            <br />
+            IconTask
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconTrash />
+            <br />
+            IconTrash
+          </span>
+
 
         </div>
 
