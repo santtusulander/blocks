@@ -51,6 +51,27 @@
         border-top-color: rgba($black, 0.8);
       }
     }
+
+    &.input-tooltip {
+      transform: translateY(-100%);
+    }
+  }
+
+  &.bottom {
+    padding: 10px 0 0;
+
+    .tooltip-arrow {
+      margin-left: -10px;
+      border-width: 0 10px 10px;
+
+      .dark-theme & {
+        border-bottom-color: rgba($black, 0.8);
+      }
+    }
+
+    .form-group + & {
+      transform: translateY(-$form-group-padding);
+    }
   }
 }
 
