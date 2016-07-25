@@ -91,7 +91,8 @@ function createTypeIcon(type) {
 SupportTicketPanel.displayName = 'SupportTicketPanel'
 SupportTicketPanel.defaultProps = {
   assignee: 'Pending',
-  priority: 'normal'
+  priority: 'normal',
+  status: 'open'
 }
 
 SupportTicketPanel.propTypes = {
