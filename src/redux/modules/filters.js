@@ -11,7 +11,7 @@ const initialState = Immutable.fromJS({
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],
     onOffNet: ['on-net', 'off-net'],
-    statusCodes: ['All'],
+    statusCodes: ['400', '401', '402', '403', '404', '405', '411', '412', '413', '500', '501', '502', '503'],
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {

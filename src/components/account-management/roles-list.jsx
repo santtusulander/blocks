@@ -37,8 +37,7 @@ export const RolesList = props => {
     <div className='roles-list'>
 
       <AccountManagementHeader
-        title={`${props.roles.count() } Roles`}
-        onAdd={props.onAdd}/>
+        title={`${props.roles.count() } Roles`}/>
 
       <table className="table table-striped">
         <thead>
