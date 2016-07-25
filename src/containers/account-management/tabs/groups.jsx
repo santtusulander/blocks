@@ -9,10 +9,11 @@ import { withRouter } from 'react-router'
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 
-import IconAdd from '../../../components/icons/icon-add.jsx'
-import IconTrash from '../../../components/icons/icon-trash.jsx'
+import IconAdd from '../../../components/icons/icon-add'
+import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
-import EditGroup from '../../../components/account-management/account/edit-group'
+import InlineAdd from '../../../components/inline-add'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -21,6 +22,8 @@ class AccountManagementAccountGroups extends React.Component {
     this.state = {
       adding: false,
       editing: null,
+      newName: '',
+      newUsers: Immutable.List(),
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -35,6 +38,8 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
+    this.changeNewName   = this.changeNewName.bind(this)
+    this.changeNewUsers  = this.changeNewUsers.bind(this)
   }
   componentWillMount() {
     const { brand, account } = this.props.params
@@ -43,14 +48,6 @@ class AccountManagementAccountGroups extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
-  }
-
-  componentDidMount() {
-    window.addEventListener('click', this.cancelAdding)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('click', this.cancelAdding)
   }
 
   cancelAdding() {
@@ -62,7 +59,11 @@ class AccountManagementAccountGroups extends React.Component {
 
   addGroup(e) {
     e.stopPropagation()
-    this.setState({ adding: true })
+    this.setState({
+      adding: true,
+      newName: '',
+      newUsers: Immutable.List()
+    })
   }
 
   changeSort(column, direction) {
@@ -119,6 +120,16 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
+  changeNewName(e) {
+    this.setState({
+      newName: e.target.value
+    })
+  }
+
+  changeNewUsers(val) {
+    this.setState({newUsers: val})
+  }
+
   render() {
     const groups = this.props.groups;
     const sorterProps  = {
@@ -135,6 +146,32 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
+
+    const inlineAddInputs = [
+      [
+        {
+          input: <Input id='name' placeholder=" Name" type="text"
+            onChange={this.changeNewName}
+            value={this.state.newName}/>,
+          positionClass: 'left'
+        }
+      ],
+      [
+        {
+          input: <FilterChecklistDropdown
+            id='members'
+            values={this.state.newUsers}
+            handleCheck={this.changeNewUsers}
+            options={this.props.users.map(user => Immutable.Map({
+              label: user.get('username'),
+              value: user.get('username')
+            }))}/>,
+          positionClass: 'left'
+        }
+      ],
+      [],
+      []
+    ]
     return (
       <div className="account-management-account-groups">
         <Row className="header-btn-row">
@@ -174,15 +211,14 @@ class AccountManagementAccountGroups extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {this.state.adding && <EditGroup save={this.saveNewGroup}/>}
+          {this.state.adding && <InlineAdd
+            validate={this.validateInlineAdd}
+            fields={['name', 'members']}
+            inputs={inlineAddInputs}
+            cancel={this.cancelAdding}
+            unmount={this.cancelAdding}
+            save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
-            if(group.get('id') === this.state.editing) {
-              return (
-                <EditGroup key={i}
-                  name={group.get('name')}
-                  save={this.saveEditedGroup(group.get('id'))}/>
-              )
-            }
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
