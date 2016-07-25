@@ -1,6 +1,6 @@
 import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import Immutable from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 
 import {urlBase, mapReducers} from '../util'
 
@@ -9,14 +9,16 @@ const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
+const USER_DELETED = 'USER_DELETED'
+const USER_CREATED = 'USER_CREATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
 // TODO: This is all fake and insecure until Keystone sign on is ready
 
-const emptyUser = Immutable.Map({
-  allUsers: Immutable.List(),
+const emptyUser = Map({
+  allUsers: List(),
   fetching: false,
   loggedIn: false
 })
@@ -41,14 +43,14 @@ export function userLoggedInFailure(){
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allUsers: Immutable.fromJS(action.payload),
+    allUsers: fromJS(action.payload),
     fetching: false
   })
 }
 
 export function fetchAllFailure(state) {
   return state.merge({
-    allUsers: Immutable.List(),
+    allUsers: List(),
     fetching: false
   })
 }
@@ -63,6 +65,31 @@ export function userLoggedOutSuccess(state){
 
 export function userStartFetch(state){
   return state.set('fetching', true)
+}
+
+export function deleteUserSuccess(state, action) {
+  const newAllUsers = state.get('allUsers')
+    .filterNot(user => {
+      return user.get('username') === action.payload.user
+    })
+  return state.merge({
+    allUsers: newAllUsers,
+    fetching: false
+  })
+}
+
+export function createUserSuccess(state, action) {
+  state.merge({
+    allUsers: state.get('allUsers').push(fromJS(action.payload))
+  })
+}
+
+export function createUserFailure(state) {
+  return state
+}
+
+export function deleteUserFailure(state) {
+  return state
 }
 
 export function userTokenChecked(state, action){
@@ -90,6 +117,8 @@ export default handleActions({
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  USER_DELETED: mapReducers(deleteUserSuccess, state => state),
+  USER_CREATED: mapReducers(createUserSuccess, state => state)
 }, emptyUser)
 
 // ACTIONS
@@ -146,6 +175,15 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
       }
     });
 })
+
+export const deleteUser = createAction(USER_DELETED, user =>
+  axios.delete(`${urlBase}/v2/users/${user}`).then(user => user)
+)
+
+export const createUser = createAction(USER_CREATED, user =>
+  axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
+    .then(res => res && res.data)
+)
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
 //   return axios.post(`${urlBase}/v2/tokens`, {

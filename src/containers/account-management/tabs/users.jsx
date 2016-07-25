@@ -216,7 +216,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="10%"></th>
+              <th width="10%"/>
             </tr>
           </thead>
           <tbody>
@@ -246,7 +246,7 @@ export class AccountManagementAccountUsers extends React.Component {
                     <a href="#" onClick={this.editUser(user.get('id'))}>
                       EDIT
                     </a>
-                    <Button onClick={this.deleteUser(user.get('id'))}
+                    <Button onClick={() => this.props.deleteUser(user.get('username'))}
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>
@@ -263,6 +263,7 @@ export class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
+  deleteUser: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
