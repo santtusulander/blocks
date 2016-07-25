@@ -6,12 +6,6 @@
     float: right;
   }
 
-  .dark-theme & {
-    .btn-add-new {
-      background-color: $btn-success-bg !important;
-    }
-  }
-
   a {
     cursor: pointer;
   }

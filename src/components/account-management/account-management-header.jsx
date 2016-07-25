@@ -9,7 +9,7 @@ export const AccountManagementHeader = props =>
       <span>{props.title}</span>
       {props.children}
       {props.onAdd &&
-      <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={props.onAdd}>
+      <UDNButton bsStyle="success" icon={true} addNew={true} onClick={props.onAdd}>
         <IconAdd/>
       </UDNButton>}
     </h2>
