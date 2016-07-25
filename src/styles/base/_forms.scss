@@ -182,6 +182,14 @@ label {
     display: inline-block;
     margin-right: 50px;
   }
+
+  &.disabled {
+
+    label,
+    input + span::before {
+      cursor: default;
+    }
+  }
 }
 
 .checkbox {
