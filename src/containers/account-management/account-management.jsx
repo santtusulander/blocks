@@ -277,15 +277,19 @@ export class AccountManagement extends Component {
               <li className="navbar">
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
               </li>
-              <li className="navbar">
+              {/*
+                <li className="navbar">
                 <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
               </li>
+              */}
               <li className="navbar">
                 <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
               </li>
+              {/*
               <li className="navbar">
                 <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
               </li>
+              */}
             </Nav>}
             <Content className="tab-bodies">
               {this.props.children && React.cloneElement(this.props.children, childProps)}
