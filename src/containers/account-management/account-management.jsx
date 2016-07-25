@@ -22,7 +22,7 @@ import IconAdd from '../../components/icons/icon-add'
 import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
-import NewAccountForm from '../../components/account-management/add-account-form.jsx'
+import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupEditForm from '../../components/account-management/group-edit-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
@@ -293,8 +293,8 @@ export class AccountManagement extends Component {
           </div>
 
           {accountManagementModal === ADD_ACCOUNT &&
-          <NewAccountForm
-            id="add-account-form"
+          <AccountForm
+            id="account-form"
             onSave={this.addAccount}
             onCancel={() => toggleModal(null)}
             show={true}/>}
