@@ -55,16 +55,17 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   newUser({ password, email, roles, group_id }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
-    createUser({
+    const { userActions: { createUser } } = this.props
+    const requestBody = {
       password,
-      full_name: 'no ui',
-      username: email,
+      email,
       roles: [roles],
-      group_id,
-      brand_id: brand,
-      account_id: Number(account)
-    })
+      group_id: [group_id]
+    }
+    if(group_id) {
+      requestBody.group_id = [ group_id ]
+    }
+    createUser(requestBody)
   }
 
   checkForEmpty(fields, customConditions) {
@@ -88,7 +89,7 @@ export class AccountManagementAccountUsers extends React.Component {
         errorText: 'Passwords don\'t match!'
       },
       email: {
-        condition: email && !/^[a-zA-Z0-9_.-]{3,50}$/i.test(email),
+        condition: email && !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
         errorText: 'invalid email!'
       },
       password: {
