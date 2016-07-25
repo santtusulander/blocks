@@ -214,7 +214,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
-      deleteUser: this.showDeleteUserModal(),
+      deleteUser: this.showDeleteUserModal,
       editGroup: this.showEditGroupModal,
       groups: this.props.groups,
       account: activeAccount,

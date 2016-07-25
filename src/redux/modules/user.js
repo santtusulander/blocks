@@ -79,7 +79,7 @@ export function deleteUserSuccess(state, action) {
 }
 
 export function createUserSuccess(state, action) {
-  state.merge({
+  return state.merge({
     allUsers: state.get('allUsers').push(fromJS(action.payload))
   })
 }
@@ -177,12 +177,12 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
 })
 
 export const deleteUser = createAction(USER_DELETED, user =>
-  axios.delete(`${urlBase}/v2/users/${user}`).then(user => user)
+  axios.delete(`${urlBase}/v2/users/${user}`).then(() => user)
 )
 
 export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
-    .then(res => res && res.data)
+    .then(res => res)
 )
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {

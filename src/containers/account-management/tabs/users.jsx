@@ -28,6 +28,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
+    this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
   }
@@ -53,6 +54,19 @@ export class AccountManagementAccountUsers extends React.Component {
     return () => console.log("Delete user " + user);
   }
 
+  newUser({ password, email, roles, group_id }) {
+    const { userActions: { createUser }, params: { brand, account } } = this.props
+    createUser({
+      password,
+      full_name: 'no ui',
+      username: email,
+      roles: [roles],
+      group_id,
+      brand_id: brand,
+      account_id: Number(account)
+    })
+  }
+
   checkForEmpty(fields, customConditions) {
     let errors = {}
     for(const fieldName in fields) {
@@ -74,7 +88,7 @@ export class AccountManagementAccountUsers extends React.Component {
         errorText: 'Passwords don\'t match!'
       },
       email: {
-        condition: email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i.test(email),
+        condition: email && !/^[a-zA-Z0-9_.-]{3,50}$/i.test(email),
         errorText: 'invalid email!'
       },
       password: {
@@ -84,6 +98,7 @@ export class AccountManagementAccountUsers extends React.Component {
     }
     return this.checkForEmpty({ email, password, confirmPw }, conditions)
   }
+
   editUser(user) {
     return e => {
       console.log("Edit user " + user);
@@ -112,11 +127,12 @@ export class AccountManagementAccountUsers extends React.Component {
     /**
      * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
      * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
-     * To get values from input fields, the input elements' IDs must match the field prop's array items.
+     * To get values from input fields, the input elements' IDs must match the fields-prop's array items.
+     *
      */
     return [
       [
-        { input: <Input id='email' placeholder=" Email" type="text"/> },
+        { input: <Input id='email' placeholder=" Email" type="text"/> }
       ],
       [
         {
@@ -133,7 +149,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <SelectWrapper
             id='roles'
             className=" inline-add-dropdown"
-            options={['SuperUser', 'Support'].map(item => [item, item])}/>
+            options={['SuperAdmin', 'Support'].map(item => [item, item])}/>
           , positionClass: 'left'
         },
         {
@@ -221,7 +237,7 @@ export class AccountManagementAccountUsers extends React.Component {
           <tbody>
             {this.state.addingNew && <InlineAdd
               validate={this.validateInlineAdd}
-              fields={['email', 'password', 'confirmPw', 'roles', 'groups']}
+              fields={['email', 'password', 'confirmPw', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
               cancel={() => {}}
               unmount={() => this.setState({ addingNew: false })}
