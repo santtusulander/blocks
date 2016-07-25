@@ -23,7 +23,7 @@ import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
 import AccountForm from '../../components/account-management/account-form.jsx'
-import GroupEditForm from '../../components/account-management/group-edit-form.jsx'
+import GroupForm from '../../components/account-management/group-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
@@ -311,15 +311,14 @@ export class AccountManagement extends Component {
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-          <GroupEditForm
-            id="group-edit-form"
-            onSave={(data) => this.editGroupInActiveAccount(this.state.groupToUpdate.get('id'), data)}
+          <GroupForm
+            id="group-form"
+            group={this.state.groupToUpdate}
+            onSave={(id, data) => this.editGroupInActiveAccount(id, data)}
             onCancel={() => toggleModal(null)}
             show={true}
             // NEEDS_API users={}
-            initialValues={
-              this.state.groupToUpdate.toJS()
-            }/>}
+            />}
         </Content>
       </PageContainer>
     )

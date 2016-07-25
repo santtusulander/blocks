@@ -22,6 +22,7 @@ import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import AccountForm from '../../components/account-management/account-form.jsx'
+import GroupForm from '../../components/account-management/group-form.jsx'
 import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
@@ -136,7 +137,7 @@ class ContentItems extends React.Component {
     }
   }
   editItem(id) {
-    this.props.accountActions.fetchAccount(this.props.params.brand, id)
+    this.props.fetchItem(id)
       .then((response) => {
         this.setState({
           showModal: true,
@@ -318,6 +319,14 @@ class ContentItems extends React.Component {
                 onCancel={this.hideModal}
                 show={true}/>
             }
+            {this.state.showModal && this.getTier() === 'account' &&
+              <GroupForm
+                id="group-form"
+                group={this.state.itemToEdit}
+                onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+                onCancel={this.hideModal}
+                show={true}/>
+            }
             {this.state.showModal && this.getTier() === 'group' &&
               <Modal show={true} dialogClassName="configuration-sidebar"
                 onHide={this.hideModal}>
@@ -374,6 +383,7 @@ ContentItems.propTypes = {
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
+  fetchItem: React.PropTypes.func,
   editItem: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   deleteItem: React.PropTypes.func,
@@ -398,9 +408,6 @@ ContentItems.propTypes = {
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool,
-  accountActions: React.PropTypes.object,
-  groupActions: React.PropTypes.object,
-  hostActions: React.PropTypes.object
 }
 ContentItems.defaultProps = {
   activeAccount: Immutable.Map(),

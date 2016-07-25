@@ -83,7 +83,7 @@ export class Accounts extends React.Component {
         type='account'
         user={this.props.user}
         viewingChart={viewingChart}
-        accountActions={this.props.accountActions}
+        fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
       />
     )
   }
