@@ -16,8 +16,7 @@ export class SupportTicketPanel extends React.Component {
 
   constructor(props) {
     super(props);
-    const closedClassNames = List(['closed', 'resolved']);
-    this.isClosed = closedClassNames.includes(this.props.status.toLowerCase());
+    this.closedClassNames = List(['closed', 'resolved']);
   }
 
   /**
@@ -39,10 +38,11 @@ export class SupportTicketPanel extends React.Component {
   }
 
   render() {
+    const isClosed = this.closedClassNames.includes(this.props.status.toLowerCase());
     const TicketTypeIcon = this.createTypeIcon(this.props.type);
-    const priorityClass = (this.isClosed) ? 'normal' : this.props.priority;
+    const priorityClass = (isClosed) ? 'normal' : this.props.priority;
     const priorityClassNames = classNames('support-ticket-panel-priority', priorityClass);
-    const statusClassNames = classNames({'support-ticket-panel': true, 'closed': this.isClosed});
+    const statusClassNames = classNames({'support-ticket-panel': true, 'closed': isClosed});
 
     return (
       <div className={statusClassNames}>
