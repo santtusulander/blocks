@@ -6,13 +6,13 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import {List, fromJS} from 'immutable'
+import {Map, List, fromJS} from 'immutable'
 
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
 
-import './group-edit-form.scss'
+import './group-form.scss'
 
 let errors = {}
 
@@ -26,14 +26,26 @@ const validate = (values) => {
   return errors;
 }
 
-class GroupEditForm extends React.Component {
+class GroupForm extends React.Component {
   constructor(props) {
     super(props)
 
     this.save = this.save.bind(this)
   }
 
+
   componentWillMount() {
+    if (this.props.group) {
+      const {
+        group,
+        fields: {
+          name,
+        }
+      } = this.props
+
+      name.onChange(group.get('name'))
+    }
+
     this.setState({
       usersToAdd: List(),
       usersToDelete: List()
@@ -47,9 +59,16 @@ class GroupEditForm extends React.Component {
       } = this.props
       // TODO: enable this when API is ready
       //const members = this.getMembers()
-      this.props.onSave({
+
+      let data = {
         name: name.value
-      })
+      }
+
+      if (this.props.group) {
+        this.props.onSave(this.props.group.get('id'), data)
+      } else {
+        this.props.onSave(data)
+      }
     }
   }
 
@@ -114,10 +133,12 @@ class GroupEditForm extends React.Component {
       return arr;
     }, []))
 
+    const title = this.props.account ? 'Edit Group' : 'Add new group'
+
     return (
-      <Modal dialogClassName="group-edit-form-sidebar" show={show}>
+      <Modal dialogClassName="group-form-sidebar" show={show}>
         <Modal.Header>
-          <h1>Edit group</h1>
+          <h1>{title}</h1>
           <p>{currentBrand}</p>
         </Modal.Header>
 
@@ -167,7 +188,7 @@ class GroupEditForm extends React.Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>Save</Button>
+                      onClick={this.save}>{this.props.group ? 'Save' : 'Add'}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
@@ -176,8 +197,9 @@ class GroupEditForm extends React.Component {
   }
 }
 
-GroupEditForm.propTypes = {
+GroupForm.propTypes = {
   fields: PropTypes.object,
+  group: PropTypes.instanceOf(Map),
   members: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -185,7 +207,7 @@ GroupEditForm.propTypes = {
   users: PropTypes.array
 }
 
-GroupEditForm.defaultProps = {
+GroupForm.defaultProps = {
   // TODO: FOR TESTING ONLY - REMOVE ME
   users: [
     {value: 1, label: 'NEEDS API foo@example.com'},
@@ -201,4 +223,4 @@ export default reduxForm({
   fields: ['name', 'members', 'users'],
   form: 'group-edit',
   validate
-})(GroupEditForm)
+})(GroupForm)
