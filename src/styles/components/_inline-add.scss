@@ -16,6 +16,18 @@
     }
   }
 
+  .filter-container {
+    min-width: 250px;
+  }
+
+  .tooltip-inner {
+    padding: 10px;
+    max-width: 200px;
+  }
+  .tooltip-arrow {
+    left: 10% !important;
+  }
+
   .btn-default {
     &,
     &:active {
