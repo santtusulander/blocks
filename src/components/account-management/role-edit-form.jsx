@@ -67,9 +67,9 @@ const RolesEditForm = (props) => {
 
         <hr/>
 
+        {/*TODO: Enable in the future when roles are editable, after 0.8
         <label>Role Available To</label>
 
-        {/*TODO: Enable in the future when roles are editable*/}
         <CheckboxArray
           iterable={rolesArray}
           field={field}
@@ -77,6 +77,7 @@ const RolesEditForm = (props) => {
           disabled={true}/>
 
         <hr/>
+        */}
 
         <label>Permissions</label>
 

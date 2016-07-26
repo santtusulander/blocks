@@ -46,7 +46,9 @@ export const RolesList = props => {
           <tr>
             <th>Role</th>
             <th>Permissions</th>
-            <th>Available To</th>
+            {/* Not in 0.8
+              <th>Available To</th>
+            */}
             <th>Assigned To</th>
             <th></th>
           </tr>
@@ -62,9 +64,11 @@ export const RolesList = props => {
                 <td>
                   {labelPermissions(role, props.permissions).join(', ')}
                 </td>
-                <td>
-                  {labelParentRoles(role, props.roles).join(', ')}
-                </td>
+                {/* Not in 0.8
+                  <td>
+                    {labelParentRoles(role, props.roles).join(', ')}
+                  </td>
+                */}
                 <td>
                   NEEDS API
                 </td>
