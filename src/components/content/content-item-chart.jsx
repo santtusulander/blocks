@@ -301,6 +301,12 @@ class ContentItemChart extends React.Component {
                   <IconConfiguration/>
                 </Link> : ''
               }
+              {this.props.onConfiguration ?
+                <a onClick={this.props.onConfiguration}
+                      className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
+                  <IconConfiguration/>
+                </a> : ''
+              }
               <Link to="/starburst-help"
                 className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
                 ?
@@ -322,6 +328,7 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,

@@ -1,6 +1,9 @@
 // Icons
 // =====
 
+$icon-two-tone-base: $silver-20;
+$icon-two-tone-primary: $dark-blue;
+
 .icon {
   position: relative;
   top: 1px;
@@ -41,4 +44,31 @@
   .light-theme &.no-fill {
     fill: transparent;
   }
+
+  // Two tone icons used primarily for support tickets
+  &.two-tone {
+    stroke: none;
+
+    .base {
+      fill: $icon-two-tone-base;
+    }
+
+    .primary {
+      color: $icon-two-tone-primary;
+      fill: $icon-two-tone-primary;
+    }
+
+    .light-theme & {
+      .base {
+        fill: $icon-two-tone-primary;
+      }
+
+      .primary {
+        color: $icon-two-tone-base;
+        fill: $icon-two-tone-base;
+      }
+    }
+  }
+
+
 }

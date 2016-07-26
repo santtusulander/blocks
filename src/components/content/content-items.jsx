@@ -21,6 +21,8 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
+import AccountForm from '../../components/account-management/account-form.jsx'
+import GroupForm from '../../components/account-management/group-form.jsx'
 import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
@@ -54,12 +56,16 @@ class ContentItems extends React.Component {
     super(props);
 
     this.state = {
-      addItem: false
+      showModal: false,
+      itemToEdit: null
     }
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
-    this.toggleAddItem = this.toggleAddItem.bind(this)
-    this.createNewItem = this.createNewItem.bind(this)
+    this.onItemAdd = this.onItemAdd.bind(this)
+    this.onItemSave = this.onItemSave.bind(this)
+    this.addItem = this.addItem.bind(this)
+    this.editItem = this.editItem.bind(this)
+    this.hideModal = this.hideModal.bind(this)
   }
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
@@ -75,23 +81,45 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
-  toggleAddItem() {
-    this.setState({
-      addItem: !this.state.addItem
-    })
+  onItemAdd() {
+    this.props.createNewItem(...arguments)
+      .then((response) => {
+        if (response.error) {
+          this.props.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+          })
+        } else {
+          this.hideModal()
+        }
+      })
   }
-  createNewItem() {
-    this.props.createNewItem(...arguments).then((response) => {
-      if (response.error) {
-        this.props.showInfoDialog({
-          title: 'Error',
-          content: response.payload.data.message,
-          buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
-        })
-      } else {
-        this.toggleAddItem()
-      }
-    })
+  onItemSave() {
+    this.props.editItem(...arguments)
+      .then((response) => {
+        if (response.error) {
+          this.props.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+          })
+        } else {
+          this.hideModal()
+        }
+      })
+  }
+  getTier() {
+    const { brand, account, group } = this.props.params
+    if (group) {
+      return 'group'
+    } else if (account && !group) {
+      return 'account'
+    } else if (brand && !account && !group) {
+      return 'brand'
+    }
+
+    return null
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
@@ -108,6 +136,27 @@ class ContentItems extends React.Component {
         break
     }
   }
+  editItem(id) {
+    this.props.fetchItem(id)
+      .then((response) => {
+        this.setState({
+          showModal: true,
+          itemToEdit: Immutable.Map(response.payload)
+        })
+      })
+  }
+  addItem() {
+    this.setState({
+      showModal: true,
+      itemToEdit: null
+    })
+  }
+  hideModal() {
+    this.setState({
+      showModal: false,
+      itemToEdit: null
+    })
+  }
   render() {
     const {
       sortValuePath,
@@ -119,8 +168,8 @@ class ContentItems extends React.Component {
       analyticsURLBuilder,
       fetchingMetrics,
       showAnalyticsLink,
-      viewingChart,
-      createNewItem } = this.props
+      viewingChart
+    } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const itemMetrics = this.getMetrics(item)
@@ -176,8 +225,7 @@ class ContentItems extends React.Component {
                 <UDNButton bsStyle="primary"
                            icon={true}
                            addNew={true}
-                           hidden={createNewItem === undefined}
-                           onClick={this.toggleAddItem}>
+                           onClick={this.addItem}>
                   <IconAdd/>
                 </UDNButton>
                 <Select
@@ -229,6 +277,9 @@ class ContentItems extends React.Component {
                       id: id,
                       linkTo: this.props.nextPageURLBuilder(id),
                       configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
+                      onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
+                        this.editItem(id)
+                      } : null,
                       analyticsLink: this.props.analyticsURLBuilder(id),
                       name: item.get('name'),
                       dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
@@ -247,6 +298,7 @@ class ContentItems extends React.Component {
                       barMaxHeight: (scaledWidth / 7).toString(),
                       showSlices: this.props.showSlices
                     }
+
                     return (
                       <ContentItem key={id}
                         isChart={viewingChart}
@@ -259,9 +311,25 @@ class ContentItems extends React.Component {
               </ReactCSSTransitionGroup>
             )}
 
-            {this.state.addItem ?
+            {this.state.showModal && this.getTier() === 'brand' &&
+              <AccountForm
+                id="account-form"
+                account={this.state.itemToEdit}
+                onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+                onCancel={this.hideModal}
+                show={true}/>
+            }
+            {this.state.showModal && this.getTier() === 'account' &&
+              <GroupForm
+                id="group-form"
+                group={this.state.itemToEdit}
+                onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+                onCancel={this.hideModal}
+                show={true}/>
+            }
+            {this.state.showModal && this.getTier() === 'group' &&
               <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.toggleAddItem}>
+                onHide={this.hideModal}>
                 <Modal.Header>
                   <h1>Add Property</h1>
                   <p>
@@ -272,10 +340,10 @@ class ContentItems extends React.Component {
                   </p>
                 </Modal.Header>
                 <Modal.Body>
-                  <AddHost createHost={this.createNewItem}
-                    cancelChanges={this.toggleAddItem}/>
+                  <AddHost createHost={this.onItemAdd}
+                    cancelChanges={this.hideModal}/>
                 </Modal.Body>
-              </Modal> : null
+              </Modal>
             }
           </div>
         </Content>
@@ -315,6 +383,8 @@ ContentItems.propTypes = {
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
+  fetchItem: React.PropTypes.func,
+  editItem: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   deleteItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
@@ -337,7 +407,7 @@ ContentItems.propTypes = {
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+  viewingChart: React.PropTypes.bool,
 }
 ContentItems.defaultProps = {
   activeAccount: Immutable.Map(),
