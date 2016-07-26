@@ -39,17 +39,15 @@
 
   .btn-primary {
     &,
+    &.btn-icon {
+      margin: 0;
+    }
     &:hover {
       color: $white !important;
       fill: $white !important;
       stroke: $white !important;
     }
   }
-}
-
-.trailing-item {
-  padding-left: 20px;
-  display: inline;
 }
 
 .half-width-item {

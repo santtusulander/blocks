@@ -161,7 +161,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
               <IconSupport/>
             </Button>,
-          positionClass: 'trailing-item'
+          positionClass: 'right'
         }
       ],
       [
