@@ -1,5 +1,5 @@
 import React from 'react'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { Table, Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -10,6 +10,7 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import SelectWrapper from '../../../components/select-wrapper'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconSupport from '../../../components/icons/icon-support'
@@ -19,7 +20,7 @@ import TableSorter from '../../../components/table-sorter'
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
-
+    this.usersGroups = List()
     this.state = {
       sortBy: 'email',
       sortDir: 1,
@@ -43,6 +44,7 @@ export class AccountManagementAccountUsers extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.cancelAdding, false)
   }
+
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
@@ -127,7 +129,7 @@ export class AccountManagementAccountUsers extends React.Component {
     /**
      * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
      * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
-     * To get values from input fields, the input elements' IDs must match the inline add component's
+     * To get values from input fields via redux form, the input elements' IDs must match the inline add component's
      * fields-prop's array items.
      *
      */
@@ -149,13 +151,12 @@ export class AccountManagementAccountUsers extends React.Component {
         {
           input: <SelectWrapper
             id='roles'
-            className=" inline-add-dropdown"
-            options={['SuperAdmin', 'Support'].map(item => [item, item])}/>
-          , positionClass: 'left'
+            className="inline-add-dropdown"
+            options={['SuperAdmin', 'Support'].map(item => [item, item])}/>,
+          positionClass: 'left'
         },
         {
-          input:
-            <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
+          input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
               <IconSupport/>
             </Button>,
           positionClass: 'trailing-item'
@@ -163,11 +164,13 @@ export class AccountManagementAccountUsers extends React.Component {
       ],
       [
         {
-          input: <SelectWrapper
-            id='group_id'
-            numericValues={true}
-            className=" inline-add-dropdown"
-            options={this.props.groups.map(group => [ group.get('id'), group.get('name') ]).toJS()}/>,
+          input: <FilterChecklistDropdown
+            className="inline-add-dropdown"
+            values={this.usersGroups || List()}
+            handleCheck={val => this.usersGroups = val}
+            options={this.props.groups.map(group => {
+              return Map({ value: group.get('id'), label: group.get('name') })
+            })}/>,
           positionClass: 'left'
         }
       ]
