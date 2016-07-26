@@ -9,8 +9,9 @@ const ArrayTd = ( props ) => {
   if(props.className) {
     classNames += ' ' + props.className
   }
-  const shownItems = props.items.slice(0,3).join(', ')
-  const hiddenItems = props.items.slice(3)
+  let maxItemsShown = props.maxItemsShown || 3
+  const shownItems = props.items.slice(0,maxItemsShown).join(', ')
+  const hiddenItems = props.items.slice(maxItemsShown)
   return (
     <td className={classNames}>
       {shownItems}
@@ -34,7 +35,8 @@ const ArrayTd = ( props ) => {
 ArrayTd.displayName = 'ArrayTd'
 ArrayTd.propTypes = {
   className: React.PropTypes.string,
-  items: React.PropTypes.array
+  items: React.PropTypes.array,
+  maxItemsShown: React.PropTypes.number
 };
 
 module.exports = ArrayTd;
