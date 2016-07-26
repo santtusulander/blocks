@@ -12,8 +12,32 @@ import SupportPageHeader from '../../components/support/support-page-header'
 import './support.scss'
 
 class Support extends React.Component {
+
+  renderTabContent(children) {
+    const { params } = this.props;
+
+    if (!params.account) {
+      return (
+        <div className="support-tab-container">
+          <p className="text-center">
+            Please select an account
+            <br/>
+            from top left to see support tickets
+          </p>
+        </div>
+      )
+    } else {
+      return (
+        <div className="support-tab-container">
+          {children && React.cloneElement(children, {...this.props})}
+        </div>
+      )
+    }
+  }
+
   render() {
     const {
+      children,
       params
     } = this.props;
     const baseUrl = getSupportUrlFromParams(params);
@@ -35,9 +59,7 @@ class Support extends React.Component {
           </Nav>}
         </div>
         <Content>
-          <div className="container-fluid">
-            {this.props.children && React.cloneElement(this.props.children, {})}
-          </div>
+          {this.renderTabContent(children)}
         </Content>
       </PageContainer>
     )
