@@ -11,31 +11,29 @@ const ErrorToolTip = attributes =>
       {attributes.error}
     </Tooltip>
 
-const InlineAdd = ({ save, inputs, fields, invalid, values, unmount }) => {
-  return (
-    <tr className="inline-add-row">
-      {inputs.map((cell, index) =>
-        <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
-          {cell.map(({ input, positionClass }, index) =>
-            <div className={positionClass} key={index}>
-              {cloneElement(input, { ...fields[input.props.id] })}
-              {ErrorToolTip(fields[input.props.id])}
-            </div>
-          )}
-          {index === inputs.length - 1 &&
-            <ButtonToolbar className="pull-right">
-              <UDNButton disabled={invalid} onClick={() => save(values)}>
-                SAVE
-              </UDNButton>
-              <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
-                <IconClose/>
-              </UDNButton>
-            </ButtonToolbar>}
-        </td>
-      )}
-    </tr>
-  )
-}
+const InlineAdd = ({ save, inputs, fields, invalid, values, unmount }) =>
+  <tr className="inline-add-row">
+    {inputs.map((cell, index) =>
+      <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
+        {cell.map(({ input, positionClass }, index) =>
+          <div className={positionClass} key={index}>
+            {cloneElement(input, { ...fields[input.props.id] })}
+            {ErrorToolTip(fields[input.props.id])}
+          </div>
+        )}
+        {index === inputs.length - 1 &&
+          <ButtonToolbar className="pull-right">
+            <UDNButton disabled={invalid} onClick={() => save(values)}>
+              SAVE
+            </UDNButton>
+            <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
+              <IconClose/>
+            </UDNButton>
+          </ButtonToolbar>}
+      </td>
+    )}
+  </tr>
+
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array,
