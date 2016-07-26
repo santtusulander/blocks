@@ -133,13 +133,14 @@ class GroupForm extends React.Component {
       return arr;
     }, []))
 
-    const title = this.props.account ? 'Edit Group' : 'Add new group'
+    const title = this.props.group ? 'Edit Group' : 'Add new group'
+    const subTitle = this.props.group ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
 
     return (
       <Modal dialogClassName="group-form-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
-          <p>{currentBrand}</p>
+          <p>{subTitle}</p>
         </Modal.Header>
 
         <Modal.Body>
@@ -200,6 +201,7 @@ class GroupForm extends React.Component {
 GroupForm.propTypes = {
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
+  account: PropTypes.instanceOf(Map).isRequired,
   members: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
