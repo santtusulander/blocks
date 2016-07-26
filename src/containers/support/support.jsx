@@ -46,7 +46,8 @@ class Support extends React.Component {
       <PageContainer>
         <div className="account-support">
           <SupportPageHeader {...this.props} />
-          {params.account && <Nav bsStyle="tabs" className="system-nav">
+          {/* TODO: enable the tab navigation when the tools and documentation sections have been designed */}
+          {false && <Nav bsStyle="tabs" className="system-nav">
             <li className="navbar">
               <Link to={baseUrl + '/tickets'} activeClassName="active">TICKETS</Link>
             </li>
