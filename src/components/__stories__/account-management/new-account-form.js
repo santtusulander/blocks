@@ -8,7 +8,7 @@ import {Provider} from 'react-redux'
 import ThemeWrap from '../theme-wrap.jsx'
 
 import AccountManagementFormContainer from '../../account-management/form-container.jsx'
-import NewAccountForm from '../../account-management/add-account-form.jsx'
+import AccountForm from '../../account-management/account-form.jsx'
 
 const reducers = {
   form: formReducer
@@ -18,7 +18,7 @@ const reducer = combineReducers(reducers);
 const store   = createStore(reducer);
 
 const form = {
-  content: <NewAccountForm onSave={action('Save')} onCancel={action('Hide form')}/>,
+  content: <AccountForm onSave={action('Save')} onCancel={action('Hide form')}/>,
   title: 'New account',
   subtitle: 'Lorem ipsum dolor'
 }

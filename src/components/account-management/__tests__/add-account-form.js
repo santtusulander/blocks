@@ -1,11 +1,11 @@
 import React from 'react'
 
 import {shallow} from 'enzyme'
-jest.unmock('../add-account-form.jsx')
+jest.unmock('../account-form.jsx')
 
-import NewAccountForm from '../add-account-form.jsx'
+import NewAccountForm from '../account-form.jsx'
 
-describe('NewAccountForm', () => {
+describe('AccountForm', () => {
   it('should exist', () => {
     const accountForm = shallow(
       <NewAccountForm />

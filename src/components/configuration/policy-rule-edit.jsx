@@ -27,9 +27,14 @@ function parsePolicy(policy, path) {
       return fields
     }, {matches: [], sets: []})
     // add info about this match to the list of matches
+    const match = policy.get('match')
+    const fieldDetail = match.get('field_detail')
+    const caseKey = match.get('cases').get(0).get(0)
     matches.push({
-      field: policy.get('match').get('field'),
-      values: policy.get('match').get('cases').map(matchCase => matchCase.get(0)).toJS(),
+      containsVal: fieldDetail ? caseKey : '',
+      field: match.get('field'),
+      fieldDetail: fieldDetail,
+      values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
       path: path.concat(['match'])
     })
     return {
@@ -242,12 +247,22 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <p>{match.field}: {match.values.join(', ')}</p>
+                      <p>{match.field}: {
+                          match.fieldDetail ?
+                            match.fieldDetail :
+                            match.values.join(', ')
+                          }
+                      </p>
                       : <p>Choose condition</p>
                     }
                   </Col>
                   <Col xs={3}>
-                    <p>Matches</p>
+                    <p>
+                      {match.containsVal && match.containsVal !== '.*' ?
+                        `Contains ${match.containsVal}` :
+                        'Exists'
+                      }
+                    </p>
                   </Col>
                   <Col xs={2} className="text-right">
                     <Button onClick={this.deleteMatch(match.path)} bsStyle="primary"

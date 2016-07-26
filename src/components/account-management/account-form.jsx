@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
+import { Map }from 'immutable'
 import {
   Modal,
   Input,
@@ -12,7 +13,7 @@ import CheckboxArray from '../checkboxes.jsx'
 
 import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
 
-import './add-account-form.scss'
+import './account-form.scss'
 
 const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [e.value, e.label]
@@ -42,11 +43,30 @@ const validate = (values) => {
   return errors;
 }
 
-class NewAccountForm extends React.Component {
+class AccountForm extends React.Component {
   constructor(props) {
     super(props)
 
     this.save = this.save.bind(this)
+  }
+
+  componentWillMount() {
+    if (this.props.account) {
+      const {
+        account,
+        fields: {
+          accountName,
+          accountBrand,
+          accountType,
+          services
+        }
+      } = this.props
+
+      accountName.onChange(account.get('name'))
+      accountBrand.onChange(account.get('brand_id'))
+      accountType.onChange(account.get('provider_type'))
+      services.onChange(account.get('services'))
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,11 +84,17 @@ class NewAccountForm extends React.Component {
       const {
         fields: { accountBrand, accountName, accountType, services }
       } = this.props
-      this.props.onSave(accountBrand.value, {
+      let data = {
         name: accountName.value,
         provider_type: Number(accountType.value),
         services: services.value
-      })
+      }
+
+      if (this.props.account) {
+        this.props.onSave(accountBrand.value, this.props.account.get('id'), data)
+      } else {
+        this.props.onSave(accountBrand.value, data)
+      }
     }
   }
 
@@ -80,11 +106,12 @@ class NewAccountForm extends React.Component {
 
     // TODO: Check me after more brands have been added
     const currentBrand = 'udn'
+    const title = this.props.account ? 'Edit Account' : 'Add new account'
 
     return (
-      <Modal dialogClassName="add-account-form-sidebar" show={show}>
+      <Modal dialogClassName="account-form-sidebar" show={show}>
         <Modal.Header>
-          <h1>Add new account</h1>
+          <h1>{title}</h1>
           <p>{currentBrand}</p>
         </Modal.Header>
 
@@ -97,7 +124,8 @@ class NewAccountForm extends React.Component {
               label="Account name"
               placeholder='Enter Account Name'/>
             {accountName.touched && accountName.error &&
-            <div className='error-msg'>{accountName.error}</div>}
+              <div className='error-msg'>{accountName.error}</div>
+            }
 
             <hr/>
 
@@ -133,7 +161,7 @@ class NewAccountForm extends React.Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
-                      onClick={this.save}>Add</Button>
+                      onClick={this.save}>{this.props.account ? 'Save' : 'Add'}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
@@ -142,7 +170,8 @@ class NewAccountForm extends React.Component {
   }
 }
 
-NewAccountForm.propTypes = {
+AccountForm.propTypes = {
+  account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -151,11 +180,11 @@ NewAccountForm.propTypes = {
 
 export default reduxForm({
   fields: ['accountName', 'accountBrand', 'accountType', 'services'],
-  form: 'new-account',
+  form: 'account',
   validate,
   initialValues: {
     accountBrand: brandOptions.length ? brandOptions[0][0] : '',
     accountType: accountTypeOptions.length ? accountTypeOptions[0][0] : '',
     services: []
   }
-})(NewAccountForm)
+})(AccountForm)

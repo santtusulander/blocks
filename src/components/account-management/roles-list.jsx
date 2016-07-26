@@ -25,7 +25,7 @@ function labelPermissions(role, permissions) {
 
 export const RolesList = props => {
 
-  if (!props.roles || props.roles.length == 0) {
+  if (!props.roles || props.roles.size === 0) {
     return (
       <div id="empty-msg">
         <p>No roles found</p>
@@ -37,8 +37,7 @@ export const RolesList = props => {
     <div className='roles-list'>
 
       <AccountManagementHeader
-        title={`${props.roles.count() } Roles`}
-        onAdd={props.onAdd}/>
+        title={`${props.roles.count() } Roles`}/>
 
       <table className="table table-striped">
         <thead>
@@ -79,15 +78,21 @@ export const RolesList = props => {
 
       </table>
 
-      <RolesEditForm
-        show={props.showAddNewDialog}
-        onCancel={props.onCancel}
-        onSave={props.onSave}/>
+      {props.showAddNewDialog ?
+        <RolesEditForm
+          permissions={props.permissions}
+          roles={props.roles}
+          editRole={props.editRole}
+          show={props.showAddNewDialog}
+          onCancel={props.onCancel}
+          onSave={props.onSave}/>
+      : null}
 
     </div>
   )
 }
 RolesList.propTypes = {
+  editRole: React.PropTypes.object,
   onAdd: React.PropTypes.func,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
