@@ -60,8 +60,8 @@ export class AccountManagementAccountUsers extends React.Component {
   }
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
-    const { brand, account, group } = this.props.params
-    this.props.userActions.fetchUsers(brand, account, group)
+    const { brand, account } = this.props.params
+    this.props.userActions.fetchUsers(brand, account)
 
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
@@ -285,4 +285,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
-

@@ -26,7 +26,7 @@ const emptyUser = Immutable.Map({
 export function updateSuccess(state, action) {
   const updatedUser = Immutable.fromJS(action.payload)
   const currIndex = state.get('allUsers').findIndex(
-    user => user.get('id') === updatedUser.get('id')
+    user => user.get('email') === updatedUser.get('email')
   )
   const updatedUsers = currIndex !== -1 ?
     state.get('allUsers').set(currIndex, updatedUser)
@@ -112,7 +112,7 @@ export default handleActions({
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
-  USER_UPDATED: mapReducers(updateSuccess, updateFailure),
+  USER_UPDATED: mapReducers(updateSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -121,10 +121,8 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
-      "username": username,// superuser
-      "brand_id": "udn",
-      "password": password,// Video4All!
-      "account_id": 1
+      "username": username,// super@vidscale.com
+      "password": password// Video4All!
     },
     {
       headers: {
@@ -170,8 +168,8 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     });
 })
 
-export const updateUser = createAction(USER_UPDATED, (user) => {
-  return axios.put(`${urlBase}/v2/users/${user.username}`, user, {
+export const updateUser = createAction(USER_UPDATED, user => {
+  return axios.put(`${urlBase}/v2/users/${user.email}`, user, {
     headers: {
       'Content-Type': 'application/json'
     }
