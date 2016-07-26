@@ -286,26 +286,25 @@ class ContentItemChart extends React.Component {
               </div>
             </div>
           </Link>
-          <div className="content-item-toolbar"
-            style={{bottom: barMaxHeight}}>
+          <div className="content-item-toolbar">
             <ButtonToolbar>
               {this.props.analyticsLink ?
                 <Link to={this.props.analyticsLink}
                   className="btn btn-sm btn-primary btn-icon btn-round invisible">
                   <IconChart/>
-                </Link> : ''
+                </Link> : null
               }
               {this.props.configurationLink ?
                 <Link to={this.props.configurationLink}
                   className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
-                </Link> : ''
+                </Link> : null
               }
               {this.props.onConfiguration ?
                 <a onClick={this.props.onConfiguration}
                       className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
-                </a> : ''
+                </a> : null
               }
               <Link to="/starburst-help"
                 className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">

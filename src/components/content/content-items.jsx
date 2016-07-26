@@ -25,7 +25,7 @@ import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
 import { Button } from 'react-bootstrap'
 
-const rangeMin = 360
+const rangeMin = 320
 const rangeMax = 732
 
 let trafficMin = 0
