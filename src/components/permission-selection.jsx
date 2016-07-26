@@ -16,12 +16,12 @@ const PermissionSelection = ({ className, disabled, onChange, permissions }) => 
   let permission = 0
 
   // List and Show == Read
-  if(permissions.get('list').get('allowed')
-    && permissions.get('show').get('allowed')) {
+  if(permissions.get('show').get('allowed')) {
     permission = 1
 
     // List, Show, Create, Modify and Delete == Read/Write
-    if(permissions.get('create').get('allowed')
+    if(permissions.get('list').get('allowed')
+      && permissions.get('create').get('allowed')
       && permissions.get('modify').get('allowed')
       && permissions.get('delete').get('allowed')) {
       permission = 2
