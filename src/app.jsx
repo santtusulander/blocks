@@ -32,7 +32,9 @@ axios.interceptors.response.use(function (response) {
   if (error) {
     const status = error.status;
     if (status === 401) {
-      if(!location.href.includes('/login')) {
+      if(!location.href.includes('/login')
+        && !location.href.includes('/set-password')
+        && !location.href.includes('/forgot-password')) {
         location.href='/login'
       }
     } else if (status === 500 || status === 404) {

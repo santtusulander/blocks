@@ -149,6 +149,8 @@ export class Main extends React.Component {
       <div className={classNames}>
       {this.props.user.get('loggedIn') &&
         this.props.location.pathname !== '/login' &&
+        this.props.location.pathname !== '/forgot-password' &&
+        this.props.location.pathname !== '/set-password' &&
         this.props.location.pathname !== '/starburst-help' ?
         <Navigation
           activeAccount={activeAccount}
@@ -159,7 +161,10 @@ export class Main extends React.Component {
           />
         : ''
       }
-        {this.props.location.pathname !== '/login' &&
+        {this.props.user.get('loggedIn') &&
+          this.props.location.pathname !== '/login' &&
+          this.props.location.pathname !== '/forgot-password' &&
+          this.props.location.pathname !== '/set-password' &&
           this.props.location.pathname !== '/starburst-help' ?
           <Header
             accounts={this.props.accounts}
@@ -230,16 +235,21 @@ Main.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   fetchAccountData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
+  infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  router: React.PropTypes.object,
   routes: React.PropTypes.array,
+  showErrorDialog: React.PropTypes.bool,
+  showInfoDialog: React.PropTypes.bool,
   theme: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),

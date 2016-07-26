@@ -17,6 +17,8 @@ export class Groups extends React.Component {
   constructor(props) {
     super(props)
 
+    this.createGroup = this.createGroup.bind(this)
+    this.editGroup = this.editGroup.bind(this)
     this.deleteGroup = this.deleteGroup.bind(this)
     this.sortItems = this.sortItems.bind(this)
   }
@@ -27,6 +29,14 @@ export class Groups extends React.Component {
     //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
     this.props.fetchData()
     //}
+  }
+  createGroup(data) {
+    const { brand, account } = this.props.params
+    return this.props.groupActions.createGroup(brand, account, data.name)
+  }
+  editGroup(id, data) {
+    const { brand, account } = this.props.params
+    return this.props.groupActions.updateGroup(brand, account, id, data)
   }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
@@ -39,7 +49,7 @@ export class Groups extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
-    const { brand } = this.props.params
+    const { brand, account } = this.props.params
     const { activeAccount, activeGroup } = this.props
 
     const nextPageURLBuilder = (groupID) => {
@@ -59,6 +69,8 @@ export class Groups extends React.Component {
         className="groups-container"
         contentItems={this.props.groups}
         dailyTraffic={this.props.dailyTraffic}
+        createNewItem={this.createGroup}
+        editItem={this.editGroup}
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -74,7 +86,9 @@ export class Groups extends React.Component {
         toggleChartView={this.props.uiActions.toggleChartView}
         type='group'
         user={this.props.user}
-        viewingChart={this.props.viewingChart}/>
+        viewingChart={this.props.viewingChart}
+        fetchItem={(id) => { return this.props.groupActions.fetchGroup(brand, account, id) }}
+      />
     )
   }
 }

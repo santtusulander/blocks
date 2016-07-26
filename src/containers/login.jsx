@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
 import { getContentUrl } from '../util/helpers'
@@ -106,7 +106,7 @@ export class Login extends React.Component {
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
             {this.state.loginError ?
-              <div className="login-error">
+              <div className="login-info">
                 <p>{this.state.loginError}</p>
               </div>
               : ''
@@ -136,14 +136,17 @@ export class Login extends React.Component {
               value={this.state.password}
               onChange={this.changeField('password')}/>
             <Row>
-              <Col xs={6}>
+              <Col xs={4}>
                 <Input type="checkbox" label="Remember me" />
               </Col>
-              <Col xs={6}>
+              <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
                   disabled={this.props.fetching}>
                   {this.props.fetching ? 'Logging in...' : 'Login'}
                 </Button>
+                <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                  Forgot password?
+                </Link>
               </Col>
             </Row>
           </form>
@@ -159,6 +162,7 @@ Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   loggedIn: React.PropTypes.bool,
+  router: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
 
