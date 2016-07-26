@@ -8,6 +8,7 @@ import moment from 'moment'
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
+import IconQuestionMark from '../icons/icon-question-mark.jsx'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip.jsx'
@@ -308,7 +309,7 @@ class ContentItemChart extends React.Component {
               }
               <Link to="/starburst-help"
                 className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
-                ?
+                <IconQuestionMark/>
               </Link>
             </ButtonToolbar>
           </div>
