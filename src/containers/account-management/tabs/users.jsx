@@ -31,6 +31,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
+    this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
   }
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
@@ -70,7 +71,7 @@ export class AccountManagementAccountUsers extends React.Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    createUser(requestBody).then(() => this.setState({ addingNew: false }))
+    createUser(requestBody).then(this.toggleInlineAdd)
   }
 
   checkForErrors(fields, customConditions) {
@@ -181,6 +182,10 @@ export class AccountManagementAccountUsers extends React.Component {
     ]
   }
 
+  toggleInlineAdd() {
+    this.setState({ addingNew: !this.state.addingNew, usersGroups: List() })
+  }
+
   getGroupsForUser(user) {
     const groupId = user.get('group_id')
     let groups = []
@@ -225,7 +230,7 @@ export class AccountManagementAccountUsers extends React.Component {
           </Col>
           <Col sm={4} className="text-right">
             <Button bsStyle="success" className="btn-icon btn-add-new"
-              onClick={e => {e.stopPropagation(); this.setState({ addingNew: !this.state.addingNew })}}>
+              onClick={this.toggleInlineAdd}>
               <IconAdd />
             </Button>
           </Col>
@@ -248,7 +253,7 @@ export class AccountManagementAccountUsers extends React.Component {
               fields={['email', 'password', 'confirmPw', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
               cancel={() => {}}
-              unmount={() => this.setState({ addingNew: false })}
+              unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
             {sortedUsers.map((user, i) => {
               return (
