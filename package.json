@@ -61,6 +61,7 @@
     "immutablediff": "^0.4.2",
     "moment": "^2.11.2",
     "numeral": "^1.5.3",
+    "node-zendesk": "^1.1.10",
     "react": "^0.14.7",
     "react-addons-css-transition-group": "^0.14.7",
     "react-bootstrap": "^0.28.2",
