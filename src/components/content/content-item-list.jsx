@@ -7,6 +7,7 @@ import { Link } from 'react-router'
 import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
+import {formatBitsPerSecond} from '../../util/helpers'
 
 class ContentItemList extends React.Component {
   constructor(props) {
@@ -102,7 +103,8 @@ class ContentItemList extends React.Component {
                   dataKey="bytes"
                   primaryData={this.props.primaryData.toJS().reverse()}
                   width={this.state.byTimeWidth}
-                  height={this.state.byTimeHeight} />
+                  height={this.state.byTimeHeight}
+                  yAxisCustomFormat={formatBitsPerSecond}/>
               : ''}
             </ReactCSSTransitionGroup>
           </div>
