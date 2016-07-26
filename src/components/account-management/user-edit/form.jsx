@@ -137,11 +137,12 @@ class UserEditForm extends React.Component {
 
         <div className="form-group password-reset">
           <label className="control-label">Password</label>
-          <div>
-            <span className="user-password">********</span>
-            <Button
-              bsStyle="primary"
-              onClick={this.resetPassword}>Reset</Button>
+          <div className="password-reset__wrapper">
+            <Button bsStyle="primary" onClick={this.resetPassword}>Reset</Button>
+            <p className="password-reset__description">
+              Sends the user a link with instructions
+              <br/>on how to reset their password
+            </p>
           </div>
         </div>
 

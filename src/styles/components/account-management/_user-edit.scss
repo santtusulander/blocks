@@ -8,23 +8,18 @@
   }
 
   .password-reset {
-    .user-password {
+    &__wrapper {
+      display: flex;
+    }
+
+    &__description {
       display: inline-block;
-      margin-right: 15px;
-      line-height: 40px;
-      vertical-align: sub;
+      margin: 0 0 0 20px;
+      font-size: 14px;
     }
 
     button.btn-primary {
-      .dark-theme & {
-        color: $dt-text-color;
-        background-color: rgba($black, 0.2);
-      }
 
-      .light-theme & {
-        color: $lt-text-color;
-        background-color: $white;
-      }
     }
   }
 }
