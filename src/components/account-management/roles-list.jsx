@@ -5,6 +5,8 @@ import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
 import ActionLinks from './action-links.jsx'
 
+import ArrayTd from '../array-td/array-td'
+
 import './roles-list.scss';
 
 function labelParentRoles(childRole, allRoles) {
@@ -61,9 +63,7 @@ export const RolesList = props => {
                 <td>
                   {role.get('name')}
                 </td>
-                <td>
-                  {labelPermissions(role, props.permissions).join(', ')}
-                </td>
+                <ArrayTd items={labelPermissions(role, props.permissions).toArray()} />
                 {/* Not in 0.8
                   <td>
                     {labelParentRoles(role, props.roles).join(', ')}
