@@ -76,6 +76,10 @@
       opacity: 1;
     }
   }
+
+  &.readonly {
+    cursor: default;
+  }
 }
 
 .toggle-label {
@@ -83,5 +87,30 @@
 
   @include md {
     padding-top: $md-btn-height / 4;
+  }
+}
+
+
+$toggle-row-padding: ($bar-height - $btn-height) / 2;
+
+.toggle-row {
+  height: $bar-height;
+  padding: $toggle-row-padding 30px;
+  margin-bottom: 6px;
+  background-color: rgba($pale-blue, 0.1);
+
+  &.yes {
+    background-color: rgba($pale-blue, 0.2);
+  }
+
+  &::after {
+    display: inline-block;
+    height: $bar-height - ($toggle-row-padding * 2);
+    vertical-align: middle;
+  }
+
+  .toggle-row-label {
+    display: inline-block;
+    vertical-align: middle;
   }
 }

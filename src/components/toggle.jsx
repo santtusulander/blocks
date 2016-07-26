@@ -7,12 +7,16 @@ class Toggle extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
   handleChange() {
+    if(this.props.readonly) return
     this.props.changeValue(!this.props.value)
   }
   render() {
     let className = 'toggle'
     if(this.props.value) {
       className = `${className} on`
+    }
+    if(this.props.readonly) {
+      className = `${className} readonly`
     }
     if(this.props.className) {
       className += ' ' + this.props.className
@@ -30,6 +34,7 @@ Toggle.displayName = 'Toggle'
 Toggle.propTypes = {
   changeValue: React.PropTypes.func,
   className: React.PropTypes.string,
+  readonly: React.PropTypes.bool,
   value: React.PropTypes.bool
 };
 

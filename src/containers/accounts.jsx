@@ -18,6 +18,8 @@ export class Accounts extends React.Component {
   constructor(props) {
     super(props);
     this.deleteAccount = this.deleteAccount.bind(this)
+    this.createAccount = this.createAccount.bind(this)
+    this.editAccount = this.editAccount.bind(this)
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
@@ -25,6 +27,12 @@ export class Accounts extends React.Component {
       this.props.metrics,
       this.props.accounts,
       this.props.dailyTraffic)
+  }
+  createAccount(brand, data) {
+    return this.props.accountActions.createAccount(brand, data)
+  }
+  editAccount(brand, id, data) {
+    return this.props.accountActions.updateAccount(brand, id, data)
   }
   deleteAccount(id) {
     this.props.accountActions.deleteAccount(this.props.params.brand, id)
@@ -58,6 +66,8 @@ export class Accounts extends React.Component {
         brand={brand}
         params={this.props.params}
         className="groups-container"
+        createNewItem={this.createAccount}
+        editItem={this.editAccount}
         contentItems={accounts}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
@@ -72,7 +82,9 @@ export class Accounts extends React.Component {
         toggleChartView={uiActions.toggleChartView}
         type='account'
         user={this.props.user}
-        viewingChart={viewingChart}/>
+        viewingChart={viewingChart}
+        fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
+      />
     )
   }
 }
