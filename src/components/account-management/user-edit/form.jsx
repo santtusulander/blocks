@@ -3,8 +3,11 @@ import { reduxForm } from 'redux-form'
 import {
   Input,
   ButtonToolbar,
-  Button
+  Button,
+  Row,
+  Col
 } from 'react-bootstrap'
+import ReactTelephoneInput from 'react-telephone-input'
 import CheckboxArray from '../../checkboxes.jsx'
 import SelectWrapper from '../../select-wrapper.jsx'
 
@@ -12,10 +15,23 @@ let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const { email, role, groups } = values
+  const {
+    email,
+    first_name,
+    last_name,
+    role
+  } = values
 
   if(!email || email.length === 0) {
     errors.email = 'Email is required'
+  }
+
+  if(!first_name || first_name.length === 0) {
+    errors.first_name = 'Firstname is required'
+  }
+
+  if(!last_name || last_name.length === 0) {
+    errors.last_name = 'Lastname is required'
   }
 
   if(!role || role.length === 0) {
@@ -35,11 +51,20 @@ class UserEditForm extends React.Component {
 
   save() {
     const {
-      fields: { email, groups }
+      fields: {
+        email,
+        first_name,
+        last_name,
+        phone_number,
+        groups
+      }
     } = this.props
 
     this.props.onSave({
       email: email.value,
+      first_name: first_name.value,
+      last_name: last_name.value,
+      phone_number: phone_number.value,
       group_id: groups.value
     })
   }
@@ -51,14 +76,21 @@ class UserEditForm extends React.Component {
 
   render() {
     const {
-      fields: { email, groups, role },
+      fields: {
+        email,
+        first_name,
+        last_name,
+        phone_number,
+        groups,
+        role
+      },
       groupOptions,
       roleOptions,
       onCancel
     } = this.props
 
     return (
-      <form>
+      <form className="user-form">
         <Input
           {...email}
           type="text"
@@ -66,6 +98,40 @@ class UserEditForm extends React.Component {
           label="Email"/>
         {email.touched && email.error &&
         <div className="error-msg">{email.error}</div>}
+
+        <div className="user-form__name">
+          <Row>
+            <Col sm={6}>
+              <Input
+                {...first_name}
+                type="text"
+                label="Firstname"/>
+              {first_name.touched && first_name.error &&
+              <div className="error-msg">{first_name.error}</div>}
+            </Col>
+
+            <Col sm={6}>
+              <Input
+                {...last_name}
+                type="text"
+                label="Firstname"/>
+              {last_name.touched && last_name.error &&
+              <div className="error-msg">{last_name.error}</div>}
+            </Col>
+          </Row>
+        </div>
+
+        <div className="user-form__telephone">
+          <ReactTelephoneInput
+            value={phone_number.value}
+            defaultCountry="usa"
+            onChange={(value) => {
+              phone_number.onChange(value)
+            }}
+          />
+          {phone_number.touched && phone_number.error &&
+          <div className="error-msg">{phone_number.error}</div>}
+        </div>
 
         <hr/>
 
@@ -120,6 +186,13 @@ UserEditForm.propTypes = {
 
 export default reduxForm({
   form: 'user-form',
-  fields: ['email', 'role', 'groups'],
+  fields: [
+    'email',
+    'first_name',
+    'last_name',
+    'phone_number',
+    'role',
+    'groups'
+  ],
   validate: validate
 })(UserEditForm)

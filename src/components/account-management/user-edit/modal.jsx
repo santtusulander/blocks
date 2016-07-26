@@ -3,9 +3,8 @@ import { Map, List } from 'immutable'
 import UserEditForm from './form'
 import { Modal } from 'react-bootstrap'
 
-import { getCheckboxArrayOptions } from '../../../util/group-helpers'
-import { getRoleSelectOptions } from '../../../util/user-helpers'
-
+import { getCheckboxArrayOptions } from '../../../util/group-helpers'
+import { getRoleSelectOptions } from '../../../util/user-helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
@@ -17,7 +16,10 @@ class UserEditModal extends React.Component {
     const initialValues = user ? {
       email: user.get('email'),
       role: user.get('roles').toJS().pop(),
-      groups: user.get('group_id')
+      groups: user.get('group_id'),
+      first_name: user.get('first_name'),
+      last_name: user.get('last_name'),
+      phone_number: user.get('phone_number')
     } : {}
 
     return (
@@ -55,3 +57,4 @@ UserEditModal.defaultProps = {
 }
 
 export default UserEditModal
+
