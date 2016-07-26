@@ -239,11 +239,10 @@ class AccountManagementAccountGroups extends React.Component {
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
             const userEmails = this.props.users
-              .filter(user => {
-                if(user.get('group_id') && user.get('group_id').size) {
-                  return user.get('group_id').indexOf(group.get('id')) !== -1
-                }
-              })
+              .filter(user => user.get('group_id') &&
+                user.get('group_id').size &&
+                user.get('group_id').includes(group.get('id'))
+              )
               .map(user => user.get('email'))
             return (
               <tr key={i}>
