@@ -1,5 +1,4 @@
-import { findDOMNode } from 'react-dom'
-import React, { Component, PropTypes, cloneElement } from 'react'
+import React, { PropTypes, cloneElement } from 'react'
 import { Tooltip, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm, getValues } from 'redux-form'
 
@@ -13,7 +12,7 @@ const InlineAdd = ({ save, inputs, fields, invalid, values, unmount }) =>
             {cell.map(({ input, positionClass }, index) =>
               <div className={positionClass} key={index}>
                 {cloneElement(input, { ...fields[input.props.id] })}
-                {fields[input.props.id] && fields[input.props.id].error &&
+                {fields[input.props.id] && fields[input.props.id].error && fields[input.props.id].touched &&
                   <Tooltip placement="bottom" className="in" id="tooltip-bottom">
                     {fields[input.props.id].error}
                   </Tooltip>}

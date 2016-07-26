@@ -73,7 +73,7 @@ export class AccountManagementAccountUsers extends React.Component {
     createUser(requestBody).then(() => this.setState({ addingNew: false }))
   }
 
-  checkForEmpty(fields, customConditions) {
+  checkForErrors(fields, customConditions) {
     let errors = {}
     for(const fieldName in fields) {
       const field = fields[fieldName]
@@ -87,22 +87,22 @@ export class AccountManagementAccountUsers extends React.Component {
     return errors
   }
 
-  validateInlineAdd({ email, password, confirmPw }) {
+  validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
       confirmPw: {
-        condition: confirmPw && password && confirmPw.length === password.length && confirmPw !== password,
+        condition: confirmPw.length === password.length && confirmPw !== password,
         errorText: 'Passwords don\'t match!'
       },
       email: {
-        condition: email && !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
+        condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
         errorText: 'invalid email!'
       },
       password: {
-        condition: password && password.length > 30,
+        condition: password.length > 30,
         errorText: 'Password too long!'
       }
     }
-    return this.checkForEmpty({ email, password, confirmPw }, conditions)
+    return this.checkForErrors({ email, password, confirmPw, roles }, conditions)
   }
 
   editUser(user) {
