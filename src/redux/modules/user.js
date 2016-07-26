@@ -168,8 +168,8 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     });
 })
 
-export const updateUser = createAction(USER_UPDATED, user => {
-  return axios.put(`${urlBase}/v2/users/${user.email}`, user, {
+export const updateUser = createAction(USER_UPDATED, (email, user) => {
+  return axios.put(`${urlBase}/v2/users/${email}`, user, {
     headers: {
       'Content-Type': 'application/json'
     }
