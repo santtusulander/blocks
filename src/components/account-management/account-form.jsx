@@ -104,15 +104,14 @@ class AccountForm extends React.Component {
 
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
-    // TODO: Check me after more brands have been added
-    const currentBrand = 'udn'
     const title = this.props.account ? 'Edit Account' : 'Add new account'
+    const subTitle = this.props.account ? `${this.props.account.get('brand_id')} / ${this.props.account.get('name')}` : 'udn'
 
     return (
       <Modal dialogClassName="account-form-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
-          <p>{currentBrand}</p>
+          <p>{subTitle}</p>
         </Modal.Header>
 
         <Modal.Body>
