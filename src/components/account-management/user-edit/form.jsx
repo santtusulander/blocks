@@ -122,6 +122,7 @@ class UserEditForm extends React.Component {
         </div>
 
         <div className="user-form__telephone">
+          <label className="control-label">Phone Number</label>
           <ReactTelephoneInput
             value={phone_number.value}
             defaultCountry="usa"
