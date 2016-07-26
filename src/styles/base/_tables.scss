@@ -73,7 +73,7 @@
           position: relative;
         }
 
-        &:not(:last-child) {
+        &:not(:last-child):not(.no-border) {
 
           .dark-theme & {
             border-right: 1px solid rgba($black, 0.2);

@@ -222,7 +222,7 @@ class ContentItems extends React.Component {
               </AccountSelector>
               <ButtonToolbar>
                 {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-                <UDNButton bsStyle="primary"
+                <UDNButton bsStyle="success"
                            icon={true}
                            addNew={true}
                            onClick={this.addItem}>
@@ -323,6 +323,7 @@ class ContentItems extends React.Component {
               <GroupForm
                 id="group-form"
                 group={this.state.itemToEdit}
+                account={activeAccount}
                 onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
                 onCancel={this.hideModal}
                 show={true}/>

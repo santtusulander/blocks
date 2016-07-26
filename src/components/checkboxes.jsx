@@ -16,6 +16,9 @@ const CheckboxArray = ({ disabled, inline, iterable, field }) => {
   if(inline) {
     className += ' inline'
   }
+  if(disabled) {
+    className += ' disabled'
+  }
   return (
     <div>
       {iterable.map((checkbox, i) => {
