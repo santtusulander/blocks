@@ -20,11 +20,11 @@ import TableSorter from '../../../components/table-sorter'
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
-    this.usersGroups = List()
     this.state = {
       sortBy: 'email',
       sortDir: 1,
-      addingNew: false
+      addingNew: false,
+      usersGroups: List()
     }
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
@@ -45,6 +45,12 @@ export class AccountManagementAccountUsers extends React.Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.params.account !== nextProps.params.account && !this.state.usersGroups.isEmpty()) {
+      this.setState({ usersGroups: List() })
+    }
+  }
+
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
@@ -52,7 +58,7 @@ export class AccountManagementAccountUsers extends React.Component {
     })
   }
 
-  newUser({ password, email, roles, group_id }) {
+  newUser({ password, email, roles }) {
     const { userActions: { createUser }, params: { brand, account } } = this.props
     const requestBody = {
       password,
@@ -61,10 +67,8 @@ export class AccountManagementAccountUsers extends React.Component {
       first_name: 'notSet',
       last_name: 'notSet',
       brand_id: brand,
-      account_id: Number(account)
-    }
-    if(group_id) {
-      requestBody.group_id = [ group_id ]
+      account_id: Number(account),
+      group_id: this.state.usersGroups.toJS()
     }
     createUser(requestBody).then(() => this.setState({ addingNew: false }))
   }
@@ -134,9 +138,7 @@ export class AccountManagementAccountUsers extends React.Component {
      *
      */
     return [
-      [
-        { input: <Input id='email' placeholder=" Email" type="text"/> }
-      ],
+      [ { input: <Input id='email' placeholder=" Email" type="text"/> } ],
       [
         {
           input: <Input id='password' placeholder=" Password" type="text"/>,
@@ -166,8 +168,10 @@ export class AccountManagementAccountUsers extends React.Component {
         {
           input: <FilterChecklistDropdown
             className="inline-add-dropdown"
-            values={this.usersGroups || List()}
-            handleCheck={val => this.usersGroups = val}
+            values={this.state.usersGroups}
+            handleCheck={newValues => {
+              this.setState({ usersGroups: newValues })
+            }}
             options={this.props.groups.map(group => {
               return Map({ value: group.get('id'), label: group.get('name') })
             })}/>,
@@ -221,7 +225,7 @@ export class AccountManagementAccountUsers extends React.Component {
           </Col>
           <Col sm={4} className="text-right">
             <Button bsStyle="success" className="btn-icon btn-add-new"
-              onClick={e => {e.stopPropagation(); this.setState({ addingNew: true })}}>
+              onClick={e => {e.stopPropagation(); this.setState({ addingNew: !this.state.addingNew })}}>
               <IconAdd />
             </Button>
           </Col>
@@ -235,7 +239,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="10%"/>
+              <th width="8%"/>
             </tr>
           </thead>
           <tbody>

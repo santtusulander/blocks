@@ -19,6 +19,7 @@
   .btn-default {
     &,
     &:active {
+      min-width: 10%;
       color: $white;
       background-color: rgba($black, 0.2);
     }
