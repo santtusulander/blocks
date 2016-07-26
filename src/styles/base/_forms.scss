@@ -180,7 +180,15 @@ label {
 
   &.inline {
     display: inline-block;
-    margin-right: 50px;
+    margin-right: $btn-sm-height;
+
+    @include md {
+      margin-right: $md-btn-sm-height;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 
   &.disabled {
