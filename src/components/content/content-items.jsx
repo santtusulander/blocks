@@ -222,7 +222,7 @@ class ContentItems extends React.Component {
               </AccountSelector>
               <ButtonToolbar>
                 {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-                <UDNButton bsStyle="primary"
+                <UDNButton bsStyle="success"
                            icon={true}
                            addNew={true}
                            onClick={this.addItem}>
