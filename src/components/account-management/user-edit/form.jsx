@@ -35,13 +35,12 @@ class UserEditForm extends React.Component {
 
   save() {
     const {
-      fields: { email, groups, role }
+      fields: { email, groups }
     } = this.props
 
     this.props.onSave({
       email: email.value,
-      //roles: [role.value],
-      group_id: groups.value.length ? groups.value[0].value : 0
+      group_id: groups.value
     })
   }
 
@@ -63,6 +62,7 @@ class UserEditForm extends React.Component {
         <Input
           {...email}
           type="text"
+          disabled
           label="Email"/>
         {email.touched && email.error &&
         <div className="error-msg">{email.error}</div>}

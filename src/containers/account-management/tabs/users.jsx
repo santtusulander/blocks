@@ -51,11 +51,15 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: false,
       addingNew: false
     }
+
+    this.notificationTimeout = null
+
     this.changeSort = this.changeSort.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
+    this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
   }
   componentWillMount() {
@@ -69,6 +73,11 @@ export class AccountManagementAccountUsers extends React.Component {
   }
   componentWillUnmount() {
     document.removeEventListener('click', this.cancelAdding, false)
+  }
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
   changeSort(column, direction) {
     this.setState({
@@ -153,11 +162,6 @@ export class AccountManagementAccountUsers extends React.Component {
   saveUser(user) {
     // Get the username from the user we have in state for editing purposes.
     //user.username = this.state.userToEdit.get('username')
-
-    user = {
-      ...this.state.userToEdit.toJS(),
-      ...user
-    }
 
     this.props.userActions.updateUser(user)
       .then((response) => {
@@ -266,6 +270,7 @@ AccountManagementAccountUsers.propTypes = {
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   userActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
 

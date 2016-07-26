@@ -17,7 +17,7 @@ class UserEditModal extends React.Component {
     const initialValues = user ? {
       email: user.get('email'),
       role: user.get('roles').toJS().pop(),
-      groups: [user.get('group_id')]
+      groups: user.get('group_id')
     } : {}
 
     return (
