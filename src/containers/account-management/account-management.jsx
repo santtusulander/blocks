@@ -71,7 +71,7 @@ export class AccountManagement extends Component {
     //this.props.fetchAccountData(account)
   }
 
-  dnsEditOnSave(){
+  dnsEditOnSave() {
     // eslint-disable-next-line no-console
     console.log('dnsEditOnSave()')
   }
@@ -112,7 +112,7 @@ export class AccountManagement extends Component {
   }
 
   showEditGroupModal(group) {
-    this.setState({groupToUpdate: group})
+    this.setState({ groupToUpdate: group })
     this.props.toggleModal(EDIT_GROUP)
   }
 
@@ -173,34 +173,34 @@ export class AccountManagement extends Component {
 
     /* TODO: remove - TEST ONLY */
     /*const dnsInitialValues = {
-      initialValues: {
-        recordType: 'MX',
-        recordName: 'mikkotest',
-        targetValue: '11.22.33.44',
-        ttl: '3600'
-      }
-    }
-    const soaFormInitialValues = dnsData && {
-      initialValues:
-        dnsData
-          .get('domains')
-          .find(domain => is(activeDomain.get('id'), domain.get('id')))
-          .get('SOARecord').toJS()
-    }
-    const dnsListProps = {
-      soaEditOnSave: this.editSOARecord,
-      modalActive: this.state.modalVisible,
-      //changeActiveDomain: dnsActions.changeActiveDomain,
-      activeDomain: activeDomain,
-      domains: dnsData && dnsData.get('domains'),
-      changeRecordType: dnsActions.changeActiveRecordType,
-      activeRecordType: activeRecordType,
-      dnsEditOnSave: this.dnsEditOnSave,
-      accountManagementModal: accountManagementModal,
-      toggleModal: toggleModal,
-      dnsFormInitialValues: dnsInitialValues,
-      soaFormInitialValues: soaFormInitialValues
-    }*/
+     initialValues: {
+     recordType: 'MX',
+     recordName: 'mikkotest',
+     targetValue: '11.22.33.44',
+     ttl: '3600'
+     }
+     }
+     const soaFormInitialValues = dnsData && {
+     initialValues:
+     dnsData
+     .get('domains')
+     .find(domain => is(activeDomain.get('id'), domain.get('id')))
+     .get('SOARecord').toJS()
+     }
+     const dnsListProps = {
+     soaEditOnSave: this.editSOARecord,
+     modalActive: this.state.modalVisible,
+     //changeActiveDomain: dnsActions.changeActiveDomain,
+     activeDomain: activeDomain,
+     domains: dnsData && dnsData.get('domains'),
+     changeRecordType: dnsActions.changeActiveRecordType,
+     activeRecordType: activeRecordType,
+     dnsEditOnSave: this.dnsEditOnSave,
+     accountManagementModal: accountManagementModal,
+     toggleModal: toggleModal,
+     dnsFormInitialValues: dnsInitialValues,
+     soaFormInitialValues: soaFormInitialValues
+     }*/
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
@@ -278,18 +278,18 @@ export class AccountManagement extends Component {
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
               </li>
               {/*
-                <li className="navbar">
-                <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
-              </li>
-              */}
+               <li className="navbar">
+               <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
+               </li>
+               */}
               <li className="navbar">
                 <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
               </li>
               {/*
-              <li className="navbar">
-                <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
-              </li>
-              */}
+               <li className="navbar">
+               <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
+               </li>
+               */}
             </Nav>}
             <Content className="tab-bodies">
               {this.props.children && React.cloneElement(this.props.children, childProps)}
@@ -318,11 +318,12 @@ export class AccountManagement extends Component {
           <GroupForm
             id="group-form"
             group={this.state.groupToUpdate}
+            account={activeAccount}
             onSave={(id, data) => this.editGroupInActiveAccount(id, data)}
             onCancel={() => toggleModal(null)}
             show={true}
             // NEEDS_API users={}
-            />}
+          />}
         </Content>
       </PageContainer>
     )
@@ -399,7 +400,7 @@ function mapDispatchToProps(dispatch) {
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            buttons:  <Button onClick={uiActions.hideInfoDialog} bsStyle="primary" >OK</Button>
+            buttons: <Button onClick={uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
           })
         }
       })
