@@ -1,44 +1,42 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { Nav } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
 
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import SupportPageHeader from '../components/support/support-page-header'
-import SupportTicketPanel from '../components/support/support-ticket-panel'
+import { getSupportUrlFromParams } from '../../util/helpers'
+import PageContainer from '../../components/layout/page-container'
+import Content from '../../components/layout/content'
+import SupportPageHeader from '../../components/support/support-page-header'
 
-const activeTicket = Map({name: "Test ticket"});
+import './support.scss'
 
-
-export class Support extends React.Component {
+class Support extends React.Component {
   render() {
+    const {
+      params
+    } = this.props;
+    const baseUrl = getSupportUrlFromParams(params);
+
     return (
       <PageContainer>
-        <div className="account-management-system-users">
-          <SupportPageHeader
-            activeTicket={activeTicket.get('name')}/>
+        <div className="account-support">
+          <SupportPageHeader {...this.props} />
+          {params.account && <Nav bsStyle="tabs" className="system-nav">
+            <li className="navbar">
+              <Link to={baseUrl + '/tickets'} activeClassName="active">TICKETS</Link>
+            </li>
+            <li className="navbar">
+              <Link to={baseUrl + '/tools'} activeClassName="active">TOOLS</Link>
+            </li>
+            <li className="navbar">
+              <Link to={baseUrl + '/documentation'} activeClassName="active">DOCUMENTATION</Link>
+            </li>
+          </Nav>}
         </div>
         <Content>
           <div className="container-fluid">
-            <h1>Support</h1>
-            <SupportTicketPanel
-              type="task"
-              assignee="Pending"
-              body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
-              comments="3"
-              number="#1-5424"
-              status="open"
-              title="Poor Performance"
-              priority="high" />
-
-            <SupportTicketPanel
-              type="task"
-              assignee="Pending"
-              body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
-              comments="3"
-              number="#1-5424"
-              status="closed"
-              title="Poor Performance"
-              priority="high" />
+            {this.props.children && React.cloneElement(this.props.children, {})}
           </div>
         </Content>
       </PageContainer>
@@ -47,7 +45,23 @@ export class Support extends React.Component {
 }
 
 Support.displayName = 'Support'
-Support.propTypes = {
+Support.defaultProps = {
+  user: Map()
 }
 
-module.exports = Support
+Support.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Map),
+  children: PropTypes.node,
+  params: PropTypes.object,
+  router: PropTypes.object,
+  user: React.PropTypes.instanceOf(Map)
+}
+
+function mapStateToProps(state) {
+  return {
+    activeAccount: state.account.get('activeAccount') || Map({}),
+    user: state.user
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(Support))
