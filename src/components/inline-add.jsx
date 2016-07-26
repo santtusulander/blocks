@@ -1,5 +1,5 @@
 import { findDOMNode } from 'react-dom'
-import React, { Component, PropTypes, cloneElement } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Tooltip, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm, getValues } from 'redux-form'
 
@@ -37,7 +37,7 @@ class InlineAdd extends Component {
           <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
             {cell.map(({ input, positionClass }, index) =>
               <div className={positionClass} key={index}>
-                {cloneElement(input, { ...fields[input.props.id] })}
+                {input}
                 {fields[input.props.id] && fields[input.props.id].error &&
                   <Tooltip placement="bottom" className="in" id="tooltip-bottom">
                     {fields[input.props.id].error}
