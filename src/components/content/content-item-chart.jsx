@@ -8,6 +8,7 @@ import moment from 'moment'
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
+import IconQuestionMark from '../icons/icon-question-mark.jsx'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip.jsx'
@@ -286,8 +287,7 @@ class ContentItemChart extends React.Component {
               </div>
             </div>
           </Link>
-          <div className="content-item-toolbar"
-            style={{bottom: barMaxHeight}}>
+          <div className="content-item-toolbar">
             <ButtonToolbar>
               {this.props.analyticsLink &&
                 <Link to={this.props.analyticsLink}
@@ -300,15 +300,17 @@ class ContentItemChart extends React.Component {
                   className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
+
               }
               {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
-                   className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
-                  <IconConfiguration/></a>
+                  className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
+                  <IconConfiguration/>
+                </a>
               }
               <Link to="/starburst-help"
                 className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
-                ?
+                <IconQuestionMark/>
               </Link>
             </ButtonToolbar>
           </div>
