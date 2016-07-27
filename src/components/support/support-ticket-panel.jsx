@@ -10,6 +10,8 @@ import IconProblem from '../icons/icon-problem'
 import IconQuestion from '../icons/icon-question'
 import IconTask from '../icons/icon-task'
 
+import { getTicketPriorities, getTicketStatuses } from '../../util/support-helper'
+
 import './support-ticket-panel.scss'
 
 class SupportTicketPanel extends React.Component {
@@ -99,8 +101,8 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
-  priority: React.PropTypes.oneOf(['urgent', 'high', 'normal', 'low']),
-  status: React.PropTypes.oneOf(['new', 'open', 'pending', 'hold', 'solved', 'closed']),
+  priority: React.PropTypes.oneOf(getTicketPriorities()),
+  status: React.PropTypes.oneOf(getTicketStatuses()),
   title: React.PropTypes.string,
   type: React.PropTypes.string
 }

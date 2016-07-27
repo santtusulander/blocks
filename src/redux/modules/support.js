@@ -139,7 +139,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) =
         "subject": "My computer is on fire!",
         "priority": "urgent",
         "status": "open",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "comment_count": 3
       },
       {
         "id": 3699,
@@ -147,7 +148,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) =
         "subject": "Load balancer configuration error",
         "priority": "high",
         "status": "open",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "comment_count": 2
       },
       {
         "id": 4008,
@@ -155,7 +157,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) =
         "subject": "My computer is on fire!",
         "priority": "normal",
         "status": "new",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "comment_count": 0
       }
     ]
   };
