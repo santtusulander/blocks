@@ -9,7 +9,6 @@ import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
 import * as accountActionCreators from '../../redux/modules/account'
-import * as userActionCreators from '../../redux/modules/user'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
@@ -441,7 +440,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
-  const userActions = bindActionCreators(userActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
@@ -473,7 +471,6 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
-    userActions: userActions,
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
