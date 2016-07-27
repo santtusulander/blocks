@@ -16,9 +16,26 @@
     }
   }
 
+  .filter-container {
+    min-width: 250px;
+  }
+
+  .in.tooltip.bottom {
+    margin-top: 25px;
+  }
+
+  .tooltip-inner {
+    padding: 10px;
+    max-width: 200px;
+  }
+  .tooltip-arrow {
+    left: 10% !important;
+  }
+
   .btn-default {
     &,
     &:active {
+      min-width: 10%;
       color: $white;
       background-color: rgba($black, 0.2);
     }
@@ -26,6 +43,9 @@
 
   .btn-primary {
     &,
+    &.btn-icon {
+      margin: 0;
+    }
     &:hover {
       color: $white !important;
       fill: $white !important;
@@ -34,13 +54,8 @@
   }
 }
 
-.trailing-item {
-  padding-left: 20px;
-  display: inline;
-}
-
 .half-width-item {
-  width: 45%;
+  width: 49%;
 }
 
 .left {
@@ -52,5 +67,8 @@
 }
 
 .inline-add-dropdown {
-  height: 40px
+  z-index: 1;
+  height: 40px;
+  width: 100%;
+  min-width: 40px;
 }

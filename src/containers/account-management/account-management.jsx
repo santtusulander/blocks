@@ -9,6 +9,7 @@ import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
 import * as accountActionCreators from '../../redux/modules/account'
+import * as userActionCreators from '../../redux/modules/user'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
@@ -22,18 +23,25 @@ import IconAdd from '../../components/icons/icon-add'
 import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
+import DeleteUserModal from '../../components/account-management/delete-user-modal'
 import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP } from '../../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import {
+  ADD_ACCOUNT,
+  DELETE_ACCOUNT,
+  DELETE_GROUP,
+  EDIT_GROUP,
+  DELETE_USER
+} from '../../constants/account-management-modals.js'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
-
+    this.userToDelete = ''
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -50,7 +58,9 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+    this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.deleteUser = this.deleteUser.bind(this)
   }
 
   componentWillMount() {
@@ -80,6 +90,17 @@ export class AccountManagement extends Component {
     this.setState({ groupToDelete: group });
 
     this.props.toggleModal(DELETE_GROUP);
+  }
+
+  showDeleteUserModal(user) {
+    this.userToDelete = user
+    this.props.toggleModal(DELETE_USER);
+  }
+
+  deleteUser() {
+    const { userActions: { deleteUser } } = this.props
+    deleteUser(this.userToDelete)
+      .then(() => this.props.toggleModal(null))
   }
 
   addGroupToActiveAccount(name) {
@@ -205,6 +226,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
+      deleteUser: this.showDeleteUserModal,
       editGroup: this.showEditGroupModal,
       account: activeAccount,
       toggleModal,
@@ -311,9 +333,14 @@ export class AccountManagement extends Component {
           {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
           <DeleteModal
             itemToDelete={this.state.groupToDelete.get('name')}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {accountManagementModal === DELETE_USER &&
+          <DeleteUserModal
+            itemToDelete={this.userToDelete}
+            onCancel={() => toggleModal(null)}
+            onDelete={this.deleteUser}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupForm
             id="group-form"
@@ -377,6 +404,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
+  const userActions = bindActionCreators(userActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
@@ -407,6 +435,7 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
+    userActions: userActions,
     accountActions: accountActions,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
@@ -415,7 +444,7 @@ function mapDispatchToProps(dispatch) {
     permissionsActions: permissionsActions,
     rolesActions: rolesActions,
     uiActions: uiActions,
-    onDelete: onDelete
+    onDelete
   };
 }
 
