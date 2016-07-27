@@ -55,7 +55,7 @@ class AccountList extends Component {
                 </td>
               </tr>
             )
-          }) : <tr id="empty-msg"><td colSpan="4">No accounts</td></tr>}
+          }) : <tr id="empty-msg"><td colSpan="6">No accounts</td></tr>}
           </tbody>
         </table>
       </div>
