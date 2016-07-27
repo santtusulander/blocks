@@ -12,8 +12,7 @@ import IconTask from '../icons/icon-task'
 
 import './support-ticket-panel.scss'
 
-
-export class SupportTicketPanel extends React.Component {
+class SupportTicketPanel extends React.Component {
   constructor(props) {
     super(props);
     this.closedClassNames = List(['closed', 'resolved']);
@@ -100,10 +99,10 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
-  priority: React.PropTypes.oneOf(['normal', 'low', 'medium', 'high']),
-  status: React.PropTypes.string,
+  priority: React.PropTypes.oneOf(['urgent', 'high', 'normal', 'low']),
+  status: React.PropTypes.oneOf(['new', 'open', 'pending', 'hold', 'solved', 'closed']),
   title: React.PropTypes.string,
   type: React.PropTypes.string
 }
 
-module.exports = SupportTicketPanel
+export default SupportTicketPanel

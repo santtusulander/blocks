@@ -1,4 +1,9 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { List } from 'immutable'
+
+import * as supportActionCreators from '../../../redux/modules/support'
 
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button.js'
@@ -7,6 +12,11 @@ import SupportTicketPanel from '../../../components/support/support-ticket-panel
 class SupportTabTickets extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    const { account } = this.props.params
+    this.props.supportActions.fetchTickets(account)
   }
 
   render() {
@@ -21,35 +31,43 @@ class SupportTabTickets extends React.Component {
             <IconAdd/>
           </UDNButton>
         </div>
-        <SupportTicketPanel
-          type="task"
-          assignee="Pending"
-          body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
-          comments="3"
-          number="#1-5424"
-          status="open"
-          title="Poor Performance"
-          priority="high" />
-
-        <SupportTicketPanel
-          type="task"
-          assignee="Pending"
-          body="My end user in Tokyo is complaining about a slow streaming start. Lorem ipsum dolor sit amet, consectur rom..."
-          comments="3"
-          number="#1-5424"
-          status="closed"
-          title="Poor Performance"
-          priority="high" />
+        {this.props.tickets.map((ticket, i) => {
+          return <SupportTicketPanel key={`ticket-${i}`}
+            type={ticket.get('type')}
+            assignee="Pending"
+            body={ticket.get('description')}
+            comments={ticket.get('comment_count')}
+            number={ticket.get('id')}
+            status={ticket.get('status')}
+            title={ticket.get('subject')}
+            priority={ticket.get('priority')} />
+        })}
       </div>
     )
   }
 }
 
 SupportTabTickets.propTypes = {
-
+  supportActions: PropTypes.object,
 }
 
-SupportTabTickets.defaultProps = {}
+SupportTabTickets.defaultProps = {
+  tickets: List()
+}
 
 
-export default SupportTabTickets;
+function mapStateToProps(state) {
+  return {
+    tickets: state.support.get('allTickets')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  const supportActions = bindActionCreators(supportActionCreators, dispatch)
+
+  return {
+    supportActions: supportActions
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SupportTabTickets)

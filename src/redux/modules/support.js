@@ -1,5 +1,5 @@
-import {createAction} from 'redux-actions'
-import {handleActions} from 'redux-actions'
+import { createAction } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
 import { mapReducers } from '../util'
@@ -20,7 +20,7 @@ const emptyTickets = Immutable.fromJS({
 // REDUCERS
 
 export function createSuccess(state, action) {
-  const newTicket = Immutable.fromJS(action.payload)
+  const newTicket = Immutable.fromJS(action.payload.ticket)
   return state.merge({
     activeTicket: newTicket,
     allGroups: state.get('allTickets').push(newTicket)
@@ -47,7 +47,7 @@ export function deleteFailure(state, action) {
 
 export function fetchSuccess(state, action) {
   return state.merge({
-    activeTicket: Immutable.fromJS(action.payload),
+    activeTicket: Immutable.fromJS(action.payload.ticket),
     fetching: false
   })
 }
@@ -61,7 +61,7 @@ export function fetchFailure(state) {
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allTickets: Immutable.fromJS(action.payload.data),
+    allTickets: Immutable.fromJS(action.payload.tickets),
     fetching: false
   })
 }
@@ -106,64 +106,63 @@ export default handleActions({
 
 // ACTIONS
 
-export const createTicket = createAction(TICKET_CREATED, (brand, account, name) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`, {name: name}, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  })
+export const createTicket = createAction(TICKET_CREATED, (data) => {
+  //noinspection Eslint
+  console.log('created ticket', data)
 })
 
 export const deleteTicket = createAction(TICKET_DELETED, (id) => {
+  //noinspection Eslint
   return console.log("deleted ticket " + id);
 })
 
 export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
-  return {"ticket": {
-    "id": id,
-    "organization_id": 509974,
-    "subject": "My computer is on fire!",
-    "priority": "high",
-    "status": "open",
-    "description": "The fire is very colorful."
-  }};
+  return {
+    "ticket": {
+      "id": id,
+      "organization_id": 509974,
+      "subject": "My computer is on fire!",
+      "priority": "high",
+      "status": "open",
+      "description": "The fire is very colorful.",
+      "comment_count": 4
+    }
+  };
 })
 
 export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) => {
-  return {"tickets": [
-    {
-      "id": 3678,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "urgent",
-      "status": "open",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 3699,
-      "organization_id": organization_id,
-      "subject": "Load balancer configuration error",
-      "priority": "high",
-      "status": "open",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 4008,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "normal",
-      "status": "new",
-      "description": "The fire is very colorful."
-    }
-  ]};
+  return {
+    "tickets": [
+      {
+        "id": 3678,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "urgent",
+        "status": "open",
+        "description": "The fire is very colorful."
+      },
+      {
+        "id": 3699,
+        "organization_id": organization_id,
+        "subject": "Load balancer configuration error",
+        "priority": "high",
+        "status": "open",
+        "description": "The fire is very colorful."
+      },
+      {
+        "id": 4008,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "normal",
+        "status": "new",
+        "description": "The fire is very colorful."
+      }
+    ]
+  };
 })
 
 export const updateTicket = createAction(TICKET_UPDATED, (id) => {
+  //noinspection Eslint
   return console.log("updateTicket ticket " + id);
 })
 
