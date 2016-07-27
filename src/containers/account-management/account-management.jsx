@@ -367,6 +367,7 @@ AccountManagement.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
+  children: PropTypes.node,
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
@@ -380,11 +381,13 @@ AccountManagement.propTypes = {
   permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
+  router: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Map),
   userActions: PropTypes.object,
-  users: React.PropTypes.instanceOf(List)
+  users: PropTypes.instanceOf(List)
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
