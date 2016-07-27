@@ -1,10 +1,10 @@
 import React, { PropTypes, Component } from 'react'
-import { Row, Col, Input } from 'react-bootstrap'
+import { Row, Col, Input, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
 
+import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
-import { AccountManagementHeader } from '../account-management-header'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
 
@@ -22,7 +22,6 @@ class AccountList extends Component {
       sortDir: 1
     }
   }
-
 
   changeSort(column, direction) {
     this.setState({
@@ -50,10 +49,12 @@ class AccountList extends Component {
   }
 
   render() {
-    const { accounts, editAccount, deleteAccount, params: { brand } } = this.props
-    const filteredAccounts = accounts.filter(account =>
-      account.get('name').toLowerCase().includes(this.state.search.toLowerCase())
-    )
+    const {
+      accounts,
+      params: { brand }
+    } = this.props
+    const filteredAccounts = accounts
+      .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -66,7 +67,7 @@ class AccountList extends Component {
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values =>
-      values.map(value => SERVICE_TYPES.find(type => type.value === value).label)
+      values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
       <div>
         <Row className="header-btn-row">
@@ -82,10 +83,12 @@ class AccountList extends Component {
               groupClassName="search-input-group"
               placeholder="Search"
               value={this.state.search}
-              onChange={this.changeSearch} />
+              onChange={({ target: { value } }) => this.setState({ search: value })} />
+            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={() => {}}>
+              <IconAdd/>
+            </Button>
           </Col>
         </Row>
-        <AccountManagementHeader title={`${accounts.size} Accounts`} onAdd={() => {}}/>
         <table className="table table-striped cell-text-left">
           <thead >
           <tr>
@@ -98,7 +101,7 @@ class AccountList extends Component {
           </tr>
           </thead>
           <tbody>
-          {!accounts.isEmpty() ? accounts.map((account, index) => {
+          {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
             return (
               <tr key={index}>
@@ -109,12 +112,19 @@ class AccountList extends Component {
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
                 <td>
                   <ActionLinks
-                    onEdit={() => editAccount(id)}
-                    onDelete={() => deleteAccount(id)}/>
+                    onEdit={() => {}}
+                    onDelete={() => {}}/>
                 </td>
               </tr>
             )
-          }) : <tr id="empty-msg"><td colSpan="6">No accounts</td></tr>}
+          }) :
+            <tr id="empty-msg">
+              <td colSpan="6">
+                {this.state.search.length > 0 ?
+                  `No accounts found with the search term ${this.state.search}` :
+                  "No accounts found"}
+              </td>
+            </tr>}
           </tbody>
         </table>
       </div>
