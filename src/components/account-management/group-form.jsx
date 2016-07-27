@@ -39,7 +39,7 @@ class GroupForm extends React.Component {
       const {
         group,
         fields: {
-          name,
+          name
         }
       } = this.props
 
@@ -104,9 +104,6 @@ class GroupForm extends React.Component {
   render() {
     const { fields: {name}, show, onCancel } = this.props
 
-    // TODO: Check me after more brands have been added
-    const currentBrand = 'udn'
-
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -122,7 +119,7 @@ class GroupForm extends React.Component {
 
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
       const userEmail = user.get('email')
-      if(!this.props.members.includes(userEmail)) {
+      if(!user.get('group_id').includes(this.props.group.get('id'))) {
         return [...arr, {label: userEmail, value: userEmail}]
       }
       return arr;
@@ -208,7 +205,6 @@ GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
-  members: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
@@ -216,8 +212,7 @@ GroupForm.propTypes = {
 }
 
 GroupForm.defaultProps = {
-  // TODO: FOR TESTING ONLY - REMOVE ME
-  members: List([2,3])
+  users: List()
 }
 
 export default reduxForm({
