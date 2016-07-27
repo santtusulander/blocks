@@ -1,5 +1,7 @@
 import React from 'react'
 
+import IconAdd from '../../../components/icons/icon-add'
+import UDNButton from '../../../components/button.js'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
 
 class SupportTabTickets extends React.Component {
@@ -10,7 +12,15 @@ class SupportTabTickets extends React.Component {
   render() {
     return (
       <div className="account-support-tickets">
-
+        <div className="account-support-tickets__filters">
+          <UDNButton bsStyle="success"
+                     pageHeaderBtn={true}
+                     icon={true}
+                     addNew={true}
+                     onClick={() => {}}>
+            <IconAdd/>
+          </UDNButton>
+        </div>
         <SupportTicketPanel
           type="task"
           assignee="Pending"
