@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
