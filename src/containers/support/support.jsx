@@ -68,10 +68,6 @@ class Support extends React.Component {
 }
 
 Support.displayName = 'Support'
-Support.defaultProps = {
-  user: Map()
-}
-
 Support.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Map),
   children: PropTypes.node,
@@ -80,9 +76,14 @@ Support.propTypes = {
   user: React.PropTypes.instanceOf(Map)
 }
 
+Support.defaultProps = {
+  activeAccount: Map(),
+  user: Map()
+}
+
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount') || Map({}),
+    activeAccount: state.account.get('activeAccount'),
     user: state.user
   };
 }
