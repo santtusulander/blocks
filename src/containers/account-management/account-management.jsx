@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -14,6 +14,7 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as permissionsActionCreators from '../../redux/modules/permissions'
 import * as rolesActionCreators from '../../redux/modules/roles'
+import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
 import PageContainer from '../../components/layout/page-container'
@@ -22,18 +23,25 @@ import IconAdd from '../../components/icons/icon-add'
 import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
+import DeleteUserModal from '../../components/account-management/delete-user-modal'
 import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
 import UDNButton from '../../components/button.js'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
-import { ADD_ACCOUNT, DELETE_ACCOUNT, DELETE_GROUP, EDIT_GROUP } from '../../constants/account-management-modals.js'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import {
+  ADD_ACCOUNT,
+  DELETE_ACCOUNT,
+  DELETE_GROUP,
+  EDIT_GROUP,
+  DELETE_USER
+} from '../../constants/account-management-modals.js'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
-
+    this.userToDelete = ''
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -50,12 +58,25 @@ export class AccountManagement extends Component {
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
+    this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.deleteUser = this.deleteUser.bind(this)
   }
 
   componentWillMount() {
+    const { brand, account } = this.props.params
     this.props.permissionsActions.fetchPermissions()
     this.props.rolesActions.fetchRoles()
+    if(account) {
+      this.props.userActions.fetchUsers(brand, account)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params.account && nextProps.params.account !== this.props.params.account) {
+      const { brand, account } = nextProps.params
+      this.props.userActions.fetchUsers(brand, account)
+    }
   }
 
   editSOARecord() {
@@ -82,6 +103,17 @@ export class AccountManagement extends Component {
     this.props.toggleModal(DELETE_GROUP);
   }
 
+  showDeleteUserModal(user) {
+    this.userToDelete = user
+    this.props.toggleModal(DELETE_USER);
+  }
+
+  deleteUser() {
+    const { userActions: { deleteUser } } = this.props
+    deleteUser(this.userToDelete)
+      .then(() => this.props.toggleModal(null))
+  }
+
   addGroupToActiveAccount(name) {
     return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
       .then(action => {
@@ -100,13 +132,31 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, data) {
-    return this.props.groupActions.updateGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      groupId,
-      data
-    ).then(() => {
+  editGroupInActiveAccount(groupId, data, addUsers, deleteUsers) {
+    const groupIdsByEmail = email => this.props.users
+      .find(user => user.get('email') === email)
+      .get('group_id')
+    const addUserActions = addUsers.map(email => {
+      return this.props.userActions.updateUser(email, {
+        group_id: groupIdsByEmail(email).push(groupId).toJS()
+      })
+    })
+    const deleteUserActions = deleteUsers.map(email => {
+      return this.props.userActions.updateUser(email, {
+        group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+      })
+    })
+    return Promise.all([
+      this.props.groupActions.updateGroup(
+        'udn',
+        this.props.activeAccount.get('id'),
+        groupId,
+        data
+      ),
+      ...addUserActions,
+      ...deleteUserActions
+    ])
+    .then(() => {
       this.props.toggleModal(null)
       this.showNotification('Group detail updates saved.')
     })
@@ -205,6 +255,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
+      deleteUser: this.showDeleteUserModal,
       editGroup: this.showEditGroupModal,
       account: activeAccount,
       toggleModal,
@@ -311,18 +362,23 @@ export class AccountManagement extends Component {
           {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
           <DeleteModal
             itemToDelete={this.state.groupToDelete.get('name')}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all groups it contains will be removed from UDN immediately.'}
+            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.'}
             onCancel={() => toggleModal(null)}
             onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {accountManagementModal === DELETE_USER &&
+          <DeleteUserModal
+            itemToDelete={this.userToDelete}
+            onCancel={() => toggleModal(null)}
+            onDelete={this.deleteUser}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupForm
             id="group-form"
             group={this.state.groupToUpdate}
             account={activeAccount}
-            onSave={(id, data) => this.editGroupInActiveAccount(id, data)}
+            onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
             onCancel={() => toggleModal(null)}
             show={true}
-            // NEEDS_API users={}
+            users={this.props.users}
           />}
         </Content>
       </PageContainer>
@@ -337,6 +393,7 @@ AccountManagement.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
+  children: PropTypes.node,
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
@@ -350,15 +407,20 @@ AccountManagement.propTypes = {
   permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
+  router: PropTypes.object,
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object
+  uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Map),
+  userActions: PropTypes.object,
+  users: PropTypes.instanceOf(List)
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
   dnsData: Map(),
   groups: List(),
-  roles: List()
+  roles: List(),
+  users: List()
 }
 
 function mapStateToProps(state) {
@@ -371,7 +433,8 @@ function mapStateToProps(state) {
     groups: state.group.get('allGroups'),
     permissions: state.permissions.get('permissions'),
     roles: state.roles.get('roles'),
-    soaFormData: state.form.soaEditForm
+    soaFormData: state.form.soaEditForm,
+    users: state.user.get('allUsers')
   };
 }
 
@@ -383,6 +446,7 @@ function mapDispatchToProps(dispatch) {
   const permissionsActions = bindActionCreators(permissionsActionCreators, dispatch)
   const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const userActions = bindActionCreators(userActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
 
   function onDelete(brandId, accountId, router) {
@@ -415,7 +479,8 @@ function mapDispatchToProps(dispatch) {
     permissionsActions: permissionsActions,
     rolesActions: rolesActions,
     uiActions: uiActions,
-    onDelete: onDelete
+    userActions: userActions,
+    onDelete
   };
 }
 
