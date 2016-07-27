@@ -264,6 +264,15 @@
       fill: $silver-30;
       stroke: $silver-30;
 
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
       .icon {
         transform: translate(-50%, -50%) scale(1);
       }
