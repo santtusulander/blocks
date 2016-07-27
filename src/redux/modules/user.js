@@ -2,7 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
-import {urlBase, mapReducers} from '../util'
+import {urlBase, mapReducers, parseResponseData} from '../util'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -11,6 +11,7 @@ const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
 const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
+const USER_UPDATED = 'USER_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -24,6 +25,27 @@ const emptyUser = Map({
 })
 
 // REDUCERS
+export function updateSuccess(state, action) {
+  const updatedUser = Immutable.fromJS(action.payload)
+  const currIndex = state.get('allUsers').findIndex(
+    user => user.get('email') === updatedUser.get('email')
+  )
+  const updatedUsers = currIndex !== -1 ?
+    state.get('allUsers').set(currIndex, updatedUser)
+    : state.get('allUsers')
+
+  return state.merge({
+    allUsers: updatedUsers,
+    fetching: false
+  })
+}
+
+export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
   localStorage.setItem('EricssonUDNUserName', action.payload.username)
@@ -117,8 +139,9 @@ export default handleActions({
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
-  USER_DELETED: mapReducers(deleteUserSuccess, state => state),
-  USER_CREATED: mapReducers(createUserSuccess, state => state)
+  USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
+  USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
+  USER_UPDATED: mapReducers(updateSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -186,6 +209,16 @@ export const createUser = createAction(USER_CREATED, user =>
       }
     })
 )
+
+export const updateUser = createAction(USER_UPDATED, user => {
+  return axios.put(`${urlBase}/v2/users/${user.email}`, user, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
 //
 // export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
 //   return axios.post(`${urlBase}/v2/tokens`, {

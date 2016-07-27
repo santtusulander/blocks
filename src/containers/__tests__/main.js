@@ -59,11 +59,9 @@ function userActionsMaker(cbResponse) {
   }
 }
 
-function fakeHistoryMaker() {
+function fakeRouterMaker() {
   return {
-    createHref: jest.genMockFunction(),
-    isActive: jest.genMockFunction(),
-    pushState: jest.genMockFunction()
+    push: jest.genMockFunction()
   }
 }
 
@@ -114,7 +112,6 @@ describe('Main', () => {
       <Main location={fakeLocation} uiActions={uiActionsMaker()}
         userActions={userActionsMaker()} theme="dark"
         params={fakeParams}
-        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData} />
     );
     expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
@@ -129,7 +126,6 @@ describe('Main', () => {
         activePurge={fakePurge}
         theme="dark"
         params={fakeParams}
-        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData} />
     );
     expect(main.state.activePurge).toBe(null);
@@ -151,7 +147,6 @@ describe('Main', () => {
         purgeActions={purgeActions}
         hostActions={hostActionsMaker()}
         params={fakeParams}
-        history={fakeHistoryMaker()}
         fetchAccountData={fakeFetchAccountData}/>
     );
     main.activatePurge(fakeProperties.get(0))()
@@ -168,7 +163,6 @@ describe('Main', () => {
       <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
         userActions={userActionsMaker()}
         viewingChart={true}
-        history={fakeHistoryMaker()}
         params={fakeParams}
         fetchAccountData={fakeFetchAccountData} />
     );
@@ -178,17 +172,17 @@ describe('Main', () => {
 
   it('handles a successful log out attempt', () => {
     const userActions = userActionsMaker({})
-    const fakeHistory = fakeHistoryMaker()
+    const fakeRouter = fakeRouterMaker()
     const main = TestUtils.renderIntoDocument(
       <Main location={fakeLocation}
         uiActions={uiActionsMaker()}
         theme="dark"
         userActions={userActions}
-        history={fakeHistory}
+        router={fakeRouter}
         params={fakeParams}
         fetchAccountData={fakeFetchAccountData} />
     )
     main.logOut()
-    expect(fakehistory.push.mock.calls[0][1]).toBe('/login')
+    expect(fakeRouter.push.mock.calls[0]).toContain('/login')
   });
 })

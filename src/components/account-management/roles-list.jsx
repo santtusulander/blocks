@@ -5,6 +5,8 @@ import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
 import ActionLinks from './action-links.jsx'
 
+import ArrayTd from '../array-td/array-td'
+
 import './roles-list.scss';
 
 function labelParentRoles(childRole, allRoles) {
@@ -16,11 +18,13 @@ function labelParentRoles(childRole, allRoles) {
 }
 
 function labelPermissions(role, permissions) {
-  return role.get('permissions').map(id => {
-    return permissions
-      .find(permission => permission.get('id') === id)
-      .get('name')
-  })
+  return role.get('permissions').get('resources')
+    .filter(rule => rule.find((rule) => rule.get('allowed') === true))
+    .map((rule, key) => {
+      return permissions
+        .find(permission => permission.get('id') === key)
+        .get('name')
+    })
 }
 
 export const RolesList = props => {
@@ -44,7 +48,9 @@ export const RolesList = props => {
           <tr>
             <th>Role</th>
             <th>Permissions</th>
-            <th>Available To</th>
+            {/* Not in 0.8
+              <th>Available To</th>
+            */}
             <th>Assigned To</th>
             <th></th>
           </tr>
@@ -57,12 +63,12 @@ export const RolesList = props => {
                 <td>
                   {role.get('name')}
                 </td>
-                <td>
-                  {labelPermissions(role, props.permissions).join(', ')}
-                </td>
-                <td>
-                  {labelParentRoles(role, props.roles).join(', ')}
-                </td>
+                <ArrayTd items={labelPermissions(role, props.permissions).toArray()} />
+                {/* Not in 0.8
+                  <td>
+                    {labelParentRoles(role, props.roles).join(', ')}
+                  </td>
+                */}
                 <td>
                   NEEDS API
                 </td>
