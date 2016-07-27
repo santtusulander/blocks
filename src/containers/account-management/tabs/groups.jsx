@@ -170,8 +170,7 @@ class AccountManagementAccountGroups extends React.Component {
         {
           input: <Input id='name' placeholder=" Name" type="text"
             onChange={this.changeNewName}
-            value={this.state.newName}/>,
-          positionClass: 'left'
+            value={this.state.newName}/>
         }
       ],
       [
