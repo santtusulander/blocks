@@ -289,23 +289,24 @@ class ContentItemChart extends React.Component {
           </Link>
           <div className="content-item-toolbar">
             <ButtonToolbar>
-              {this.props.analyticsLink ?
+              {this.props.analyticsLink &&
                 <Link to={this.props.analyticsLink}
                   className="btn btn-sm btn-primary btn-icon btn-round invisible">
                   <IconChart/>
-                </Link> : null
+                </Link>
               }
-              {this.props.configurationLink ?
+              {this.props.configurationLink &&
                 <Link to={this.props.configurationLink}
                   className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
-                </Link> : null
+                </Link>
+
               }
-              {this.props.onConfiguration ?
+              {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
-                      className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
-                </a> : null
+                </a>
               }
               <Link to="/starburst-help"
                 className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">

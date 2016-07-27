@@ -2,11 +2,18 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Input, Table, Button, Row, Col } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter } from 'react-router'
 
-import IconAdd from '../../icons/icon-add.jsx'
-import IconTrash from '../../icons/icon-trash.jsx'
-import TableSorter from '../../table-sorter'
-import EditGroup from './edit-group'
+import * as userActionCreators from '../../../redux/modules/user'
+import * as groupActionCreators from '../../../redux/modules/group'
+
+import IconAdd from '../../../components/icons/icon-add'
+import IconTrash from '../../../components/icons/icon-trash'
+import TableSorter from '../../../components/table-sorter'
+import InlineAdd from '../../../components/inline-add'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -15,6 +22,8 @@ class AccountManagementAccountGroups extends React.Component {
     this.state = {
       adding: false,
       editing: null,
+      newName: '',
+      newUsers: Immutable.List(),
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -29,14 +38,23 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
+    this.changeNewName   = this.changeNewName.bind(this)
+    this.changeNewUsers  = this.changeNewUsers.bind(this)
+  }
+  componentWillMount() {
+    const { brand, account } = this.props.params
+    this.props.userActions.fetchUsers(brand, account)
+
+    if (!this.props.groups.toJS().length) {
+      this.props.groupActions.fetchGroups(brand, account);
+    }
   }
 
-  componentDidMount() {
-    window.addEventListener('click', this.cancelAdding)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('click', this.cancelAdding)
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.params.account !== this.props.params.account) {
+      const { brand, account } = nextProps.params
+      this.props.userActions.fetchUsers(brand, account)
+    }
   }
 
   cancelAdding() {
@@ -48,7 +66,11 @@ class AccountManagementAccountGroups extends React.Component {
 
   addGroup(e) {
     e.stopPropagation()
-    this.setState({ adding: true })
+    this.setState({
+      adding: true,
+      newName: '',
+      newUsers: Immutable.List()
+    })
   }
 
   changeSort(column, direction) {
@@ -58,6 +80,7 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
+  // TODO: Now that this is a container, no need to pass this in
   deleteGroup(group) {
     return () => this.props.deleteGroup(group)
   }
@@ -70,12 +93,26 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
+  // TODO: Now that this is a container, no need to pass this in
   saveEditedGroup(group) {
     return name => this.props.editGroup(group, name).then(this.cancelAdding)
   }
 
-  saveNewGroup(name) {
-    this.props.addGroup(name).then(this.cancelAdding)
+  // TODO: Now that this is a container, no need to pass this in
+  saveNewGroup() {
+    this.props.addGroup(this.state.newName)
+      .then(newGroup => {
+        return Promise.all(this.state.newUsers.map(email => {
+          const foundUser = this.props.users
+            .find(user => user.get('email') === email)
+          const newUser = {
+            group_id: foundUser.get('group_id').push(newGroup.id).toJS(),
+            email: email
+          }
+          return this.props.userActions.updateUser(newUser)
+        }))
+      })
+      .then(this.cancelAdding)
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -102,6 +139,16 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
+  changeNewName(e) {
+    this.setState({
+      newName: e.target.value
+    })
+  }
+
+  changeNewUsers(val) {
+    this.setState({newUsers: val})
+  }
+
   render() {
     const groups = this.props.groups;
     const sorterProps  = {
@@ -118,6 +165,32 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
+
+    const inlineAddInputs = [
+      [
+        {
+          input: <Input id='name' placeholder=" Name" type="text"
+            onChange={this.changeNewName}
+            value={this.state.newName}/>,
+          positionClass: 'left'
+        }
+      ],
+      [
+        {
+          input: <FilterChecklistDropdown
+            id='members'
+            values={this.state.newUsers}
+            handleCheck={this.changeNewUsers}
+            options={this.props.users.map(user => Immutable.Map({
+              label: user.get('email') || 'No Email',
+              value: user.get('email')
+            }))}/>,
+          positionClass: 'left'
+        }
+      ],
+      [],
+      []
+    ]
     return (
       <div className="account-management-account-groups">
         <Row className="header-btn-row">
@@ -157,19 +230,24 @@ class AccountManagementAccountGroups extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {this.state.adding && <EditGroup save={this.saveNewGroup}/>}
+          {this.state.adding && <InlineAdd
+            validate={this.validateInlineAdd}
+            fields={['name', 'members']}
+            inputs={inlineAddInputs}
+            cancel={this.cancelAdding}
+            unmount={this.cancelAdding}
+            save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
-            if(group.get('id') === this.state.editing) {
-              return (
-                <EditGroup key={i}
-                  name={group.get('name')}
-                  save={this.saveEditedGroup(group.get('id'))}/>
+            const userEmails = this.props.users
+              .filter(user => user.get('group_id') &&
+                user.get('group_id').size &&
+                user.get('group_id').includes(group.get('id'))
               )
-            }
+              .map(user => user.get('email'))
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
-                <td>NEEDS_API</td>
+                <td>{userEmails.size ? userEmails.join(', ') : 'No members'}</td>
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
@@ -204,11 +282,30 @@ AccountManagementAccountGroups.propTypes    = {
   addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
   editGroup: React.PropTypes.func,
+  groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  toggleModal: React.PropTypes.func
+  params: React.PropTypes.object,
+  toggleModal: React.PropTypes.func,
+  userActions: React.PropTypes.object,
+  users: React.PropTypes.instanceOf(Immutable.List)
 }
 AccountManagementAccountGroups.defaultProps = {
-  groups: Immutable.List([])
+  groups: Immutable.List(),
+  users: Immutable.List()
 }
 
-module.exports = AccountManagementAccountGroups
+function mapStateToProps(state) {
+  return {
+    users: state.user.get('allUsers'),
+    groups: state.group.get('allGroups')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountGroups))
