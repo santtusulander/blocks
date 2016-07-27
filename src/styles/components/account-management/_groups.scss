@@ -1,8 +1,8 @@
 .account-management-account-groups {
   th:last-child,
   td:last-child {
-    width: 120px;
-    text-align: center;
+    text-align: right;
+    white-space: nowrap;
   }
 
   .edit-row {
@@ -13,11 +13,11 @@
     }
 
     input {
-      max-width: initial;
       height: auto;
+      max-width: initial;
       padding: 5px 0;
-      background-color: $pale-blue;
       color: $white;
+      background-color: $pale-blue;
 
       &::placeholder {
         color: rgba($white, 0.8);
@@ -29,5 +29,9 @@
       color: $white;
       background-color: rgba($black, 0.2);
     }
+  }
+
+  .form-group .dropdown-select {
+    min-width: 300px;
   }
 }

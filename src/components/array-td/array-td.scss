@@ -1,0 +1,18 @@
+// Array TD
+// ========
+
+.array-td-tooltip {
+
+  p {
+    margin: 0 0 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.array-td-more-link {
+  margin-left: 10px;
+  cursor: pointer;
+}

@@ -26,18 +26,18 @@ export default handleActions({
 // ACTIONS
 export const fetchPermissions = createAction(PERMISSIONS_FETCHED, () => {
   return Promise.resolve({data: [
-    {id: 1, name: 'Content'},
-    {id: 2, name: 'Analytics'},
-    {id: 3, name: 'Analytics: CP: Traffic'},
-    {id: 4, name: 'Analytics: CP: Unique Visitors'},
-    {id: 5, name: 'Analytics: CP: SP Contribution'},
-    {id: 6, name: 'Analytics: CP: File Error'},
-    {id: 7, name: 'Analytics: CP: URL'},
-    {id: 8, name: 'Analytics: SP: On/Off Net'},
-    {id: 9, name: 'Security'},
-    {id: 10, name: 'Services'},
-    {id: 11, name: 'Account'},
-    {id: 12, name: 'Config'},
-    {id: 13, name: 'Support'}
+    {id: 'content', name: 'Content'},
+    {id: 'analytics', name: 'Analytics'},
+    {id: 'analytics_cp_traffic', name: 'Analytics: CP: Traffic'},
+    {id: 'analytics_cp_unique_visitors', name: 'Analytics: CP: Unique Visitors'},
+    {id: 'analytics_cp_sp_contribution', name: 'Analytics: CP: SP Contribution'},
+    {id: 'analytics_cp_file_error', name: 'Analytics: CP: File Error'},
+    {id: 'analytics_cp_url', name: 'Analytics: CP: URL'},
+    {id: 'analytics_sp_on_off_net', name: 'Analytics: SP: On/Off Net'},
+    {id: 'security', name: 'Security'},
+    {id: 'services', name: 'Services'},
+    {id: 'account', name: 'Account'},
+    {id: 'config', name: 'Config'},
+    {id: 'support', name: 'Support'}
   ]})
 })
