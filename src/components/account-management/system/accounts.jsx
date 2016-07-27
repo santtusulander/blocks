@@ -2,29 +2,19 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
 
-import ActionLinks from '../action-links.jsx'
-import { AccountManagementHeader } from '../account-management-header.jsx'
+import ActionLinks from '../action-links'
+import { AccountManagementHeader } from '../account-management-header'
+import ArrayCell from '../../array-td/array-td'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options.js'
+import { fetchAccounts } from '../../../redux/modules/account'
 
-function getServicesString(services) {
-  let string = ''
-  let servicesLength = services.length
-  if (servicesLength >= 1) {
-    string = string.concat(SERVICE_TYPES.find(item => item.value === services[0]).label)
-    if (servicesLength >= 2) {
-      string = string.concat(', ' + SERVICE_TYPES.find(item => item.value === services[1]).label)
-      if (servicesLength > 2) {
-        string = string.concat(', +' + servicesLength)
-      }
-    }
-  } else return 'No service types'
-  return string
-}
+import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
 
 class AccountList extends Component {
   render() {
     const { accounts, editAccount, deleteAccount, params: { brand } } = this.props
+    const services = values =>
+      values.map(value => SERVICE_TYPES.find(type => type.value === value).label)
     return (
       <div>
         <AccountManagementHeader title={`${accounts.size} Accounts`} onAdd={() => {}}/>
@@ -48,7 +38,7 @@ class AccountList extends Component {
                 <td>{ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value).label}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
-                <td>{getServicesString(account.get('services').toJS())}</td>
+                <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
                 <td>
                   <ActionLinks
                     onEdit={() => editAccount(id)}
@@ -84,11 +74,11 @@ AccountList.defaultProps = {
 function mapStateToProps(state) {
   const notSufficient = state.account.get('allAccounts')
   const sufficient = notSufficient.map(account => {
-    account = account.set('services', fromJS([1]))
+    account = account.set('services', fromJS([1, 1, 1, 1]))
     account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
     return account
   })
   return { accounts: sufficient, brand: 'udn' }
 }
 
-export default connect(mapStateToProps)(AccountList)
+export default connect(mapStateToProps, { fetchAccounts })(AccountList)
