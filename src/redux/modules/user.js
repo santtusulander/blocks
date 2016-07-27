@@ -26,7 +26,7 @@ const emptyUser = Map({
 
 // REDUCERS
 export function updateSuccess(state, action) {
-  const updatedUser = Immutable.fromJS(action.payload)
+  const updatedUser = fromJS(action.payload)
   const currIndex = state.get('allUsers').findIndex(
     user => user.get('email') === updatedUser.get('email')
   )
@@ -151,7 +151,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
       "username": username,// superuser
-      "password": password,// Video4All!
+      "password": password// Video4All!
     },
     {
       headers: {
