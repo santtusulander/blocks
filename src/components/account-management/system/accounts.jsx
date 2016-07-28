@@ -144,19 +144,8 @@ AccountList.defaultProps = {
   accounts: List()
 }
 
-/**
- *
- * waiting for api endpoint to return sufficient data
- */
-
 function mapStateToProps(state) {
-  const notSufficient = state.account.get('allAccounts')
-  const sufficient = notSufficient.map(account => {
-    account = account.set('services', fromJS([1, 1, 1, 1]))
-    account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
-    return account
-  })
-  return { accounts: sufficient, brand: 'udn' }
+  return { accounts: state.account.get('allAccounts'), brand: 'udn' }
 }
 
-export default connect(mapStateToProps, { fetchAccounts })(AccountList)
+export default connect((mapStateToProps), { fetchAccounts })(AccountList)
