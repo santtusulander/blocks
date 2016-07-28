@@ -132,7 +132,7 @@ export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
 
 export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
   const organization_id = 12345;
-  return {"data": [
+  return {"tickets": [
     {
       "id": 3678,
       "organization_id": organization_id,

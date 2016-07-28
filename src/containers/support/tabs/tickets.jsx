@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { List } from 'immutable'
-
-import * as supportActionCreators from '../../../redux/modules/support'
+import { Row, Col } from 'react-bootstrap'
 
 import * as supportActionCreators from '../../../redux/modules/support'
 
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button.js'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
-import { STATUSES_OPEN, STATUSES_CLOSED } from '../../../constants/support'
+import {
+  getClosedTicketStatuses,
+  getOpenTicketStatuses
+} from '../../../util/support-helper'
 
 import './tickets.scss'
 
@@ -19,8 +21,8 @@ class SupportTabTickets extends React.Component {
   constructor(props) {
     super(props)
 
-    this.openStatuses = STATUSES_OPEN
-    this.closedStatuses = STATUSES_CLOSED
+    this.openStatuses = List(getOpenTicketStatuses())
+    this.closedStatuses = List(getClosedTicketStatuses())
 
     this.state = {
       ticketToEdit: null,
@@ -58,16 +60,23 @@ class SupportTabTickets extends React.Component {
 
     return (
       <div className="account-support-tickets">
-        <div className="account-support-tickets__filters">
-          <UDNButton bsStyle="success"
-                     pageHeaderBtn={true}
-                     icon={true}
-                     addNew={true}
-                     onClick={() => { this.showModal() }}>
-            <IconAdd/>
-          </UDNButton>
-        </div>
-        <h2>{openTickets.size} Open Ticket{openTickets.size === 1 ? '' : 's'}</h2>
+        <Row>
+          <Col sm={8}>
+            <h2>{openTickets.size} Open Ticket{openTickets.size === 1 ? '' : 's'}</h2>
+          </Col>
+          <Col sm={4}>
+            <div className="account-support-tickets__filters">
+              <UDNButton bsStyle="success"
+                         pageHeaderBtn={true}
+                         icon={true}
+                         addNew={true}
+                         className="pull-right"
+                         onClick={() => { this.showModal() }}>
+                <IconAdd/>
+              </UDNButton>
+            </div>
+          </Col>
+        </Row>
         {renderTicketList(openTickets)}
 
         <h2>{closedTickets.size} Closed Ticket{closedTickets.size === 1 ? '' : 's'}</h2>

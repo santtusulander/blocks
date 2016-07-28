@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
+import { List } from 'immutable'
 import classNames from 'classnames'
 
 import IconComments from '../icons/icon-comments'
@@ -8,16 +9,18 @@ import IconIntegration from '../icons/icon-integration'
 import IconProblem from '../icons/icon-problem'
 import IconQuestion from '../icons/icon-question'
 import IconTask from '../icons/icon-task'
-import { PRIORITIES, STATUSES, STATUSES_CLOSED } from '../../constants/support'
-
-import { getTicketPriorities, getTicketStatuses } from '../../util/support-helper'
+import {
+  getTicketPriorities,
+  getTicketStatuses,
+  getClosedTicketStatuses
+} from '../../util/support-helper'
 
 import './support-ticket-panel.scss'
 
 class SupportTicketPanel extends React.Component {
   constructor(props) {
     super(props);
-    this.closedStatuses = STATUSES_CLOSED;
+    this.closedStatuses = List(getClosedTicketStatuses());
   }
 
   render() {
@@ -25,7 +28,7 @@ class SupportTicketPanel extends React.Component {
     const TicketTypeIcon = createTypeIcon(this.props.type);
     const priorityClass = (isClosed) ? 'normal' : this.props.priority;
     const priorityClassNames = classNames('support-ticket-panel-priority', priorityClass);
-    const statusClassNames = classNames({'support-ticket-panel': true, 'closed': isClosed});
+    const statusClassNames = classNames({ 'support-ticket-panel': true, 'closed': isClosed });
 
     return (
       <div className={statusClassNames}>
@@ -55,11 +58,11 @@ class SupportTicketPanel extends React.Component {
               <Col xs={6}>
                 <div className="support-ticket-panel-assignee">
                   Assignee: <span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
-              </div>
+                </div>
               </Col>
               <Col xs={6} className="text-right">
                 <span className="support-ticket-panel-comments">
-                  <IconComments count={this.props.comments} />
+                  <IconComments count={this.props.comments}/>
                 </span>
               </Col>
             </Row>
@@ -70,7 +73,6 @@ class SupportTicketPanel extends React.Component {
   }
 }
 
-
 /**
  * Return an icon component based on a provided type string.
  *
@@ -79,11 +81,11 @@ class SupportTicketPanel extends React.Component {
  */
 function createTypeIcon(type) {
   let iconTypeComponents = {
-    'task'        : IconTask,
-    'problem'     : IconProblem,
-    'question'    : IconQuestion,
-    'integration' : IconIntegration,
-    'incident'    : IconIncident
+    'task': IconTask,
+    'problem': IconProblem,
+    'question': IconQuestion,
+    'integration': IconIntegration,
+    'incident': IconIncident
   }
 
   return iconTypeComponents[type] || null;

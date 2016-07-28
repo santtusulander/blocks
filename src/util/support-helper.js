@@ -32,6 +32,22 @@ export function getTicketStatuses() {
   ]
 }
 
+export function getOpenTicketStatuses() {
+  return [
+    STATUS_NEW,
+    STATUS_OPEN,
+    STATUS_PENDING,
+    STATUS_HOLD
+  ]
+}
+
+export function getClosedTicketStatuses() {
+  return [
+    STATUS_SOLVED,
+    STATUS_CLOSED
+  ]
+}
+
 export function getTicketPriorityOptions() {
   return [
     { value: PRIORITY_URGENT, label: 'Urgent' },
