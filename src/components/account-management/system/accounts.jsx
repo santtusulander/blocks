@@ -39,8 +39,8 @@ class AccountList extends Component {
 
   validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
     const conditions = {
-      confirmPw: {
-        condition: this.props.accounts.find(account => account.get('name') !== name),
+      name: {
+        condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
         errorText: 'That account name is taken'
       }
     }
