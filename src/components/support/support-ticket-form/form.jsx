@@ -7,10 +7,12 @@ import {
   Button
 } from 'react-bootstrap'
 import Toggle from '../../toggle'
+import SelectWrapper from '../../select-wrapper.jsx'
 import { STATUS_OPEN, STATUS_SOLVED } from '../../../constants/ticket'
 import {
   isStatusOpen,
-  isStatusClosed
+  getTicketPriorityOptions,
+  getTicketTypeOptions
 } from '../../../util/support-helper'
 
 let errors = {}
@@ -78,7 +80,10 @@ class SupportTicketForm extends React.Component {
       fields: {
         subject,
         description,
-        status
+        status,
+        type,
+        priority,
+        assignee
       },
       onCancel
     } = this.props
@@ -114,6 +119,26 @@ class SupportTicketForm extends React.Component {
         </div>
 
         <hr/>
+
+        <div className='form-group'>
+          <label className='control-label'>Type</label>
+          <SelectWrapper
+            {...type}
+            className="input-select"
+            options={getTicketTypeOptions()}
+          />
+        </div>
+
+        <hr/>
+
+        <div className='form-group'>
+          <label className='control-label'>Priority</label>
+          <SelectWrapper
+            {...priority}
+            className="input-select"
+            options={getTicketPriorityOptions()}
+          />
+        </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>

@@ -11,3 +11,9 @@ export const STATUS_PENDING = 'pending'
 export const STATUS_HOLD = 'hold'
 export const STATUS_SOLVED = 'solved'
 export const STATUS_CLOSED = 'closed'
+
+// TICKET TYPE
+export const TYPE_PROBLEM = 'problem'
+export const TYPE_INCIDENT = 'incident'
+export const TYPE_QUESTION = 'question'
+export const TYPE_TASK = 'task'

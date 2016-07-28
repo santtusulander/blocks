@@ -11,7 +11,12 @@ import {
   STATUS_PENDING,
   STATUS_HOLD,
   STATUS_SOLVED,
-  STATUS_CLOSED
+  STATUS_CLOSED,
+
+  TYPE_PROBLEM,
+  TYPE_INCIDENT,
+  TYPE_QUESTION,
+  TYPE_TASK,
 } from '../constants/ticket'
 
 export function getTicketPriorities() {
@@ -50,6 +55,15 @@ export function getClosedTicketStatuses() {
   ]
 }
 
+export function getTicketTypes() {
+  return [
+    TYPE_PROBLEM,
+    TYPE_INCIDENT,
+    TYPE_QUESTION,
+    TYPE_TASK,
+  ]
+}
+
 export function isStatusOpen(status) {
   return List(getOpenTicketStatuses()).includes(status.toLowerCase())
 }
@@ -78,5 +92,12 @@ export function getTicketStatusOptions() {
   ]
 }
 
-
+export function getTicketTypeOptions() {
+  return [
+    { value: TYPE_PROBLEM, label: 'Problem' },
+    { value: TYPE_INCIDENT, label: 'Incident' },
+    { value: TYPE_QUESTION, label: 'Question' },
+    { value: TYPE_TASK, label: 'Task' },
+  ]
+}
 
