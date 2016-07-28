@@ -1,6 +1,5 @@
-import {createAction} from 'redux-actions'
+import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
-import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
 import { urlBase, mapReducers, parseResponseData } from '../util'
@@ -29,7 +28,7 @@ export function createSuccess(state, action) {
 }
 
 export function deleteSuccess(state, action) {
-  const newAllAccounts = state.get('allAccounts').filterNot(account => account === action.payload.id)
+  const newAllAccounts = state.get('allAccounts').filterNot(account => account.get('id') == action.payload.id)
   return state.merge({
     allAccounts: newAllAccounts,
     fetching: false

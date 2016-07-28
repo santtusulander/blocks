@@ -12,8 +12,32 @@ import SupportPageHeader from '../../components/support/support-page-header'
 import './support.scss'
 
 class Support extends React.Component {
+
+  renderTabContent(children) {
+    const { params } = this.props;
+
+    if (!params.account) {
+      return (
+        <div className="support-tab-container">
+          <p className="text-center">
+            Please select an account
+            <br/>
+            from top left to see support tickets
+          </p>
+        </div>
+      )
+    } else {
+      return (
+        <div className="support-tab-container">
+          {children && React.cloneElement(children, {...this.props})}
+        </div>
+      )
+    }
+  }
+
   render() {
     const {
+      children,
       params
     } = this.props;
     const baseUrl = getSupportUrlFromParams(params);
@@ -22,7 +46,8 @@ class Support extends React.Component {
       <PageContainer>
         <div className="account-support">
           <SupportPageHeader {...this.props} />
-          {params.account && <Nav bsStyle="tabs" className="system-nav">
+          {/* TODO: enable the tab navigation when the tools and documentation sections have been designed */}
+          {false && <Nav bsStyle="tabs" className="system-nav">
             <li className="navbar">
               <Link to={baseUrl + '/tickets'} activeClassName="active">TICKETS</Link>
             </li>
@@ -35,9 +60,7 @@ class Support extends React.Component {
           </Nav>}
         </div>
         <Content>
-          <div className="container-fluid">
-            {this.props.children && React.cloneElement(this.props.children, {})}
-          </div>
+          {this.renderTabContent(children)}
         </Content>
       </PageContainer>
     )
@@ -45,10 +68,6 @@ class Support extends React.Component {
 }
 
 Support.displayName = 'Support'
-Support.defaultProps = {
-  user: Map()
-}
-
 Support.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Map),
   children: PropTypes.node,
@@ -57,9 +76,14 @@ Support.propTypes = {
   user: React.PropTypes.instanceOf(Map)
 }
 
+Support.defaultProps = {
+  activeAccount: Map(),
+  user: Map()
+}
+
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount') || Map({}),
+    activeAccount: state.account.get('activeAccount'),
     user: state.user
   };
 }

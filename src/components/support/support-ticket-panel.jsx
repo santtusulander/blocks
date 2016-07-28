@@ -1,7 +1,6 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import classNames from 'classnames'
-import { List } from 'immutable'
 
 import IconComments from '../icons/icon-comments'
 import IconIncident from '../icons/icon-incident'
@@ -9,6 +8,7 @@ import IconIntegration from '../icons/icon-integration'
 import IconProblem from '../icons/icon-problem'
 import IconQuestion from '../icons/icon-question'
 import IconTask from '../icons/icon-task'
+import { PRIORITIES, STATUSES, STATUSES_CLOSED } from '../../constants/support'
 
 import { getTicketPriorities, getTicketStatuses } from '../../util/support-helper'
 
@@ -17,11 +17,11 @@ import './support-ticket-panel.scss'
 class SupportTicketPanel extends React.Component {
   constructor(props) {
     super(props);
-    this.closedClassNames = List(['closed', 'resolved']);
+    this.closedStatuses = STATUSES_CLOSED;
   }
 
   render() {
-    const isClosed = this.closedClassNames.includes(this.props.status.toLowerCase());
+    const isClosed = this.closedStatuses.includes(this.props.status.toLowerCase());
     const TicketTypeIcon = createTypeIcon(this.props.type);
     const priorityClass = (isClosed) ? 'normal' : this.props.priority;
     const priorityClassNames = classNames('support-ticket-panel-priority', priorityClass);

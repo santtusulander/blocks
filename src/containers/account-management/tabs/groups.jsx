@@ -106,10 +106,9 @@ class AccountManagementAccountGroups extends React.Component {
           const foundUser = this.props.users
             .find(user => user.get('email') === email)
           const newUser = {
-            group_id: foundUser.get('group_id').push(newGroup.id).toJS(),
-            email: email
+            group_id: foundUser.get('group_id').push(newGroup.id).toJS()
           }
-          return this.props.userActions.updateUser(newUser)
+          return this.props.userActions.updateUser(email, newUser)
         }))
       })
       .then(this.cancelAdding)
@@ -171,8 +170,7 @@ class AccountManagementAccountGroups extends React.Component {
         {
           input: <Input id='name' placeholder=" Name" type="text"
             onChange={this.changeNewName}
-            value={this.state.newName}/>,
-          positionClass: 'left'
+            value={this.state.newName}/>
         }
       ],
       [

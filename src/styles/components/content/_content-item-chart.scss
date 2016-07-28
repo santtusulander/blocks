@@ -227,29 +227,60 @@
 
   .content-item-text-centered {
     position: absolute;
-    top: 51%;
+    top: 48%;
     left: 50%;
     width: 90%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -30%);
   }
 
   .content-item-chart-name {
     margin-bottom: 8px;
+    overflow: hidden;
     font-size: 36px;
-    font-weight: 500;
+    font-weight: bold;
     line-height: 1em;
+    color: $white;
+    text-overflow: ellipsis;
     word-wrap: break-word;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
   }
 
   .content-item-toolbar {
     position: absolute;
+    top: 71%;
     left: 50%;
+    width: 100%;
     margin-bottom: 7%;
     transform: translateX(-50%);
+
+    .btn.btn-sm.btn-icon {
+      width: $btn-sm-height;
+      height: $btn-sm-height;
+      line-height: $btn-sm-height;
+      color: $silver-30;
+      background: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+      background-color: $black;
+      box-shadow: 0 11px 10px rgba(0, 0, 0, 0.35);
+      fill: $silver-30;
+      stroke: $silver-30;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      .icon {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .btn-toolbar > .btn + .btn {
+      margin-left: 22px;
+    }
   }
 
   .show-help {
