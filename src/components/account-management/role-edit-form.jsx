@@ -40,6 +40,11 @@ const RolesEditForm = (props) => {
     value: props.editRole.get('parentRoles'),
     onChange: () => null
   }
+  // TODO: Fix this when API returns permission options
+  const editPerms = Immutable.Map([
+    ...props.editRole.get('permissions').get('aaa'),
+    ...props.editRole.get('permissions').get('north')
+  ])
 
   return (
     <Modal
@@ -88,12 +93,11 @@ const RolesEditForm = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.permissions.map((permission, i) => {
-              const permissions = props.editRole.get('permissions').get('resources').find((rule, key) => key === permission.get('id'))
+            {editPerms.map((permissions, i) => {
               return (
                 <tr key={i}>
                   <td className="no-border">
-                    {permission.get('name')}
+                    {i}
                   </td>
                   <td>
                     {/*TODO: Remove disabled prop in the future when roles are editable*/}
@@ -105,7 +109,7 @@ const RolesEditForm = (props) => {
                   </td>
                 </tr>
               )
-            })}
+            }).toList()}
           </tbody>
         </Table>
 

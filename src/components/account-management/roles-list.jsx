@@ -9,22 +9,16 @@ import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
-function labelParentRoles(childRole, allRoles) {
-  return childRole.get('parentRoles').map(id => {
-    return allRoles
-      .find(possibleParent => possibleParent.get('id') === id)
-      .get('name')
-  })
-}
-
-function labelPermissions(role, permissions) {
-  return role.get('permissions').get('resources')
-    .filter(rule => rule.find((rule) => rule.get('allowed') === true))
-    .map((rule, key) => {
-      return permissions
-        .find(permission => permission.get('id') === key)
-        .get('name')
-    })
+function labelPermissions(rolePermissions, permissions) {
+  return rolePermissions
+    .filter(rule => rule.find(access => access.get('allowed') === true))
+    // TODO: use this instead when permissions API returns labels
+    // .map((rule, key) => {
+    //   return permissions
+    //     .find(permission => permission.get('id') === key)
+    //     .get('name')
+    // })
+    .keySeq()
 }
 
 export const RolesList = props => {
@@ -48,9 +42,6 @@ export const RolesList = props => {
           <tr>
             <th>Role</th>
             <th>Permissions</th>
-            {/* Not in 0.8
-              <th>Available To</th>
-            */}
             <th>Assigned To</th>
             <th></th>
           </tr>
@@ -63,12 +54,16 @@ export const RolesList = props => {
                 <td>
                   {role.get('name')}
                 </td>
-                <ArrayTd items={labelPermissions(role, props.permissions).toArray()} />
-                {/* Not in 0.8
-                  <td>
-                    {labelParentRoles(role, props.roles).join(', ')}
-                  </td>
-                */}
+                <ArrayTd items={[
+                  ...labelPermissions(
+                    role.get('permissions').get('aaa'),
+                    props.permissions
+                  ).toArray(),
+                  ...labelPermissions(
+                    role.get('permissions').get('north'),
+                    props.permissions
+                  ).toArray()
+                ]} />
                 <td>
                   NEEDS API
                 </td>
