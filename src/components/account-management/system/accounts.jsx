@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Row, Col, Input, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { List, fromJS } from 'immutable'
+import { List } from 'immutable'
 
 import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
