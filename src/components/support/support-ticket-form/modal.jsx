@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import SupportTicketForm from './form'
 import { Modal } from 'react-bootstrap'
 
-class SupportTicketModal extends React.Component {
+class SupportTicketFormModal extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -18,7 +18,7 @@ class SupportTicketModal extends React.Component {
     return (
       <Modal dialogClassName="ticket-form-sidebar" show={show}>
         <Modal.Header>
-          <h1>{SupportTicketModal.getTitle(ticket)}</h1>
+          <h1>{SupportTicketFormModal.getTitle(ticket)}</h1>
         </Modal.Header>
 
         <Modal.Body>
@@ -33,16 +33,16 @@ class SupportTicketModal extends React.Component {
   }
 }
 
-SupportTicketModal.propTypes = {
+SupportTicketFormModal.propTypes = {
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
   ticket: PropTypes.instanceOf(Map)
 }
 
-SupportTicketModal.defaultProps = {
+SupportTicketFormModal.defaultProps = {
   ticket: null
 }
 
-export default SupportTicketModal
+export default SupportTicketFormModal
 

@@ -128,3 +128,23 @@ export function getTicketPriorityIcon(priority) {
 
   return (<div className={className}></div>)
 }
+
+export function getTicketPriorityLabel(priority) {
+  const options = List(getTicketPriorityOptions())
+
+  const option = options.find((option) => {
+    return option.value === priority
+  })
+
+  return option.label
+}
+
+export function getTicketTypeLabel(type) {
+  const options = List(getTicketTypeOptions())
+
+  const option = options.find((option) => {
+    return option.value === type
+  })
+
+  return option.label
+}

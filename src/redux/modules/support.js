@@ -121,7 +121,8 @@ export const createTicket = createAction(TICKET_CREATED, (data) => {
         "status": "open",
         "type": "task",
         "comment_count": "5",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       }
     })
   })
@@ -142,7 +143,8 @@ export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
       "status": "open",
       "type": "task",
       "comment_count": "5",
-      "description": "The fire is very colorful."
+      "description": "The fire is very colorful.",
+      "created_at": "2009-07-20T22:55:29Z"
     }
   };
 })
@@ -159,7 +161,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "status": "open",
         "type": "task",
         "comment_count": "1",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       },
       {
         "id": 3699,
@@ -169,7 +172,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "status": "open",
         "type": "question",
         "comment_count": "0",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       },
       {
         "id": 4008,
@@ -179,7 +183,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "status": "new",
         "type": "incident",
         "comment_count": "6",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       },
       {
         "id": 5679,
@@ -189,7 +194,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "status": "closed",
         "type": "task",
         "comment_count": "4",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       },
       {
         "id": 6331,
@@ -199,15 +205,16 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "status": "solved",
         "type": "problem",
         "comment_count": "8",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       }
     ]
   };
 })
 
-export const updateTicket = createAction(TICKET_UPDATED, (id) => {
+export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
   //noinspection Eslint
-  console.log('updateTicket', id);
+  console.log('updateTicket', id, data);
 
   return new Promise((resolve) => {
     resolve({
@@ -219,7 +226,8 @@ export const updateTicket = createAction(TICKET_UPDATED, (id) => {
         "status": "open",
         "type": "task",
         "comment_count": "5",
-        "description": "The fire is very colorful."
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
       }
     })
   })

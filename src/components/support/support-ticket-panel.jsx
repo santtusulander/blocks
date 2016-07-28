@@ -32,7 +32,7 @@ class SupportTicketPanel extends React.Component {
     const statusClassNames = classNames({ 'support-ticket-panel': true, 'closed': isClosed });
 
     return (
-      <div className={statusClassNames}>
+      <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
         <div className={priorityClassNames}></div>
         <Grid componentClass="header" fluid={true}>
           <Row>
@@ -78,7 +78,8 @@ SupportTicketPanel.displayName = 'SupportTicketPanel'
 SupportTicketPanel.defaultProps = {
   assignee: 'Pending',
   priority: 'normal',
-  status: 'open'
+  status: 'open',
+  openTicket: () => {}
 }
 
 SupportTicketPanel.propTypes = {
@@ -89,7 +90,8 @@ SupportTicketPanel.propTypes = {
   priority: React.PropTypes.oneOf(getTicketPriorities()),
   status: React.PropTypes.oneOf(getTicketStatuses()),
   title: React.PropTypes.string,
-  type: React.PropTypes.string
+  type: React.PropTypes.string,
+  openTicket: React.PropTypes.func
 }
 
 export default SupportTicketPanel

@@ -11,7 +11,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button.js'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
-import SupportTicketModal from '../../../components/support/support-ticket-form/modal'
+import SupportTicketModal from '../../../components/support/support-ticket-modal'
+import SupportTicketFormModal from '../../../components/support/support-ticket-form/modal'
 
 import {
   getClosedTicketStatuses,
@@ -30,46 +31,116 @@ class SupportTabTickets extends React.Component {
     this.notificationTimeout = null
 
     this.state = {
-      ticketToEdit: null,
+      activeTicket: null,
+      showEditModal: false,
       showModal: false
     }
 
     this.showModal = this.showModal.bind(this);
+    this.showFormModal = this.showFormModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.saveTicket = this.saveTicket.bind(this);
+    this.viewTicket = this.viewTicket.bind(this);
+    this.renderTicketList = this.renderTicketList.bind(this);
   }
 
   componentWillMount() {
     this.props.supportActions.fetchTickets();
   }
 
-  showModal(ticket = null) {
+  showModal(ticket) {
+    this.hideModal()
+
     this.setState({
-      ticketToEdit: ticket,
-      showModal: true
+      showModal: true,
+      activeTicket: ticket,
+      showEditModal: false,
+    })
+  }
+
+  showFormModal(ticket = null) {
+    this.setState({
+      activeTicket: ticket,
+      showEditModal: true,
+      showModal: false
     })
   }
 
   hideModal() {
-    this.setState({ showModal: false })
+    this.setState({
+      activeTicket: null,
+      showEditModal: false,
+      showModal: false
+    })
   }
 
   saveTicket(data) {
-    if (this.state.ticketToEdit) {
+    if (this.state.activeTicket) {
       // Update ticket
+      return this.props.supportActions.updateTicket(data.id, data).then(action => {
+        const ticket = action.payload.ticket
+        this.showNotification(`Ticket #${ticket.id} updated.`)
+        this.hideModal()
+      })
     } else {
       // Add ticket
       return this.props.supportActions.createTicket(data).then(action => {
-        this.showNotification(`Ticket ${data.subject} created.`)
+        const ticket = action.payload.ticket
+        this.showNotification(`Ticket #${ticket.id} created.`)
         this.hideModal()
       })
     }
+  }
+
+  viewTicket(ticket) {
+    this.showModal(ticket)
   }
 
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
+  }
+
+  /**
+   * Render a list of tickets.
+   *
+   * @param {Immutable.List} tickets  An immutable list of ticket data.
+   * @return                          The HTML for the ticket list.
+   */
+  renderTicketList(tickets) {
+    return (
+      <div className="support-tickets-list">
+        {tickets.map(ticket => {
+          const {
+            description,
+            id,
+            priority,
+            status,
+            subject,
+            type,
+            comment_count
+          } = ticket.toJS();
+          return (
+            <SupportTicketPanel
+              key={id}
+              type={type}
+              assignee="Pending"
+              body={description}
+              comments={comment_count}
+              number={`#${id}`}
+              status={status}
+              title={subject}
+              priority={priority}
+              openTicket={() => {
+                this.viewTicket(ticket)
+              }}
+            />
+          )
+        })}
+
+      </div>
+    )
   }
 
   render() {
@@ -91,66 +162,37 @@ class SupportTabTickets extends React.Component {
                          addNew={true}
                          className="pull-right"
                          onClick={() => {
-                           this.showModal()
+                           this.showFormModal()
                          }}>
                 <IconAdd/>
               </UDNButton>
             </div>
           </Col>
         </Row>
-        {renderTicketList(openTickets)}
+        {this.renderTicketList(openTickets)}
 
         <h2>{closedTickets.size} Closed Ticket{closedTickets.size === 1 ? '' : 's'}</h2>
-        {renderTicketList(closedTickets)}
+        {this.renderTicketList(closedTickets)}
 
+        {this.state.showEditModal &&
+        <SupportTicketFormModal
+          onCancel={this.hideModal}
+          onSave={this.saveTicket}
+          show={this.state.showEditModal}
+          ticket={this.state.activeTicket}
+        />
+        }
         {this.state.showModal &&
         <SupportTicketModal
           onCancel={this.hideModal}
-          onSave={this.saveTicket}
+          onEdit={this.showFormModal}
           show={this.state.showModal}
-          ticket={this.state.ticketToEdit}
+          ticket={this.state.activeTicket}
         />
         }
       </div>
     )
   }
-}
-
-/**
- * Render a list of tickets.
- *
- * @param {Immutable.List} tickets  An immutable list of ticket data.
- * @return                          The HTML for the ticket list.
- */
-function renderTicketList(tickets) {
-  return (
-    <div className="support-tickets-list">
-      {tickets.map(ticket => {
-        const {
-          description,
-          id,
-          priority,
-          status,
-          subject,
-          type,
-          comment_count
-        } = ticket.toJS();
-        return (
-          <SupportTicketPanel
-            key={id}
-            type={type}
-            assignee="Pending"
-            body={description}
-            comments={comment_count}
-            number={`#${id}`}
-            status={status}
-            title={subject}
-            priority={priority}/>
-        )
-      })}
-
-    </div>
-  )
 }
 
 SupportTabTickets.displayName = 'SupportTabTickets'

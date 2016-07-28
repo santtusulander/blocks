@@ -342,6 +342,17 @@ export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
   return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
 }
 
+/**
+ * Format a date string to desired format
+ * @param date
+ * @param format
+ * @returns {*}
+ */
+export function formatDate(date, format = 'MM/DD/YYYY') {
+  return moment(date).format(format)
+}
+
+
 export function filterAccountsByUserName (accounts) {
   // placeholder for now
   return accounts
