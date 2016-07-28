@@ -10,6 +10,8 @@ import * as supportActionCreators from '../../../redux/modules/support'
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button.js'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
+import SupportTicketModal from '../../../components/support/support-ticket-form/modal'
+
 import {
   getClosedTicketStatuses,
   getOpenTicketStatuses
@@ -81,7 +83,15 @@ class SupportTabTickets extends React.Component {
 
         <h2>{closedTickets.size} Closed Ticket{closedTickets.size === 1 ? '' : 's'}</h2>
         {renderTicketList(closedTickets)}
-
+        
+        {this.state.showModal &&
+          <SupportTicketModal
+            onCancel={this.hideModal}
+            onSave={this.saveTicket}
+            show={this.state.showModal}
+            ticket={this.state.ticketToEdit}
+          />
+        }
       </div>
     )
   }
