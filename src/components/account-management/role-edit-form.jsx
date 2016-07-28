@@ -6,6 +6,7 @@ import { Modal, Input, ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import CheckboxArray from '../checkboxes'
 import PermissionSelection from '../permission-selection'
+import Toggle from '../toggle'
 
 import './role-edit-form.scss'
 
@@ -44,6 +45,9 @@ const RolesEditForm = (props) => {
   const editPerms = Immutable.Map([
     ...props.editRole.get('permissions').get('aaa'),
     ...props.editRole.get('permissions').get('north')
+  ])
+  const editPermsUI = Immutable.Map([
+    ...props.editRole.get('permissions').get('ui')
   ])
 
   return (
@@ -84,7 +88,7 @@ const RolesEditForm = (props) => {
         <hr/>
         */}
 
-        <label>Permissions</label>
+        <label>API Permissions</label>
 
         <Table className="table-striped">
           <thead>
@@ -106,6 +110,36 @@ const RolesEditForm = (props) => {
                       onChange={() => null}
                       disabled={true}
                       permissions={permissions}/>
+                  </td>
+                </tr>
+              )
+            }).toList()}
+          </tbody>
+        </Table>
+
+        <hr/>
+
+        <label>UI Permissions</label>
+
+        <Table className="table-striped">
+          <thead>
+            <tr>
+              <th colSpan="3">PERMISSION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {editPermsUI.map((permission, permissionName) => {
+              return (
+                <tr key={permissionName}>
+                  <td className="no-border">
+                    {permissionName}
+                  </td>
+                  <td>
+                    {/*TODO: Remove readonly prop in the future when roles are editable*/}
+                    <Toggle
+                      className="pull-right"
+                      readonly={true}
+                      value={permission}/>
                   </td>
                 </tr>
               )
@@ -136,7 +170,7 @@ RolesEditForm.propTypes = {
   fields: React.PropTypes.object,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  permissions: React.PropTypes.instanceOf(Immutable.List),
+  permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.object,
   show: React.PropTypes.bool
 }
