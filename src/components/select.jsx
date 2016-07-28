@@ -8,7 +8,6 @@ class Select extends Component {
     super(props);
 
     this.selectOption = this.selectOption.bind(this)
-    this.selectedOption = ''
   }
   selectOption(e) {
     const value = e.target.getAttribute('data-value')

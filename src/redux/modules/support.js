@@ -1,3 +1,4 @@
+import axios from 'axios'
 import {createAction} from 'redux-actions'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
@@ -130,18 +131,23 @@ export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
     "subject": "My computer is on fire!",
     "priority": "high",
     "status": "open",
+    "type": "task",
+    "comment_count": "5",
     "description": "The fire is very colorful."
   }};
 })
 
-export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) => {
-  return {"tickets": [
+export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
+  const organization_id = 12345;
+  return {"data": [
     {
       "id": 3678,
       "organization_id": organization_id,
       "subject": "My computer is on fire!",
       "priority": "urgent",
       "status": "open",
+      "type": "task",
+      "comment_count": "1",
       "description": "The fire is very colorful."
     },
     {
@@ -150,14 +156,38 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, (organization_id) =
       "subject": "Load balancer configuration error",
       "priority": "high",
       "status": "open",
+      "type": "question",
+      "comment_count": "0",
       "description": "The fire is very colorful."
     },
     {
       "id": 4008,
       "organization_id": organization_id,
       "subject": "My computer is on fire!",
-      "priority": "normal",
+      "priority": "low",
       "status": "new",
+      "type": "incident",
+      "comment_count": "6",
+      "description": "The fire is very colorful."
+    },
+    {
+      "id": 5679,
+      "organization_id": organization_id,
+      "subject": "My computer is on fire!",
+      "priority": "urgent",
+      "status": "closed",
+      "type": "integration",
+      "comment_count": "4",
+      "description": "The fire is very colorful."
+    },
+    {
+      "id": 6331,
+      "organization_id": organization_id,
+      "subject": "My computer is on fire!",
+      "priority": "high",
+      "status": "solved",
+      "type": "problem",
+      "comment_count": "8",
       "description": "The fire is very colorful."
     }
   ]};

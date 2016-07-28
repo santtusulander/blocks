@@ -39,7 +39,7 @@ class GroupForm extends React.Component {
       const {
         group,
         fields: {
-          name,
+          name
         }
       } = this.props
 
@@ -65,70 +65,62 @@ class GroupForm extends React.Component {
       }
 
       if (this.props.group) {
-        this.props.onSave(this.props.group.get('id'), data)
-      } else {
-        this.props.onSave(data)
+        this.props.onSave(
+          this.props.group.get('id'),
+          data,
+          this.state.usersToAdd,
+          this.state.usersToDelete
+        )
       }
     }
   }
 
-  deleteMember(userId) {
+  deleteMember(userEmail) {
     // New members will be just removed from the new members list
-    if (this.state.usersToAdd.includes(userId)) {
+    if (this.state.usersToAdd.includes(userEmail)) {
       this.setState({
-        usersToAdd: this.state.usersToAdd.take(this.state.usersToAdd.keyOf(userId)) // keyOf
+        usersToAdd: this.state.usersToAdd.take(this.state.usersToAdd.keyOf(userEmail)) // keyOf
       })
     }
     // Existing members will be added to the to be deleted list
     else {
       this.setState({
-        usersToDelete: this.state.usersToDelete.push(userId)
+        usersToDelete: this.state.usersToDelete.push(userEmail)
       })
     }
   }
 
-  undoDelete(userId) {
+  undoDelete(userEmail) {
     this.setState({
-      usersToDelete: this.state.usersToDelete.take(this.state.usersToDelete.keyOf(userId))
+      usersToDelete: this.state.usersToDelete.take(this.state.usersToDelete.keyOf(userEmail))
     })
-  }
-
-  getMembers() {
-    return this.state.usersToAdd.concat(this.props.members).reduce((arr, user) => {
-      if (!this.state.usersToDelete.includes(user)) {
-        return arr.push(user)
-      }
-      return arr
-    }, List())
   }
 
   isEdited() {
     const {fields: {name}} = this.props
-    return name.value !== name.initialValue || !this.getMembers().equals(this.props.members)
+    return name.value !== name.initialValue || this.state.usersToAdd.size || this.state.usersToDelete.size
   }
 
   render() {
     const { fields: {name}, show, onCancel } = this.props
 
-    // TODO: Check me after more brands have been added
-    const currentBrand = 'udn'
-
     const currentMembers = this.props.users.reduce((members, user) => {
-      if (this.state.usersToAdd.includes(user.value)) {
-        return [{...user, toAdd: true}, ...members]
+      if (this.state.usersToAdd.includes(user.get('email'))) {
+        return [user.set('toAdd', true), ...members]
       }
-      if (this.state.usersToDelete.includes(user.value)) {
-        return [...members, {...user, toDelete: true}]
+      if (this.state.usersToDelete.includes(user.get('email'))) {
+        return [...members, user.set('toDelete', true)]
       }
-      if (this.props.members.includes(user.value)) {
+      if (user.get('group_id').includes(this.props.group.get('id'))) {
         return [...members, user]
       }
       return members
     }, [])
 
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
-      if(!this.props.members.includes(user.value)) {
-        return [...arr, user]
+      const userEmail = user.get('email')
+      if(!user.get('group_id').includes(this.props.group.get('id'))) {
+        return [...arr, {label: userEmail, value: userEmail}]
       }
       return arr;
     }, []))
@@ -167,18 +159,29 @@ class GroupForm extends React.Component {
             </div>
 
             <div className="form-group">
-              <label className="control-label">{`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}</label>
+              <label className="control-label">
+                {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
+              </label>
               <ul className="members-list">
                 {currentMembers.map((val) => {
                   let className = 'members-list__member '
-                  className += val.toAdd ? 'members-list__member--new ' : ''
-                  className += val.toDelete ? 'members-list__member--delete ' : ''
+                  className += val.get('toAdd') ? 'members-list__member--new ' : ''
+                  className += val.get('toDelete') ? 'members-list__member--delete ' : ''
                   return(
-                    <li key={val.value} className={className}>
-                      <span className="members-list__member__label">{val.label}</span>
+                    <li key={val.get('email')} className={className}>
+                      <span className="members-list__member__label">{val.get('email')}</span>
                       <span className="members-list__member__actions">
-                      {val.toAdd && <span className="members-list__member__actions__new">NEW</span>}
-                      {val.toDelete ? <Button bsStyle="link" className="undo-label" onClick={() => this.undoDelete(val.value)}>UNDO</Button> : <Button bsStyle="link" className="delete-button" onClick={() => this.deleteMember(val.value)}><IconClose width="20" height="20"/></Button>}
+                        {val.get('toAdd') && <span className="members-list__member__actions__new">
+                          NEW
+                        </span>}
+                        {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
+                          onClick={() => this.undoDelete(val.get('email'))}>
+                          UNDO
+                        </Button> :
+                        <Button bsStyle="link" className="delete-button"
+                          onClick={() => this.deleteMember(val.get('email'))}>
+                          <IconClose width="20" height="20"/>
+                        </Button>}
                       </span>
                     </li>
                   )
@@ -199,26 +202,17 @@ class GroupForm extends React.Component {
 }
 
 GroupForm.propTypes = {
+  account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
-  account: PropTypes.instanceOf(Map).isRequired,
-  members: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
-  users: PropTypes.array
+  users: PropTypes.instanceOf(List)
 }
 
 GroupForm.defaultProps = {
-  // TODO: FOR TESTING ONLY - REMOVE ME
-  users: [
-    {value: 1, label: 'NEEDS API foo@example.com'},
-    {value: 2, label: 'NEEDS API bar@example.com'},
-    {value: 3, label: 'NEEDS API baz@example.com'},
-    {value: 4, label: 'NEEDS API foz@example.com'}
-  ],
-  // TODO: FOR TESTING ONLY - REMOVE ME
-  members: List([2,3])
+  users: List()
 }
 
 export default reduxForm({

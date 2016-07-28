@@ -52,9 +52,17 @@
 
     &__toggle {
       display: flex;
-      margin: 20px 20px 20px 0;
-      border-right: 1px solid $silver-60;
       padding: 0 15px 0 10px;
+      margin: ($bar-height / 3) ($bar-height / 3) ($bar-height / 3) 0;
+      border-right: 1px solid $silver-60;
+
+      @include md {
+        margin: 19px 20px 19px 0;
+      }
+
+      @include sm {
+        margin: 20px 20px 20px 0;
+      }
 
       .dropdown-toggle {
         text-transform: uppercase;
