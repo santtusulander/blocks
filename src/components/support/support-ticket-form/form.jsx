@@ -7,6 +7,11 @@ import {
   Button
 } from 'react-bootstrap'
 import Toggle from '../../toggle'
+import { STATUS_OPEN, STATUS_SOLVED } from '../../../constants/ticket'
+import {
+  isStatusOpen,
+  isStatusClosed
+} from '../../../util/support-helper'
 
 let errors = {}
 const validate = (values) => {
@@ -16,7 +21,7 @@ const validate = (values) => {
     subject
   } = values
 
-  if(!subject || subject.length === 0) {
+  if (!subject || subject.length === 0) {
     errors.subject = 'Title is required'
   }
 
@@ -28,6 +33,7 @@ class SupportTicketForm extends React.Component {
     super(props)
 
     this.save = this.save.bind(this)
+    this.toggleStatus = this.toggleStatus.bind(this)
   }
 
   componentWillMount() {
@@ -35,11 +41,15 @@ class SupportTicketForm extends React.Component {
       const {
         ticket,
         fields: {
-          subject
+          subject,
+          description,
+          status
         }
       } = this.props
 
       subject.onChange(ticket.get('subject'))
+      description.onChange(ticket.get('description'))
+      status.onChange(ticket.get('status'))
     }
   }
 
@@ -55,11 +65,20 @@ class SupportTicketForm extends React.Component {
     })
   }
 
+  toggleStatus(value) {
+    const {
+      fields: { status }
+    } = this.props
+
+    status.onChange(value ? STATUS_OPEN : STATUS_SOLVED)
+  }
+
   render() {
     const {
       fields: {
         subject,
-        description
+        description,
+        status
       },
       onCancel
     } = this.props
@@ -81,6 +100,20 @@ class SupportTicketForm extends React.Component {
           label="Description"/>
         {description.touched && description.error &&
         <div className="error-msg">{description.error}</div>}
+
+        <hr/>
+
+        <div className='form-group'>
+          <label className='control-label'>Status</label>
+          <Toggle
+            value={isStatusOpen(status.value)}
+            changeValue={this.toggleStatus}
+            onText="Open"
+            offText="Closed"
+          />
+        </div>
+
+        <hr/>
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
@@ -109,5 +142,8 @@ export default reduxForm({
     'priority',
     'assignee'
   ],
+  initialValues: {
+    status: STATUS_OPEN
+  },
   validate: validate
 })(SupportTicketForm)

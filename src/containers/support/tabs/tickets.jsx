@@ -83,7 +83,7 @@ class SupportTabTickets extends React.Component {
 
         <h2>{closedTickets.size} Closed Ticket{closedTickets.size === 1 ? '' : 's'}</h2>
         {renderTicketList(closedTickets)}
-        
+
         {this.state.showModal &&
           <SupportTicketModal
             onCancel={this.hideModal}

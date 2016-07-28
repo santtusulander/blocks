@@ -1,3 +1,5 @@
+import { List } from 'immutable'
+
 import {
   PRIORITY_URGENT,
   PRIORITY_HIGHT,
@@ -48,6 +50,14 @@ export function getClosedTicketStatuses() {
   ]
 }
 
+export function isStatusOpen(status) {
+  return List(getOpenTicketStatuses()).includes(status.toLowerCase())
+}
+
+export function isStatusClosed(status) {
+  return List(getClosedTicketStatuses()).includes(status.toLowerCase())
+}
+
 export function getTicketPriorityOptions() {
   return [
     { value: PRIORITY_URGENT, label: 'Urgent' },
@@ -67,3 +77,6 @@ export function getTicketStatusOptions() {
     { value: STATUS_CLOSED, label: 'Closed' },
   ]
 }
+
+
+
