@@ -1,0 +1,42 @@
+@import '../../../styles/base/variables';
+
+.support-tickets-list {
+  display: flex;
+  padding: 0;
+  margin-bottom: 3.75em;
+  flex-wrap: wrap;
+
+  > * {
+    margin: 1%;
+  }
+}
+
+// Three column list
+@media (min-width: $screen-md-min) {
+  .support-tickets-list > * {
+    width: 32%;
+
+    &:nth-of-type(3n) {
+      margin-right: 0;
+    }
+
+    &:nth-of-type(3n+1) {
+      margin-left: 0;
+    }
+  }
+}
+
+// Two column list
+@media (max-width: #{$screen-md-min - 1}) {
+  .support-tickets-list > * {
+    width: 49%;
+
+    &:nth-of-type(2n) {
+      margin-right: 0;
+    }
+
+    &:nth-of-type(2n+1) {
+      margin-left: 0;
+    }
+  }
+}
