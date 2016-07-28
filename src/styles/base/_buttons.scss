@@ -202,6 +202,10 @@
   line-height: inherit;
   text-align: left;
 
+  h1 {
+    margin-bottom: 0;
+  }
+
   h3 {
     max-width: calc(100% - #{$btn-height});
     white-space: normal;
@@ -213,11 +217,11 @@
 
   .caret {
     position: relative;
-    margin: -8px ($btn-height / 4) 0 ($btn-height / 2);
+    margin: -6px ($btn-height / 4) 0 ($btn-height / 2);
     border: 0;
 
     @include md {
-      margin: -8px ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
+      margin: -2px ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
     }
 
     &::before {
