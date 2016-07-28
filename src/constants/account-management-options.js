@@ -15,5 +15,7 @@ export const BRANDS = [
 ]
 
 export const ROLES = [
-  { id: 14, label: 'UDN Admin' }
+  { id: 1, label: 'SP Admin' },
+  { id: 2, label: 'CP Admin' },
+  { id: 3, label: 'UDN Admin' }
 ]
