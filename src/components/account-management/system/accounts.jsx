@@ -78,8 +78,8 @@ class AccountList extends Component {
   }
 
   newAccount({ name, provider_type, brand }) {
-    const { createAccount } = this.props, { accountServices } = this.state
-    const requestBody = { name, provider_type, services: accountServices }
+    const { createAccount } = this.props
+    const requestBody = { name, provider_type, services: [1] }
     createAccount(brand, requestBody).then(this.toggleInlineAdd)
   }
 
