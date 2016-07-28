@@ -20,7 +20,7 @@ import { checkForErrors } from '../../../util/helpers'
 class AccountList extends Component {
   constructor(props) {
     super(props);
-    this.values = []
+    this.newAccount = this.newAccount.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
@@ -50,6 +50,10 @@ class AccountList extends Component {
     return checkForErrors({ name, brand, provider_type }, conditions)
   }
 
+  componentWillReceiveProps(nextProps) {
+    nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
+  }
+
   getInlineAddFields() {
     return [
       [ { input: <Input id='name' placeholder=" Email" type="text"/> } ],
@@ -68,16 +72,14 @@ class AccountList extends Component {
               this.setState({ accountServices: newValues })
             }}
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-          positionClass: 'left'
+          positionClass: 'col-sm-6'
       } ]
     ]
   }
 
-  newAccount({ name, type, brand }) {
+  newAccount({ name, provider_type, brand }) {
     const { createAccount } = this.props, { accountServices } = this.state
-    const requestBody = {
-      name, type, accountServices
-    }
+    const requestBody = { name, provider_type, services: accountServices }
     createAccount(brand, requestBody).then(this.toggleInlineAdd)
   }
 
@@ -220,7 +222,7 @@ function mapStateToProps(state) {
     return account
   })
   const addAccountForm = state.form.inlineAdd
-  const typeField = addAccountForm && addAccountForm.provider_type.value
+  const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
   return { accounts: sufficient, typeField }
 }
 
