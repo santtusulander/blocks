@@ -1,8 +1,13 @@
 @import   '../../styles/base/variables';
 @import '../../styles/base/colors';
 
-.dropdown-checklist .dropdown-menu {
+.dropdown-checklist.dropdown-select .dropdown-menu {
   overflow-y: visible;
+
+  > li {
+    display: block;
+    height: auto;
+  }
 }
 
 .dropdown-filter {

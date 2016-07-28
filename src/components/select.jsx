@@ -11,25 +11,34 @@ class Select extends Component {
     this.getMenuItem = this.getMenuItem.bind(this)
     this.getOptionLabel = this.getOptionLabel.bind(this)
     this.getOptionValue = this.getOptionValue.bind(this)
+    this.getOptionIcon = this.getOptionIcon.bind(this)
     this.getSelected = this.getSelected.bind(this)
+    this.getSelectedItem = this.getSelectedItem.bind(this)
   }
 
-  selectOption(e) {
-    const value = e.target.getAttribute('data-value')
+  selectOption(e, value) {
     this.props.onSelect(this.props.numericValues ? Number(value) : value)
   }
 
   getMenuItem(option, i) {
     const value = this.getOptionValue(option)
     const label = this.getOptionLabel(option)
+    const Icon = this.getOptionIcon(option)
+
     return (
       <MenuItem
         key={i}
         data-value={value}
+        eventKey={value}
         className={this.props.value === value && 'hidden'}>
-        {label}
+        {Icon && <div className="dropdown-select__option-icon"><Icon/></div>}
+        <div className="dropdown-select__option-label">{label}</div>
       </MenuItem>
     )
+  }
+
+  getOptionIcon(option) {
+    return Array.isArray(option) ? option[2] : option.icon
   }
 
   getOptionLabel(option) {
@@ -46,21 +55,31 @@ class Select extends Component {
     })
   }
 
+  getSelectedItem() {
+    const selected = this.getSelected()
+    const label = selected ? this.getOptionLabel(selected) : this.props.emptyLabel
+    const Icon = selected ? this.getOptionIcon(selected) : null
+
+    return (
+      <div className="dropdown-select__selected-item">
+        {Icon && <div className="dropdown-select__option-icon"><Icon/></div>}
+        <div className="dropdown-select__option-label">{label}</div>
+      </div>
+    )
+  }
+
   render() {
     let className = 'dropdown-select'
     if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 
-    const selected = this.getSelected()
-    const label = selected ? this.getOptionLabel(selected) : this.props.emptyLabel
-
     return (
       <Dropdown id="" disabled={this.props.disabled} className={className}
                 onSelect={this.selectOption}>
         <Dropdown.Toggle noCaret={true}>
           <IconSelectCaret/>
-          {label}
+          {this.getSelectedItem()}
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {this.props.options.map(this.getMenuItem)}

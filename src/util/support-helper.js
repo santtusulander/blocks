@@ -1,4 +1,8 @@
 import { List } from 'immutable'
+import IconIncident from '../components/icons/icon-incident'
+import IconProblem from '../components/icons/icon-problem'
+import IconQuestion from '../components/icons/icon-question'
+import IconTask from '../components/icons/icon-task'
 
 import {
   PRIORITY_URGENT,
@@ -94,10 +98,25 @@ export function getTicketStatusOptions() {
 
 export function getTicketTypeOptions() {
   return [
-    { value: TYPE_PROBLEM, label: 'Problem' },
-    { value: TYPE_INCIDENT, label: 'Incident' },
-    { value: TYPE_QUESTION, label: 'Question' },
-    { value: TYPE_TASK, label: 'Task' },
+    { value: TYPE_PROBLEM, label: 'Problem', icon: getTicketTypeIcon(TYPE_PROBLEM) },
+    { value: TYPE_INCIDENT, label: 'Incident', icon: getTicketTypeIcon(TYPE_INCIDENT) },
+    { value: TYPE_QUESTION, label: 'Question', icon: getTicketTypeIcon(TYPE_QUESTION) },
+    { value: TYPE_TASK, label: 'Task', icon: getTicketTypeIcon(TYPE_TASK) },
   ]
+}
+
+export function getTicketTypeIcon(type) {
+  switch (type) {
+    case TYPE_PROBLEM:
+      return IconProblem
+    case TYPE_INCIDENT:
+      return IconIncident
+    case TYPE_QUESTION:
+      return IconQuestion
+    case TYPE_TASK:
+      return IconTask
+    default:
+      return null
+  }
 }
 
