@@ -32,7 +32,7 @@ describe('Account Module', () => {
 
   it('should handle delete account success', () => {
     const state = Immutable.fromJS({
-      allAccounts: [1]
+      allAccounts: [{id: 1}]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
     expect(newState.get('allAccounts')).not.toContain(1);
