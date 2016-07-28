@@ -17,6 +17,8 @@ import IconSupport from '../../../components/icons/icon-support'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 
+import { ROLES } from '../../../constants/account-management-options'
+
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
@@ -65,8 +67,6 @@ export class AccountManagementAccountUsers extends React.Component {
       password,
       email,
       roles: [roles],
-      first_name: 'notSet',
-      last_name: 'notSet',
       brand_id: brand,
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
@@ -154,8 +154,9 @@ export class AccountManagementAccountUsers extends React.Component {
         {
           input: <SelectWrapper
             id='roles'
+            numericValues={true}
             className="inline-add-dropdown"
-            options={['SuperAdmin', 'Support'].map(item => [item, item])}/>,
+            options={ROLES.map(role => [ role.id, role.label ])}/>,
           positionClass: 'left'
         },
         {

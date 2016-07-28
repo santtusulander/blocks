@@ -13,3 +13,7 @@ export const SERVICE_TYPES = [
 export const BRANDS = [
   { id: 'udn', brandName: 'UDN' }
 ]
+
+export const ROLES = [
+  { id: 14, label: 'UDN Admin' }
+]
