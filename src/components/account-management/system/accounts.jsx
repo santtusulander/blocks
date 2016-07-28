@@ -42,6 +42,7 @@ class AccountList extends Component {
   }
 
   validateInlineAdd({ name = '', provider_type, brand = '' }) {
+    console.log(provider_type)
     const conditions = {
       confirmPw: {
         condition: this.props.accounts.find(account => account.get('name') !== name),
@@ -71,7 +72,8 @@ class AccountList extends Component {
               this.setState({ accountServices: newValues })
             }}
             options={fromJS(SERVICE_TYPES.filter(service => {
-              return service.accountTypes.includes(this.state.type)}))}/>,
+              console.log(service.accountTypes.includes(this.state.provider_type))
+              return service.accountTypes.includes(this.state.provider_type)}))}/>,
           positionClass: 'left'
       } ]
     ]
