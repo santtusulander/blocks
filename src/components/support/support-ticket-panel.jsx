@@ -12,7 +12,8 @@ import IconTask from '../icons/icon-task'
 import {
   getTicketPriorities,
   getTicketStatuses,
-  getClosedTicketStatuses
+  getClosedTicketStatuses,
+  getTicketTypeIcon
 } from '../../util/support-helper'
 
 import './support-ticket-panel.scss'
@@ -25,7 +26,7 @@ class SupportTicketPanel extends React.Component {
 
   render() {
     const isClosed = this.closedStatuses.includes(this.props.status.toLowerCase());
-    const TicketTypeIcon = createTypeIcon(this.props.type);
+    const ticketTypeIcon = getTicketTypeIcon(this.props.type);
     const priorityClass = (isClosed) ? 'normal' : this.props.priority;
     const priorityClassNames = classNames('support-ticket-panel-priority', priorityClass);
     const statusClassNames = classNames({ 'support-ticket-panel': true, 'closed': isClosed });
@@ -37,7 +38,7 @@ class SupportTicketPanel extends React.Component {
           <Row>
             <Col xs={6}>
               <span className="support-ticket-panel-type">
-                {TicketTypeIcon && <TicketTypeIcon />}
+                {ticketTypeIcon}
               </span>
               <span className="support-ticket-panel-number">{this.props.number}</span>
             </Col>
@@ -71,24 +72,6 @@ class SupportTicketPanel extends React.Component {
       </div>
     )
   }
-}
-
-/**
- * Return an icon component based on a provided type string.
- *
- * @param  {string} type      The type of the ticket.
- * @return {React.Component}  The icon component or null if a matching component wasn't found.
- */
-function createTypeIcon(type) {
-  let iconTypeComponents = {
-    'task': IconTask,
-    'problem': IconProblem,
-    'question': IconQuestion,
-    'integration': IconIntegration,
-    'incident': IconIncident
-  }
-
-  return iconTypeComponents[type] || null;
 }
 
 SupportTicketPanel.displayName = 'SupportTicketPanel'

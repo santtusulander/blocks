@@ -23,7 +23,7 @@ class Select extends Component {
   getMenuItem(option, i) {
     const value = this.getOptionValue(option)
     const label = this.getOptionLabel(option)
-    const Icon = this.getOptionIcon(option)
+    const icon = this.getOptionIcon(option)
 
     return (
       <MenuItem
@@ -31,7 +31,7 @@ class Select extends Component {
         data-value={value}
         eventKey={value}
         className={this.props.value === value && 'hidden'}>
-        {Icon && <div className="dropdown-select__option-icon"><Icon/></div>}
+        {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
       </MenuItem>
     )
@@ -58,11 +58,11 @@ class Select extends Component {
   getSelectedItem() {
     const selected = this.getSelected()
     const label = selected ? this.getOptionLabel(selected) : this.props.emptyLabel
-    const Icon = selected ? this.getOptionIcon(selected) : null
+    const icon = selected ? this.getOptionIcon(selected) : null
 
     return (
       <div className="dropdown-select__selected-item">
-        {Icon && <div className="dropdown-select__option-icon"><Icon/></div>}
+        {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
       </div>
     )

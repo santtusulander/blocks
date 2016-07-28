@@ -169,7 +169,7 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
       "subject": "My computer is on fire!",
       "priority": "urgent",
       "status": "closed",
-      "type": "integration",
+      "type": "task",
       "comment_count": "4",
       "description": "The fire is very colorful."
     },

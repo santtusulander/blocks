@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import classNames from 'classnames'
 import IconIncident from '../components/icons/icon-incident'
 import IconProblem from '../components/icons/icon-problem'
 import IconQuestion from '../components/icons/icon-question'
@@ -78,10 +79,10 @@ export function isStatusClosed(status) {
 
 export function getTicketPriorityOptions() {
   return [
-    { value: PRIORITY_URGENT, label: 'Urgent' },
-    { value: PRIORITY_HIGHT, label: 'High' },
-    { value: PRIORITY_NORMAL, label: 'Normal' },
-    { value: PRIORITY_LOW, label: 'Low' },
+    { value: PRIORITY_URGENT, label: 'Urgent', icon: getTicketPriorityIcon(PRIORITY_URGENT) },
+    { value: PRIORITY_HIGHT, label: 'High', icon: getTicketPriorityIcon(PRIORITY_HIGHT) },
+    { value: PRIORITY_NORMAL, label: 'Normal', icon: getTicketPriorityIcon(PRIORITY_NORMAL) },
+    { value: PRIORITY_LOW, label: 'Low', icon: getTicketPriorityIcon(PRIORITY_LOW) },
   ]
 }
 
@@ -108,15 +109,22 @@ export function getTicketTypeOptions() {
 export function getTicketTypeIcon(type) {
   switch (type) {
     case TYPE_PROBLEM:
-      return IconProblem
+      return <IconProblem />
     case TYPE_INCIDENT:
-      return IconIncident
+      return <IconIncident />
     case TYPE_QUESTION:
-      return IconQuestion
+      return <IconQuestion />
     case TYPE_TASK:
-      return IconTask
+      return <IconTask />
     default:
       return null
   }
 }
 
+export function getTicketPriorityIcon(priority) {
+  const className = classNames('support-ticket__priority-icon', {
+    [`support-ticket__priority-icon--${priority.toLowerCase()}`]: true
+  })
+
+  return (<div className={className}></div>)
+}

@@ -108,7 +108,7 @@ class SupportTicketForm extends React.Component {
 
         <hr/>
 
-        <div className='form-group'>
+        <div className='form-group ticket-form__status'>
           <label className='control-label'>Status</label>
           <Toggle
             value={isStatusOpen(status.value)}
