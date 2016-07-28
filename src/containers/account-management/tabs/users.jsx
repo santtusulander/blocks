@@ -252,7 +252,6 @@ export class AccountManagementAccountUsers extends React.Component {
               validate={this.validateInlineAdd}
               fields={['email', 'password', 'confirmPw', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
-              cancel={() => {}}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
             {sortedUsers.map((user, i) => {
