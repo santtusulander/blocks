@@ -33,11 +33,8 @@ class AccountList extends Component {
     }
   }
 
-  changeSort(column, direction) {
-    this.setState({
-      sortBy: column,
-      sortDir: direction
-    })
+  componentWillReceiveProps(nextProps) {
+    nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
@@ -50,13 +47,16 @@ class AccountList extends Component {
     return checkForErrors({ name, brand, provider_type }, conditions)
   }
 
-  componentWillReceiveProps(nextProps) {
-    nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
+  changeSort(column, direction) {
+    this.setState({
+      sortBy: column,
+      sortDir: direction
+    })
   }
 
   getInlineAddFields() {
     return [
-      [ { input: <Input id='name' placeholder=" Email" type="text"/> } ],
+      [ { input: <Input id='name' placeholder="Account name" type="text"/> } ],
       [ { input: <SelectWrapper
             numericValues={true}
             id='provider_type'
@@ -108,6 +108,7 @@ class AccountList extends Component {
   render() {
     const {
       accounts,
+      deleteAccount,
       params: { brand }
     } = this.props
     const filteredAccounts = accounts
@@ -150,9 +151,9 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <th width="10%">TYPE</th>
+            <th width="15%">TYPE</th>
             <th width="10%">ID</th>
-            <th width="10%">BRAND</th>
+            <th width="15%">BRAND</th>
             <th width="30%">SERVICES</th>
             <th width="8%"/>
           </tr>
@@ -176,7 +177,7 @@ class AccountList extends Component {
                 <td>
                   <ActionLinks
                     onEdit={() => {}}
-                    onDelete={() => {}}/>
+                    onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>
             )

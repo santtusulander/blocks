@@ -42,6 +42,7 @@ export class AccountManagement extends Component {
   constructor(props) {
     super(props)
     this.userToDelete = ''
+    this.accountToDelete = null
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -57,6 +58,7 @@ export class AccountManagement extends Component {
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
@@ -106,6 +108,11 @@ export class AccountManagement extends Component {
   showDeleteUserModal(user) {
     this.userToDelete = user
     this.props.toggleModal(DELETE_USER);
+  }
+
+  showDeleteAccountModal(account) {
+    this.accountToDelete = account
+    this.props.toggleModal(DELETE_ACCOUNT);
   }
 
   deleteUser() {
@@ -222,6 +229,24 @@ export class AccountManagement extends Component {
       activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
+    let deleteModalProps = null
+    switch(accountManagementModal) {
+      case DELETE_ACCOUNT:
+        deleteModalProps = {
+          itemToDelete: 'Account',
+          onCancel: () => toggleModal(null),
+          onDelete: () => onDelete(brand, account || this.accountToDelete, router)
+        }
+        break
+      case DELETE_GROUP:
+        deleteModalProps = {
+          itemToDelete: this.state.groupToDelete.get('name'),
+          description: 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+          onCancel: () => toggleModal(null),
+          onDelete: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+        }
+    }
+
     /* TODO: remove - TEST ONLY */
     /*const dnsInitialValues = {
      initialValues: {
@@ -255,6 +280,7 @@ export class AccountManagement extends Component {
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
+      deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
       editGroup: this.showEditGroupModal,
       account: activeAccount,
@@ -346,25 +372,13 @@ export class AccountManagement extends Component {
               {this.props.children && React.cloneElement(this.props.children, childProps)}
             </Content>
           </div>
-
           {accountManagementModal === ADD_ACCOUNT &&
           <AccountForm
             id="account-form"
             onSave={this.addAccount}
             onCancel={() => toggleModal(null)}
             show={true}/>}
-          {accountManagementModal === DELETE_ACCOUNT &&
-          <DeleteModal
-            itemToDelete={activeAccount.get('name')}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This account, and all properties and groups it contains will be removed from UDN immediately.'}
-            onCancel={() => toggleModal(null)}
-            onDelete={() => onDelete(brand, account, router)}/>}
-          {(accountManagementModal === DELETE_GROUP && this.state.groupToDelete) &&
-          <DeleteModal
-            itemToDelete={this.state.groupToDelete.get('name')}
-            description={'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.'}
-            onCancel={() => toggleModal(null)}
-            onDelete={() => this.deleteGroupFromActiveAccount(this.state.groupToDelete)}/>}
+          {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
           {accountManagementModal === DELETE_USER &&
           <DeleteUserModal
             itemToDelete={this.userToDelete}
