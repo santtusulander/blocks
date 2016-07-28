@@ -403,7 +403,7 @@ AccountManagement.propTypes = {
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
-  permissions: PropTypes.instanceOf(List),
+  permissions: PropTypes.instanceOf(Map),
   permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
@@ -431,7 +431,7 @@ function mapStateToProps(state) {
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
-    permissions: state.permissions.get('permissions'),
+    permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
     users: state.user.get('allUsers')
