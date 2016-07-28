@@ -25,7 +25,6 @@ class AccountList extends Component {
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.state = {
-      provider_type: null,
       addingNew: false,
       accountServices: fromJS([]),
       search: '',
@@ -41,27 +40,24 @@ class AccountList extends Component {
     })
   }
 
-  validateInlineAdd({ name = '', provider_type, brand = '' }) {
-    console.log(provider_type)
+  validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
     const conditions = {
       confirmPw: {
         condition: this.props.accounts.find(account => account.get('name') !== name),
         errorText: 'That account name is taken'
       }
     }
-    return checkForErrors({ name, provider_type, brand }, conditions)
+    return checkForErrors({ name, brand, provider_type }, conditions)
   }
 
   getInlineAddFields() {
     return [
       [ { input: <Input id='name' placeholder=" Email" type="text"/> } ],
       [ { input: <SelectWrapper
-            value={this.state.provider_type}
             numericValues={true}
-            onChange={provider_type => this.setState({ provider_type })}
             id='provider_type'
             className="inline-add-dropdown"
-            options={SERVICE_TYPES.map(type => [type.value, type.label])}/>
+            options={ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
       } ],
       [],
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
@@ -71,9 +67,7 @@ class AccountList extends Component {
             handleCheck={newValues => {
               this.setState({ accountServices: newValues })
             }}
-            options={fromJS(SERVICE_TYPES.filter(service => {
-              console.log(service.accountTypes.includes(this.state.provider_type))
-              return service.accountTypes.includes(this.state.provider_type)}))}/>,
+            options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
           positionClass: 'left'
       } ]
     ]
@@ -206,7 +200,7 @@ AccountList.propTypes = {
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   params: PropTypes.object,
-  typeField: PropTypes.object
+  typeField: PropTypes.number
 }
 
 AccountList.defaultProps = {
@@ -225,7 +219,9 @@ function mapStateToProps(state) {
     account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
     return account
   })
-  return { accounts: sufficient }
+  const addAccountForm = state.form.inlineAdd
+  const typeField = addAccountForm && addAccountForm.provider_type.value
+  return { accounts: sufficient, typeField }
 }
 
 export default connect(mapStateToProps, { fetchAccounts, createAccount })(AccountList)

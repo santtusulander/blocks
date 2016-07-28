@@ -24,4 +24,4 @@ IconClose.propTypes = {
   width: React.PropTypes.string
 }
 
-module.exports = IconClose
+export default IconClose
