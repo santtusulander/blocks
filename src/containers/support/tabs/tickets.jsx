@@ -6,6 +6,7 @@ import { List } from 'immutable'
 import { Row, Col } from 'react-bootstrap'
 
 import * as supportActionCreators from '../../../redux/modules/support'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button.js'
@@ -25,6 +26,8 @@ class SupportTabTickets extends React.Component {
 
     this.openStatuses = List(getOpenTicketStatuses())
     this.closedStatuses = List(getClosedTicketStatuses())
+
+    this.notificationTimeout = null
 
     this.state = {
       ticketToEdit: null,
@@ -51,8 +54,22 @@ class SupportTabTickets extends React.Component {
     this.setState({ showModal: false })
   }
 
-  saveTicket() {
+  saveTicket(data) {
+    if (this.state.ticketToEdit) {
+      // Update ticket
+    } else {
+      // Add ticket
+      return this.props.supportActions.createTicket(data).then(action => {
+        this.showNotification(`Ticket ${data.subject} created.`)
+        this.hideModal()
+      })
+    }
+  }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   render() {
@@ -73,7 +90,9 @@ class SupportTabTickets extends React.Component {
                          icon={true}
                          addNew={true}
                          className="pull-right"
-                         onClick={() => { this.showModal() }}>
+                         onClick={() => {
+                           this.showModal()
+                         }}>
                 <IconAdd/>
               </UDNButton>
             </div>
@@ -85,12 +104,12 @@ class SupportTabTickets extends React.Component {
         {renderTicketList(closedTickets)}
 
         {this.state.showModal &&
-          <SupportTicketModal
-            onCancel={this.hideModal}
-            onSave={this.saveTicket}
-            show={this.state.showModal}
-            ticket={this.state.ticketToEdit}
-          />
+        <SupportTicketModal
+          onCancel={this.hideModal}
+          onSave={this.saveTicket}
+          show={this.state.showModal}
+          ticket={this.state.ticketToEdit}
+        />
         }
       </div>
     )
@@ -126,7 +145,7 @@ function renderTicketList(tickets) {
             number={`#${id}`}
             status={status}
             title={subject}
-            priority={priority} />
+            priority={priority}/>
         )
       })}
 
@@ -151,7 +170,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const supportActions = bindActionCreators(supportActionCreators, dispatch)
-  return { supportActions };
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
+
+  return {
+    supportActions,
+    uiActions
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SupportTabTickets))

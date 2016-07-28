@@ -9,7 +9,7 @@ class SupportTicketModal extends React.Component {
   }
 
   static getTitle(ticket = null) {
-    return ticket ? 'New Ticket' : `Edit Ticket: `
+    return ticket ? `Edit Ticket: #${ticket.get('id')}` : 'New Ticket'
   }
 
   render() {

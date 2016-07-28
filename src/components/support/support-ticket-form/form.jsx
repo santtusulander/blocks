@@ -20,11 +20,40 @@ const validate = (values) => {
   errors = {}
 
   const {
-    subject
+    subject,
+    description,
+    status,
+    type,
+    priority,
+    assignee
   } = values
 
   if (!subject || subject.length === 0) {
     errors.subject = 'Title is required'
+  }
+
+  if (!description || description.length === 0) {
+    errors.description = 'Description is required'
+  }
+
+  if (!status || status.length === 0) {
+    errors.status = 'Status is required'
+  }
+
+  if (!type || type.length === 0) {
+    errors.type = 'Type is required'
+  }
+
+  if (!priority || priority.length === 0) {
+    errors.priority = 'Priority is required'
+  }
+
+  if (!priority || priority.length === 0) {
+    errors.priority = 'Priority is required'
+  }
+
+  if (!assignee || assignee.length === 0) {
+    errors.assignee = 'Assignee is required'
   }
 
   return errors;
@@ -45,26 +74,47 @@ class SupportTicketForm extends React.Component {
         fields: {
           subject,
           description,
-          status
+          status,
+          type,
+          priority
         }
       } = this.props
 
       subject.onChange(ticket.get('subject'))
       description.onChange(ticket.get('description'))
       status.onChange(ticket.get('status'))
+      type.onChange(ticket.get('type'))
+      priority.onChange(ticket.get('priority'))
     }
   }
 
   save() {
     const {
+      ticket,
       fields: {
-        subject
+        subject,
+        description,
+        status,
+        type,
+        priority,
+        assignee
       }
     } = this.props
 
-    this.props.onSave({
+    let data = {
       subject: subject.value,
-    })
+      description: description.value,
+      status: status.value,
+      type: type.value,
+      priority: priority.value,
+      assignee: assignee.value,
+    }
+
+    if (ticket) {
+      data.id = ticket.get('id')
+    }
+
+    this.props.onSave(data)
   }
 
   toggleStatus(value) {
@@ -77,6 +127,7 @@ class SupportTicketForm extends React.Component {
 
   render() {
     const {
+      ticket,
       fields: {
         subject,
         description,
@@ -140,10 +191,21 @@ class SupportTicketForm extends React.Component {
           />
         </div>
 
+        <hr/>
+
+        <div className='form-group'>
+          <label className='control-label'>Assignee</label>
+          <SelectWrapper
+            {...assignee}
+            className="input-select"
+            options={[{ value: 'support', label: 'Support'}]}
+          />
+        </div>
+
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
           <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
-                  onClick={this.save}>Save</Button>
+                  onClick={this.save}>{ticket ? 'Save' : 'Add'}</Button>
         </ButtonToolbar>
       </form>
     )
@@ -168,7 +230,8 @@ export default reduxForm({
     'assignee'
   ],
   initialValues: {
-    status: STATUS_OPEN
+    status: STATUS_OPEN,
+    assignee: null
   },
   validate: validate
 })(SupportTicketForm)
