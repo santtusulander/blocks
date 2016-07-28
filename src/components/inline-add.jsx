@@ -11,13 +11,23 @@ const ErrorToolTip = attributes =>
       {attributes.error}
     </Tooltip>
 
+const customize = (input, fieldProps) => {
+  if(input.props.onChange) {
+    fieldProps.onChange = input.props.onChange
+  }
+  if(input.props.value) {
+    fieldProps.value = input.props.value
+  }
+  return [ input, fieldProps ]
+}
+
 const InlineAdd = ({ save, inputs, fields, invalid, values, unmount }) =>
   <tr className="inline-add-row">
     {inputs.map((cell, index) =>
       <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
         {cell.map(({ input, positionClass }, index) =>
           <div className={positionClass} key={index}>
-            {cloneElement(input, { ...fields[input.props.id] })}
+            {cloneElement(...customize(input, fields[input.props.id]))}
             {ErrorToolTip(fields[input.props.id])}
           </div>
         )}

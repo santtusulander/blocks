@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Row, Col, Input, Button } from 'react-bootstrap'
+import { Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
 
@@ -8,17 +8,26 @@ import ActionLinks from '../action-links'
 import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
+import SelectWrapper from '../../../components/select-wrapper'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 import { fetchAccounts, createAccount } from '../../../redux/modules/account'
 
 import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
 
+import { checkForErrors } from '../../../util/helpers'
+
 class AccountList extends Component {
   constructor(props) {
     super(props);
+    this.values = []
     this.changeSort = this.changeSort.bind(this)
+    this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
+    this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.state = {
+      provider_type: null,
       addingNew: false,
+      accountServices: fromJS([]),
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -32,75 +41,43 @@ class AccountList extends Component {
     })
   }
 
-  checkForErrors(fields, customConditions) {
-    let errors = {}
-    for(const fieldName in fields) {
-      const field = fields[fieldName]
-      if(field === '') {
-        errors[fieldName] = 'Required'
-      }
-      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
-        errors[fieldName] = customConditions[fieldName].errorText
-      }
-    }
-    return errors
-  }
-
-  validateInlineAdd({ name = '', provider_type = '', brand }) {
+  validateInlineAdd({ name = '', provider_type, brand = '' }) {
     const conditions = {
       confirmPw: {
         condition: this.props.accounts.find(account => account.get('name') !== name),
-        errorText: 'Account name is taken'
+        errorText: 'That account name is taken'
       }
     }
-    return this.checkForErrors({ name, provider_type, brand }, conditions)
+    return checkForErrors({ name, provider_type, brand }, conditions)
   }
 
   getInlineAddFields() {
-    /**
-     * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
-     * The positionClass-field is meant for positioning the div that wraps the input element and it's tooltip.
-     * To get values from input fields via redux form, the input elements' IDs must match the inline add component's
-     * fields-prop's array items.
-     *
-     */
     return [
       [ { input: <Input id='name' placeholder=" Email" type="text"/> } ],
-      [
-        {
-          input: <SelectWrapper
-            id='type'
+      [ { input: <SelectWrapper
+            value={this.state.provider_type}
+            numericValues={true}
+            onChange={provider_type => this.setState({ provider_type })}
+            id='provider_type'
             className="inline-add-dropdown"
             options={SERVICE_TYPES.map(type => [type.value, type.label])}/>
-        }
-      ],
+      } ],
       [],
-      [
-        {
-          input: <SelectWrapper
-            id='brand'
+      [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
+      [ { input: <FilterChecklistDropdown
             className="inline-add-dropdown"
-            options={[['udn', 'udn']]}/>
-        }
-      ],
-      [
-        {
-          input: <FilterChecklistDropdown
-            className="inline-add-dropdown"
-            values={this.state.usersGroups}
+            values={this.state.accountServices}
             handleCheck={newValues => {
-              this.setState({ usersGroups: newValues })
+              this.setState({ accountServices: newValues })
             }}
-            options={this.props.groups.map(group => {
-              return Map({ value: group.get('id'), label: group.get('name') })
-            })}/>,
+            options={fromJS(SERVICE_TYPES.filter(service => {
+              return service.accountTypes.includes(this.state.type)}))}/>,
           positionClass: 'left'
-        }
-      ]
+      } ]
     ]
   }
 
-  newUser({ name, type, brand }) {
+  newAccount({ name, type, brand }) {
     const { createAccount } = this.props, { accountServices } = this.state
     const requestBody = {
       name, type, accountServices
@@ -109,7 +86,7 @@ class AccountList extends Component {
   }
 
   toggleInlineAdd() {
-    this.setState({ addingNew: !this.state.addingNew, usersGroups: List() })
+    this.setState({ addingNew: !this.state.addingNew, accountServices: List() })
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -166,7 +143,7 @@ class AccountList extends Component {
               placeholder="Search"
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
-            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={() => {}}>
+            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={this.toggleInlineAdd}>
               <IconAdd/>
             </Button>
           </Col>
@@ -185,10 +162,10 @@ class AccountList extends Component {
           <tbody>
           {this.state.addingNew && <InlineAdd
             validate={this.validateInlineAdd}
-            fields={['name', 'type', 'brand']}
+            fields={['name', 'provider_type', 'brand']}
             inputs={this.getInlineAddFields()}
             unmount={this.toggleInlineAdd}
-            save={this.newUser}/>}
+            save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
             return (
@@ -226,7 +203,8 @@ AccountList.propTypes = {
   createAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
-  params: PropTypes.object
+  params: PropTypes.object,
+  typeField: PropTypes.object
 }
 
 AccountList.defaultProps = {
@@ -245,7 +223,7 @@ function mapStateToProps(state) {
     account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
     return account
   })
-  return { accounts: sufficient, brand: 'udn' }
+  return { accounts: sufficient }
 }
 
 export default connect(mapStateToProps, { fetchAccounts, createAccount })(AccountList)
