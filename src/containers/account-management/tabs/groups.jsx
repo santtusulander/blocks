@@ -221,7 +221,7 @@ class AccountManagementAccountGroups extends React.Component {
           </thead>
           <tbody>
           {this.state.adding && <InlineAdd
-            validate={({ name }) => checkForErrors({ name }, {})}
+            validate={name => checkForErrors({ name }, {})}
             fields={['name']}
             inputs={inlineAddInputs}
             cancel={this.cancelAdding}
