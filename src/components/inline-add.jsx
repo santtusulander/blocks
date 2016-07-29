@@ -17,7 +17,7 @@ const InlineAdd = ({ save, inputs, fields, invalid, values, unmount }) =>
       <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
         {cell.map(({ input, positionClass }, index) =>
           <div className={positionClass} key={index}>
-            {cloneElement(input, { ...fields[input.props.id] })}
+            {cloneElement(input, fields[input.props.id])}
             {ErrorToolTip(fields[input.props.id])}
           </div>
         )}

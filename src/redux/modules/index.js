@@ -14,6 +14,7 @@ export const metrics = require('./metrics').default;
 export const reports = require('./reports').default;
 export const roles = require('./roles').default;
 export const permissions = require('./permissions').default;
+export const support = require('./support').default;
 
 //Account Management
 export const dns = require('./dns').default;

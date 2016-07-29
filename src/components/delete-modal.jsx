@@ -19,7 +19,7 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
         <p>
           {description}
         </p>
-        <Input type="text" label="Type 'delete'" placeholder="delete"{ ...delField }/>
+        <Input type="text" label="Type 'delete'" placeholder="delete" {...delField}/>
       </Modal.Body>
 
       <Modal.Footer className="delete-modal-footer">
@@ -39,6 +39,7 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
 
 DeleteModal.displayName = 'ErrorModal'
 DeleteModal.propTypes = {
+  description: PropTypes.description,
   fields: PropTypes.object,
   itemToDelete: PropTypes.string,
   onCancel: PropTypes.func,

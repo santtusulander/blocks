@@ -9,22 +9,15 @@ import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
-function labelParentRoles(childRole, allRoles) {
-  return childRole.get('parentRoles').map(id => {
-    return allRoles
-      .find(possibleParent => possibleParent.get('id') === id)
-      .get('name')
-  })
-}
-
-function labelPermissions(role, permissions) {
-  return role.get('permissions').get('resources')
-    .filter(rule => rule.find((rule) => rule.get('allowed') === true))
-    .map((rule, key) => {
-      return permissions
-        .find(permission => permission.get('id') === key)
-        .get('name')
+function labelPermissions(rolePermissions, permissions, section) {
+  let permissionNames = rolePermissions
+    .map((rules, key) => {
+      let permissionName = permissions
+        .find(permission => permission.get('name') === key)
+        .get('title')
+      return `${section}: ${permissionName} (${key})`
     })
+  return permissionNames;
 }
 
 export const RolesList = props => {
@@ -48,9 +41,6 @@ export const RolesList = props => {
           <tr>
             <th>Role</th>
             <th>Permissions</th>
-            {/* Not in 0.8
-              <th>Available To</th>
-            */}
             <th>Assigned To</th>
             <th></th>
           </tr>
@@ -63,12 +53,23 @@ export const RolesList = props => {
                 <td>
                   {role.get('name')}
                 </td>
-                <ArrayTd items={labelPermissions(role, props.permissions).toArray()} />
-                {/* Not in 0.8
-                  <td>
-                    {labelParentRoles(role, props.roles).join(', ')}
-                  </td>
-                */}
+                <ArrayTd items={[
+                  ...labelPermissions(
+                    role.get('permissions').get('aaa'),
+                    props.permissions.get('aaa'),
+                    'AAA'
+                  ).toArray(),
+                  ...labelPermissions(
+                    role.get('permissions').get('north'),
+                    props.permissions.get('north'),
+                    'North'
+                  ).toArray(),
+                  ...labelPermissions(
+                    role.get('permissions').get('ui'),
+                    props.permissions.get('ui'),
+                    'UI'
+                  ).toArray()
+                ]} />
                 <td>
                   NEEDS API
                 </td>
@@ -104,7 +105,7 @@ RolesList.propTypes = {
   onDelete: React.PropTypes.func,
   onEdit: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  permissions: React.PropTypes.instanceOf(Immutable.List),
+  permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
   showAddNewDialog: React.PropTypes.bool
 }
