@@ -324,13 +324,14 @@ export class AccountManagement extends Component {
                            onClick={() => toggleModal(ADD_ACCOUNT)}>
                   <IconAdd/>
                 </UDNButton>
-                <UDNButton bsStyle="secondary"
-                           pageHeaderBtn={true}
-                           icon={true}
-                           addNew={true}
-                           onClick={() => toggleModal(DELETE_ACCOUNT)}>
+                {this.props.params.account &&
+                  <UDNButton bsStyle="secondary"
+                   pageHeaderBtn={true}
+                   icon={true}
+                   addNew={true}
+                   onClick={() => toggleModal(DELETE_ACCOUNT)}>
                   <IconTrash/>
-                </UDNButton>
+                </UDNButton>}
               </div>
             </PageHeader>
             {account && <Nav bsStyle="tabs" className="system-nav">
