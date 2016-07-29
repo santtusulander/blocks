@@ -13,9 +13,11 @@ import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
-import IconSupport from '../../../components/icons/icon-support'
+import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
+
+import { checkForErrors } from '../../../util/helpers'
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -74,20 +76,6 @@ export class AccountManagementAccountUsers extends React.Component {
     createUser(requestBody).then(this.toggleInlineAdd)
   }
 
-  checkForErrors(fields, customConditions) {
-    let errors = {}
-    for(const fieldName in fields) {
-      const field = fields[fieldName]
-      if(field === '') {
-        errors[fieldName] = 'Required'
-      }
-      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
-        errors[fieldName] = customConditions[fieldName].errorText
-      }
-    }
-    return errors
-  }
-
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
       confirmPw: {
@@ -103,7 +91,7 @@ export class AccountManagementAccountUsers extends React.Component {
         errorText: 'Password too long!'
       }
     }
-    return this.checkForErrors({ email, password, confirmPw, roles }, conditions)
+    return checkForErrors({ email, password, confirmPw, roles }, conditions)
   }
 
   editUser(user) {
@@ -139,7 +127,7 @@ export class AccountManagementAccountUsers extends React.Component {
      *
      */
     return [
-      [ { input: <Input id='email' placeholder=" Email" type="text"/> } ],
+      [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
         {
           input: <Input id='password' placeholder=" Password" type="text"/>,
@@ -160,7 +148,7 @@ export class AccountManagementAccountUsers extends React.Component {
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
-              <IconSupport/>
+              <IconInfo/>
             </Button>,
           positionClass: 'right'
         }
@@ -252,7 +240,6 @@ export class AccountManagementAccountUsers extends React.Component {
               validate={this.validateInlineAdd}
               fields={['email', 'password', 'confirmPw', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
-              cancel={() => {}}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
             {sortedUsers.map((user, i) => {

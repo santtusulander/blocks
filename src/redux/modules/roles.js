@@ -30,20 +30,23 @@ export const fetchRoles = createAction(ROLES_FETCHED, () => {
     .then(parseResponseData)
     .then(roles => Promise.all(roles.map(role => {
       return Promise.all([
-        axios.get(`${urlBase}/v2/roles/${role.name}/services/AAA`)
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/AAA`)
           .then(parseResponseData),
-        axios.get(`${urlBase}/v2/roles/${role.name}/services/North`)
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/North`)
+          .then(parseResponseData),
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/UI`)
           .then(parseResponseData)
       ])
-      .then(servicePerms => {
+      .then(axios.spread((permissionsAAA, permissionsNorth, permissionsUI) => {
         return {
           ...role,
           permissions: {
-            aaa: servicePerms[0].permissions.resources,
-            north: servicePerms[1].permissions.resources
+            aaa: permissionsAAA.permissions.resources,
+            north: permissionsNorth.permissions.resources,
+            ui: permissionsUI.permissions.resources
           }
         }
-      })
+      }))
     })))
   // return Promise.resolve({data: [
   //   {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {

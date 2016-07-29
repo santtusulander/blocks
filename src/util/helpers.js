@@ -359,6 +359,25 @@ export function filterAccountsByUserName (accounts) {
   return accounts
 }
 
+/**
+ * Check if empty, check if custom error condition is true per field
+ * @param {Object} fields
+ * @param {Object} customConditions
+ */
+export function checkForErrors(fields, customConditions) {
+  let errors = {}
+  for(const fieldName in fields) {
+    const field = fields[fieldName]
+    if(field === '') {
+      errors[fieldName] = 'Required'
+    }
+    else if(customConditions[fieldName] && customConditions[fieldName].condition) {
+      errors[fieldName] = customConditions[fieldName].errorText
+    }
+  }
+  return errors
+}
+
 export function formatFileSize(bytes) {
   return filesize(bytes)
 }
