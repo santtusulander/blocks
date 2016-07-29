@@ -43,6 +43,7 @@ export class AccountManagement extends Component {
     super(props)
     this.userToDelete = ''
     this.accountToDelete = null
+    this.accountToUpdate = null
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -57,6 +58,7 @@ export class AccountManagement extends Component {
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
+    this.showAccountForm = this.showAccountForm.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
@@ -174,11 +176,17 @@ export class AccountManagement extends Component {
     this.props.toggleModal(EDIT_GROUP)
   }
 
-  editAccount(accountId, data) {
-    return this.props.accountActions.updateAccount('udn', accountId, data)
+  editAccount(brandId, accountId, data) {
+    return this.props.accountActions.updateAccount(brandId, accountId, data)
       .then(() => {
+        this.props.toggleModal(null)
         this.showNotification('Account detail updates saved.')
       })
+  }
+
+  showAccountForm(account) {
+    this.accountToUpdate = account
+    this.props.toggleModal(ADD_ACCOUNT)
   }
 
   addAccount(brand, data) {
@@ -219,14 +227,14 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router,
-      dnsData
+      router
+      //dnsData
     } = this.props
 
     const subPage = this.getTabName(),
       isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
-      activeDomain = dnsData && dnsData.get('activeDomain'),
+      //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
@@ -287,10 +295,12 @@ export class AccountManagement extends Component {
       toggleModal,
       params,
       isAdmin,
+      editAccount: this.showAccountForm,
       onSave: this.editAccount,
       uiActions: this.props.uiActions,
       initialValues: {
         accountName: activeAccount.get('name'),
+        accountBrand: 'udn',
         brand: 'udn',
         services: activeAccount.get('services'),
         accountType: accountType && accountType.value
@@ -375,7 +385,8 @@ export class AccountManagement extends Component {
           {accountManagementModal === ADD_ACCOUNT &&
           <AccountForm
             id="account-form"
-            onSave={this.addAccount}
+            onSave={this.editAccount}
+            account={this.accountToUpdate}
             onCancel={() => toggleModal(null)}
             show={true}/>}
           {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
