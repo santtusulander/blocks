@@ -176,7 +176,7 @@ class AccountList extends Component {
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
                 <td>
                   <ActionLinks
-                    onEdit={() => {}}
+                    onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>

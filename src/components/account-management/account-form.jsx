@@ -56,14 +56,12 @@ class AccountForm extends React.Component {
         account,
         fields: {
           accountName,
-          accountBrand,
           accountType,
           services
         }
       } = this.props
 
       accountName.onChange(account.get('name'))
-      accountBrand.onChange(account.get('brand_id'))
       accountType.onChange(account.get('provider_type'))
       services.onChange(account.get('services'))
     }
@@ -105,7 +103,7 @@ class AccountForm extends React.Component {
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
     const title = this.props.account ? 'Edit Account' : 'Add new account'
-    const subTitle = this.props.account ? `${this.props.account.get('brand_id')} / ${this.props.account.get('name')}` : 'udn'
+    const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
     return (
       <Modal dialogClassName="account-form-sidebar" show={show}>
