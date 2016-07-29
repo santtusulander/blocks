@@ -9,16 +9,15 @@ import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
-function labelPermissions(rolePermissions, permissions) {
-  return rolePermissions
-    .filter(rule => rule.find(access => access.get('allowed') === true))
-    // TODO: use this instead when permissions API returns labels
-    // .map((rule, key) => {
-    //   return permissions
-    //     .find(permission => permission.get('id') === key)
-    //     .get('name')
-    // })
-    .keySeq()
+function labelPermissions(rolePermissions, permissions, section) {
+  let permissionNames = rolePermissions
+    .map((rules, key) => {
+      let permissionName = permissions
+        .find(permission => permission.get('name') === key)
+        .get('title')
+      return `${section}: ${permissionName} (${key})`
+    })
+  return permissionNames;
 }
 
 export const RolesList = props => {
@@ -57,11 +56,18 @@ export const RolesList = props => {
                 <ArrayTd items={[
                   ...labelPermissions(
                     role.get('permissions').get('aaa'),
-                    props.permissions
+                    props.permissions.get('aaa'),
+                    'AAA'
                   ).toArray(),
                   ...labelPermissions(
                     role.get('permissions').get('north'),
-                    props.permissions
+                    props.permissions.get('north'),
+                    'North'
+                  ).toArray(),
+                  ...labelPermissions(
+                    role.get('permissions').get('ui'),
+                    props.permissions.get('ui'),
+                    'UI'
                   ).toArray()
                 ]} />
                 <td>
@@ -99,7 +105,7 @@ RolesList.propTypes = {
   onDelete: React.PropTypes.func,
   onEdit: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  permissions: React.PropTypes.instanceOf(Immutable.List),
+  permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
   showAddNewDialog: React.PropTypes.bool
 }
