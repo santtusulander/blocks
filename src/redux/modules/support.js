@@ -121,7 +121,8 @@ export const createTicket = createAction(TICKET_CREATED, (data) => {
         "type": "task",
         "comment_count": "5",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       }
     })
   })
@@ -143,7 +144,8 @@ export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
       "type": "task",
       "comment_count": "5",
       "description": "The fire is very colorful.",
-      "created_at": "2009-07-20T22:55:29Z"
+      "created_at": "2009-07-20T22:55:29Z",
+      "assignee_id": 235323
     }
   };
 })
@@ -161,7 +163,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "type": "task",
         "comment_count": "1",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       },
       {
         "id": 3699,
@@ -172,7 +175,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "type": "question",
         "comment_count": "0",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       },
       {
         "id": 4008,
@@ -183,7 +187,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "type": "incident",
         "comment_count": "6",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       },
       {
         "id": 5679,
@@ -194,7 +199,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "type": "task",
         "comment_count": "4",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       },
       {
         "id": 6331,
@@ -205,7 +211,8 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
         "type": "problem",
         "comment_count": "8",
         "description": "The fire is very colorful.",
-        "created_at": "2009-07-20T22:55:29Z"
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
       }
     ]
   };

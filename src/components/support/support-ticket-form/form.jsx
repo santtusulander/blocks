@@ -76,7 +76,8 @@ class SupportTicketForm extends React.Component {
           description,
           status,
           type,
-          priority
+          priority,
+          assignee
         }
       } = this.props
 
@@ -85,6 +86,7 @@ class SupportTicketForm extends React.Component {
       status.onChange(ticket.get('status'))
       type.onChange(ticket.get('type'))
       priority.onChange(ticket.get('priority'))
+      assignee.onChange(ticket.get('assignee_id'))
     }
   }
 
@@ -198,7 +200,7 @@ class SupportTicketForm extends React.Component {
           <SelectWrapper
             {...assignee}
             className="input-select"
-            options={[{ value: 'support', label: 'Support'}]}
+            options={[{ value: 235323, label: 'Support'}]}
           />
         </div>
 
