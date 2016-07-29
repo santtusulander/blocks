@@ -1,7 +1,7 @@
 export const ACCOUNT_TYPES = [
   { value: 1, label: 'Content Provider' },
-  { value: 2, label: 'Service Provider' }
-  //{ value: 3, label: 'Cloud Provider' }
+  { value: 2, label: 'Service Provider' },
+  { value: 3, label: 'Cloud Provider' }
 ]
 
 export const SERVICE_TYPES = [
