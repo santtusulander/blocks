@@ -227,14 +227,14 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router,
-      dnsData
+      router
+      //dnsData
     } = this.props
 
     const subPage = this.getTabName(),
       isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
-      activeDomain = dnsData && dnsData.get('activeDomain'),
+      //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
