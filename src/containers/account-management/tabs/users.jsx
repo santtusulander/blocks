@@ -127,14 +127,14 @@ export class AccountManagementAccountUsers extends React.Component {
      *
      */
     return [
-      [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
+      [ { input: <Input ref="emails" id='email' placeholder="Email" type="text"/> } ],
       [
         {
-          input: <Input id='password' placeholder=" Password" type="text"/>,
+          input: <Input id='password' placeholder="Password" type="text"/>,
           positionClass: 'half-width-item left'
         },
         {
-          input: <Input id='confirmPw' placeholder=" Confirm password" type="text"/>,
+          input: <Input id='confirmPw' placeholder="Confirm password" type="text"/>,
           positionClass: 'half-width-item right'
         }
       ],
