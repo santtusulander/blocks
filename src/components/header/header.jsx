@@ -170,6 +170,8 @@ class Header extends React.Component {
         router.push(getUrl('/account-management', ...params))
       } else if(router.isActive('/security')) {
         router.push(getUrl('/security', ...params))
+      } else if(router.isActive('/support')) {
+        router.push(getUrl('/support', ...params))
       }
     }
     return (
@@ -195,7 +197,7 @@ class Header extends React.Component {
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
                 canGetEdited={activeAccount.get('name')}
                 user={this.props.user}
-                onSelect={(...params) => itemSelectorFunc(...params)}
+                onSelect={itemSelectorFunc}
                 restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
