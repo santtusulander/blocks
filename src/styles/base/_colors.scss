@@ -76,7 +76,6 @@ $dark-blue-60:  #5b6592;
 $dark-blue-40:  #8d92b4;
 $dark-blue-20:  #c3c5d9;
 
-
 // Gradients
 // =========
 
@@ -120,3 +119,13 @@ $lt-text-color: $grey-80;
 $lt-button-color: rgba($white, 0.7);
 
 $btn-success-bg: #009f80;
+
+
+// Support
+// =======
+
+// Support priority colors
+$support-priority-normal: $pale-blue;
+$support-priority-low:    $gradient-teal;
+$support-priority-medium: $yellow;
+$support-priority-high:   $red;

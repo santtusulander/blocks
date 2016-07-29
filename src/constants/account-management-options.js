@@ -1,7 +1,7 @@
 export const ACCOUNT_TYPES = [
   { value: 1, label: 'Content Provider' },
-  { value: 2, label: 'Service Provider' }
-  //{ value: 3, label: 'Cloud Provider' }
+  { value: 2, label: 'Service Provider' },
+  { value: 3, label: 'Cloud Provider' }
 ]
 
 export const SERVICE_TYPES = [
@@ -12,4 +12,10 @@ export const SERVICE_TYPES = [
 
 export const BRANDS = [
   { id: 'udn', brandName: 'UDN' }
+]
+
+export const ROLES = [
+  { id: 2, label: 'CP Admin', accountTypes: [1] },
+  { id: 1, label: 'SP Admin', accountTypes: [2] },
+  { id: 3, label: 'UDN Admin', accountTypes: [ 1, 2 ] }
 ]

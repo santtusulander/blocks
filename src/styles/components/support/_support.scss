@@ -1,0 +1,11 @@
+.support-ticket {
+  &__priority-icon {
+    width: 20px;
+    height: 20px;
+
+    &--urgent { background-color: $support-priority-high; }
+    &--high { background-color: $support-priority-medium; }
+    &--normal { background-color: $support-priority-normal; }
+    &--low { background-color: $support-priority-low; }
+  }
+}

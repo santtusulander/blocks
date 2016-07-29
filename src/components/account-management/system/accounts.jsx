@@ -167,10 +167,12 @@ class AccountList extends Component {
             save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
+            const accountType = ACCOUNT_TYPES
+              .find(type => account.get('provider_type') === type.value)
             return (
               <tr key={index}>
                 <td>{account.get('name')}</td>
-                <td>{ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value).label}</td>
+                <td>{accountType && accountType.label}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
