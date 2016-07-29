@@ -13,7 +13,7 @@ import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
-import IconSupport from '../../../components/icons/icon-support'
+import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 
@@ -148,7 +148,7 @@ export class AccountManagementAccountUsers extends React.Component {
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
-              <IconSupport/>
+              <IconInfo/>
             </Button>,
           positionClass: 'right'
         }

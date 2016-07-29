@@ -57,11 +57,11 @@ class AccountManagementSystemRoles extends React.Component {
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
-  permissions: React.PropTypes.instanceOf(Immutable.List),
+  permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List)
 }
 AccountManagementSystemRoles.defaultProps = {
-  permissions: Immutable.List(),
+  permissions: Immutable.Map(),
   roles: Immutable.List()
 }
 
