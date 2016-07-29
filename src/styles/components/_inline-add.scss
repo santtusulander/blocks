@@ -2,12 +2,14 @@
   background-color: $pale-blue !important;
 
   td > div {
-    &.col-sm-6 {
+    &.col-sm-6,
+    &.col-sm-9 {
       padding-left: 0;
     }
 
     & > .form-group {
       padding-top: 0 !important;
+      padding-bottom: 0 !important;
     }
   }
 

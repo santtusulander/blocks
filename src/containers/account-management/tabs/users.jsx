@@ -145,7 +145,7 @@ export class AccountManagementAccountUsers extends React.Component {
             numericValues={true}
             className="inline-add-dropdown"
             options={ROLES.map(role => [ role.id, role.label ])}/>,
-          positionClass: 'left'
+          positionClass: 'col-sm-9'
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
@@ -165,7 +165,7 @@ export class AccountManagementAccountUsers extends React.Component {
             options={this.props.groups.map(group => {
               return Map({ value: group.get('id'), label: group.get('name') })
             })}/>,
-          positionClass: 'left'
+          positionClass: 'col-sm-6'
         }
       ]
     ]
