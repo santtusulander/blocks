@@ -4,6 +4,7 @@ import { Table, Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { change } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -51,8 +52,9 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account && !this.state.usersGroups.isEmpty()) {
-      this.setState({ usersGroups: List() })
+    if(this.props.params.account !== nextProps.params.account) {
+      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
+      this.props.resetRoles()
     }
   }
 
@@ -126,6 +128,9 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
+    const roles = ROLES
+      .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
+      .map(role => [ role.id, role.label ])
     return [
       [ { input: <Input id='email' placeholder=" Email" type="text"/> } ],
       [
@@ -144,7 +149,7 @@ export class AccountManagementAccountUsers extends React.Component {
             id='roles'
             numericValues={true}
             className="inline-add-dropdown"
-            options={ROLES.map(role => [ role.id, role.label ])}/>,
+            options={roles}/>,
           positionClass: 'col-sm-9'
         },
         {
@@ -162,9 +167,7 @@ export class AccountManagementAccountUsers extends React.Component {
             handleCheck={newValues => {
               this.setState({ usersGroups: newValues })
             }}
-            options={this.props.groups.map(group => {
-              return Map({ value: group.get('id'), label: group.get('name') })
-            })}/>,
+            options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
           positionClass: 'col-sm-6'
         }
       ]
@@ -279,10 +282,12 @@ export class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
+  account: React.PropTypes.instanceOf(Map),
   deleteUser: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
+  resetRoles: React.PropTypes.func,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
@@ -296,6 +301,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
