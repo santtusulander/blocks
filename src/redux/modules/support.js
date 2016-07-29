@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { createAction } from 'redux-actions'
 import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'

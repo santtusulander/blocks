@@ -4,7 +4,7 @@ import { Modal, Glyphicon } from 'react-bootstrap'
 
 import IconEdit from '../icons/icon-configuration'
 import IconClose from '../icons/icon-close'
-import UDNButton from '../button.js'
+import UDNButton from '../button'
 import Toggle from '../toggle'
 import { formatDate } from '../../util/helpers'
 

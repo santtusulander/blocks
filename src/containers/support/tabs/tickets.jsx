@@ -9,7 +9,7 @@ import * as supportActionCreators from '../../../redux/modules/support'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import IconAdd from '../../../components/icons/icon-add'
-import UDNButton from '../../../components/button.js'
+import UDNButton from '../../../components/button'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
 import SupportTicketModal from '../../../components/support/support-ticket-modal'
 import SupportTicketFormModal from '../../../components/support/support-ticket-form/modal'
