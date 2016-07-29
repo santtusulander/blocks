@@ -41,7 +41,6 @@ class AccountManagementAccountGroups extends React.Component {
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
-    this.validateInlineAdd = this.validateInlineAdd.bind(this)
   }
   componentWillMount() {
     const { brand, account } = this.props.params
@@ -133,10 +132,6 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
-  validateInlineAdd({ name }) {
-    return checkForErrors({ name }, {})
-  }
-
   changeSearch(e) {
     this.setState({
       search: e.target.value
@@ -226,7 +221,7 @@ class AccountManagementAccountGroups extends React.Component {
           </thead>
           <tbody>
           {this.state.adding && <InlineAdd
-            validate={this.validateInlineAdd}
+            validate={({ name }) => checkForErrors({ name }, {})}
             fields={['name']}
             inputs={inlineAddInputs}
             cancel={this.cancelAdding}
