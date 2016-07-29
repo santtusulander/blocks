@@ -160,6 +160,7 @@ class AccountList extends Component {
           </thead>
           <tbody>
           {this.state.addingNew && <InlineAdd
+            noClear={true}
             validate={this.validateInlineAdd}
             fields={['name', 'provider_type', 'brand']}
             inputs={this.getInlineAddFields()}

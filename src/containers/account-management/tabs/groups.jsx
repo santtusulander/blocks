@@ -177,6 +177,7 @@ class AccountManagementAccountGroups extends React.Component {
       [
         {
           input: <FilterChecklistDropdown
+            noClear={true}
             id='members'
             values={this.state.newUsers}
             handleCheck={this.changeNewUsers}
