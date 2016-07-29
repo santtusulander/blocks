@@ -1,6 +1,5 @@
-import axios from 'axios'
-import {createAction} from 'redux-actions'
-import {handleActions} from 'redux-actions'
+import { createAction } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
 import { mapReducers } from '../util'
@@ -21,7 +20,7 @@ const emptyTickets = Immutable.fromJS({
 // REDUCERS
 
 export function createSuccess(state, action) {
-  const newTicket = Immutable.fromJS(action.payload)
+  const newTicket = Immutable.fromJS(action.payload.ticket)
   return state.merge({
     activeTicket: newTicket,
     allGroups: state.get('allTickets').push(newTicket)
@@ -48,7 +47,7 @@ export function deleteFailure(state, action) {
 
 export function fetchSuccess(state, action) {
   return state.merge({
-    activeTicket: Immutable.fromJS(action.payload),
+    activeTicket: Immutable.fromJS(action.payload.ticket),
     fetching: false
   })
 }
@@ -62,7 +61,7 @@ export function fetchFailure(state) {
 
 export function fetchAllSuccess(state, action) {
   return state.merge({
-    allTickets: Immutable.fromJS(action.payload.data),
+    allTickets: Immutable.fromJS(action.payload.tickets),
     fetching: false
   })
 }
@@ -75,9 +74,9 @@ export function fetchAllFailure(state) {
 }
 
 export function updateSuccess(state, action) {
-  const updatedTicket = Immutable.fromJS(action.payload)
+  const updatedTicket = Immutable.fromJS(action.payload.ticket)
   const index = state.get('allTickets')
-    .findIndex(group => group.get('id') === action.payload.id)
+    .findIndex(ticket => ticket.get('id') === action.payload.ticket.id)
   const newAllTickets = state.get('allTickets').set(index, updatedTicket)
   return state.merge({
     activeTicket: updatedTicket,
@@ -107,94 +106,137 @@ export default handleActions({
 
 // ACTIONS
 
-export const createTicket = createAction(TICKET_CREATED, (brand, account, name) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`, {name: name}, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
+export const createTicket = createAction(TICKET_CREATED, (data) => {
+  //noinspection Eslint
+  console.log('createTicket', data)
+
+  return new Promise((resolve) => {
+    resolve({
+      "ticket": {
+        "id": 3243,
+        "organization_id": 509974,
+        "subject": "My computer is on fire!",
+        "priority": "high",
+        "status": "open",
+        "type": "task",
+        "comment_count": "5",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      }
+    })
   })
 })
 
 export const deleteTicket = createAction(TICKET_DELETED, (id) => {
-  return console.log("deleted ticket " + id);
+  //noinspection Eslint
+  return console.log('deleteTicket', id);
 })
 
 export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
-  return {"ticket": {
-    "id": id,
-    "organization_id": 509974,
-    "subject": "My computer is on fire!",
-    "priority": "high",
-    "status": "open",
-    "type": "task",
-    "comment_count": "5",
-    "description": "The fire is very colorful."
-  }};
+  return {
+    "ticket": {
+      "id": id,
+      "organization_id": 509974,
+      "subject": "My computer is on fire!",
+      "priority": "high",
+      "status": "open",
+      "type": "task",
+      "comment_count": "5",
+      "description": "The fire is very colorful.",
+      "created_at": "2009-07-20T22:55:29Z",
+      "assignee_id": 235323
+    }
+  };
 })
 
 export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
   const organization_id = 12345;
-  return {"data": [
-    {
-      "id": 3678,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "urgent",
-      "status": "open",
-      "type": "task",
-      "comment_count": "1",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 3699,
-      "organization_id": organization_id,
-      "subject": "Load balancer configuration error",
-      "priority": "high",
-      "status": "open",
-      "type": "question",
-      "comment_count": "0",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 4008,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "low",
-      "status": "new",
-      "type": "incident",
-      "comment_count": "6",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 5679,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "urgent",
-      "status": "closed",
-      "type": "integration",
-      "comment_count": "4",
-      "description": "The fire is very colorful."
-    },
-    {
-      "id": 6331,
-      "organization_id": organization_id,
-      "subject": "My computer is on fire!",
-      "priority": "high",
-      "status": "solved",
-      "type": "problem",
-      "comment_count": "8",
-      "description": "The fire is very colorful."
-    }
-  ]};
+  return {
+    "tickets": [
+      {
+        "id": 3678,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "urgent",
+        "status": "open",
+        "type": "task",
+        "comment_count": "1",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      },
+      {
+        "id": 3699,
+        "organization_id": organization_id,
+        "subject": "Load balancer configuration error",
+        "priority": "high",
+        "status": "open",
+        "type": "question",
+        "comment_count": "0",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      },
+      {
+        "id": 4008,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "low",
+        "status": "new",
+        "type": "incident",
+        "comment_count": "6",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      },
+      {
+        "id": 5679,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "urgent",
+        "status": "closed",
+        "type": "task",
+        "comment_count": "4",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      },
+      {
+        "id": 6331,
+        "organization_id": organization_id,
+        "subject": "My computer is on fire!",
+        "priority": "high",
+        "status": "solved",
+        "type": "problem",
+        "comment_count": "8",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z",
+        "assignee_id": 235323
+      }
+    ]
+  };
 })
 
-export const updateTicket = createAction(TICKET_UPDATED, (id) => {
-  return console.log("updateTicket ticket " + id);
+export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
+  //noinspection Eslint
+  console.log('updateTicket', id, data);
+
+  return new Promise((resolve) => {
+    resolve({
+      "ticket": {
+        "id": id,
+        "organization_id": 509974,
+        "subject": "My computer is on fire!",
+        "priority": "high",
+        "status": "open",
+        "type": "task",
+        "comment_count": "5",
+        "description": "The fire is very colorful.",
+        "created_at": "2009-07-20T22:55:29Z"
+      }
+    })
+  })
 })
 
 export const changeActiveTicket = createAction(TICKET_ACTIVE_TICKET_CHANGED)

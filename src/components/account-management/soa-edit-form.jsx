@@ -3,7 +3,7 @@ import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
 
-import UDNButton from '../button.js'
+import UDNButton from '../button'
 
 import './soa-edit.form.scss'
 
