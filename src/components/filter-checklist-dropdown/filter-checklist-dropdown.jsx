@@ -183,4 +183,4 @@ FilterChecklistDropdown.defaultProps = {
   values: List()
 }
 
-module.exports = FilterChecklistDropdown
+export default FilterChecklistDropdown

@@ -58,6 +58,11 @@ $icon-two-tone-primary: $dark-blue;
       fill: $icon-two-tone-primary;
     }
 
+    .pale-blue {
+      color: $pale-blue;
+      fill: $pale-blue;
+    }
+
     .light-theme & {
       .base {
         fill: $icon-two-tone-primary;

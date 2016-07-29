@@ -46,4 +46,4 @@ TableSorter.propTypes = {
   width: React.PropTypes.string
 };
 
-module.exports = TableSorter;
+export default TableSorter

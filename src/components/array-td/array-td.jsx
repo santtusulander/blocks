@@ -39,4 +39,4 @@ ArrayTd.propTypes = {
   maxItemsShown: React.PropTypes.number
 };
 
-module.exports = ArrayTd;
+export default ArrayTd;

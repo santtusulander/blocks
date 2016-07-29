@@ -20,10 +20,10 @@ const PermissionSelection = ({ className, disabled, onChange, permissions }) => 
     permission = 1
 
     // List, Show, Create, Modify and Delete == Read/Write
-    if(permissions.get('list').get('allowed')
-      && permissions.get('create').get('allowed')
-      && permissions.get('modify').get('allowed')
-      && permissions.get('delete').get('allowed')) {
+    if(permissions.getIn(['list', 'allowed'])
+      && permissions.getIn(['create', 'allowed'])
+      && permissions.getIn(['modify', 'allowed'])
+      && permissions.getIn(['delete', 'allowed'])) {
       permission = 2
     }
   }
