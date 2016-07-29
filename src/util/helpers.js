@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { getRoute } from '../routes.jsx'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
+import filesize from 'filesize'
 
 const BYTE_BASE = 1000
 
@@ -356,4 +357,8 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 export function filterAccountsByUserName (accounts) {
   // placeholder for now
   return accounts
+}
+
+export function formatFileSize(bytes) {
+  return filesize(bytes)
 }
