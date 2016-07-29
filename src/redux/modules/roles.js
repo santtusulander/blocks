@@ -1,7 +1,8 @@
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
+import axios from 'axios'
 
-import { mapReducers } from '../util'
+import { mapReducers, parseResponseData, urlBase } from '../util'
 
 const ROLES_FETCHED = 'ROLES_FETCHED'
 
@@ -12,7 +13,7 @@ export const initialState = fromJS({
 // REDUCERS
 
 export function rolesFetchSuccess(state, action) {
-  return state.set('roles', fromJS(action.payload.data))
+  return state.set('roles', fromJS(action.payload))
 }
 
 export function rolesFetchFailure(state) {
@@ -25,9 +26,313 @@ export default handleActions({
 
 // ACTIONS
 export const fetchRoles = createAction(ROLES_FETCHED, () => {
-  return Promise.resolve({data: [
-    {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13]},
-    {id: 2, name: 'Content Provider', parentRoles: [1, 2], permissions: [1,2,3,4,5,6,7]},
-    {id: 3, name: 'Service Provider', parentRoles: [1, 3], permissions: [1,2,8]}
-  ]})
+  return axios.get(`${urlBase}/v2/roles`)
+    .then(parseResponseData)
+    .then(roles => Promise.all(roles.map(role => {
+      return Promise.all([
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/AAA`)
+          .then(parseResponseData),
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/North`)
+          .then(parseResponseData),
+        axios.get(`${urlBase}/v2/roles/${role.id}/services/UI`)
+          .then(parseResponseData)
+      ])
+      .then(axios.spread((permissionsAAA, permissionsNorth, permissionsUI) => {
+        return {
+          ...role,
+          permissions: {
+            aaa: permissionsAAA.permissions.resources,
+            north: permissionsNorth.permissions.resources,
+            ui: permissionsUI.permissions.resources
+          }
+        }
+      }))
+    })))
+  // return Promise.resolve({data: [
+  //   {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {
+  //     resources: {
+  //       content: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_traffic: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_unique_visitors: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_sp_contribution: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_file_error: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_url: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_sp_on_off_net: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       security: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       services: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       account: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       config: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       support: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       }
+  //     }
+  //   }},
+  //   {id: 2, name: 'Content Provider', parentRoles: [2], permissions: {
+  //     resources: {
+  //       content: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_traffic: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_unique_visitors: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_sp_contribution: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_file_error: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_url: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_sp_on_off_net: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       security: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       services: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       account: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       config: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       support: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       }
+  //     }
+  //   }},
+  //   {id: 3, name: 'Service Provider', parentRoles: [3], permissions: {
+  //     resources: {
+  //       content: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_traffic: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_unique_visitors: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_sp_contribution: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_file_error: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_cp_url: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       analytics_sp_on_off_net: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       security: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       services: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       account: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       config: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       },
+  //       support: {
+  //         list: {allowed: true},
+  //         create: {allowed: true},
+  //         show: {allowed: true},
+  //         modify: {allowed: true},
+  //         delete: {allowed: true}
+  //       }
+  //     }
+  //   }}
+  // ]})
 })

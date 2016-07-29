@@ -7,25 +7,87 @@ jest.dontMock('../roles-list.jsx')
 const RolesList = require('../roles-list.jsx').RolesList
 
 const fakeRoles = fromJS([
-  {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: [1,2,3,4,5,6,7,8,9,10,11,12,13]},
-  {id: 2, name: 'Content Provider', parentRoles: [1, 2], permissions: [1,2,3,4,5,6,7]},
-  {id: 3, name: 'Service Provider', parentRoles: [1, 3], permissions: [1,2,8]}
+  {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {
+    resources: {
+      content: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics_cp_traffic: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      }
+    }
+  }},
+  {id: 2, name: 'Content Provider', parentRoles: [2], permissions: {
+    resources: {
+      content: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics_cp_traffic: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      }
+    }
+  }},
+  {id: 3, name: 'Service Provider', parentRoles: [3], permissions: {
+    resources: {
+      content: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      },
+      analytics_cp_traffic: {
+        list: {allowed: true},
+        create: {allowed: true},
+        show: {allowed: true},
+        modify: {allowed: true},
+        delete: {allowed: true}
+      }
+    }
+  }}
 ])
 
 const fakePermissions = fromJS([
-  {id: 1, name: 'Content'},
-  {id: 2, name: 'Analytics'},
-  {id: 3, name: 'Analytics: CP: Traffic'},
-  {id: 4, name: 'Analytics: CP: Unique Visitors'},
-  {id: 5, name: 'Analytics: CP: SP Contribution'},
-  {id: 6, name: 'Analytics: CP: File Error'},
-  {id: 7, name: 'Analytics: CP: URL'},
-  {id: 8, name: 'Analytics: SP: On/Off Net'},
-  {id: 9, name: 'Security'},
-  {id: 10, name: 'Services'},
-  {id: 11, name: 'Account'},
-  {id: 12, name: 'Config'},
-  {id: 13, name: 'Support'}
+  {id: 'content', name: 'Content'},
+  {id: 'analytics', name: 'Analytics'},
+  {id: 'analytics_cp_traffic', name: 'Analytics: CP: Traffic'}
 ])
 
 describe('RolesList', () => {

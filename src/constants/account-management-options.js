@@ -5,7 +5,7 @@ export const ACCOUNT_TYPES = [
 ]
 
 export const SERVICE_TYPES = [
-  { value: 1, label: 'UDN Network Partner - On-Net', accountTypes: [2] }, // TODO: Update the value when the service is implemented
+  { value: 2, label: 'UDN Network Partner - On-Net', accountTypes: [2] }, // TODO: Update the value when the service is implemented
   { value: 1, label: 'Media Delivery', accountTypes: [1] }
   // Not in 0.7 { value: 'storage', label: 'Storage', accountType: 3 }
 ]

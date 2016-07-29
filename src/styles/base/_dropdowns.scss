@@ -180,11 +180,11 @@
           display: block;
           min-height: $bar-height + $btn-height;
           padding: 0;
-          margin: 0 ($btn-height / 2);
+          margin: 0;
 
           @include md {
             min-height: $md-bar-height + $md-btn-height;
-            margin: 0 ($md-btn-height / 2);
+            margin: 0;
           }
         }
 
@@ -266,32 +266,20 @@
           position: absolute;
           top: 50%;
           width: 100%;
-          padding: 0 ($btn-height / 3);
+          padding: 0 $dropdown-padding;
           transform: translateY(-50%);
-
-          @include md {
-            padding: 0 ($md-btn-height / 3);
-          }
         }
 
         &.dropdown-header .user-menu-item {
-          padding: 0 ($btn-height / 2);
-
-          @include md {
-            padding: 0 ($md-btn-height / 2);
-          }
+          padding: 0 $dropdown-padding;
         }
 
         .dropdown-select {
-          width: calc(100% + #{$btn-height});
-          margin: 0 (-$btn-height / 2);
-
-          @include md {
-            width: calc(100% + #{$md-btn-height});
-            margin: 0 (-$md-btn-height / 2);
-          }
+          width: calc(100% + #{$dropdown-padding * 2});
+          margin: 0 (-$dropdown-padding * 2 / 2);
 
           > .dropdown-toggle {
+            padding: 0 $dropdown-padding;
             font-weight: inherit;
             background: transparent;
           }
@@ -301,6 +289,7 @@
             background-color: $silver-40;
 
             li > a {
+              padding: 15px $dropdown-padding;
               color: $lt-text-color;
 
               &:hover {
@@ -310,7 +299,11 @@
           }
 
           .icon {
-            width: 40px;
+            margin-right: 10px;
+
+            @include md {
+              margin-right: 2px;
+            }
           }
         }
       }

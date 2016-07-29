@@ -24,7 +24,10 @@ import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
 import SetPassword from './containers/set-password'
-import Support from './containers/support'
+import Support from './containers/support/support'
+import SupportTabTickets from './containers/support/tabs/tickets'
+import SupportTabTools from './containers/support/tabs/tools'
+import SupportTabDocumentation from './containers/support/tabs/documentation'
 import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
 
@@ -93,6 +96,10 @@ const routes = {
   supportGroup: '/support/:brand/:account/:group',
   supportProperty: '/support/:brand/:account/:group/:property',
 
+  supportTabTickets: 'tickets',
+  supportTabTools: 'tools',
+  supportTabDocumentation: 'documentation',
+
   configuration: '/services'
 }
 
@@ -129,7 +136,7 @@ import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.js
 import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 
-/* helper for creating Tab-Routes */
+/* helper for creating Analytics Tab-Routes */
 function getAnalyticsTabRoutes() {
   return (
     <Route>
@@ -141,6 +148,18 @@ function getAnalyticsTabRoutes() {
       <Route path={routes.analyticsTabFileError} component={AnalyticsTabFileError} />
       <Route path={routes.analyticsTabUrlReport} component={AnalyticsTabUrlReport} />
       <Route path={routes.analyticsTabPlaybackDemo} component={AnalyticsTabPlaybackDemo} />
+    </Route>
+  )
+}
+
+/* helper for creating Support Tab-Routes */
+function getSupportTabRoutes() {
+  return (
+    <Route>
+      <IndexRedirect to={routes.supportTabTickets} />
+      <Route path={routes.supportTabTickets} component={SupportTabTickets} />
+      <Route path={routes.supportTabTools} component={SupportTabTools} />
+      <Route path={routes.supportTabDocumentation} component={SupportTabDocumentation} />
     </Route>
   )
 }
@@ -226,10 +245,18 @@ module.exports = (
     {/* Support - routes */}
     <Route path={routes.support}>
       <IndexRedirect to={getRoute('supportBrand', { brand: 'udn' })} />
-      <Route path={routes.supportBrand} component={Support}/>
-      <Route path={routes.supportAccount} component={Support}/>
-      <Route path={routes.supportGroup} component={Support}/>
-      <Route path={routes.supportProperty} component={Support}/>
+        <Route path={routes.supportBrand} component={Support}>
+          {getSupportTabRoutes()}
+        </Route>
+        <Route path={routes.supportAccount} component={Support}>
+          {getSupportTabRoutes()}
+        </Route>
+        <Route path={routes.supportGroup} component={Support}>
+          {getSupportTabRoutes()}
+        </Route>
+        <Route path={routes.supportProperty} component={Support}>
+          {getSupportTabRoutes()}
+        </Route>
     </Route>
 
     {/* Account management - routes */}

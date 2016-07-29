@@ -56,6 +56,9 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   if (inline) {
     checkboxDivClassName .push('inline')
   }
+  if(disabled) {
+    checkboxDivClassName .push('disabled')
+  }
   checkboxDivClassName.join(' ')
 
   return (

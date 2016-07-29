@@ -93,7 +93,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   shouldLeave({ pathname }) {
-    if (!this.isLeaving && this.isDirty()) {
+    if (!this.isLeaving && this.isDirty() && this.props.account.size) {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',

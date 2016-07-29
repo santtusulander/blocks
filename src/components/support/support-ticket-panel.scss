@@ -44,11 +44,11 @@ $support-priority-high:   $red;
       background-color: $support-priority-low;
     }
 
-    &.medium {
+    &.high {
       background-color: $support-priority-medium;
     }
 
-    &.high {
+    &.urgent {
       background-color: $support-priority-high;
     }
   }

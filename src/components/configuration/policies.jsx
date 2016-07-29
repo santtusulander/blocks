@@ -251,7 +251,7 @@ class ConfigurationPolicies extends React.Component {
             <h3>Policy Rules</h3>
           </Col>
           <Col sm={4} className="text-right">
-            <Button bsStyle="primary" className="btn-icon btn-add-new"
+            <Button bsStyle="success" className="btn-icon"
               onClick={this.addRule}>
               <IconAdd />
             </Button>

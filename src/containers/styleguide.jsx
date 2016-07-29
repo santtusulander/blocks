@@ -43,6 +43,7 @@ import IconEricsson      from '../components/icons/icon-ericsson'
 import IconEye           from '../components/icons/icon-eye'
 import IconHeaderCaret   from '../components/icons/icon-header-caret'
 import IconIncident      from '../components/icons/icon-incident'
+import IconInfo          from '../components/icons/icon-info'
 import IconIntegration   from '../components/icons/icon-integration'
 import IconItemChart     from '../components/icons/icon-item-chart'
 import IconItemList      from '../components/icons/icon-item-list'
@@ -501,6 +502,11 @@ class Styleguide extends React.Component {
             <IconSupport />
             <br />
             IconSupport
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconInfo />
+            <br />
+            IconInfo
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconTask />

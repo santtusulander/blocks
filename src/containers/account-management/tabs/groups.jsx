@@ -14,6 +14,7 @@ import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import ArrayTd from '../../../components/array-td/array-td'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -106,10 +107,9 @@ class AccountManagementAccountGroups extends React.Component {
           const foundUser = this.props.users
             .find(user => user.get('email') === email)
           const newUser = {
-            group_id: foundUser.get('group_id').push(newGroup.id).toJS(),
-            email: email
+            group_id: foundUser.get('group_id').push(newGroup.id).toJS()
           }
-          return this.props.userActions.updateUser(newUser)
+          return this.props.userActions.updateUser(email, newUser)
         }))
       })
       .then(this.cancelAdding)
@@ -171,8 +171,7 @@ class AccountManagementAccountGroups extends React.Component {
         {
           input: <Input id='name' placeholder=" Name" type="text"
             onChange={this.changeNewName}
-            value={this.state.newName}/>,
-          positionClass: 'left'
+            value={this.state.newName}/>
         }
       ],
       [
@@ -219,14 +218,14 @@ class AccountManagementAccountGroups extends React.Component {
               <TableSorter {...sorterProps} column="name">
                 Name
               </TableSorter>
-              <th width="20%">Members</th>
+              <th>Members</th>
               <TableSorter {...sorterProps} column="created">
                 Created On
               </TableSorter>
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="1%"></th>
+              <th width="8%"></th>
             </tr>
           </thead>
           <tbody>
@@ -239,16 +238,15 @@ class AccountManagementAccountGroups extends React.Component {
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
             const userEmails = this.props.users
-              .filter(user => {
-                if(user.get('group_id') && user.get('group_id').size) {
-                  return user.get('group_id').indexOf(group.get('id')) !== -1
-                }
-              })
+              .filter(user => user.get('group_id') &&
+                user.get('group_id').size &&
+                user.get('group_id').includes(group.get('id'))
+              )
               .map(user => user.get('email'))
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
-                <td>{userEmails.size ? userEmails.join(', ') : 'No members'}</td>
+                <ArrayTd items={userEmails.size ? userEmails.toArray() : ['No members']} />
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>

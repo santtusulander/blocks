@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
-import { withRouter } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as accountActionCreators from '../redux/modules/account'

@@ -236,18 +236,34 @@ label {
       .checkbox-div {
         height: $bar-height;
 
-        @include md {
-          height: $md-bar-height;
+        &.inline {
+          display: inline-block;
+          margin-right: $btn-sm-height;
+
+          @include md {
+            margin-right: $md-btn-sm-height;
+            height: $md-bar-height;
+          }
+
+          &:last-of-type {
+            margin-right: 0;
+          }
+        }
+
+        &.disabled {
+          label,
+          input + span::before {
+            cursor: default;
+          }
         }
       }
     }
-  }
 
-
-  .checkbox-div {
-    &.inline {
-      display: inline-block;
-      margin-right: 50px;
+    .checkbox-div {
+      &.inline {
+        display: inline-block;
+        margin-right: 50px;
+      }
     }
   }
 }
