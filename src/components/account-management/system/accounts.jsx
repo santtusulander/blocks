@@ -1,26 +1,50 @@
 import React, { PropTypes, Component } from 'react'
-import { Row, Col, Input, Button } from 'react-bootstrap'
+import { Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 
 import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
+import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
+import SelectWrapper from '../../../components/select-wrapper'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
-import { fetchAccounts } from '../../../redux/modules/account'
+import { fetchAccounts, createAccount } from '../../../redux/modules/account'
 
 import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
+
+import { checkForErrors } from '../../../util/helpers'
 
 class AccountList extends Component {
   constructor(props) {
     super(props);
+    this.newAccount = this.newAccount.bind(this)
     this.changeSort = this.changeSort.bind(this)
+    this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
+    this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.state = {
+      addingNew: false,
+      accountServices: fromJS([]),
       search: '',
       sortBy: 'name',
       sortDir: 1
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
+  }
+
+  validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
+    const conditions = {
+      name: {
+        condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
+        errorText: 'That account name is taken'
+      }
+    }
+    return checkForErrors({ name, brand, provider_type }, conditions)
   }
 
   changeSort(column, direction) {
@@ -28,6 +52,39 @@ class AccountList extends Component {
       sortBy: column,
       sortDir: direction
     })
+  }
+
+  getInlineAddFields() {
+    return [
+      [ { input: <Input id='name' placeholder="Account name" type="text"/> } ],
+      [ { input: <SelectWrapper
+            numericValues={true}
+            id='provider_type'
+            className="inline-add-dropdown"
+            options={ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
+      } ],
+      [],
+      [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
+      [ { input: <FilterChecklistDropdown
+            className="inline-add-dropdown"
+            values={this.state.accountServices}
+            handleCheck={newValues => {
+              this.setState({ accountServices: newValues })
+            }}
+            options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
+          positionClass: 'col-sm-6'
+      } ]
+    ]
+  }
+
+  newAccount({ name, provider_type, brand }) {
+    const { createAccount } = this.props
+    const requestBody = { name, provider_type, services: [1] }
+    createAccount(brand, requestBody).then(this.toggleInlineAdd)
+  }
+
+  toggleInlineAdd() {
+    this.setState({ addingNew: !this.state.addingNew, accountServices: List() })
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -51,6 +108,7 @@ class AccountList extends Component {
   render() {
     const {
       accounts,
+      deleteAccount,
       params: { brand }
     } = this.props
     const filteredAccounts = accounts
@@ -84,7 +142,7 @@ class AccountList extends Component {
               placeholder="Search"
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
-            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={() => {}}>
+            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={this.toggleInlineAdd}>
               <IconAdd/>
             </Button>
           </Col>
@@ -93,14 +151,20 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <th width="10%">TYPE</th>
+            <th width="15%">TYPE</th>
             <th width="10%">ID</th>
-            <th width="10%">BRAND</th>
+            <th width="15%">BRAND</th>
             <th width="30%">SERVICES</th>
             <th width="8%"/>
           </tr>
           </thead>
           <tbody>
+          {this.state.addingNew && <InlineAdd
+            validate={this.validateInlineAdd}
+            fields={['name', 'provider_type', 'brand']}
+            inputs={this.getInlineAddFields()}
+            unmount={this.toggleInlineAdd}
+            save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
             return (
@@ -113,7 +177,7 @@ class AccountList extends Component {
                 <td>
                   <ActionLinks
                     onEdit={() => {}}
-                    onDelete={() => {}}/>
+                    onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>
             )
@@ -135,17 +199,32 @@ class AccountList extends Component {
 AccountList.propTypes = {
   accounts: PropTypes.instanceOf(List),
   addAccount: PropTypes.func,
+  createAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
-  params: PropTypes.object
+  params: PropTypes.object,
+  typeField: PropTypes.number
 }
 
 AccountList.defaultProps = {
   accounts: List()
 }
 
+/**
+ *
+ * waiting for api endpoint to return sufficient data
+ */
+
 function mapStateToProps(state) {
-  return { accounts: state.account.get('allAccounts'), brand: 'udn' }
+  // const notSufficient = state.account.get('allAccounts')
+  // const sufficient = notSufficient.map(account => {
+  //   account = account.set('services', fromJS([1, 1, 1, 1]))
+  //   account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
+  //   return account
+  // })
+  const addAccountForm = state.form.inlineAdd
+  const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
+  return { accounts: state.account.get('allAccounts'), typeField }
 }
 
-export default connect((mapStateToProps), { fetchAccounts })(AccountList)
+export default connect(mapStateToProps, { fetchAccounts, createAccount })(AccountList)
