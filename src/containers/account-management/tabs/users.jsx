@@ -14,6 +14,7 @@ import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
+import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
@@ -29,6 +30,7 @@ export class AccountManagementAccountUsers extends React.Component {
       sortBy: 'email',
       sortDir: 1,
       addingNew: false,
+      passwordVisible: false,
       usersGroups: List()
     }
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
@@ -37,6 +39,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.editUser = this.editUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
   }
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
@@ -135,12 +138,20 @@ export class AccountManagementAccountUsers extends React.Component {
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
         {
-          input: <Input id='password' placeholder="Password" type="text"/>,
-          positionClass: 'half-width-item left'
+          input: <Input id='password' placeholder=" Password"
+            type={this.state.passwordVisible ? 'text' : 'password'}/>,
+          positionClass: 'password-field left'
         },
         {
-          input: <Input id='confirmPw' placeholder="Confirm password" type="text"/>,
-          positionClass: 'half-width-item right'
+          input: <Input id='confirmPw' placeholder=" Confirm password"
+            type={this.state.passwordVisible ? 'text' : 'password'}
+            wrapperClassName={'input-addon-after-outside'}
+            addonAfter={<a className={'input-addon-link' +
+                (this.state.passwordVisible ? ' active' : '')}
+                onClick={this.togglePasswordVisibility}>
+                  <IconEye/>
+              </a>}/>,
+          positionClass: 'password-field left'
         }
       ],
       [
@@ -176,6 +187,12 @@ export class AccountManagementAccountUsers extends React.Component {
 
   toggleInlineAdd() {
     this.setState({ addingNew: !this.state.addingNew, usersGroups: List() })
+  }
+
+  togglePasswordVisibility() {
+    this.setState({
+      passwordVisible: !this.state.passwordVisible
+    })
   }
 
   getGroupsForUser(user) {
