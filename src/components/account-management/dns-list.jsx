@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List, Map, is } from 'immutable'
 
-import UDNButton from '../button.js'
+import UDNButton from '../button'
 import ActionLinks from './action-links.jsx'
 import IconAdd from '../icons/icon-add.jsx'
 import SoaEditForm from './soa-edit-form.jsx'

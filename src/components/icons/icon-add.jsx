@@ -22,4 +22,4 @@ IconAdd.propTypes = {
   className: React.PropTypes.string
 }
 
-module.exports = IconAdd
+export default IconAdd

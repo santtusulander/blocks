@@ -39,7 +39,7 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
 
 DeleteModal.displayName = 'ErrorModal'
 DeleteModal.propTypes = {
-  description: PropTypes.description,
+  description: PropTypes.string,
   fields: PropTypes.object,
   itemToDelete: PropTypes.string,
   onCancel: PropTypes.func,

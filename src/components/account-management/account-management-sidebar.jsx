@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import UDNButton from '../../components/button.js'
-import Sidebar from '../../components/layout/sidebar.jsx'
-import { SidebarLinks } from '../sidebar-links.jsx'
+import UDNButton from '../../components/button'
+import Sidebar from '../../components/layout/sidebar'
+import { SidebarLinks } from '../sidebar-links'
 
 export const AccountManagementSidebar = props => {
   const { accounts, activate, addAccount, activeAccount } = props

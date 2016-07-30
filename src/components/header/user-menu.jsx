@@ -1,10 +1,9 @@
 import React from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
-import { Link } from 'react-router'
 
 import Select from '../select'
 
-const UserMenu = ({open, onToggle, theme, handleThemeChange, logout}) => {
+const UserMenu = ({open, onToggle, theme, goToAccountManagement, handleThemeChange, logout}) => {
   return (
     <Dropdown id="user-menu" pullRight={true}
               open={open}
@@ -45,14 +44,12 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout}) => {
               </div>
             </li>
             <li>
-              <Link
-                id="account-management"
-                to={`/account-management`} activeClassName="active"
-                onClick={onToggle}>
+              <a href="#" id="account-management"
+                onClick={goToAccountManagement}>
                 <div className="user-menu-item">
                   Account Management
                 </div>
-              </Link>
+              </a>
             </li>
           </ul>
         </li>
@@ -67,11 +64,12 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout}) => {
 }
 
 UserMenu.propTypes = {
-  open: React.PropTypes.bool,
-  onToggle: React.PropTypes.func,
-  theme: React.PropTypes.string,
+  goToAccountManagement: React.PropTypes.func,
   handleThemeChange: React.PropTypes.func,
-  logout: React.PropTypes.func
+  logout: React.PropTypes.func,
+  onToggle: React.PropTypes.func,
+  open: React.PropTypes.bool,
+  theme: React.PropTypes.string
 }
 
 export default UserMenu

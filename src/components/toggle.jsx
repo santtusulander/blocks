@@ -1,41 +1,50 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 class Toggle extends React.Component {
   constructor(props) {
-    super(props);
-
+    super(props)
     this.handleChange = this.handleChange.bind(this)
   }
+
   handleChange() {
-    if(this.props.readonly) return
+    if (this.props.readonly) return
     this.props.changeValue(!this.props.value)
   }
+
   render() {
     let className = 'toggle'
-    if(this.props.value) {
+    if (this.props.value) {
       className = `${className} on`
     }
-    if(this.props.readonly) {
+    if (this.props.readonly) {
       className = `${className} readonly`
     }
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     return (
       <div className={className} onClick={this.handleChange}>
         <div className="indicator"/>
-        <div className="off-text">NO</div>
-        <div className="on-text">YES</div>
+        <div className="off-text">{this.props.offText}</div>
+        <div className="on-text">{this.props.onText}</div>
       </div>
-    );
+    )
   }
 }
+
 Toggle.displayName = 'Toggle'
 Toggle.propTypes = {
-  changeValue: React.PropTypes.func,
-  className: React.PropTypes.string,
-  readonly: React.PropTypes.bool,
-  value: React.PropTypes.bool
-};
+  changeValue: PropTypes.func,
+  className: PropTypes.string,
+  offText: PropTypes.string,
+  onText: PropTypes.string,
+  readonly: PropTypes.bool,
+  value: PropTypes.bool
+}
+Toggle.defaultProps = {
+  offText: 'NO',
+  onText: 'YES',
+  changeValue: () => {}
+}
 
-module.exports = Toggle
+export default Toggle
