@@ -66,6 +66,7 @@ class AccountList extends Component {
       [],
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
       [ { input: <FilterChecklistDropdown
+            noClear={true}
             className="inline-add-dropdown"
             values={this.state.accountServices}
             handleCheck={newValues => {
