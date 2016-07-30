@@ -9,7 +9,8 @@ import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
-import { getAnalyticsUrl, getContentUrl, getUrl } from '../../util/helpers.js'
+import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
+  getUrl } from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Header extends React.Component {
     this.handleThemeChange = this.handleThemeChange.bind(this)
     this.toggleAccountMenu = this.toggleAccountMenu.bind(this)
     this.toggleUserMenu = this.toggleUserMenu.bind(this)
+    this.goToAccountManagement = this.goToAccountManagement.bind(this)
 
     this.state = {
       animatingGradient: false,
@@ -52,6 +54,12 @@ class Header extends React.Component {
 
   handleThemeChange(value) {
     this.props.handleThemeChange(value)
+  }
+
+  goToAccountManagement(e) {
+    e.preventDefault()
+    this.props.router.push(getAccountManagementUrlFromParams(this.props.params))
+    this.toggleUserMenu()
   }
 
   activatePurge(e) {
@@ -170,6 +178,8 @@ class Header extends React.Component {
         router.push(getUrl('/account-management', ...params))
       } else if(router.isActive('/security')) {
         router.push(getUrl('/security', ...params))
+      } else if(router.isActive('/support')) {
+        router.push(getUrl('/support', ...params))
       }
     }
     return (
@@ -195,7 +205,7 @@ class Header extends React.Component {
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
                 canGetEdited={activeAccount.get('name')}
                 user={this.props.user}
-                onSelect={(...params) => itemSelectorFunc(...params)}
+                onSelect={itemSelectorFunc}
                 restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
@@ -225,6 +235,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
+                goToAccountManagement={this.goToAccountManagement}
               />
             </li>
           </Nav>
