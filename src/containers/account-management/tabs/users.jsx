@@ -17,6 +17,7 @@ import IconAdd from '../../../components/icons/icon-add'
 import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
+import ArrayCell from '../../../components/array-td/array-td'
 
 import { ROLES } from '../../../constants/account-management-options'
 
@@ -38,6 +39,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.sortedData = this.sortedData.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
   }
+
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
     const { brand, account } = this.props.params
@@ -47,15 +49,16 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.groupActions.fetchGroups(brand, account);
     }
   }
-  componentWillUnmount() {
-    document.removeEventListener('click', this.cancelAdding, false)
-  }
 
   componentWillReceiveProps(nextProps) {
     if(this.props.params.account !== nextProps.params.account) {
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.cancelAdding, false)
   }
 
   changeSort(column, direction) {
@@ -179,25 +182,15 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   getGroupsForUser(user) {
-    const groupId = user.get('group_id')
-    let groups = []
-
-    this.props.groups.forEach(group => {
-      if (group.get('id') === groupId) {
-        groups.push(group.get('name'))
-      }
-    })
-
-    if (!groups.length) {
-      return <em>User has no groups</em>
-    }
-
-    return groups.length < 6 ? groups.join(', ') : `${groups.length} Groups`
+    const groups = user.get('group_id')
+      .map(groupId => this.props.groups.find(group => group.get('id') === groupId).get('name'))
+      .toJS()
+    return groups.length > 0 ? groups : ['User has no groups']
   }
   getRolesForUser(user) {
-    const roles = user.get('roles');
-    return roles.size < 6 ? roles.join(', ') : `${roles.size} Roles`
+    return user.get('roles').map(roleId => ROLES.find(role => role.id === roleId).label).toJS()
   }
+
   getEmailForUser(user) {
     return user.get('email') || user.get('username')
   }
@@ -255,12 +248,8 @@ export class AccountManagementAccountUsers extends React.Component {
                   <td>
                     ********
                   </td>
-                  <td>
-                    {this.getRolesForUser(user)}
-                  </td>
-                  <td>
-                    {this.getGroupsForUser(user)}
-                  </td>
+                  <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                  <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td>
                     <a href="#" onClick={this.editUser(user.get('id'))}>
                       EDIT
