@@ -21,7 +21,7 @@ const SupportPageHeader = (props) => {
 
   return (
     <PageHeader>
-      <p>ACCOUNT SUPPORT</p>
+      <p>SUPPORT</p>
       <AccountSelector
         params={params}
         topBarTexts={{ brand: 'UDN Admin' }}
