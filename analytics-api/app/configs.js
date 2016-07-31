@@ -19,7 +19,7 @@ let environmentConfigs = {
   development: {
     port: 3030,
     dbConnectionLimit: 100,
-    dbHost: 'metrics-db.dal.cdx-dev.unifieddeliverynetwork.net',
+    dbHost: 'metrics-db.sea.cdx-dev.unifieddeliverynetwork.net',
     dbUser: 'ro',
     dbPassword: 'Read0nLy',
     dbName: 'metrics'
