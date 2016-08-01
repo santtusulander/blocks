@@ -130,7 +130,7 @@ class GroupForm extends React.Component {
     const subTitle = this.props.group ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
 
     return (
-      <Modal dialogClassName="group-form-sidebar" show={show}>
+      <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
           <p>{subTitle}</p>
