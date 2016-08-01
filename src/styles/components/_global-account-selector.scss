@@ -16,9 +16,13 @@
   }
 
   .dropdown-menu {
-    width: 270px !important;
+    width: 328px !important;
     max-height: 500px !important;
     overflow-y: auto !important;
+
+    @include md {
+      width: 246px !important;
+    }
 
     li {
       display: flex;
