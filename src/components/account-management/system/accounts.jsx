@@ -152,10 +152,10 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <th width="15%">TYPE</th>
-            <th width="10%">ID</th>
-            <th width="15%">BRAND</th>
-            <th width="30%">SERVICES</th>
+            <TableSorter {...sorterProps} column="type" width="15%">TYPE</TableSorter>
+            <TableSorter {...sorterProps} column="id" width="10%">ID</TableSorter>
+            <TableSorter {...sorterProps} column="brand" width="15%">BRAND</TableSorter>
+            <TableSorter {...sorterProps} column="services" width="30%">SERVICES</TableSorter>
             <th width="8%"/>
           </tr>
           </thead>
