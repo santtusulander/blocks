@@ -58,9 +58,9 @@
   }
 
   h1 {
+    font-size: 40px;
     color: $pale-blue;
     text-transform: uppercase;
-    font-size: 40px;
 
     @include md {
       font-size: 30px;
@@ -68,12 +68,16 @@
   }
 
   .btn.btn-primary {
-    background-color: $pale-blue;
     color: $white;
+    background-color: $pale-blue;
+    fill: $white;
+    stroke: $white;
 
     &:hover {
-      background-color: rgba($pale-blue, 0.8);
       color: $white;
+      background-color: rgba($pale-blue, 0.8);
+      fill: $white;
+      stroke: $white;
     }
   }
 }
