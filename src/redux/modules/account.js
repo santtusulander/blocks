@@ -12,18 +12,21 @@ const ACCOUNT_START_FETCH = 'ACCOUNT_START_FETCH'
 const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED'
 const ACCOUNT_CHANGE_ACTIVE = 'ACCOUNT_CHANGE_ACTIVE'
 const ACCOUNT_CLEAR_ACTIVE = 'ACCOUNT_CLEAR_ACTIVE'
+const ACCOUNT_RESET_CHANGED = 'ACCOUNT_RESET_CHANGED'
 
 const emptyAccounts = Immutable.fromJS({
+  changedAccount: null,
   activeAccount: undefined,
   allAccounts: [],
   fetching: false
 })
 
 export function createSuccess(state, action) {
-  const newAccount = Immutable.fromJS(action.payload)
+  const newAccount = Immutable.fromJS(payload)
   return state.merge({
     activeAccount: newAccount,
-    allAccounts: state.get('allAccounts').push(newAccount)
+    allAccounts: state.get('allAccounts').push(newAccount),
+    changedAccount: { id: action.payload.id, name: action.payload.name }
   })
 }
 
@@ -31,7 +34,8 @@ export function deleteSuccess(state, action) {
   const newAllAccounts = state.get('allAccounts').filterNot(account => account.get('id') == action.payload.id)
   return state.merge({
     allAccounts: newAllAccounts,
-    fetching: false
+    fetching: false,
+    changedAccount: { id: action.payload.id }
   })
 }
 
@@ -53,6 +57,11 @@ export function fetchFailure(state) {
     activeAccount: null,
     fetching: false
   })
+}
+
+export function changedAccountReset(state) {
+  console.log('asdasd')
+  return state.set({ changedAccount: null })
 }
 
 export function fetchAllSuccess(state, action) {
@@ -82,6 +91,7 @@ export function updateSuccess(state, action) {
     state.get('allAccounts').set(currIndex, updatedAccount)
     : state.get('allAccounts')
   return state.merge({
+    changedAccount: { id: action.payload.id, name: action.payload.name },
     activeAccount: updatedAccount,
     allAccounts: updatedAccounts,
     fetching: false
@@ -112,7 +122,8 @@ export default handleActions({
   ACCOUNT_START_FETCH: startFetch,
   ACCOUNT_UPDATED: mapReducers(updateSuccess, updateFailure),
   ACCOUNT_CHANGE_ACTIVE: changeActive,
-  ACCOUNT_CLEAR_ACTIVE: clearActive
+  ACCOUNT_CLEAR_ACTIVE: clearActive,
+  ACCOUNT_RESET_CHANGED: changedAccountReset
 }, emptyAccounts)
 
 // ACTIONS
@@ -152,6 +163,7 @@ export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) 
   .then(parseResponseData)
 })
 
+export const resetChangedAccount = createAction(ACCOUNT_RESET_CHANGED, () => console.log('kutsusu actionia'))
 export const clearActiveAccount = createAction(ACCOUNT_CLEAR_ACTIVE)
 export const startFetching = createAction(ACCOUNT_START_FETCH)
 export const changeActiveAccount = createAction(ACCOUNT_CHANGE_ACTIVE)
