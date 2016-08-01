@@ -4,7 +4,7 @@ import { Table, Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { change } from 'redux-form'
+import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -32,8 +32,11 @@ export class AccountManagementAccountUsers extends React.Component {
       sortDir: 1,
       addingNew: false,
       passwordVisible: false,
-      usersGroups: List()
+      usersGroups: List(),
+      existingMail: null,
+      existingMailMsg: null
     }
+
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.newUser = this.newUser.bind(this)
@@ -47,7 +50,6 @@ export class AccountManagementAccountUsers extends React.Component {
     document.addEventListener('click', this.cancelAdding, false)
     const { brand, account } = this.props.params
     this.props.userActions.fetchUsers(brand, account)
-
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
@@ -72,7 +74,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   newUser({ password, email, roles }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
+    const { userActions: { createUser }, params: { brand, account }, formFieldFocus } = this.props
     const requestBody = {
       password,
       email,
@@ -81,7 +83,16 @@ export class AccountManagementAccountUsers extends React.Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    createUser(requestBody).then(this.toggleInlineAdd)
+    createUser(requestBody).then(res => {
+      if(res.error){
+        this.setState({
+          existingMail: requestBody.email,
+          existingMailMsg: res.payload.message
+        }, () => formFieldFocus('inlineAdd', 'email'))
+      } else {
+        this.toggleInlineAdd()
+      }
+    })
   }
 
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
@@ -90,10 +101,16 @@ export class AccountManagementAccountUsers extends React.Component {
         condition: confirmPw.length === password.length && confirmPw !== password,
         errorText: 'Passwords don\'t match!'
       },
-      email: {
-        condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
-        errorText: 'invalid email!'
-      },
+      email: [
+        {
+          condition: email === this.state.existingMail,
+          errorText: this.state.existingMailMsg
+        },
+        {
+          condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
+          errorText: 'invalid email!'
+        }
+      ],
       password: {
         condition: password.length > 30,
         errorText: 'Password too long!'
@@ -295,6 +312,7 @@ AccountManagementAccountUsers.propTypes = {
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
+  formFieldFocus: React.PropTypes.func,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
@@ -311,7 +329,8 @@ function mapDispatchToProps(dispatch) {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    formFieldFocus: (form, field) => dispatch(focus(form, field))
   };
 }
 
