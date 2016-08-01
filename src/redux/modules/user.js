@@ -197,6 +197,13 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     });
 })
 
+export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
+  return Promise.all(accounts.map(account => axios.get(`${urlBase}/v2/users?brand_id=${brandId}&account_id=${account.get('id')}`)
+    .then(parseResponseData)
+  ))
+  .then(allUsers => fromJS(allUsers).flatten(true))
+})
+
 export const deleteUser = createAction(USER_DELETED, user =>
   axios.delete(`${urlBase}/v2/users/${user}`).then(() => user)
 )

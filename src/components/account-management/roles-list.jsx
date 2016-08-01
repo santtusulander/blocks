@@ -71,7 +71,10 @@ export const RolesList = props => {
                   ).toArray()
                 ]} />
                 <td>
-                  NEEDS API
+                  {props.users
+                    .filter(user => user.get('roles').contains(role.get('id')))
+                    .size
+                  }
                 </td>
                 <td>
                   <ActionLinks
@@ -107,11 +110,13 @@ RolesList.propTypes = {
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
-  showAddNewDialog: React.PropTypes.bool
+  showAddNewDialog: React.PropTypes.bool,
+  users: React.PropTypes.instanceOf(Immutable.List)
 }
 RolesList.defaultProps = {
-  permissions: Immutable.List([]),
-  roles: Immutable.List([])
+  permissions: Immutable.Map(),
+  roles: Immutable.List(),
+  users: Immutable.List()
 }
 
 export default RolesList
