@@ -8,6 +8,7 @@ const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
+const USER_FETCHED = 'USER_FETCHED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
 const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
@@ -61,6 +62,20 @@ export function userLoggedInSuccess(state, action){
 
 export function userLoggedInFailure(){
   return emptyUser
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    currentUser: fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    currentUser: Map(),
+    fetching: false
+  })
 }
 
 export function fetchAllSuccess(state, action) {
@@ -138,6 +153,7 @@ export default handleActions({
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
+  USER_FETCHED: mapReducers(fetchSuccess, fetchFailure),
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
@@ -150,8 +166,8 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
-      "username": username,// superuser
-      "password": password// Video4All!
+      "username": username,
+      "password": password
     },
     {
       headers: {
@@ -177,6 +193,11 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     token: localStorage.getItem('EricssonUDNUserToken') || null,
     username: localStorage.getItem('EricssonUDNUserName')
   }
+})
+
+export const fetchUser = createAction(USER_FETCHED, (username) => {
+  return axios.get(`${urlBase}/v2/users/${username}`)
+    .then(parseResponseData)
 })
 
 export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accountId = null, groupId = null) => {
