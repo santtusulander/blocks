@@ -305,7 +305,7 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
-                params={{ brand: 'udn', account }}
+                params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
@@ -316,23 +316,6 @@ export class AccountManagement extends Component {
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
                 </Dropdown.Toggle>
               </AccountSelector>
-              <div className="account-management-manage-account__actions">
-                <UDNButton bsStyle="success"
-                           pageHeaderBtn={true}
-                           icon={true}
-                           addNew={true}
-                           onClick={() => toggleModal(ADD_ACCOUNT)}>
-                  <IconAdd/>
-                </UDNButton>
-                {this.props.params.account &&
-                  <UDNButton bsStyle="secondary"
-                   pageHeaderBtn={true}
-                   icon={true}
-                   addNew={true}
-                   onClick={() => toggleModal(DELETE_ACCOUNT)}>
-                  <IconTrash/>
-                </UDNButton>}
-              </div>
             </PageHeader>
             {account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
