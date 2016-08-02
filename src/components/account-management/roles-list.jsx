@@ -103,7 +103,8 @@ class RolesList extends React.Component {
                   <td>
                     {role.get('name')}
                   </td>
-                  <ArrayTd items={[
+                  <ArrayTd maxItemsShown={5} items={[/*
+                    TODO: Uncomment these when we support API permissions
                     ...this.labelPermissions(
                       role.get('permissions').get('aaa'),
                       this.props.permissions.get('aaa'),
@@ -113,7 +114,7 @@ class RolesList extends React.Component {
                       role.get('permissions').get('north'),
                       this.props.permissions.get('north'),
                       'North'
-                    ).toArray(),
+                    ).toArray(),*/
                     ...this.labelPermissions(
                       role.get('permissions').get('ui'),
                       this.props.permissions.get('ui'),
