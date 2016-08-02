@@ -71,7 +71,6 @@ class AccountSelector extends Component {
   }
 
   handleItemListChanging({ name, id, action }) {
-    console.log('lista muuttuu')
     const { items } = this.state
     const indexOfChanged = items.findIndex(item => item[0] === id)
     switch(action) {
