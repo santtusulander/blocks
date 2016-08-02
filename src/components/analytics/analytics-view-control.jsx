@@ -6,6 +6,7 @@ import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
+import IconExport from '../icons/icon-export.jsx'
 
 import './analytics-view-control.scss'
 
@@ -138,6 +139,7 @@ const AnalyticsViewControl = (props) => {
               bsStyle="primary"
               disabled={getTabName(props.location.pathname) === 'playback-demo'}
               onClick={props.exportCSV}>
+              <IconExport />
               Export
             </Button>
           </ButtonToolbar>

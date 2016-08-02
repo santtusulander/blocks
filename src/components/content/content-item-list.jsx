@@ -7,7 +7,7 @@ import { Link } from 'react-router'
 import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
-import {formatBitsPerSecond} from '../../util/helpers'
+import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 
 class ContentItemList extends React.Component {
   constructor(props) {
@@ -58,6 +58,12 @@ class ContentItemList extends React.Component {
                 <IconConfiguration/>
               </Link> : ''
             }
+            {this.props.onConfiguration &&
+            <a onClick={this.props.onConfiguration}
+               className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
+              <IconConfiguration/>
+            </a>
+            }
             <Link to={this.props.analyticsLink}
               className="btn btn-sm btn-primary btn-icon btn-round">
               <IconChart/>
@@ -82,8 +88,8 @@ class ContentItemList extends React.Component {
                 </Col>
                 <Col xs={6}>
                   <h1>
-                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0}
-                    <span className="heading-suffix"> {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}</span>
+                    {this.props.timeToFirstByte ? formatTime(this.props.timeToFirstByte.split(' ')[0]).split(' ')[0] : 0}
+                    <span className="heading-suffix"> {this.props.timeToFirstByte ? formatTime(this.props.timeToFirstByte.split(' ')[0]).split(' ')[1] : 'ms'}</span>
                   </h1>
                   <p className="text-sm">Avg. TTFB</p>
                 </Col>
@@ -121,6 +127,7 @@ ContentItemList.propTypes = {
   avgTransfer: React.PropTypes.string,
   cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,

@@ -26,6 +26,14 @@ $icon-two-tone-primary: $dark-blue;
     stroke: $lt-text-color;
   }
 
+  .btn > & {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: middle;
+    fill: inherit;
+    stroke: inherit;
+  }
+
   .btn-icon & {
     position: absolute;
     top: 50%;
@@ -75,5 +83,11 @@ $icon-two-tone-primary: $dark-blue;
     }
   }
 
+  &.icon-export {
+    stroke: none;
 
+    .btn:not(.btn-icon) > & {
+      top: -3px;
+    }
+  }
 }
