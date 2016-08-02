@@ -30,7 +30,7 @@ class RolesList extends React.Component {
         let permissionName = permissions
           .find(permission => permission.get('name') === key)
           .get('title')
-        return `${section}: ${permissionName} (${key})`
+        return permissionName
       })
     return permissionNames;
   }
