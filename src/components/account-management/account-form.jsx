@@ -33,6 +33,9 @@ const validate = (values) => {
   if(!accountName || accountName.length === 0) {
     errors.accountName = 'Account name is required'
   }
+  if( accountName && !(/^[a-zA-Z0-9_\.,\-\&\(\)\[\]]{3,40}$/).test(accountName) ) {
+    errors.accountName = 'Account name is invalid'
+  }
   if(!accountBrand || accountBrand.length === 0) {
     errors.accountBrand = 'Account brand is required'
   }
