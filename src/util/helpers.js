@@ -53,7 +53,7 @@ export function formatBitsPerSecond(bits_per_second, decimals) {
 }
 
 export function formatTime(milliseconds) {
-  milliseconds         = milliseconds || 0
+  milliseconds  = milliseconds || 0
   let formatted = numeral(milliseconds).format('0,0') + ' ms'
 
   if(milliseconds >= 1000) {
