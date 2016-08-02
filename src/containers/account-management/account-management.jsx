@@ -319,7 +319,6 @@ export class AccountManagement extends Component {
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                canGetEdited={activeAccount.get('name')}
                 restrictedTo="account"
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">

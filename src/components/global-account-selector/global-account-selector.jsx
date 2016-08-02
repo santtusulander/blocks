@@ -35,7 +35,7 @@ class AccountSelector extends Component {
     this.tier = null
     this.account = null
     this.group = null
-    this.handleItemListChanging = this.handleItemListChanging.bind(this)
+    this.handleSingleItemChanging = this.handleSingleItemChanging.bind(this)
     this.fetchItems = this.fetchItems.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
@@ -61,8 +61,9 @@ class AccountSelector extends Component {
     open && this.setState({ open: false })
     if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
-    } else if(nextChangedItem && !is(prevChangedItem, nextChangedItem)) {
-      this.handleItemListChanging(nextChangedItem.toJS())
+    }
+    else if(nextChangedItem && !is(prevChangedItem, nextChangedItem)) {
+      this.handleSingleItemChanging(nextChangedItem.toJS())
     }
   }
 
@@ -70,7 +71,7 @@ class AccountSelector extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
 
-  handleItemListChanging({ name, id, action }) {
+  handleSingleItemChanging({ name, id, action }) {
     const { items } = this.state
     const indexOfChanged = items.findIndex(item => item[0] === id)
     switch(action) {
@@ -232,11 +233,12 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
-  canGetEdited: PropTypes.string,
   fetchItems: PropTypes.func,
+  getChangedItem: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
   params: PropTypes.object,
+  resetChanged: PropTypes.func,
   restrictedTo: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
