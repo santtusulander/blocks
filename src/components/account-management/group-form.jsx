@@ -31,6 +31,10 @@ class GroupForm extends React.Component {
     super(props)
 
     this.save = this.save.bind(this)
+    this.state = {
+      usersToAdd: List(),
+      usersToDelete: List()
+    }
   }
 
 
@@ -45,11 +49,6 @@ class GroupForm extends React.Component {
 
       name.onChange(group.get('name'))
     }
-
-    this.setState({
-      usersToAdd: List(),
-      usersToDelete: List()
-    })
   }
 
   save() {
@@ -103,7 +102,6 @@ class GroupForm extends React.Component {
 
   render() {
     const { fields: {name}, show, onCancel } = this.props
-
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -218,7 +216,7 @@ GroupForm.defaultProps = {
 }
 
 export default reduxForm({
-  fields: ['name', 'users'],
+  fields: ['name'],
   form: 'group-edit',
   validate
-})(GroupForm)
+}, state => ({ users: state.user.get('allUsers') }))(GroupForm)
