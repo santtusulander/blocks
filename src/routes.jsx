@@ -11,6 +11,14 @@ import AccountManagementBrands from './components/account-management/system/bran
 import AccountManagementDNS from './components/account-management/system/dns'
 import AccountManagementRoles from './components/account-management/system/roles'
 import AccountManagementServices from './components/account-management/system/services'
+import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
+import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
+import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
+import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
+import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
+import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
+import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
+import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Configurations from './containers/configurations'
@@ -124,17 +132,6 @@ export function getRoute(name, params) {
 
   return route
 }
-
-//Analytics v2
-import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
-
-import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
-import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
-import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
-import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
-import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
-import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
-import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 
 /* helper for creating Analytics Tab-Routes */
 function getAnalyticsTabRoutes() {

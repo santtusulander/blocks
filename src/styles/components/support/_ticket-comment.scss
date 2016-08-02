@@ -1,0 +1,22 @@
+.support-ticket-comments {
+  .support-ticket-comment {
+  }
+}
+
+.support-ticket-comment {
+  padding: 10px 0;
+  position: relative;
+
+  &__header {
+    margin: 0 0 20px 0;
+  }
+
+  &__author {
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  &__created {
+
+  }
+}

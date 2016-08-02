@@ -6,7 +6,7 @@ import { withRouter } from 'react-router'
 
 import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
-import UDNButton from '../../button.js'
+import UDNButton from '../../button'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
@@ -66,7 +66,7 @@ class AccountManagementAccountDetails extends React.Component {
   save() {
     if(!Object.keys(errors).length) {
       const { fields: { accountName, accountType, services } } = this.props
-      this.props.onSave(this.props.account.get('id'), {
+      this.props.onSave('udn', this.props.account.get('id'), {
         name: accountName.value,
         provider_type: Number(accountType.value),
         services: services.value

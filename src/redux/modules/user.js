@@ -208,6 +208,9 @@ export const createUser = createAction(USER_CREATED, user =>
         return res.data
       }
     })
+    .catch(err => {
+      throw new Error(err.data.message)
+    })
 )
 
 export const updateUser = createAction(USER_UPDATED, (email, user) => {

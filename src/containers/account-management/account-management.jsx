@@ -24,9 +24,9 @@ import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
 import DeleteUserModal from '../../components/account-management/delete-user-modal'
-import AccountForm from '../../components/account-management/account-form.jsx'
-import GroupForm from '../../components/account-management/group-form.jsx'
-import UDNButton from '../../components/button.js'
+import AccountForm from '../../components/account-management/account-form'
+import GroupForm from '../../components/account-management/group-form'
+import UDNButton from '../../components/button'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
@@ -43,6 +43,7 @@ export class AccountManagement extends Component {
     super(props)
     this.userToDelete = ''
     this.accountToDelete = null
+    this.accountToUpdate = null
     this.state = {
       groupToDelete: null,
       groupToUpdate: null
@@ -57,6 +58,7 @@ export class AccountManagement extends Component {
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
     this.editAccount = this.editAccount.bind(this)
     this.addAccount = this.addAccount.bind(this)
+    this.showAccountForm = this.showAccountForm.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
@@ -174,11 +176,17 @@ export class AccountManagement extends Component {
     this.props.toggleModal(EDIT_GROUP)
   }
 
-  editAccount(accountId, data) {
-    return this.props.accountActions.updateAccount('udn', accountId, data)
+  editAccount(brandId, accountId, data) {
+    return this.props.accountActions.updateAccount(brandId, accountId, data)
       .then(() => {
+        this.props.toggleModal(null)
         this.showNotification('Account detail updates saved.')
       })
+  }
+
+  showAccountForm(account) {
+    this.accountToUpdate = account
+    this.props.toggleModal(ADD_ACCOUNT)
   }
 
   addAccount(brand, data) {
@@ -219,14 +227,14 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router,
-      dnsData
+      router
+      //dnsData
     } = this.props
 
     const subPage = this.getTabName(),
       isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
-      activeDomain = dnsData && dnsData.get('activeDomain'),
+      //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
@@ -287,10 +295,12 @@ export class AccountManagement extends Component {
       toggleModal,
       params,
       isAdmin,
+      editAccount: this.showAccountForm,
       onSave: this.editAccount,
       uiActions: this.props.uiActions,
       initialValues: {
         accountName: activeAccount.get('name'),
+        accountBrand: 'udn',
         brand: 'udn',
         services: activeAccount.get('services'),
         accountType: accountType && accountType.value
@@ -305,7 +315,7 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
-                params={{ brand: 'udn', account }}
+                params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
@@ -316,22 +326,6 @@ export class AccountManagement extends Component {
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
                 </Dropdown.Toggle>
               </AccountSelector>
-              <div className="account-management-manage-account__actions">
-                <UDNButton bsStyle="success"
-                           pageHeaderBtn={true}
-                           icon={true}
-                           addNew={true}
-                           onClick={() => toggleModal(ADD_ACCOUNT)}>
-                  <IconAdd/>
-                </UDNButton>
-                <UDNButton bsStyle="secondary"
-                           pageHeaderBtn={true}
-                           icon={true}
-                           addNew={true}
-                           onClick={() => toggleModal(DELETE_ACCOUNT)}>
-                  <IconTrash/>
-                </UDNButton>
-              </div>
             </PageHeader>
             {account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
@@ -375,7 +369,8 @@ export class AccountManagement extends Component {
           {accountManagementModal === ADD_ACCOUNT &&
           <AccountForm
             id="account-form"
-            onSave={this.addAccount}
+            onSave={this.editAccount}
+            account={this.accountToUpdate}
             onCancel={() => toggleModal(null)}
             show={true}/>}
           {deleteModalProps && <DeleteModal {...deleteModalProps}/>}

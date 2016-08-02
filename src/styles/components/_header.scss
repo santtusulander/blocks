@@ -53,7 +53,7 @@
     &__toggle {
       display: flex;
       padding: 0 15px 0 10px;
-      margin: ($bar-height / 3) ($bar-height / 3) ($bar-height / 3) 0;
+      margin: 26px 26px 26px 0;
       border-right: 1px solid $silver-60;
 
       @include md {
@@ -61,7 +61,7 @@
       }
 
       @include sm {
-        margin: 20px 20px 20px 0;
+        margin: 20px 20px 19px 0;
       }
 
       .dropdown-toggle {

@@ -4,6 +4,7 @@ import { Table, Button, Row, Col, Modal, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -13,10 +14,14 @@ import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
+import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
+import ArrayCell from '../../../components/array-td/array-td'
+
+import { ROLES } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -28,11 +33,13 @@ export class AccountManagementAccountUsers extends React.Component {
       sortDir: 1,
       showEditModal: false,
       addingNew: false,
-      usersGroups: List()
+      passwordVisible: false,
+      usersGroups: List(),
+      existingMail: null,
+      existingMailMsg: null
     }
 
     this.notificationTimeout = null
-
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.newUser = this.newUser.bind(this)
@@ -42,29 +49,33 @@ export class AccountManagementAccountUsers extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
   }
+
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
     const { brand, account } = this.props.params
     this.props.userActions.fetchUsers(brand, account)
-
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.params.account !== nextProps.params.account) {
+      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
+      this.props.resetRoles()
+    }
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.cancelAdding, false)
   }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account && !this.state.usersGroups.isEmpty()) {
-      this.setState({ usersGroups: List() })
-    }
   }
 
   changeSort(column, direction) {
@@ -75,18 +86,25 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   newUser({ password, email, roles }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
+    const { userActions: { createUser }, params: { brand, account }, formFieldFocus } = this.props
     const requestBody = {
       password,
       email,
       roles: [roles],
-      first_name: 'notSet',
-      last_name: 'notSet',
       brand_id: brand,
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    createUser(requestBody).then(this.toggleInlineAdd)
+    createUser(requestBody).then(res => {
+      if(res.error){
+        this.setState({
+          existingMail: requestBody.email,
+          existingMailMsg: res.payload.message
+        }, () => formFieldFocus('inlineAdd', 'email'))
+      } else {
+        this.toggleInlineAdd()
+      }
+    })
   }
 
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
@@ -95,10 +113,16 @@ export class AccountManagementAccountUsers extends React.Component {
         condition: confirmPw.length === password.length && confirmPw !== password,
         errorText: 'Passwords don\'t match!'
       },
-      email: {
-        condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
-        errorText: 'invalid email!'
-      },
+      email: [
+        {
+          condition: email === this.state.existingMail,
+          errorText: this.state.existingMailMsg
+        },
+        {
+          condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
+          errorText: 'invalid email!'
+        }
+      ],
       password: {
         condition: password.length > 30,
         errorText: 'Password too long!'
@@ -139,25 +163,37 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
+    const roles = ROLES
+      .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
+      .map(role => [ role.id, role.label ])
     return [
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
         {
-          input: <Input id='password' placeholder=" Password" type="text"/>,
-          positionClass: 'half-width-item left'
+          input: <Input id='password' placeholder=" Password"
+            type={this.state.passwordVisible ? 'text' : 'password'}/>,
+          positionClass: 'password-field left'
         },
         {
-          input: <Input id='confirmPw' placeholder=" Confirm password" type="text"/>,
-          positionClass: 'half-width-item right'
+          input: <Input id='confirmPw' placeholder=" Confirm password"
+            type={this.state.passwordVisible ? 'text' : 'password'}
+            wrapperClassName={'input-addon-after-outside'}
+            addonAfter={<a className={'input-addon-link' +
+                (this.state.passwordVisible ? ' active' : '')}
+                onClick={this.togglePasswordVisibility}>
+                  <IconEye/>
+              </a>}/>,
+          positionClass: 'password-field left'
         }
       ],
       [
         {
           input: <SelectWrapper
             id='roles'
+            numericValues={true}
             className="inline-add-dropdown"
-            options={['SuperAdmin', 'Support'].map(item => [item, item])}/>,
-          positionClass: 'left'
+            options={roles}/>,
+          positionClass: 'col-sm-9'
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
@@ -169,15 +205,14 @@ export class AccountManagementAccountUsers extends React.Component {
       [
         {
           input: <FilterChecklistDropdown
+            noClear={true}
             className="inline-add-dropdown"
             values={this.state.usersGroups}
             handleCheck={newValues => {
               this.setState({ usersGroups: newValues })
             }}
-            options={this.props.groups.map(group => {
-              return Map({ value: group.get('id'), label: group.get('name') })
-            })}/>,
-          positionClass: 'left'
+            options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
+          positionClass: 'col-sm-6'
         }
       ]
     ]
@@ -187,26 +222,22 @@ export class AccountManagementAccountUsers extends React.Component {
     this.setState({ addingNew: !this.state.addingNew, usersGroups: List() })
   }
 
-  getGroupsForUser(user) {
-    const groupId = user.get('group_id')
-    let groups = []
-
-    this.props.groups.forEach(group => {
-      if (group.get('id') === groupId) {
-        groups.push(group.get('name'))
-      }
+  togglePasswordVisibility() {
+    this.setState({
+      passwordVisible: !this.state.passwordVisible
     })
+  }
 
-    if (!groups.length) {
-      return <em>User has no groups</em>
-    }
-
-    return groups.length < 6 ? groups.join(', ') : `${groups.length} Groups`
+  getGroupsForUser(user) {
+    const groups = user.get('group_id')
+      .map(groupId => this.props.groups.find(group => group.get('id') === groupId).get('name'))
+      .toJS()
+    return groups.length > 0 ? groups : ['User has no groups']
   }
   getRolesForUser(user) {
-    const roles = user.get('roles');
-    return roles.size < 6 ? roles.join(', ') : `${roles.size} Roles`
+    return user.get('roles').map(roleId => ROLES.find(role => role.id === roleId).label).toJS()
   }
+
   getEmailForUser(user) {
     return user.get('email') || user.get('username')
   }
@@ -292,12 +323,8 @@ export class AccountManagementAccountUsers extends React.Component {
                   <td>
                     ********
                   </td>
-                  <td>
-                    {this.getRolesForUser(user)}
-                  </td>
-                  <td>
-                    {this.getGroupsForUser(user)}
-                  </td>
+                  <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                  <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td>
                     <a href="#" onClick={() => {this.editUser(user)}}>
                       EDIT
@@ -328,10 +355,13 @@ export class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
+  account: React.PropTypes.instanceOf(Map),
   deleteUser: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
+  resetRoles: React.PropTypes.func,
+  formFieldFocus: React.PropTypes.func,
   userActions: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
@@ -346,9 +376,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    formFieldFocus: (form, field) => dispatch(focus(form, field))
   };
 }
 

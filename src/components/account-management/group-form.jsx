@@ -79,7 +79,7 @@ class GroupForm extends React.Component {
     // New members will be just removed from the new members list
     if (this.state.usersToAdd.includes(userEmail)) {
       this.setState({
-        usersToAdd: this.state.usersToAdd.take(this.state.usersToAdd.keyOf(userEmail)) // keyOf
+        usersToAdd: this.state.usersToAdd.delete(this.state.usersToAdd.keyOf(userEmail))
       })
     }
     // Existing members will be added to the to be deleted list
@@ -92,7 +92,7 @@ class GroupForm extends React.Component {
 
   undoDelete(userEmail) {
     this.setState({
-      usersToDelete: this.state.usersToDelete.take(this.state.usersToDelete.keyOf(userEmail))
+      usersToDelete: this.state.usersToDelete.delete(this.state.usersToDelete.keyOf(userEmail))
     })
   }
 
@@ -117,6 +117,7 @@ class GroupForm extends React.Component {
       return members
     }, [])
 
+
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
       const userEmail = user.get('email')
       if(!user.get('group_id').includes(this.props.group.get('id'))) {
@@ -129,7 +130,7 @@ class GroupForm extends React.Component {
     const subTitle = this.props.group ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
 
     return (
-      <Modal dialogClassName="group-form-sidebar" show={show}>
+      <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
           <p>{subTitle}</p>
@@ -150,6 +151,7 @@ class GroupForm extends React.Component {
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
+                noClear={true}
                 options={addMembersOptions}
                 values={this.state.usersToAdd || List()}
                 handleCheck={val => {

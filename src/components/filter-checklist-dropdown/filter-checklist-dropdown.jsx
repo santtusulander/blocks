@@ -159,10 +159,10 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
-            <li className="clear-container">
+            {!this.props.noClear && <li className="clear-container">
               <Button bsClass="btn btn-block btn-primary"
                       onClick={this.handleClear}>Clear</Button>
-            </li>
+            </li>}
           </Dropdown.Menu>
         </Dropdown>
       </div>
@@ -174,6 +174,7 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
+  noClear: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),
   values: React.PropTypes.instanceOf(List)
 }
