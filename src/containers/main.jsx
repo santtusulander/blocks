@@ -38,11 +38,16 @@ export class Main extends React.Component {
   }
   componentWillMount() {
     this.props.userActions.checkToken()
-    const accountId = this.props.activeAccount.size ?
-      this.props.activeAccount.get('id') :
-      this.props.params.account
+      .then(action => {
+        if(action.error) {
+          return false
+        }
+        const accountId = this.props.activeAccount.size ?
+          this.props.activeAccount.get('id') :
+          this.props.params.account
 
-    this.props.fetchAccountData(accountId, this.props.accounts)
+        return this.props.fetchAccountData(accountId, this.props.accounts)
+      })
   }
 
   //update account if account prop changed (in url) or clear active if there is no account in route
@@ -126,7 +131,17 @@ export class Main extends React.Component {
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
+  pageAllowsAnon() {
+    return this.props.location.pathname === '/login' ||
+    this.props.location.pathname === '/forgot-password' ||
+    this.props.location.pathname === '/set-password' ||
+    this.props.location.pathname === '/starburst-help' ||
+    this.props.location.pathname === '/styleguide'
+  }
   render() {
+    if(!this.props.currentUser.size && !this.pageAllowsAnon()) {
+      return <div>Loading...</div>
+    }
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
@@ -147,11 +162,7 @@ export class Main extends React.Component {
 
     return (
       <div className={classNames}>
-      {this.props.user.get('loggedIn') &&
-        this.props.location.pathname !== '/login' &&
-        this.props.location.pathname !== '/forgot-password' &&
-        this.props.location.pathname !== '/set-password' &&
-        this.props.location.pathname !== '/starburst-help' ?
+      {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
         <Navigation
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
@@ -161,11 +172,7 @@ export class Main extends React.Component {
           />
         : ''
       }
-        {this.props.user.get('loggedIn') &&
-          this.props.location.pathname !== '/login' &&
-          this.props.location.pathname !== '/forgot-password' &&
-          this.props.location.pathname !== '/set-password' &&
-          this.props.location.pathname !== '/starburst-help' ?
+        {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
           <Header
             accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
@@ -237,6 +244,7 @@ Main.propTypes = {
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetchAccountData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
@@ -254,7 +262,6 @@ Main.propTypes = {
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   userActions: React.PropTypes.object,
-  username: React.PropTypes.string,
   viewingChart: React.PropTypes.bool
 }
 
@@ -264,6 +271,7 @@ Main.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  currentUser: Immutable.Map(),
   properties: Immutable.List(),
   user: Immutable.Map()
 }
@@ -275,6 +283,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     activePurge: state.purge.get('activePurge'),
+    currentUser: state.user.get('currentUser'),
     fetching: state.account.get('fetching') ||
       state.content.get('fetching') ||
       state.group.get('fetching') ||
@@ -289,7 +298,6 @@ function mapStateToProps(state) {
     infoDialogOptions: state.ui.get('infoDialogOptions'),
     theme: state.ui.get('theme'),
     user: state.user,
-    username: state.user.get('username'),
     viewingChart: state.ui.get('viewingChart'),
     breadcrumbs: state.ui.get('breadcrumbs')
   };

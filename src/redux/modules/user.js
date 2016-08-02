@@ -21,6 +21,7 @@ const loginAxios = axios.create()
 
 const emptyUser = Map({
   allUsers: List(),
+  currentUser: Map(),
   fetching: false,
   loggedIn: false
 })
@@ -136,7 +137,8 @@ export function userTokenChecked(state, action){
 
     return state.merge({
       loggedIn: true,
-      username: action.payload.username
+      username: action.payload.user.email,
+      currentUser: fromJS(action.payload.user)
     })
   }
   else {
@@ -189,9 +191,23 @@ export const logOut = createAction(USER_LOGGED_OUT)
 export const startFetching = createAction(USER_START_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  return {
-    token: localStorage.getItem('EricssonUDNUserToken') || null,
-    username: localStorage.getItem('EricssonUDNUserName')
+  const username = localStorage.getItem('EricssonUDNUserName')
+  const token = localStorage.getItem('EricssonUDNUserToken')
+  if(username && token) {
+    return loginAxios.get(`${urlBase}/v2/users/${username}`,
+      {headers: {'X-Auth-Token': token}}
+    )
+    .then(res => {
+      if(res) {
+        return {
+          token: token,
+          user: res.data
+        }
+      }
+    })
+  }
+  else {
+    return Promise.reject({data:{message:"No token"}})
   }
 })
 
@@ -211,11 +227,7 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
   }
 
   return axios.get(`${urlBase}/v2/users${query}`)
-    .then((res) => {
-      if(res) {
-        return res.data;
-      }
-    });
+    .then(parseResponseData)
 })
 
 export const deleteUser = createAction(USER_DELETED, user =>
@@ -224,11 +236,7 @@ export const deleteUser = createAction(USER_DELETED, user =>
 
 export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
-    .then(res => {
-      if(res) {
-        return res.data
-      }
-    })
+    .then(parseResponseData)
     .catch(err => {
       throw new Error(err.data.message)
     })
@@ -251,9 +259,5 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
 //     "password": "Video4All!",
 //     "account_id": 1}
 //   })
-//   .then((res) => {
-//     if(res.data) {
-//       return res.data
-//     }
-//   })
+//   .then(parseResponseData)
 // })

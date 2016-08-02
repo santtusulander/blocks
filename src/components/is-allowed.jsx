@@ -5,10 +5,6 @@ import { connect } from 'react-redux'
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 
-
-
-// TODO: I think this component needs to fetch currentUser and roles.
-// It breaks on a page refresh because the store doesn't contain the necessary bits.
 class IsAllowed extends Component {
   constructor(props) {
     super(props)
