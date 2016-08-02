@@ -1,28 +1,35 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import TestUtils from 'react-addons-test-utils'
 import { fromJS } from 'immutable'
-import { ROLE_UDN, ROLE_CONTENT_PROVIDER, ROLE_SERVICE_PROVIDER } from '../../../constants/roles.js'
 
 jest.dontMock('../roles-list.jsx')
-const RolesList = require('../roles-list.jsx').RolesList
+jest.dontMock('../action-links.jsx')
+jest.dontMock('../../table-sorter.jsx')
+jest.dontMock('../account-management-header.jsx')
+jest.dontMock('../../array-td/array-td.jsx')
+const RolesList = require('../roles-list.jsx')
 
 const fakeRoles = fromJS([
   {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {
-    resources: {
+    aaa: {
       content: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    north: {
       analytics: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    ui: {
       analytics_cp_traffic: {
         list: {allowed: true},
         create: {allowed: true},
@@ -33,21 +40,25 @@ const fakeRoles = fromJS([
     }
   }},
   {id: 2, name: 'Content Provider', parentRoles: [2], permissions: {
-    resources: {
+    aaa: {
       content: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    north: {
       analytics: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    ui: {
       analytics_cp_traffic: {
         list: {allowed: true},
         create: {allowed: true},
@@ -58,21 +69,25 @@ const fakeRoles = fromJS([
     }
   }},
   {id: 3, name: 'Service Provider', parentRoles: [3], permissions: {
-    resources: {
+    aaa: {
       content: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    north: {
       analytics: {
         list: {allowed: true},
         create: {allowed: true},
         show: {allowed: true},
         modify: {allowed: true},
         delete: {allowed: true}
-      },
+      }
+    },
+    ui: {
       analytics_cp_traffic: {
         list: {allowed: true},
         create: {allowed: true},
@@ -84,28 +99,48 @@ const fakeRoles = fromJS([
   }}
 ])
 
-const fakePermissions = fromJS([
-  {id: 'content', name: 'Content'},
-  {id: 'analytics', name: 'Analytics'},
-  {id: 'analytics_cp_traffic', name: 'Analytics: CP: Traffic'}
-])
+const fakePermissions = fromJS({
+  aaa :
+    [{name: 'content', title: 'Content'}]
+  ,
+  north :
+    [{name: 'analytics', title: 'Analytics'}]
+  ,
+  ui :
+    [{name: 'analytics_cp_traffic', title: 'Analytics: CP: Traffic'}]
+
+})
 
 describe('RolesList', () => {
-
   it('should exist', () => {
-    const list = shallow(<RolesList/>)
-    expect(list.length).toBe(1)
-  })
+    let rolesList = TestUtils.renderIntoDocument(
+      <RolesList/>
+    );
+    expect(TestUtils.isCompositeComponent(rolesList)).toBeTruthy();
+  });
 
   it('should list roles', () => {
-    const list = shallow(
+    let rolesList = TestUtils.renderIntoDocument(
       <RolesList roles={fakeRoles} permissions={fakePermissions}/>
-    )
-    expect(list.find('.roles-list-row').length).toBe(3)
-  })
+    );
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'tr').length).toBe(4)
+  });
 
-  it('should show empty message', () => {
-    const list = shallow(<RolesList/>)
-    expect(list.find('#empty-msg').length).toBe(1)
-  })
+  it('should list roles', () => {
+    let rolesList = TestUtils.renderIntoDocument(
+      <RolesList/>
+    );
+    expect(TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'div')[0].textContent).toContain('No roles found')
+  });
+
+  it('can sort roles', () => {
+    let rolesList = TestUtils.renderIntoDocument(
+      <RolesList roles={fakeRoles} permissions={fakePermissions}/>
+    );
+    let tds = TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'td');
+    expect(tds[0].textContent).toContain('UDN Admin');
+    rolesList.changeSort('name', 1)
+    tds = TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'td');
+    expect(tds[0].textContent).toContain('Content Provider');
+  });
 })

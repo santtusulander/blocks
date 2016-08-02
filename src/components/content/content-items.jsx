@@ -311,7 +311,7 @@ class ContentItems extends React.Component {
               </ReactCSSTransitionGroup>
             )}
 
-            {this.state.showEditModal && this.getTier() === 'brand' &&
+            {this.state.showModal && this.getTier() === 'brand' &&
               <AccountForm
                 id="account-form"
                 account={this.state.itemToEdit}
@@ -319,7 +319,7 @@ class ContentItems extends React.Component {
                 onCancel={this.hideModal}
                 show={true}/>
             }
-            {this.state.showEditModal && this.getTier() === 'account' &&
+            {this.state.showModal && this.getTier() === 'account' &&
               <GroupForm
                 id="group-form"
                 group={this.state.itemToEdit}
@@ -328,7 +328,7 @@ class ContentItems extends React.Component {
                 onCancel={this.hideModal}
                 show={true}/>
             }
-            {this.state.showEditModal && this.getTier() === 'group' &&
+            {this.state.showModal && this.getTier() === 'group' &&
               <Modal show={true} dialogClassName="configuration-sidebar"
                 onHide={this.hideModal}>
                 <Modal.Header>

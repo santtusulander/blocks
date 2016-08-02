@@ -106,7 +106,7 @@ class AccountForm extends React.Component {
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
     return (
-      <Modal dialogClassName="account-form-sidebar" show={show}>
+      <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
           <p>{subTitle}</p>
