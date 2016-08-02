@@ -58,6 +58,12 @@ class ContentItemList extends React.Component {
                 <IconConfiguration/>
               </Link> : ''
             }
+            {this.props.onConfiguration &&
+            <a onClick={this.props.onConfiguration}
+               className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
+              <IconConfiguration/>
+            </a>
+            }
             <Link to={this.props.analyticsLink}
               className="btn btn-sm btn-primary btn-icon btn-round">
               <IconChart/>
@@ -121,6 +127,7 @@ ContentItemList.propTypes = {
   avgTransfer: React.PropTypes.string,
   cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,
