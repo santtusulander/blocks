@@ -218,7 +218,7 @@ GroupForm.defaultProps = {
 }
 
 export default reduxForm({
-  fields: ['name', 'members', 'users'],
+  fields: ['name', 'users'],
   form: 'group-edit',
   validate
 })(GroupForm)

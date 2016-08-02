@@ -300,7 +300,6 @@ class ContentItemChart extends React.Component {
                   className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
-
               }
               {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
