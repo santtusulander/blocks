@@ -92,12 +92,16 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name">Role</TableSorter>
               <th>Permissions</th>
               <th>Assigned To</th>
-              <th></th>
+              <th width="1%"></th>
             </tr>
           </thead>
 
           <tbody>
             {sortedRoles.map( (role, i) => {
+              const userCount = this.props.users
+                .filter(user => user.get('roles').contains(role.get('id')))
+                .size
+
               return (
                 <tr className='roles-list-row' key={i}>
                   <td>
@@ -122,10 +126,7 @@ class RolesList extends React.Component {
                     ).toArray()
                   ]} />
                   <td>
-                    {this.props.users
-                      .filter(user => user.get('roles').contains(role.get('id')))
-                      .size
-                    }
+                    {userCount} User{userCount !== 1 && 's'}
                   </td>
                   <td>
                     <ActionLinks
