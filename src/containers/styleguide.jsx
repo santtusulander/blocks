@@ -40,6 +40,7 @@ import IconDelete        from '../components/icons/icon-delete'
 import IconEdit          from '../components/icons/icon-edit'
 import IconEmail         from '../components/icons/icon-email'
 import IconEricsson      from '../components/icons/icon-ericsson'
+import IconExport        from '../components/icons/icon-export'
 import IconEye           from '../components/icons/icon-eye'
 import IconHeaderCaret   from '../components/icons/icon-header-caret'
 import IconIncident      from '../components/icons/icon-incident'
@@ -439,6 +440,11 @@ class Styleguide extends React.Component {
             IconEricsson
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconExport />
+            <br />
+            IconExport
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconEye />
             <br />
             IconEye
@@ -452,6 +458,11 @@ class Styleguide extends React.Component {
             <IconIncident />
             <br />
             IconIncident
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconInfo />
+            <br />
+            IconInfo
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconIntegration />
@@ -502,11 +513,6 @@ class Styleguide extends React.Component {
             <IconSupport />
             <br />
             IconSupport
-          </span>
-          <span className="col-xs-3" style={{marginBottom: '1em'}}>
-            <IconInfo />
-            <br />
-            IconInfo
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconTask />
