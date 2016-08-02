@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import ReactDOM from 'react-dom'
+import { findDOMNode } from 'react-dom'
 import Immutable from 'immutable'
 
 import {
@@ -58,7 +58,7 @@ class AccountSelector extends Component {
   }
 
   handleClick(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+    if (findDOMNode(this).contains(e.target)) {
       return
     }
 
