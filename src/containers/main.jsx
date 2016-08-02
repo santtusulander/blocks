@@ -11,6 +11,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
+import * as rolesActionCreators from '../redux/modules/roles'
 
 import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -42,6 +43,7 @@ export class Main extends React.Component {
         if(action.error) {
           return false
         }
+        this.props.rolesActions.fetchRoles()
         const accountId = this.props.activeAccount.size ?
           this.props.activeAccount.get('id') :
           this.props.params.account
@@ -139,7 +141,7 @@ export class Main extends React.Component {
     this.props.location.pathname === '/styleguide'
   }
   render() {
-    if(!this.props.currentUser.size && !this.pageAllowsAnon()) {
+    if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
       return <div>Loading...</div>
     }
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
@@ -254,6 +256,8 @@ Main.propTypes = {
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   showErrorDialog: React.PropTypes.bool,
@@ -273,6 +277,7 @@ Main.defaultProps = {
   activePurge: Immutable.Map(),
   currentUser: Immutable.Map(),
   properties: Immutable.List(),
+  roles: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -293,6 +298,7 @@ function mapStateToProps(state) {
       state.visitors.get('fetching'),
     notification: state.ui.get('notification'),
     properties: state.host.get('allHosts'),
+    roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),
     showInfoDialog: state.ui.get('showInfoDialog'),
     infoDialogOptions: state.ui.get('infoDialogOptions'),
@@ -324,6 +330,7 @@ function mapDispatchToProps(dispatch) {
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     fetchAccountData: fetchAccountData
   }
 }

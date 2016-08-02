@@ -5,6 +5,8 @@ let permissionMapping = {};
 // This mapping connects permission constants to the permissions attached to roles.
 
 // Sections
+permissionMapping[PERMISSIONS.VIEW_ACCOUNT_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'account'])
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'analytics'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_SECTION] =
@@ -43,6 +45,6 @@ permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-  let userRoles = user.get('roles');
+  const userRoles = user.get('roles')
   return userRoles.some(roleId => permissionMapping[permission](roles.get(roleId)))
 }
