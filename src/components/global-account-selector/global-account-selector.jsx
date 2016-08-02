@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Map, fromJS } from 'immutable'
+import { Map, fromJS, is } from 'immutable'
 import axios from 'axios'
 
 import { resetChangedAccount } from '../../redux/modules/account'
@@ -55,13 +55,14 @@ class AccountSelector extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { params, getChangedItem } = this.props
-    const changedItem = getChangedItem(this.tier)
+    const prevChangedItem = getChangedItem(this.tier)
+    const nextChangedItem = nextProps.getChangedItem(this.tier)
     let { open } = this.state
     open && this.setState({ open: false })
     if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
-    } else if(changedItem) {
-      this.handleItemListChanging(changedItem.toJS())
+    } else if(nextChangedItem && !is(prevChangedItem, nextChangedItem)) {
+      this.handleItemListChanging(nextChangedItem.toJS())
     }
   }
 
@@ -69,15 +70,16 @@ class AccountSelector extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
 
-  handleItemListChanging({ name, id }) {
+  handleItemListChanging({ name, id, action }) {
+    console.log('lista muuttuu')
     const { items } = this.state
     const indexOfChanged = items.findIndex(item => item[0] === id)
-    if(indexOfChanged < 0) {
-      items.push([id, name])
-    } else if(name) {
-      items[indexOfChanged] = [id, name]
-    } else {
-      items.splice(indexOfChanged, 1)
+    switch(action) {
+      case 'delete': items.splice(indexOfChanged, 1)
+        break
+      case 'edit': items[indexOfChanged] = [id, name]
+        break
+      case 'add': items.push([id, name])
     }
     this.setState({ items })
   }
@@ -207,9 +209,12 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { topBarTexts, resetChanged, getChanged, restrictedTo, ...other } = this.props
+    const { topBarTexts, resetChanged, getChangedItem, restrictedTo, ...other } = this.props
     const menuProps = Object.assign(other, {
-      toggle: () => this.setState({ open: !this.state.open }),
+      toggle: () => {
+        getChangedItem(this.tier) !== null && !this.state.open && resetChanged(this.tier)
+        this.setState({ open: !this.state.open })
+      },
       onSearch: e => this.setState({ searchValue: e.target.value }),
       drillable: restrictedTo
         && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))

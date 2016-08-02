@@ -22,11 +22,11 @@ const emptyAccounts = Immutable.fromJS({
 })
 
 export function createSuccess(state, action) {
-  const newAccount = Immutable.fromJS(payload)
+  const newAccount = Immutable.fromJS(action.payload)
   return state.merge({
     activeAccount: newAccount,
     allAccounts: state.get('allAccounts').push(newAccount),
-    changedAccount: { id: action.payload.id, name: action.payload.name }
+    changedAccount: { id: action.payload.id, name: action.payload.name, action: 'add' }
   })
 }
 
@@ -35,7 +35,7 @@ export function deleteSuccess(state, action) {
   return state.merge({
     allAccounts: newAllAccounts,
     fetching: false,
-    changedAccount: { id: action.payload.id }
+    changedAccount: { id: action.payload.id, action: 'delete' }
   })
 }
 
@@ -60,8 +60,7 @@ export function fetchFailure(state) {
 }
 
 export function changedAccountReset(state) {
-  console.log('asdasd')
-  return state.set({ changedAccount: null })
+  return state.set('changedAccount', null)
 }
 
 export function fetchAllSuccess(state, action) {
@@ -91,7 +90,7 @@ export function updateSuccess(state, action) {
     state.get('allAccounts').set(currIndex, updatedAccount)
     : state.get('allAccounts')
   return state.merge({
-    changedAccount: { id: action.payload.id, name: action.payload.name },
+    changedAccount: { id: action.payload.id, name: action.payload.name, action: 'edit' },
     activeAccount: updatedAccount,
     allAccounts: updatedAccounts,
     fetching: false
@@ -163,7 +162,7 @@ export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) 
   .then(parseResponseData)
 })
 
-export const resetChangedAccount = createAction(ACCOUNT_RESET_CHANGED, () => console.log('kutsusu actionia'))
+export const resetChangedAccount = createAction(ACCOUNT_RESET_CHANGED)
 export const clearActiveAccount = createAction(ACCOUNT_CLEAR_ACTIVE)
 export const startFetching = createAction(ACCOUNT_START_FETCH)
 export const changeActiveAccount = createAction(ACCOUNT_CHANGE_ACTIVE)
