@@ -57,7 +57,7 @@ class AccountSelector extends Component {
     const { params, getChangedItem } = this.props
     const prevChangedItem = getChangedItem(this.tier)
     const nextChangedItem = nextProps.getChangedItem(this.tier)
-    let { open } = this.state
+    const { open } = this.state
     open && this.setState({ open: false })
     if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
