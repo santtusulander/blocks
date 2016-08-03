@@ -159,7 +159,7 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
-    const roles = ROLES_MAPPING
+    const roleOptions = ROLES_MAPPING
       .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
       .map(mapped_role => [
         mapped_role.id,
@@ -191,7 +191,7 @@ export class AccountManagementAccountUsers extends React.Component {
             id='roles'
             numericValues={true}
             className="inline-add-dropdown"
-            options={roles}/>,
+            options={roleOptions}/>,
           positionClass: 'col-sm-9'
         },
         {
