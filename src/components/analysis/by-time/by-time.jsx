@@ -144,7 +144,7 @@ class AnalysisByTime extends React.Component {
     const primaryData = this.props.primaryData || []
     let secondaryData = this.props.secondaryData || []
     if(!primaryData.length && !secondaryData.length) {
-      return <div>No data found.</div>
+      return <div className="no-data-list-section section-sm text-sm"><p>No data found.</p></div>
     }
     if(this.props.stacked && primaryData && primaryData.length &&
       secondaryData && secondaryData.length) {

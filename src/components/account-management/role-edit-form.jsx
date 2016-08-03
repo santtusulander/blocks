@@ -4,8 +4,6 @@ import {reduxForm} from 'redux-form'
 
 import { Modal, Input, ButtonToolbar, Button, Table } from 'react-bootstrap'
 
-import CheckboxArray from '../checkboxes'
-import PermissionSelection from '../permission-selection'
 import Toggle from '../toggle'
 
 import './role-edit-form.scss'
@@ -29,7 +27,7 @@ const validate = values => {
 const RolesEditForm = (props) => {
 
   const { fields: { roleName } } = props
-
+  /*TODO: Enable in the future when roles are editable, after 0.8
   const rolesArray = props.roles.map((role) => {
     return {
       value: role.get('id'),
@@ -41,14 +39,14 @@ const RolesEditForm = (props) => {
     value: props.editRole.get('parentRoles'),
     onChange: () => null
   }
-  // TODO: Fix this when API returns permission options
-  const editPerms = Immutable.Map([
-    ...props.editRole.get('permissions').get('aaa'),
-    ...props.editRole.get('permissions').get('north')
-  ])
+  */
   const editPermsUI = Immutable.Map([
     ...props.editRole.get('permissions').get('ui')
   ])
+
+  const getPermissionName = function(permissionKey, section) {
+    return props.permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
+  }
 
   return (
     <Modal
@@ -88,7 +86,7 @@ const RolesEditForm = (props) => {
         <hr/>
         */}
 
-        <label>API Permissions</label>
+        <label>Permissions</label>
 
         <Table className="table-striped">
           <thead>
@@ -97,42 +95,11 @@ const RolesEditForm = (props) => {
             </tr>
           </thead>
           <tbody>
-            {editPerms.map((permissions, i) => {
+            {editPermsUI.map((permission, permissionKey) => {
               return (
-                <tr key={i}>
+                <tr key={permissionKey}>
                   <td className="no-border">
-                    {i}
-                  </td>
-                  <td>
-                    {/*TODO: Remove disabled prop in the future when roles are editable*/}
-                    <PermissionSelection
-                      className="pull-right"
-                      onChange={() => null}
-                      disabled={true}
-                      permissions={permissions}/>
-                  </td>
-                </tr>
-              )
-            }).toList()}
-          </tbody>
-        </Table>
-
-        <hr/>
-
-        <label>UI Permissions</label>
-
-        <Table className="table-striped">
-          <thead>
-            <tr>
-              <th colSpan="3">PERMISSION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {editPermsUI.map((permission, permissionName) => {
-              return (
-                <tr key={permissionName}>
-                  <td className="no-border">
-                    {permissionName}
+                    {getPermissionName(permissionKey, 'ui')}
                   </td>
                   <td>
                     {/*TODO: Remove readonly prop in the future when roles are editable*/}
