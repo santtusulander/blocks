@@ -22,7 +22,7 @@ import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
 
-import { ROLES } from '../../../constants/account-management-options'
+import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -159,9 +159,12 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
-    const roles = ROLES
+    const roles = ROLES_MAPPING
       .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
-      .map(role => [ role.id, role.label ])
+      .map(mapped_role => [
+        mapped_role.id,
+        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+      ])
     return [
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
