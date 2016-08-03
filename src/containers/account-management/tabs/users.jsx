@@ -348,6 +348,7 @@ export class AccountManagementAccountUsers extends React.Component {
             groups={this.props.groups}
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}
+            roles={this.props.roles}
           />
         }
       </div>

@@ -4,11 +4,28 @@ import UserEditForm from './form'
 import { Modal } from 'react-bootstrap'
 
 import { getCheckboxArrayOptions } from '../../../util/group-helpers'
-import { getRoleSelectOptions } from '../../../util/user-helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
     super(props)
+
+    this.getRolesForUser = this.getRolesForUser.bind(this)
+  }
+
+  getRolesForUser(user) {
+    let roles = []
+    const mappedRoles = this.props.roles.size ?
+      user.get('roles').map(roleId => (
+        {
+          id: roleId,
+          name: this.props.roles.find(role => role.get('id') === roleId).get('name')
+        }
+      )).toJS()
+      : []
+    mappedRoles.forEach(role => {
+      roles.push([role.id, role.name])
+    })
+    return roles
   }
 
   render() {
@@ -26,14 +43,13 @@ class UserEditModal extends React.Component {
       <Modal dialogClassName="user-form-sidebar" show={show}>
         <Modal.Header>
           <h1>Edit User</h1>
-          <p>Lorem Ipsum dolor</p>
         </Modal.Header>
 
         <Modal.Body>
           <UserEditForm
             initialValues={initialValues}
             groupOptions={getCheckboxArrayOptions(groups)}
-            roleOptions={getRoleSelectOptions(user)}
+            roleOptions={this.getRolesForUser(user)}
             onSave={onSave}
             onCancel={onCancel}
           />
@@ -47,6 +63,7 @@ UserEditModal.propTypes = {
   groups: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  roles: React.PropTypes.instanceOf(List),
   show: PropTypes.bool,
   user: PropTypes.instanceOf(Map)
 }
@@ -57,4 +74,3 @@ UserEditModal.defaultProps = {
 }
 
 export default UserEditModal
-
