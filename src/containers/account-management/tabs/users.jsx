@@ -1,6 +1,6 @@
 import React from 'react'
-import { List, fromJS, Map } from 'immutable'
-import { Table, Button, Row, Col, Modal, Input } from 'react-bootstrap'
+import { List, Map } from 'immutable'
+import { Table, Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -133,12 +133,6 @@ export class AccountManagementAccountUsers extends React.Component {
     return checkForErrors({ email, password, confirmPw, roles }, conditions)
   }
 
-  editUser(user) {
-    return e => {
-      console.log("Edit user " + user);
-      e.preventDefault();
-    };
-  }
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
@@ -360,15 +354,15 @@ AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   deleteUser: React.PropTypes.func,
+  formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
-  formFieldFocus: React.PropTypes.func,
-  userActions: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
   uiActions: React.PropTypes.object,
+  userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
 

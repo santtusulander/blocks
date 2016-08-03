@@ -82,7 +82,7 @@ class UserEditForm extends React.Component {
         <Input
           {...email}
           type="text"
-          disabled
+          disabled={true}
           label="Email"/>
         {email.touched && email.error &&
         <div className="error-msg">{email.error}</div>}
@@ -93,7 +93,7 @@ class UserEditForm extends React.Component {
               <Input
                 {...first_name}
                 type="text"
-                label="Firstname"/>
+                label="First name"/>
               {first_name.touched && first_name.error &&
               <div className="error-msg">{first_name.error}</div>}
             </Col>
@@ -102,7 +102,7 @@ class UserEditForm extends React.Component {
               <Input
                 {...last_name}
                 type="text"
-                label="Firstname"/>
+                label="Last name"/>
               {last_name.touched && last_name.error &&
               <div className="error-msg">{last_name.error}</div>}
             </Col>
