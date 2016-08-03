@@ -28,14 +28,22 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleCheck(optionVal) {
     let newVals = List()
-    if(optionVal !== 'all') {
+    if(optionVal === 'all') {
+      newVals = this.props.values.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
+    } else if(optionVal === '4XX') {
+      newVals = this.props.values.includes('4XX') ?
+        this.props.values.filterNot(val => 400 <= Number(val) < 500) :
+        this.props.values.merge(this.props.options.filter(val => 400 <= Number(val) < 500))
+      console.log(newVals.toJS(), this.props.values.toJS(), this.props.values.has('4XX'))
+    } else if(optionVal === '5XX') {
+      newVals = this.props.values.includes('5XX') ?
+        this.props.values.filterNot(val => 500 <= Number(val)) :
+        this.props.values.merge(this.props.options.filter(val => 500 <= Number(val)))
+    } else {
       const valIndex = this.props.values.indexOf(optionVal)
       newVals = valIndex === -1 ?
         this.props.values.push(optionVal) :
         this.props.values.delete(valIndex)
-    }
-    else {
-      newVals = this.props.values.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
     }
     this.props.handleCheck(newVals)
 
