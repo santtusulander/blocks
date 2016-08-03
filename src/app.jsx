@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 
-import routes from './routes'
+import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { LogPageView } from './util/google-analytics'
 
@@ -41,14 +41,14 @@ axios.interceptors.response.use(function (response) {
       store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
     }
   }
-  
+
   return Promise.reject(error);
 });
 
 ReactDOM.render(
   <Provider store={store}>
     <Router onUpdate={LogPageView} history={browserHistory}>
-      {routes}
+      {getRoutes(store)}
     </Router>
   </Provider>, document.getElementById('content')
 );
