@@ -162,8 +162,7 @@ class AccountManagementAccountGroups extends React.Component {
     const inlineAddInputs = [
       [
         {
-          input: <Input id='name' placeholder="Name" type="text"/>,
-          positionClass: 'col-sm-9'
+          input: <Input id='name' placeholder="Name" type="text"/>
         }
       ],
       [
@@ -176,8 +175,7 @@ class AccountManagementAccountGroups extends React.Component {
             options={this.props.users.map(user => Immutable.Map({
               label: user.get('email') || 'No Email',
               value: user.get('email')
-            }))}/>,
-          positionClass: 'col-sm-9'
+            }))}/>
         }
       ],
       []
