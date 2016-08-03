@@ -17,21 +17,11 @@ const validate = (values) => {
 
   const {
     email,
-    first_name,
-    last_name,
     role
   } = values
 
   if(!email || email.length === 0) {
     errors.email = 'Email is required'
-  }
-
-  if(!first_name || first_name.length === 0) {
-    errors.first_name = 'Firstname is required'
-  }
-
-  if(!last_name || last_name.length === 0) {
-    errors.last_name = 'Lastname is required'
   }
 
   if(!role || role.length === 0) {
