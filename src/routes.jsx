@@ -1,5 +1,7 @@
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
+import { UserAuthWrapper } from 'redux-auth-wrapper'
+
 import * as PERMISSIONS from './constants/permissions'
 import checkPermissions from './util/permissions'
 //import { store } from './app'
@@ -164,20 +166,23 @@ function getSupportTabRoutes() {
   )
 }
 
-/* require permissions */
-const requirePermission = (permission, store) => {
-  return (location, replaceWith) => {
-    const state = store.getState();
+const UserHasPermission = (permission, store) => UserAuthWrapper({
+  authSelector: state => state.user.get('currentUser'),
+  redirectAction: newroute => {
+    location.href = newroute.pathname // TODO: figure out how to route to this nicely
+  },
+  failureRedirectPath: '/',
+  wrapperDisplayName: 'UserHasPermission',
+  predicate: user => checkPermissions(
+    store.getState().roles.get('roles'),
+    user,
+    permission
+  ),
+  allowRedirectBack: false
+})(props => props.children)
 
-    if ( checkPermissions( state.roles.get('roles'), state.user.get('currentUser'), permission) ) {
-      console.log('ALLOWED: ', permission);
-    } else {
-      console.log('NOT ALLOWED: ', permission);
-    }
-  }
-}
+export const getRoutes = store => {
 
-export const getRoutes = (store) => {
   return (
     <Route path="/" component={Main}>
       <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
@@ -189,7 +194,7 @@ export const getRoutes = (store) => {
       <Route path="/forgot-password" component={ForgotPassword}/>
 
       {/* Analytics - routes */}
-      <Route path={routes.analytics} onEnter={requirePermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
+      <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
         {/* default - set 'udn' as brand */}
         <IndexRedirect to="udn" />
         <Route path={routes.analyticsBrand} component={AnalyticsContainer} />
@@ -205,7 +210,7 @@ export const getRoutes = (store) => {
       </Route>
 
       {/* Content - routes */}
-      <Route path={routes.content} onEnter={requirePermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
+      <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
         <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
         <Route component={ContentTransition}>
           <Route path={routes.contentBrand} component={Accounts}/>
@@ -224,7 +229,7 @@ export const getRoutes = (store) => {
       </Route>
 
       {/* Security - routes */}
-      <Route path={routes.security} onEnter={requirePermission(PERMISSIONS.VIEW_SECURITY_SECTION, store)}>
+      <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION, store)}>
         <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
         <Route path={routes.securityBrand} component={Security} />
         <Route path={routes.securityAccount} component={Security}>
@@ -248,7 +253,7 @@ export const getRoutes = (store) => {
       </Route>
 
       {/* Services - routes */}
-      <Route path={routes.services} onEnter={requirePermission(PERMISSIONS.VIEW_SERVICES_SECTION, store)}>
+      <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION, store)}>
         <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
         <Route path={routes.servicesBrand} component={Services}/>
         <Route path={routes.servicesAccount} component={Services}/>
@@ -257,7 +262,7 @@ export const getRoutes = (store) => {
       </Route>
 
       {/* Support - routes */}
-      <Route path={routes.support} onEnter={requirePermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+      <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
         <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
         <Route path={routes.supportBrand} component={Support}>
             {getSupportTabRoutes()}
@@ -274,7 +279,7 @@ export const getRoutes = (store) => {
       </Route>
 
       {/* Account management - routes */}
-      <Route path={routes.accountManagement} onEnter={requirePermission(PERMISSIONS.VIEW_ACCOUNT_SECTION, store)}>
+      <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION, store)}>
         <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
         <Route path={routes.accountManagementBrand} component={AccountManagement}>
           <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
