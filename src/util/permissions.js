@@ -36,6 +36,11 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
   (role) => role.getIn(['permissions', 'ui', 'config'])
 
+permissionMapping[PERMISSIONS.DENY_ALWAYS] =
+  (role) => false
+permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
+  (role) => true
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.
