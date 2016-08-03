@@ -8,6 +8,7 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
+import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import SelectWrapper from '../../../components/select-wrapper'
@@ -18,9 +19,10 @@ import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
+import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
 
-import { ROLES } from '../../../constants/account-management-options'
+import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -30,6 +32,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.state = {
       sortBy: 'email',
       sortDir: 1,
+      showEditModal: false,
       addingNew: false,
       passwordVisible: false,
       usersGroups: List(),
@@ -37,11 +40,15 @@ export class AccountManagementAccountUsers extends React.Component {
       existingMailMsg: null
     }
 
+    this.notificationTimeout = null
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
+    this.saveUser = this.saveUser.bind(this)
     this.sortedData = this.sortedData.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+    this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
   }
@@ -53,6 +60,7 @@ export class AccountManagementAccountUsers extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
+    this.props.rolesActions.fetchRoles()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,6 +72,12 @@ export class AccountManagementAccountUsers extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('click', this.cancelAdding, false)
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   changeSort(column, direction) {
@@ -119,12 +133,6 @@ export class AccountManagementAccountUsers extends React.Component {
     return checkForErrors({ email, password, confirmPw, roles }, conditions)
   }
 
-  editUser(user) {
-    return e => {
-      console.log("Edit user " + user);
-      e.preventDefault();
-    };
-  }
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
@@ -151,9 +159,12 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
-    const roles = ROLES
+    const roleOptions = ROLES_MAPPING
       .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
-      .map(role => [ role.id, role.label ])
+      .map(mapped_role => [
+        mapped_role.id,
+        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+      ])
     return [
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
@@ -180,7 +191,7 @@ export class AccountManagementAccountUsers extends React.Component {
             id='roles'
             numericValues={true}
             className="inline-add-dropdown"
-            options={roles}/>,
+            options={roleOptions}/>,
           positionClass: 'col-sm-9'
         },
         {
@@ -223,11 +234,39 @@ export class AccountManagementAccountUsers extends React.Component {
     return groups.length > 0 ? groups : ['User has no groups']
   }
   getRolesForUser(user) {
-    return user.get('roles').map(roleId => ROLES.find(role => role.id === roleId).label).toJS()
+    return this.props.roles.size ? user.get('roles').map(roleId => this.props.roles.find(role => role.get('id') === roleId).get('name')).toJS() : []
   }
 
   getEmailForUser(user) {
     return user.get('email') || user.get('username')
+  }
+  editUser(user) {
+    this.setState({
+      userToEdit: user,
+      showEditModal: true
+    })
+  }
+  cancelUserEdit() {
+    this.setState({
+      userToEdit: null,
+      showEditModal: false
+    })
+  }
+  saveUser(user) {
+    // Get the username from the user we have in state for editing purposes.
+    //user.username = this.state.userToEdit.get('username')
+
+    this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
+      .then((response) => {
+        if (!response.error) {
+          this.showNotification('Updates to user saved.')
+
+          this.setState({
+            userToEdit: null,
+            showEditModal: false
+          })
+        }
+      })
   }
   render() {
     const sorterProps = {
@@ -286,7 +325,7 @@ export class AccountManagementAccountUsers extends React.Component {
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td>
-                    <a href="#" onClick={this.editUser(user.get('id'))}>
+                    <a href="#" onClick={() => {this.editUser(user)}}>
                       EDIT
                     </a>
                     <Button onClick={() => this.props.deleteUser(this.getEmailForUser(user))}
@@ -299,6 +338,16 @@ export class AccountManagementAccountUsers extends React.Component {
             })}
           </tbody>
         </Table>
+        {this.state.showEditModal &&
+          <UserEditModal
+            show={this.state.showEditModal}
+            user={this.state.userToEdit}
+            groups={this.props.groups}
+            onCancel={this.cancelUserEdit}
+            onSave={this.saveUser}
+            roles={this.props.roles}
+          />
+        }
       </div>
     )
   }
@@ -308,17 +357,21 @@ AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   deleteUser: React.PropTypes.func,
+  formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
-  formFieldFocus: React.PropTypes.func,
+  roles: React.PropTypes.instanceOf(List),
+  rolesActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
 
 function mapStateToProps(state) {
   return {
+    roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
     groups: state.group.get('allGroups')
   }
@@ -328,6 +381,7 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     formFieldFocus: (form, field) => dispatch(focus(form, field))

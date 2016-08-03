@@ -8,6 +8,7 @@ import { getContentUrl } from '../util/helpers'
 
 import * as userActionCreators from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
+import * as rolesActionCreators from '../redux/modules/roles'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
@@ -35,17 +36,19 @@ export class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
   goToAccountPage() {
-    // this.props.accountActions.startFetching()
-    // this.props.accountActions.fetchAccounts('udn').then(action => {
-    //   if(!action.error && action.payload.data.length) {
-    //     const firstId = action.payload.data[0].id
-    //     this.props.router.push(`/content/groups/udn/${firstId}`)
-    //   }
-    //   else {
-    //     this.setState({loginError: action.payload.message})
-    //   }
-    // })
     this.props.router.push(getContentUrl('brand', 'udn', {}))
+  }
+  /**
+   * Set data on the redux store after login. This method blocks redirecting the
+   * user after a successful login. In this method, only get data that is absolutely necessary
+   * to get before redirecting the user.
+   * @return {Promise}
+   */
+  getLoggedInData() {
+    return Promise.all([
+      this.props.rolesActions.fetchRoles(),
+      this.props.userActions.fetchUser(this.state.username)
+    ])
   }
   onSubmit(e) {
     e.preventDefault()
@@ -56,7 +59,14 @@ export class Login extends React.Component {
       this.state.password
     ).then(action => {
       if(!action.error) {
-        this.goToAccountPage()
+        // NOTE: We wait to go to the account page until we receive data because
+        // we need to know about roles and permissions before determining what
+        // the user is allowed to see.
+        this.getLoggedInData()
+          .then(() => {
+            this.goToAccountPage()
+            this.props.userActions.finishFetching()
+          })
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -162,6 +172,7 @@ Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   loggedIn: React.PropTypes.bool,
+  rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
@@ -176,6 +187,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }

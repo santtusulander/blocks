@@ -8,7 +8,7 @@ import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 import { Button } from 'react-bootstrap'
 
-import routes from './routes'
+import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
@@ -59,7 +59,7 @@ axios.interceptors.response.use(function (response) {
 ReactDOM.render(
   <Provider store={store}>
     <Router onUpdate={LogPageView} history={browserHistory}>
-      {routes}
+      {getRoutes(store)}
     </Router>
   </Provider>, document.getElementById('content')
 );

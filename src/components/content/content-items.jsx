@@ -57,7 +57,7 @@ class ContentItems extends React.Component {
 
     this.state = {
       showModal: false,
-      itemToEdit: null
+      itemToEdit: undefined
     }
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
@@ -148,13 +148,13 @@ class ContentItems extends React.Component {
   addItem() {
     this.setState({
       showModal: true,
-      itemToEdit: null
+      itemToEdit: undefined
     })
   }
   hideModal() {
     this.setState({
       showModal: false,
-      itemToEdit: null
+      itemToEdit: undefined
     })
   }
   render() {
@@ -322,6 +322,7 @@ class ContentItems extends React.Component {
             {this.state.showModal && this.getTier() === 'account' &&
               <GroupForm
                 id="group-form"
+                users={this.props.user.get('allUsers')}
                 group={this.state.itemToEdit}
                 account={activeAccount}
                 onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}

@@ -41,8 +41,13 @@
           &.delete-button {
             height: 24px;
 
-            .icon:hover {
+            .icon {
               stroke: $pale-blue;
+              vertical-align: initial;
+
+              &:hover{
+                stroke: $white;
+              }
             }
           }
 
