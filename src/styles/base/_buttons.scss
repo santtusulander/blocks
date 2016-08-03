@@ -61,9 +61,9 @@
   }
 
   &.btn-outline {
+    color: $dt-text-color;
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
-    color: $dt-text-color;
 
     &,
     &:hover,
@@ -143,43 +143,38 @@
 
   &.btn-header {
     height: $header-btn-height;
-    margin-top: ($bar-height - $header-btn-height) / 2;
-    margin-right: 10px;
-    margin-bottom: ($bar-height - $header-btn-height) / 2;
-    margin-left: 10px;
+    margin-top: ($header-height - $header-btn-height) / 2;
+    margin-right: 8px;
+    margin-bottom: ($header-height - $header-btn-height) / 2;
+    margin-left: 8px;
     line-height: $header-btn-height;
     color: $dt-text-color;
     background-color: rgba($pale-blue, 0.1);
     fill: $dt-text-color;
     stroke: $dt-text-color;
 
-    @include lg {
-      margin-right: 5px;
-      margin-left: 5px;
-    }
-
     @include md {
-      height: $md-btn-height;
-      margin-top: ($md-bar-height - $md-header-btn-height) / 2;
-      margin-bottom: ($md-bar-height - $md-header-btn-height) / 2;
+      margin-top: ($md-header-height - $md-header-btn-height) / 2;
+      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
       line-height: $md-header-btn-height;
     }
   }
 
   &.btn-user-menu,
   .btn-group > &.btn.btn-user-menu:first-child {
-    margin-top: ($bar-height - $btn-height) / 2;
-    margin-right: ($bar-height / 2);
-    margin-bottom: ($bar-height - $btn-height) / 2;
-    margin-left: 10px;
+    width: $header-btn-height;
+    height: $header-btn-height;
+    margin-top: ($header-height - $header-btn-height) / 2;
+    margin-right: 20px;
+    margin-bottom: ($header-height - $header-btn-height) / 2;
+    margin-left: 8px;
     overflow: hidden;
     background: url('../assets/img/img-user.jpg') center center no-repeat;
     background-size: cover;
 
     @include md {
-      margin-top: ($md-bar-height - $md-btn-height) / 2;
-      margin-right: ($md-bar-height / 3);
-      margin-bottom: ($md-bar-height - $md-btn-height) / 2;
+      margin-top: ($md-header-height - $md-header-btn-height) / 2;
+      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
     }
 
     img {
@@ -321,9 +316,8 @@
 }
 
 .dark-theme,
-.light-theme .header,
-  /* TODO: Should this be removed? .light-theme .configuration-sidebar */
-{
+// TODO: Should this be removed? .light-theme .configuration-sidebar
+.light-theme .header {
 
   .dropdown-select {
 
@@ -598,9 +592,9 @@
   }
 
   .configuration-sidebar .btn-outline {
-    background-color: $white !important;
     color: $pale-blue;
-    border: 0px;
+    background-color: $white !important;
+    border: 0;
   }
 
   .configuration-sidebar .btn-primary,
