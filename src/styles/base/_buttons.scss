@@ -158,6 +158,24 @@
       margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
       line-height: $md-header-btn-height;
     }
+
+    &.btn-icon {
+      .icon {
+        transform: translate(-50%, -50%) scale(1, 1);
+      }
+    }
+
+    &.btn-alerts {
+      svg {
+        width: 11px;
+      }
+    }
+
+    &.btn-help {
+      svg {
+        width: 8px;
+      }
+    }
   }
 
   &.btn-user-menu,
@@ -303,14 +321,14 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
 
     .dark-theme &,
     .light-theme & {
       color: $dt-text-color;
-      background: $purple;
+      background: $red;
     }
   }
 }
