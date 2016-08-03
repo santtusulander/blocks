@@ -237,7 +237,7 @@ export class AccountManagementAccountUsers extends React.Component {
     return groups.length > 0 ? groups : ['User has no groups']
   }
   getRolesForUser(user) {
-    return user.get('roles').map(roleId => ROLES.find(role => role.id === roleId).label).toJS()
+    return this.props.roles.size ? user.get('roles').map(roleId => this.props.roles.find(role => role.get('id') === roleId).get('name')).toJS() : []
   }
 
   getEmailForUser(user) {
