@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import {List} from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
@@ -16,10 +17,24 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     this.handleCheck  = this.handleCheck.bind(this)
+    this.handleClick  = this.handleClick.bind(this)
     this.handleClear  = this.handleClear.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
     this.getLabel     = this.getLabel.bind(this)
     this.getFilteredResults = this.getFilteredResults.bind(this)
+  }
+
+  componentWillMount() {
+    document.addEventListener('click', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, false)
+  }
+
+  handleClick(e) {
+    !findDOMNode(this).contains(e.target) && this.state.dropdownOpen &&
+      this.setState({ dropdownOpen: false })
   }
 
   toggleDropdown(val) {

@@ -6,6 +6,7 @@ import moment from 'moment'
 
 import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
 
+import { fetchUsers } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -27,6 +28,7 @@ export class Groups extends React.Component {
      * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
      **/
     //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
+    this.props.fetchUsers()
     this.props.fetchData()
     //}
   }
@@ -159,6 +161,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     fetchData: fetchData,
     groupActions: groupActions,
+    fetchUsers: () => dispatch(fetchUsers(brand, account)),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
