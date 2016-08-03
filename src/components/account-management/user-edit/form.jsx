@@ -42,7 +42,6 @@ class UserEditForm extends React.Component {
   save() {
     const {
       fields: {
-        email,
         first_name,
         last_name,
         phone_number,
@@ -51,7 +50,6 @@ class UserEditForm extends React.Component {
     } = this.props
 
     this.props.onSave({
-      email: email.value,
       first_name: first_name.value,
       last_name: last_name.value,
       phone_number: phone_number.value,
