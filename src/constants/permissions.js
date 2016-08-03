@@ -28,3 +28,7 @@ export const VIEW_ANALYTICS_URL = 'VIEW_ANALYTICS_URL'
 
 // Misc Functionality
 export const VIEW_PROPERTY_CONFIG = 'VIEW_PROPERTY_CONFIG'
+
+// Deny/Allow always (for testing)
+export const DENY_ALWAYS = 'DENY_ALWAYS'
+export const ALLOW_ALWAYS = 'ALLOW_ALWAYS'

@@ -18,7 +18,6 @@ permissionMapping[PERMISSIONS.VIEW_SERVICES_SECTION] =
 permissionMapping[PERMISSIONS.VIEW_SUPPORT_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'support'])
 
-
 // Analytics Reports
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_file_error'])
@@ -37,6 +36,11 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
   (role) => role.getIn(['permissions', 'ui', 'config'])
 
+permissionMapping[PERMISSIONS.DENY_ALWAYS] =
+  (role) => false
+permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
+  (role) => true
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.
@@ -46,5 +50,12 @@ permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
  */
 export default function checkPermissions(roles, user, permission) {
   const userRoles = user.get('roles')
-  return userRoles.some(roleId => permissionMapping[permission](roles.get(roleId)))
+  if (!userRoles) return false
+
+  return userRoles.some(roleId => {
+    const role = roles.get(roleId)
+    if ( role ) return permissionMapping[permission](role)
+
+    return false
+  })
 }

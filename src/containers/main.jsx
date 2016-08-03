@@ -41,14 +41,19 @@ export class Main extends React.Component {
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
+          if(!this.pageAllowsAnon()) {
+            this.props.router.push('/login')
+          }
           return false
         }
-        this.props.rolesActions.fetchRoles()
-        const accountId = this.props.activeAccount.size ?
-          this.props.activeAccount.get('id') :
-          this.props.params.account
+        else {
+          this.props.rolesActions.fetchRoles()
+          const accountId = this.props.activeAccount.size ?
+            this.props.activeAccount.get('id') :
+            this.props.params.account
 
-        return this.props.fetchAccountData(accountId, this.props.accounts)
+          return this.props.fetchAccountData(accountId, this.props.accounts)
+        }
       })
   }
 
