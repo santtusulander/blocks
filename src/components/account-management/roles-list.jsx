@@ -24,7 +24,7 @@ class RolesList extends React.Component {
     this.sortedData = this.sortedData.bind(this);
   }
 
-  labelPermissions(rolePermissions, permissions, section) {
+  labelPermissions(rolePermissions, permissions) {
     let permissionNames = rolePermissions
       .map((rules, key) => {
         let permissionName = permissions
@@ -111,18 +111,15 @@ class RolesList extends React.Component {
                     TODO: Uncomment these when we support API permissions
                     ...this.labelPermissions(
                       role.get('permissions').get('aaa'),
-                      this.props.permissions.get('aaa'),
-                      'AAA'
+                      this.props.permissions.get('aaa')
                     ).toArray(),
                     ...this.labelPermissions(
                       role.get('permissions').get('north'),
-                      this.props.permissions.get('north'),
-                      'North'
+                      this.props.permissions.get('north')
                     ).toArray(),*/
                     ...this.labelPermissions(
                       role.get('permissions').get('ui'),
-                      this.props.permissions.get('ui'),
-                      'UI'
+                      this.props.permissions.get('ui')
                     ).toArray()
                   ]} />
                   <td>
