@@ -1,0 +1,36 @@
+.user-form-sidebar {
+  @extend .modal-form-panel;
+
+  .form-group.border-bottom {
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .password-reset {
+    &__wrapper {
+      display: flex;
+    }
+
+    &__description {
+      display: inline-block;
+      margin: 0 0 0 20px;
+      font-size: 14px;
+    }
+
+    button.btn-primary {
+
+    }
+  }
+}
+
+.user-form {
+  &__name {
+    margin-top: 25px;
+  }
+
+  &__telephone {
+    margin-top: 25px;
+  }
+}
+

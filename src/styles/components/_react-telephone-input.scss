@@ -1,0 +1,247 @@
+.react-tel-input {
+  width: auto;
+
+  .flag {
+    background-image: url('../assets/img/flags.png') !important;
+  }
+  input[type=text],
+  input[type=tel] {
+    height: $bar-height;
+    max-width: 900px;
+    padding: ($btn-sm-height / 3) ($btn-height / 2);
+    font-size: inherit;
+    color: inherit;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: none;
+    transition: box-shadow 0s;
+    position: relative;
+    z-index: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 60px !important;
+    margin-left: 0;
+    width: 100%;
+
+    @include md {
+      height: $md-bar-height;
+      padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
+    }
+
+    // Hide IE clear and reveal buttons for design purposes
+    &::-ms-clear,
+    &::-ms-reveal {
+      display: none;
+    }
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background-color: rgba($black, 0.2);
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $pale-blue;
+      }
+
+      &::placeholder {
+        color: rgba($dt-text-color, 0.3);
+
+        @include print {
+          color: transparent;
+        }
+      }
+    }
+
+    .light-theme .configuration-sidebar & {
+      color: $lt-text-color;
+      background-color: $white;
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $pale-blue;
+      }
+
+      &::placeholder {
+        color: rgba($lt-text-color, 0.3);
+
+        @include print {
+          color: transparent;
+        }
+      }
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+      background-color: $white;
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $pale-blue;
+      }
+
+      &::placeholder {
+        color: rgba($lt-text-color, 0.3);
+      }
+    }
+
+    .light-theme .page-header-layout & {
+      background-color: rgba($black, 0.1);
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $pale-blue;
+      }
+
+      &::placeholder {
+        color: rgba($lt-text-color, 0.3);
+      }
+    }
+
+    .dark-theme .has-error &,
+    .light-theme .has-error & {
+      background-color: $purple;
+
+      &[type=textarea] {
+        color: rgba($dt-text-color, 0.3);
+      }
+
+      &::placeholder {
+        color: rgba($dt-text-color, 0.3);
+      }
+    }
+
+    &.valid,
+    .valid & {
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $green;
+      }
+    }
+
+    &.invalid,
+    .invalid & {
+
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $purple;
+      }
+    }
+  }
+  .flag-dropdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0 10px 0 0;
+    width: 60px;
+    display: flex;
+    border: none;
+    background: transparent;
+
+    &.open-dropdown {
+      background-color: transparent;
+      .selected-flag {
+        background-color: transparent;
+      }
+    }
+    &:hover {
+      cursor: pointer;
+      background-color: transparent;
+
+      .selected-flag {
+        background-color: transparent;
+      }
+    }
+  }
+  input[disabled] {
+    &+.flag-dropdown {
+      &:hover {
+        cursor: default;
+        .selected-flag {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+  .selected-flag {
+    z-index: 13;
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+
+    .flag {
+      position: relative;
+      top: auto;
+      margin: 0;
+    }
+
+    .arrow {
+      display: none;
+      position: relative;
+      top: 50%;
+      margin-top: -2px;
+      left: 20px;
+      width: 0;
+      height: 0;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+      border-top: 4px solid #555;
+
+      &.up {
+        border-top: none;
+        border-bottom: 4px solid #555;
+      }
+    }
+  }
+
+  .country-list {
+    list-style: none;
+    position: absolute;
+    z-index: 2;
+    padding: 0;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 400px;
+    max-height: 200px;
+    overflow-y: scroll;
+    border-radius: 0 0 3px 3px;
+    top: 100%;
+    left: 0;
+
+    .flag {
+      display: inline-block;
+    }
+    .divider {
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+    .country {
+      padding: 5px 10px;
+      .dial-code {
+        color: #999;
+      }
+      &:hover {
+        background-color: #e8f7fe;
+      }
+      &.highlight {
+        background-color: #c7e2f1;
+      }
+    }
+    .flag {
+      margin-right: 6px;
+      margin-top: 2px;
+    }
+    .country-name {
+      margin-right: 6px;
+    }
+  }
+}
