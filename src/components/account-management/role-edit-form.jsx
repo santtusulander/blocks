@@ -44,6 +44,10 @@ const RolesEditForm = (props) => {
     ...props.editRole.get('permissions').get('ui')
   ])
 
+  const getPermissionName = function(permissionKey, section) {
+    return props.permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
+  }
+
   return (
     <Modal
       show={props.show}
@@ -82,7 +86,7 @@ const RolesEditForm = (props) => {
         <hr/>
         */}
 
-        <label>UI Permissions</label>
+        <label>Permissions</label>
 
         <Table className="table-striped">
           <thead>
@@ -91,11 +95,11 @@ const RolesEditForm = (props) => {
             </tr>
           </thead>
           <tbody>
-            {editPermsUI.map((permission, permissionName) => {
+            {editPermsUI.map((permission, permissionKey) => {
               return (
-                <tr key={permissionName}>
+                <tr key={permissionKey}>
                   <td className="no-border">
-                    {permissionName}
+                    {getPermissionName(permissionKey, 'ui')}
                   </td>
                   <td>
                     {/*TODO: Remove readonly prop in the future when roles are editable*/}
