@@ -8,8 +8,6 @@ import {
 } from 'react-bootstrap'
 import {Map, List, fromJS} from 'immutable'
 
-import { fetchUsers } from '../../redux/modules/user'
-
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
@@ -45,7 +43,6 @@ class GroupForm extends React.Component {
 
 
   componentWillMount() {
-    this.props.fetchUsers(this.props.account.get('brand_id'), this.props.account.get('id'))
     if (this.props.group) {
       const {
         group,
@@ -210,7 +207,6 @@ class GroupForm extends React.Component {
 
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
-  fetchUsers: PropTypes.func,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
@@ -228,4 +224,4 @@ export default reduxForm({
   fields: ['name'],
   form: 'group-edit',
   validate
-}, state => ({ users: state.user.get('allUsers') }), { fetchUsers })(GroupForm)
+})(GroupForm)

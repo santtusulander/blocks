@@ -322,6 +322,7 @@ class ContentItems extends React.Component {
             {this.state.showModal && this.getTier() === 'account' &&
               <GroupForm
                 id="group-form"
+                users={this.props.user.get('allUsers')}
                 group={this.state.itemToEdit}
                 account={activeAccount}
                 onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
