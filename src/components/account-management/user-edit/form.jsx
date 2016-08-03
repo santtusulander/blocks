@@ -11,17 +11,25 @@ import ReactTelephoneInput from 'react-telephone-input'
 import CheckboxArray from '../../checkboxes.jsx'
 import SelectWrapper from '../../select-wrapper.jsx'
 
+import IconEye from '../../icons/icon-eye.jsx'
+
 let errors = {}
 const validate = (values) => {
   errors = {}
 
   const {
     email,
+    password,
+    confirm,
     role
   } = values
 
   if(!email || email.length === 0) {
     errors.email = 'Email is required'
+  }
+
+  if(password && password !== confirm) {
+    errors.password = 'Passwords do not match'
   }
 
   if(!role || role.length === 0) {
@@ -35,8 +43,13 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      passwordVisible: false
+    }
+
     this.save = this.save.bind(this)
     this.resetPassword = this.resetPassword.bind(this)
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
   }
 
   save() {
@@ -44,22 +57,35 @@ class UserEditForm extends React.Component {
       fields: {
         first_name,
         last_name,
+        password,
         phone_number,
         groups
       }
     } = this.props
 
-    this.props.onSave({
+    let newValues = {
       first_name: first_name.value,
       last_name: last_name.value,
       phone_number: phone_number.value,
       group_id: groups.value
-    })
+    }
+
+    if(password && password.value.length !== 0) {
+      newValues.password = password.value
+    }
+
+    this.props.onSave(newValues)
   }
 
   resetPassword() {
     //noinspection Eslint
-    console.log('UserEditForm.resetPassword()')
+    // console.log('UserEditForm.resetPassword()')
+  }
+
+  togglePasswordVisibility() {
+    this.setState({
+      passwordVisible: !this.state.passwordVisible
+    })
   }
 
   render() {
@@ -68,6 +94,8 @@ class UserEditForm extends React.Component {
         email,
         first_name,
         last_name,
+        password,
+        confirm,
         phone_number,
         groups,
         role
@@ -124,6 +152,7 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
+        {/* TODO: Finish once functionality allows it (not in 0.8)
         <div className="form-group password-reset">
           <label className="control-label">Password</label>
           <div className="password-reset__wrapper">
@@ -133,6 +162,39 @@ class UserEditForm extends React.Component {
               <br/>on how to reset their password
             </p>
           </div>
+        </div>
+        */}
+
+        {/* This is a temporary solution for password reset in 0.8 */}
+        <div className="user-form__password">
+          <Row>
+            <Col xs={11}>
+              <label>Reset password</label>
+              <Row>
+                <Col xs={6}>
+                  <Input
+                    {...password}
+                    type={this.state.passwordVisible ? 'text' : 'password'}
+                    placeholder="New Password"/>
+                  {password.touched && password.error && !password.active && !confirm.active &&
+                    <div className="error-msg">{password.error}</div>}
+                </Col>
+
+                <Col xs={6}>
+                  <Input
+                    {...confirm}
+                    type={this.state.passwordVisible ? 'text' : 'password'}
+                    placeholder="Confirm New Password"
+                    wrapperClassName="input-addon-after-outside"
+                    addonAfter={<a className={'input-addon-link' +
+                        (this.state.passwordVisible ? ' active' : '')}
+                        onClick={this.togglePasswordVisibility}>
+                          <IconEye/>
+                      </a>}/>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
         </div>
 
         <hr/>
@@ -180,6 +242,8 @@ export default reduxForm({
     'email',
     'first_name',
     'last_name',
+    'password',
+    'confirm',
     'phone_number',
     'role',
     'groups'
