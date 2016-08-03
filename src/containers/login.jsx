@@ -36,16 +36,6 @@ export class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
   goToAccountPage() {
-    // this.props.accountActions.startFetching()
-    // this.props.accountActions.fetchAccounts('udn').then(action => {
-    //   if(!action.error && action.payload.data.length) {
-    //     const firstId = action.payload.data[0].id
-    //     this.props.router.push(`/content/groups/udn/${firstId}`)
-    //   }
-    //   else {
-    //     this.setState({loginError: action.payload.message})
-    //   }
-    // })
     this.props.router.push(getContentUrl('brand', 'udn', {}))
   }
   /**
@@ -55,7 +45,6 @@ export class Login extends React.Component {
    * @return {Promise}
    */
   getLoggedInData() {
-    this.props.userActions.startFetching()
     return Promise.all([
       this.props.rolesActions.fetchRoles(),
       this.props.userActions.fetchUser(this.state.username)
@@ -76,6 +65,7 @@ export class Login extends React.Component {
         this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
+            this.props.userActions.finishFetching()
           })
       }
       else {
