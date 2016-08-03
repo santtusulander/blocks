@@ -8,6 +8,7 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
+import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import SelectWrapper from '../../../components/select-wrapper'
@@ -59,6 +60,7 @@ export class AccountManagementAccountUsers extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
+    this.props.rolesActions.fetchRoles()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -363,12 +365,15 @@ AccountManagementAccountUsers.propTypes = {
   resetRoles: React.PropTypes.func,
   formFieldFocus: React.PropTypes.func,
   userActions: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(List),
+  rolesActions: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
 
 function mapStateToProps(state) {
   return {
+    roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
     groups: state.group.get('allGroups')
   }
@@ -378,6 +383,7 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     formFieldFocus: (form, field) => dispatch(focus(form, field))
