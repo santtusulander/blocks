@@ -124,8 +124,8 @@ class UserEditForm extends React.Component {
         <div className="user-form__telephone">
           <label className="control-label">Phone Number</label>
           <ReactTelephoneInput
-            value={phone_number.value}
-            defaultCountry="usa"
+            value={phone_number.value !== '+' ? phone_number.value : '1'}
+            defaultCountry="us"
             onChange={(value) => {
               phone_number.onChange(value)
             }}
