@@ -358,6 +358,14 @@
           display: none;
         }
       }
+
+      span,
+      .dropdown-select__selected-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: auto;
+        white-space: nowrap;
+      }
     }
 
     &.open .dropdown-toggle {
