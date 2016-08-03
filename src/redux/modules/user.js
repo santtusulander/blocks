@@ -8,6 +8,7 @@ const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
+const USER_FETCHED = 'USER_FETCHED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
 const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
@@ -20,6 +21,7 @@ const loginAxios = axios.create()
 
 const emptyUser = Map({
   allUsers: List(),
+  currentUser: Map(),
   fetching: false,
   loggedIn: false
 })
@@ -61,6 +63,20 @@ export function userLoggedInSuccess(state, action){
 
 export function userLoggedInFailure(){
   return emptyUser
+}
+
+export function fetchSuccess(state, action) {
+  return state.merge({
+    currentUser: fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchFailure(state) {
+  return state.merge({
+    currentUser: Map(),
+    fetching: false
+  })
 }
 
 export function fetchAllSuccess(state, action) {
@@ -121,7 +137,8 @@ export function userTokenChecked(state, action){
 
     return state.merge({
       loggedIn: true,
-      username: action.payload.username
+      username: action.payload.user.email,
+      currentUser: fromJS(action.payload.user)
     })
   }
   else {
@@ -138,6 +155,7 @@ export default handleActions({
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
+  USER_FETCHED: mapReducers(fetchSuccess, fetchFailure),
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
@@ -150,8 +168,8 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${urlBase}/v2/tokens`,
     {
-      "username": username,// superuser
-      "password": password// Video4All!
+      "username": username,
+      "password": password
     },
     {
       headers: {
@@ -173,10 +191,29 @@ export const logOut = createAction(USER_LOGGED_OUT)
 export const startFetching = createAction(USER_START_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  return {
-    token: localStorage.getItem('EricssonUDNUserToken') || null,
-    username: localStorage.getItem('EricssonUDNUserName')
+  const username = localStorage.getItem('EricssonUDNUserName')
+  const token = localStorage.getItem('EricssonUDNUserToken')
+  if(username && token) {
+    return loginAxios.get(`${urlBase}/v2/users/${username}`,
+      {headers: {'X-Auth-Token': token}}
+    )
+    .then(res => {
+      if(res) {
+        return {
+          token: token,
+          user: res.data
+        }
+      }
+    })
   }
+  else {
+    return Promise.reject({data:{message:"No token"}})
+  }
+})
+
+export const fetchUser = createAction(USER_FETCHED, (username) => {
+  return axios.get(`${urlBase}/v2/users/${username}`)
+    .then(parseResponseData)
 })
 
 export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accountId = null, groupId = null) => {
@@ -190,11 +227,7 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
   }
 
   return axios.get(`${urlBase}/v2/users${query}`)
-    .then((res) => {
-      if(res) {
-        return res.data;
-      }
-    });
+    .then(parseResponseData)
 })
 
 export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
@@ -210,11 +243,7 @@ export const deleteUser = createAction(USER_DELETED, user =>
 
 export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
-    .then(res => {
-      if(res) {
-        return res.data
-      }
-    })
+    .then(parseResponseData)
     .catch(err => {
       throw new Error(err.data.message)
     })
@@ -237,9 +266,5 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
 //     "password": "Video4All!",
 //     "account_id": 1}
 //   })
-//   .then((res) => {
-//     if(res.data) {
-//       return res.data
-//     }
-//   })
+//   .then(parseResponseData)
 // })
