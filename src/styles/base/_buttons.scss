@@ -231,6 +231,7 @@
   .caret {
     position: relative;
     margin: -6px ($btn-height / 4) 0 ($btn-height / 2);
+    color: $white;
     border: 0;
 
     @include md {
@@ -273,6 +274,31 @@
       border-left: 5px solid transparent;
       content: '';
       transform: translate(-50%, -50%);
+    }
+
+    .header & {
+      margin: -2px 12.5px 0 25px;
+
+      &::before {
+        width: 18px;
+        height: 18px;
+        margin-top: -8.5px;
+        margin-left: -9.5px;
+
+        @include md {
+          margin-top: -8.5px;
+          margin-left: -9.5px;
+        }
+
+        .dark-theme &,
+        .light-theme & {
+          background-color: $black;
+        }
+      }
+
+      &::after {
+        transform: translate(-50%, -50%) scale(0.75, 0.75);
+      }
     }
   }
 

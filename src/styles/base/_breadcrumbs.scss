@@ -51,6 +51,7 @@
       display: block;
       max-width: 350px;
       overflow: hidden;
+      font-weight: bold;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -165,7 +166,7 @@
 
     .dark-theme &,
     .light-theme .header & {
-      color: rgba($white, 0.5);
+      color: $white;
     }
 
     .light-theme & {

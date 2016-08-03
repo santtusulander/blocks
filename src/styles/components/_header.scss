@@ -4,6 +4,7 @@
 .header {
   height: $header-total-height;
   min-width: 1024px;
+  font-size: 14px;
   border: 0;
 
   &__content {
@@ -27,7 +28,10 @@
       width: 19px;
       height: 25px;
       transform: scale(1, 1);
-      fill: $white;
+
+      .dark-theme & {
+        fill: $white;
+      }
     }
   }
 
@@ -57,11 +61,16 @@
     &__toggle {
       display: flex;
       padding: 0 20px 0 30px;
-      margin: 13px 20px 13px 0;
+      margin: 14.5px 20px 14.5px 0;
       border-right: 1px solid $silver-60;
 
       .dropdown-toggle {
+        font-weight: bold;
         text-transform: uppercase;
+
+        .dark-theme & {
+          color: $pale-blue;
+        }
       }
     }
   }
