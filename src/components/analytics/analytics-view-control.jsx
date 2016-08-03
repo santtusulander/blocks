@@ -2,21 +2,25 @@ import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
+import * as PERMISSIONS from '../../constants/permissions'
+import IsAllowed from '../is-allowed'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 import IconExport from '../icons/icon-export.jsx'
 
+
+
 import './analytics-view-control.scss'
 
 const tabs = [
-  { key: 'traffic', label: 'Traffic Overview' },
-  { key: 'visitors', label: 'Unique Visitors' },
-  { key: 'on-off-net', label: 'Service Provider On/Off Net', hideHierarchy: true },
-  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true },
-  { key: 'file-error', label: 'File Error', propertyOnly: true },
-  { key: 'url-report', label: 'URL', propertyOnly: true },
+  { key: 'traffic', label: 'Traffic Overview', permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW },
+  { key: 'visitors', label: 'Unique Visitors', permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS },
+  { key: 'on-off-net', label: 'Service Provider On/Off Net', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET},
+  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION },
+  { key: 'file-error', label: 'File Error', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR },
+  { key: 'url-report', label: 'URL', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_URL },
   { key: 'playback-demo', label: 'Playback demo', hideHierarchy: true }
 ]
 
@@ -150,12 +154,20 @@ const AnalyticsViewControl = (props) => {
       <Nav bsStyle="tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
-            lis.push(
+            const tabContent = tab.permission ?
+              <IsAllowed to={tab.permission}>
+                <li key={tab.key}>
+                  <Link to={getTabLink(props.location, tab.key)}
+                  activeClassName='active'>{tab.label}</Link>
+                </li>
+              </IsAllowed>
+            :
               <li key={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
-                      activeClassName='active'>{tab.label}</Link>
+                activeClassName='active'>{tab.label}</Link>
               </li>
-            )
+
+            lis.push( tabContent )
           }
           return lis
         }, [])}
