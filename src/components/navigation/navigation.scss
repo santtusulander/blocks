@@ -55,8 +55,9 @@ $dark-blue-navi: #070d1e;
         }
 
         svg {
-          width: $navigation-sidebar-width / 2.4;
-          height: $navigation-sidebar-width / 2.4;
+          width: $navigation-sidebar-width / 3.2;
+          height: $navigation-sidebar-width / 3.2;
+          transform: scale(1, 1);
           transition: all $navigation-transition-time;
           shape-rendering: geometricPrecision;
           stroke-linejoin: round;
