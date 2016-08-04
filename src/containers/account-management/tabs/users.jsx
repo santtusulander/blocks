@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Table, Button, Row, Col, Input } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -8,6 +8,7 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
+import * as permissionsActionCreators from '../../../redux/modules/permissions'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -21,6 +22,7 @@ import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
+import ActionModal from '../../../components/action-modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -33,6 +35,7 @@ export class AccountManagementAccountUsers extends React.Component {
       sortBy: 'email',
       sortDir: 1,
       showEditModal: false,
+      showPermissionsModal: false,
       addingNew: false,
       passwordVisible: false,
       usersGroups: List(),
@@ -51,6 +54,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.togglePermissionModal = this.togglePermissionModal.bind(this)
   }
 
   componentWillMount() {
@@ -195,7 +199,7 @@ export class AccountManagementAccountUsers extends React.Component {
           positionClass: 'col-sm-9'
         },
         {
-          input: <Button bsStyle="primary" className="btn-icon" onClick={() => console.log('modal')}>
+          input: <Button bsStyle="primary" className="btn-icon" onClick={this.togglePermissionModal}>
               <IconInfo/>
             </Button>,
           positionClass: 'right'
@@ -219,6 +223,10 @@ export class AccountManagementAccountUsers extends React.Component {
 
   toggleInlineAdd() {
     this.setState({ addingNew: !this.state.addingNew, usersGroups: List() })
+  }
+
+  togglePermissionModal() {
+    this.setState({ showPermissionsModal: !this.state.showPermissionsModal })
   }
 
   togglePasswordVisibility() {
@@ -348,6 +356,35 @@ export class AccountManagementAccountUsers extends React.Component {
             roles={this.props.roles}
           />
         }
+        {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
+          <ActionModal
+            show={this.state.showPermissionsModal}
+            title="View Permissions"
+            showClose={true}
+            closeModal={this.togglePermissionModal}
+            buttons={
+              <Button
+                className="btn-save"
+                onClick={this.togglePermissionModal}>CLOSE</Button>
+            }>
+              {this.props.roles.map((role, i) => (
+                <PanelGroup accordion={true} key={i} defaultActiveKey="">
+                  <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
+                    <Table striped={true} key={i}>
+                      <tbody>
+                      {this.props.permissions.get('ui').map((permission, i) => (
+                        <tr key={i}>
+                          <td className="no-border">{permission.get('title')}</td>
+                          <td><b>{role.get('permissions').get('ui').get(permission.get('name')) ? 'Yes' : 'No'}</b></td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </Table>
+                  </Panel>
+                </PanelGroup>
+              ))}
+          </ActionModal>
+        }
       </div>
     )
   }
@@ -361,6 +398,8 @@ AccountManagementAccountUsers.propTypes = {
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
+  permissions: React.PropTypes.instanceOf(Map),
+  permissionsActions: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
@@ -373,6 +412,7 @@ function mapStateToProps(state) {
   return {
     roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
+    permissions: state.permissions,
     groups: state.group.get('allGroups')
   }
 }
@@ -381,6 +421,7 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    permissionsActions: bindActionCreators(permissionsActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
