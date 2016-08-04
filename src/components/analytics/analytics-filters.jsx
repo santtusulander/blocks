@@ -137,8 +137,9 @@ const AnalyticsFilters = (props) => {
             noClear={true}
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
-            handleCheck={val =>
-              props.onFilterChange('statusCodes', val.toJS())}
+            handleCheck={val => {
+              console.log(val.toJS())
+              props.onFilterChange('statusCodes', val.toJS())}}
           />
         </div>
       }

@@ -29,17 +29,29 @@ export class FilterChecklistDropdown extends React.Component {
   handleCheck(optionVal) {
     let newVals = List()
     if(optionVal === 'all') {
-      newVals = this.props.values.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
-    } else if(optionVal === '4XX') {
-      newVals = this.props.values.includes('4XX') ?
-        this.props.values.filterNot(val => 400 <= Number(val) < 500) :
-        this.props.values.merge(this.props.options.filter(val => 400 <= Number(val) < 500))
-      console.log(newVals.toJS(), this.props.values.toJS(), this.props.values.has('4XX'))
-    } else if(optionVal === '5XX') {
-      newVals = this.props.values.includes('5XX') ?
-        this.props.values.filterNot(val => 500 <= Number(val)) :
-        this.props.values.merge(this.props.options.filter(val => 500 <= Number(val)))
-    } else {
+      newVals = this.props.values.size === this.props.options.size ?
+        List() : this.props.options.reduce((build, val) => {
+          if(!(val.get('value') instanceof Object)) {
+            build = build.push(val.get('value'))
+          }
+          return build
+        }, List())
+    }
+    else if(optionVal instanceof Object) {
+      let values = this.props.values
+      if(optionVal.filter(selected => values.findIndex(value => value === selected) >= 0).size === optionVal.size) {
+        values = values.filter(value => optionVal.findIndex(selected => selected === value) < 0)
+      }
+      else {
+        optionVal.forEach(item => {
+          if(!values.includes(item)) {
+            values = values.push(item)
+          }
+        })
+      }
+      newVals = values
+    }
+    else {
       const valIndex = this.props.values.indexOf(optionVal)
       newVals = valIndex === -1 ?
         this.props.values.push(optionVal) :
@@ -120,6 +132,10 @@ export class FilterChecklistDropdown extends React.Component {
       ]) : List()
 
       itemList = itemList.concat(filteredResults.map((option, i) => {
+        const value = option.get('value'), { values } = this.props
+        const checked = value instanceof Object ?
+          value.filter(option => values.findIndex(value => value === option) >= 0).size === value.size :
+          this.props.values.indexOf(value) !== -1
         return (
           <li key={i}
               role="presentation"
@@ -127,7 +143,7 @@ export class FilterChecklistDropdown extends React.Component {
             <Input type="checkbox"
                    label={option.get('label')}
                    value={option.get('value')}
-                   checked={this.props.values.indexOf(option.get('value')) !== -1}
+                   checked={checked}
                    onChange={() => this.handleCheck(option.get('value'))}/>
           </li>
         )
