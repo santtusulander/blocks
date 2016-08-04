@@ -398,9 +398,9 @@
 
       span,
       .dropdown-select__selected-item {
+        width: auto;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: auto;
         white-space: nowrap;
       }
     }
@@ -590,7 +590,7 @@
 
     &:hover:not(:disabled) {
       color: $white;
-      box-shadow: inset 0 0 0 1px $white;
+      box-shadow: 0 0 0 1px $white;
       fill: $white;
       stroke: $white;
     }
