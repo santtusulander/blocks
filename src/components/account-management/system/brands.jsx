@@ -1,8 +1,7 @@
 import React from 'react'
 import {
   BrandList,
-  AVAILABILITY_PRIVATE,
-  AVAILABILITY_SHARED,
+  AVAILABILITY_PRIVATE
   }  from '../brand-list.jsx'
 
 const fakeBrands = [

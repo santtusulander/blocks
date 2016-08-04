@@ -4,7 +4,6 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from './constants/permissions'
 import checkPermissions from './util/permissions'
-//import { store } from './app'
 
 import AccountManagement from './containers/account-management/account-management'
 import AccountManagementAccount from './components/account-management/account/account'
@@ -168,9 +167,12 @@ function getSupportTabRoutes() {
 
 const UserHasPermission = (permission, store) => UserAuthWrapper({
   authSelector: state => state.user.get('currentUser'),
+  /* THIS IS NOT NEEDED:
+  * From Docs: https://github.com/mjrussell/redux-auth-wrapper
+  * [redirectAction] (Function): Optional redux action creator for redirecting the user. If not present, will use React-Router's router context to perform the transition.
   redirectAction: newroute => {
     location.href = newroute.pathname // TODO: figure out how to route to this nicely
-  },
+  },*/
   failureRedirectPath: '/',
   wrapperDisplayName: 'UserHasPermission',
   predicate: user => checkPermissions(
