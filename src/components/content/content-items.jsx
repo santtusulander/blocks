@@ -81,15 +81,23 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
+  }
   onItemAdd() {
     this.props.createNewItem(...arguments)
-      .then((response) => {
-        if (response.error) {
+      .then(({ item, name, error, payload }) => {
+        if (error) {
           this.props.showInfoDialog({
             title: 'Error',
-            content: response.payload.data.message,
+            content: payload.data.message,
             buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
           })
+        } else if(item && name) {
+          this.hideModal()
+          this.showNotification(`${item} ${name} created.`)
         } else {
           this.hideModal()
         }
@@ -97,13 +105,16 @@ class ContentItems extends React.Component {
   }
   onItemSave() {
     this.props.editItem(...arguments)
-      .then((response) => {
-        if (response.error) {
+      .then(({ item, name, error, payload }) => {
+        if (error) {
           this.props.showInfoDialog({
             title: 'Error',
-            content: response.payload.data.message,
+            content: payload.data.message,
             buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
           })
+        } else if(item && name) {
+          this.hideModal()
+          this.showNotification('Group detail updates saved.')
         } else {
           this.hideModal()
         }
@@ -381,14 +392,15 @@ ContentItems.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
+  changeNotification: React.PropTypes.func,
   className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
-  fetchItem: React.PropTypes.func,
-  editItem: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   deleteItem: React.PropTypes.func,
+  editItem: React.PropTypes.func,
+  fetchItem: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
@@ -409,7 +421,7 @@ ContentItems.propTypes = {
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool,
+  viewingChart: React.PropTypes.bool
 }
 ContentItems.defaultProps = {
   activeAccount: Immutable.Map(),
