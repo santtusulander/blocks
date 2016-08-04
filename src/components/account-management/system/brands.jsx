@@ -17,7 +17,9 @@ class AccountManagementSystemBrands extends React.Component {
   render() {
     return (
       <div className="account-management-system-brands">
+        {/*
         <BrandList {...this.props} brands={fakeBrands} />
+        */}
       </div>
     )
   }
