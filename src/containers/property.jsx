@@ -307,6 +307,7 @@ export class Property extends React.Component {
             <p>PROPERTY SUMMARY</p>
             <div className="content-layout__header">
               <AccountSelector
+                as="propertySummary"
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}

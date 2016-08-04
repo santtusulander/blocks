@@ -230,6 +230,7 @@ export class Configuration extends React.Component {
               </ButtonToolbar>
               <p>CONFIGURATION</p>
               <AccountSelector
+                as="configuration"
                 params={this.props.params}
                 topBarTexts={{}}
                 user={this.props.user}

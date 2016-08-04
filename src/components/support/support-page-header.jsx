@@ -23,6 +23,7 @@ const SupportPageHeader = (props) => {
     <PageHeader>
       <p>SUPPORT</p>
       <AccountSelector
+        as="support"
         params={{ brand, account }}
         topBarTexts={{ brand: 'UDN Admin' }}
         topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}

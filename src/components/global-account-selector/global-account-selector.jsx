@@ -1,14 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
-import { Map, fromJS, is } from 'immutable'
-import axios from 'axios'
+import { bindActionCreators } from 'multireducer';
+import { Map, List, is } from 'immutable'
 
 import { resetChangedAccount } from '../../redux/modules/account'
-import { urlBase } from '../../redux/util'
+import * as accountSelectorActionCreators from '../../redux/modules/account-selector'
 
 import Menu from './selector-component.jsx'
-import {filterAccountsByUserName} from '../../util/helpers'
 
 const tierHierarchy = [
   'property',
@@ -17,17 +16,6 @@ const tierHierarchy = [
   'brand'
 ]
 
-const getAccounts = brand =>
-  axios.get(`${urlBase}/v2/brands/${brand}/accounts`)
-    .then(res => res && res.data)
-
-const getGroups = (brand, account) =>
-  axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
-    .then(res => res && res.data)
-
-const getProperties = (brand, account, group) =>
-  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
-
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
@@ -35,7 +23,7 @@ class AccountSelector extends Component {
     this.tier = null
     this.account = null
     this.group = null
-    this.handleSingleItemChanging = this.handleSingleItemChanging.bind(this)
+    // this.handleSingleItemChanging = this.handleSingleItemChanging.bind(this)
     this.fetchItems = this.fetchItems.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
@@ -43,8 +31,7 @@ class AccountSelector extends Component {
 
     this.state = {
       open: false,
-      searchValue: '',
-      items: []
+      searchValue: ''
     }
   }
 
@@ -71,18 +58,18 @@ class AccountSelector extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
 
-  handleSingleItemChanging({ name, id, action }) {
-    const { items } = this.state
-    const indexOfChanged = items.findIndex(item => item[0] === id)
-    switch(action) {
-      case 'delete': items.splice(indexOfChanged, 1)
-        break
-      case 'edit': items[indexOfChanged] = [id, name]
-        break
-      case 'add': items.push([id, name])
-    }
-    this.setState({ items })
-  }
+  // handleSingleItemChanging({ name, id, action }) {
+  //   const { items } = this.state
+  //   const indexOfChanged = items.findIndex(item => item[0] === id)
+  //   switch(action) {
+  //     case 'delete': items.splice(indexOfChanged, 1)
+  //       break
+  //     case 'edit': items[indexOfChanged] = [id, name]
+  //       break
+  //     case 'add': items.push([id, name])
+  //   }
+  //   this.setState({ items })
+  // }
 
   handleClick(e) {
     if (findDOMNode(this).contains(e.target)) {
@@ -112,36 +99,21 @@ class AccountSelector extends Component {
     this.setState({ searchValue: e.target.value });
   }
 
-  fetchItems(nextTier, ...params) {
+  fetchItems(nextTier, brand, account, group) {
+    let fetchParams = []
     switch(nextTier) {
       case 'property':
-        getProperties(...params)
-          .then(res => {
-            res && this.setState({ items: res.data.map(item => [item, item]) })
-          })
+        fetchParams = [brand, account, group]
         break
       case 'group':
-        getGroups(...params)
-          .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
+        fetchParams = [brand, account]
         break
       case 'brand':
       case 'account':
-        getAccounts(...params)
-          .then(res => {
-            if(res && res.data) {
-              const filteredAccounts = this.props.user.get('username') ?
-                filterAccountsByUserName(
-                  fromJS(res.data),
-                  this.props.user.get('username')
-                ).toJS() :
-                res.data
-              this.setState({
-                items: filteredAccounts.map(item => [item.id, item.name])
-              })
-            }
-          })
+        fetchParams = [brand]
         break
     }
+    this.props.accountSelectorActions.fetchItems(...fetchParams)
     this.tier = nextTier
   }
 
@@ -196,13 +168,14 @@ class AccountSelector extends Component {
   }
 
   sortedOptions() {
-    const { searchValue, items } = this.state
+    const { searchValue } = this.state
+    const { items } = this.props
     const itemsToSort = searchValue !== '' ?
-      items.filter(item => item[1].toLowerCase().includes(searchValue.toLowerCase())) :
+      items.filter(item => item.get(1).toLowerCase().includes(searchValue.toLowerCase())) :
       items
     return itemsToSort.sort((a,b) => {
-      if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
-      if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
+      if ( a.get(1).toLowerCase() < b.get(1).toLowerCase() ) return -1
+      if ( a.get(1).toLowerCase() > b.get(1).toLowerCase() ) return 1
       return 0
     })
   }
@@ -219,7 +192,7 @@ class AccountSelector extends Component {
       drillable: restrictedTo
         && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
         || this.tier === 'property' ? false : true,
-      items: this.sortedOptions(),
+      items: this.sortedOptions().toJS(),
       topBarText: topBarTexts[this.tier],
       onSelect: this.selectOption,
       searchValue,
@@ -233,9 +206,10 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
+  accountSelectorActions: PropTypes.object,
   fetchItems: PropTypes.func,
   getChangedItem: PropTypes.func,
-  items: PropTypes.array,
+  items: React.PropTypes.instanceOf(List),
   onSelect: PropTypes.func,
   params: PropTypes.object,
   resetChanged: PropTypes.func,
@@ -249,20 +223,22 @@ AccountSelector.defaultProps = {
   user: Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, {as}) {
   return {
     getChangedItem: tier => {
       switch(tier) {
         case 'brand':
         case 'account': return state.account.get('changedAccount')
       }
-    }
+    },
+    items: state.accountSelectors[as].get('items')
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, {as}) {
 
   return {
+    accountSelectorActions: bindActionCreators(accountSelectorActionCreators, dispatch, as),
     resetChanged: tier => {
       switch(tier) {
         case 'brand':

@@ -219,6 +219,7 @@ class ContentItems extends React.Component {
 
             <div className="content-layout__header">
               <AccountSelector
+                as="content"
                 params={this.props.params}
                 startTier={this.props.selectionStartTier}
                 topBarTexts={itemSelectorTexts}

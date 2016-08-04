@@ -201,6 +201,7 @@ class Header extends React.Component {
             </li>
             <li className="header__account-selector">
               <AccountSelector
+                as="header"
                 params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}

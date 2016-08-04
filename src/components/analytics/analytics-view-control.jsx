@@ -116,6 +116,7 @@ const AnalyticsViewControl = (props) => {
       <p className="analytics-view-control__title">{title}</p>
       <div className="analytics-view-control__header">
         <AccountSelector
+          as="analytics"
           params={props.params}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}

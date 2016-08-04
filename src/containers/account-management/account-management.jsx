@@ -319,6 +319,7 @@ export class AccountManagement extends Component {
           <div className="account-management-manage-account">
             <PageHeader>
               <AccountSelector
+                as="accountManagement"
                 params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
