@@ -23,7 +23,7 @@ const validate = (values) => {
     errors.name = 'Group name is required'
   }
 
-  if( name && !/^[a-zA-Z0-9_\.,\-\&\(\)\[\]]{3,40}$/g.test(name) ) {
+  if( name && !/^[a-zA-Z0-9_ \.,\-\&\(\)\[\]]{3,40}$/g.test(name) ) {
     errors.name = 'Group name is invalid'
   }
 
