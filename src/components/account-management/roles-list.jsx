@@ -118,10 +118,10 @@ class RolesList extends React.Component {
                       this.props.permissions.get('north')
                     ).toArray(),*/
                     ...this.labelPermissions(
-                      role.get('permissions').get('ui'),
                       this.props.permissions.get('ui')
                     ).toArray()
                   ]} />
+                        role.get('permissions').get('ui').filter(permission => permission),
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
