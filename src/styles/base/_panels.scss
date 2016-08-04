@@ -1,6 +1,8 @@
 // Panels
 // ======
 
+$bg-permission-panel: #1e6a86;
+
 .panel {
   margin-bottom: 0;
   background-color: transparent;
@@ -11,4 +13,102 @@
 
 .panel-body {
   padding: 0;
+}
+
+.permission-panel {
+
+  .panel-heading {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+
+    .dark-theme & {
+      background: $bg-permission-panel;
+    }
+
+    .light-theme & {
+      background: $silver-40;
+    }
+
+    h4 {
+      font-size: 20px;
+      font-weight: bold;
+      color: $white;
+    }
+
+    a {
+      position: relative;
+      display: block;
+      padding: $btn-height / 2;
+      text-decoration: none;
+
+      @include md {
+        padding: $md-btn-height / 2;
+      }
+
+      &::after {
+        position: absolute;
+        top: 50%;
+        right: $btn-height / 2;
+        display: block;
+        border-right: 7px solid transparent;
+        border-bottom: 11px solid;
+        border-left: 7px solid transparent;
+        content: '';
+        transform: translateY(-50%);
+
+        .dark-theme & {
+          border-bottom-color: $white;
+        }
+
+        .light-theme & {
+          border-bottom-color: $lt-text-color;
+        }
+      }
+
+      &:hover::after {
+
+        .dark-theme & {
+          border-bottom-color: $white;
+        }
+
+        .light-theme & {
+          border-bottom-color: rgba($black, 0.4);
+        }
+      }
+
+      &.collapsed {
+
+        &::after {
+          border-top: 11px solid;
+          border-right: 7px solid transparent;
+          border-bottom: 0;
+          border-left: 7px solid transparent;
+
+          .dark-theme & {
+            border-top-color: $dt-text-color;
+          }
+
+          .light-theme & {
+            border-top-color: $lt-text-color;
+          }
+        }
+
+        &:hover::after {
+
+          .dark-theme & {
+            border-top-color: $white;
+          }
+
+          .light-theme & {
+            border-top-color: rgba($black, 0.4);
+          }
+        }
+      }
+    }
+  }
+
+  .panel-heading + .panel-collapse > .panel-body {
+    border: 0;
+  }
 }
