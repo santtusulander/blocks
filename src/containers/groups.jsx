@@ -33,24 +33,20 @@ export class Groups extends React.Component {
     this.props.fetchData()
     //}
   }
-  showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
   createGroup(data, usersToAdd) {
     return this.props.groupActions.createGroup('udn', this.props.params.account, data.name)
-        .then(({ payload }) => {
-          this.props.clearFetchedHosts()
-          return Promise.all(usersToAdd.map(email => {
-            const foundUser = this.props.user.get('allUsers')
-              .find(user => user.get('email') === email)
-            const newUser = {
-              group_id: foundUser.get('group_id').push(payload.id).toJS()
-            }
-            return this.props.updateUser(email, newUser)
-          }))
-        })
+      .then(({ payload }) => {
+        this.props.clearFetchedHosts()
+        return Promise.all(usersToAdd.map(email => {
+          const foundUser = this.props.user.get('allUsers')
+            .find(user => user.get('email') === email)
+          const newUser = {
+            group_id: foundUser.get('group_id').push(payload.id).toJS()
+          }
+          return this.props.updateUser(email, newUser)
+        }))
+        .then(() => ({ item: 'Group', name: data.name }))
+      })
   }
   editGroup(groupId, data, addUsers, deleteUsers) {
     const groupIdsByEmail = email => this.props.user.get('allUsers')
@@ -76,10 +72,7 @@ export class Groups extends React.Component {
       ...addUserActions,
       ...deleteUserActions
     ])
-    .then(() => {
-      this.props.toggleModal(null)
-      this.showNotification('Group detail updates saved.')
-    })
+    .then(() => ({ item: 'Group', name: data.name }))
   }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
@@ -111,6 +104,7 @@ export class Groups extends React.Component {
         params={this.props.params}
         className="groups-container"
         contentItems={this.props.groups}
+        changeNotification={this.props.uiActions.changeNotification}
         dailyTraffic={this.props.dailyTraffic}
         createNewItem={this.createGroup}
         editItem={this.editGroup}
