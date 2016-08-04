@@ -398,9 +398,10 @@
 
       span,
       .dropdown-select__selected-item {
+        display: block;
+        width: auto;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: auto;
         white-space: nowrap;
       }
     }

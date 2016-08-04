@@ -73,7 +73,7 @@ class AccountList extends Component {
               this.setState({ accountServices: newValues })
             }}
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-          positionClass: 'col-sm-6'
+          positionClass: 'row col-xs-6'
       } ]
     ]
   }
