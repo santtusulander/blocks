@@ -147,7 +147,7 @@ export class Main extends React.Component {
   }
   render() {
     if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
-      return <div>Loading...</div>
+      return <LoadingSpinner />
     }
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
