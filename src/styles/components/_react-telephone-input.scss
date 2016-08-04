@@ -4,24 +4,25 @@
   .flag {
     background-image: url('../assets/img/flags.png') !important;
   }
+
   input[type=text],
   input[type=tel] {
+    position: relative;
+    z-index: 0;
+    width: 100%;
     height: $bar-height;
     max-width: 900px;
     padding: ($btn-sm-height / 3) ($btn-height / 2);
+    padding-left: 60px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0;
     font-size: inherit;
     color: inherit;
     border: 0;
     border-radius: 2px;
     box-shadow: none;
     transition: box-shadow 0s;
-    position: relative;
-    z-index: 0;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding-left: 60px !important;
-    margin-left: 0;
-    width: 100%;
 
     @include md {
       height: $md-bar-height;
@@ -130,51 +131,70 @@
       }
     }
   }
+
   .flag-dropdown {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    padding: 0 10px 0 0;
-    width: 60px;
-    display: flex;
-    border: none;
+    position: relative;
     background: transparent;
+    border: 0;
+
+    .selected-flag {
+      position: absolute;
+      top: -$bar-height;
+      bottom: auto;
+      display: flex;
+      width: 60px;
+      height: $bar-height;
+      background: none;
+
+      @include md {
+        top: -$md-bar-height;
+        height: $md-bar-height;
+      }
+    }
 
     &.open-dropdown {
       background-color: transparent;
-      .selected-flag {
-        background-color: transparent;
-      }
-    }
-    &:hover {
-      cursor: pointer;
-      background-color: transparent;
 
       .selected-flag {
-        background-color: transparent;
+        background: transparent;
+        border-radius: 0;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: transparent;
+
+      .selected-flag {
+        background: transparent;
       }
     }
   }
+
   input[disabled] {
+
     &+.flag-dropdown {
+
       &:hover {
         cursor: default;
+
         .selected-flag {
           background-color: transparent;
         }
       }
     }
   }
+
   .selected-flag {
-    z-index: 13;
     position: relative;
+    z-index: 13;
     display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
     width: 100%;
+    height: 100%;
     background-color: transparent;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
 
     .flag {
       position: relative;
@@ -183,63 +203,89 @@
     }
 
     .arrow {
-      display: none;
       position: relative;
       top: 50%;
-      margin-top: -2px;
       left: 20px;
+      display: none;
       width: 0;
       height: 0;
-      border-left: 3px solid transparent;
-      border-right: 3px solid transparent;
+      margin-top: -2px;
       border-top: 4px solid #555;
+      border-right: 3px solid transparent;
+      border-left: 3px solid transparent;
 
       &.up {
-        border-top: none;
+        border-top: 0;
         border-bottom: 4px solid #555;
       }
     }
   }
 
   .country-list {
-    list-style: none;
     position: absolute;
-    z-index: 2;
-    padding: 0;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-    background-color: white;
-    border: 1px solid #ccc;
-    width: 400px;
-    max-height: 200px;
-    overflow-y: scroll;
-    border-radius: 0 0 3px 3px;
     top: 100%;
     left: 0;
+    z-index: 10;
+    width: 100%;
+    max-height: 250px;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    list-style: none;
+    border: 0;
+    border-radius: 0 0 2px 2px;
+    box-shadow: none;
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background-color: $black;
+      background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+      background-size: 100%;
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+      background-color: $silver-30;
+    }
 
     .flag {
       display: inline-block;
+      margin-top: 2px;
+      margin-right: 15px;
     }
+
     .divider {
-      padding-bottom: 5px;
-      margin-bottom: 5px;
-      border-bottom: 1px solid #ccc;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: 1px solid rgba($black, 0.1);
     }
+
     .country {
-      padding: 5px 10px;
+      padding: 10px $dropdown-padding;
+
       .dial-code {
         color: #999;
       }
-      &:hover {
-        background-color: #e8f7fe;
+
+      .dark-theme & {
+
+        &:hover,
+        &.highlight {
+          color: $pale-blue;
+          background-color: rgba($pale-blue, 0.1);
+        }
       }
-      &.highlight {
-        background-color: #c7e2f1;
+
+      .light-theme & {
+
+        &:hover,
+        &.highlight {
+          color: $black;
+          background-color: rgba($black, 0.1);
+        }
       }
     }
-    .flag {
-      margin-right: 6px;
-      margin-top: 2px;
-    }
+
     .country-name {
       margin-right: 6px;
     }

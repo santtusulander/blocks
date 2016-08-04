@@ -37,10 +37,9 @@ class ContentItemList extends React.Component {
     })
   }
   render() {
-    const tooltip = (<Tooltip className="content-item-chart-tooltip"><h3>{this.props.name}</h3></Tooltip>)
+    const tooltip = (<Tooltip className="content-item-chart-tooltip display-long-name-tooltip"><h3>{this.props.name}</h3></Tooltip>)
     return (
       <div className="content-item-list">
-
         <div className="content-item-list-section section-lg">
           <Link className="content-item-list-link" to={this.props.linkTo}>
             <div className="content-item-details">
