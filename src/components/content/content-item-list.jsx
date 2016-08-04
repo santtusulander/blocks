@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { ButtonToolbar, Col, Row, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { Link } from 'react-router'
@@ -8,6 +8,7 @@ import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
+import TruncatedTitle from '../truncated-title'
 
 class ContentItemList extends React.Component {
   constructor(props) {
@@ -16,8 +17,7 @@ class ContentItemList extends React.Component {
     this.state = {
       byLocationWidth: 0,
       byTimeWidth: 0,
-      byTimeHeight: 0,
-      isTitleTruncated: false
+      byTimeHeight: 0
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -32,24 +32,16 @@ class ContentItemList extends React.Component {
   measureContainers() {
     this.setState({
       byTimeWidth: this.refs.byTimeHolder.clientWidth,
-      byTimeHeight: this.refs.byTimeHolder.clientHeight,
-      isTitleTruncated: this.refs.contentItemName.scrollWidth > this.refs.contentItemName.clientWidth
+      byTimeHeight: this.refs.byTimeHolder.clientHeight
     })
   }
   render() {
-    const tooltip = (<Tooltip className="content-item-chart-tooltip display-long-name-tooltip"><h3>{this.props.name}</h3></Tooltip>)
     return (
       <div className="content-item-list">
         <div className="content-item-list-section section-lg">
           <Link className="content-item-list-link" to={this.props.linkTo}>
             <div className="content-item-details">
-              {this.state.isTitleTruncated ?
-                <OverlayTrigger placement="top" overlay={tooltip}>
-                  <div className="content-item-list-name" ref="contentItemName">{this.props.name}</div>
-                </OverlayTrigger> :
-                <div className="content-item-list-name" ref="contentItemName">{this.props.name}</div>
-              }
-
+              <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
               <div className="content-item-list-details text-sm">
                 <p>Last Edited</p>
                 <p>Yesterday 12:30 pm</p>
