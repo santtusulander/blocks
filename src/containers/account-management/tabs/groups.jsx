@@ -17,6 +17,8 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 import ArrayTd from '../../../components/array-td/array-td'
 
 import { checkForErrors } from '../../../util/helpers'
+import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -41,6 +43,7 @@ class AccountManagementAccountGroups extends React.Component {
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
+    this.validateInlineAdd = this.validateInlineAdd.bind(this)
   }
   componentWillMount() {
     const { brand, account } = this.props.params
@@ -91,6 +94,22 @@ class AccountManagementAccountGroups extends React.Component {
       e.stopPropagation()
       this.setState({ editing: group })
     }
+  }
+
+  validateInlineAdd({name = ''}){
+    const conditions = {
+      name: [
+        {
+          condition: this.props.groups.findIndex(account => account.get('name') === name) > -1,
+          errorText: 'That account name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          errorText: 'Account name is invalid'
+        }
+      ]
+    }
+    return checkForErrors({ name }, conditions)
   }
 
   // TODO: Now that this is a container, no need to pass this in
@@ -220,7 +239,7 @@ class AccountManagementAccountGroups extends React.Component {
           </thead>
           <tbody>
           {this.state.adding && <InlineAdd
-            validate={name => checkForErrors({ name }, {})}
+            validate={this.validateInlineAdd}
             fields={['name']}
             inputs={inlineAddInputs}
             cancel={this.cancelAdding}
