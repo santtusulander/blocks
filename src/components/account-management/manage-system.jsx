@@ -2,7 +2,7 @@ import React from 'react'
 import { Nav, NavItem } from 'react-bootstrap'
 
 import PageHeader from '../layout/page-header'
-// import Brands from './system/brands'
+import Brands from './system/brands'
 import DNS from './system/dns'
 import Roles from './system/roles'
 import Users from './system/users'
@@ -29,7 +29,7 @@ class AccountManagementManageSystem extends React.Component {
         <Nav bsStyle="tabs" className="system-nav"
           activeKey={this.state.activeTab} onSelect={this.changeTab}>
           <NavItem eventKey="users">Users</NavItem>
-          {/*<NavItem eventKey="brands">Brands</NavItem>*/}
+          <NavItem eventKey="brands">Brands</NavItem>
           <NavItem eventKey="dns">DNS</NavItem>
           <NavItem eventKey="roles">Roles</NavItem>
         </Nav>
@@ -37,11 +37,9 @@ class AccountManagementManageSystem extends React.Component {
           {this.state.activeTab === 'users' &&
             <Users/>
           }
-          {/*
           {this.state.activeTab === 'brands' &&
             <Brands {...this.props.brandsList} />
           }
-          */}
           {this.state.activeTab === 'dns' &&
             <DNS {...this.props.dnsList}/>
           }

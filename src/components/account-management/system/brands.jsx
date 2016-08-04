@@ -1,8 +1,7 @@
 import React from 'react'
 import {
   BrandList,
-  AVAILABILITY_PRIVATE,
-  AVAILABILITY_SHARED,
+  AVAILABILITY_PRIVATE
   }  from '../brand-list.jsx'
 
 const fakeBrands = [
@@ -17,9 +16,7 @@ class AccountManagementSystemBrands extends React.Component {
   render() {
     return (
       <div className="account-management-system-brands">
-        {/*
         <BrandList {...this.props} brands={fakeBrands} />
-        */}
       </div>
     )
   }
