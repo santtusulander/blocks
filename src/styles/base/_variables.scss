@@ -65,8 +65,8 @@ $sm-btn-min-width: 100px;
 $btn-sm-height: 50px;
 $md-btn-sm-height: 40px;
 
-$header-btn-height: 50px;
-$md-header-btn-height: 40px;
+$header-btn-height: 30px;
+$md-header-btn-height: 30px;
 
 
 $dropdown-padding: 24px;
@@ -102,8 +102,8 @@ $md-content-item-list-height: 140px;
 // Components
 // ==========
 
-$header-height: 80px;
-$md-header-height: 60px;
+$header-height: 48px;
+$md-header-height: 48px;
 
 $header-gradient-height: 10px;
 
@@ -124,6 +124,9 @@ $sm-modal-header-height: 150px;
 
 $configuration-dialog-height: 130px;
 $md-configuration-dialog-height: 90px;
+
+$action-modal-width: 800px;
+$md-action-modal-width: 640px;
 
 $footer-height: 60px;
 

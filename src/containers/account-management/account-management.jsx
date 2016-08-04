@@ -19,14 +19,11 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
-import IconAdd from '../../components/icons/icon-add'
-import IconTrash from '../../components/icons/icon-trash'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
 import DeleteUserModal from '../../components/account-management/delete-user-modal'
 import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
-import UDNButton from '../../components/button'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
@@ -74,12 +71,18 @@ export class AccountManagement extends Component {
     if(account) {
       this.props.userActions.fetchUsers(brand, account)
     }
+    else if(this.props.accounts.size) {
+      this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
+    const { brand, account } = nextProps.params
     if(nextProps.params.account && nextProps.params.account !== this.props.params.account) {
-      const { brand, account } = nextProps.params
       this.props.userActions.fetchUsers(brand, account)
+    }
+    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+      this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
   }
 
@@ -306,7 +309,8 @@ export class AccountManagement extends Component {
         accountType: accountType && accountType.value
       },
       roles: this.props.roles,
-      permissions: this.props.permissions
+      permissions: this.props.permissions,
+      users: this.props.users
     }
 
     return (

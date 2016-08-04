@@ -61,9 +61,9 @@
   }
 
   &.btn-outline {
+    color: $dt-text-color;
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
-    color: $dt-text-color;
 
     &,
     &:hover,
@@ -143,43 +143,56 @@
 
   &.btn-header {
     height: $header-btn-height;
-    margin-top: ($bar-height - $header-btn-height) / 2;
-    margin-right: 10px;
-    margin-bottom: ($bar-height - $header-btn-height) / 2;
-    margin-left: 10px;
+    margin-top: ($header-height - $header-btn-height) / 2;
+    margin-right: 8px;
+    margin-bottom: ($header-height - $header-btn-height) / 2;
+    margin-left: 8px;
     line-height: $header-btn-height;
     color: $dt-text-color;
     background-color: rgba($pale-blue, 0.1);
     fill: $dt-text-color;
     stroke: $dt-text-color;
 
-    @include lg {
-      margin-right: 5px;
-      margin-left: 5px;
+    @include md {
+      margin-top: ($md-header-height - $md-header-btn-height) / 2;
+      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
+      line-height: $md-header-btn-height;
     }
 
-    @include md {
-      height: $md-btn-height;
-      margin-top: ($md-bar-height - $md-header-btn-height) / 2;
-      margin-bottom: ($md-bar-height - $md-header-btn-height) / 2;
-      line-height: $md-header-btn-height;
+    &.btn-icon {
+      .icon {
+        transform: translate(-50%, -50%) scale(1, 1);
+      }
+    }
+
+    &.btn-alerts {
+      svg {
+        width: 11px;
+      }
+    }
+
+    &.btn-help {
+      svg {
+        width: 8px;
+      }
     }
   }
 
   &.btn-user-menu,
   .btn-group > &.btn.btn-user-menu:first-child {
-    margin-top: ($bar-height - $btn-height) / 2;
-    margin-right: ($bar-height / 2);
-    margin-bottom: ($bar-height - $btn-height) / 2;
-    margin-left: 10px;
+    width: $header-btn-height;
+    height: $header-btn-height;
+    margin-top: ($header-height - $header-btn-height) / 2;
+    margin-right: 20px;
+    margin-bottom: ($header-height - $header-btn-height) / 2;
+    margin-left: 8px;
     overflow: hidden;
     background: url('../assets/img/img-user.jpg') center center no-repeat;
     background-size: cover;
 
     @include md {
-      margin-top: ($md-bar-height - $md-btn-height) / 2;
-      margin-right: ($md-bar-height / 3);
-      margin-bottom: ($md-bar-height - $md-btn-height) / 2;
+      margin-top: ($md-header-height - $md-header-btn-height) / 2;
+      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
     }
 
     img {
@@ -218,6 +231,7 @@
   .caret {
     position: relative;
     margin: -6px ($btn-height / 4) 0 ($btn-height / 2);
+    color: $white;
     border: 0;
 
     @include md {
@@ -260,6 +274,30 @@
       border-left: 5px solid transparent;
       content: '';
       transform: translate(-50%, -50%);
+    }
+
+    .header & {
+      margin: -2px 12.5px 0 25px;
+
+      &::before {
+        width: 18px;
+        height: 18px;
+        margin-top: -8.5px;
+        margin-left: -9.5px;
+
+        @include md {
+          margin-top: -8.5px;
+          margin-left: -9.5px;
+        }
+
+        .dark-theme & {
+          background-color: $black;
+        }
+      }
+
+      &::after {
+        transform: translate(-50%, -50%) scale(0.75, 0.75);
+      }
     }
   }
 
@@ -308,22 +346,21 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
 
     .dark-theme &,
     .light-theme & {
       color: $dt-text-color;
-      background: $purple;
+      background: $red;
     }
   }
 }
 
 .dark-theme,
-.light-theme .header,
-  /* TODO: Should this be removed? .light-theme .configuration-sidebar */
-{
+// TODO: Should this be removed? .light-theme .configuration-sidebar
+.light-theme .header {
 
   .dropdown-select {
 
@@ -357,6 +394,14 @@
         @include print {
           display: none;
         }
+      }
+
+      span,
+      .dropdown-select__selected-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: auto;
+        white-space: nowrap;
       }
     }
 
@@ -521,13 +566,33 @@
     &:focus,
     &:active,
     &.active {
-      color: $dt-text-color;
+      color: $pale-blue;
       text-decoration: none;
       background-color: transparent;
     }
 
     &:hover:not(:disabled) {
       color: $pale-blue;
+    }
+  }
+}
+
+.light-theme .header {
+  .btn-tertiary {
+
+    &,
+    &:hover {
+      color: $white;
+      background-color: $silver-80;
+      fill: $white;
+      stroke: $white;
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      box-shadow: inset 0 0 0 1px $white;
+      fill: $white;
+      stroke: $white;
     }
   }
 }
@@ -598,9 +663,9 @@
   }
 
   .configuration-sidebar .btn-outline {
-    background-color: $white !important;
     color: $pale-blue;
-    border: 0px;
+    background-color: $white !important;
+    border: 0;
   }
 
   .configuration-sidebar .btn-primary,
@@ -707,10 +772,10 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $lt-text-color;
       background-color: rgba($black, 0.2);
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $lt-text-color;
+      stroke: $lt-text-color;
     }
 
     &:hover:not(:disabled) {

@@ -24,13 +24,13 @@ class RolesList extends React.Component {
     this.sortedData = this.sortedData.bind(this);
   }
 
-  labelPermissions(rolePermissions, permissions, section) {
+  labelPermissions(rolePermissions, permissions) {
     let permissionNames = rolePermissions
       .map((rules, key) => {
         let permissionName = permissions
           .find(permission => permission.get('name') === key)
           .get('title')
-        return `${section}: ${permissionName} (${key})`
+        return permissionName
       })
     return permissionNames;
   }
@@ -92,36 +92,38 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name">Role</TableSorter>
               <th>Permissions</th>
               <th>Assigned To</th>
-              <th></th>
+              <th width="1%"></th>
             </tr>
           </thead>
 
           <tbody>
             {sortedRoles.map( (role, i) => {
+              const userCount = this.props.users
+                .filter(user => user.get('roles').contains(role.get('id')))
+                .size
+
               return (
                 <tr className='roles-list-row' key={i}>
                   <td>
                     {role.get('name')}
                   </td>
-                  <ArrayTd items={[
+                  <ArrayTd maxItemsShown={5} items={[/*
+                    TODO: Uncomment these when we support API permissions
                     ...this.labelPermissions(
                       role.get('permissions').get('aaa'),
-                      this.props.permissions.get('aaa'),
-                      'AAA'
+                      this.props.permissions.get('aaa')
                     ).toArray(),
                     ...this.labelPermissions(
                       role.get('permissions').get('north'),
-                      this.props.permissions.get('north'),
-                      'North'
-                    ).toArray(),
+                      this.props.permissions.get('north')
+                    ).toArray(),*/
                     ...this.labelPermissions(
                       role.get('permissions').get('ui'),
-                      this.props.permissions.get('ui'),
-                      'UI'
+                      this.props.permissions.get('ui')
                     ).toArray()
                   ]} />
                   <td>
-                    NEEDS API
+                    {userCount} User{userCount !== 1 && 's'}
                   </td>
                   <td>
                     <ActionLinks
@@ -159,11 +161,13 @@ RolesList.propTypes = {
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
-  showAddNewDialog: React.PropTypes.bool
+  showAddNewDialog: React.PropTypes.bool,
+  users: React.PropTypes.instanceOf(Immutable.List)
 }
 RolesList.defaultProps = {
-  permissions: Immutable.List([]),
-  roles: Immutable.List([])
+  permissions: Immutable.Map(),
+  roles: Immutable.List(),
+  users: Immutable.List()
 }
 
 module.exports = RolesList

@@ -44,6 +44,7 @@ class AccountManagementSystemRoles extends React.Component {
         <RolesList
           editRole={this.state.editRole}
           roles={this.props.roles}
+          users={this.props.users}
           permissions={this.props.permissions}
           onCancel={this.hideAddNewRoleDialog}
           onSave={this.saveRole}
@@ -58,11 +59,13 @@ class AccountManagementSystemRoles extends React.Component {
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
   permissions: React.PropTypes.instanceOf(Immutable.Map),
-  roles: React.PropTypes.instanceOf(Immutable.List)
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  users: React.PropTypes.instanceOf(Immutable.List)
 }
 AccountManagementSystemRoles.defaultProps = {
   permissions: Immutable.Map(),
-  roles: Immutable.List()
+  roles: Immutable.List(),
+  users: Immutable.List()
 }
 
 module.exports = AccountManagementSystemRoles
