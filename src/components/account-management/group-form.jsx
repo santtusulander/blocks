@@ -43,7 +43,7 @@ class GroupForm extends React.Component {
 
 
   componentWillMount() {
-    if (this.props.group) {
+    if (!this.props.group.isEmpty()) {
       const {
         group,
         fields: {
@@ -126,8 +126,8 @@ class GroupForm extends React.Component {
       return arr;
     }, []))
 
-    const title = this.props.group ? 'Edit Group' : 'Add new group'
-    const subTitle = this.props.group ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
+    const title = !this.props.group.isEmpty() ? 'Edit Group' : 'Add new group'
+    const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -194,7 +194,7 @@ class GroupForm extends React.Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>{this.props.group ? 'Save' : 'Add'}</Button>
+                      onClick={this.save}>{!this.props.group.isEmpty() ? 'Save' : 'Add'}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
