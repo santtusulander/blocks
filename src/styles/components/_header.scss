@@ -62,15 +62,11 @@
       display: flex;
       padding: 0 20px 0 30px;
       margin: 14.5px 20px 14.5px 0;
-      border-right: 1px solid $silver-60;
+      border-right: 1px solid $silver-80;
 
       .dropdown-toggle {
         font-weight: bold;
         text-transform: uppercase;
-
-        .dark-theme & {
-          color: $pale-blue;
-        }
       }
     }
   }
@@ -102,10 +98,13 @@
     }
   }
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     background-color: $dt-header-background-color;
-    background-size: 100%;
+  }
+
+  .light-theme & {
+    background-color: $silver-20;
+    border-bottom: 1px solid $silver-80;
   }
 
   .form-control {
@@ -127,11 +126,29 @@
 
     &.header-search-input {
       width: 156px;
-      color: $dt-text-color;
-      background-color: rgba($black, 0.2);
 
-      &::placeholder {
-        color: rgba($dt-text-color, 0.3);
+      .dark-theme & {
+        color: $dt-text-color;
+        background-color: rgba($black, 0.2);
+
+        &::placeholder {
+          color: rgba($dt-text-color, 0.3);
+        }
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+        background-color: transparent;
+        box-shadow: inset 0 0 0 1px $silver-80;
+
+        &:focus,
+        &:active {
+          box-shadow: inset 0 0 0 1px $white;
+        }
+
+        &::placeholder {
+          color: $lt-text-color;
+        }
       }
     }
 

@@ -16,12 +16,20 @@ $dark-blue-navi: #070d1e;
   z-index: 10000;
   width: $navigation-sidebar-width;
   height: 100vh;
-  background-color: $black;
   box-sizing: border-box;
   transition: all $navigation-transition-time;
 
   @include md {
     top: $md-header-total-height;
+  }
+
+  .dark-theme & {
+    background-color: $black;
+  }
+
+  .light-theme & {
+    background-color: $white-20;
+    box-shadow: 8px 0 5px -8px rgba(0, 0, 0, 0.2);
   }
 
   ul {
@@ -49,8 +57,24 @@ $dark-blue-navi: #070d1e;
         border-left: $navigation-sidebar-border-width solid transparent;
         fill: $silver-60;
 
+        .dark-theme & {
+          color: $silver-60;
+          fill: $silver-60;
+        }
+
+        .light-theme & {
+          color: $grey-80;
+          fill: $grey-80;
+        }
+
         &.active {
+          color: $pale-blue;
           border-left: $navigation-sidebar-border-width solid $pale-blue;
+
+          svg {
+            fill: $pale-blue;
+            stroke: $pale-blue;
+          }
         }
 
         svg {

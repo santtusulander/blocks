@@ -290,8 +290,7 @@
           margin-left: -9.5px;
         }
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           background-color: $black;
         }
       }
@@ -559,13 +558,33 @@
     &:focus,
     &:active,
     &.active {
-      color: $dt-text-color;
+      color: $pale-blue;
       text-decoration: none;
       background-color: transparent;
     }
 
     &:hover:not(:disabled) {
       color: $pale-blue;
+    }
+  }
+}
+
+.light-theme .header {
+  .btn-tertiary {
+
+    &,
+    &:hover {
+      color: $white;
+      background-color: $silver-80;
+      fill: $white;
+      stroke: $white;
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      box-shadow: inset 0 0 0 1px $white;
+      fill: $white;
+      stroke: $white;
     }
   }
 }
@@ -745,10 +764,10 @@
 
     &,
     &:hover {
-      color: $lt-button-color;
+      color: $lt-text-color;
       background-color: rgba($black, 0.2);
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
+      fill: $lt-text-color;
+      stroke: $lt-text-color;
     }
 
     &:hover:not(:disabled) {
