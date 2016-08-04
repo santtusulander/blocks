@@ -26,18 +26,22 @@ export class FilterChecklistDropdown extends React.Component {
     this.setState({ dropdownOpen: !val })
   }
 
+  areAllSelected({ values, options }) {
+    return options.filter(option => !(option.get('value') instanceof List)).size === values.size
+  }
+
   handleCheck(optionVal) {
     let newVals = List()
     if(optionVal === 'all') {
-      newVals = this.props.values.size === this.props.options.size ?
-        List() : this.props.options.reduce((build, val) => {
-          if(!(val.get('value') instanceof Object)) {
-            build = build.push(val.get('value'))
+      newVals = this.areAllSelected(this.props) ? List() :
+        this.props.options.reduce((reduction, val) => {
+          if(!(val.get('value') instanceof List)) {
+            reduction = reduction.push(val.get('value'))
           }
-          return build
+          return reduction
         }, List())
     }
-    else if(optionVal instanceof Object) {
+    else if(optionVal instanceof List) {
       let values = this.props.values
       if(optionVal.filter(selected => values.findIndex(value => value === selected) >= 0).size === optionVal.size) {
         values = values.filter(value => optionVal.findIndex(selected => selected === value) < 0)
@@ -126,14 +130,14 @@ export class FilterChecklistDropdown extends React.Component {
           <Input type="checkbox"
                  label={`SELECT ALL (${this.props.options.size})`}
                  value="all"
-                 checked={this.props.values.size === this.props.options.size}
+                 checked={this.areAllSelected(this.props)}
                  onChange={() => this.handleCheck("all")}/>
         </li>
       ]) : List()
 
       itemList = itemList.concat(filteredResults.map((option, i) => {
         const value = option.get('value'), { values } = this.props
-        const checked = value instanceof Object ?
+        const checked = value instanceof List ?
           value.filter(option => values.findIndex(value => value === option) >= 0).size === value.size :
           this.props.values.indexOf(value) !== -1
         return (
