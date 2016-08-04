@@ -20,6 +20,7 @@ import ErrorModal from '../components/error-modal'
 import InfoModal from '../components/info-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 export class Main extends React.Component {
   constructor(props) {
