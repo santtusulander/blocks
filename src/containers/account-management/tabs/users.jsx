@@ -321,7 +321,7 @@ export class AccountManagementAccountUsers extends React.Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {sortedUsers.map((user, i) => {
+            {this.props.groups.size !== 0 && sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
