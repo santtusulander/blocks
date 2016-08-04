@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import {List} from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
@@ -16,50 +17,40 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     this.handleCheck  = this.handleCheck.bind(this)
+    this.handleClick  = this.handleClick.bind(this)
     this.handleClear  = this.handleClear.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
     this.getLabel     = this.getLabel.bind(this)
     this.getFilteredResults = this.getFilteredResults.bind(this)
   }
 
+  componentWillMount() {
+    document.addEventListener('click', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, false)
+  }
+
+  handleClick(e) {
+    !findDOMNode(this).contains(e.target) && this.state.dropdownOpen &&
+      this.setState({ dropdownOpen: false })
+  }
+
   toggleDropdown(val) {
     this.setState({ dropdownOpen: !val })
   }
 
-  areAllSelected({ values, options }) {
-    return options.filter(option => !(option.get('value') instanceof List)).size === values.size
-  }
-
   handleCheck(optionVal) {
     let newVals = List()
-    if(optionVal === 'all') {
-      newVals = this.areAllSelected(this.props) ? List() :
-        this.props.options.reduce((reduction, val) => {
-          if(!(val.get('value') instanceof List)) {
-            reduction = reduction.push(val.get('value'))
-          }
-          return reduction
-        }, List())
-    }
-    else if(optionVal instanceof List) {
-      let values = this.props.values
-      if(optionVal.filter(selected => values.findIndex(value => value === selected) >= 0).size === optionVal.size) {
-        values = values.filter(value => optionVal.findIndex(selected => selected === value) < 0)
-      }
-      else {
-        optionVal.forEach(item => {
-          if(!values.includes(item)) {
-            values = values.push(item)
-          }
-        })
-      }
-      newVals = values
-    }
-    else {
+    if(optionVal !== 'all') {
       const valIndex = this.props.values.indexOf(optionVal)
       newVals = valIndex === -1 ?
         this.props.values.push(optionVal) :
         this.props.values.delete(valIndex)
+    }
+    else {
+      newVals = this.props.values.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
     }
     this.props.handleCheck(newVals)
 
@@ -130,16 +121,13 @@ export class FilterChecklistDropdown extends React.Component {
           <Input type="checkbox"
                  label={`SELECT ALL (${this.props.options.size})`}
                  value="all"
-                 checked={this.areAllSelected(this.props)}
+                 checked={this.props.values.size === this.props.options.size}
                  onChange={() => this.handleCheck("all")}/>
-        </li>
+        </li>,
+        this.props.children && this.props.children.map(child => child)
       ]) : List()
 
       itemList = itemList.concat(filteredResults.map((option, i) => {
-        const value = option.get('value'), { values } = this.props
-        const checked = value instanceof List ?
-          value.filter(option => values.findIndex(value => value === option) >= 0).size === value.size :
-          this.props.values.indexOf(value) !== -1
         return (
           <li key={i}
               role="presentation"
@@ -147,7 +135,7 @@ export class FilterChecklistDropdown extends React.Component {
             <Input type="checkbox"
                    label={option.get('label')}
                    value={option.get('value')}
-                   checked={checked}
+                   checked={this.props.values.indexOf(option.get('value')) !== -1}
                    onChange={() => this.handleCheck(option.get('value'))}/>
           </li>
         )

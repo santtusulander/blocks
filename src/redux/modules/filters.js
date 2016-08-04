@@ -19,8 +19,6 @@ const initialState = Immutable.fromJS({
     serviceProviders: [{label: 'All', value: 'all'} ],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
     statusCodes: [
-      {label: '4XX', value: [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ]},
-      {label: '5XX', value: [ '500', '501', '502', '503' ]},
       {label: '400', value: '400'},
       {label: '401', value: '401'},
       {label: '402', value: '402'},
