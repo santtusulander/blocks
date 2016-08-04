@@ -107,21 +107,23 @@ class RolesList extends React.Component {
                   <td>
                     {role.get('name')}
                   </td>
-                  <ArrayTd maxItemsShown={5} items={[/*
-                    TODO: Uncomment these when we support API permissions
-                    ...this.labelPermissions(
-                      role.get('permissions').get('aaa'),
-                      this.props.permissions.get('aaa')
-                    ).toArray(),
-                    ...this.labelPermissions(
-                      role.get('permissions').get('north'),
-                      this.props.permissions.get('north')
-                    ).toArray(),*/
-                    ...this.labelPermissions(
-                      this.props.permissions.get('ui')
-                    ).toArray()
-                  ]} />
+                  {this.props.permissions.size ?
+                    <ArrayTd maxItemsShown={5} items={[/*
+                      TODO: Uncomment these when we support API permissions
+                      ...this.labelPermissions(
+                        role.get('permissions').get('aaa'),
+                        this.props.permissions.get('aaa')
+                      ).toArray(),
+                      ...this.labelPermissions(
+                        role.get('permissions').get('north'),
+                        this.props.permissions.get('north')
+                      ).toArray(),*/
+                      ...this.labelPermissions(
                         role.get('permissions').get('ui').filter(permission => permission),
+                        this.props.permissions.get('ui')
+                      ).toArray()
+                    ]} />
+                  : <td>No permissions found</td>}
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
