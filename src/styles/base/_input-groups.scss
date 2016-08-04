@@ -65,6 +65,12 @@
     stroke: $dt-text-color;
   }
 
+  .light-theme & {
+    color: $lt-text-color;
+    fill: $lt-text-color;
+    stroke: $lt-text-color;
+  }
+
   .icon {
     fill: inherit;
     stroke: inherit;
@@ -74,7 +80,8 @@
   &:active,
   &.active {
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;
