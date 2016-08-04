@@ -5,9 +5,9 @@
   min-width: 300px;
 
   &__option-icon {
+    display: flex;
     width: 35px;
     padding: 0 10px 0 0;
-    display: flex;
     align-items: center;
 
     svg {
@@ -18,6 +18,8 @@
   }
 
   &__option-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
     flex: 1;
   }
 
@@ -75,7 +77,8 @@
       width: 10px;
       height: 15px;
       margin-top: ($btn-height / 2) - 7.5px;
-      margin-left: 30px;
+      margin-right: 0;
+      margin-left: 15px;
       border: 0;
       fill: inherit;
       stroke: inherit;
