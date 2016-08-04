@@ -19,3 +19,5 @@ export const ROLES_MAPPING = [
   { id: 2, accountTypes: [1] },
   { id: 3, accountTypes: [2] }
 ]
+
+export const NAME_VALIDATION_REGEXP = '^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$'

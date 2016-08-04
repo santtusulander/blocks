@@ -11,6 +11,7 @@ import {Map, List, fromJS} from 'immutable'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
+import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './group-form.scss'
 
@@ -23,7 +24,7 @@ const validate = (values) => {
     errors.name = 'Group name is required'
   }
 
-  if( name && !/^[a-zA-Z0-9_ \.,\-\&\(\)\[\]]{3,40}$/g.test(name) ) {
+  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
     errors.name = 'Group name is invalid'
   }
 
