@@ -71,7 +71,7 @@ class GroupForm extends React.Component {
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave({ name: name.value })
+        this.props.onSave({ name: name.value }, this.state.usersToAdd)
       }
     }
   }

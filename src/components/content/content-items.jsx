@@ -98,7 +98,7 @@ class ContentItems extends React.Component {
   onItemSave() {
     this.props.editItem(...arguments)
       .then((response) => {
-        if (response.error) {
+        if (response && response.error) {
           this.props.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,

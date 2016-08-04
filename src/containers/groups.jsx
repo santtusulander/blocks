@@ -6,8 +6,9 @@ import moment from 'moment'
 
 import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
 
-import { fetchUsers } from '../redux/modules/user'
+import { fetchUsers, updateUser } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
+import { clearFetchedHosts } from '../redux/modules/host'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -32,13 +33,53 @@ export class Groups extends React.Component {
     this.props.fetchData()
     //}
   }
-  createGroup(data) {
-    const { brand, account } = this.props.params
-    return this.props.groupActions.createGroup(brand, account, data.name)
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
-  editGroup(id, data) {
-    const { brand, account } = this.props.params
-    return this.props.groupActions.updateGroup(brand, account, id, data)
+  createGroup(data, usersToAdd) {
+    return this.props.groupActions.createGroup('udn', this.props.params.account, data.name)
+        .then(({ payload }) => {
+          this.props.clearFetchedHosts()
+          return Promise.all(usersToAdd.map(email => {
+            const foundUser = this.props.user.get('allUsers')
+              .find(user => user.get('email') === email)
+            const newUser = {
+              group_id: foundUser.get('group_id').push(payload.id).toJS()
+            }
+            return this.props.updateUser(email, newUser)
+          }))
+        })
+  }
+  editGroup(groupId, data, addUsers, deleteUsers) {
+    const groupIdsByEmail = email => this.props.user.get('allUsers')
+      .find(user => user.get('email') === email)
+      .get('group_id')
+    const addUserActions = addUsers.map(email => {
+      return this.props.updateUser(email, {
+        group_id: groupIdsByEmail(email).push(groupId).toJS()
+      })
+    })
+    const deleteUserActions = deleteUsers.map(email => {
+      return this.props.updateUser(email, {
+        group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+      })
+    })
+    return Promise.all([
+      this.props.groupActions.updateGroup(
+        'udn',
+        this.props.activeAccount.get('id'),
+        groupId,
+        data
+      ),
+      ...addUserActions,
+      ...deleteUserActions
+    ])
+    .then(() => {
+      this.props.toggleModal(null)
+      this.showNotification('Group detail updates saved.')
+    })
   }
   deleteGroup(id) {
     this.props.groupActions.deleteGroup(
@@ -99,8 +140,10 @@ Groups.displayName = 'Groups'
 Groups.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  clearFetchedHosts: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
+  fetchUsers: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
@@ -110,7 +153,9 @@ Groups.propTypes = {
   params: React.PropTypes.object,
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  toggleModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
+  updateUser: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
@@ -145,6 +190,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const metricsOpts = {
     account: account,
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
@@ -159,10 +205,13 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
   }
   return {
+    toggleModal: uiActions.toggleAccountManagementModal,
     fetchData: fetchData,
     groupActions: groupActions,
+    clearFetchedHosts: () => dispatch(clearFetchedHosts()),
     fetchUsers: () => dispatch(fetchUsers(brand, account)),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    updateUser: (email, newUser) => dispatch(updateUser(email, newUser)),
+    uiActions
   };
 }
 
