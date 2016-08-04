@@ -50,53 +50,56 @@ function getToggledValues( currentValues, toggleVal) {
 }
 
 
-const renderStatusCodes = ({ filterOptions, filters, onFilterChange }) => {
-  let values = filters.get('statusCodes')
-  const isChecked = option =>
-    option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length
-  const options = filterOptions.get('statusCodes'),
-    fiveHundreds = [ '500', '501', '502', '503' ],
-    fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
-    fourHundredsChecked = isChecked(fourHundreds),
-    fiveHundredsChecked = isChecked(fiveHundreds)
-  const handleCheck = (optionValue, checked) => () => {
-    if(checked) {
-      values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
-    } else {
-      optionValue.forEach(item => {
-        if(!values.includes(item)) {
-          values = values.push(item)
-        }
-      })
-    }
-    onFilterChange('statusCodes', values.toJS())
-  }
-  return (
-    <FilterChecklistDropdown
-      noClear={true}
-      options={options}
-      values={values}
-      handleCheck={val => {
-        onFilterChange('statusCodes', val.toJS())}}>
-      <li role="presentation" className="children">
-        <Input type="checkbox"
-          label='4XX'
-          value={fourHundreds}
-          checked={fourHundredsChecked}
-          onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
-      </li>
-      <li role="presentation" className="children">
-        <Input type="checkbox"
-          label='5XX'
-          value={fiveHundreds}
-          checked={fiveHundredsChecked}
-          onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
-      </li>
-    </FilterChecklistDropdown>
-  )
-}
 
 const AnalyticsFilters = (props) => {
+
+  const renderStatusCodes = ({ filterOptions, filters, onFilterChange }) => {
+    let values = filters.get('statusCodes')
+    const isChecked = option =>
+      option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length
+    const options = filterOptions.get('statusCodes'),
+      fiveHundreds = [ '500', '501', '502', '503' ],
+      fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
+      fourHundredsChecked = isChecked(fourHundreds),
+      fiveHundredsChecked = isChecked(fiveHundreds)
+    const handleCheck = (optionValue, checked) => () => {
+      if(checked) {
+        values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
+      } else {
+        optionValue.forEach(item => {
+          if(!values.includes(item)) {
+            values = values.push(item)
+          }
+        })
+      }
+      onFilterChange('statusCodes', values.toJS())
+    }
+
+    return (
+      <FilterChecklistDropdown
+        noClear={true}
+        options={options}
+        values={values}
+        handleCheck={val => {
+          onFilterChange('statusCodes', val.toJS())}}>
+        <li role="presentation" className="children">
+          <Input type="checkbox"
+            label='4XX'
+            value={fourHundreds}
+            checked={fourHundredsChecked}
+            onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
+        </li>
+        <li role="presentation" className="children">
+          <Input type="checkbox"
+            label='5XX'
+            value={fiveHundreds}
+            checked={fiveHundredsChecked}
+            onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
+        </li>
+      </FilterChecklistDropdown>
+    )
+  }
+
   return (
     <div className='analytics-filters'>
 

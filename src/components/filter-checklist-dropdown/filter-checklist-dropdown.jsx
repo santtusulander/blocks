@@ -188,6 +188,7 @@ export class FilterChecklistDropdown extends React.Component {
 
 FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
+  children: React.PropTypes.array,
   className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
