@@ -323,7 +323,6 @@ export class AccountManagement extends Component {
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                canGetEdited={activeAccount.get('name')}
                 restrictedTo="account"
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
@@ -349,10 +348,10 @@ export class AccountManagement extends Component {
               <li className="navbar">
                 <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
               </li>
+              {/*
               <li className="navbar">
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
               </li>
-              {/*
                <li className="navbar">
                <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
                </li>

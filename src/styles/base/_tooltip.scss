@@ -17,6 +17,10 @@
     opacity: 1;
   }
 
+  &.display-long-name-tooltip {
+    word-wrap: break-word;
+  }
+
   .tooltip-inner {
     max-width: 100%;
     padding: 25px 30px;

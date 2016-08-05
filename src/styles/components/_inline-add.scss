@@ -72,6 +72,7 @@
   .input-addon-link {
     height: 60px;
     min-width: 60px;
+    background: transparent !important;
 
     @include md {
       height: 40px;
