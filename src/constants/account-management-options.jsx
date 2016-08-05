@@ -28,7 +28,7 @@ export const NAME_VALIDATION_REQUIREMENTS = (
     Requirements:
     <ul>
       <li>minimum of 3 and maximum of 40 characters</li>
-      <li>allowed special characters: _ , & ( ) [ ]</li>
+      <li>allowed special characters: _ . , - & ( ) [ ]</li>
     </ul>
   </div>
 )
