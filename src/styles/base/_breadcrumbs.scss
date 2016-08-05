@@ -44,12 +44,16 @@
         height: auto;
         line-height: 1;
       }
+
+      &:not(:first-of-type) {
+        overflow: hidden;
+      }
     }
 
     > a,
     > span {
       display: block;
-      max-width: 350px;
+      padding-right: 5px;
       overflow: hidden;
       font-weight: bold;
       text-overflow: ellipsis;
@@ -114,7 +118,7 @@
     }
 
     &:not(.breadcrumb-back, :last-child)::after {
-      padding: 0 10px;
+      padding: 0 10px 0 5px;
       content: '\203A';
 
       .dark-theme &,
