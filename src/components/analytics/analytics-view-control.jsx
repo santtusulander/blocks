@@ -8,9 +8,8 @@ import IsAllowed from '../is-allowed'
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
+import TruncatedTitle from '../truncated-title'
 import IconExport from '../icons/icon-export.jsx'
-
-
 
 import './analytics-view-control.scss'
 
@@ -134,7 +133,7 @@ const AnalyticsViewControl = (props) => {
             props.router.push(url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              <h1>{activeItem || "select account"}</h1>
+              <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
           </Dropdown.Toggle>
         </AccountSelector>
         {props.params.account &&

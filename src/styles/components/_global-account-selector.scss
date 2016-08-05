@@ -9,10 +9,11 @@
     align-items: center;
 
     :first-child {
+      float: left;
+      width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      float: left;
     }
   }
 

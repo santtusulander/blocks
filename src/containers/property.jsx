@@ -29,6 +29,7 @@ import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
+import TruncatedTitle from '../components/truncated-title'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -314,7 +315,7 @@ export class Property extends React.Component {
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
                 drillable={true}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
+                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
                 </Dropdown.Toggle>
               </AccountSelector>
               <ButtonToolbar>
