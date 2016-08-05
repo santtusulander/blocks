@@ -5,12 +5,16 @@ import axios from 'axios'
 const ACCOUNT_SELECTOR_START_FETCH = 'ACCOUNT_SELECTOR_START_FETCH'
 const ACCOUNT_SELECTOR_FINISH_FETCH = 'ACCOUNT_SELECTOR_FINISH_FETCH'
 const ACCOUNT_SELECTOR_ITEMS_FETCHED = 'ACCOUNT_SELECTOR_ITEMS_FETCHED'
+const ACCOUNT_SELECTOR_OPEN_SET = 'ACCOUNT_SELECTOR_OPEN_SET'
+const ACCOUNT_SELECTOR_SEARCH_SET = 'ACCOUNT_SELECTOR_SEARCH_SET'
 
 import { urlBase, parseResponseData, mapReducers } from '../util'
 
 const emptySelector = Immutable.Map({
   fetching: false,
-  items: Immutable.List()
+  items: Immutable.List(),
+  open: false,
+  searchValue: ''
 })
 
 export function fetchItemsSuccess(state, action) {
@@ -37,6 +41,14 @@ export function finishFetch(state) {
   return state.set('fetching', false)
 }
 
+export function openSet(state, action) {
+  return state.set('open', action.payload)
+}
+
+export function searchSet(state, action) {
+  return state.set('searchValue', action.payload)
+}
+
 // REDUCERS
 
 export default handleActions({
@@ -44,7 +56,9 @@ export default handleActions({
     fetchItemsSuccess,
     fetchItemsFailure),
   ACCOUNT_SELECTOR_START_FETCH: startFetch,
-  ACCOUNT_SELECTOR_FINISH_FETCH: finishFetch
+  ACCOUNT_SELECTOR_FINISH_FETCH: finishFetch,
+  ACCOUNT_SELECTOR_OPEN_SET: openSet,
+  ACCOUNT_SELECTOR_SEARCH_SET: searchSet
 }, emptySelector)
 
 // ACTIONS
@@ -62,3 +76,5 @@ export const fetchItems = createAction(ACCOUNT_SELECTOR_ITEMS_FETCHED, (brand, a
 
 export const startFetching = createAction(ACCOUNT_SELECTOR_START_FETCH)
 export const finishFetching = createAction(ACCOUNT_SELECTOR_FINISH_FETCH)
+export const setOpen = createAction(ACCOUNT_SELECTOR_OPEN_SET)
+export const setSearch = createAction(ACCOUNT_SELECTOR_SEARCH_SET)
