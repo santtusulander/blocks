@@ -54,21 +54,23 @@
     }
   }
 
+  .icon.two-tone .base {
+    @extend .btn-primary
+  }
+
   .btn-primary {
     &,
     &.btn-icon {
       background: none;
       margin: 0;
 
-      .light-theme &,
-      .light-theme & .icon.two-tone .base {
+      .light-theme & {
         color: rgba($black, 0.5);
         fill: rgba($black, 0.5);
         stroke: rgba($black, 0.5);
       }
 
-      &:hover,
-      & .icon.two-tone .base:hover {
+      &:hover {
         color: $white !important;
         fill: $white !important;
         stroke: $white !important;
