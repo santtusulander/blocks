@@ -23,6 +23,7 @@ import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
+import TruncatedTitle from '../../components/truncated-title'
 import { Button } from 'react-bootstrap'
 
 const rangeMin = 400
@@ -227,7 +228,7 @@ class ContentItems extends React.Component {
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>
-                    {headerText.label}
+                    <TruncatedTitle content={headerText.label} tooltipPlacement="bottom" className="account-content-title"/>
                   </h1>
                 </Dropdown.Toggle>
               </AccountSelector>

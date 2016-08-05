@@ -315,7 +315,7 @@ export class Property extends React.Component {
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
                 drillable={true}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
                 </Dropdown.Toggle>
               </AccountSelector>
               <ButtonToolbar>
