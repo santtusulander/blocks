@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
-import Immutable from 'immutable'
+import { List, Map } from 'immutable'
 
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
@@ -49,57 +49,56 @@ function getToggledValues( currentValues, toggleVal) {
   return currentValues.push( toggleVal )
 }
 
+const StatusCodes = ({ options, values, onChange }) => {
+  const isChecked = option =>
+    option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
+    fiveHundreds = [ '500', '501', '502', '503' ],
+    fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
+    fourHundredsChecked = isChecked(fourHundreds),
+    fiveHundredsChecked = isChecked(fiveHundreds)
+  const handleCheck = (optionValue, checked) => () => {
+    if(checked) {
+      values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
+    } else {
+      optionValue.forEach(item => {
+        if(!values.includes(item)) {
+          values = values.push(item)
+        }
+      })
+    }
+    onChange(values)
+  }
+  return (
+    <FilterChecklistDropdown
+      noClear={true}
+      options={options}
+      values={values}
+      handleCheck={onChange}>
+      <li role="presentation" className="children">
+        <Input type="checkbox"
+          label='4XX'
+          value={fourHundreds}
+          checked={fourHundredsChecked}
+          onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
+      </li>
+      <li role="presentation" className="children">
+        <Input type="checkbox"
+          label='5XX'
+          value={fiveHundreds}
+          checked={fiveHundredsChecked}
+          onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
+      </li>
+    </FilterChecklistDropdown>
+  )
+}
 
+StatusCodes.propTypes = {
+  onChange: PropTypes.func,
+  options: PropTypes.instanceOf(List),
+  values: PropTypes.instanceOf(List)
+}
 
 const AnalyticsFilters = (props) => {
-
-  const renderStatusCodes = ({ filterOptions, filters, onFilterChange }) => {
-    let values = filters.get('statusCodes')
-    const isChecked = option =>
-      option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length
-    const options = filterOptions.get('statusCodes'),
-      fiveHundreds = [ '500', '501', '502', '503' ],
-      fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
-      fourHundredsChecked = isChecked(fourHundreds),
-      fiveHundredsChecked = isChecked(fiveHundreds)
-    const handleCheck = (optionValue, checked) => () => {
-      if(checked) {
-        values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
-      } else {
-        optionValue.forEach(item => {
-          if(!values.includes(item)) {
-            values = values.push(item)
-          }
-        })
-      }
-      onFilterChange('statusCodes', values.toJS())
-    }
-
-    return (
-      <FilterChecklistDropdown
-        noClear={true}
-        options={options}
-        values={values}
-        handleCheck={val => {
-          onFilterChange('statusCodes', val.toJS())}}>
-        <li role="presentation" className="children">
-          <Input type="checkbox"
-            label='4XX'
-            value={fourHundreds}
-            checked={fourHundredsChecked}
-            onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
-        </li>
-        <li role="presentation" className="children">
-          <Input type="checkbox"
-            label='5XX'
-            value={fiveHundreds}
-            checked={fiveHundredsChecked}
-            onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
-        </li>
-      </FilterChecklistDropdown>
-    )
-  }
-
   return (
     <div className='analytics-filters'>
 
@@ -184,7 +183,10 @@ const AnalyticsFilters = (props) => {
           <div className="sidebar-section-header">
           Status Codes
           </div>
-          {renderStatusCodes(props)}
+          <StatusCodes
+            options={props.filterOptions.get('statusCodes')}
+            values={props.filters.get('statusCodes')}
+            onChange={values => props.onFilterChange('statusCodes', values.toJS())}/>
         </div>
       }
 
@@ -203,16 +205,16 @@ const AnalyticsFilters = (props) => {
 }
 
 AnalyticsFilters.propTypes = {
-  filters: React.PropTypes.instanceOf(Immutable.Map),
-  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
-  onFilterChange: React.PropTypes.func,
-  showFilters: React.PropTypes.instanceOf(Immutable.Map)
+  filterOptions: PropTypes.instanceOf(Map),
+  filters: PropTypes.instanceOf(Map),
+  onFilterChange: PropTypes.func,
+  showFilters: PropTypes.instanceOf(Map)
 }
 
 AnalyticsFilters.defaultProps = {
-  filters: Immutable.Map(),
-  filterOptions: Immutable.Map(),
-  showFilters: Immutable.Map()
+  filters: Map(),
+  filterOptions: Map(),
+  showFilters: Map()
 }
 
 export default AnalyticsFilters
