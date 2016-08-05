@@ -50,24 +50,24 @@ function getToggledValues( currentValues, toggleVal) {
 }
 
 const StatusCodes = ({ options, values, onChange }) => {
-  const isChecked = option =>
-    option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
-    fiveHundreds = [ '500', '501', '502', '503' ],
+  const fiveHundreds = [ '500', '501', '502', '503' ],
     fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
     fourHundredsChecked = isChecked(fourHundreds),
-    fiveHundredsChecked = isChecked(fiveHundreds)
-  const handleCheck = (optionValue, checked) => () => {
-    if(checked) {
-      values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
-    } else {
-      optionValue.forEach(item => {
-        if(!values.includes(item)) {
-          values = values.push(item)
-        }
-      })
+    fiveHundredsChecked = isChecked(fiveHundreds),
+    isChecked = option =>
+      option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
+    handleCheck = (optionValue, checked) => () => {
+      if(checked) {
+        values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
+      } else {
+        optionValue.forEach(item => {
+          if(!values.includes(item)) {
+            values = values.push(item)
+          }
+        })
+      }
+      onChange(values)
     }
-    onChange(values)
-  }
   return (
     <FilterChecklistDropdown
       noClear={true}
