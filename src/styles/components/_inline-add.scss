@@ -55,17 +55,26 @@
   }
 
   .btn-primary {
-
     &,
     &.btn-icon {
+      background: none;
       margin: 0;
+
+      .light-theme &,
+      .light-theme & .icon.two-tone .base {
+        color: rgba($black, 0.5);
+        fill: rgba($black, 0.5);
+        stroke: rgba($black, 0.5);
+      }
+
+      &:hover,
+      & .icon.two-tone .base:hover {
+        color: $white !important;
+        fill: $white !important;
+        stroke: $white !important;
+      }
     }
 
-    &:hover {
-      color: $white !important;
-      fill: $white !important;
-      stroke: $white !important;
-    }
   }
 
   .input-group-addon,
