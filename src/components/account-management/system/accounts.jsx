@@ -13,7 +13,12 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 
 import { fetchAccounts, createAccount } from '../../../redux/modules/account'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES, NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+import {
+  SERVICE_TYPES,
+  ACCOUNT_TYPES,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -46,7 +51,7 @@ class AccountList extends Component {
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: 'Account name is invalid'
+          errorText: <div>{['Account name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
         }
       ]
     }

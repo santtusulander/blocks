@@ -17,7 +17,7 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 import ArrayTd from '../../../components/array-td/array-td'
 
 import { checkForErrors } from '../../../util/helpers'
-import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+import { NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../../constants/account-management-options'
 
 
 class AccountManagementAccountGroups extends React.Component {
@@ -101,11 +101,11 @@ class AccountManagementAccountGroups extends React.Component {
       name: [
         {
           condition: this.props.groups.findIndex(account => account.get('name') === name) > -1,
-          errorText: 'That account name is taken'
+          errorText: 'That group name is taken'
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: 'Account name is invalid'
+          errorText: <div>{['Group name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
         }
       ]
     }
