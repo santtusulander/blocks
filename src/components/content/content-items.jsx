@@ -224,8 +224,7 @@ class ContentItems extends React.Component {
                 startTier={this.props.selectionStartTier}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-                user={this.props.user}>
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>
                     {headerText.label}

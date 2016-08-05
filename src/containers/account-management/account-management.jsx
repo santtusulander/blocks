@@ -324,8 +324,7 @@ export class AccountManagement extends Component {
                 topBarTexts={{ brand: 'UDN Admin' }}
                 topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                 onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                restrictedTo="account"
-                user={this.props.user}>
+                restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{activeAccount.get('name') || 'No active account'}</h1>
                 </Dropdown.Toggle>
@@ -424,7 +423,6 @@ AccountManagement.propTypes = {
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
-  user: PropTypes.instanceOf(Map),
   userActions: PropTypes.object,
   users: PropTypes.instanceOf(List)
 }

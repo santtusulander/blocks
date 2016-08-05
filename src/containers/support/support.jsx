@@ -72,19 +72,16 @@ Support.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Map),
   children: PropTypes.node,
   params: PropTypes.object,
-  router: PropTypes.object,
-  user: React.PropTypes.instanceOf(Map)
+  router: PropTypes.object
 }
 
 Support.defaultProps = {
-  activeAccount: Map(),
-  user: Map()
+  activeAccount: Map()
 }
 
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    user: state.user
+    activeAccount: state.account.get('activeAccount')
   };
 }
 

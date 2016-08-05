@@ -205,7 +205,6 @@ class Header extends React.Component {
                 params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-                user={this.props.user}
                 onSelect={itemSelectorFunc}
                 restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">

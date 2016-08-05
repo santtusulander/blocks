@@ -233,7 +233,6 @@ export class Configuration extends React.Component {
                 as="configuration"
                 params={this.props.params}
                 topBarTexts={{}}
-                user={this.props.user}
                 onSelect={(tier, value, params) => {
                   const { brand, account, group } = params, { hostActions } = this.props
                   hostActions.startFetching()
@@ -389,14 +388,12 @@ Configuration.propTypes = {
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map)
+  uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
-  activeHost: Immutable.Map(),
-  user: Immutable.Map()
+  activeHost: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -405,8 +402,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching'),
-    notification: state.ui.get('notification'),
-    user: state.user
+    notification: state.ui.get('notification')
   };
 }
 
