@@ -124,7 +124,7 @@ class AccountSelector extends Component {
     let fetchArgs = ['group', 'udn', this.account]
     if(this.tier === 'group') {
       this.group = e.target.getAttribute('data-value')
-      fetchArgs.push(this.group)
+      fetchArgs = ['property', 'udn', this.account, this.group]
     }
     else {
       this.account = e.target.getAttribute('data-value')
