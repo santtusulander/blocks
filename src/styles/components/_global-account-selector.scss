@@ -26,11 +26,11 @@
     }
 
     li {
-      display: flex;
+      display: flex !important;
 
       a {
         position: relative;
-        display: flex;
+        display: flex !important;
         width: 100%;
         align-items: center;
         flex-direction: row;
