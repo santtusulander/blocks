@@ -114,6 +114,10 @@ class AccountList extends Component {
     } = this.props
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
+      .map(account => {
+        const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
+        return account.set('provider_type_label', accountType ? accountType.label : '')
+      })
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -152,7 +156,7 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <TableSorter {...sorterProps} column="type" width="15%">TYPE</TableSorter>
+            <TableSorter {...sorterProps} column="provider_type_label" width="15%">TYPE</TableSorter>
             <TableSorter {...sorterProps} column="id" width="10%">ID</TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%">BRAND</TableSorter>
             <TableSorter {...sorterProps} column="services" width="30%">SERVICES</TableSorter>
@@ -168,12 +172,10 @@ class AccountList extends Component {
             save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
-            const accountType = ACCOUNT_TYPES
-              .find(type => account.get('provider_type') === type.value)
             return (
               <tr key={index}>
                 <td>{account.get('name')}</td>
-                <td>{accountType && accountType.label}</td>
+                <td>{account.get('provider_type_label')}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
