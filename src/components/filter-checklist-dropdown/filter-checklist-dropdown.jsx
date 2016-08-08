@@ -123,7 +123,8 @@ export class FilterChecklistDropdown extends React.Component {
                  value="all"
                  checked={this.props.values.size === this.props.options.size}
                  onChange={() => this.handleCheck("all")}/>
-        </li>
+        </li>,
+        this.props.children && this.props.children.map(child => child)
       ]) : List()
 
       itemList = itemList.concat(filteredResults.map((option, i) => {
@@ -187,6 +188,7 @@ export class FilterChecklistDropdown extends React.Component {
 
 FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
+  children: React.PropTypes.array,
   className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,

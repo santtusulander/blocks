@@ -11,7 +11,7 @@ import {
 import SelectWrapper from '../select-wrapper.jsx'
 import CheckboxArray from '../checkboxes.jsx'
 
-import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './account-form.scss'
 
@@ -33,7 +33,7 @@ const validate = (values) => {
   if(!accountName || accountName.length === 0) {
     errors.accountName = 'Account name is required'
   }
-  if( accountName && !/^[a-zA-Z0-9_\.,\-\&\(\)\[\]]{3,40}$/g.test(accountName) ) {
+  if( accountName && ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName) ) {
     errors.accountName = 'Account name is invalid'
   }
   if(!accountBrand || accountBrand.length === 0) {
