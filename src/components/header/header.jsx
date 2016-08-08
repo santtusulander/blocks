@@ -10,6 +10,8 @@ import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import * as PERMISSIONS from '../../constants/permissions.js'
+import checkPermissions from '../../util/permissions'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
 
@@ -166,10 +168,16 @@ class Header extends React.Component {
 
   render() {
     const { activeAccount, router, params: { account, brand } } = this.props
+    const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
+    const canSeeAccounts = checkPermissions(
+      this.props.roles,
+      this.props.user,
+      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+    )
     const itemSelectorFunc = (...params) => {
       if(router.isActive('/content')) {
         router.push(getContentUrl(...params))
@@ -200,17 +208,19 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="header__account-selector">
-              <AccountSelector
-                as="header"
-                params={{ brand, account }}
-                topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-                topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-                onSelect={itemSelectorFunc}
-                restrictedTo="account">
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
-                </Dropdown.Toggle>
-              </AccountSelector>
+              {canSeeAccounts ? <AccountSelector
+                  as="header"
+                  params={{ brand, account }}
+                  topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+                  topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+                  onSelect={itemSelectorFunc}
+                  restrictedTo="account">
+                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                    {activeAccount && activeAccountName}
+                  </Dropdown.Toggle>
+                </AccountSelector> :
+                <div className="active-account-name">{activeAccountName}</div>
+              }
             </li>
             {this.renderBreadcrumb()}
           </Nav>
@@ -255,6 +265,7 @@ Header.defaultProps = {
   breadcrumbs: null,
   /* FOR TEST only */
   isUDNAdmin: true,
+  roles: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -272,6 +283,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
