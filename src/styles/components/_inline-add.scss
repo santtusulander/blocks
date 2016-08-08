@@ -58,8 +58,13 @@
     @extend .btn-primary
   }
 
+  .input-addon-link {
+    @extend .btn-primary
+  }
+
   .btn-primary {
     &,
+    &:not(:disabled),
     &.btn-icon {
       background: none;
       margin: 0;
@@ -107,16 +112,6 @@
     }
   }
 
-  .input-addon-link:hover,
-  .input-addon-link:active,
-  .input-addon-link.active {
-
-    .dark-theme & {
-      color: rgba($black, 0.5);
-      fill: rgba($black, 0.5);
-      stroke: rgba($black, 0.5);
-    }
-  }
 }
 
 .half-width-item {
