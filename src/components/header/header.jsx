@@ -5,6 +5,7 @@ import { getRoute } from '../../routes.jsx'
 import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
 import UserMenu from './user-menu'
+import TruncatedTitle from '../truncated-title'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
@@ -208,7 +209,7 @@ class Header extends React.Component {
                 onSelect={itemSelectorFunc}
                 restrictedTo="account">
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
+                  <TruncatedTitle content={activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'} tooltipPlacement="bottom" className="account-property-title"/>
                 </Dropdown.Toggle>
               </AccountSelector>
             </li>

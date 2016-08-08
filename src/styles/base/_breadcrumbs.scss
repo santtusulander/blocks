@@ -51,7 +51,8 @@
     }
 
     > a,
-    > span {
+    > span,
+    .truncated-breadcrumb-title {
       display: block;
       padding-right: 5px;
       overflow: hidden;

@@ -228,7 +228,7 @@ class ContentItems extends React.Component {
                 user={this.props.user}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>
-                    <TruncatedTitle content={headerText.label} tooltipPlacement="bottom" className="account-content-title"/>
+                    <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
                   </h1>
                 </Dropdown.Toggle>
               </AccountSelector>
