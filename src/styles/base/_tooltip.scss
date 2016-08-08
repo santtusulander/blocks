@@ -4,7 +4,7 @@
 .tooltip {
   z-index: 1020;
   max-width: 360px;
-  min-width: 280px;
+  min-width: 285px;
   font-size: $tooltip-font-size;
 
   @include md {
