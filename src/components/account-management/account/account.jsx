@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
 // import SelectWrapper from '../../select-wrapper.jsx'
-// import CheckboxArray from '../../checkboxes.jsx'
+import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
 
 // import IconAdd from '../../icons/icon-add.jsx'
@@ -115,7 +115,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   render() {
-    const { fields: { accountName, accountType/*, services*/ } } = this.props
+    const { fields: { accountName, accountType, services } } = this.props
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
       <div className="account-management-account-details">
@@ -234,14 +234,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label">Services</label>
             <Col xs={3}>
-              {/* Not editable in 0.8
               <CheckboxArray iterable={checkBoxes} field={services}/>
-              */}
-              <div className="input-group input-group-static">
-                <span className="form-control-static">
-                  {checkBoxes.map(service => service.label).join(', ')}
-                </span>
-              </div>
             </Col>
           </div>
 
