@@ -234,6 +234,10 @@
     color: $white;
     border: 0;
 
+    .content-layout__header & {
+      vertical-align: baseline;
+    }
+
     @include md {
       margin: -2px ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
     }
