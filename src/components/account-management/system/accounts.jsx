@@ -73,7 +73,7 @@ class AccountList extends Component {
               this.setState({ accountServices: newValues })
             }}
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-          positionClass: 'col-sm-6'
+          positionClass: 'row col-xs-6'
       } ]
     ]
   }
@@ -219,12 +219,6 @@ AccountList.defaultProps = {
  */
 
 function mapStateToProps(state) {
-  // const notSufficient = state.account.get('allAccounts')
-  // const sufficient = notSufficient.map(account => {
-  //   account = account.set('services', fromJS([1, 1, 1, 1]))
-  //   account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
-  //   return account
-  // })
   const addAccountForm = state.form.inlineAdd
   const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
   return { accounts: state.account.get('allAccounts'), typeField }

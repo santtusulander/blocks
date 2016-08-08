@@ -38,7 +38,7 @@ class AccountManagementManageSystem extends React.Component {
             <Users/>
           }
           {this.state.activeTab === 'brands' &&
-            <Brands { ...this.props.brandsList} />
+            <Brands {...this.props.brandsList} />
           }
           {this.state.activeTab === 'dns' &&
             <DNS {...this.props.dnsList}/>
