@@ -35,11 +35,19 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
 // Misc Functionality
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
   (role) => role.getIn(['permissions', 'ui', 'config'])
-
 permissionMapping[PERMISSIONS.DENY_ALWAYS] =
-  (role) => false
+  () => false
 permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
-  (role) => true
+  () => true
+
+// Content Item listing
+permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
+  () => false
+  // (role) => role.getIn(['aaa', 'accounts', 'list'])
+permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
+  (role) => role.getIn(['aaa', 'groups', 'list'])
+permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
+  (role) => role.getIn(['north', 'locations', 'list'])
 
 /**
  * Determine if a user has a permission.

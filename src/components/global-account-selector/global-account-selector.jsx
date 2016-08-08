@@ -6,6 +6,8 @@ import { Map, List, is } from 'immutable'
 
 import { resetChangedAccount } from '../../redux/modules/account'
 import * as accountSelectorActionCreators from '../../redux/modules/account-selector'
+import * as PERMISSIONS from '../../constants/permissions.js'
+import checkPermissions from '../../util/permissions'
 
 import Menu from './selector-component.jsx'
 
@@ -48,6 +50,14 @@ class AccountSelector extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
 
+  canSeeAccounts() {
+    return checkPermissions(
+      this.props.roles,
+      this.props.currentUser,
+      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+    )
+  }
+
   handleClick(e) {
     if (findDOMNode(this).contains(e.target)) {
       return
@@ -60,7 +70,12 @@ class AccountSelector extends Component {
 
   setInitialTier(params) {
     const { property, group, account, brand } = params
-    this.tier = this.props.startTier || property && 'property' || group && 'group' || account && 'account' || brand && 'brand'
+    let initTier = this.props.startTier || property && 'property' ||
+      group && 'group' || account && 'account' || brand && 'brand'
+    if(!this.canSeeAccounts() && (initTier === 'account' || initTier === 'brand')) {
+      initTier = 'group'
+    }
+    this.tier = initTier
   }
 
   fetchByTier(params) {
@@ -74,6 +89,12 @@ class AccountSelector extends Component {
 
   fetchItems(nextTier, brand, account, group) {
     let fetchParams = [brand]
+    if(!this.canSeeAccounts() && (nextTier === 'account' || nextTier === 'brand')) {
+      nextTier = 'group'
+    }
+    if(!this.canSeeAccounts() && !account) {
+      account = this.props.currentUser.get('account_id')
+    }
     if(nextTier === 'property') {
       fetchParams = [brand, account, group]
     }
@@ -85,13 +106,17 @@ class AccountSelector extends Component {
   }
 
   selectOption(e) {
-    const { onSelect, topBarAction, params: { brand, account, group, property } } = this.props
+    let { onSelect, topBarAction, params: { brand, account, group, property } } = this.props
+    if(!this.canSeeAccounts() && !account) {
+      account = this.props.currentUser.get('account_id')
+    }
     switch(e.target.id) {
       /**
        * Item name pressed -> should route to that item. Since the same menu items are displayed
        * in brand and account tiers, in both cases 'account' gets passed
        */
       case 'name':
+        this.props.accountSelectorActions.setOpen(false)
       case 'menu-item':
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
@@ -148,6 +173,7 @@ class AccountSelector extends Component {
 
   render() {
     const { topBarTexts, resetChanged, getChangedItem, restrictedTo, open, searchValue, accountSelectorActions, ...other } = this.props
+    const topBarText = this.tier === 'group' && !this.canSeeAccounts() ? '' : topBarTexts[this.tier]
     const menuProps = Object.assign(other, {
       toggle: () => {
         getChangedItem(this.tier) !== null && !open && resetChanged(this.tier)
@@ -158,7 +184,7 @@ class AccountSelector extends Component {
         && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
         || this.tier === 'property' ? false : true,
       items: this.sortedOptions().toJS(),
-      topBarText: topBarTexts[this.tier],
+      topBarText: topBarText,
       onSelect: this.selectOption,
       searchValue,
       open,
@@ -172,6 +198,7 @@ class AccountSelector extends Component {
 
 AccountSelector.propTypes = {
   accountSelectorActions: PropTypes.object,
+  currentUser: React.PropTypes.instanceOf(Map),
   fetchItems: PropTypes.func,
   getChangedItem: PropTypes.func,
   items: React.PropTypes.instanceOf(List),
@@ -180,15 +207,16 @@ AccountSelector.propTypes = {
   params: PropTypes.object,
   resetChanged: PropTypes.func,
   restrictedTo: PropTypes.string,
+  roles: React.PropTypes.instanceOf(List),
   searchValue: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
-  topBarTexts: PropTypes.object,
-  user: React.PropTypes.instanceOf(Map)
+  topBarTexts: PropTypes.object
 }
 AccountSelector.defaultProps = {
   items: List(),
-  user: Map()
+  roles: List(),
+  currentUser: Map()
 }
 
 function mapStateToProps(state, {as}) {
@@ -202,7 +230,9 @@ function mapStateToProps(state, {as}) {
     },
     items: accountSelector.get('items'),
     open: accountSelector.get('open'),
-    searchValue: accountSelector.get('searchValue')
+    roles: state.roles.get('roles'),
+    searchValue: accountSelector.get('searchValue'),
+    currentUser: state.user.get('currentUser')
   }
 }
 
