@@ -115,10 +115,6 @@ export class AccountManagementAccountUsers extends React.Component {
 
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
-      confirmPw: {
-        condition: confirmPw !== password,
-        errorText: 'Passwords don\'t match!'
-      },
       email: [
         {
           condition: email === this.state.existingMail,
@@ -126,12 +122,16 @@ export class AccountManagementAccountUsers extends React.Component {
         },
         {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
-          errorText: 'invalid email!'
+          errorText: 'Invalid Email.'
         }
       ],
       password: {
         condition: password.length > 30,
-        errorText: 'Password too long!'
+        errorText: 'Password too long.'
+      },
+      confirmPw: {
+        condition: confirmPw !== password,
+        errorText: 'Passwords don\'t match.'
       }
     }
     return checkForErrors({ email, password, confirmPw, roles }, conditions)
