@@ -25,6 +25,10 @@
       align-items: center;
       justify-content: space-between;
 
+      .light-theme & {
+        background: $pale-blue;
+      }
+
       &__label {
         flex-grow: 1;
       }
@@ -44,6 +48,10 @@
             .icon {
               stroke: $pale-blue;
               vertical-align: initial;
+
+              .light-theme & {
+                stroke: $silver-60;
+              }
 
               &:hover{
                 stroke: $white;

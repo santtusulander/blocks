@@ -181,7 +181,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Input id='confirmPw' placeholder=" Confirm password"
             type={this.state.passwordVisible ? 'text' : 'password'}
             wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link' +
+            addonAfter={<a className={'input-addon-link btn-primary' +
                 (this.state.passwordVisible ? ' active' : '')}
                 onClick={this.togglePasswordVisibility}>
                   <IconEye/>
@@ -196,13 +196,13 @@ export class AccountManagementAccountUsers extends React.Component {
             numericValues={true}
             className="inline-add-dropdown"
             options={roleOptions}/>,
-          positionClass: 'col-sm-9'
+          positionClass: 'row col-xs-10'
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={this.togglePermissionModal}>
               <IconInfo/>
             </Button>,
-          positionClass: 'right'
+          positionClass: 'col-xs-2 text-right'
         }
       ],
       [
@@ -215,7 +215,7 @@ export class AccountManagementAccountUsers extends React.Component {
               this.setState({ usersGroups: newValues })
             }}
             options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-          positionClass: 'col-sm-6'
+          positionClass: 'row col-xs-7'
         }
       ]
     ]
@@ -321,7 +321,7 @@ export class AccountManagementAccountUsers extends React.Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {sortedUsers.map((user, i) => {
+            {this.props.groups.size !== 0 && sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
