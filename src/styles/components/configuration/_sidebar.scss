@@ -190,6 +190,10 @@
     &.dropdown-toggle {
       text-transform: none;
     }
+
+    .light-theme & {
+      color: rgba($pale-blue, 0.5);
+    }
   }
 
   .small-select {
