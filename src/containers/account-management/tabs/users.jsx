@@ -238,7 +238,8 @@ export class AccountManagementAccountUsers extends React.Component {
   getGroupsForUser(user) {
     const groups = user.get('group_id')
       .map(groupId => this.props.groups
-      .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' })).get('name'))
+        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+        .get('name'))
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
