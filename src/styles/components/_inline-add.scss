@@ -70,10 +70,26 @@
         stroke: rgba($black, 0.5);
       }
 
-      &:hover {
-        color: $white !important;
-        fill: $white !important;
-        stroke: $white !important;
+      .dark-theme & {
+        color: $white;
+        fill: $white;
+        stroke: $white;
+      }
+
+      &.active,
+      &:hover,
+      &:hover:not(:disabled) {
+        .light-theme & {
+          color: $white;
+          fill: $white;
+          stroke: $white;
+        }
+
+        .dark-theme & {
+          color: rgba($black, 0.5);
+          fill: rgba($black, 0.5);
+          stroke: rgba($black, 0.5);
+        }
       }
     }
 
