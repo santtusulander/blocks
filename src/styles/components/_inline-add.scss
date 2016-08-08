@@ -54,24 +54,57 @@
     }
   }
 
+  .icon.two-tone .base {
+    @extend .btn-primary
+  }
+
+  .input-addon-link {
+    @extend .btn-primary
+  }
+
   .btn-primary {
-
     &,
+    &:not(:disabled),
     &.btn-icon {
+      background: none;
       margin: 0;
+
+      .light-theme & {
+        color: rgba($black, 0.5);
+        fill: rgba($black, 0.5);
+        stroke: rgba($black, 0.5);
+      }
+
+      .dark-theme & {
+        color: $white;
+        fill: $white;
+        stroke: $white;
+      }
+
+      &.active,
+      &:hover,
+      &:hover:not(:disabled) {
+        .light-theme & {
+          color: $white;
+          fill: $white;
+          stroke: $white;
+        }
+
+        .dark-theme & {
+          color: rgba($black, 0.5);
+          fill: rgba($black, 0.5);
+          stroke: rgba($black, 0.5);
+        }
+      }
     }
 
-    &:hover {
-      color: $white !important;
-      fill: $white !important;
-      stroke: $white !important;
-    }
   }
 
   .input-group-addon,
   .input-addon-link {
     height: 60px;
     min-width: 60px;
+    background: transparent !important;
 
     @include md {
       height: 40px;
@@ -79,16 +112,6 @@
     }
   }
 
-  .input-addon-link:hover,
-  .input-addon-link:active,
-  .input-addon-link.active {
-
-    .dark-theme & {
-      color: rgba($black, 0.5);
-      fill: rgba($black, 0.5);
-      stroke: rgba($black, 0.5);
-    }
-  }
 }
 
 .half-width-item {

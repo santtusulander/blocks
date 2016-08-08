@@ -20,6 +20,7 @@ import ErrorModal from '../components/error-modal'
 import InfoModal from '../components/info-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -41,14 +42,19 @@ export class Main extends React.Component {
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
+          if(!this.pageAllowsAnon()) {
+            this.props.router.push('/login')
+          }
           return false
         }
-        this.props.rolesActions.fetchRoles()
-        const accountId = this.props.activeAccount.size ?
-          this.props.activeAccount.get('id') :
-          this.props.params.account
+        else {
+          this.props.rolesActions.fetchRoles()
+          const accountId = this.props.activeAccount.size ?
+            this.props.activeAccount.get('id') :
+            this.props.params.account
 
-        return this.props.fetchAccountData(accountId, this.props.accounts)
+          return this.props.fetchAccountData(accountId, this.props.accounts)
+        }
       })
   }
 
@@ -142,7 +148,7 @@ export class Main extends React.Component {
   }
   render() {
     if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
-      return <div>Loading...</div>
+      return <LoadingSpinner />
     }
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 

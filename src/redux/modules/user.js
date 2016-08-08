@@ -7,6 +7,7 @@ import {urlBase, mapReducers, parseResponseData} from '../util'
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
+const USER_FINISH_FETCH = 'USER_FINISH_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
 const USER_FETCHED = 'USER_FETCHED'
 const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
@@ -56,7 +57,6 @@ export function userLoggedInSuccess(state, action){
 
   return state.merge({
     loggedIn: true,
-    fetching: false,
     username: action.payload.username
   })
 }
@@ -67,8 +67,7 @@ export function userLoggedInFailure(){
 
 export function fetchSuccess(state, action) {
   return state.merge({
-    currentUser: fromJS(action.payload),
-    fetching: false
+    currentUser: fromJS(action.payload)
   })
 }
 
@@ -103,6 +102,10 @@ export function userLoggedOutSuccess(state){
 
 export function userStartFetch(state){
   return state.set('fetching', true)
+}
+
+export function userFinishFetch(state){
+  return state.set('fetching', false)
 }
 
 export function deleteUserSuccess(state, action) {
@@ -154,6 +157,7 @@ export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
+  USER_FINISH_FETCH: userFinishFetch,
   USER_TOKEN_CHECKED: userTokenChecked,
   USER_FETCHED: mapReducers(fetchSuccess, fetchFailure),
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
@@ -189,6 +193,8 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
 export const logOut = createAction(USER_LOGGED_OUT)
 
 export const startFetching = createAction(USER_START_FETCH)
+
+export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
   const username = localStorage.getItem('EricssonUDNUserName')

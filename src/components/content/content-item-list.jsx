@@ -8,11 +8,11 @@ import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
+import TruncatedTitle from '../truncated-title'
 
 class ContentItemList extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.state = {
       byLocationWidth: 0,
@@ -38,11 +38,10 @@ class ContentItemList extends React.Component {
   render() {
     return (
       <div className="content-item-list">
-
         <div className="content-item-list-section section-lg">
           <Link className="content-item-list-link" to={this.props.linkTo}>
             <div className="content-item-details">
-              <div className="content-item-list-name">{this.props.name}</div>
+              <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
               <div className="content-item-list-details text-sm">
                 <p>Last Edited</p>
                 <p>Yesterday 12:30 pm</p>

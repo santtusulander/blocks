@@ -7,6 +7,7 @@ import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 import UserMenu from './user-menu'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
+import IconQuestionMark from '../icons/icon-question-mark.jsx'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
@@ -203,7 +204,6 @@ class Header extends React.Component {
                 params={{ brand, account }}
                 topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
                 topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-                canGetEdited={activeAccount.get('name')}
                 user={this.props.user}
                 onSelect={itemSelectorFunc}
                 restrictedTo="account">
@@ -222,7 +222,7 @@ class Header extends React.Component {
               </Button>
             </li>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon btn-round">?</Button>
+              <Button className="btn-header btn-tertiary btn-icon btn-round btn-help"><IconQuestionMark /></Button>
             </li>
             <li>
               <Input className="header-search-input"
