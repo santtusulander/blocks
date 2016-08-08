@@ -8,10 +8,10 @@ import UserMenu from './user-menu'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
-import checkPermissions from '../../util/permissions'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
 
@@ -173,11 +173,6 @@ class Header extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const canSeeAccounts = checkPermissions(
-      this.props.roles,
-      this.props.user,
-      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
-    )
     const itemSelectorFunc = (...params) => {
       if(router.isActive('/content')) {
         router.push(getContentUrl(...params))
@@ -208,7 +203,8 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="header__account-selector">
-              {canSeeAccounts ? <AccountSelector
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <AccountSelector
                   as="header"
                   params={{ brand, account }}
                   topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
@@ -218,9 +214,11 @@ class Header extends React.Component {
                   <Dropdown.Toggle bsStyle="link" className="header-toggle">
                     {activeAccount && activeAccountName}
                   </Dropdown.Toggle>
-                </AccountSelector> :
+                </AccountSelector>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <div className="active-account-name">{activeAccountName}</div>
-              }
+              </IsAllowed>
             </li>
             {this.renderBreadcrumb()}
           </Nav>
@@ -265,7 +263,6 @@ Header.defaultProps = {
   breadcrumbs: null,
   /* FOR TEST only */
   isUDNAdmin: true,
-  roles: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -283,7 +280,6 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,

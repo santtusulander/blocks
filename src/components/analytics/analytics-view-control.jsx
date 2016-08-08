@@ -134,7 +134,7 @@ const AnalyticsViewControl = (props) => {
             props.router.push(url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              <h1>{activeItem || "select account"}</h1>
+            <h1>{activeItem || "select account"}</h1>
           </Dropdown.Toggle>
         </AccountSelector>
         {props.params.account &&

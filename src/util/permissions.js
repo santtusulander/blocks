@@ -42,12 +42,11 @@ permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
 
 // Content Item listing
 permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
-  () => false
-  // (role) => role.getIn(['aaa', 'accounts', 'list'])
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
-  (role) => role.getIn(['aaa', 'groups', 'list'])
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
-  (role) => role.getIn(['north', 'locations', 'list'])
+  (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
 
 /**
  * Determine if a user has a permission.
