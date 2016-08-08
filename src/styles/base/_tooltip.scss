@@ -24,13 +24,19 @@
   .tooltip-inner {
     max-width: 100%;
     padding: 18px 14px;
+    font-family: 'Roboto', Helvetica, Arial;
     text-align: left;
     border-radius: 0;
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       color: $dt-text-color;
       background-color: rgba($black, 0.8);
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+      background-color: $white;
+      box-shadow: 0 5px 10px rgba($black, 0.2);
     }
   }
 
@@ -47,9 +53,12 @@
       margin-right: 5px;
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       border-bottom: 1px solid rgba($pale-blue, 0.2);
+    }
+
+    .light-theme & {
+      border-bottom: 1px solid rgba($black, 0.1);
     }
   }
 
