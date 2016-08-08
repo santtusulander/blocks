@@ -141,6 +141,7 @@ const AnalyticsViewControl = (props) => {
           <ButtonToolbar>
             <Button
               bsStyle="primary"
+              className="has-icon"
               disabled={getTabName(props.location.pathname) === 'playback-demo'}
               onClick={props.exportCSV}>
               <IconExport />

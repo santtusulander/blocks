@@ -108,6 +108,7 @@
 
   .dark-theme & {
     background-color: $dt-header-background-color;
+    border-bottom: 1px solid $black;
   }
 
   .light-theme & {

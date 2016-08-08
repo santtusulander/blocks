@@ -115,10 +115,6 @@ export class AccountManagementAccountUsers extends React.Component {
 
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
-      confirmPw: {
-        condition: confirmPw.length === password.length && confirmPw !== password,
-        errorText: 'Passwords don\'t match!'
-      },
       email: [
         {
           condition: email === this.state.existingMail,
@@ -126,12 +122,16 @@ export class AccountManagementAccountUsers extends React.Component {
         },
         {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
-          errorText: 'invalid email!'
+          errorText: 'Invalid Email.'
         }
       ],
       password: {
         condition: password.length > 30,
-        errorText: 'Password too long!'
+        errorText: 'Password too long.'
+      },
+      confirmPw: {
+        condition: confirmPw !== password,
+        errorText: 'Passwords don\'t match.'
       }
     }
     return checkForErrors({ email, password, confirmPw, roles }, conditions)
@@ -181,7 +181,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Input id='confirmPw' placeholder=" Confirm password"
             type={this.state.passwordVisible ? 'text' : 'password'}
             wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link' +
+            addonAfter={<a className={'input-addon-link btn-primary' +
                 (this.state.passwordVisible ? ' active' : '')}
                 onClick={this.togglePasswordVisibility}>
                   <IconEye/>
@@ -196,13 +196,13 @@ export class AccountManagementAccountUsers extends React.Component {
             numericValues={true}
             className="inline-add-dropdown"
             options={roleOptions}/>,
-          positionClass: 'col-sm-9'
+          positionClass: 'row col-xs-10'
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={this.togglePermissionModal}>
               <IconInfo/>
             </Button>,
-          positionClass: 'right'
+          positionClass: 'col-xs-2 text-right'
         }
       ],
       [
@@ -215,7 +215,7 @@ export class AccountManagementAccountUsers extends React.Component {
               this.setState({ usersGroups: newValues })
             }}
             options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-          positionClass: 'col-sm-6'
+          positionClass: 'row col-xs-7'
         }
       ]
     ]
@@ -237,7 +237,9 @@ export class AccountManagementAccountUsers extends React.Component {
 
   getGroupsForUser(user) {
     const groups = user.get('group_id')
-      .map(groupId => this.props.groups.find(group => group.get('id') === groupId).get('name'))
+      .map(groupId => this.props.groups
+        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+        .get('name'))
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
