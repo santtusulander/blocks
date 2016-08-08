@@ -5,14 +5,43 @@ import { reduxForm, getValues } from 'redux-form'
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
+/**
+ * When to display errorTooltip
+ * @param attributes
+ * @returns {*|boolean}
+ */
+const displayTooltipRules = (attributes) => {
+  return attributes &&
+        attributes.error &&
+        attributes.touched  &&
+        attributes.active &&
+        (
+          attributes.name !== 'password' && attributes.name !== 'confirmPw' || attributes.error !== 'Required'
+        )
+}
+
+/**
+ * When to add `has-error`-classname to input
+ * @param attributes
+ * @returns {*|boolean}
+ */
+const errorClassnameRules = (attributes) => {
+  return attributes &&
+        attributes.error &&
+        attributes.touched &&
+        (
+          attributes.name !== 'password' && attributes.name !== 'confirmPw' || attributes.error !== 'Required'
+        )
+}
+
 const ErrorToolTip = attributes =>
-  attributes && attributes.error && attributes.touched && attributes.active && attributes.dirty &&
+  displayTooltipRules(attributes) &&
   <Tooltip placement="bottom" className="in" id="tooltip-bottom">
     {attributes.error}
   </Tooltip>
 
 const generateBsClasses = (attributes, input) => {
-  if (attributes && attributes.dirty && attributes.touched && attributes.invalid) {
+  if (errorClassnameRules(attributes)) {
     let errorStyle;
     if (input.props.bsStyle) {
       errorStyle = `${input.props.bsStyle} error`
