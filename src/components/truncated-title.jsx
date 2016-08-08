@@ -31,7 +31,7 @@ class TruncatedTitle extends React.Component {
   }
 
   render() {
-    const tooltip = (<Tooltip id="truncated-title-tooltip" className="content-item-chart-tooltip display-long-name-tooltip" ref="tooltip"><h3>{this.props.content}</h3></Tooltip>)
+    const tooltip = (<Tooltip id="truncated-title-tooltip" className="content-item-chart-tooltip display-long-name-tooltip" ref="truncatedTooltip"><h3>{this.props.content}</h3></Tooltip>)
     return (
       <div>
         {this.state.isTitleTruncated ?
