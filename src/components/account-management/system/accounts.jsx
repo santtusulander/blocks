@@ -13,7 +13,12 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 
 import { fetchAccounts, createAccount } from '../../../redux/modules/account'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
+import {
+  SERVICE_TYPES,
+  ACCOUNT_TYPES,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -39,10 +44,16 @@ class AccountList extends Component {
 
   validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
     const conditions = {
-      name: {
-        condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
-        errorText: 'That account name is taken'
-      }
+      name: [
+        {
+          condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
+          errorText: 'That account name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          errorText: <div>{['Account name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        }
+      ]
     }
     return checkForErrors({ name, brand, provider_type }, conditions)
   }
