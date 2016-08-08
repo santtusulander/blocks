@@ -5,10 +5,6 @@
   }
 
   .dropdown-toggle {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-
     :first-child {
       overflow: hidden;
       text-overflow: ellipsis;
