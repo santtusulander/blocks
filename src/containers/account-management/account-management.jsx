@@ -139,8 +139,14 @@ export class AccountManagement extends Component {
       'udn',
       this.props.activeAccount.get('id'),
       group.get('id')
-    ).then(() => {
+    ).then(response => {
       this.props.toggleModal(null)
+      response.error &&
+        this.props.uiActions.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+        })
     })
   }
 
