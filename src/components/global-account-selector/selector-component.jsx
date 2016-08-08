@@ -31,13 +31,11 @@ AccountSelector.propTypes = {
   classname: PropTypes.string,
   drillable: PropTypes.bool,
   items: PropTypes.array,
-  onCaretClick: PropTypes.func,
   onSearch: PropTypes.func,
   onSelect: PropTypes.func,
   open: PropTypes.bool,
   searchValue: PropTypes.string,
-  toggle: PropTypes.func,
-  topBarText: PropTypes.string
+  toggle: PropTypes.func
 }
 
 export default AccountSelector
