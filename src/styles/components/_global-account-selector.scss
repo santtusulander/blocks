@@ -1,4 +1,5 @@
-.global-account-selector {
+.global-account-selector,
+.navbar-nav .global-account-selector.open {
   &__toggle {
     display: flex;
   }
@@ -25,12 +26,14 @@
       width: 246px !important;
     }
 
+    & > li,
     li {
-      display: flex !important;
+      display: flex;
 
+      & > a,
       a {
         position: relative;
-        display: flex !important;
+        display: flex;
         width: 100%;
         align-items: center;
         flex-direction: row;
