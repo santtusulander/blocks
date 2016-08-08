@@ -23,7 +23,7 @@
 
   .tooltip-inner {
     max-width: 100%;
-    padding: 25px 30px;
+    padding: 18px 14px;
     text-align: left;
     border-radius: 0;
 
@@ -35,8 +35,17 @@
   }
 
   .tooltip-header {
-    padding: 0 30px 10px;
-    margin: 0 -30px 10px;
+    padding: 0 14px 20px;
+    margin: 0 -14px 20px;
+
+    h3 {
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+
+    b > span:first-child {
+      margin-right: 5px;
+    }
 
     .dark-theme &,
     .light-theme & {

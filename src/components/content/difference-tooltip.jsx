@@ -1,7 +1,8 @@
 import React from 'react'
 
-const ContentDifferenceTooltip = () => <div>
+const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">
+    <h3>{name}</h3>
     <b>Bandwidth</b> vs 28 days ago
   </div>
   <div>
