@@ -116,7 +116,7 @@ export class AccountManagementAccountUsers extends React.Component {
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
       confirmPw: {
-        condition: confirmPw.length === password.length && confirmPw !== password,
+        condition: confirmPw !== password,
         errorText: 'Passwords don\'t match!'
       },
       email: [
@@ -237,7 +237,9 @@ export class AccountManagementAccountUsers extends React.Component {
 
   getGroupsForUser(user) {
     const groups = user.get('group_id')
-      .map(groupId => this.props.groups.find(group => group.get('id') === groupId).get('name'))
+      .map(groupId => this.props.groups
+        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+        .get('name'))
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
@@ -321,7 +323,7 @@ export class AccountManagementAccountUsers extends React.Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {this.props.groups.size !== 0 && sortedUsers.map((user, i) => {
+            {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>

@@ -23,7 +23,7 @@ const generateBsClasses = (attributes, input) => {
     return { bsStyle: errorStyle }
   }
 
-  return !!input.props.bsStyle ? { bsStyle: input.props.bsStyle } : {}
+  return input.props.bsStyle ? { bsStyle: input.props.bsStyle } : {}
 }
 
 const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
