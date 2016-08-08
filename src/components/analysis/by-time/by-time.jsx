@@ -135,7 +135,7 @@ class AnalysisByTime extends React.Component {
       numeral(val).format(this.props.yAxisFormat)
     : this.props.yAxisCustomFormat ?
       this.props.yAxisCustomFormat(numeral(val).format('0'))
-    : numeral(val).format('0')
+    : numeral(val).format('0,0')
   }
   render() {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
