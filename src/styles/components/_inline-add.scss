@@ -11,6 +11,21 @@
       padding-top: 0 !important;
       padding-bottom: 0 !important;
     }
+
+    & > .has-error input {
+      color: $white;
+      background-color: rgba($black, 0.2) !important;
+      border: 2px solid $purple;
+
+      &:focus, &:active {
+        box-shadow: none;
+      }
+
+      .light-theme & {
+        background-color: $white !important;
+        color: $grey-80;
+      }
+    }
   }
 
   input {
