@@ -143,6 +143,15 @@ export class Configuration extends React.Component {
     let newHost = this.props.activeHost.setIn(
       ['services',0,'configurations',this.state.activeConfig],
       this.getActiveConfig().setIn(['configuration_status','deployment_status'], env))
+
+    // Set the active_configurations when publishing
+    newHost = this.props.activeHost.setIn(
+      ['services', 0, 'active_configurations'],
+      Immutable.fromJS([
+        {config_id: this.getActiveConfig().get('config_id')}
+      ])
+    )
+
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
