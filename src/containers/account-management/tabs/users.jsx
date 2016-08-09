@@ -210,17 +210,18 @@ export class AccountManagementAccountUsers extends React.Component {
         }
       ],
       [
-        {
-          input: <FilterChecklistDropdown
-            noClear={true}
-            className="inline-add-dropdown"
-            values={this.state.usersGroups}
-            handleCheck={newValues => {
-              this.setState({ usersGroups: newValues })
-            }}
-            options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-          positionClass: 'row col-xs-7'
-        }
+        // Disable until API support allows listing groups for user with some assigned
+        // {
+        //   input: <FilterChecklistDropdown
+        //     noClear={true}
+        //     className="inline-add-dropdown"
+        //     values={this.state.usersGroups}
+        //     handleCheck={newValues => {
+        //       this.setState({ usersGroups: newValues })
+        //     }}
+        //     options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
+        //   positionClass: 'row col-xs-7'
+        // }
       ]
     ]
   }
