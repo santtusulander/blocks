@@ -160,7 +160,7 @@ class AccountForm extends React.Component {
 
             <hr/>
 
-            <label>Service type</label>
+            <label>Services</label>
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
