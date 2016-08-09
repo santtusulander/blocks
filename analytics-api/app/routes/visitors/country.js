@@ -2,7 +2,6 @@
 
 require('express-jsend');
 let _         = require('lodash');
-let countries = require('country-data').countries;
 let dataUtils = require('../../data-utils');
 let db        = require('../../db');
 let log       = require('../../logger');
@@ -55,8 +54,8 @@ function routeVisitorsCountry(req, res) {
     // Add the country code and proper country name
     responseData.countries.forEach((countryRecord) => {
       let code = countryRecord.name;
-      countryRecord.code = countries[code] ? countries[code].alpha3 : code;
-      countryRecord.name = countries[code] ? countries[code].name : code;
+      countryRecord.code = dataUtils.get3CharCountryCodeFromCode(code);
+      countryRecord.name = dataUtils.getCountryNameFromCode(code);
     });
 
     res.jsend(responseData);

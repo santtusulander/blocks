@@ -1,7 +1,8 @@
 'use strict';
 
-const _      = require('lodash');
-const moment = require('moment');
+const _         = require('lodash');
+const moment    = require('moment');
+const countries = require('country-data').countries;
 
 /**
  * @class
@@ -230,6 +231,26 @@ class DataUtils {
     records = _.take(records, max);
 
     return records;
+  }
+
+  /**
+   * Given a case insensitive country code, return the country name.
+   * @param  {string} code  The 2 or 3 character country code, e.g. US, us, USA, usa
+   * @return {string}       The country name, e.g. United States
+   */
+  getCountryNameFromCode(code) {
+    code = countries[code] ? code : code.toUpperCase();
+    return countries[code] ? countries[code].name : code;
+  }
+
+  /**
+   * Given a case insensitive country code, return the three character country code.
+   * @param  {string} code  The 2 or 3 character country code, e.g. US, us, USA, usa
+   * @return {string}       The uppercase 3 character country code, e.g. USA
+   */
+  get3CharCountryCodeFromCode(code) {
+    code = countries[code] ? code : code.toUpperCase();
+    return countries[code] ? countries[code].alpha3 : code;
   }
 
 }

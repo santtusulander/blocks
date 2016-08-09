@@ -71,11 +71,12 @@ $silver-40:     #e2e1e1;
 $silver-30:     #e9e9e9;
 $silver-20:     #f0f0f0;
 
+$white-20:      #f7f7f7;
+
 $dark-blue-80:  #2e4275;
 $dark-blue-60:  #5b6592;
 $dark-blue-40:  #8d92b4;
 $dark-blue-20:  #c3c5d9;
-
 
 // Gradients
 // =========
@@ -115,8 +116,21 @@ $gradient-sm-red:    linear-gradient(to right, $gradient-red, $gradient-orange);
 
 // Dark Theme
 
+$dt-header-background-color: #1f3048;
 $dt-text-color: #d2d2d2;
+
+// Light theme
 $lt-text-color: $grey-80;
 $lt-button-color: rgba($white, 0.7);
 
 $btn-success-bg: #009f80;
+
+
+// Support
+// =======
+
+// Support priority colors
+$support-priority-normal: $pale-blue;
+$support-priority-low:    $gradient-teal;
+$support-priority-medium: $yellow;
+$support-priority-high:   $red;

@@ -20,4 +20,4 @@ IconSelectCaret.propTypes = {
   className: React.PropTypes.string
 }
 
-module.exports = IconSelectCaret
+export default IconSelectCaret

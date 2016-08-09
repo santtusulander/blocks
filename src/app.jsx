@@ -6,9 +6,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
+import { Button } from 'react-bootstrap'
 
-import routes from './routes'
+import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
+import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
 
 import './styles/style.scss'
@@ -25,6 +27,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.timeout = 30000
 
 // Handle 401s with a redirect to login page
+// Handle 403s with a InfoDialod & display message
 // display ErrorModal on other errors
 axios.interceptors.response.use(function (response) {
   return response;
@@ -37,18 +40,26 @@ axios.interceptors.response.use(function (response) {
         && !location.href.includes('/forgot-password')) {
         location.href='/login'
       }
-    } else if (status === 500 || status === 404) {
+    }
+    else if (status === 403) {
+      store.dispatch(showInfoDialog({
+        title: 'Unauthorized',
+        content: 'You do not have permission to access information on this page.',
+        buttons: <Button onClick={() => store.dispatch(hideInfoDialog())} bsStyle="primary">OK</Button>
+      }));
+    }
+    else if (status === 500 || status === 404) {
       store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
     }
   }
-  
+
   return Promise.reject(error);
 });
 
 ReactDOM.render(
   <Provider store={store}>
     <Router onUpdate={LogPageView} history={browserHistory}>
-      {routes}
+      {getRoutes(store)}
     </Router>
   </Provider>, document.getElementById('content')
 );

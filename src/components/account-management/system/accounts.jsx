@@ -13,7 +13,12 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 
 import { fetchAccounts, createAccount } from '../../../redux/modules/account'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
+import {
+  SERVICE_TYPES,
+  ACCOUNT_TYPES,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -39,10 +44,16 @@ class AccountList extends Component {
 
   validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
     const conditions = {
-      name: {
-        condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
-        errorText: 'That account name is taken'
-      }
+      name: [
+        {
+          condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
+          errorText: 'That account name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          errorText: <div>{['Account name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        }
+      ]
     }
     return checkForErrors({ name, brand, provider_type }, conditions)
   }
@@ -66,13 +77,14 @@ class AccountList extends Component {
       [],
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
       [ { input: <FilterChecklistDropdown
+            noClear={true}
             className="inline-add-dropdown"
             values={this.state.accountServices}
             handleCheck={newValues => {
               this.setState({ accountServices: newValues })
             }}
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-          positionClass: 'col-sm-6'
+          positionClass: 'row col-xs-6'
       } ]
     ]
   }
@@ -113,6 +125,10 @@ class AccountList extends Component {
     } = this.props
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
+      .map(account => {
+        const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
+        return account.set('provider_type_label', accountType ? accountType.label : '')
+      })
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -151,10 +167,10 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <th width="15%">TYPE</th>
-            <th width="10%">ID</th>
-            <th width="15%">BRAND</th>
-            <th width="30%">SERVICES</th>
+            <TableSorter {...sorterProps} column="provider_type_label" width="15%">TYPE</TableSorter>
+            <TableSorter {...sorterProps} column="id" width="10%">ID</TableSorter>
+            <TableSorter {...sorterProps} column="brand" width="15%">BRAND</TableSorter>
+            <TableSorter {...sorterProps} column="services" width="30%">SERVICES</TableSorter>
             <th width="8%"/>
           </tr>
           </thead>
@@ -170,13 +186,13 @@ class AccountList extends Component {
             return (
               <tr key={index}>
                 <td>{account.get('name')}</td>
-                <td>{ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value).label}</td>
+                <td>{account.get('provider_type_label')}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
                 <td>
                   <ActionLinks
-                    onEdit={() => {}}
+                    onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>
@@ -216,12 +232,6 @@ AccountList.defaultProps = {
  */
 
 function mapStateToProps(state) {
-  // const notSufficient = state.account.get('allAccounts')
-  // const sufficient = notSufficient.map(account => {
-  //   account = account.set('services', fromJS([1, 1, 1, 1]))
-  //   account = account.set('provider_type', Math.floor(Math.random() * 2) + 1)
-  //   return account
-  // })
   const addAccountForm = state.form.inlineAdd
   const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
   return { accounts: state.account.get('allAccounts'), typeField }

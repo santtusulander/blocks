@@ -128,11 +128,23 @@
     }
   }
 
+  .no-data-list-section {
+    height: $content-item-list-height;
+    padding: 89px 30px 30px;
+
+    @include md {
+      height: $md-content-item-list-height;
+      padding: 60px 15px 15px;
+    }
+  }
+
   .content-item-list-name {
+    overflow: hidden;
     font-size: 30px;
     font-weight: 500;
-    line-height: 1;
-    word-break: break-all;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: nowrap;
 
     @include md {
       font-size: 24px;

@@ -16,6 +16,10 @@ import InlineAdd from '../../../components/inline-add'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 
+import { checkForErrors } from '../../../util/helpers'
+import { NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../../constants/account-management-options'
+
+
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +27,6 @@ class AccountManagementAccountGroups extends React.Component {
     this.state = {
       adding: false,
       editing: null,
-      newName: '',
       newUsers: Immutable.List(),
       search: '',
       sortBy: 'name',
@@ -39,8 +42,8 @@ class AccountManagementAccountGroups extends React.Component {
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
-    this.changeNewName   = this.changeNewName.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
+    this.validateInlineAdd = this.validateInlineAdd.bind(this)
   }
   componentWillMount() {
     const { brand, account } = this.props.params
@@ -69,7 +72,6 @@ class AccountManagementAccountGroups extends React.Component {
     e.stopPropagation()
     this.setState({
       adding: true,
-      newName: '',
       newUsers: Immutable.List()
     })
   }
@@ -94,14 +96,30 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
+  validateInlineAdd({name = ''}){
+    const conditions = {
+      name: [
+        {
+          condition: this.props.groups.findIndex(account => account.get('name') === name) > -1,
+          errorText: 'That group name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          errorText: <div>{['Group name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        }
+      ]
+    }
+    return checkForErrors({ name }, conditions)
+  }
+
   // TODO: Now that this is a container, no need to pass this in
   saveEditedGroup(group) {
     return name => this.props.editGroup(group, name).then(this.cancelAdding)
   }
 
   // TODO: Now that this is a container, no need to pass this in
-  saveNewGroup() {
-    this.props.addGroup(this.state.newName)
+  saveNewGroup(values) {
+    this.props.addGroup(values.name)
       .then(newGroup => {
         return Promise.all(this.state.newUsers.map(email => {
           const foundUser = this.props.users
@@ -139,12 +157,6 @@ class AccountManagementAccountGroups extends React.Component {
     })
   }
 
-  changeNewName(e) {
-    this.setState({
-      newName: e.target.value
-    })
-  }
-
   changeNewUsers(val) {
     this.setState({newUsers: val})
   }
@@ -169,25 +181,22 @@ class AccountManagementAccountGroups extends React.Component {
     const inlineAddInputs = [
       [
         {
-          input: <Input id='name' placeholder=" Name" type="text"
-            onChange={this.changeNewName}
-            value={this.state.newName}/>
+          input: <Input id='name' placeholder="Name" type="text"/>
         }
       ],
       [
         {
           input: <FilterChecklistDropdown
+            noClear={true}
             id='members'
             values={this.state.newUsers}
             handleCheck={this.changeNewUsers}
             options={this.props.users.map(user => Immutable.Map({
               label: user.get('email') || 'No Email',
               value: user.get('email')
-            }))}/>,
-          positionClass: 'left'
+            }))}/>
         }
       ],
-      [],
       []
     ]
     return (
@@ -225,13 +234,13 @@ class AccountManagementAccountGroups extends React.Component {
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="8%"></th>
+              <th width="8%"/>
             </tr>
           </thead>
           <tbody>
           {this.state.adding && <InlineAdd
             validate={this.validateInlineAdd}
-            fields={['name', 'members']}
+            fields={['name']}
             inputs={inlineAddInputs}
             cancel={this.cancelAdding}
             unmount={this.cancelAdding}

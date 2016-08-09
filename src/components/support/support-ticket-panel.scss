@@ -6,11 +6,6 @@ $support-padding-horizontal: 5em;
 $support-padding-vertical:   2.5em;
 
 $support-priority-width:  2em;
-$support-priority-normal: $pale-blue;
-$support-priority-low:    $gradient-teal;
-$support-priority-medium: $yellow;
-$support-priority-high:   $red;
-
 
 .support-ticket-panel {
   position: relative;
@@ -21,6 +16,10 @@ $support-priority-high:   $red;
   font-size: 1rem;
   background-color: rgba($pale-blue, 0.2);
   box-shadow: 0 0.2em 0.2em rgba($black, 0.75);
+
+  &:hover{
+    cursor: pointer;
+  }
 
   &.closed {
     background-color: darken(rgba($pale-blue, 0.2), 15);

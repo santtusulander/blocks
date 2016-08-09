@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { getRoute } from '../routes.jsx'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
+import filesize from 'filesize'
 
 const BYTE_BASE = 1000
 
@@ -48,6 +49,17 @@ export function formatBitsPerSecond(bits_per_second, decimals) {
   else if(bits_per_second < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 4)).format(digits) + ' Tbps'
   }
+  return formatted
+}
+
+export function formatTime(milliseconds) {
+  milliseconds  = milliseconds || 0
+  let formatted = numeral(milliseconds).format('0,0') + ' ms'
+
+  if(milliseconds >= 1000) {
+    formatted = numeral(milliseconds / 1000).format('0,0') + ' s'
+  }
+
   return formatted
 }
 
@@ -342,6 +354,17 @@ export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
   return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
 }
 
+/**
+ * Format a date string to desired format
+ * @param date
+ * @param format
+ * @returns {*}
+ */
+export function formatDate(date, format = 'MM/DD/YYYY') {
+  return moment(date).format(format)
+}
+
+
 export function filterAccountsByUserName (accounts) {
   // placeholder for now
   return accounts
@@ -359,9 +382,20 @@ export function checkForErrors(fields, customConditions) {
     if(field === '') {
       errors[fieldName] = 'Required'
     }
+    else if (Array.isArray(customConditions[fieldName])) {
+      for(const customCondition in customConditions[fieldName]) {
+        if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
+          errors[fieldName] = customConditions[fieldName][customCondition].errorText
+        }
+      }
+    }
     else if(customConditions[fieldName] && customConditions[fieldName].condition) {
       errors[fieldName] = customConditions[fieldName].errorText
     }
   }
   return errors
+}
+
+export function formatFileSize(bytes) {
+  return filesize(bytes)
 }

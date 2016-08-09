@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import {List} from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
@@ -16,10 +17,24 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     this.handleCheck  = this.handleCheck.bind(this)
+    this.handleClick  = this.handleClick.bind(this)
     this.handleClear  = this.handleClear.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
     this.getLabel     = this.getLabel.bind(this)
     this.getFilteredResults = this.getFilteredResults.bind(this)
+  }
+
+  componentWillMount() {
+    document.addEventListener('click', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, false)
+  }
+
+  handleClick(e) {
+    !findDOMNode(this).contains(e.target) && this.state.dropdownOpen &&
+      this.setState({ dropdownOpen: false })
   }
 
   toggleDropdown(val) {
@@ -108,7 +123,8 @@ export class FilterChecklistDropdown extends React.Component {
                  value="all"
                  checked={this.props.values.size === this.props.options.size}
                  onChange={() => this.handleCheck("all")}/>
-        </li>
+        </li>,
+        this.props.children && this.props.children.map(child => child)
       ]) : List()
 
       itemList = itemList.concat(filteredResults.map((option, i) => {
@@ -159,10 +175,10 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
-            <li className="clear-container">
+            {!this.props.noClear && <li className="clear-container">
               <Button bsClass="btn btn-block btn-primary"
                       onClick={this.handleClear}>Clear</Button>
-            </li>
+            </li>}
           </Dropdown.Menu>
         </Dropdown>
       </div>
@@ -172,8 +188,10 @@ export class FilterChecklistDropdown extends React.Component {
 
 FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
+  children: React.PropTypes.array,
   className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
+  noClear: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),
   values: React.PropTypes.instanceOf(List)
 }

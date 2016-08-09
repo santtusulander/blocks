@@ -3,7 +3,7 @@ import { Input, ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 
 import SelectWrapper from '../select-wrapper.jsx'
-import UDNButton from '../button.js'
+import UDNButton from '../button'
 
 export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors, editMode }) => {
   const { account, group, title, privateKey, interMediateCert, certificate } = fields

@@ -2,23 +2,44 @@
   background-color: $pale-blue !important;
 
   td > div {
-    &.col-sm-6 {
+    &.col-sm-6,
+    &.col-sm-9 {
       padding-left: 0;
     }
 
     & > .form-group {
       padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    & > .has-error input {
+      color: $white;
+      background-color: rgba($black, 0.2) !important;
+      border: 2px solid $purple;
+
+      &:focus, &:active {
+        box-shadow: none;
+      }
+
+      .light-theme & {
+        background-color: $white !important;
+        color: $grey-80;
+      }
     }
   }
 
   input {
-    height: 40px;
+    height: 60px;
     padding: 5px 20px;
     color: $white;
     background-color: $pale-blue;
 
     &::placeholder {
       color: $white;
+    }
+
+    @include md {
+      height: 40px;
     }
   }
 
@@ -30,10 +51,15 @@
     margin-top: 25px;
   }
 
+  .tooltip {
+    max-width: 350px;
+  }
+
   .tooltip-inner {
-    max-width: 200px;
+    max-width: 350px;
     padding: 10px;
   }
+
   .tooltip-arrow {
     left: 10% !important;
   }
@@ -47,21 +73,77 @@
     }
   }
 
+  .icon.two-tone .base {
+    @extend .btn-primary
+  }
+
+  .input-addon-link {
+    @extend .btn-primary
+  }
+
   .btn-primary {
     &,
+    &:not(:disabled),
     &.btn-icon {
+      background: none;
       margin: 0;
+
+      .light-theme & {
+        color: rgba($black, 0.5);
+        fill: rgba($black, 0.5);
+        stroke: rgba($black, 0.5);
+      }
+
+      .dark-theme & {
+        color: $white;
+        fill: $white;
+        stroke: $white;
+      }
+
+      &.active,
+      &:hover,
+      &:hover:not(:disabled) {
+        .light-theme & {
+          color: $white;
+          fill: $white;
+          stroke: $white;
+        }
+
+        .dark-theme & {
+          color: rgba($black, 0.5);
+          fill: rgba($black, 0.5);
+          stroke: rgba($black, 0.5);
+        }
+      }
     }
-    &:hover {
-      color: $white !important;
-      fill: $white !important;
-      stroke: $white !important;
+
+  }
+
+  .input-group-addon,
+  .input-addon-link {
+    height: 60px;
+    min-width: 60px;
+    background: transparent !important;
+
+    @include md {
+      height: 40px;
+      min-width: 50px;
     }
   }
+
 }
 
 .half-width-item {
   width: 49%;
+}
+
+.password-field {
+  width: calc(50% - 30px);
+  margin-right: 10px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
 }
 
 .left {
@@ -75,6 +157,11 @@
 .inline-add-dropdown {
   z-index: 1;
   width: 100%;
-  height: 40px;
-  min-width: 40px;
+  height: 60px;
+  min-width: 60px;
+
+  @include md {
+    height: 40px;
+    min-width: 40px;
+  }
 }

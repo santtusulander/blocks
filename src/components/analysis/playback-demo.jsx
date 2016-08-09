@@ -63,7 +63,7 @@ export class PlaybackDemo extends React.Component {
   }
   playVideo() {
     if(this.state.hls) {
-      this.state.hls.loadSource('http://video.origin.sjc.cdx-stag.unifieddeliverynetwork.net'+this.props.activeVideo)
+      this.state.hls.loadSource('https://origin.udn.global'+this.props.activeVideo)
       this.state.hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
         this.setState({ttfp: ((new Date()) - this.state.videoStartPlayTime)})

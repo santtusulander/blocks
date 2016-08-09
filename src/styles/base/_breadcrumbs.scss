@@ -5,11 +5,11 @@
 // Need to override BootStrap
 .breadcrumb {
   display: flex;
+  width: 100%;
   padding: 0;
   margin-bottom: 0;
   text-transform: uppercase;
   background-color: transparent;
-  width: 100%;
 
   :not(.header) > .container-fluid > & {
     position: absolute;
@@ -32,12 +32,12 @@
     vertical-align: middle;
 
     .header & {
-      height: $bar-height;
-      line-height: $bar-height;
+      height: $header-height;
+      line-height: $header-height;
 
       @include md {
-        height: $md-bar-height;
-        line-height: $md-bar-height;
+        height: $md-header-height;
+        line-height: $md-header-height;
       }
 
       @include print {
@@ -48,11 +48,12 @@
 
     > a,
     > span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       display: block;
       max-width: 350px;
+      overflow: hidden;
+      font-weight: bold;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &.breadcrumb-back {
@@ -164,8 +165,8 @@
   > .active {
 
     .dark-theme &,
-    .light-theme .header & {
-      color: rgba($white, 0.5);
+    .light-theme & {
+      color: $white;
     }
 
     .light-theme & {

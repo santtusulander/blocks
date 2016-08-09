@@ -11,7 +11,7 @@ import {
 import SelectWrapper from '../select-wrapper.jsx'
 import CheckboxArray from '../checkboxes.jsx'
 
-import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './account-form.scss'
 
@@ -32,6 +32,9 @@ const validate = (values) => {
 
   if(!accountName || accountName.length === 0) {
     errors.accountName = 'Account name is required'
+  }
+  if( accountName && ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName) ) {
+    errors.accountName = 'Account name is invalid'
   }
   if(!accountBrand || accountBrand.length === 0) {
     errors.accountBrand = 'Account brand is required'
@@ -56,14 +59,12 @@ class AccountForm extends React.Component {
         account,
         fields: {
           accountName,
-          accountBrand,
           accountType,
           services
         }
       } = this.props
 
       accountName.onChange(account.get('name'))
-      accountBrand.onChange(account.get('brand_id'))
       accountType.onChange(account.get('provider_type'))
       services.onChange(account.get('services'))
     }
@@ -105,10 +106,10 @@ class AccountForm extends React.Component {
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
     const title = this.props.account ? 'Edit Account' : 'Add new account'
-    const subTitle = this.props.account ? `${this.props.account.get('brand_id')} / ${this.props.account.get('name')}` : 'udn'
+    const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
     return (
-      <Modal dialogClassName="account-form-sidebar" show={show}>
+      <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
           <p>{subTitle}</p>

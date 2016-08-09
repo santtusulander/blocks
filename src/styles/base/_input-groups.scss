@@ -28,16 +28,23 @@
   }
 }
 
-.input-addon-after-outside .input-group-addon:last-child {
-  position: absolute;
-  left: 100%;
-  display: block;
+.input-addon-after-outside {
 
-  .icon {
+  .input-group {
+    width: 100%;
+  }
+
+  .input-group-addon:last-child {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 100%;
+    display: block;
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
@@ -58,6 +65,12 @@
     stroke: $dt-text-color;
   }
 
+  .light-theme & {
+    color: $lt-text-color;
+    fill: $lt-text-color;
+    stroke: $lt-text-color;
+  }
+
   .icon {
     fill: inherit;
     stroke: inherit;
@@ -67,7 +80,8 @@
   &:active,
   &.active {
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       color: $pale-blue;
       fill: $pale-blue;
       stroke: $pale-blue;

@@ -1,35 +1,38 @@
-.global-account-selector {
+.global-account-selector,
+.navbar-nav .global-account-selector.open {
   &__toggle {
     display: flex;
   }
 
   .dropdown-toggle {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-
     :first-child {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      float: left;
     }
   }
 
   .dropdown-menu {
+    width: 328px !important;
     max-height: 500px !important;
-    width: 270px !important;
     overflow-y: auto !important;
 
+    @include md {
+      width: 246px !important;
+    }
+
+    & > li,
     li {
       display: flex;
 
+      & > a,
       a {
         position: relative;
         display: flex;
-        flex-direction: row;
-        padding: 0 20px;
         width: 100%;
         align-items: center;
+        flex-direction: row;
       }
     }
 
@@ -47,19 +50,19 @@
     font-weight: bold;
 
     .caret {
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-      border-right: 5px solid $pale-blue;
-      margin-left: -10px;
       margin-right: 10px;
+      margin-left: -10px;
+      border-top: 5px solid transparent;
+      border-right: 5px solid $pale-blue;
+      border-bottom: 5px solid transparent;
     }
   }
 
   .name {
-    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
   }
 
   .caret-container {

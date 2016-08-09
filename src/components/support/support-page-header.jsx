@@ -13,7 +13,7 @@ const SupportPageHeader = (props) => {
   const {
     activeAccount,
     params,
-    params: {brand},
+    params: {brand, account},
     router,
     user
   } = props;
@@ -21,13 +21,12 @@ const SupportPageHeader = (props) => {
 
   return (
     <PageHeader>
-      <p>ACCOUNT SUPPORT</p>
+      <p>SUPPORT</p>
       <AccountSelector
-        params={params}
+        params={{ brand, account }}
         topBarTexts={{ brand: 'UDN Admin' }}
         topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
         onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-        canGetEdited={activeAccount.get('name')}
         restrictedTo="account"
         user={user}>
         <Dropdown.Toggle bsStyle="link" className="header-toggle">

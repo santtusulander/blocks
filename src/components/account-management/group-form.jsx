@@ -11,6 +11,7 @@ import {Map, List, fromJS} from 'immutable'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
+import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './group-form.scss'
 
@@ -23,6 +24,10 @@ const validate = (values) => {
     errors.name = 'Group name is required'
   }
 
+  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
+    errors.name = 'Group name is invalid'
+  }
+
   return errors;
 }
 
@@ -31,11 +36,15 @@ class GroupForm extends React.Component {
     super(props)
 
     this.save = this.save.bind(this)
+    this.state = {
+      usersToAdd: List(),
+      usersToDelete: List()
+    }
   }
 
 
   componentWillMount() {
-    if (this.props.group) {
+    if (!this.props.group.isEmpty()) {
       const {
         group,
         fields: {
@@ -45,11 +54,6 @@ class GroupForm extends React.Component {
 
       name.onChange(group.get('name'))
     }
-
-    this.setState({
-      usersToAdd: List(),
-      usersToDelete: List()
-    })
   }
 
   save() {
@@ -60,17 +64,15 @@ class GroupForm extends React.Component {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
 
-      let data = {
-        name: name.value
-      }
-
-      if (this.props.group) {
+      if (!this.props.group.isEmpty()) {
         this.props.onSave(
           this.props.group.get('id'),
-          data,
+          { name: name.value },
           this.state.usersToAdd,
           this.state.usersToDelete
         )
+      } else {
+        this.props.onSave({ name: name.value }, this.state.usersToAdd)
       }
     }
   }
@@ -79,7 +81,7 @@ class GroupForm extends React.Component {
     // New members will be just removed from the new members list
     if (this.state.usersToAdd.includes(userEmail)) {
       this.setState({
-        usersToAdd: this.state.usersToAdd.take(this.state.usersToAdd.keyOf(userEmail)) // keyOf
+        usersToAdd: this.state.usersToAdd.delete(this.state.usersToAdd.keyOf(userEmail))
       })
     }
     // Existing members will be added to the to be deleted list
@@ -92,7 +94,7 @@ class GroupForm extends React.Component {
 
   undoDelete(userEmail) {
     this.setState({
-      usersToDelete: this.state.usersToDelete.take(this.state.usersToDelete.keyOf(userEmail))
+      usersToDelete: this.state.usersToDelete.delete(this.state.usersToDelete.keyOf(userEmail))
     })
   }
 
@@ -103,7 +105,6 @@ class GroupForm extends React.Component {
 
   render() {
     const { fields: {name}, show, onCancel } = this.props
-
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -117,6 +118,7 @@ class GroupForm extends React.Component {
       return members
     }, [])
 
+
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
       const userEmail = user.get('email')
       if(!user.get('group_id').includes(this.props.group.get('id'))) {
@@ -125,11 +127,11 @@ class GroupForm extends React.Component {
       return arr;
     }, []))
 
-    const title = this.props.group ? 'Edit Group' : 'Add new group'
-    const subTitle = this.props.group ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
+    const title = !this.props.group.isEmpty() ? 'Edit Group' : 'Add new group'
+    const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
 
     return (
-      <Modal dialogClassName="group-form-sidebar" show={show}>
+      <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
           <p>{subTitle}</p>
@@ -150,6 +152,7 @@ class GroupForm extends React.Component {
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
+                noClear={true}
                 options={addMembersOptions}
                 values={this.state.usersToAdd || List()}
                 handleCheck={val => {
@@ -192,7 +195,7 @@ class GroupForm extends React.Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>{this.props.group ? 'Save' : 'Add'}</Button>
+                      onClick={this.save}>{!this.props.group.isEmpty() ? 'Save' : 'Add'}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
@@ -212,11 +215,12 @@ GroupForm.propTypes = {
 }
 
 GroupForm.defaultProps = {
-  users: List()
+  users: List(),
+  group: Map()
 }
 
 export default reduxForm({
-  fields: ['name', 'members', 'users'],
+  fields: ['name'],
   form: 'group-edit',
   validate
 })(GroupForm)

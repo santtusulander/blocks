@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react'
-import ReactDOM from 'react-dom'
-import Immutable from 'immutable'
+import { findDOMNode } from 'react-dom'
+import { connect } from 'react-redux'
+import { Map, fromJS, is } from 'immutable'
+import axios from 'axios'
 
-import {
-  fetchAccountsForModal as fetchAccounts,
-  fetchGroupsForModal as fetchGroups,
-  fetchPropertiesForModal as fetchHosts } from '../../redux/modules/security.js'
+import { resetChangedAccount } from '../../redux/modules/account'
+import { urlBase } from '../../redux/util'
 
 import Menu from './selector-component.jsx'
 import {filterAccountsByUserName} from '../../util/helpers'
@@ -17,6 +17,17 @@ const tierHierarchy = [
   'brand'
 ]
 
+const getAccounts = brand =>
+  axios.get(`${urlBase}/v2/brands/${brand}/accounts`)
+    .then(res => res && res.data)
+
+const getGroups = (brand, account) =>
+  axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+    .then(res => res && res.data)
+
+const getProperties = (brand, account, group) =>
+  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+
 class AccountSelector extends Component {
   constructor(props) {
     super(props)
@@ -24,7 +35,7 @@ class AccountSelector extends Component {
     this.tier = null
     this.account = null
     this.group = null
-
+    this.handleSingleItemChanging = this.handleSingleItemChanging.bind(this)
     this.fetchItems = this.fetchItems.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
@@ -43,13 +54,16 @@ class AccountSelector extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state.open && this.setState({ open: false })
-    const { canGetEdited, params } = this.props, { items } = this.state
+    const { params, getChangedItem } = this.props
+    const prevChangedItem = getChangedItem(this.tier)
+    const nextChangedItem = nextProps.getChangedItem(this.tier)
+    const { open } = this.state
+    open && this.setState({ open: false })
     if(JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
       this.fetchByTier(nextProps.params)
     }
-    else if(nextProps.canGetEdited && canGetEdited && nextProps.canGetEdited !== canGetEdited) {
-      this.setState({ items: items.map(item => item[1] === canGetEdited ? [item[0], nextProps.canGetEdited] : item) })
+    else if(nextChangedItem && !is(prevChangedItem, nextChangedItem)) {
+      this.handleSingleItemChanging(nextChangedItem.toJS())
     }
   }
 
@@ -57,8 +71,21 @@ class AccountSelector extends Component {
     document.removeEventListener('click', this.handleClick, false)
   }
 
+  handleSingleItemChanging({ name, id, action }) {
+    const { items } = this.state
+    const indexOfChanged = items.findIndex(item => item[0] === id)
+    switch(action) {
+      case 'delete': items.splice(indexOfChanged, 1)
+        break
+      case 'edit': items[indexOfChanged] = [id, name]
+        break
+      case 'add': items.push([id, name])
+    }
+    this.setState({ items })
+  }
+
   handleClick(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+    if (findDOMNode(this).contains(e.target)) {
       return
     }
 
@@ -88,23 +115,23 @@ class AccountSelector extends Component {
   fetchItems(nextTier, ...params) {
     switch(nextTier) {
       case 'property':
-        fetchHosts(...params).payload
+        getProperties(...params)
           .then(res => {
             res && this.setState({ items: res.data.map(item => [item, item]) })
           })
         break
       case 'group':
-        fetchGroups(...params).payload
+        getGroups(...params)
           .then(res => res && this.setState({ items: res.data.map(item => [item.id, item.name]) }))
         break
       case 'brand':
       case 'account':
-        fetchAccounts(...params).payload
+        getAccounts(...params)
           .then(res => {
             if(res && res.data) {
               const filteredAccounts = this.props.user.get('username') ?
                 filterAccountsByUserName(
-                  Immutable.fromJS(res.data),
+                  fromJS(res.data),
                   this.props.user.get('username')
                 ).toJS() :
                 res.data
@@ -182,9 +209,12 @@ class AccountSelector extends Component {
 
   render() {
     const { searchValue, open } = this.state
-    const { topBarTexts, restrictedTo, ...other } = this.props
+    const { topBarTexts, resetChanged, getChangedItem, restrictedTo, ...other } = this.props
     const menuProps = Object.assign(other, {
-      toggle: () => this.setState({ open: !this.state.open }),
+      toggle: () => {
+        getChangedItem(this.tier) !== null && !this.state.open && resetChanged(this.tier)
+        this.setState({ open: !this.state.open })
+      },
       onSearch: e => this.setState({ searchValue: e.target.value }),
       drillable: restrictedTo
         && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
@@ -203,19 +233,44 @@ class AccountSelector extends Component {
 }
 
 AccountSelector.propTypes = {
-  canGetEdited: PropTypes.string,
   fetchItems: PropTypes.func,
+  getChangedItem: PropTypes.func,
   items: PropTypes.array,
   onSelect: PropTypes.func,
   params: PropTypes.object,
+  resetChanged: PropTypes.func,
   restrictedTo: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
   topBarTexts: PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map)
+  user: React.PropTypes.instanceOf(Map)
 }
 AccountSelector.defaultProps = {
-  user: Immutable.Map({})
+  user: Map()
 }
 
-export default AccountSelector
+function mapStateToProps(state) {
+  return {
+    getChangedItem: tier => {
+      switch(tier) {
+        case 'brand':
+        case 'account': return state.account.get('changedAccount')
+      }
+    }
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+
+  return {
+    resetChanged: tier => {
+      switch(tier) {
+        case 'brand':
+        case 'account':
+          dispatch(resetChangedAccount())
+      }
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountSelector)
