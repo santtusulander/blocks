@@ -22,18 +22,6 @@ const accountTypeOptions = ACCOUNT_TYPES.map(e => {
   return [ e.value, e.label]
 });
 
-let errors = {}
-
-const validate = values => {
-  errors = {}
-
-  const { accountName } = values
-  if(!accountName || accountName.length === 0) errors.accountName = 'Account name is required'
-
-  return errors;
-
-}
-
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
     super(props)
@@ -64,7 +52,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   save() {
-    if(!Object.keys(errors).length) {
+    if(!this.props.invalid) {
       const { fields: { accountName, accountType, services } } = this.props
       this.props.onSave('udn', this.props.account.get('id'), {
         name: accountName.value,
@@ -227,7 +215,7 @@ class AccountManagementAccountDetails extends React.Component {
 
           <ButtonToolbar className="text-right extra-margin-top">
             <UDNButton
-              disabled={Object.keys(errors).length > 0}
+              disabled={this.props.invalid}
               bsStyle="primary"
               onClick={this.save}>
               Save
@@ -256,6 +244,5 @@ AccountManagementAccountDetails.defaultProps = {
 
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
-  form: 'account-details',
-  validate
+  form: 'account-details'
 })(withRouter(AccountManagementAccountDetails))
