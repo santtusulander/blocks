@@ -36,6 +36,8 @@ export class AccountManagementAccountUsers extends React.Component {
       sortBy: 'email',
       sortDir: 1,
       search: '',
+      filteredGroups: 'all',
+      filteredRoles: 'all',
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
@@ -321,31 +323,76 @@ export class AccountManagementAccountUsers extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredUsers = users.filter((user) => {
+    const filteredUsersByRole = users.filter((user) => {
+      if(this.state.filteredRoles === 'all') {
+        return true
+      } else {
+        return user.get('roles').find(role => {
+          return this.state.filteredRoles === role
+        })
+      }
+    })
+    const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
+      if(this.state.filteredGroups === 'all') {
+        return true
+      } else {
+        return user.get('group_id').find(group => {
+          return this.state.filteredGroups === group
+        })
+      }
+    })
+    const searchedUsers = filteredUsersByGroup.filter((user) => {
       return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
     })
     const sortedUsers = this.sortedData(
-      filteredUsers,
+      searchedUsers,
       this.state.sortBy,
       this.state.sortDir
     )
+    let roleOptions = ROLES_MAPPING.map(mapped_role => [
+      mapped_role.id,
+      this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+    ])
+    roleOptions.unshift(['all', 'All Roles'])
+    const groupOptions = this.props.groups.map(group => [
+      group.get('id'),
+      group.get('name')
+    ]).insert(0, ['all', 'All Groups']).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
     return (
       <div className="account-management-account-users">
         <Row className="header-btn-row">
-          <Col sm={6}>
+          <Col lg={2}>
             <h3>
               {sortedUsers.size} User{sortedUsers.size === 1 ? '' : 's'} {!!numHiddenUsers && `(${numHiddenUsers} hidden)`}
             </h3>
           </Col>
-          <Col sm={6} className="text-right">
+          <Col lg={10} className="text-right">
             <Input
               type="text"
               className="search-input"
-              groupClassName="search-input-group"
+              groupClassName="search-input-group inline"
               placeholder="Search"
               value={this.state.search}
               onChange={this.changeSearch} />
+            <div className="form-group inline">
+              <SelectWrapper
+                id='filtered-roles'
+                value={this.state.filteredRoles}
+                onChange={value => {
+                  this.setState({ filteredRoles: value })
+                }}
+                options={roleOptions}/>
+            </div>
+            <div className="form-group inline">
+              <SelectWrapper
+                id='filtered-groups'
+                value={this.state.filteredGroups}
+                onChange={value => {
+                  this.setState({ filteredGroups: value })
+                }}
+                options={groupOptions}/>
+            </div>
             <Button bsStyle="success" className="btn-icon btn-add-new"
               onClick={this.toggleInlineAdd}>
               <IconAdd />
