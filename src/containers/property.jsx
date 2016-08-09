@@ -482,6 +482,7 @@ Property.propTypes = {
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  router: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
