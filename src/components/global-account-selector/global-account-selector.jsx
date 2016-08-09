@@ -146,13 +146,14 @@ class AccountSelector extends Component {
   }
 
   onCaretClick(e) {
-    let fetchArgs = ['group', 'udn', this.account]
+    let fetchArgs;
     if(this.tier === 'group') {
       this.group = e.target.getAttribute('data-value')
       fetchArgs = ['property', 'udn', this.account, this.group]
     }
     else {
       this.account = e.target.getAttribute('data-value')
+      fetchArgs = ['group', 'udn', this.account]
     }
     this.fetchItems(...fetchArgs)
   }
