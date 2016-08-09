@@ -8,6 +8,7 @@ import { withRouter } from 'react-router'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import IconAdd from '../../../components/icons/icon-add'
 import IconTrash from '../../../components/icons/icon-trash'
@@ -15,6 +16,7 @@ import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
+import UDNButton from '../../../components/button'
 
 import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../../constants/account-management-options'
@@ -43,15 +45,18 @@ class AccountManagementAccountGroups extends React.Component {
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
+    this.shouldLeave     = this.shouldLeave.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
+    this.isLeaving       = false;
   }
   componentWillMount() {
-    const { brand, account } = this.props.params
+    const {router, route, params: { brand, account }} = this.props
     this.props.userActions.fetchUsers(brand, account)
 
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -159,6 +164,25 @@ class AccountManagementAccountGroups extends React.Component {
 
   changeNewUsers(val) {
     this.setState({newUsers: val})
+  }
+
+  shouldLeave({ pathname }) {
+    if (!this.isLeaving && this.state.adding) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Warning',
+        content: 'You have made changes to the Group(s), are you sure you want to exit without saving?',
+        buttons:  [
+          <UDNButton key="button-1" onClick={() => {
+            this.isLeaving = true
+            this.props.router.push(pathname)
+            this.props.uiActions.hideInfoDialog()
+          }} bsStyle="primary">Continue</UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+        ]
+      })
+      return false;
+    }
+    return true
   }
 
   render() {
@@ -293,7 +317,10 @@ AccountManagementAccountGroups.propTypes    = {
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  route: React.PropTypes.object,
+  router: React.PropTypes.object,
   toggleModal: React.PropTypes.func,
+  uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)
 }
@@ -312,6 +339,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
