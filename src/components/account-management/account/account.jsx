@@ -231,6 +231,7 @@ AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
+  invalid: React.PropTypes.bool,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
   route: React.PropTypes.object,
