@@ -37,6 +37,14 @@
 
   &__account-selector {
     display: flex;
+
+    .active-account-name {
+      padding: 0 20px 0 30px;
+      margin: 14.5px 20px 14.5px 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-right: 1px solid $silver-80;
+    }
   }
 
   &__left {

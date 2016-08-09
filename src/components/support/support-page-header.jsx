@@ -14,8 +14,7 @@ const SupportPageHeader = (props) => {
     activeAccount,
     params,
     params: {brand, account},
-    router,
-    user
+    router
   } = props;
   const subPage = getTabName(router, params);
 
@@ -23,12 +22,12 @@ const SupportPageHeader = (props) => {
     <PageHeader>
       <p>SUPPORT</p>
       <AccountSelector
+        as="support"
         params={{ brand, account }}
         topBarTexts={{ brand: 'UDN Admin' }}
         topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
         onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-        restrictedTo="account"
-        user={user}>
+        restrictedTo="account">
         <Dropdown.Toggle bsStyle="link" className="header-toggle">
           <h1>{activeAccount.get('name') || 'No active account'}</h1>
         </Dropdown.Toggle>
@@ -54,8 +53,7 @@ SupportPageHeader.propTypes = {
   account: PropTypes.string,
   activeAccount: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,
-  router: PropTypes.object,
-  user: React.PropTypes.instanceOf(Map)
+  router: PropTypes.object
 }
 
 export default SupportPageHeader
