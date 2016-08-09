@@ -37,7 +37,8 @@ export const UserCanManageAccounts = store => {
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const currentUser = state.user.get('currentUser')
-      const path = ownProps.location.pathname.replace(/\/accounts$/, '').replace(/\/$/, '')
+      const path = ownProps.location.pathname.replace(/\/accounts$/, '')
+        .replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanManageAccounts',
@@ -51,7 +52,8 @@ export const UserCanTicketAccounts = store => {
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const currentUser = state.user.get('currentUser')
-      const path = ownProps.location.pathname.replace(/\/tickets$/, '').replace(/\/$/, '')
+      const path = ownProps.location.pathname.replace(/\/tickets$/, '')
+        .replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanTicketAccounts',

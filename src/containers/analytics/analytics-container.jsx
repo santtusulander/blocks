@@ -7,7 +7,6 @@ import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
-import * as uiActionCreators from '../../redux/modules/ui'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
 import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
@@ -19,19 +18,11 @@ import PageHeader from '../../components/layout/page-header'
 
 import { getTabName } from '../../util/helpers.js'
 import { createCSVExporters } from '../../util/analysis-csv-export'
+import checkPermissions from '../../util/permissions'
+import * as PERMISSIONS from '../../constants/permissions'
 
 
 import './analytics-container.scss'
-
-function getNameById( list, id ) {
-  const foundItem = list.find( (item) => {
-    return item.get('id').toString() === id.toString()
-  })
-
-  if (foundItem) return foundItem.get('name')
-
-  return null
-}
 
 class AnalyticsContainer extends React.Component {
   constructor(props){
@@ -69,23 +60,20 @@ class AnalyticsContainer extends React.Component {
   }
 
   fetchData(params, refresh){
-    let promises = [];
-    /* TODO: could be simplified? Or maybe redux module should decide what needs to be updated? */
-    if(params.brand !== this.props.params.brand || refresh) {
-      promises.push( this.props.accountActions.fetchAccounts(params.brand) )
+    const brandChanged = params.brand !== this.props.params.brand
+    const accountChanged = params.account !== this.props.params.account
+    const groupChanged = params.group !== this.props.params.group
+    if((brandChanged || refresh) && checkPermissions(
+      this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+    ) {
+      this.props.accountActions.fetchAccounts(params.brand)
     }
 
-    if(params.brand !== this.props.params.brand ||
-      params.account !== this.props.params.account || refresh) {
-
-      promises.push( this.props.groupActions.fetchGroups(params.brand, params.account) )
+    if((brandChanged || accountChanged || refresh) && params.account) {
+      this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
-    if ( params.brand !== this.props.params.brand ||
-      params.account !== this.props.params.account ||
-      params.group !== this.props.params.group  || refresh) {
-
-      /*No need use promise-array to wait for properties as breadcrumbs for property is only its ID (www....)*/
+    if ((brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }
@@ -107,7 +95,7 @@ class AnalyticsContainer extends React.Component {
     const {
       filterOptions,
       filters,
-      location: { pathname, query: { property } }
+      location: { pathname }
     } = this.props
 
     /* TODO: should  be moved to consts ? */
@@ -216,7 +204,9 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  propertyActions: React.PropTypes.object
+  propertyActions: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsContainer.defaultProps = {
@@ -224,7 +214,9 @@ AnalyticsContainer.defaultProps = {
   brands: Immutable.List(),
   filters: Immutable.Map(),
   groups: Immutable.List(),
-  properties: Immutable.List()
+  properties: Immutable.List(),
+  roles: Immutable.List(),
+  user: Immutable.Map()
 }
 
 function mapStateToProps(state) {
@@ -237,7 +229,9 @@ function mapStateToProps(state) {
     groups: state.group.get('allGroups'),
     properties: state.host.get('allHosts'),
     filters: state.filters.get('filters'),
-    filterOptions: state.filters.get('filterOptions')
+    filterOptions: state.filters.get('filterOptions'),
+    roles: state.roles.get('roles'),
+    user: state.user.get('currentUser')
   }
 }
 
