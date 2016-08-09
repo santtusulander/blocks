@@ -137,7 +137,6 @@ class AccountList extends Component {
         content: 'You have made changes to the Account(s), are you sure you want to exit without saving?',
         buttons:  [
           <UDNButton key="button-1" onClick={() => {
-            //this.leavePage()
             this.isLeaving = true
             this.props.router.push(pathname)
             this.props.uiActions.hideInfoDialog()
