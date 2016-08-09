@@ -6,33 +6,37 @@ import { getRoute } from '../../routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/helpers'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
-
-
+import IsAllowed from '../../components/is-allowed'
+import * as PERMISSIONS from '../../constants/permissions.js'
 
 const SupportPageHeader = (props) => {
   const {
     activeAccount,
     params,
     params: {brand, account},
-    router,
-    user
+    router
   } = props;
   const subPage = getTabName(router, params);
 
   return (
     <PageHeader>
       <p>SUPPORT</p>
-      <AccountSelector
-        params={{ brand, account }}
-        topBarTexts={{ brand: 'UDN Admin' }}
-        topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
-        onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-        restrictedTo="account"
-        user={user}>
-        <Dropdown.Toggle bsStyle="link" className="header-toggle">
-          <h1>{activeAccount.get('name') || 'No active account'}</h1>
-        </Dropdown.Toggle>
-      </AccountSelector>
+      <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+        <AccountSelector
+          as="support"
+          params={{ brand, account }}
+          topBarTexts={{ brand: 'UDN Admin' }}
+          topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
+          onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
+          restrictedTo="account">
+          <Dropdown.Toggle bsStyle="link" className="header-toggle">
+            <h1>{activeAccount.get('name') || 'No active account'}</h1>
+          </Dropdown.Toggle>
+        </AccountSelector>
+      </IsAllowed>
+      <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+        <h1>{activeAccount.get('name') || 'No active account'}</h1>
+      </IsAllowed>
     </PageHeader>
   )
 }
@@ -54,8 +58,7 @@ SupportPageHeader.propTypes = {
   account: PropTypes.string,
   activeAccount: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,
-  router: PropTypes.object,
-  user: React.PropTypes.instanceOf(Map)
+  router: PropTypes.object
 }
 
 export default SupportPageHeader

@@ -114,7 +114,7 @@ class AnalysisTraffic extends React.Component {
                             stacked={true}
                             showLegend={true}
                             showTooltip={false}
-                            yAxisCustomFormat={(val) => formatBitsPerSecond(val, true)}
+                            yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, true, setMax)}
                             width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
           }
         </div>

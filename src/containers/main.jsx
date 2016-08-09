@@ -21,6 +21,8 @@ import InfoModal from '../components/info-modal'
 import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
+import * as PERMISSIONS from '../constants/permissions.js'
+import checkPermissions from '../util/permissions'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -53,7 +55,7 @@ export class Main extends React.Component {
             this.props.activeAccount.get('id') :
             this.props.params.account
 
-          return this.props.fetchAccountData(accountId, this.props.accounts)
+          return this.fetchAccountData(accountId, this.props.accounts)
         }
       })
   }
@@ -62,7 +64,20 @@ export class Main extends React.Component {
   componentWillReceiveProps(nextProps){
     !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
     if (this.props.params.account !== nextProps.params.account) {
-      this.props.fetchAccountData(nextProps.params.account, this.props.accounts)
+      this.fetchAccountData(nextProps.params.account, this.props.accounts)
+    }
+  }
+  fetchAccountData(account, accounts) {
+    if(accounts && accounts.isEmpty() && checkPermissions(
+      this.props.roles,
+      this.props.currentUser,
+      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+    )) {
+      this.props.accountActions.fetchAccounts('udn')
+    }
+    if(account) {
+      this.props.accountActions.fetchAccount('udn', account)
+      this.props.groupActions.fetchGroups('udn', account)
     }
   }
 
@@ -189,7 +204,7 @@ export class Main extends React.Component {
             activatePurge={this.activatePurge(firstProperty)}
             breadcrumbs={this.props.breadcrumbs}
             fetching={this.props.fetching}
-            fetchAccountData={this.props.fetchAccountData}
+            fetchAccountData={this.fetchAccountData}
             theme={this.props.theme}
             handleThemeChange={this.props.uiActions.changeTheme}
             location={this.props.location}
@@ -197,8 +212,9 @@ export class Main extends React.Component {
             routes={this.props.routes}
             pathname={this.props.location.pathname}
             params={this.props.params}
+            roles={this.props.roles}
             toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
-            user={this.props.user}/>
+            user={this.props.currentUser}/>
           : ''
         }
         <div className="content-container">{this.props.children}</div>
@@ -245,6 +261,7 @@ export class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
+  accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
@@ -253,8 +270,8 @@ Main.propTypes = {
   breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  fetchAccountData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
+  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -316,28 +333,14 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch);
-  const groupActions = bindActionCreators(groupActionCreators, dispatch);
-
-  function fetchAccountData(account, accounts) {
-    if(accounts && accounts.isEmpty()) {
-      accountActions.fetchAccounts('udn')
-    }
-    if(account) {
-      accountActions.fetchAccount('udn', account)
-      groupActions.fetchGroups('udn', account)
-    }
-  }
-
   return {
-    accountActions: accountActions,
-    groupActions: groupActions,
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-    fetchAccountData: fetchAccountData
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
   }
 }
 

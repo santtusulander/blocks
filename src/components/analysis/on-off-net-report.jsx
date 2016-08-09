@@ -109,7 +109,7 @@ class AnalysisOnOffNetReport extends React.Component {
           secondaryData={dataSets[1] && dataSets[1]}
           primaryLabel='On Net'
           secondaryLabel='Off Net'
-          yAxisCustomFormat={formatBytes}
+          yAxisCustomFormat={(val, setMax) => formatBytes(val, false, setMax)}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
           showTooltip={false}

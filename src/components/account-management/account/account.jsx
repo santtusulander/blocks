@@ -1,10 +1,10 @@
 import React from 'react'
-import { Col, OverlayTrigger, Tooltip, ButtonToolbar } from 'react-bootstrap'
+import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar } from 'react-bootstrap'
 import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
-import SelectWrapper from '../../select-wrapper.jsx'
+// import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
 
@@ -18,21 +18,9 @@ import './account.scss'
 //   return [ e.id, e.brandName ]
 // });
 
-const accountTypeOptions = ACCOUNT_TYPES.map(e => {
-  return [ e.value, e.label]
-});
-
-let errors = {}
-
-const validate = values => {
-  errors = {}
-
-  const { accountName } = values
-  if(!accountName || accountName.length === 0) errors.accountName = 'Account name is required'
-
-  return errors;
-
-}
+// const accountTypeOptions = ACCOUNT_TYPES.map(e => {
+//   return [ e.value, e.label]
+// });
 
 class AccountManagementAccountDetails extends React.Component {
   constructor(props) {
@@ -64,7 +52,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   save() {
-    if(!Object.keys(errors).length) {
+    if(!this.props.invalid) {
       const { fields: { accountName, accountType, services } } = this.props
       this.props.onSave('udn', this.props.account.get('id'), {
         name: accountName.value,
@@ -125,9 +113,9 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label">Brand</label>
             <Col xs={6}>
-              <div className="input-group brand-row">
+              <div className="input-group input-group-static">
 
-                <span className="brand-field">UDN</span>
+                <span className="form-control-static">UDN</span>
                 {/* Not in 0.7
                   <SelectWrapper
                     { ... brand }
@@ -149,6 +137,7 @@ class AccountManagementAccountDetails extends React.Component {
                         <IconEdit/>
                       </UDNButton>*/}
 
+                    {/* TODO: Get real tooltip content
                     <OverlayTrigger placement="top" overlay={
                       <Tooltip id="tooltip_brand">
                         <div className="tooltip-header">Brand</div>
@@ -158,6 +147,7 @@ class AccountManagementAccountDetails extends React.Component {
 
                       <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
                     </OverlayTrigger>
+                    */}
                   </ButtonToolbar>
                 </span>
               </div>
@@ -167,13 +157,14 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label">Account Name</label>
             <Col xs={8}>
-              <div className="input-group">
+              {/* <div className="input-group"> */}
                 <input
                   {...accountName}
                   type="text"
                   placeholder="Enter Account Name"
                   className="form-control"/>
 
+                {/* TODO: Get real tooltip content
                 <span className="input-group-addon">
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_brand">
@@ -185,7 +176,8 @@ class AccountManagementAccountDetails extends React.Component {
                     <UDNButton bsStyle="link" icon={true}>?</UDNButton>
                   </OverlayTrigger>
                 </span>
-              </div>
+                */}
+              {/* </div> */}
 
               {accountName.touched && accountName.error &&
               <div className='error-msg errorAccountName'>{accountName.error}</div>}
@@ -195,6 +187,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label">Account Type</label>
             <Col xs={3}>
+              {/* Not editable in 0.8
               <div className="input-group">
                 <SelectWrapper
                   {...accountType}
@@ -202,10 +195,17 @@ class AccountManagementAccountDetails extends React.Component {
                   className="input-select"
                   options={accountTypeOptions}
                 />
+                */}
 
+              <div className="input-group input-group-static">
+                <span className="form-control-static">
+                  {accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}
+                </span>
+
+                {/* TODO: Get real tooltip content
                 <span className="input-group-addon">
                   <OverlayTrigger placement="top" overlay={
-                    <Tooltip id="tooltip_brand">
+                    <Tooltip id="tooltip_account_type">
                       <div className="tooltip-header">Account Type</div>
                       <div className="text-sm">Lorem ipsum ...</div>
                     </Tooltip>
@@ -214,6 +214,7 @@ class AccountManagementAccountDetails extends React.Component {
                     <UDNButton bsStyle="link" className="btn-icon">?</UDNButton>
                   </OverlayTrigger>
                 </span>
+                */}
               </div>
             </Col>
           </div>
@@ -227,7 +228,7 @@ class AccountManagementAccountDetails extends React.Component {
 
           <ButtonToolbar className="text-right extra-margin-top">
             <UDNButton
-              disabled={Object.keys(errors).length > 0}
+              disabled={this.props.invalid}
               bsStyle="primary"
               onClick={this.save}>
               Save
@@ -243,6 +244,7 @@ AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
+  invalid: React.PropTypes.bool,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
   route: React.PropTypes.object,
@@ -256,6 +258,5 @@ AccountManagementAccountDetails.defaultProps = {
 
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
-  form: 'account-details',
-  validate
+  form: 'account-details'
 })(withRouter(AccountManagementAccountDetails))

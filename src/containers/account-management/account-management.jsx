@@ -25,8 +25,9 @@ import DeleteUserModal from '../../components/account-management/delete-user-mod
 import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
+import IsAllowed from '../../components/is-allowed'
 
-import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
@@ -34,6 +35,9 @@ import {
   EDIT_GROUP,
   DELETE_USER
 } from '../../constants/account-management-modals.js'
+import * as PERMISSIONS from '../../constants/permissions.js'
+
+import { checkForErrors } from '../../util/helpers'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -61,6 +65,7 @@ export class AccountManagement extends Component {
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.validateAccountName = this.validateAccountName.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
 
@@ -228,6 +233,25 @@ export class AccountManagement extends Component {
     return '';
   }
 
+  validateAccountName({ accountName }) {
+    if(this.props.activeAccount.get('name') === accountName) {
+      return {}
+    }
+    const conditions = {
+      accountName: [
+        {
+          condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
+          errorText: 'That account name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
+          errorText: <div>{['Account name is invalid.', <div key={accountName}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        }
+      ]
+    }
+    return checkForErrors({ accountName }, conditions)
+  }
+
   render() {
     const {
       params: { brand, account },
@@ -236,7 +260,8 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router
+      router,
+      accounts
       //dnsData
     } = this.props
 
@@ -307,6 +332,7 @@ export class AccountManagement extends Component {
       editAccount: this.showAccountForm,
       onSave: this.editAccount,
       uiActions: this.props.uiActions,
+      validate: this.validateAccountName,
       initialValues: {
         accountName: activeAccount.get('name'),
         accountBrand: 'udn',
@@ -324,17 +350,22 @@ export class AccountManagement extends Component {
         <Content>
           <div className="account-management-manage-account">
             <PageHeader>
-              <AccountSelector
-                params={{ brand, account }}
-                topBarTexts={{ brand: 'UDN Admin' }}
-                topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
-                onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                restrictedTo="account"
-                user={this.props.user}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{activeAccount.get('name') || 'No active account'}</h1>
-                </Dropdown.Toggle>
-              </AccountSelector>
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <AccountSelector
+                  as="accountManagement"
+                  params={{ brand, account }}
+                  topBarTexts={{ brand: 'UDN Admin' }}
+                  topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
+                  onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
+                  restrictedTo="account">
+                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                    <h1>{activeAccount.get('name') || 'No active account'}</h1>
+                  </Dropdown.Toggle>
+                </AccountSelector>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <h1>{activeAccount.get('name') || 'No active account'}</h1>
+              </IsAllowed>
             </PageHeader>
             {account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
@@ -429,7 +460,6 @@ AccountManagement.propTypes = {
   soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
-  user: PropTypes.instanceOf(Map),
   userActions: PropTypes.object,
   users: PropTypes.instanceOf(List)
 }
