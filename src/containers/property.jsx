@@ -413,7 +413,7 @@ export class Property extends React.Component {
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
-                yAxisCustomFormat={formatBitsPerSecond}
+                yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
                 sliceGranularity={sliceGranularity}
                 hoverSlice={this.hoverSlice}
                 selectSlice={this.selectSlice}
@@ -482,6 +482,7 @@ Property.propTypes = {
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  router: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,

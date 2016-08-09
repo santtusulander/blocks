@@ -7,46 +7,46 @@ import filesize from 'filesize'
 
 const BYTE_BASE = 1000
 
-export function formatBytes(bytes) {
+export function formatBytes(bytes, setMax) {
   let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format('0,0') + ' PB'
   bytes         = bytes || 0
 
-  if(bytes < BYTE_BASE) {
+  if((setMax || bytes) < BYTE_BASE) {
     formatted = numeral(bytes).format('0,0') + ' B'
   }
-  else if(bytes < Math.pow(BYTE_BASE, 2)) {
+  else if((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bytes / BYTE_BASE).format('0,0') + ' KB'
   }
-  else if(bytes < Math.pow(BYTE_BASE, 3)) {
+  else if((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format('0,0') + ' MB'
   }
-  else if(bytes < Math.pow(BYTE_BASE, 4)) {
+  else if((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format('0,0') + ' GB'
   }
-  else if(bytes < Math.pow(BYTE_BASE, 5)) {
+  else if((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format('0,0') + ' TB'
   }
   return formatted
 }
 
-export function formatBitsPerSecond(bits_per_second, decimals) {
+export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
   const digits    = decimals ? '0,0.00' : '0,0'
   bits_per_second = bits_per_second || 0
   let formatted   = numeral(bits_per_second / Math.pow(BYTE_BASE, 5)).format(digits) + ' Pbps'
 
-  if(bits_per_second < BYTE_BASE) {
+  if((setMax || bits_per_second) < BYTE_BASE) {
     formatted = numeral(bits_per_second).format(digits) + ' bps'
   }
-  else if(bits_per_second < Math.pow(BYTE_BASE, 2)) {
+  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bits_per_second / BYTE_BASE).format(digits) + ' Kbps'
   }
-  else if(bits_per_second < Math.pow(BYTE_BASE, 3)) {
+  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 2)).format(digits) + ' Mbps'
   }
-  else if(bits_per_second < Math.pow(BYTE_BASE, 4)) {
+  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 3)).format(digits) + ' Gbps'
   }
-  else if(bits_per_second < Math.pow(BYTE_BASE, 5)) {
+  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 4)).format(digits) + ' Tbps'
   }
   return formatted
