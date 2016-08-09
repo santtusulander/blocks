@@ -3,7 +3,7 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import Select from '../select'
 
-const UserMenu = ({open, onToggle, theme, goToAccountManagement, handleThemeChange, logout}) => {
+const UserMenu = ({open, onToggle, theme, handleThemeChange, logout}) => {
   return (
     <Dropdown id="user-menu" pullRight={true}
               open={open}
@@ -18,18 +18,6 @@ const UserMenu = ({open, onToggle, theme, goToAccountManagement, handleThemeChan
             <MenuItem header={true} className="dropdown-main-header">
               <div id="user-menu-username" className="user-menu-item">UDN Admin</div>
             </MenuItem>
-            <MenuItem eventKey="1">
-              <div className="user-menu-item">
-                <div className="helper-header">Company</div>
-                Ericsson
-              </div>
-            </MenuItem>
-            <MenuItem eventKey="2">
-              <div className="user-menu-item">
-                <div className="helper-header">Role</div>
-                Account Management
-              </div>
-            </MenuItem>
             <li className="menu-item-theme">
               <div className="menuitem">
                 <div className="user-menu-item">
@@ -42,14 +30,6 @@ const UserMenu = ({open, onToggle, theme, goToAccountManagement, handleThemeChan
                             ['light', 'Ericsson Light Theme']]}/>
                 </div>
               </div>
-            </li>
-            <li>
-              <a href="#" id="account-management"
-                onClick={goToAccountManagement}>
-                <div className="user-menu-item">
-                  Account Management
-                </div>
-              </a>
             </li>
           </ul>
         </li>
@@ -64,7 +44,6 @@ const UserMenu = ({open, onToggle, theme, goToAccountManagement, handleThemeChan
 }
 
 UserMenu.propTypes = {
-  goToAccountManagement: React.PropTypes.func,
   handleThemeChange: React.PropTypes.func,
   logout: React.PropTypes.func,
   onToggle: React.PropTypes.func,
