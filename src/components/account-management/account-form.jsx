@@ -145,18 +145,22 @@ class AccountForm extends React.Component {
 
             <div className='form-group'>
               <label className='control-label'>Account type</label>
-              <SelectWrapper
-                {...accountType}
-                numericValues={true}
-                value={Number(accountType.value)}
-                className="input-select"
-                options={accountTypeOptions}
-              />
+              {this.props.account ?
+                <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
+              :
+                <SelectWrapper
+                  {...accountType}
+                  numericValues={true}
+                  value={Number(accountType.value)}
+                  className="input-select"
+                  options={accountTypeOptions}
+                />
+              }
             </div>
 
             <hr/>
 
-            <label>Service type</label>
+            <label>Services</label>
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
