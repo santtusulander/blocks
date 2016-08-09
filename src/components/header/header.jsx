@@ -243,6 +243,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
+                user={this.props.user}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>
