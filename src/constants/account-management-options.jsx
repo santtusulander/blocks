@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const ACCOUNT_TYPES = [
   { value: 1, label: 'Content Provider' },
   { value: 2, label: 'Service Provider' },
@@ -19,3 +21,14 @@ export const ROLES_MAPPING = [
   { id: 2, accountTypes: [1] },
   { id: 3, accountTypes: [2] }
 ]
+
+export const NAME_VALIDATION_REGEXP = '^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$'
+export const NAME_VALIDATION_REQUIREMENTS = (
+  <div style={{marginTop: '0.5em'}}>
+    Requirements:
+    <ul>
+      <li>minimum of 3 and maximum of 40 characters</li>
+      <li>allowed special characters: _ . , - & ( ) [ ]</li>
+    </ul>
+  </div>
+)

@@ -23,6 +23,7 @@ import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
 import ActionModal from '../../../components/action-modal'
+import UDNButton from '../../../components/button'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -55,16 +56,19 @@ export class AccountManagementAccountUsers extends React.Component {
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
+    this.shouldLeave = this.shouldLeave.bind(this)
+    this.isLeaving = false;
   }
 
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
-    const { brand, account } = this.props.params
+    const {router, route, params: { brand, account }} = this.props
     this.props.userActions.fetchUsers(brand, account)
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
     this.props.rolesActions.fetchRoles()
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,10 +119,6 @@ export class AccountManagementAccountUsers extends React.Component {
 
   validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
     const conditions = {
-      confirmPw: {
-        condition: confirmPw.length === password.length && confirmPw !== password,
-        errorText: 'Passwords don\'t match!'
-      },
       email: [
         {
           condition: email === this.state.existingMail,
@@ -126,12 +126,16 @@ export class AccountManagementAccountUsers extends React.Component {
         },
         {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
-          errorText: 'invalid email!'
+          errorText: 'Invalid Email.'
         }
       ],
       password: {
         condition: password.length > 30,
-        errorText: 'Password too long!'
+        errorText: 'Password too long.'
+      },
+      confirmPw: {
+        condition: confirmPw !== password,
+        errorText: 'Passwords don\'t match.'
       }
     }
     return checkForErrors({ email, password, confirmPw, roles }, conditions)
@@ -181,7 +185,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Input id='confirmPw' placeholder=" Confirm password"
             type={this.state.passwordVisible ? 'text' : 'password'}
             wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link' +
+            addonAfter={<a className={'input-addon-link btn-primary' +
                 (this.state.passwordVisible ? ' active' : '')}
                 onClick={this.togglePasswordVisibility}>
                   <IconEye/>
@@ -237,7 +241,9 @@ export class AccountManagementAccountUsers extends React.Component {
 
   getGroupsForUser(user) {
     const groups = user.get('group_id')
-      .map(groupId => this.props.groups.find(group => group.get('id') === groupId).get('name'))
+      .map(groupId => this.props.groups
+        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+        .get('name'))
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
@@ -248,6 +254,26 @@ export class AccountManagementAccountUsers extends React.Component {
   getEmailForUser(user) {
     return user.get('email') || user.get('username')
   }
+
+  shouldLeave({ pathname }) {
+    if (!this.isLeaving && this.state.addingNew) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Warning',
+        content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
+        buttons:  [
+          <UDNButton key="button-1" onClick={() => {
+            this.isLeaving = true
+            this.props.router.push(pathname)
+            this.props.uiActions.hideInfoDialog()
+          }} bsStyle="primary">Continue</UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+        ]
+      })
+      return false;
+    }
+    return true
+  }
+
   editUser(user) {
     this.setState({
       userToEdit: user,
@@ -321,7 +347,7 @@ export class AccountManagementAccountUsers extends React.Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {this.props.groups.size !== 0 && sortedUsers.map((user, i) => {
+            {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
@@ -403,6 +429,8 @@ AccountManagementAccountUsers.propTypes = {
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
+  route: React.PropTypes.object,
+  router: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)

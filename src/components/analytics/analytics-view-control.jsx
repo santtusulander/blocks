@@ -115,10 +115,10 @@ const AnalyticsViewControl = (props) => {
       <p className="analytics-view-control__title">{title}</p>
       <div className="analytics-view-control__header">
         <AccountSelector
+          as="analytics"
           params={props.params}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
-          user={props.user}
           onSelect={(...params) => {
             let url = isContentAnalytics ?
               `${getContentUrl(...params)}/analytics` :
@@ -186,8 +186,7 @@ AnalyticsViewControl.propTypes = {
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
-  router: React.PropTypes.object,
-  user: PropTypes.instanceOf(Immutable.Map)
+  router: React.PropTypes.object
 }
 
 AnalyticsViewControl.defaultProps = {
@@ -195,8 +194,7 @@ AnalyticsViewControl.defaultProps = {
   brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),
-  params: {},
-  user: Immutable.Map()
+  params: {}
 }
 
 export default withRouter(AnalyticsViewControl)

@@ -1,3 +1,6 @@
+import accountSelector from './account-selector'
+import multireducer from 'multireducer'
+
 export const account = require('./account').default;
 export const exports = require('./exports').default;
 export const form = require('redux-form').reducer;
@@ -24,3 +27,14 @@ export const filters = require('./filters').default;
 
 //Security
 export const security = require('./security').default;
+
+// Account Selectors
+export const accountSelectors = multireducer({
+  header: accountSelector,
+  support: accountSelector,
+  accountManagement: accountSelector,
+  configuration: accountSelector,
+  propertySummary: accountSelector,
+  content: accountSelector,
+  analytics: accountSelector
+})

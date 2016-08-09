@@ -2,6 +2,8 @@ import React, { PropTypes, Component } from 'react'
 import { Button, Row, Col, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
+import { bindActionCreators } from 'redux'
+import { withRouter } from 'react-router'
 
 import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
@@ -10,20 +12,31 @@ import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
 import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import UDNButton from '../../../components/button'
 
-import { fetchAccounts, createAccount } from '../../../redux/modules/account'
+import * as accountActionCreators from '../../../redux/modules/account'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
-import { SERVICE_TYPES, ACCOUNT_TYPES } from '../../../constants/account-management-options'
+import {
+  SERVICE_TYPES,
+  ACCOUNT_TYPES,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
 class AccountList extends Component {
   constructor(props) {
     super(props);
+
     this.newAccount = this.newAccount.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
+    this.shouldLeave = this.shouldLeave.bind(this)
+    this.isLeaving = false;
+
     this.state = {
       addingNew: false,
       accountServices: fromJS([]),
@@ -33,16 +46,27 @@ class AccountList extends Component {
     }
   }
 
+  componentWillMount() {
+    const { router, route } = this.props
+    router.setRouteLeaveHook(route, this.shouldLeave)
+  }
+
   componentWillReceiveProps(nextProps) {
     nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
     const conditions = {
-      name: {
-        condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
-        errorText: 'That account name is taken'
-      }
+      name: [
+        {
+          condition: this.props.accounts.findIndex(account => account.get('name') === name) > -1,
+          errorText: 'That account name is taken'
+        },
+        {
+          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          errorText: <div>{['Account name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        }
+      ]
     }
     return checkForErrors({ name, brand, provider_type }, conditions)
   }
@@ -79,7 +103,7 @@ class AccountList extends Component {
   }
 
   newAccount({ name, provider_type, brand }) {
-    const { createAccount } = this.props
+    const { createAccount } = this.props.accountActions
     const requestBody = { name, provider_type, services: [1] }
     createAccount(brand, requestBody).then(this.toggleInlineAdd)
   }
@@ -106,6 +130,25 @@ class AccountList extends Component {
     })
   }
 
+  shouldLeave({ pathname }) {
+    if (!this.isLeaving && this.state.addingNew) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Warning',
+        content: 'You have made changes to the Account(s), are you sure you want to exit without saving?',
+        buttons:  [
+          <UDNButton key="button-1" onClick={() => {
+            this.isLeaving = true
+            this.props.router.push(pathname)
+            this.props.uiActions.hideInfoDialog()
+          }} bsStyle="primary">Continue</UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+        ]
+      })
+      return false;
+    }
+    return true
+  }
+
   render() {
     const {
       accounts,
@@ -114,6 +157,10 @@ class AccountList extends Component {
     } = this.props
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
+      .map(account => {
+        const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
+        return account.set('provider_type_label', accountType ? accountType.label : '')
+      })
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -152,7 +199,7 @@ class AccountList extends Component {
           <thead >
           <tr>
             <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <TableSorter {...sorterProps} column="type" width="15%">TYPE</TableSorter>
+            <TableSorter {...sorterProps} column="provider_type_label" width="15%">TYPE</TableSorter>
             <TableSorter {...sorterProps} column="id" width="10%">ID</TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%">BRAND</TableSorter>
             <TableSorter {...sorterProps} column="services" width="30%">SERVICES</TableSorter>
@@ -168,12 +215,10 @@ class AccountList extends Component {
             save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
-            const accountType = ACCOUNT_TYPES
-              .find(type => account.get('provider_type') === type.value)
             return (
               <tr key={index}>
                 <td>{account.get('name')}</td>
-                <td>{accountType && accountType.label}</td>
+                <td>{account.get('provider_type_label')}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
@@ -200,13 +245,16 @@ class AccountList extends Component {
 }
 
 AccountList.propTypes = {
+  accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
   addAccount: PropTypes.func,
-  createAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   params: PropTypes.object,
-  typeField: PropTypes.number
+  route: React.PropTypes.object,
+  router: React.PropTypes.object,
+  typeField: PropTypes.number,
+  uiActions: React.PropTypes.object
 }
 
 AccountList.defaultProps = {
@@ -224,4 +272,11 @@ function mapStateToProps(state) {
   return { accounts: state.account.get('allAccounts'), typeField }
 }
 
-export default connect(mapStateToProps, { fetchAccounts, createAccount })(AccountList)
+function mapDispatchToProps(dispatch) {
+  return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountList))
