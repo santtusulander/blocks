@@ -35,6 +35,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.state = {
       sortBy: 'email',
       sortDir: 1,
+      search: '',
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
@@ -57,6 +58,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
+    this.changeSearch = this.changeSearch.bind(this)
     this.isLeaving = false;
   }
 
@@ -247,6 +249,7 @@ export class AccountManagementAccountUsers extends React.Component {
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
+
   getRolesForUser(user) {
     return this.props.roles.size ? user.get('roles').map(roleId => this.props.roles.find(role => role.get('id') === roleId).get('name')).toJS() : []
   }
@@ -280,12 +283,14 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: true
     })
   }
+
   cancelUserEdit() {
     this.setState({
       userToEdit: null,
       showEditModal: false
     })
   }
+
   saveUser(user) {
     // Get the username from the user we have in state for editing purposes.
     //user.username = this.state.userToEdit.get('username')
@@ -302,26 +307,45 @@ export class AccountManagementAccountUsers extends React.Component {
         }
       })
   }
+
+  changeSearch(e) {
+    this.setState({
+      search: e.target.value
+    })
+  }
+
   render() {
+    const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
+    const filteredUsers = users.filter((user) => {
+      return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
+    })
     const sortedUsers = this.sortedData(
-      this.props.users,
+      filteredUsers,
       this.state.sortBy,
       this.state.sortDir
     )
+    const numHiddenUsers = users.size - sortedUsers.size;
     return (
       <div className="account-management-account-users">
         <Row className="header-btn-row">
-          <Col sm={8}>
+          <Col sm={6}>
             <h3>
-              {this.props.users.size} User{this.props.users.size === 1 ? '' : 's'}
+              {sortedUsers.size} User{sortedUsers.size === 1 ? '' : 's'} {!!numHiddenUsers && `(${numHiddenUsers} hidden)`}
             </h3>
           </Col>
-          <Col sm={4} className="text-right">
+          <Col sm={6} className="text-right">
+            <Input
+              type="text"
+              className="search-input"
+              groupClassName="search-input-group"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
             <Button bsStyle="success" className="btn-icon btn-add-new"
               onClick={this.toggleInlineAdd}>
               <IconAdd />
@@ -372,6 +396,11 @@ export class AccountManagementAccountUsers extends React.Component {
             })}
           </tbody>
         </Table>
+        {
+          sortedUsers.size === 0 &&
+          this.state.search.length > 0 &&
+          <div className="text-center">No users found with the search term "{this.state.search}"</div>
+        }
         {this.state.showEditModal &&
           <UserEditModal
             show={this.state.showEditModal}
