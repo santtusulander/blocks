@@ -329,8 +329,17 @@
   }
 
   &.no-data {
-    background-color: $black;
     border: 1px solid rgba($white, 0.2);
+
+    .dark-theme & {
+      background-color: $black;
+    }
+
+    .light-theme & {
+      background: linear-gradient($pale-blue, $pale-blue);
+      background-color: $lt-text-color;
+      opacity: 0.5;
+    }
   }
 
   .dark-theme &.avg,
