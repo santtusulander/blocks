@@ -35,6 +35,12 @@ var development = Object.assign({}, {
       favicon: 'src/assets/icons/favicon.ico',
       filename: 'downtime.html'
     }),
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      template: 'src/scheduled_downtime.html',
+      favicon: 'src/assets/icons/favicon.ico',
+      filename: 'scheduled_downtime.html'
+    }),
     new CopyWebpackPlugin([
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},

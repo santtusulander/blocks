@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 20.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 180 180" style="enable-background:new 0 0 180 180;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:url(#SVGID_1_);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:url(#SVGID_2_);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="85.2304" y1="171.0201" x2="85.2304" y2="1.0574">
+		<stop  offset="0" style="stop-color:#00A9D4;stop-opacity:0.3"/>
+		<stop  offset="1" style="stop-color:#00A9D4;stop-opacity:0.8"/>
+	</linearGradient>
+	<path class="st0" d="M86.6,136.3c-28.3,0-51.3-23-51.3-51.3c0-28.3,23-51.3,51.3-51.3c28.3,0,51.3,23,51.3,51.3
+		c0,6.9-1.4,13.4-3.8,19.4l11.3,11.3c1.8-3.5,3.1-7.3,4.3-11.2l18.9-5.6V71.2l-18.9-5.6c-1.2-4.1-2.7-8-4.7-11.7l9.7-17.6
+		l-19.5-19.5l-17.5,9.6c-3.7-2-7.6-3.4-11.7-4.6l-5.6-19H72.8l-5.6,19c-4.1,1.2-8,2.8-11.7,4.7L38,16.9L18.5,36.4l9.6,17.5
+		c-2,3.7-4.6,7.6-5.9,11.7L2,71.2v27.6l20.2,5.6c1.2,4.1,3.4,8,5.3,11.7l-9.4,17.6l19.6,19.5l17.6-9.6c3.7,2,7.6,4.5,11.7,5.7
+		l5.6,20.1h27.6l5.6-20.1c3.6-1.1,7.1-2.9,10.4-4.6l-11.6-11.6C99.1,135.1,93,136.3,86.6,136.3z"/>
+	<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="119.2208" y1="178.9426" x2="119.2208" y2="56.9065">
+		<stop  offset="0" style="stop-color:#00A9D4;stop-opacity:0.3"/>
+		<stop  offset="1" style="stop-color:#00A9D4;stop-opacity:0.8"/>
+	</linearGradient>
+	<path class="st1" d="M174.6,157.6l-21.9-21.9l-23-23l-13-13c-3.2-3.2-4.7-7.8-4.1-12.3c0.9-7.6-1.6-15.5-7.4-21.3
+		c-5-5-11.7-7.6-18.3-7.6c-2.7,0-5.4,0.4-8,1.2c-0.5,0.2-0.7,1.1-0.4,1.4l11.2,11.2c3.2,3.2,3.1,8.5,0,11.5l-4.9,4.9
+		c-1.6,1.5-3.7,2.3-5.8,2.3c-2.1,0-4.2-0.8-5.7-2.3L62.7,78.3c-0.2-0.2-0.4-0.3-0.6-0.3c-0.4,0-0.7,0.3-0.8,0.6
+		c-2.2,8.7,0.2,18.2,6.9,24.9c5.1,5.1,11.7,7.6,18.3,7.6c0.6,0,1.3,0,1.9-0.1c0.4,0,0.9-0.1,1.3-0.1c3.9,0,7.5,1.4,10.2,4.2
+		l13.5,13.5l23.2,23.2l21.8,21.8c2.2,2.2,5.1,3.4,8,3.4c3,0,5.9-1.2,8.2-3.5C179.1,169.1,179.1,162.1,174.6,157.6z M170.1,169.3
+		c-1,1-2.3,1.5-3.6,1.5c-1.3,0-2.6-0.5-3.6-1.5c-2-2-2-5.2,0-7.2c1-1,2.3-1.5,3.6-1.5c1.3,0,2.6,0.5,3.6,1.5
+		C172.1,164.1,172.1,167.3,170.1,169.3z"/>
+</g>
+</svg>
