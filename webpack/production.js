@@ -33,9 +33,9 @@ module.exports = Object.assign({}, {
     }),
     new HtmlWebpackPlugin({
       inject: 'body',
-      template: 'src/scheduled_downtime.html',
+      template: 'src/downtime_scheduled.html',
       favicon: 'src/assets/icons/favicon.ico',
-      filename: 'scheduled_downtime.html'
+      filename: 'downtime_scheduled.html'
     }),
     new CopyWebpackPlugin([
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
