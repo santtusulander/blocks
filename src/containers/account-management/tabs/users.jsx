@@ -275,6 +275,21 @@ export class AccountManagementAccountUsers extends React.Component {
     return true
   }
 
+  deleteUser(user) {
+    if(user === this.props.currentUser) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Error',
+        content: 'You cannot delete the account you are logged in with.',
+        buttons:  [
+          <UDNButton key="button-1" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</UDNButton>
+        ]
+      })
+    }
+    else {
+      this.props.deleteUser(user)
+    }
+  }
+
   editUser(user) {
     this.setState({
       userToEdit: user,
@@ -363,7 +378,7 @@ export class AccountManagementAccountUsers extends React.Component {
                     <a href="#" onClick={() => {this.editUser(user)}}>
                       EDIT
                     </a>
-                    <Button onClick={() => this.props.deleteUser(this.getEmailForUser(user))}
+                    <Button onClick={() => this.deleteUser(user.get('email'))}
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>
@@ -420,6 +435,7 @@ export class AccountManagementAccountUsers extends React.Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
   formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
@@ -441,6 +457,7 @@ function mapStateToProps(state) {
   return {
     roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
+    currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
     groups: state.group.get('allGroups')
   }
