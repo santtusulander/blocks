@@ -36,7 +36,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
     accountName: [
       {
         condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-        errorText: <div key={1}>{['Account name is invalid.', <div key={accountName}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        errorText: <div key={accountName}>{['Account name is invalid.', <div>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
       }
     ]
   }
@@ -174,6 +174,7 @@ class AccountForm extends React.Component {
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
