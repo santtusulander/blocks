@@ -210,17 +210,18 @@ export class AccountManagementAccountUsers extends React.Component {
         }
       ],
       [
-        {
-          input: <FilterChecklistDropdown
-            noClear={true}
-            className="inline-add-dropdown"
-            value={this.state.usersGroups}
-            handleCheck={newValues => {
-              this.setState({ usersGroups: newValues })
-            }}
-            options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-          positionClass: 'row col-xs-7'
-        }
+        // Disable until API support allows listing groups for user with some assigned
+        // {
+        //   input: <FilterChecklistDropdown
+        //     noClear={true}
+        //     className="inline-add-dropdown"
+        //     value={this.state.usersGroups}
+        //     handleCheck={newValues => {
+        //       this.setState({ usersGroups: newValues })
+        //     }}
+        //     options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
+        //   positionClass: 'row col-xs-7'
+        // }
       ]
     ]
   }
@@ -272,6 +273,21 @@ export class AccountManagementAccountUsers extends React.Component {
       return false;
     }
     return true
+  }
+
+  deleteUser(user) {
+    if(user === this.props.currentUser) {
+      this.props.uiActions.showInfoDialog({
+        title: 'Error',
+        content: 'You cannot delete the account you are logged in with.',
+        buttons:  [
+          <UDNButton key="button-1" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</UDNButton>
+        ]
+      })
+    }
+    else {
+      this.props.deleteUser(user)
+    }
   }
 
   editUser(user) {
@@ -362,7 +378,7 @@ export class AccountManagementAccountUsers extends React.Component {
                     <a href="#" onClick={() => {this.editUser(user)}}>
                       EDIT
                     </a>
-                    <Button onClick={() => this.props.deleteUser(this.getEmailForUser(user))}
+                    <Button onClick={() => this.deleteUser(user.get('email'))}
                       className="btn-link btn-icon">
                       <IconTrash/>
                     </Button>
@@ -419,6 +435,7 @@ export class AccountManagementAccountUsers extends React.Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
   formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
@@ -440,6 +457,7 @@ function mapStateToProps(state) {
   return {
     roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
+    currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
     groups: state.group.get('allGroups')
   }
