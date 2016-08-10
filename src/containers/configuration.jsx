@@ -202,7 +202,6 @@ export class Configuration extends React.Component {
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-    console.log(activeConfig.toJS())
 
     return (
       <PageContainer className="configuration-container">

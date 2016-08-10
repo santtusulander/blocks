@@ -5,15 +5,32 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+const matchFilterChildPaths = {
+  'exists': ['cases', 0, 1],
+  'contains': ['cases', 0, 1],
+  'does_not_exist': ['default'],
+  'does_not_contain': ['cases', 1, 1]
+}
+
+function getMatchFilterType(match) {
+  if(match.get('default')) {
+    return 'does_not_exist'
+  }
+  if(match.get('cases').size > 1) {
+    return 'does_not_contain'
+  }
+  return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
+}
+
 class Matcher extends React.Component {
   constructor(props) {
     super(props);
     const fieldDetail = props.match.get('field_detail')
-    const caseKey = props.match.get('cases').get(0).get(0)
+    const caseKey = props.match.getIn(['cases', 0, 0])
     const containsVal = fieldDetail ? caseKey : ''
 
     this.state = {
-      activeFilter: containsVal && containsVal !== '.*' ? 'contains' : 'exists',
+      activeFilter: getMatchFilterType(props.match),
       containsVal: containsVal,
       val: fieldDetail ? fieldDetail : caseKey
     }
@@ -39,13 +56,42 @@ class Matcher extends React.Component {
     // matches with a contain value put val in field_detail and use containsVal
     // as child key
     if(this.props.contains) {
-      // for now the api only supports Contains or Exists
-      const caseKey = this.state.activeFilter === 'contains' ?
-        this.state.containsVal :
-        '.*'
-      const newMatch = this.props.match
+      const children = this.props.match
+        .getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
+      let newMatch = this.props.match
         .set('field_detail', this.state.val)
-        .setIn(['cases', 0, 0], caseKey)
+      switch (this.state.activeFilter) {
+        case 'exists':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              ['.*', children]
+            ]))
+            .delete('default')
+          break
+        case 'contains':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.containsVal, children]
+            ]))
+            .delete('default')
+          break
+        case 'does_not_exist':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              ['.*', []]
+            ]))
+            .set('default', children)
+          break
+        case 'does_not_contain':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.containsVal, []],
+              ['.*', children]
+            ]))
+            .delete('default')
+          break
+      }
+      // console.log(newMatch.toJS())
       this.props.changeValue(this.props.path, newMatch)
     }
     // if there's no contain value, use val as the child key
