@@ -214,7 +214,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <FilterChecklistDropdown
             noClear={true}
             className="inline-add-dropdown"
-            values={this.state.usersGroups}
+            value={this.state.usersGroups}
             handleCheck={newValues => {
               this.setState({ usersGroups: newValues })
             }}

@@ -213,7 +213,7 @@ class AccountManagementAccountGroups extends React.Component {
           input: <FilterChecklistDropdown
             noClear={true}
             id='members'
-            values={this.state.newUsers}
+            value={this.state.newUsers}
             handleCheck={this.changeNewUsers}
             options={this.props.users.map(user => Immutable.Map({
               label: user.get('email') || 'No Email',
