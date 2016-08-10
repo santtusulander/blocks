@@ -85,7 +85,7 @@ class AccountManagementAccountDetails extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',
-        buttons:  [
+        buttons: [
           <UDNButton key="button-1" onClick={() => {
             //this.leavePage()
             this.isLeaving = true
