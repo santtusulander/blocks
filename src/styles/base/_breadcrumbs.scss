@@ -119,7 +119,7 @@
     }
 
     &:not(.breadcrumb-back, :last-child)::after {
-      padding: 0 10px 0 5px;
+      padding: 0 10px 0 0;
       content: '\203A';
 
       .dark-theme &,

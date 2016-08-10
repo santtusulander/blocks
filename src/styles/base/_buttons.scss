@@ -235,7 +235,7 @@
     border: 0;
 
     .content-layout__header & {
-      vertical-align: baseline;
+      vertical-align: middle;
     }
 
     @include md {
