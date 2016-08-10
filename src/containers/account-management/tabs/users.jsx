@@ -434,6 +434,7 @@ export class AccountManagementAccountUsers extends React.Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
   formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
