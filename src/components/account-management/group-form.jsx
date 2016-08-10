@@ -148,6 +148,8 @@ class GroupForm extends React.Component {
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
 
+            {/*
+              Disable until API support allows listing groups for user with some assigned
             <hr/>
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
@@ -191,7 +193,7 @@ class GroupForm extends React.Component {
                 })}
               </ul>
             </div>
-
+            */}
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
