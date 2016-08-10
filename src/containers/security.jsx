@@ -127,7 +127,11 @@ export class Security extends React.Component {
             accounts={accounts}
             activeAccount={activeAccount.get('name')}
             fetchAccount={fetchAccount}/>
-           {this.renderContent(certificateFormProps, sslListProps)}
+           {/* ----- Not in 0.8.1* ----- */}
+           {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
+
+           {/* ----- REMOVE ME AFTER ----- */}
+           <Content className="tab-bodies">Coming soon!</Content>
         </div>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
