@@ -209,17 +209,18 @@ class AccountManagementAccountGroups extends React.Component {
         }
       ],
       [
-        {
-          input: <FilterChecklistDropdown
-            noClear={true}
-            id='members'
-            value={this.state.newUsers}
-            handleCheck={this.changeNewUsers}
-            options={this.props.users.map(user => Immutable.Map({
-              label: user.get('email') || 'No Email',
-              value: user.get('email')
-            }))}/>
-        }
+        // Disable until API support allows listing groups for user with some assigned
+        // {
+        //   input: <FilterChecklistDropdown
+        //     noClear={true}
+        //     id='members'
+        //     value={this.state.newUsers}
+        //     handleCheck={this.changeNewUsers}
+        //     options={this.props.users.map(user => Immutable.Map({
+        //       label: user.get('email') || 'No Email',
+        //       value: user.get('email')
+        //     }))}/>
+        // }
       ],
       []
     ]
