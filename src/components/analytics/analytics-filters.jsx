@@ -73,7 +73,7 @@ const StatusCodes = ({ options, values, onChange }) => {
     <FilterChecklistDropdown
       noClear={true}
       options={options}
-      values={values}
+      value={values}
       handleCheck={onChange}>
       <li role="presentation" className="children">
         <Input type="checkbox"

@@ -23,7 +23,9 @@ import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
 
-const accountTypeOptions = ACCOUNT_TYPES.map(e => {
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+
+const accountTypeOptions = FILTERED_ACCOUNT_TYPES.map(e => {
   return [e.value, e.label]
 });
 

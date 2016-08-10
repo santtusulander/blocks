@@ -26,6 +26,8 @@ import {
 
 import { checkForErrors } from '../../../util/helpers'
 
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+
 class AccountList extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +82,7 @@ class AccountList extends Component {
             numericValues={true}
             id='provider_type'
             className="inline-add-dropdown"
-            options={ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
+            options={FILTERED_ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
       } ],
       [],
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],

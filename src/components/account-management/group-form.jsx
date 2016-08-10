@@ -154,7 +154,7 @@ class GroupForm extends React.Component {
               <FilterChecklistDropdown
                 noClear={true}
                 options={addMembersOptions}
-                values={this.state.usersToAdd || List()}
+                value={this.state.usersToAdd || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
                 }}

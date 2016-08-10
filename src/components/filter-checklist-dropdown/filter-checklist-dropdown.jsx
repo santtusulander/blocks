@@ -196,6 +196,7 @@ FilterChecklistDropdown.propTypes   = {
   className: React.PropTypes.string,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
+  onChange: React.PropTypes.func,
   options: React.PropTypes.instanceOf(List),
   value: React.PropTypes.instanceOf(List)
 }
