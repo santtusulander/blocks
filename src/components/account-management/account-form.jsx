@@ -188,7 +188,7 @@ export default reduxForm({
   validate,
   initialValues: {
     accountBrand: brandOptions.length ? brandOptions[0][0] : '',
-    accountType: accountTypeOptions.length ? accountTypeOptions[0][0] : '',
+    accountType: '',
     services: []
   }
 })(AccountForm)

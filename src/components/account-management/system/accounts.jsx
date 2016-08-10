@@ -55,7 +55,7 @@ class AccountList extends Component {
     nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
   }
 
-  validateInlineAdd({ name = '', brand = '', provider_type = '' }) {
+  validateInlineAdd({ name = '', brand = '' }) {
     const conditions = {
       name: [
         {
@@ -68,7 +68,7 @@ class AccountList extends Component {
         }
       ]
     }
-    return checkForErrors({ name, brand, provider_type }, conditions)
+    return checkForErrors({ name, brand }, conditions)
   }
 
   changeSort(column, direction) {
@@ -104,7 +104,7 @@ class AccountList extends Component {
 
   newAccount({ name, provider_type, brand }) {
     const { createAccount } = this.props.accountActions
-    const requestBody = { name, provider_type, services: [1] }
+    const requestBody = { name, provider_type,  services: fromJS(this.state.accountServices) }
     createAccount(brand, requestBody).then(this.toggleInlineAdd)
   }
 
@@ -260,11 +260,6 @@ AccountList.propTypes = {
 AccountList.defaultProps = {
   accounts: List()
 }
-
-/**
- *
- * waiting for api endpoint to return sufficient data
- */
 
 function mapStateToProps(state) {
   const addAccountForm = state.form.inlineAdd
