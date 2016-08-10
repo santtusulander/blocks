@@ -39,7 +39,6 @@ class AccountList extends Component {
 
     this.state = {
       addingNew: false,
-      accountServices: fromJS([]),
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -51,11 +50,7 @@ class AccountList extends Component {
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
-  componentWillReceiveProps(nextProps) {
-    nextProps.typeField !== this.props.typeField && this.setState({ accountServices: List() })
-  }
-
-  validateInlineAdd({ name = '', brand = '' }) {
+  validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {
     const conditions = {
       name: [
         {
@@ -68,7 +63,7 @@ class AccountList extends Component {
         }
       ]
     }
-    return checkForErrors({ name, brand }, conditions)
+    return checkForErrors({ name, brand, provider_type, services: services.toJS() }, conditions)
   }
 
   changeSort(column, direction) {
@@ -90,26 +85,23 @@ class AccountList extends Component {
       [],
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
       [ { input: <FilterChecklistDropdown
+            id="services"
             noClear={true}
             className="inline-add-dropdown"
-            values={this.state.accountServices}
-            handleCheck={newValues => {
-              this.setState({ accountServices: newValues })
-            }}
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
           positionClass: 'row col-xs-6'
       } ]
     ]
   }
 
-  newAccount({ name, provider_type, brand }) {
+  newAccount({ name, provider_type, brand, services }) {
     const { createAccount } = this.props.accountActions
-    const requestBody = { name, provider_type,  services: fromJS(this.state.accountServices) }
+    const requestBody = { name, provider_type, services: services.toJS() }
     createAccount(brand, requestBody).then(this.toggleInlineAdd)
   }
 
   toggleInlineAdd() {
-    this.setState({ addingNew: !this.state.addingNew, accountServices: List() })
+    this.setState({ addingNew: !this.state.addingNew })
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -209,8 +201,9 @@ class AccountList extends Component {
           <tbody>
           {this.state.addingNew && <InlineAdd
             validate={this.validateInlineAdd}
-            fields={['name', 'provider_type', 'brand']}
+            fields={['name', 'provider_type', 'brand', 'services']}
             inputs={this.getInlineAddFields()}
+            initialValues={{ services: List() }}
             unmount={this.toggleInlineAdd}
             save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {

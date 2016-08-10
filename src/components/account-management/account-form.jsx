@@ -36,7 +36,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
     accountName: [
       {
         condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-        errorText: <div key={accountName}>{['Account name is invalid.', <div>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
       }
     ]
   }

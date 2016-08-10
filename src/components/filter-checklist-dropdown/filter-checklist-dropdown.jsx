@@ -44,15 +44,19 @@ export class FilterChecklistDropdown extends React.Component {
   handleCheck(optionVal) {
     let newVals = List()
     if(optionVal !== 'all') {
-      const valIndex = this.props.values.indexOf(optionVal)
+      const valIndex = this.props.value.indexOf(optionVal)
       newVals = valIndex === -1 ?
-        this.props.values.push(optionVal) :
-        this.props.values.delete(valIndex)
+        this.props.value.push(optionVal) :
+        this.props.value.delete(valIndex)
     }
     else {
-      newVals = this.props.values.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
+      newVals = this.props.value.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
     }
-    this.props.handleCheck(newVals)
+    if(this.props.handleCheck) {
+      this.props.handleCheck(newVals)
+    } else {
+      this.props.onChange(newVals)
+    }
 
   }
 
@@ -82,9 +86,9 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   getLabel() {
-    const numVals = this.props.values.size
+    const numVals = this.props.value.size
     const labels = this.props.options
-      .filter(opt => this.props.values.indexOf(opt.get('value')) !== -1)
+      .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
     if(!numVals || !labels.size) {
       return 'Please Select'
@@ -121,7 +125,7 @@ export class FilterChecklistDropdown extends React.Component {
           <Input type="checkbox"
                  label={`SELECT ALL (${this.props.options.size})`}
                  value="all"
-                 checked={this.props.values.size === this.props.options.size}
+                 checked={this.props.value.size === this.props.options.size}
                  onChange={() => this.handleCheck("all")}/>
         </li>,
         this.props.children && this.props.children.map(child => child)
@@ -135,7 +139,7 @@ export class FilterChecklistDropdown extends React.Component {
             <Input type="checkbox"
                    label={option.get('label')}
                    value={option.get('value')}
-                   checked={this.props.values.indexOf(option.get('value')) !== -1}
+                   checked={this.props.value.indexOf(option.get('value')) !== -1}
                    onChange={() => this.handleCheck(option.get('value'))}/>
           </li>
         )
@@ -193,12 +197,12 @@ FilterChecklistDropdown.propTypes   = {
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),
-  values: React.PropTypes.instanceOf(List)
+  value: React.PropTypes.instanceOf(List)
 }
 
 FilterChecklistDropdown.defaultProps = {
   options: List(),
-  values: List()
+  value: List()
 }
 
 export default FilterChecklistDropdown
