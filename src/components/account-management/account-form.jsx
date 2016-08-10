@@ -28,7 +28,7 @@ let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const { accountName, accountBrand, services } = values
+  const { accountName, accountBrand, accountType, services } = values
 
   if(!accountName || accountName.length === 0) {
     errors.accountName = 'Account name is required'
@@ -38,6 +38,9 @@ const validate = (values) => {
   }
   if(!accountBrand || accountBrand.length === 0) {
     errors.accountBrand = 'Account brand is required'
+  }
+  if(accountType !== '') {
+    errors.accountType = 'Account type is required'
   }
   if(services && services.length === 0) {
     errors.serviceType = 'Service type is required'
@@ -87,7 +90,7 @@ class AccountForm extends React.Component {
       } = this.props
       let data = {
         name: accountName.value,
-        provider_type: Number(accountType.value),
+        provider_type: accountType.value,
         services: services.value
       }
 
@@ -151,7 +154,7 @@ class AccountForm extends React.Component {
                 <SelectWrapper
                   {...accountType}
                   numericValues={true}
-                  value={Number(accountType.value)}
+                  value={accountType.value}
                   className="input-select"
                   options={accountTypeOptions}
                 />
