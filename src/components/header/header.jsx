@@ -8,8 +8,10 @@ import UserMenu from './user-menu'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
 
@@ -166,6 +168,7 @@ class Header extends React.Component {
 
   render() {
     const { activeAccount, router, params: { account, brand } } = this.props
+    const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -200,17 +203,22 @@ class Header extends React.Component {
               </Link>
             </li>
             <li className="header__account-selector">
-              <AccountSelector
-                params={{ brand, account }}
-                topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-                topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-                user={this.props.user}
-                onSelect={itemSelectorFunc}
-                restrictedTo="account">
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  {activeAccount && this.props.params.account ? activeAccount.get('name') : 'UDN Admin'}
-                </Dropdown.Toggle>
-              </AccountSelector>
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <AccountSelector
+                  as="header"
+                  params={{ brand, account }}
+                  topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+                  topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+                  onSelect={itemSelectorFunc}
+                  restrictedTo="account">
+                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                    {activeAccount && activeAccountName}
+                  </Dropdown.Toggle>
+                </AccountSelector>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <div className="active-account-name">{activeAccountName}</div>
+              </IsAllowed>
             </li>
             {this.renderBreadcrumb()}
           </Nav>
@@ -235,6 +243,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
+                user={this.props.user}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>

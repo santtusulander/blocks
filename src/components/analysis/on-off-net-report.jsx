@@ -109,7 +109,7 @@ class AnalysisOnOffNetReport extends React.Component {
           secondaryData={dataSets[1] && dataSets[1]}
           primaryLabel='On Net'
           secondaryLabel='Off Net'
-          yAxisCustomFormat={formatBytes}
+          yAxisCustomFormat={(val, setMax) => formatBytes(val, false, setMax)}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
           showTooltip={false}
@@ -224,9 +224,9 @@ AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
 AnalysisOnOffNetReport.propTypes = {
   fetching: React.PropTypes.bool,
   onOffNetChartType: React.PropTypes.string,
+  onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   onOffStats: React.PropTypes.instanceOf(Immutable.Map),
-  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map),
-  onOffFilter: React.PropTypes.instanceOf(Immutable.Map)
+  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalysisOnOffNetReport.defaultProps = {

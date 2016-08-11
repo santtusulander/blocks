@@ -307,10 +307,10 @@ export class Property extends React.Component {
             <p>PROPERTY SUMMARY</p>
             <div className="content-layout__header">
               <AccountSelector
+                as="propertySummary"
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                user={this.props.user}
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
                 drillable={true}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
@@ -413,7 +413,7 @@ export class Property extends React.Component {
                 height={this.state.byTimeWidth / 3}
                 xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
                   : this.state.byTimeWidth > 600 ? 2 : 3}
-                yAxisCustomFormat={formatBitsPerSecond}
+                yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
                 sliceGranularity={sliceGranularity}
                 hoverSlice={this.hoverSlice}
                 selectSlice={this.selectSlice}
@@ -482,10 +482,10 @@ Property.propTypes = {
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
+  router: React.PropTypes.object,
   trafficActions: React.PropTypes.object,
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
   visitorsActions: React.PropTypes.object,
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
@@ -501,7 +501,6 @@ Property.defaultProps = {
     history: []
   }),
   properties: Immutable.List(),
-  user: Immutable.Map(),
   visitorsByCountry: Immutable.Map()
 }
 
@@ -517,7 +516,6 @@ function mapStateToProps(state) {
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
     trafficFetching: state.traffic.get('fetching'),
-    user: state.user,
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
   };

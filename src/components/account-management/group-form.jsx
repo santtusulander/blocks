@@ -148,13 +148,15 @@ class GroupForm extends React.Component {
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
 
+            {/*
+              Disable until API support allows listing groups for user with some assigned
             <hr/>
             <div className="form-group add-members">
               <label className="control-label">Add Members</label>
               <FilterChecklistDropdown
                 noClear={true}
                 options={addMembersOptions}
-                values={this.state.usersToAdd || List()}
+                value={this.state.usersToAdd || List()}
                 handleCheck={val => {
                   this.setState({usersToAdd: val})
                 }}
@@ -191,7 +193,7 @@ class GroupForm extends React.Component {
                 })}
               </ul>
             </div>
-
+            */}
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
