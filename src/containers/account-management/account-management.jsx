@@ -351,6 +351,7 @@ export class AccountManagement extends Component {
         <Content>
           <div className="account-management-manage-account">
             <PageHeader>
+              <p>ACCOUNT MANAGEMENT</p>
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"
