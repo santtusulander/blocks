@@ -211,12 +211,15 @@ class UserEditForm extends React.Component {
         {role.touched && role.error &&
         <div className='error-msg'>{role.error}</div>}
 
+        {/* Hiding group assignment until the API supports listing groups for
+            users that have them assigned
         <hr/>
 
         <CheckboxArray
           iterable={groupOptions}
           field={groups}
           headerText="Groups"/>
+        */}
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}>Cancel</Button>

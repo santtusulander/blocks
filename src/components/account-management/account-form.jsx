@@ -11,11 +11,21 @@ import {
 import SelectWrapper from '../select-wrapper.jsx'
 import CheckboxArray from '../checkboxes.jsx'
 
-import { ACCOUNT_TYPES, SERVICE_TYPES, BRANDS, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPES,
+  SERVICE_TYPES,
+  BRANDS,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../constants/account-management-options'
+
+import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
 
-const accountTypeOptions = ACCOUNT_TYPES.map(e => {
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+
+const accountTypeOptions = FILTERED_ACCOUNT_TYPES.map(e => {
   return [e.value, e.label]
 });
 
@@ -23,27 +33,16 @@ const brandOptions = BRANDS.map(e => {
   return [e.id, e.brandName]
 });
 
-let errors = {}
-
-const validate = (values) => {
-  errors = {}
-
-  const { accountName, accountBrand, services } = values
-
-  if(!accountName || accountName.length === 0) {
-    errors.accountName = 'Account name is required'
+const validate = ({ accountName, accountBrand, accountType, services }) => {
+  const conditions = {
+    accountName: [
+      {
+        condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
+        errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+      }
+    ]
   }
-  if( accountName && ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName) ) {
-    errors.accountName = 'Account name is invalid'
-  }
-  if(!accountBrand || accountBrand.length === 0) {
-    errors.accountBrand = 'Account brand is required'
-  }
-  if(services && services.length === 0) {
-    errors.serviceType = 'Service type is required'
-  }
-
-  return errors;
+  return checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
 }
 
 class AccountForm extends React.Component {
@@ -81,13 +80,13 @@ class AccountForm extends React.Component {
   }
 
   save() {
-    if(!Object.keys(errors).length) {
+    if(!this.props.invalid) {
       const {
         fields: { accountBrand, accountName, accountType, services }
       } = this.props
       let data = {
         name: accountName.value,
-        provider_type: Number(accountType.value),
+        provider_type: accountType.value,
         services: services.value
       }
 
@@ -151,7 +150,7 @@ class AccountForm extends React.Component {
                 <SelectWrapper
                   {...accountType}
                   numericValues={true}
-                  value={Number(accountType.value)}
+                  value={accountType.value}
                   className="input-select"
                   options={accountTypeOptions}
                 />
@@ -164,7 +163,7 @@ class AccountForm extends React.Component {
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-              <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
+              <Button disabled={this.props.invalid} bsStyle="primary"
                       onClick={this.save}>{this.props.account ? 'Save' : 'Add'}</Button>
             </ButtonToolbar>
           </form>
@@ -177,6 +176,7 @@ class AccountForm extends React.Component {
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
@@ -188,7 +188,7 @@ export default reduxForm({
   validate,
   initialValues: {
     accountBrand: brandOptions.length ? brandOptions[0][0] : '',
-    accountType: accountTypeOptions.length ? accountTypeOptions[0][0] : '',
+    accountType: '',
     services: []
   }
 })(AccountForm)
