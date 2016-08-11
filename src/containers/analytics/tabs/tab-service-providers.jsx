@@ -54,7 +54,7 @@ AnalyticsTabServiceProviders.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  serviceProviders: React.PropTypes.instanceOf(Immutable.Map),
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   trafficActions: React.PropTypes.object
 }
 
