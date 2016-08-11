@@ -39,10 +39,14 @@
       display: inline-block;
       width: 25px;
       height: 25px;
-      margin: 7px 10px 0 0;
+      margin: 17px 10px 0 0;
       vertical-align: top;
       background-color: rgba($black, 0.1);
       border-radius: 50%;
+
+      @include md {
+        margin: 7px 10px 0 0;
+      }
     }
 
     .icon {
