@@ -15,6 +15,28 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
 
+/**
+ * Build route & params to be used on getRoute() on logo
+ * @param activeAccount
+ * @returns {{route: string, linkParams: {brand: string}}}
+ */
+const buildLogoLink = (activeAccount) => {
+  let route = 'content'
+  let linkParams = {
+    brand: 'udn'
+  }
+
+  if(activeAccount && activeAccount.size){
+    route = 'contentAccount'
+    linkParams.account = activeAccount.get('id')
+  }
+
+  return {
+    route,
+    linkParams
+  }
+}
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -195,10 +217,11 @@ class Header extends React.Component {
         </div>
         <div className="header__content">
           <Nav className="header__left">
-            {/* TODO: the logo should link to the level where they select accounts,
-             for CPs it should link to where they select groups.*/}
             <li className="header__logo">
-              <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+              <Link to={getRoute(
+                buildLogoLink(activeAccount).route,
+                buildLogoLink(activeAccount).linkParams
+              )} className="logo">
                 <IconEricsson />
               </Link>
             </li>
