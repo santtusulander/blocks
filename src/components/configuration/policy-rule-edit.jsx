@@ -6,34 +6,35 @@ import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import IconArrowUp from '../icons/icon-arrow-up.jsx'
 import IconArrowDown from '../icons/icon-arrow-down.jsx'
+import {
+  matchFilterChildPaths,
+  getMatchFilterType
+} from '../../util/policy-config'
 
 function parsePolicy(policy, path) {
   // if this is a match
-  if(policy.has('match')) {
-    let {matches, sets} = policy.get('match').get('cases').reduce((fields, policyCase, i) => {
-      const {matches, sets} = policyCase.get(1).reduce((combinations, subcase, j) => {
-        // build up a path to the nested rules
-        const nextPath = path.concat(['match','cases',i,1,j])
-        // recurse to parse the nested policy rules
-        const {matches, sets} = parsePolicy(subcase, nextPath)
-        // add any found matches / sets to the list
-        combinations.matches = combinations.matches.concat(matches)
-        combinations.sets = combinations.sets.concat(sets)
-        return combinations
-      }, {matches: [], sets: []})
-      // add any found matches / sets to the list
-      fields.matches = fields.matches.concat(matches)
-      fields.sets = fields.sets.concat(sets)
-      return fields
-    }, {matches: [], sets: []})
-    // add info about this match to the list of matches
+  if(policy && policy.has('match')) {
     const match = policy.get('match')
     const fieldDetail = match.get('field_detail')
-    const caseKey = match.get('cases').get(0).get(0)
+    const caseKey = match.getIn(['cases', 0, 0])
+    const filterType = getMatchFilterType(match)
+    const childPath = matchFilterChildPaths[filterType]
+    let {matches, sets} = match.getIn(childPath).reduce((combinations, subcase, i) => {
+      // build up a path to the nested rules
+      const nextPath = path.concat(['match'], childPath, [i])
+      // recurse to parse the nested policy rules
+      const {matches, sets} = parsePolicy(subcase, nextPath)
+      // add any found matches / sets to the list
+      combinations.matches = combinations.matches.concat(matches)
+      combinations.sets = combinations.sets.concat(sets)
+      return combinations
+    }, {matches: [], sets: []})
+    // add info about this match to the list of matches
     matches.push({
       containsVal: fieldDetail ? caseKey : '',
       field: match.get('field'),
       fieldDetail: fieldDetail,
+      filterType: match.get('field') ? filterType : '',
       values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
       path: path.concat(['match'])
     })
@@ -43,7 +44,7 @@ function parsePolicy(policy, path) {
     }
   }
   // if this is a set
-  else if(policy.has('set')) {
+  else if(policy && policy.has('set')) {
     // sets are the deepest level, so just return data about the sets
     return {
       matches: [],
@@ -88,13 +89,15 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   addMatch(deepestMatch) {
     return e => {
       e.preventDefault()
-      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
       let newMatch = Immutable.fromJS([
         {match: {field: null, cases: [['',[]]]}}
       ])
       if(currentSet) {
-        newMatch = newMatch.setIn([0, 'match', 'cases', 0, 1], currentSet)
+        const newSetPath = [0, 'match'].concat(childPath)
+        newMatch = newMatch.setIn(newSetPath, currentSet)
       }
       this.props.changeValue([],
         this.props.config.setIn(
@@ -108,7 +111,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   addAction(deepestMatch) {
     return e => {
       e.preventDefault()
-      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const newPath = deepestMatch.path.concat(childPath)
       const currentSets = this.props.config.getIn(newPath)
       const newSets = currentSets.push(Immutable.fromJS({set: {"": {}}}))
       this.props.changeValue([],
@@ -241,6 +245,19 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               if(Immutable.fromJS(match.path).equals(Immutable.fromJS(this.props.activeMatchPath))) {
                 active = true
               }
+              let filterText = ''
+              if(match.filterType === 'exists') {
+                filterText = 'Exists'
+              }
+              else if(match.filterType === 'does_not_exist') {
+                filterText = 'Does not exist'
+              }
+              else if(match.filterType === 'contains') {
+                filterText = `Contains ${match.containsVal}`
+              }
+              else if(match.filterType === 'does_not_contain') {
+                filterText = `Does not contain ${match.containsVal}`
+              }
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
@@ -258,10 +275,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={3}>
                     <p>
-                      {match.containsVal && match.containsVal !== '.*' ?
-                        `Contains ${match.containsVal}` :
-                        'Exists'
-                      }
+                      {filterText}
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">

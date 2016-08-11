@@ -4,23 +4,10 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
-
-const matchFilterChildPaths = {
-  'exists': ['cases', 0, 1],
-  'contains': ['cases', 0, 1],
-  'does_not_exist': ['default'],
-  'does_not_contain': ['cases', 1, 1]
-}
-
-function getMatchFilterType(match) {
-  if(match.get('default')) {
-    return 'does_not_exist'
-  }
-  if(match.get('cases').size > 1) {
-    return 'does_not_contain'
-  }
-  return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
-}
+import {
+  matchFilterChildPaths,
+  getMatchFilterType
+} from '../../../util/policy-config'
 
 class Matcher extends React.Component {
   constructor(props) {
@@ -40,6 +27,18 @@ class Matcher extends React.Component {
     this.handleContainsValChange = this.handleContainsValChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
+  componentWillReceiveProps(nextProps) {
+    if(!Immutable.is(nextProps.match, this.props.match)) {
+      const fieldDetail = nextProps.match.get('field_detail')
+      const caseKey = nextProps.match.getIn(['cases', 0, 0])
+      const containsVal = fieldDetail ? caseKey : ''
+      this.setState({
+        activeFilter: getMatchFilterType(nextProps.match),
+        containsVal: containsVal,
+        val: fieldDetail ? fieldDetail : caseKey
+      })
+    }
+  }
   handleValChange(e) {
     this.setState({val: e.target.value})
   }
@@ -55,11 +54,11 @@ class Matcher extends React.Component {
   saveChanges() {
     // matches with a contain value put val in field_detail and use containsVal
     // as child key
+    const children = this.props.match
+      .getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
+    let newMatch = this.props.match
     if(this.props.contains) {
-      const children = this.props.match
-        .getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
-      let newMatch = this.props.match
-        .set('field_detail', this.state.val)
+      newMatch = newMatch.set('field_detail', this.state.val)
       switch (this.state.activeFilter) {
         case 'exists':
           newMatch = newMatch
@@ -91,16 +90,28 @@ class Matcher extends React.Component {
             .delete('default')
           break
       }
-      // console.log(newMatch.toJS())
-      this.props.changeValue(this.props.path, newMatch)
     }
     // if there's no contain value, use val as the child key
     else {
-      this.props.changeValue(
-        this.props.path.concat(['cases', 0, 0]),
-        this.state.val
-      )
+      newMatch = newMatch.delete('field_detail')
+      switch (this.state.activeFilter) {
+        case 'exists':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.val, children]
+            ]))
+            .delete('default')
+          break
+        case 'does_not_exist':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.val, []]
+            ]))
+            .set('default', children)
+          break
+      }
     }
+    this.props.changeValue(this.props.path, newMatch)
     this.props.close()
   }
   render() {
