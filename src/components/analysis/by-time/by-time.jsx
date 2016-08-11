@@ -130,11 +130,11 @@ class AnalysisByTime extends React.Component {
     }
   }
 
-  formatY(val) {
+  formatY(val, setMax) {
     return this.props.yAxisFormat ?
       numeral(val).format(this.props.yAxisFormat)
     : this.props.yAxisCustomFormat ?
-      this.props.yAxisCustomFormat(numeral(val).format('0'))
+      this.props.yAxisCustomFormat(numeral(val).format('0'), setMax)
     : numeral(val).format('0,0')
   }
   render() {
@@ -316,22 +316,25 @@ class AnalysisByTime extends React.Component {
             })
             : null
           }
-          {this.props.axes ?
-            yScale.ticks(4).reduce((axes, tick, i) => {
+          {this.props.axes ? (() => {
+            const yMax = Math.max(...yScale.ticks(4))
+            return yScale.ticks(4).reduce((axes, tick, i) => {
               if(i) {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.formatY(tick)}
+                      {this.formatY(tick, yMax)}
                     </text>
                   </g>
                 );
               }
               return axes
             }, [])
+          })()
             : null
+
           }
           {slices.map((slice, i) => {
             const startX = xScale(slice)

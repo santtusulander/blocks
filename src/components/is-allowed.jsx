@@ -6,12 +6,12 @@ import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 
 class IsAllowed extends Component {
-  constructor(props) {
-    super(props)
-  }
   render() {
-    const { children, currentUser, roles, to } = this.props;
-    const isAllowed = checkPermissions(roles, currentUser, to)
+    const { children, currentUser, roles, to, not } = this.props;
+    let isAllowed = checkPermissions(roles, currentUser, to)
+    if(not) {
+      isAllowed = !isAllowed
+    }
     return (
       isAllowed && children
     )
@@ -23,6 +23,7 @@ IsAllowed.displayName = 'IsAllowed'
 IsAllowed.propTypes = {
   children: React.PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
+  not: React.PropTypes.bool,
   roles: PropTypes.instanceOf(List),
   to: PropTypes.oneOf(Object.keys(PERMISSIONS))
 }
