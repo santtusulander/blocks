@@ -102,8 +102,8 @@ class StarburstHelp extends React.Component {
             </text>
             {/* Pointer */}
             <line className="pointer"
-              x1="1470.2" y1="249.6" x2="1306.4" y2="249.6"/>
-            <circle className="pointer-dot" cx="1470" cy="249.6" r="3.8"/>
+              x1="1470.2" y1="225" x2="1306.4" y2="249.6"/>
+            <circle className="pointer-dot" cx="1470" cy="225" r="3.8"/>
           </g>
           {/* Action Buttons */}
           <g>
@@ -113,8 +113,8 @@ class StarburstHelp extends React.Component {
             </text>
             {/* Pointer */}
             <line className="pointer"
-              x1="764" y1="837" x2="184" y2="1037"/>
-            <circle className="pointer-dot" cx="764" cy="837" r="3.8"/>
+              x1="770" y1="800" x2="184" y2="1037"/>
+            <circle className="pointer-dot" cx="770" cy="800" r="3.8"/>
             {/* Description */}
             <text transform="matrix(1 0 0 1 82 945)">
               Metrics
@@ -195,9 +195,9 @@ class StarburstHelp extends React.Component {
               TTFB (Time to First Byte)
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="935" y1="772"
+            <line className="pointer" x1="930" y1="733"
               x2="1197" y2="1066"/>
-            <circle className="pointer-dot" cx="935" cy="772" r="3.8"/>
+            <circle className="pointer-dot" cx="930" cy="733" r="3.8"/>
             {/* Descrition */}
             <text transform="matrix(1 0 0 1 1040 1148)">
               <tspan x="0" y="0">
@@ -215,8 +215,8 @@ class StarburstHelp extends React.Component {
               Cache Hit Rate
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="795" y1="745" x2="514" y2="650"/>
-            <circle className="pointer-dot" cx="795" cy="745" r="3.8"/>
+            <line className="pointer" x1="798" y1="706" x2="514" y2="650"/>
+            <circle className="pointer-dot" cx="798" cy="706" r="3.8"/>
             {/* Description */}
             <text transform="matrix(1 0 0 1 0 653)">
               <tspan x="0" y="0">
