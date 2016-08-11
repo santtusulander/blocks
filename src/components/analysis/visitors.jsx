@@ -169,9 +169,11 @@ class AnalysisVisitors extends React.Component {
                 % of Visitors
               </TableSorter>
               <th className="text-center">Period Trend</th>
+              {/* Hide in 0.8 UDNP-1109
               <TableSorter {...countrySorterProps} column="change" sortFunc="trending">
                 Change
               </TableSorter>
+              */}
             </tr>
           </thead>
           <tbody>
@@ -195,7 +197,9 @@ class AnalysisVisitors extends React.Component {
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
+                    {/* Hide in 0.8 UDNP-1109
                     <td>{this.getTrending(country)}</td>
+                    */}
                   </tr>
                 )
               })
@@ -216,9 +220,11 @@ class AnalysisVisitors extends React.Component {
                 % of Visitors
               </TableSorter>
               <th className="text-center">Period Trend</th>
-              <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
-                Change
-              </TableSorter>
+                {/* Hide in 0.8 UDNP-1109
+                <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
+                  Change
+                </TableSorter>
+                */}
             </tr>
           </thead>
           <tbody>
@@ -242,7 +248,9 @@ class AnalysisVisitors extends React.Component {
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
+                    {/* Hide in 0.8 UDNP-1109
                     <td>{this.getTrending(browser)}</td>
+                    */}
                   </tr>
                 )
               })
@@ -263,9 +271,11 @@ class AnalysisVisitors extends React.Component {
                 % of Visitors
               </TableSorter>
               <th className="text-center">Period Trend</th>
-              <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
-                Change
-              </TableSorter>
+                {/* Hide in 0.8 UDNP-1109
+                <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
+                  Change
+                </TableSorter>
+                */}
             </tr>
           </thead>
           <tbody>
@@ -289,7 +299,9 @@ class AnalysisVisitors extends React.Component {
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
+                    {/* Hide in 0.8 UDNP-1109
                     <td>{this.getTrending(os)}</td>
+                    */}
                   </tr>
                 )
               })

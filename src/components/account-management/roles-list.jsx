@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { Button, Row, Col, Input } from 'react-bootstrap'
 
 import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
@@ -15,6 +16,7 @@ class RolesList extends React.Component {
     super(props);
 
     this.state = {
+      search: '',
       sortBy: 'name',
       sortDir: -1
     }
@@ -61,30 +63,40 @@ class RolesList extends React.Component {
   }
 
   render() {
-    if (!this.props.roles || this.props.roles.size === 0) {
-      return (
-        <div id="empty-msg">
-          <p>No roles found</p>
-        </div>
-      )
-    }
+    const filteredRoles = this.props.roles
+      .filter(role => role.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
 
-    const sorterProps = {
+    const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
+
     const sortedRoles = this.sortedData(
-      this.props.roles,
+      filteredRoles,
       this.state.sortBy,
       this.state.sortDir
     )
+    const hiddenRoles = this.props.roles.size - sortedRoles.size
 
     return (
       <div className='roles-list'>
-
-        <AccountManagementHeader
-          title={`${this.props.roles.count() } Roles`}/>
+        <Row className="header-btn-row">
+          <Col sm={6}>
+            <h3>
+              {sortedRoles.size} Role{sortedRoles.size === 1 ? '' : 's'} {!!hiddenRoles && `(${hiddenRoles} hidden)`}
+            </h3>
+          </Col>
+          <Col sm={6} className="text-right">
+            <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder="Search"
+            value={this.state.search}
+            onChange={({ target: { value } }) => this.setState({ search: value })} />
+          </Col>
+        </Row>
 
         <table className="table table-striped">
           <thead>
@@ -96,8 +108,8 @@ class RolesList extends React.Component {
             </tr>
           </thead>
 
-          <tbody>
-            {sortedRoles.map( (role, i) => {
+        <tbody>
+            { !sortedRoles.isEmpty() ? sortedRoles.map((role, i) => {
               const userCount = this.props.users
                 .filter(user => user.get('roles').contains(role.get('id')))
                 .size
@@ -109,34 +121,40 @@ class RolesList extends React.Component {
                   </td>
                   {this.props.permissions.size ?
                     <ArrayTd maxItemsShown={5} items={[/*
-                      TODO: Uncomment these when we support API permissions
+                     TODO: Uncomment these when we support API permissions
+                     ...this.labelPermissions(
+                     role.get('permissions').get('aaa'),
+                     this.props.permissions.get('aaa')
+                     ).toArray(),
+                     ...this.labelPermissions(
+                     role.get('permissions').get('north'),
+                     this.props.permissions.get('north')
+                     ).toArray(),*/
                       ...this.labelPermissions(
-                        role.get('permissions').get('aaa'),
-                        this.props.permissions.get('aaa')
-                      ).toArray(),
-                      ...this.labelPermissions(
-                        role.get('permissions').get('north'),
-                        this.props.permissions.get('north')
-                      ).toArray(),*/
-                      ...this.labelPermissions(
-                        role.get('permissions').get('ui').filter(permission => permission),
-                        this.props.permissions.get('ui')
+                      role.get('permissions').get('ui').filter(permission => permission),
+                      this.props.permissions.get('ui')
                       ).toArray()
-                    ]} />
-                  : <td>No permissions found</td>}
+                      ]} />
+                    : <td>No permissions found</td>}
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
                   <td>
                     <ActionLinks
-                      onEdit={() => this.props.onEdit(role.get('id'))}
-                      onDelete={() => this.props.onDelete(role.get('id'))}/>
+                    onEdit={() => this.props.onEdit(role.get('id'))}
+                    onDelete={() => this.props.onDelete(role.get('id'))}/>
                   </td>
                 </tr>
               );
-            })}
+            }) :
+              <tr id="empty-msg">
+                <td colSpan="6">
+                {this.state.search.length > 0 ?
+                  `No roles found with the search term ${this.state.search}` :
+                  "No roles found"}
+                </td>
+              </tr>}
           </tbody>
-
         </table>
 
         {this.props.showAddNewDialog ?

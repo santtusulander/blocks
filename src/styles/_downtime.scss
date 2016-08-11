@@ -1,12 +1,16 @@
 .downtime-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 600px;
+  transform: translate(-50%, -50%);
 
-  min-height: 100vh;
-
-  .modal-dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 800px;
-    transform: translate(-50%, -50%);
+  .downtime-img {
+    display: inline-block;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 1em;
+    background: url('../assets/img/downtime.svg') center center no-repeat;
+    background-size: 100% 100%;
   }
 }

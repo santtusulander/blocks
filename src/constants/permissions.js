@@ -32,3 +32,8 @@ export const VIEW_PROPERTY_CONFIG = 'VIEW_PROPERTY_CONFIG'
 // Deny/Allow always (for testing)
 export const DENY_ALWAYS = 'DENY_ALWAYS'
 export const ALLOW_ALWAYS = 'ALLOW_ALWAYS'
+
+// AAA Content Item listing
+export const VIEW_CONTENT_ACCOUNTS = 'VIEW_CONTENT_ACCOUNTS'
+export const VIEW_CONTENT_GROUPS = 'VIEW_CONTENT_GROUPS'
+export const VIEW_CONTENT_PROPERTIES = 'VIEW_CONTENT_PROPERTIES'

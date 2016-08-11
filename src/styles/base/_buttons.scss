@@ -398,7 +398,7 @@
 
       span,
       .dropdown-select__selected-item {
-        display: block;
+        display: flex;
         width: auto;
         overflow: hidden;
         text-overflow: ellipsis;
