@@ -147,6 +147,6 @@ describe('AnalysisVisitors', () => {
         byTime={fakeByTimeData}/>
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(visitors, 'td')
-    expect(tds.length).toBe(30);
+    expect(tds.length).toBe(24);
   });
 })
