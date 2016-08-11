@@ -14,19 +14,21 @@ import AccountSelector from '../global-account-selector/global-account-selector.
 import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
+import checkPermissions from '../../util/permissions'
 
 /**
  * Build route & params to be used on getRoute() on logo
  * @param activeAccount
  * @returns {{route: string, linkParams: {brand: string}}}
  */
-const buildLogoLink = (activeAccount) => {
+const buildLogoLink = (roles, user, activeAccount) => {
   let route = 'content'
   let linkParams = {
     brand: 'udn'
   }
 
-  if(activeAccount && activeAccount.size){
+  if(!checkPermissions(roles, user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+    && activeAccount && activeAccount.size){
     route = 'contentAccount'
     linkParams.account = activeAccount.get('id')
   }
@@ -189,7 +191,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, router, params: { account, brand } } = this.props
+    const { activeAccount, roles, user, router, params: { account, brand } } = this.props
     const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
@@ -209,7 +211,7 @@ class Header extends React.Component {
       }
     }
 
-    const logoLink = buildLogoLink(activeAccount)
+    const logoLink = buildLogoLink(roles, user, activeAccount)
 
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
@@ -307,6 +309,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
