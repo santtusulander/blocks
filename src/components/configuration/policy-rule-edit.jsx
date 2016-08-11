@@ -8,61 +8,8 @@ import IconArrowUp from '../icons/icon-arrow-up.jsx'
 import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import {
   matchFilterChildPaths,
-  getMatchFilterType
+  parsePolicy
 } from '../../util/policy-config'
-
-function parsePolicy(policy, path) {
-  // if this is a match
-  if(policy && policy.has('match')) {
-    const match = policy.get('match')
-    const fieldDetail = match.get('field_detail')
-    const caseKey = match.getIn(['cases', 0, 0])
-    const filterType = getMatchFilterType(match)
-    const childPath = matchFilterChildPaths[filterType]
-    let {matches, sets} = match.getIn(childPath).reduce((combinations, subcase, i) => {
-      // build up a path to the nested rules
-      const nextPath = path.concat(['match'], childPath, [i])
-      // recurse to parse the nested policy rules
-      const {matches, sets} = parsePolicy(subcase, nextPath)
-      // add any found matches / sets to the list
-      combinations.matches = combinations.matches.concat(matches)
-      combinations.sets = combinations.sets.concat(sets)
-      return combinations
-    }, {matches: [], sets: []})
-    // add info about this match to the list of matches
-    matches.push({
-      containsVal: fieldDetail ? caseKey : '',
-      field: match.get('field'),
-      fieldDetail: fieldDetail,
-      filterType: match.get('field') ? filterType : '',
-      values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
-      path: path.concat(['match'])
-    })
-    return {
-      matches: matches,
-      sets: sets
-    }
-  }
-  // if this is a set
-  else if(policy && policy.has('set')) {
-    // sets are the deepest level, so just return data about the sets
-    return {
-      matches: [],
-      sets: policy.get('set').keySeq().toArray().map((key) => {
-        return {
-          setkey: key,
-          path: path.concat(['set', key])
-        }
-      })
-    }
-  }
-  else {
-    return {
-      matches: [],
-      sets: []
-    }
-  }
-}
 
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
