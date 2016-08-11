@@ -208,6 +208,9 @@ class Header extends React.Component {
         router.push(getUrl('/support', ...params))
       }
     }
+
+    const logoLink = buildLogoLink(activeAccount)
+
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -219,8 +222,8 @@ class Header extends React.Component {
           <Nav className="header__left">
             <li className="header__logo">
               <Link to={getRoute(
-                buildLogoLink(activeAccount).route,
-                buildLogoLink(activeAccount).linkParams
+                logoLink.route,
+                logoLink.linkParams
               )} className="logo">
                 <IconEricsson />
               </Link>
