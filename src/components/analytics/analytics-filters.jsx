@@ -209,7 +209,7 @@ AnalyticsFilters.propTypes = {
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
-  showFilters: PropTypes.instanceOf(Map)
+  showFilters: PropTypes.instanceOf(List)
 }
 
 AnalyticsFilters.defaultProps = {
