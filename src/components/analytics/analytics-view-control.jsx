@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
+import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
@@ -132,9 +132,10 @@ const AnalyticsViewControl = (props) => {
             }
             props.router.push(url)
           }}>
-          <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
-          </Dropdown.Toggle>
+          <div className="btn btn-link dropdown-toggle header-toggle">
+            <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <span className="caret"></span>
+          </div>
         </AccountSelector>
         {props.params.account &&
           <ButtonToolbar>

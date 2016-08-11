@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonToolbar, Dropdown } from 'react-bootstrap'
+import { Modal, ButtonToolbar } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -226,11 +226,12 @@ class ContentItems extends React.Component {
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1>
                     <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
                   </h1>
-                </Dropdown.Toggle>
+                  <span className="caret"></span>
+                </div>
               </AccountSelector>
               <ButtonToolbar>
                 {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}

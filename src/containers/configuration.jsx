@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -17,6 +17,7 @@ import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
+import TruncatedTitle from '../components/truncated-title'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -216,6 +217,10 @@ export class Configuration extends React.Component {
                   !activeEnvironment ?
                   <Button bsStyle="primary" onClick={this.togglePublishModal}>
                     Publish
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                    <span className="caret"></span>
+                  </div>
                   </Button>
                   : ''
                 }
@@ -250,9 +255,6 @@ export class Configuration extends React.Component {
                   })
                 }}
                 drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
               </AccountSelector>
               <p className="text-sm">
                 <span className="right-separator">

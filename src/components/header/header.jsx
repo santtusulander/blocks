@@ -212,9 +212,10 @@ class Header extends React.Component {
                   topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
                   onSelect={itemSelectorFunc}
                   restrictedTo="account">
-                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                  <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                  </Dropdown.Toggle>
+                    <span className="caret"></span>
+                  </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>

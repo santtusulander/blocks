@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -314,9 +314,10 @@ export class Property extends React.Component {
                 topBarAction={this.itemSelectorTopBarAction}
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
                 drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
+                <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-                </Dropdown.Toggle>
+                  <span className="caret"></span>
+                </div>
               </AccountSelector>
               <ButtonToolbar>
                 <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
