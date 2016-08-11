@@ -211,52 +211,54 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
             <PageHeader>
-              <ButtonToolbar className="pull-right">
-                {activeEnvironment === 2 ||
-                  activeEnvironment === 1 ||
-                  !activeEnvironment ?
-                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                    Publish
+              <p>CONFIGURATION</p>
+              <div className="content-layout__header">
+                <AccountSelector
+                  as="configuration"
+                  params={this.props.params}
+                  topBarTexts={{}}
+                  onSelect={(tier, value, params) => {
+                    const { brand, account, group } = params, { hostActions } = this.props
+                    hostActions.startFetching()
+                    hostActions.fetchHost(brand, account, group, value).then(() => {
+                      this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                    })
+                  }}
+                  drillable={true}>
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
                     <span className="caret"></span>
                   </div>
+                </AccountSelector>
+                <ButtonToolbar className="pull-right">
+                  {activeEnvironment === 2 ||
+                    activeEnvironment === 1 ||
+                    !activeEnvironment ?
+                    <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                      Publish
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                    Copy
                   </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                  Copy
-                </Button>
-                {activeEnvironment === 2 || activeEnvironment === 3 ?
-                  <Button bsStyle="primary"
-                    onClick={() => this.changeActiveVersionEnvironment(1)}>
-                    Retire
+                  {activeEnvironment === 2 || activeEnvironment === 3 ?
+                    <Button bsStyle="primary"
+                      onClick={() => this.changeActiveVersionEnvironment(1)}>
+                      Retire
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.toggleVersionModal}
+                    className="versions-btn">
+                    <div className="icon-holder">
+                      <IconArrowLeft/>
+                    </div>
+                    Versions
                   </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                  className="versions-btn">
-                  <div className="icon-holder">
-                    <IconArrowLeft/>
-                  </div>
-                  Versions
-                </Button>
-              </ButtonToolbar>
-              <p>CONFIGURATION</p>
-              <AccountSelector
-                as="configuration"
-                params={this.props.params}
-                topBarTexts={{}}
-                onSelect={(tier, value, params) => {
-                  const { brand, account, group } = params, { hostActions } = this.props
-                  hostActions.startFetching()
-                  hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                  })
-                }}
-                drillable={true}>
-              </AccountSelector>
-              <p className="text-sm">
+                </ButtonToolbar>
+              </div>
+              <p className="text-sm content-layout__header__aside">
                 <span className="right-separator">
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </span>
