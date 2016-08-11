@@ -33,12 +33,6 @@
 
     .header & {
       height: $header-height;
-      line-height: $header-height;
-
-      @include md {
-        height: $md-header-height;
-        line-height: $md-header-height;
-      }
 
       @include print {
         height: auto;
@@ -48,6 +42,12 @@
       &:not(:first-of-type) {
         overflow: hidden;
       }
+    }
+
+    > a,
+    > span,
+    &:not(.breadcrumb-back, :last-child)::after {
+      margin-top: 15px;
     }
 
     > a,
