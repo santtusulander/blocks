@@ -22,24 +22,26 @@ const SupportPageHeader = (props) => {
   return (
     <PageHeader>
       <p>SUPPORT</p>
-      <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <AccountSelector
-          as="support"
-          params={{ brand, account }}
-          topBarTexts={{ brand: 'UDN Admin' }}
-          topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
-          onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-          restrictedTo="account">
-        </AccountSelector>
-      </IsAllowed>
-      <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <h1>{activeAccount.get('name') || 'No active account'}</h1>
-      </IsAllowed>
+      <div className="content-layout__header">
+        <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+          <AccountSelector
+            as="support"
+            params={{ brand, account }}
+            topBarTexts={{ brand: 'UDN Admin' }}
+            topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
+            onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
+            restrictedTo="account">
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
                 tooltipPlacement="bottom" className="account-management-title"/></h1>
               <span className="caret"></span>
             </div>
+          </AccountSelector>
+        </IsAllowed>
+        <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+          <h1>{activeAccount.get('name') || 'No active account'}</h1>
+        </IsAllowed>
+      </div>
     </PageHeader>
   )
 }
