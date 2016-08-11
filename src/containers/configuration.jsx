@@ -237,7 +237,7 @@ export class Configuration extends React.Component {
                   Versions
                 </Button>
               </ButtonToolbar>
-              <p>CONFIGURATION</p>
+              <h5>CONFIGURATION</h5>
               <AccountSelector
                 as="configuration"
                 params={this.props.params}

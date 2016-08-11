@@ -5,7 +5,7 @@ import PageHeader from '../layout/page-header'
 const ServicesPageHeader = ({ activeAccount }) => {
   return (
     <PageHeader>
-      <p>SERVICES</p>
+      <h5>SERVICES</h5>
       <h1>{activeAccount || 'select account'}</h1>
     </PageHeader>
   )

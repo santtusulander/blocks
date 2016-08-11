@@ -304,7 +304,7 @@ export class Property extends React.Component {
       <PageContainer className="property-container">
         <Content>
           <PageHeader>
-            <p>PROPERTY SUMMARY</p>
+            <h5>PROPERTY SUMMARY</h5>
             <div className="content-layout__header">
               <AccountSelector
                 as="propertySummary"

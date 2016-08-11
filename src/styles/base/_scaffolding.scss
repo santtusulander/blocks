@@ -5,6 +5,7 @@ html,
 body {
   min-width: 1024px;
   min-height: 100%;
+  font-size: $base-font-size;
 
   @include print {
     width: 100%;
@@ -15,18 +16,10 @@ body {
 
 body {
   font-family: 'Roboto', Helvetica, Arial;
-  font-size: $font-size;
+  font-size: rem(14px);
   transition: color 250ms, background 250ms;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-
-  @include md {
-    font-size: $md-font-size;
-  }
-
-  @include sm {
-    font-size: $sm-font-size;
-  }
 
   @include print {
     font-size: $print-font-size;

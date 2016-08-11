@@ -20,7 +20,7 @@ const SupportPageHeader = (props) => {
 
   return (
     <PageHeader>
-      <p>SUPPORT</p>
+      <h5>SUPPORT</h5>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
           as="support"
