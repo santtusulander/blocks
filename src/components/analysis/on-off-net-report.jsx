@@ -224,9 +224,9 @@ AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
 AnalysisOnOffNetReport.propTypes = {
   fetching: React.PropTypes.bool,
   onOffNetChartType: React.PropTypes.string,
+  onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   onOffStats: React.PropTypes.instanceOf(Immutable.Map),
-  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map),
-  onOffFilter: React.PropTypes.instanceOf(Immutable.Map)
+  onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalysisOnOffNetReport.defaultProps = {

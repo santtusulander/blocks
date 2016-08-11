@@ -26,14 +26,6 @@ $icon-two-tone-primary: $dark-blue;
     stroke: $lt-text-color;
   }
 
-  .has-icon > & {
-    display: inline-block;
-    margin-right: 20px;
-    vertical-align: middle;
-    fill: inherit;
-    stroke: inherit;
-  }
-
   .btn-icon & {
     position: absolute;
     top: 50%;
