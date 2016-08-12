@@ -178,6 +178,18 @@ class ContentItemChart extends React.Component {
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
+          <Tooltip className="content-item-chart-tooltip"
+            id={'tooltip-' + (this.props.id)}>
+              {this.state.showDiffLegend ?
+                <DifferenceTooltip/>
+                : <TrafficTooltip
+                  name={this.props.name}
+                  date={tooltipDate}
+                  avgTransfer={avgTransfer}
+                  maxTransfer={maxTransfer}
+                  minTransfer={minTransfer}/>
+              }
+            </Tooltip>
           <Link className="content-item-chart-link" to={link}>
             <ReactCSSTransitionGroup
               component="div"
