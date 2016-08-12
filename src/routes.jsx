@@ -2,12 +2,13 @@ import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
+import checkPermissions from './util/permissions'
 import {
   UserHasPermission,
   UserCanListAccounts,
   UserCanManageAccounts,
   UserCanTicketAccounts,
-  UserCanViewAnalyticsTrafficOverview
+  UserCanViewAnalyticsTab
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -142,21 +143,22 @@ export function getRoute(name, params) {
   return route
 }
 
+const analyticsTabs = [
+  [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
+  [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
+  [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
+  [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport]
+]
+
 /* helper for creating Analytics Tab-Routes */
-function getAnalyticsTabRoutes( store ) {
-  return (
-    <Route>
-      <IndexRedirect to={routes.analyticsTabTraffic} />
-      <Route path={routes.analyticsTabTraffic} component={UserCanViewAnalyticsTrafficOverview(store)(AnalyticsTabTraffic)} />
-      <Route path={routes.analyticsTabVisitors} component={AnalyticsTabVisitors} />
-      <Route path={routes.analyticsTabOnOffNet} component={AnalyticsTabOnOffNet} />
-      <Route path={routes.analyticsTabServiceProviders} component={AnalyticsTabServiceProviders} />
-      <Route path={routes.analyticsTabFileError} component={AnalyticsTabFileError} />
-      <Route path={routes.analyticsTabUrlReport} component={AnalyticsTabUrlReport} />
-      <Route path={routes.analyticsTabPlaybackDemo} component={AnalyticsTabPlaybackDemo} />
-    </Route>
-  )
-}
+const getAnalyticsTabRoutes = store => <Route>
+  <IndexRedirect to={routes.analyticsTabTraffic} />
+  {analyticsTabs.map(([permission, path, component]) => <Route path={path}
+    component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+  )}
+</Route>
 
 /* helper for creating Support Tab-Routes */
 function getSupportTabRoutes() {
