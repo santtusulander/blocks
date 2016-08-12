@@ -44,7 +44,6 @@ export default class DeleteModal extends Component {
           </p>
           <Input type="text" label="Type 'delete'" placeholder="delete" {...delField}/>
         </Modal.Body>
-
         <Modal.Footer className="delete-modal-footer">
           <ButtonToolbar className="pull-right">
             <Button onClick={onCancel} className="btn-outline">Cancel</Button>
