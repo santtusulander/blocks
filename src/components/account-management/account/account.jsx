@@ -1,19 +1,18 @@
 import React from 'react'
 import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar } from 'react-bootstrap'
-import { Map, is, fromJS, List } from 'immutable'
+import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
 // import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
+import IsAllowed from '../../is-allowed'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
 import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../../constants/account-management-options'
-import { VIEW_CONTENT_ACCOUNTS } from '../../../constants/permissions'
-
-import checkPermissions from '../../../util/permissions'
+import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
 
 import './account.scss'
 
@@ -106,7 +105,7 @@ class AccountManagementAccountDetails extends React.Component {
   }
 
   render() {
-    const { fields: { accountName, accountType, services }, roles, currentUser } = this.props
+    const { fields: { accountName, accountType, services } } = this.props
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
       <div className="account-management-account-details">
@@ -161,19 +160,20 @@ class AccountManagementAccountDetails extends React.Component {
             <label className="col-xs-3 control-label">Account Name</label>
             <Col xs={8}>
               {/* <div className="input-group"> */}
-              {checkPermissions(roles, currentUser, VIEW_CONTENT_ACCOUNTS) ?
+              <IsAllowed to={MODIFY_ACCOUNTS}>
                 <input
                   {...accountName}
                   type="text"
                   placeholder="Enter Account Name"
-                  className="form-control"/> :
+                  className="form-control"/>
+              </IsAllowed>
+              <IsAllowed not={true} to={MODIFY_ACCOUNTS}>
                 <div className="input-group input-group-static">
                   <span className="form-control-static">
                     {accountName.value}
                   </span>
                 </div>
-                }
-
+              </IsAllowed>
                 {/* TODO: Get real tooltip content
                 <span className="input-group-addon">
                   <OverlayTrigger placement="top" overlay={
@@ -253,12 +253,10 @@ class AccountManagementAccountDetails extends React.Component {
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
-  currentUser: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
   invalid: React.PropTypes.bool,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  roles: React.PropTypes.instanceOf(List),
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   toggleModal: React.PropTypes.func,
@@ -271,6 +269,4 @@ AccountManagementAccountDetails.defaultProps = {
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details'
-},
-({ roles, user }) => ({ roles: roles.get('roles'), currentUser: user.get('currentUser') }))
-(withRouter(AccountManagementAccountDetails))
+})(withRouter(AccountManagementAccountDetails))
