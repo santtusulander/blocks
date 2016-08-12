@@ -1,13 +1,15 @@
 .not-found-page-container {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
 
-  svg {
-    margin: 80px 0;
+  .not-found-img {
+    display: inline-block;
+    width: 400px;
+    height: 150px;
+    margin: 2em 0;
+    background: url('../assets/img/not-found.svg') center center no-repeat;
+    background-size: contain;
   }
 
   button {
-    margin: 20px 0;
+    margin: 2em 0;
   }
 }
