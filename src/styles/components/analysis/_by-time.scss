@@ -76,10 +76,14 @@
 
   circle {
     stroke-width: 2px;
+    fill: transparent;
 
     .dark-theme & {
-      stroke: rgba($pale-blue, 0.5);
-      fill: transparent;
+      stroke: rgba($dt-text-color, 0.5);
+    }
+
+    .light-theme & {
+      stroke: rgba($lt-text-color, 0.5);
     }
   }
 
@@ -92,12 +96,12 @@
   }
 
   .slice {
-    fill: rgba($pale-blue, 0.4);
     opacity: 0;
+    fill: rgba($pale-blue, 0.4);
 
     &:hover {
-      opacity: 1;
       cursor: pointer;
+      opacity: 1;
       transition: opacity 200ms;
     }
   }
