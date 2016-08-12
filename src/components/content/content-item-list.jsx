@@ -104,7 +104,7 @@ class ContentItemList extends React.Component {
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
               {!this.props.fetchingMetrics ?
-                <AnalysisByTime axes={false} padding={0} className=""
+                <AnalysisByTime axes={false} padding={0}
                   dataKey="bytes"
                   primaryData={this.props.primaryData.toJS().reverse()}
                   width={this.state.byTimeWidth}
