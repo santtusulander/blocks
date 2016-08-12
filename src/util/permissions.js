@@ -60,7 +60,7 @@ export default function checkPermissions(roles, user, permission) {
   if (!userRoles) return false
 
   return userRoles.some(roleId => {
-    const role = roles.get(roleId)
+    const role = roles.find(role => role.get('id') === roleId)
     if ( role ) return permissionMapping[permission](role)
 
     return false
