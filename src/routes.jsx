@@ -6,7 +6,8 @@ import {
   UserHasPermission,
   UserCanListAccounts,
   UserCanManageAccounts,
-  UserCanTicketAccounts
+  UserCanTicketAccounts,
+  UserCanViewAnalyticsTrafficOverview
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -142,11 +143,11 @@ export function getRoute(name, params) {
 }
 
 /* helper for creating Analytics Tab-Routes */
-function getAnalyticsTabRoutes() {
+function getAnalyticsTabRoutes( store ) {
   return (
     <Route>
       <IndexRedirect to={routes.analyticsTabTraffic} />
-      <Route path={routes.analyticsTabTraffic} component={AnalyticsTabTraffic} />
+      <Route path={routes.analyticsTabTraffic} component={UserCanViewAnalyticsTrafficOverview(store)(AnalyticsTabTraffic)} />
       <Route path={routes.analyticsTabVisitors} component={AnalyticsTabVisitors} />
       <Route path={routes.analyticsTabOnOffNet} component={AnalyticsTabOnOffNet} />
       <Route path={routes.analyticsTabServiceProviders} component={AnalyticsTabServiceProviders} />
@@ -187,13 +188,13 @@ export const getRoutes = store => {
         <IndexRedirect to="udn" />
         <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)} />
         <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
       </Route>
 
@@ -207,7 +208,7 @@ export const getRoutes = store => {
         </Route>
         <Route path={routes.contentProperty} component={Property} />
         <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes()}
+          {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>

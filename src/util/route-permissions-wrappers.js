@@ -61,3 +61,17 @@ export const UserCanTicketAccounts = store => {
     allowRedirectBack: false
   })
 }
+
+export const UserCanViewAnalyticsTrafficOverview = store => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const path = ownProps.location.pathname.replace(/\/traffic$/, '')
+        .replace(/\/$/, '')
+      return `${path}/on-off-net`
+    },
+    wrapperDisplayName: 'UserCanTicketAccounts',
+    predicate: permissionChecker(PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, store),
+    allowRedirectBack: false
+  })
+}
