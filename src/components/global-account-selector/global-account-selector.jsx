@@ -120,8 +120,8 @@ class AccountSelector extends Component {
        * in brand and account tiers, in both cases 'account' gets passed
        */
       case 'name':
-        this.props.accountSelectorActions.setOpen(false)
       case 'menu-item':
+        this.props.accountSelectorActions.setOpen(false)
         onSelect(
           this.tier === 'brand' ? 'account' : this.tier,
           e.target.getAttribute('data-value'),
