@@ -14,30 +14,6 @@ import AccountSelector from '../global-account-selector/global-account-selector.
 import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
-import checkPermissions from '../../util/permissions'
-
-/**
- * Build route & params to be used on getRoute() on logo
- * @param activeAccount
- * @returns {{route: string, linkParams: {brand: string}}}
- */
-const buildLogoLink = (roles, user, activeAccount) => {
-  let route = 'content'
-  let linkParams = {
-    brand: 'udn'
-  }
-
-  if(!checkPermissions(roles, user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
-    && activeAccount && activeAccount.size){
-    route = 'contentAccount'
-    linkParams.account = activeAccount.get('id')
-  }
-
-  return {
-    route,
-    linkParams
-  }
-}
 
 class Header extends React.Component {
   constructor(props) {
@@ -191,7 +167,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, roles, user, router, params: { account, brand } } = this.props
+    const { activeAccount, router, user, params: { account, brand } } = this.props
     const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
@@ -210,9 +186,6 @@ class Header extends React.Component {
         router.push(getUrl('/support', ...params))
       }
     }
-
-    const logoLink = buildLogoLink(roles, user, activeAccount)
-
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -223,12 +196,19 @@ class Header extends React.Component {
         <div className="header__content">
           <Nav className="header__left">
             <li className="header__logo">
-              <Link to={getRoute(
-                logoLink.route,
-                logoLink.linkParams
-              )} className="logo">
-                <IconEricsson />
-              </Link>
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('contentAccount', {
+                  brand: 'udn',
+                  account: user.get('account_id')
+                })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
             </li>
             <li className="header__account-selector">
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
@@ -271,7 +251,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
-                user={this.props.user}
+                user={user}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>
@@ -309,7 +289,6 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
