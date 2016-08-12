@@ -2,7 +2,7 @@
 // ==============
 
 /**
-* Given a unitless number and an optional context, calculate a size in rem.
+* Given a pixel number and an optional context, calculate a size in rem.
 *
 * @param  {number} $size    A unitless number to convert to a size in rem
 * @param  {number} $context A unitless number that acts as the divisor
@@ -13,7 +13,7 @@
 }
 
 /**
-* Given a unitless number and an optional context, calculate a size in em.
+* Given a pixel number and an optional context, calculate a size in em.
 *
 * @param  {number} $size    A unitless number to convert to a size in em
 * @param  {number} $context A unitless number that acts as the divisor
