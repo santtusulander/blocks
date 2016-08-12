@@ -127,6 +127,19 @@ label {
   }
 }
 
+.form-control-static {
+  height: $bar-height;
+  max-width: 900px;
+  padding: ($btn-sm-height / 3) 0;
+  line-height: $bar-height - (($btn-sm-height / 3) * 2);
+
+  @include md {
+    height: $md-bar-height;
+    padding: ($md-btn-sm-height / 3) 0;
+    line-height: $md-bar-height - (($md-btn-sm-height / 3) * 2);
+  }
+}
+
 .form-groups {
   position: relative;
 }
@@ -160,6 +173,10 @@ label {
   .control-label {
     padding-top: 26px;
     text-align: inherit;
+
+    @include md {
+      padding-top: 19px;
+    }
   }
 
   .form-groups .control-label {
@@ -445,5 +462,13 @@ label {
     > .search-input {
       width: 16em;
     }
+  }
+}
+
+.input-group-static {
+  display: inline-flex;
+
+  & .input-group-addon {
+    padding-top: 9px;
   }
 }

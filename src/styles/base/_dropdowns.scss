@@ -100,6 +100,11 @@
       font-size: 20px;
     }
 
+    .menu-item-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .menu-item-theme {
       z-index: 1;
     }

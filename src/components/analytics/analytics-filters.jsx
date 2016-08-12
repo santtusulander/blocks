@@ -73,7 +73,7 @@ const StatusCodes = ({ options, values, onChange }) => {
     <FilterChecklistDropdown
       noClear={true}
       options={options}
-      values={values}
+      value={values}
       handleCheck={onChange}>
       <li role="presentation" className="children">
         <Input type="checkbox"
@@ -209,7 +209,7 @@ AnalyticsFilters.propTypes = {
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
-  showFilters: PropTypes.instanceOf(Map)
+  showFilters: PropTypes.instanceOf(List)
 }
 
 AnalyticsFilters.defaultProps = {

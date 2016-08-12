@@ -116,10 +116,10 @@ const AnalyticsViewControl = (props) => {
       <p className="analytics-view-control__title">{title}</p>
       <div className="analytics-view-control__header">
         <AccountSelector
+          as="analytics"
           params={props.params}
           topBarTexts={topBarTexts}
           topBarAction={topBarFunc}
-          user={props.user}
           onSelect={(...params) => {
             let url = isContentAnalytics ?
               `${getContentUrl(...params)}/analytics` :
@@ -134,7 +134,7 @@ const AnalyticsViewControl = (props) => {
             props.router.push(url)
           }}>
           <Dropdown.Toggle bsStyle="link" className="header-toggle">
-              <h1>{activeItem || "select account"}</h1>
+            <h1>{activeItem || "select account"}</h1>
           </Dropdown.Toggle>
         </AccountSelector>
         {props.params.account &&
@@ -156,8 +156,8 @@ const AnalyticsViewControl = (props) => {
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              <IsAllowed to={tab.permission}>
-                <li key={tab.key}>
+              <IsAllowed key={tab.key} to={tab.permission}>
+                <li>
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
@@ -187,8 +187,7 @@ AnalyticsViewControl.propTypes = {
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
-  router: React.PropTypes.object,
-  user: PropTypes.instanceOf(Immutable.Map)
+  router: React.PropTypes.object
 }
 
 AnalyticsViewControl.defaultProps = {
@@ -196,8 +195,7 @@ AnalyticsViewControl.defaultProps = {
   brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),
-  params: {},
-  user: Immutable.Map()
+  params: {}
 }
 
 export default withRouter(AnalyticsViewControl)
