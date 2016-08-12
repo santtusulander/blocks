@@ -4,11 +4,16 @@ import * as PERMISSIONS from '../constants/permissions'
 import checkPermissions from './permissions'
 
 const authSelector = state => state.user.get('currentUser')
-const permissionChecker = (permission, store) => user => checkPermissions(
+const permissionChecker = (permission, store) => user => {
+  if(!permission) {
+    return true
+  }
+  return checkPermissions(
     store.getState().roles.get('roles'),
     user,
     permission
   )
+}
 
 export const UserHasPermission = (permission, store) => UserAuthWrapper({
   authSelector: authSelector,

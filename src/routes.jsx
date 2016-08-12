@@ -2,7 +2,6 @@ import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
-import checkPermissions from './util/permissions'
 import {
   UserHasPermission,
   UserCanListAccounts,
@@ -149,7 +148,8 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
-  [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport]
+  [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
+  [null, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
 ]
 
 /* helper for creating Analytics Tab-Routes */
