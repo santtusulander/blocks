@@ -163,8 +163,10 @@ class ContentItemChart extends React.Component {
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
         {this.state.showDiffLegend ?
-          <DifferenceTooltip/>
+          <DifferenceTooltip
+            name={this.props.name}/>
           : <TrafficTooltip
+            name={this.props.name}
             date={tooltipDate}
             avgTransfer={avgTransfer}
             maxTransfer={maxTransfer}
