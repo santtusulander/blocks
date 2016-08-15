@@ -278,6 +278,7 @@
         }
 
         .dropdown-select {
+          z-index: 10;
           width: calc(100% + #{$dropdown-padding * 2});
           margin: 0 (-$dropdown-padding * 2 / 2);
 
