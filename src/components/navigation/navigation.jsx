@@ -37,7 +37,7 @@ const Navigation = (props) => {
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
   return (
-    <nav className='navigation-sidebar'>
+    <nav className='navigation-sidebar text-sm'>
       <ul>
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}

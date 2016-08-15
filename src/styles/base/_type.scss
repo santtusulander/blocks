@@ -17,7 +17,7 @@ h6 {
 h1 {
   font-size: rem(36px);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.1;
   text-transform: capitalize;
 
   @include print {
@@ -52,8 +52,9 @@ h1 {
 }
 
 h2 {
-  font-size: 24px;
+  font-size: rem(30px);
   font-weight: 700;
+  line-height: 1.133;
 
   @include print {
     font-size: $print-font-size * 2;
@@ -136,7 +137,7 @@ p {
 .text-sm {
   font-size: rem(12px);
   font-weight: normal;
-  line-height: rem(18px);
+  line-height: 1.5;
 
   @include print {
     font-size: $print-font-size * 0.75;
