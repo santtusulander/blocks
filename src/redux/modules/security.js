@@ -159,6 +159,15 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
     Promise.resolve([])
 })
 
+export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
+  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {
   return new Promise(res => res(opts))
 })
