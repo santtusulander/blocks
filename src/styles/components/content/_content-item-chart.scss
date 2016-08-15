@@ -97,9 +97,12 @@
       }
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       background-color: $black;
+    }
+
+    .light-theme & {
+      background-color: $pale-blue;
     }
   }
 
@@ -108,15 +111,19 @@
     height: 100%;
     border: 10px solid;
     border-radius: 50%;
-    opacity: 0.3;
     transition: opacity 250ms;
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center center;
       background-size: 100%;
       border-color: $black;
+      opacity: 0.3;
+    }
+
+    .light-theme & {
+      background: linear-gradient($white, rgba($white, 0.1));
+      opacity: 0.5;
     }
   }
 
@@ -195,7 +202,7 @@
     transform: translate(-50%, -50%);
 
     .light-theme & {
-      color: $dt-text-color;
+      color: $white;
     }
 
     .content-item-text-bold {
@@ -249,7 +256,7 @@
     position: absolute;
     top: 75%;
     left: 50%;
-    width: 100%;
+    width: 45%;
     transform: translate(-50%, -100%);
 
     .btn.btn-sm.btn-icon {
@@ -261,13 +268,28 @@
       fill: $silver-30;
       stroke: $silver-30;
 
-      &:hover,
-      &:focus,
-      &:active,
-      &.active {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
+      .dark-theme & {
+        background: linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+          color: $pale-blue;
+          fill: $pale-blue;
+          stroke: $pale-blue;
+        }
+      }
+
+      .light-theme & {
+        background: rgba($black, 0.25);
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+          background: rgba($black, 0.15);
+        }
       }
 
       .icon {
@@ -307,8 +329,15 @@
   }
 
   &.no-data {
-    background-color: $black;
-    border: 1px solid rgba($white, 0.2);
+    .dark-theme & {
+      background-color: $black;
+      border: 1px solid rgba($white, 0.2);
+    }
+
+    .light-theme & {
+      background: linear-gradient(rgba($pale-blue, 0.5), rgba($pale-blue, 0.5));
+      background-color: $lt-text-color;
+    }
   }
 
   .dark-theme &.avg,
