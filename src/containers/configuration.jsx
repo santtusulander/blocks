@@ -249,7 +249,7 @@ export class Configuration extends React.Component {
                     : ''
                   }
                   <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                    className="versions-btn">
+                  className="versions-btn has-icon">
                     <div className="icon-holder">
                       <IconArrowLeft/>
                     </div>

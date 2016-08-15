@@ -8,9 +8,10 @@ function getUnit(stat) {
   return stat ? stat.split(' ')[1] : ''
 }
 
-const ContentTrafficTooltip = ({avgTransfer, maxTransfer, minTransfer, date}) => <div>
+const ContentTrafficTooltip = ({name, avgTransfer, maxTransfer, minTransfer, date}) => <div>
   <div className="tooltip-header">
-    <b>Bandwidth</b> {date}
+    <h3>{name}</h3>
+    <b>Bandwidth {date}</b>
   </div>
   <div>
     Peak
@@ -36,8 +37,10 @@ const ContentTrafficTooltip = ({avgTransfer, maxTransfer, minTransfer, date}) =>
 ContentTrafficTooltip.displayName = 'ContentTrafficTooltip'
 ContentTrafficTooltip.propTypes = {
   avgTransfer: React.PropTypes.string,
+  date:        React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
-  minTransfer: React.PropTypes.string
+  minTransfer: React.PropTypes.string,
+  name:        React.PropTypes.string
 }
 
 module.exports = ContentTrafficTooltip

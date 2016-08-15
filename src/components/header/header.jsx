@@ -168,7 +168,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, router, params: { account, brand } } = this.props
+    const { activeAccount, router, user, params: { account, brand } } = this.props
     const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
@@ -196,12 +196,20 @@ class Header extends React.Component {
         </div>
         <div className="header__content">
           <Nav className="header__left">
-            {/* TODO: the logo should link to the level where they select accounts,
-             for CPs it should link to where they select groups.*/}
             <li className="header__logo">
-              <Link to={getRoute('content', { brand: 'udn' })} className="logo">
-                <IconEricsson />
-              </Link>
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('contentAccount', {
+                  brand: 'udn',
+                  account: user.get('account_id')
+                })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
             </li>
             <li className="header__account-selector">
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
@@ -245,7 +253,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
-                user={this.props.user}
+                user={user}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>

@@ -156,8 +156,8 @@ const AnalyticsViewControl = (props) => {
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              <IsAllowed to={tab.permission}>
-                <li key={tab.key}>
+              <IsAllowed key={tab.key} to={tab.permission}>
+                <li>
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
