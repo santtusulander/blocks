@@ -229,33 +229,33 @@ export class Configuration extends React.Component {
                     <span className="caret"></span>
                   </div>
                 </AccountSelector>
-              <ButtonToolbar className="pull-right">
-                {activeEnvironment === 2 ||
-                  activeEnvironment === 1 ||
-                  !activeEnvironment ?
-                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                    Publish
+                <ButtonToolbar className="pull-right">
+                  {activeEnvironment === 2 ||
+                    activeEnvironment === 1 ||
+                    !activeEnvironment ?
+                    <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                      Publish
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                    Copy
                   </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                  Copy
-                </Button>
-                {activeEnvironment === 2 || activeEnvironment === 3 ?
-                  <Button bsStyle="primary"
-                    onClick={() => this.changeActiveVersionEnvironment(1)}>
-                    Retire
+                  {activeEnvironment === 2 || activeEnvironment === 3 ?
+                    <Button bsStyle="primary"
+                      onClick={() => this.changeActiveVersionEnvironment(1)}>
+                      Retire
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.toggleVersionModal}
+                    className="versions-btn has-icon">
+                    <div className="icon-holder">
+                      <IconArrowLeft/>
+                    </div>
+                    Versions
                   </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                  className="versions-btn has-icon">
-                  <div className="icon-holder">
-                    <IconArrowLeft/>
-                  </div>
-                  Versions
-                </Button>
-              </ButtonToolbar>
+                </ButtonToolbar>
               </div>
               <p className="text-sm content-layout__header__aside">
                 <span className="right-separator">
