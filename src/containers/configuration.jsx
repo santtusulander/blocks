@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -17,6 +17,7 @@ import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
+import TruncatedTitle from '../components/truncated-title'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -202,7 +203,6 @@ export class Configuration extends React.Component {
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-    console.log(activeConfig.toJS())
 
     return (
       <PageContainer className="configuration-container">
@@ -210,6 +210,25 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
             <PageHeader>
+              <h5>CONFIGURATION</h5>
+              <div className="content-layout__header">
+                <AccountSelector
+                  as="configuration"
+                  params={this.props.params}
+                  topBarTexts={{}}
+                  onSelect={(tier, value, params) => {
+                    const { brand, account, group } = params, { hostActions } = this.props
+                    hostActions.startFetching()
+                    hostActions.fetchHost(brand, account, group, value).then(() => {
+                      this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                    })
+                  }}
+                  drillable={true}>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                    <span className="caret"></span>
+                  </div>
+                </AccountSelector>
               <ButtonToolbar className="pull-right">
                 {activeEnvironment === 2 ||
                   activeEnvironment === 1 ||
@@ -237,24 +256,8 @@ export class Configuration extends React.Component {
                   Versions
                 </Button>
               </ButtonToolbar>
-              <h5>CONFIGURATION</h5>
-              <AccountSelector
-                as="configuration"
-                params={this.props.params}
-                topBarTexts={{}}
-                onSelect={(tier, value, params) => {
-                  const { brand, account, group } = params, { hostActions } = this.props
-                  hostActions.startFetching()
-                  hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                  })
-                }}
-                drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
-              </AccountSelector>
-              <p className="text-sm">
+              </div>
+              <p className="text-sm content-layout__header__aside">
                 <span className="right-separator">
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </span>
@@ -397,6 +400,7 @@ Configuration.propTypes = {
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
+  router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {

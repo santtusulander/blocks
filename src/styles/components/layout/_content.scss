@@ -7,17 +7,23 @@
 
   &__header {
     display: flex;
-    flex-wrap: nowrap;
     margin: 0 0 10px;
+    flex-wrap: nowrap;
     align-items: center;
+    justify-content: space-between;
 
     .btn-toolbar {
       padding-left: 20px;
+      white-space: nowrap;
     }
 
     .global-account-selector {
-      flex: 1;
-      width: 0;
+      min-width: 0;
+    }
+
+    &__aside,
+    .page-header-layout &__aside {
+      margin: -10px 0 10px;
     }
   }
 
