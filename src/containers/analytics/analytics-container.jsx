@@ -8,8 +8,8 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
 
-import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
-import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
+import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
+import AnalyticsFilters from '../../components/analytics/analytics-filters'
 
 //layout
 import PageContainer from '../../components/layout/page-container'
@@ -20,6 +20,7 @@ import { getTabName } from '../../util/helpers.js'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
+import analyticsTabConfig from '../../constants/analytics-tab-config'
 
 
 import './analytics-container.scss'
@@ -98,23 +99,14 @@ class AnalyticsContainer extends React.Component {
       location: { pathname }
     } = this.props
 
-    /* TODO: should  be moved to consts ? */
-    const availableFilters = Immutable.fromJS({
-      'traffic': ['date-range', 'service-type'],
-      'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
-      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code', 'service-type'],
-      'url-report': ['date-range', 'error-code', 'service-type'],
-      'playback-demo': ['video']
-    })
+    const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
 
     return (
       <AnalyticsFilters
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
-        showFilters={availableFilters.get(getTabName(pathname))}
+        showFilters={thisTabConfig.get('filters')}
       />
     )
   }
