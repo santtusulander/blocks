@@ -27,16 +27,18 @@ class TruncatedTitle extends React.Component {
   }
 
   render() {
+    let className = 'truncated-title'
+    if(this.props.className) {
+      className += ' ' + this.props.className
+    }
     const tooltip = (<Tooltip id="truncated-title-tooltip" className="display-long-name-tooltip"><h3>{this.props.content}</h3></Tooltip>)
     return (
-      <div>
-        {this.state.isTitleTruncated ?
-          <OverlayTrigger placement={this.props.tooltipPlacement} overlay={tooltip}>
-            <div className={this.props.className} ref="contentItemName">{this.props.content}</div>
-          </OverlayTrigger> :
-          <div className={this.props.className} ref="contentItemName">{this.props.content}</div>
-        }
-      </div>
+      this.state.isTitleTruncated ?
+        <OverlayTrigger placement={this.props.tooltipPlacement || 'top'} overlay={tooltip}>
+          <div className={className} ref="contentItemName">{this.props.content}</div>
+        </OverlayTrigger>
+      :
+        <div className={className} ref="contentItemName">{this.props.content}</div>
     );
   }
 }
