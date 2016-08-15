@@ -156,7 +156,7 @@ export class Property extends React.Component {
     )
   }
   fetchData(params, queryParams) {
-    const {brand, account, group, property} = this.props.params
+    const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
@@ -311,8 +311,7 @@ export class Property extends React.Component {
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-                drillable={true}>
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
                 <Dropdown.Toggle bsStyle="link" className="header-toggle">
                   <h1>{this.props.params.property}</h1>
                 </Dropdown.Toggle>
