@@ -461,11 +461,14 @@ export class AccountManagementAccountUsers extends React.Component {
         </Table>
         {sortedUsers.size === 0 &&
           <div className="text-center">
-            {this.state.search.length > 0 &&
+            {this.state.search.length > 0 ?
               <span>No users found with the search term "{this.state.search}"</span>
+            :
+              <span>No users found</span>
             }
             {this.state.filteredRoles !== 'all' &&
-              <span> and a role of "{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}"</span>
+              <span> {this.state.search.length > 0 ? 'and ' : 'with '}
+                a role of "{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}"</span>
             }
             {this.state.filteredGroups !== 'all' &&
               <span> within the group "{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}"</span>
