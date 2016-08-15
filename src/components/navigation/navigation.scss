@@ -3,7 +3,6 @@
 
 $navigation-element-height: $navigation-sidebar-width;
 $navigation-sidebar-border-width: 6px;
-$navigation-sidebar-font-size: 12px;
 
 $navigation-transition-time: 0.3s;
 $dark-blue-navi: #070d1e;
@@ -17,10 +16,6 @@ $dark-blue-navi: #070d1e;
   height: 100vh;
   box-sizing: border-box;
   transition: all $navigation-transition-time;
-
-  @include md {
-    top: $md-header-total-height;
-  }
 
   .dark-theme & {
     background-color: $black;
@@ -46,15 +41,11 @@ $dark-blue-navi: #070d1e;
 
       a {
         display: table-cell;
-        font-family: 'Roboto', Arial, Helvetica, Sans-Serif;
         font-weight: bold;
-        color: $silver-60;
-        text-align: center;
         text-decoration: none;
         vertical-align: middle;
         border-right: $navigation-sidebar-border-width solid transparent;
         border-left: $navigation-sidebar-border-width solid transparent;
-        fill: $silver-60;
 
         .dark-theme & {
           color: $silver-60;
@@ -87,9 +78,6 @@ $dark-blue-navi: #070d1e;
 
         span {
           display: block;
-          font-size: $navigation-sidebar-font-size;
-          line-height: 1;
-          text-align: center;
           transition: all $navigation-transition-time;
         }
 

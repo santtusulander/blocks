@@ -7,9 +7,10 @@
   height: $btn-height;
   min-width: $btn-min-width;
   padding: 0 ($btn-height / 2);
-  font-size: inherit;
-  font-weight: normal;
+  font-size: rem(15px);
+  font-weight: 700;
   line-height: $btn-height;
+  color: $white;
   border: 0;
   border-radius: 2px;
   box-shadow: none;
@@ -246,21 +247,9 @@
   position: relative;
   height: auto;
   min-width: 0;
-  padding: 0 $btn-sm-height 0 0;
+  padding: 0 30px 0 0;
   line-height: inherit;
   text-align: left;
-
-  @include md {
-    padding: 0 $md-btn-sm-height 0 0;
-  }
-
-  .header & {
-    padding-right: 30px;
-  }
-
-  h1 {
-    margin-bottom: 0;
-  }
 
   h3 {
     max-width: calc(100% - #{$btn-height});
@@ -281,11 +270,6 @@
     color: $white;
     border: 0;
     transform: translateY(-50%);
-
-    @include md {
-      width: $btn-sm-height / 2;
-      height: $btn-sm-height / 2;
-    }
 
     .content-layout__header & {
       vertical-align: middle;
@@ -316,16 +300,7 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent;
       content: '';
-      transform: translate(-50%, -50%);
-    }
-
-    .header & {
-      width: 18px;
-      height: 18px;
-
-      &::after {
-        transform: translate(-50%, -50%) scale(0.75, 0.75);
-      }
+      transform: translate(-50%, -50%) scale(0.8, 0.8);
     }
   }
 

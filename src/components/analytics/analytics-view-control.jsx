@@ -112,7 +112,7 @@ const AnalyticsViewControl = (props) => {
 
   return (
     <div className="analytics-view-control">
-      <p className="analytics-view-control__title">{title}</p>
+      <h5 className="analytics-view-control__title">{title}</h5>
       <div className="analytics-view-control__header">
         <AccountSelector
           as="analytics"

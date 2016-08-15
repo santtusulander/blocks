@@ -216,7 +216,7 @@ class ContentItems extends React.Component {
       <PageContainer className={`${this.props.className} content-subcontainer`}>
         <Content>
           <PageHeader>
-            <p>{headerText.summary}</p>
+            <h5>{headerText.summary}</h5>
 
             <div className="content-layout__header">
               <AccountSelector

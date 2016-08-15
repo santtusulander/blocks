@@ -210,7 +210,7 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
             <PageHeader>
-              <p>CONFIGURATION</p>
+              <h5>CONFIGURATION</h5>
               <div className="content-layout__header">
                 <AccountSelector
                   as="configuration"
@@ -249,7 +249,7 @@ export class Configuration extends React.Component {
                     : ''
                   }
                   <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                  className="versions-btn has-icon">
+                    className="versions-btn has-icon">
                     <div className="icon-holder">
                       <IconArrowLeft/>
                     </div>
