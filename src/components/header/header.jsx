@@ -5,6 +5,7 @@ import { getRoute } from '../../routes.jsx'
 import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
 
 import UserMenu from './user-menu'
+import TruncatedTitle from '../truncated-title'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
@@ -167,7 +168,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeAccount, router, params: { account, brand } } = this.props
+    const { activeAccount, router, user, params: { account, brand } } = this.props
     const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
@@ -195,12 +196,20 @@ class Header extends React.Component {
         </div>
         <div className="header__content">
           <Nav className="header__left">
-            {/* TODO: the logo should link to the level where they select accounts,
-             for CPs it should link to where they select groups.*/}
             <li className="header__logo">
-              <Link to={getRoute('content', { brand: 'udn' })} className="logo">
-                <IconEricsson />
-              </Link>
+              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
+              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+                <Link to={getRoute('contentAccount', {
+                  brand: 'udn',
+                  account: user.get('account_id')
+                })} className="logo">
+                  <IconEricsson />
+                </Link>
+              </IsAllowed>
             </li>
             <li className="header__account-selector">
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
@@ -211,9 +220,10 @@ class Header extends React.Component {
                   topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
                   onSelect={itemSelectorFunc}
                   restrictedTo="account">
-                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                    {activeAccount && activeAccountName}
-                  </Dropdown.Toggle>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
+                    <span className="caret"></span>
+                  </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
@@ -243,6 +253,7 @@ class Header extends React.Component {
                 handleThemeChange={this.handleThemeChange}
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
+                user={user}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>

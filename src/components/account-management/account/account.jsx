@@ -7,10 +7,12 @@ import { withRouter } from 'react-router'
 // import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
+import IsAllowed from '../../is-allowed'
 
 // import IconAdd from '../../icons/icon-add.jsx'
 // import IconEdit from '../../icons/icon-edit.jsx'
 import { ACCOUNT_TYPES, SERVICE_TYPES } from '../../../constants/account-management-options'
+import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
 
 import './account.scss'
 
@@ -85,7 +87,7 @@ class AccountManagementAccountDetails extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',
-        buttons:  [
+        buttons: [
           <UDNButton key="button-1" onClick={() => {
             //this.leavePage()
             this.isLeaving = true
@@ -158,12 +160,20 @@ class AccountManagementAccountDetails extends React.Component {
             <label className="col-xs-3 control-label">Account Name</label>
             <Col xs={8}>
               {/* <div className="input-group"> */}
+              <IsAllowed to={MODIFY_ACCOUNTS}>
                 <input
                   {...accountName}
                   type="text"
                   placeholder="Enter Account Name"
                   className="form-control"/>
-
+              </IsAllowed>
+              <IsAllowed not={true} to={MODIFY_ACCOUNTS}>
+                <div className="input-group input-group-static">
+                  <span className="form-control-static">
+                    {accountName.value}
+                  </span>
+                </div>
+              </IsAllowed>
                 {/* TODO: Get real tooltip content
                 <span className="input-group-addon">
                   <OverlayTrigger placement="top" overlay={

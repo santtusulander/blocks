@@ -1,16 +1,15 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
+import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
+import TruncatedTitle from '../truncated-title'
 import IconExport from '../icons/icon-export.jsx'
-
-
 
 import './analytics-view-control.scss'
 
@@ -133,9 +132,10 @@ const AnalyticsViewControl = (props) => {
             }
             props.router.push(url)
           }}>
-          <Dropdown.Toggle bsStyle="link" className="header-toggle">
-            <h1>{activeItem || "select account"}</h1>
-          </Dropdown.Toggle>
+          <div className="btn btn-link dropdown-toggle header-toggle">
+            <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <span className="caret"></span>
+          </div>
         </AccountSelector>
         {props.params.account &&
           <ButtonToolbar>
@@ -156,8 +156,8 @@ const AnalyticsViewControl = (props) => {
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              <IsAllowed to={tab.permission}>
-                <li key={tab.key}>
+              <IsAllowed key={tab.key} to={tab.permission}>
+                <li>
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>

@@ -1,9 +1,14 @@
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from './constants/permissions'
-import checkPermissions from './util/permissions'
+import {
+  UserHasPermission,
+  UserCanListAccounts,
+  UserCanManageAccounts,
+  UserCanTicketAccounts,
+  UserCanViewAnalyticsTab
+} from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
 import AccountManagementAccount from './components/account-management/account/account'
@@ -137,21 +142,23 @@ export function getRoute(name, params) {
   return route
 }
 
+const analyticsTabs = [
+  [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
+  [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
+  [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
+  [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
+  [null, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
+]
+
 /* helper for creating Analytics Tab-Routes */
-function getAnalyticsTabRoutes() {
-  return (
-    <Route>
-      <IndexRedirect to={routes.analyticsTabTraffic} />
-      <Route path={routes.analyticsTabTraffic} component={AnalyticsTabTraffic} />
-      <Route path={routes.analyticsTabVisitors} component={AnalyticsTabVisitors} />
-      <Route path={routes.analyticsTabOnOffNet} component={AnalyticsTabOnOffNet} />
-      <Route path={routes.analyticsTabServiceProviders} component={AnalyticsTabServiceProviders} />
-      <Route path={routes.analyticsTabFileError} component={AnalyticsTabFileError} />
-      <Route path={routes.analyticsTabUrlReport} component={AnalyticsTabUrlReport} />
-      <Route path={routes.analyticsTabPlaybackDemo} component={AnalyticsTabPlaybackDemo} />
-    </Route>
-  )
-}
+const getAnalyticsTabRoutes = store => <Route>
+  <IndexRedirect to={routes.analyticsTabTraffic} />
+  {analyticsTabs.map(([permission, path, component]) => <Route path={path}
+    component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+  )}
+</Route>
 
 /* helper for creating Support Tab-Routes */
 function getSupportTabRoutes() {
@@ -164,24 +171,6 @@ function getSupportTabRoutes() {
     </Route>
   )
 }
-
-const UserHasPermission = (permission, store) => UserAuthWrapper({
-  authSelector: state => state.user.get('currentUser'),
-  /* THIS IS NOT NEEDED:
-  * From Docs: https://github.com/mjrussell/redux-auth-wrapper
-  * [redirectAction] (Function): Optional redux action creator for redirecting the user. If not present, will use React-Router's router context to perform the transition.
-  redirectAction: newroute => {
-    location.href = newroute.pathname // TODO: figure out how to route to this nicely
-  },*/
-  failureRedirectPath: '/',
-  wrapperDisplayName: 'UserHasPermission',
-  predicate: user => checkPermissions(
-    store.getState().roles.get('roles'),
-    user,
-    permission
-  ),
-  allowRedirectBack: false
-})(props => props.children)
 
 export const getRoutes = store => {
 
@@ -199,15 +188,15 @@ export const getRoutes = store => {
       <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
         {/* default - set 'udn' as brand */}
         <IndexRedirect to="udn" />
-        <Route path={routes.analyticsBrand} component={AnalyticsContainer} />
+        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)} />
         <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
       </Route>
 
@@ -215,13 +204,13 @@ export const getRoutes = store => {
       <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
         <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
         <Route component={ContentTransition}>
-          <Route path={routes.contentBrand} component={Accounts}/>
+          <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
           <Route path={routes.contentAccount} component={Groups}/>
           <Route path={routes.contentGroup} component={Hosts}/>
         </Route>
         <Route path={routes.contentProperty} component={Property} />
         <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes()}
+          {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>
@@ -233,7 +222,7 @@ export const getRoutes = store => {
       {/* Security - routes */}
       <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION, store)}>
         <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
-        <Route path={routes.securityBrand} component={Security} />
+        <Route path={routes.securityBrand} component={UserCanListAccounts(store)(Security)} />
         <Route path={routes.securityAccount} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
           <Route path={routes.securityTabSslCertificate} component={Security}/>
@@ -257,7 +246,7 @@ export const getRoutes = store => {
       {/* Services - routes */}
       <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION, store)}>
         <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
-        <Route path={routes.servicesBrand} component={Services}/>
+        <Route path={routes.servicesBrand} component={UserCanListAccounts(store)(Services)}/>
         <Route path={routes.servicesAccount} component={Services}/>
         <Route path={routes.servicesGroup} component={Services}/>
         <Route path={routes.servicesProperty} component={Services}/>
@@ -266,7 +255,7 @@ export const getRoutes = store => {
       {/* Support - routes */}
       <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
         <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
-        <Route path={routes.supportBrand} component={Support}>
+        <Route path={routes.supportBrand} component={UserCanTicketAccounts(store)(Support)}>
             {getSupportTabRoutes()}
         </Route>
         <Route path={routes.supportAccount} component={Support}>
@@ -283,7 +272,7 @@ export const getRoutes = store => {
       {/* Account management - routes */}
       <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION, store)}>
         <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
-        <Route path={routes.accountManagementBrand} component={AccountManagement}>
+        <Route path={routes.accountManagementBrand} component={UserCanManageAccounts(store)(AccountManagement)}>
           <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
           <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
           <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>

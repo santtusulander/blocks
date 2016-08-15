@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Dropdown, Nav, Button } from 'react-bootstrap'
+import { Nav, Button } from 'react-bootstrap'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
@@ -26,6 +26,7 @@ import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
+import TruncatedTitle from '../../components/truncated-title'
 
 import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../constants/account-management-options'
 import {
@@ -65,7 +66,7 @@ export class AccountManagement extends Component {
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
-    this.validateAccountName = this.validateAccountName.bind(this)
+    this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
 
@@ -233,23 +234,24 @@ export class AccountManagement extends Component {
     return '';
   }
 
-  validateAccountName({ accountName }) {
-    if(this.props.activeAccount.get('name') === accountName) {
-      return {}
+  validateAccountDetails({ accountName, services }) {
+    let nameTaken = null
+    if(this.props.activeAccount.get('name') !== accountName) {
+      nameTaken = {
+        condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
+        errorText: 'That account name is taken'
+      }
     }
     const conditions = {
       accountName: [
         {
-          condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
-          errorText: 'That account name is taken'
-        },
-        {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-          errorText: <div>{['Account name is invalid.', <div key={accountName}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
         }
       ]
     }
-    return checkForErrors({ accountName }, conditions)
+    nameTaken && conditions.accountName.push(nameTaken)
+    return checkForErrors({ accountName, services }, conditions)
   }
 
   render() {
@@ -260,8 +262,7 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
-      router,
-      accounts
+      router
       //dnsData
     } = this.props
 
@@ -332,7 +333,7 @@ export class AccountManagement extends Component {
       editAccount: this.showAccountForm,
       onSave: this.editAccount,
       uiActions: this.props.uiActions,
-      validate: this.validateAccountName,
+      validate: this.validateAccountDetails,
       initialValues: {
         accountName: activeAccount.get('name'),
         accountBrand: 'udn',
@@ -350,6 +351,7 @@ export class AccountManagement extends Component {
         <Content>
           <div className="account-management-manage-account">
             <PageHeader>
+              <p>ACCOUNT MANAGEMENT</p>
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"
@@ -358,9 +360,11 @@ export class AccountManagement extends Component {
                   topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                   onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                   restrictedTo="account">
-                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                    <h1>{activeAccount.get('name') || 'No active account'}</h1>
-                  </Dropdown.Toggle>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
+                      tooltipPlacement="bottom" className="account-property-title"/></h1>
+                    <span className="caret"></span>
+                  </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>

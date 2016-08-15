@@ -48,6 +48,10 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
 
+// Account Permissions
+permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.
@@ -60,7 +64,7 @@ export default function checkPermissions(roles, user, permission) {
   if (!userRoles) return false
 
   return userRoles.some(roleId => {
-    const role = roles.get(roleId)
+    const role = roles.find(role => role.get('id') === roleId)
     if ( role ) return permissionMapping[permission](role)
 
     return false
