@@ -16,6 +16,10 @@ class TruncatedTitle extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
 
+  componentWillReceiveProps(){
+    this.measureContainers()
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
