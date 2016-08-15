@@ -33,23 +33,28 @@
 
     .header & {
       height: $header-height;
-      line-height: $header-height;
-
-      @include md {
-        height: $md-header-height;
-        line-height: $md-header-height;
-      }
 
       @include print {
         height: auto;
         line-height: 1;
       }
+
+      &:not(:first-of-type) {
+        overflow: hidden;
+      }
     }
 
     > a,
-    > span {
+    > span,
+    &:not(.breadcrumb-back, :last-child)::after {
+      margin-top: 15px;
+    }
+
+    > a,
+    > span,
+    .truncated-breadcrumb-title {
       display: block;
-      max-width: 350px;
+      padding-right: 5px;
       overflow: hidden;
       font-weight: bold;
       text-overflow: ellipsis;
@@ -114,7 +119,7 @@
     }
 
     &:not(.breadcrumb-back, :last-child)::after {
-      padding: 0 10px;
+      padding: 0 10px 0 0;
       content: '\203A';
 
       .dark-theme &,
