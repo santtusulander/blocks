@@ -80,4 +80,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabOnOffNet);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabOnOffNet);

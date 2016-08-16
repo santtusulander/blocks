@@ -71,4 +71,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabServiceProviders);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabServiceProviders);

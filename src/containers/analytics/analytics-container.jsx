@@ -136,7 +136,6 @@ class AnalyticsContainer extends React.Component {
           /* Render tab -content */
           children && React.cloneElement(children, {
             params: params,
-            ref: 'tab',
             filters: filters,
             location: location
           } )
