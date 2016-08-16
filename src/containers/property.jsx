@@ -270,6 +270,7 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
@@ -464,8 +465,10 @@ export class Property extends React.Component {
         {this.state.deleteModal && <DeleteModal
           itemToDelete="Property"
           onCancel={toggleDelete}
-          onDelete={this.props.hostActions.deleteHost(...Object.keys(this.props.params).map(k => this.props.params[k]))}
-          />
+          onDelete={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>
 
         }
       </PageContainer>
