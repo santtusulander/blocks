@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
 import {
@@ -157,7 +157,8 @@ const analyticsTabs = [
 /* helper for creating Analytics Tab-Routes */
 const getAnalyticsTabRoutes = store => <Route>
   <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component]) => <Route path={path}
+  {analyticsTabs.map(([permission, path, component], i) => <Route path={path}
+    key={i}
     component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
   )}
 </Route>

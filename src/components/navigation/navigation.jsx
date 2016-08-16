@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router'
+import Immutable from 'immutable'
 
 import { getRoute } from '../../routes.jsx'
 import {
@@ -53,7 +54,7 @@ const Navigation = (props) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
               <IconAnalytics />
               <span>Analytics</span>
             </Link>
@@ -98,6 +99,14 @@ const Navigation = (props) => {
       </ul>
     </nav>
   )
+}
+
+Navigation.displayName = 'Navigation'
+Navigation.propTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  router: React.PropTypes.object
 }
 
 export default withRouter(Navigation)

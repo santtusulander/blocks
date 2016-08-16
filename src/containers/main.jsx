@@ -190,8 +190,10 @@ export class Main extends React.Component {
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
+          currentUser={this.props.currentUser}
           params={this.props.params}
           pathname={this.props.location.pathname}
+          roles={this.props.roles}
           />
         : ''
       }
