@@ -392,11 +392,12 @@ export class AccountManagement extends Component {
               {/*
               <li className="navbar">
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-              </li>
+              </li>*/}
+              <IsAllowed to={PERMISSIONS.VIEW_DNS}>
                <li className="navbar">
-               <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
+                 <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
                </li>
-               */}
+              </IsAllowed>
               <li className="navbar">
                 <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
               </li>
