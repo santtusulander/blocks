@@ -35,6 +35,9 @@ export class AccountManagementAccountUsers extends React.Component {
     this.state = {
       sortBy: 'email',
       sortDir: 1,
+      search: '',
+      filteredGroups: 'all',
+      filteredRoles: 'all',
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
@@ -57,6 +60,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
+    this.changeSearch = this.changeSearch.bind(this)
     this.isLeaving = false;
   }
 
@@ -248,6 +252,7 @@ export class AccountManagementAccountUsers extends React.Component {
       .toJS()
     return groups.length > 0 ? groups : ['User has no groups']
   }
+
   getRolesForUser(user) {
     return this.props.roles.size ? user.get('roles').map(roleId => this.props.roles.find(role => role.get('id') === roleId).get('name')).toJS() : []
   }
@@ -296,12 +301,14 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: true
     })
   }
+
   cancelUserEdit() {
     this.setState({
       userToEdit: null,
       showEditModal: false
     })
   }
+
   saveUser(user) {
     // Get the username from the user we have in state for editing purposes.
     //user.username = this.state.userToEdit.get('username')
@@ -318,26 +325,90 @@ export class AccountManagementAccountUsers extends React.Component {
         }
       })
   }
+
+  changeSearch(e) {
+    this.setState({
+      search: e.target.value
+    })
+  }
+
   render() {
+    const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
+    const filteredUsersByRole = users.filter((user) => {
+      if(this.state.filteredRoles === 'all') {
+        return true
+      } else {
+        return user.get('roles').find(role => {
+          return this.state.filteredRoles === role
+        })
+      }
+    })
+    const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
+      if(this.state.filteredGroups === 'all') {
+        return true
+      } else {
+        return user.get('group_id').find(group => {
+          return this.state.filteredGroups === group
+        })
+      }
+    })
+    const searchedUsers = filteredUsersByGroup.filter((user) => {
+      return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
+    })
     const sortedUsers = this.sortedData(
-      this.props.users,
+      searchedUsers,
       this.state.sortBy,
       this.state.sortDir
     )
+    let roleOptions = ROLES_MAPPING.map(mapped_role => [
+      mapped_role.id,
+      this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+    ])
+    roleOptions.unshift(['all', 'All Roles'])
+    const groupOptions = this.props.groups.map(group => [
+      group.get('id'),
+      group.get('name')
+    ]).insert(0, ['all', 'All Groups']).toArray()
+    const numHiddenUsers = users.size - sortedUsers.size;
     return (
       <div className="account-management-account-users">
         <Row className="header-btn-row">
-          <Col sm={8}>
+          <Col lg={2}>
             <h3>
-              {this.props.users.size} User{this.props.users.size === 1 ? '' : 's'}
+              {sortedUsers.size} User{sortedUsers.size === 1 ? '' : 's'} {!!numHiddenUsers && `(${numHiddenUsers} hidden)`}
             </h3>
           </Col>
-          <Col sm={4} className="text-right">
+          <Col lg={10} className="text-right">
+            <Input
+              type="text"
+              className="search-input"
+              groupClassName="search-input-group inline"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
+            <div className="form-group inline">
+              <SelectWrapper
+                id='filtered-roles'
+                value={this.state.filteredRoles}
+                onChange={value => {
+                  this.setState({ filteredRoles: value })
+                }}
+                options={roleOptions}/>
+            </div>
+            <div className="form-group inline">
+              <SelectWrapper
+                id='filtered-groups'
+                value={this.state.filteredGroups}
+                onChange={value => {
+                  this.setState({ filteredGroups: value })
+                }}
+                options={groupOptions}/>
+            </div>
             <Button bsStyle="success" className="btn-icon btn-add-new"
               onClick={this.toggleInlineAdd}>
               <IconAdd />
@@ -388,6 +459,22 @@ export class AccountManagementAccountUsers extends React.Component {
             })}
           </tbody>
         </Table>
+        {sortedUsers.size === 0 &&
+          <div className="text-center">
+            {this.state.search.length > 0 ?
+              <span>No users found with the search term "{this.state.search}"</span>
+            :
+              <span>No users found</span>
+            }
+            {this.state.filteredRoles !== 'all' &&
+              <span> {this.state.search.length > 0 ? 'and ' : 'with '}
+                a role of "{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}"</span>
+            }
+            {this.state.filteredGroups !== 'all' &&
+              <span> within the group "{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}"</span>
+            }
+          </div>
+        }
         {this.state.showEditModal &&
           <UserEditModal
             show={this.state.showEditModal}
