@@ -37,17 +37,6 @@ export const DNSList = props => {
   ]
   return (
     <div>
-      <div className="account-management-header">
-        Select Domain
-        <Select
-          value={activeDomain && activeDomain.get('id')}
-          className="dns-dropdowns"
-          onSelect={id => (changeActiveDomain(id))}
-          options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-        <UDNButton id="add-domain" bsStyle="primary" onClick={onAddDomain}>
-          <strong>ADD DOMAIN</strong>
-        </UDNButton>
-      </div>
       <h3 className="account-management-header">
         <span id="domain-stats">
           {activeDomain ?
