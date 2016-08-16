@@ -22,6 +22,7 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AnalysisByTime from '../components/analysis/by-time'
+import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
@@ -60,6 +61,7 @@ export class Property extends React.Component {
     super(props)
 
     this.state = {
+      deleteModal: false,
       activeSlice: null,
       activeSliceX: 100,
       byTimeWidth: 0,
@@ -329,6 +331,9 @@ export class Property extends React.Component {
                       to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                   <IconConfiguration/>
                 </Link>
+                <Button bsStyle="primary" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                  <IconTrash/>
+                </Button>
               </ButtonToolbar>
             </div>
           </PageHeader>
