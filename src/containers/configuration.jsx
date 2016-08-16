@@ -11,13 +11,17 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import { getContentUrl } from '../util/helpers'
+
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
+import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -39,6 +43,7 @@ export class Configuration extends React.Component {
     const config = props.activeHost ? props.activeHost.getIn(['services',0,'configurations',0]) : null
 
     this.state = {
+      deleteModal: false,
       activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
@@ -200,6 +205,8 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
@@ -230,6 +237,9 @@ export class Configuration extends React.Component {
                   </div>
                 </AccountSelector>
                 <ButtonToolbar className="pull-right">
+                  <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                    <IconTrash/>
+                  </Button>
                   {activeEnvironment === 2 ||
                     activeEnvironment === 1 ||
                     !activeEnvironment ?
@@ -346,8 +356,15 @@ export class Configuration extends React.Component {
             />
 
         </Content>
-
-        {this.state.showPublishModal ?
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          onCancel={toggleDelete}
+          onDelete={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>
+        }
+        {this.state.showPublishModal &&
           <Modal show={true}
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
@@ -362,10 +379,9 @@ export class Configuration extends React.Component {
                 versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}
                 publishing={this.props.fetching}/>
             </Modal.Body>
-          </Modal>
-          : ''}
+          </Modal>}
 
-          {this.state.showVersionModal ?
+          {this.state.showVersionModal &&
             <Modal show={true}
               dialogClassName="configuration-sidebar configuration-versions-sidebar"
               onHide={this.toggleVersionModal}>
@@ -380,8 +396,7 @@ export class Configuration extends React.Component {
                   status={this.props.activeHost.get('status')}
                   activeHost={this.props.activeHost}/>
               </Sidebar>
-            </Modal>
-            : ''}
+            </Modal>}
       </PageContainer>
     );
   }

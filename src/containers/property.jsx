@@ -467,9 +467,7 @@ export class Property extends React.Component {
           onDelete={() => {
             deleteHost(brand, account, group, property)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>
-
-        }
+          }}/>}
       </PageContainer>
     )
   }
