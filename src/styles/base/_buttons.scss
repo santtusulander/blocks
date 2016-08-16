@@ -3,28 +3,18 @@
 
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
+
+$btn-horizontal-padding: em(18px);
+
 .btn {
-  height: $btn-height;
   min-width: $btn-min-width;
-  padding: 0 ($btn-height / 2);
+  padding: 0 $btn-horizontal-padding;
   font-size: rem(15px);
   font-weight: 700;
-  line-height: $btn-height;
   color: $white;
   border: 0;
   border-radius: 2px;
   box-shadow: none;
-
-  @include md {
-    height: $md-btn-height;
-    min-width: $md-btn-min-width;
-    padding: 0 ($md-btn-height / 2);
-    line-height: $md-btn-height;
-  }
-
-  @include sm {
-    min-width: $sm-btn-min-width;
-  }
 
   @include print {
     // scss-lint:disable ImportantRule

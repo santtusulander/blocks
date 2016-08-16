@@ -75,20 +75,18 @@ class Styleguide extends React.Component {
           <h3>Heading H3</h3>
           <h4>Heading H4</h4>
           <h5>Heading H5</h5>
-          <h6>Heading H6</h6>
 
           <h3>Heading with label <Label>New</Label></h3>
-
 
           <hr />
 
           <p className="lead">Leading body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 
-
           <hr />
 
           <p>Body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan in nisi at suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec et sem posuere, pulvinar purus quis, varius augue. Praesent porttitor, mauris aliquet feugiat vestibulum, diam augue tempor turpis, id facilisis sapien massa ac eros. Vestibulum pretium cursus varius. Suspendisse sed enim vel orci fermentum consectetur. Cras metus risus, ultrices ut elit id, fringilla euismod quam. In pharetra tellus lectus. Aliquam erat volutpat. Morbi justo neque, pellentesque quis nunc a, varius euismod odio. Integer gravida quam sit amet ornare mattis. Proin molestie ex vitae ligula pellentesque, vitae placerat magna tincidunt. Aliquam sed purus id lectus volutpat suscipit quis a mauris. Fusce in est mattis, tristique mi id, auctor nibh. Proin venenatis id sapien id lobortis. Nullam cursus nisi mauris, eget interdum nisi porttitor nec.</p>
 
+          <p className="text-sm">Small body text.</p>
 
           <h1 className="page-header">Breadcrumbs</h1>
 
