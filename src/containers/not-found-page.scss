@@ -1,0 +1,20 @@
+.not-found-page-container {
+
+  .not-found-img {
+    display: inline-block;
+    width: 400px;
+    height: 150px;
+    margin: 0 0 4em;
+    background: url('../assets/img/not-found.svg') center center no-repeat;
+    background-size: contain;
+  }
+
+  p {
+    font-size: 2em;
+    line-height: 1.5;
+  }
+
+  button {
+    margin: 2em 0;
+  }
+}

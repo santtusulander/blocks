@@ -7,7 +7,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 0;
+  margin: 0;
 
   @include print {
     page-break-after: avoid;
@@ -15,16 +15,10 @@ h6 {
 }
 
 h1 {
-  font-size: 60px;
-  font-weight: 500;
-
-  @include md {
-    font-size: 40px;
-  }
-
-  @include sm {
-    font-size: 36px;
-  }
+  font-size: rem(36px);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: capitalize;
 
   @include print {
     font-size: $print-font-size * 3;
@@ -35,11 +29,7 @@ h1 {
   }
 
   .heading-suffix {
-    font-size: 30px;
-
-    @include md {
-      font-size: 20px;
-    }
+    font-size: 20px;
   }
 
   .right-separator {
@@ -62,11 +52,9 @@ h1 {
 }
 
 h2 {
-  font-size: 40px;
-
-  @include md {
-    font-size: 24px;
-  }
+  font-size: rem(30px);
+  font-weight: 700;
+  line-height: 1.133;
 
   @include print {
     font-size: $print-font-size * 2;
@@ -90,11 +78,9 @@ h2 {
 }
 
 h3 {
-  font-size: 30px;
-
-  @include md {
-    font-size: 20px;
-  }
+  font-size: rem(21px);
+  font-weight: 700;
+  line-height: 1.14285;
 
   @include print {
     font-size: $print-font-size * 1.5;
@@ -102,18 +88,10 @@ h3 {
 
   &.has-btn {
     line-height: $btn-height;
-
-    @include md {
-      line-height: $md-btn-height;
-    }
   }
 
   &.extra-margin-top {
-    margin-top: 60px;
-
-    @include md {
-      margin-top: 40px;
-    }
+    margin-top: 40px;
   }
 
   .heading-suffix {
@@ -123,15 +101,24 @@ h3 {
 
   .analysis-traffic &:not(:first-child) {
     margin-top: $btn-height;
-
-    @include md {
-      margin-top: $md-btn-height;
-    }
   }
 }
 
-p {
+h4 {
+  font-size: rem(18px);
+  font-weight: 700;
+  line-height: 1.33;
+}
 
+h5 {
+  font-size: rem(14px);
+  font-weight: 500;
+  line-height: 1.28571;
+  text-transform: uppercase;
+}
+
+
+p {
   .right-separator {
     display: inline-block;
     margin-right: 12px;
@@ -148,15 +135,9 @@ p {
 }
 
 .text-sm {
-  font-size: $font-size-sm;
-
-  @include md {
-    font-size: $md-font-size-sm;
-  }
-
-  @include sm {
-    font-size: $sm-font-size-sm;
-  }
+  font-size: rem(12px);
+  font-weight: normal;
+  line-height: 1.5;
 
   @include print {
     font-size: $print-font-size * 0.75;

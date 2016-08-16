@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -29,6 +29,7 @@ import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
+import TruncatedTitle from '../components/truncated-title'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -304,7 +305,7 @@ export class Property extends React.Component {
       <PageContainer className="property-container">
         <Content>
           <PageHeader>
-            <p>PROPERTY SUMMARY</p>
+            <h5>PROPERTY SUMMARY</h5>
             <div className="content-layout__header">
               <AccountSelector
                 as="propertySummary"
@@ -313,9 +314,10 @@ export class Property extends React.Component {
                 topBarAction={this.itemSelectorTopBarAction}
                 onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
                 drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
+                <div className="btn btn-link dropdown-toggle header-toggle">
+                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
+                  <span className="caret"></span>
+                </div>
               </AccountSelector>
               <ButtonToolbar>
                 <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
