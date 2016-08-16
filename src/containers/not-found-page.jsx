@@ -9,7 +9,7 @@ const NotFoundPage = ({ history }) => {
     <div className="main-content downtime-content not-found-page-container">
       <div className="text-center">
         <div className="not-found-img"></div>
-        <p>We couldn&apos;t find the page you were looking for.</p>
+        <p>We couldn&rsquo;t find the page you<br />were looking for</p>
         <Button className="btn-save" onClick={history.goBack}>GO BACK</Button>
       </div>
     </div>
