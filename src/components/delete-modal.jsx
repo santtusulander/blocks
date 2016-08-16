@@ -26,8 +26,7 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
         <ButtonToolbar className="pull-right">
           <Button onClick={onCancel} className="btn-outline">Cancel</Button>
           <Button onClick={onDelete}
-            bsStyle="secondary"
-            className="delete-modal-submit"
+            className="delete-modal-submit btn btn-secondary"
             disabled={submitDisabled}>
             Delete
           </Button>
@@ -37,7 +36,6 @@ const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { 
   );
 }
 
-DeleteModal.displayName = 'ErrorModal'
 DeleteModal.propTypes = {
   description: PropTypes.string,
   fields: PropTypes.object,
