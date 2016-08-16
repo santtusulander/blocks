@@ -36,6 +36,7 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
+import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
@@ -301,6 +302,8 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
         </Route>
       </Route>
+
+      <Route path="*" component={NotFoundPage} />
     </Route>
   )
 }

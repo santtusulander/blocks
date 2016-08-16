@@ -5,34 +5,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Confirmation from '../confirmation.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
-
-function parsePolicy(policy) {
-  if(!policy) {
-    return {
-      matches: [],
-      sets: []
-    }
-  }
-  if(policy.has('match')) {
-    let {combinedMatches, combinedSets} = policy.get('match').get('cases').reduce((fields, policyCase) => {
-      const {matches, sets} = parsePolicy(policyCase.get(1).get(0))
-      fields.combinedMatches = fields.combinedMatches.concat(matches)
-      fields.combinedSets = fields.combinedSets.concat(sets)
-      return fields
-    }, {combinedMatches: [], combinedSets: []})
-    combinedMatches.push(policy.get('match').get('field'))
-    return {
-      matches: combinedMatches,
-      sets: combinedSets
-    }
-  }
-  else if(policy.has('set')) {
-    return {
-      matches: [],
-      sets: policy.get('set').keySeq().toArray()
-    }
-  }
-}
+import {parsePolicy} from '../../util/policy-config'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -95,12 +68,12 @@ class ConfigurationPolicyRules extends React.Component {
           </thead>
           <tbody>
             {this.props.requestPolicies.map((policy, i) => {
-              const {matches, sets} = parsePolicy(policy)
+              const {matches, sets} = parsePolicy(policy, [])
               return (
                 <tr key={i}>
                   <td>{policy.get('rule_name')}</td>
-                  <td>{matches.join(', ')}</td>
-                  <td>{sets.join(', ')}</td>
+                  <td>{matches.map(match => match.field).join(', ')}</td>
+                  <td>{sets.map(set => set.setkey).join(', ')}</td>
                   <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
@@ -136,12 +109,12 @@ class ConfigurationPolicyRules extends React.Component {
               )
             })}
             {this.props.responsePolicies.map((policy, i) => {
-              const {matches, sets} = parsePolicy(policy)
+              const {matches, sets} = parsePolicy(policy, [])
               return (
                 <tr key={i}>
                   <td>{policy.get('rule_name')}</td>
-                  <td>{matches.join(', ')}</td>
-                  <td>{sets.join(', ')}</td>
+                  <td>{matches.map(match => match.field).join(', ')}</td>
+                  <td>{sets.map(set => set.setkey).join(', ')}</td>
                   <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
