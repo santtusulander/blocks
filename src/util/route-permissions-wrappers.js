@@ -1,3 +1,4 @@
+import React from 'react'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
@@ -90,6 +91,21 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     },
     wrapperDisplayName: 'UserCanViewAnalyticsTab',
     predicate: permissionChecker(permission, store),
+    allowRedirectBack: false
+  })
+}
+
+export const UserCanViewDns = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
+      const path = ownProps.location.pathname.replace(/\/dns/, 'accounts')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'UserCanViewDns',
+    predicate: permissionChecker(PERMISSIONS.VIEW_DNS, store),
     allowRedirectBack: false
   })
 }

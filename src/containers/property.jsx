@@ -157,7 +157,7 @@ export class Property extends React.Component {
     )
   }
   fetchData(params, queryParams) {
-    const {brand, account, group, property} = this.props.params
+    const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
@@ -312,8 +312,7 @@ export class Property extends React.Component {
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-                drillable={true}>
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
                   <span className="caret"></span>
