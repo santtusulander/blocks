@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import Select from '../../select'
 import UDNButton from '../../button'
+import IconAdd from '../../icons/icon-add'
+import IconEdit from '../../icons/icon-edit'
 import { DNSList } from '../dns-list'
 
 class AccountManagementSystemDNS extends Component {
@@ -25,8 +27,6 @@ class AccountManagementSystemDNS extends Component {
       <div className="account-management-system-dns">
         <DomainToolbar/>
         <DNSList
-          onAddDomain={() => console.log('add domain')}
-          changeActiveDomain={id => console.log('change active domain, id:', id)}
           onAddEntry={() => console.log('add entry')}
           onDeleteEntry={() => console.log('delete entry')}
           {...dnsListProps}
@@ -44,17 +44,31 @@ AccountManagementSystemDNS.propTypes = {}
 //   }
 // }
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain }) =>
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain }) =>
   <div className="account-management-header">
-    Select Domain
     <Select
-      value={activeDomain && activeDomain.get('id')}
+      value={activeDomain}
       className="dns-dropdowns"
       onSelect={id => (changeActiveDomain(id))}
       options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-    <UDNButton id="add-domain" bsStyle="primary" onClick={onAddDomain}>
-      <strong>ADD DOMAIN</strong>
-    </UDNButton>
+
+      <UDNButton
+        id="add-domain"
+        bsStyle="primary"
+        icon={true}
+        addNew={true}
+        onClick={onAddDomain}>
+        <IconAdd/>
+      </UDNButton>
+
+      <UDNButton
+        id="edit-domain"
+        bsStyle="primary"
+        icon={true}
+        onClick={onEditDomain}>
+        <IconEdit/>
+      </UDNButton>
+
   </div>
 
 export default connect(() => ({}))(AccountManagementSystemDNS)
