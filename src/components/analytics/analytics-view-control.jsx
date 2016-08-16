@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar, Button } from 'react-bootstrap'
+import { Nav, ButtonToolbar } from 'react-bootstrap'
+
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
@@ -9,7 +10,7 @@ import IsAllowed from '../is-allowed'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 import TruncatedTitle from '../truncated-title'
-import IconExport from '../icons/icon-export.jsx'
+import AnalyticsExport from '../../containers/analytics/export.jsx'
 
 import './analytics-view-control.scss'
 
@@ -139,14 +140,10 @@ const AnalyticsViewControl = (props) => {
         </AccountSelector>
         {props.params.account &&
           <ButtonToolbar>
-            <Button
-              bsStyle="primary"
-              className="has-icon"
-              disabled={getTabName(props.location.pathname) === 'playback-demo'}
-              onClick={props.exportCSV}>
-              <IconExport />
-              Export
-            </Button>
+            <AnalyticsExport
+              activeTab={getTabName(props.location.pathname)}
+              params={props.params}
+              />
           </ButtonToolbar>
         }
       </div>
@@ -182,7 +179,6 @@ AnalyticsViewControl.propTypes = {
   accounts: PropTypes.instanceOf(Immutable.List),
   activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
-  exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   params: PropTypes.object,

@@ -17,7 +17,6 @@ import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 
 import { getTabName } from '../../util/helpers.js'
-import { createCSVExporters } from '../../util/analysis-csv-export'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 
@@ -157,13 +156,8 @@ class AnalyticsContainer extends React.Component {
       filters,
       activeAccount,
       activeGroup,
-      location: { pathname, query: { property } }
+      location: { pathname }
     } = this.props
-    const exportCSV = () => {
-      const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
-      const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
-      this.refs.tab.getWrappedInstance().export(createCSVExporters(fileName))
-    }
     return (
       <PageContainer className='analytics-container'>
         <Content>
@@ -171,7 +165,6 @@ class AnalyticsContainer extends React.Component {
             <AnalyticsViewControl
               activeAccount={activeAccount}
               activeGroup={activeGroup}
-              exportCSV={exportCSV}
               brands={brands}
               accounts={accounts}
               groups={groups}

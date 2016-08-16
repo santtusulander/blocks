@@ -26,10 +26,6 @@ class AnalyticsTabVisitors extends React.Component {
     this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: 'day'})
   }
 
-  export(exporters) {
-    exporters.visitors(this.props.byTime)
-  }
-
   render() {
     return (
       <AnalysisVisitors
