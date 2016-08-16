@@ -317,8 +317,7 @@ export class Property extends React.Component {
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-                drillable={true}>
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
                   <span className="caret"></span>
@@ -334,7 +333,7 @@ export class Property extends React.Component {
                       to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                   <IconConfiguration/>
                 </Link>
-                <Button bsStyle="primary" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
                   <IconTrash/>
                 </Button>
               </ButtonToolbar>
