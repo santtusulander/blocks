@@ -56,10 +56,12 @@ export function formatTime(milliseconds) {
   milliseconds  = milliseconds || 0
   let formatted = numeral(milliseconds).format('0,0') + ' ms'
 
-  if(milliseconds >= 1000) {
+  if(milliseconds >= 60000) {
+    formatted = numeral(milliseconds / 60000).format('0,0') + ' m'
+  }
+  else if(milliseconds >= 1000) {
     formatted = numeral(milliseconds / 1000).format('0,0') + ' s'
   }
-
   return formatted
 }
 
