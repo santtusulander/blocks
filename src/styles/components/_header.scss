@@ -36,7 +36,7 @@
   }
 
   &__account-selector {
-    display: flex;
+    min-width: 0;
 
     .active-account-name {
       padding: 0 20px 0 30px;
@@ -50,6 +50,7 @@
   &__left {
     display: flex;
     height: $header-total-height - $header-gradient-height;
+    min-width: 0;
     padding-left: 0 !important;
     margin-left: 0 !important;
     flex: 1;
@@ -61,6 +62,7 @@
 
   &__right {
     display: flex;
+    min-width: 0;
   }
 
   .global-account-selector {
@@ -68,8 +70,10 @@
 
     &__toggle {
       display: flex;
+      width: 100%;
       padding: 0 20px 0 30px;
-      margin: 14.5px 20px 14.5px 0;
+      margin: 11.5px 20px 11.5px 0;
+      overflow: hidden;
       border-right: 1px solid $silver-80;
 
       .dropdown-toggle {
@@ -80,7 +84,7 @@
   }
 
   &__breadcrumb {
-    flex: 1;
+    overflow: hidden;
   }
 
   @include md {

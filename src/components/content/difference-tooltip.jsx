@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
-const ContentDifferenceTooltip = () => <div>
+const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">
+    <h3>{name}</h3>
     <b>Bandwidth</b> vs 28 days ago
   </div>
   <div>
@@ -23,6 +24,8 @@ const ContentDifferenceTooltip = () => <div>
 </div>
 
 ContentDifferenceTooltip.displayName = 'ContentDifferenceTooltip'
-ContentDifferenceTooltip.propTypes = {}
+ContentDifferenceTooltip.propTypes = {
+  name: PropTypes.string
+}
 
 module.exports = ContentDifferenceTooltip

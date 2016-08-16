@@ -58,13 +58,7 @@
   }
 
   h1 {
-    font-size: 40px;
     color: $pale-blue;
-    text-transform: uppercase;
-
-    @include md {
-      font-size: 30px;
-    }
   }
 
   .btn.btn-primary {

@@ -16,6 +16,10 @@ class TruncatedTitle extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
 
+  componentWillReceiveProps(){
+    this.measureContainers()
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
@@ -27,7 +31,7 @@ class TruncatedTitle extends React.Component {
   }
 
   render() {
-    const tooltip = (<Tooltip id="truncated-title-tooltip" className="content-item-chart-tooltip display-long-name-tooltip"><h3>{this.props.content}</h3></Tooltip>)
+    const tooltip = (<Tooltip id="truncated-title-tooltip" className="display-long-name-tooltip"><h3>{this.props.content}</h3></Tooltip>)
     return (
       <div>
         {this.state.isTitleTruncated ?

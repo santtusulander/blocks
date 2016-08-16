@@ -1,15 +1,25 @@
+.global-account-selector {
+  display: block;
+}
+
 .global-account-selector,
 .navbar-nav .global-account-selector.open {
+
   &__toggle {
     display: flex;
   }
 
   .dropdown-toggle {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
     :first-child {
+      float: left;
+      width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      float: left;
     }
   }
 
