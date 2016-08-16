@@ -7,7 +7,8 @@ import {
   UserCanListAccounts,
   UserCanManageAccounts,
   UserCanTicketAccounts,
-  UserCanViewAnalyticsTab
+  UserCanViewAnalyticsTab,
+  UserCanViewDns
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -278,7 +279,7 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
           <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
           <Route path={routes.accountManagementTabSystemBrands} component={AccountManagementBrands}/>
-          <Route path={routes.accountManagementTabSystemDNS} component={AccountManagementDNS}/>
+          <Route path={routes.accountManagementTabSystemDNS} component={UserCanViewDns(store)(AccountManagementDNS)}/>
           <Route path={routes.accountManagementTabSystemRoles} component={AccountManagementRoles}/>
           <Route path={routes.accountManagementTabSystemServices} component={AccountManagementServices}/>
         </Route>
