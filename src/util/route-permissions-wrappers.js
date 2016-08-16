@@ -94,3 +94,18 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     allowRedirectBack: false
   })
 }
+
+export const UserCanViewDns = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
+      const path = ownProps.location.pathname.replace(/\/dns/, 'accounts')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'UserCanViewDns',
+    predicate: permissionChecker(PERMISSIONS.VIEW_DNS, store),
+    allowRedirectBack: false
+  })
+}

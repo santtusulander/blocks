@@ -57,7 +57,7 @@ permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
 // Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
 
 permissionMapping[PERMISSIONS.VIEW_DNS] =
-  (role) => role.getIn(['permissions', 'zones', 'list', 'allowed']) && role.getIn(['permissions', 'rr', 'list', 'allowed'])
+  (role) => role.getIn(['permissions', 'north', 'zones', 'list', 'allowed']) && role.getIn(['permissions', 'north', 'rr', 'list', 'allowed'])
 
 /**
  * Determine if a user has a permission.
