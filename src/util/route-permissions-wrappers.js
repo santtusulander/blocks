@@ -88,7 +88,7 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
         throw("User doesn't have permission to see any analytics tabs.")
       }
     },
-    wrapperDisplayName: 'UserCanTicketAccounts',
+    wrapperDisplayName: 'UserCanViewAnalyticsTab',
     predicate: permissionChecker(permission, store),
     allowRedirectBack: false
   })
