@@ -68,7 +68,7 @@ class CertificateFormContainer extends Component {
           {!toEdit.isEmpty() && <p>{formProps.fields.title.value}</p>}
         </Modal.Header>
         <Modal.Body>
-          <CertificateForm editMode={!toEdit.isEmpty()}{ ...buttonFunctions }{ ...errors }{ ...formProps }/>
+          <CertificateForm editMode={!toEdit.isEmpty()}{...buttonFunctions}{...errors}{...formProps}/>
         </Modal.Body>
       </Modal>
     )

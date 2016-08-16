@@ -48,8 +48,11 @@ class AccountList extends Component {
   }
 
   componentWillMount() {
-    const { router, route } = this.props
+    const { accountActions, router, route } = this.props
     router.setRouteLeaveHook(route, this.shouldLeave)
+
+    //TODO: get brand from redux
+    accountActions.fetchAccounts( this.props.params.brand )
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {

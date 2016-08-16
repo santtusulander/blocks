@@ -7,9 +7,10 @@
   height: $btn-height;
   min-width: $btn-min-width;
   padding: 0 ($btn-height / 2);
-  font-size: inherit;
-  font-weight: normal;
+  font-size: rem(15px);
+  font-weight: 700;
   line-height: $btn-height;
+  color: $white;
   border: 0;
   border-radius: 2px;
   box-shadow: none;
@@ -206,18 +207,49 @@
     display: block;
     height: 100%;
   }
+
+  &.has-icon {
+
+    .icon-holder {
+      position: relative;
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      margin: 17px 10px 0 0;
+      vertical-align: top;
+      background-color: rgba($black, 0.1);
+      border-radius: 50%;
+
+      @include md {
+        margin: 7px 10px 0 0;
+      }
+
+      > .icon {
+        position: absolute;
+        top: 3px;
+        left: 8px;
+        width: 7px;
+        fill: $white;
+      }
+    }
+
+    > .icon {
+      display: inline-block;
+      margin-right: 20px;
+      vertical-align: middle;
+      fill: inherit;
+      stroke: inherit;
+    }
+  }
 }
 
 .header-toggle {
+  position: relative;
   height: auto;
   min-width: 0;
-  padding: 0;
+  padding: 0 30px 0 0;
   line-height: inherit;
   text-align: left;
-
-  h1 {
-    margin-bottom: 0;
-  }
 
   h3 {
     max-width: calc(100% - #{$btn-height});
@@ -229,35 +261,26 @@
   }
 
   .caret {
-    position: relative;
-    margin: -6px ($btn-height / 4) 0 ($btn-height / 2);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    display: block;
+    width: $btn-height / 2;
+    height: $btn-height / 2;
     color: $white;
     border: 0;
+    transform: translateY(-50%);
 
     .content-layout__header & {
-      vertical-align: baseline;
-    }
-
-    @include md {
-      margin: -2px ($btn-sm-height / 4) 0 ($btn-sm-height / 2);
+      vertical-align: middle;
     }
 
     &::before {
       display: block;
-      width: $btn-height / 2;
-      height: $btn-height / 2;
-      margin-top: -($btn-height / 4);
-      margin-left: -($btn-height / 4);
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       content: '';
-
-      @include md {
-        right: $md-btn-sm-height / 2;
-        width: $btn-sm-height / 2;
-        height: $btn-sm-height / 2;
-        margin-top: -($btn-sm-height / 4);
-        margin-left: -($btn-sm-height / 4);
-      }
 
       .dark-theme &,
       .light-theme & {
@@ -277,27 +300,7 @@
       border-right: 5px solid transparent;
       border-left: 5px solid transparent;
       content: '';
-      transform: translate(-50%, -50%);
-    }
-
-    .header & {
-      margin: 0 12.5px 0 25px;
-
-      &::before {
-        width: 18px;
-        height: 18px;
-        margin-top: -9.5px;
-        margin-left: -9px;
-
-        @include md {
-          margin-top: -9.5px;
-          margin-left: -9px;
-        }
-      }
-
-      &::after {
-        transform: translate(-50%, -50%) scale(0.75, 0.75);
-      }
+      transform: translate(-50%, -50%) scale(0.8, 0.8);
     }
   }
 

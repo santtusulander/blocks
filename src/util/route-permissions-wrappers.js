@@ -4,11 +4,16 @@ import * as PERMISSIONS from '../constants/permissions'
 import checkPermissions from './permissions'
 
 const authSelector = state => state.user.get('currentUser')
-const permissionChecker = (permission, store) => user => checkPermissions(
+const permissionChecker = (permission, store) => user => {
+  if(!permission) {
+    return true
+  }
+  return checkPermissions(
     store.getState().roles.get('roles'),
     user,
     permission
   )
+}
 
 export const UserHasPermission = (permission, store) => UserAuthWrapper({
   authSelector: authSelector,
@@ -58,6 +63,33 @@ export const UserCanTicketAccounts = store => {
     },
     wrapperDisplayName: 'UserCanTicketAccounts',
     predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS, store),
+    allowRedirectBack: false
+  })
+}
+
+export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const fallback = allTabs.find(([perm]) => {
+        return checkPermissions(
+          store.getState().roles.get('roles'),
+          state.user.get('currentUser'),
+          perm
+        )
+      })
+      if(fallback) {
+        let path = ownProps.location.pathname.replace(/\/$/, '')
+        path = path.substr(0, path.lastIndexOf('/'))
+        return `${path}/${fallback[1]}`
+      }
+      else {
+        // TODO: Where should we send them? Wrap these checks to 404 on error?
+        throw("User doesn't have permission to see any analytics tabs.")
+      }
+    },
+    wrapperDisplayName: 'UserCanTicketAccounts',
+    predicate: permissionChecker(permission, store),
     allowRedirectBack: false
   })
 }
