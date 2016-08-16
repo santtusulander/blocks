@@ -31,6 +31,7 @@ import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -269,6 +270,7 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
     const activeHost = this.props.activeHost
@@ -453,12 +455,19 @@ export class Property extends React.Component {
             </div>
           </div>
         </Content>
-        {this.state.purgeActive ? <PurgeModal
+        {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
-          showNotification={this.showNotification}/> : ''}
+          showNotification={this.showNotification}/>}
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          onCancel={toggleDelete}
+          onDelete={this.props.hostActions.deleteHost(...Object.keys(this.props.params).map(k => this.props.params[k]))}
+          />
+
+        }
       </PageContainer>
     )
   }
