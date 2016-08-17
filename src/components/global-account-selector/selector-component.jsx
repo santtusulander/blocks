@@ -93,7 +93,7 @@ const AccountSelector = ({
       {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
       {items.map((option, i) =>
         <MenuItem key={i} id="menu-item">
-          <span id="name" className="name"onClick={() => onItemClick(option[0])}>{option[1]}</span>
+          <span id="name" className="name" onClick={() => onItemClick(option[0])}>{option[1]}</span>
           {drillable &&
             <span className="caret-container" onClick={() => onCaretClick(option[0])}>
               <span className="caret"></span>
