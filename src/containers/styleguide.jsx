@@ -141,9 +141,10 @@ class Styleguide extends React.Component {
           </ButtonToolbar>
 
           <ButtonToolbar className="styleguide-row">
-            <Button bsStyle="primary" disabled={true}>Default button</Button>
-            <Button className="btn-secondary" disabled={true}>Secondary button</Button>
-            <Button className="btn-secondary active" disabled={true}>Active secondary button</Button>
+            <Button bsStyle="primary" disabled={true}>Primary</Button>
+            <Button bsStyle="secondary" disabled={true}>Secondary</Button>
+            <Button bsStyle="danger" disabled={true}>Destructive</Button>
+            <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
             <Button bsStyle="primary" className="btn-icon" disabled={true}>?</Button>
             <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}>+</Button>
