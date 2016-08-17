@@ -70,10 +70,6 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  export(exporters) {
-    exporters.traffic(this.props.trafficByTime, this.props.serviceTypes)
-  }
-
   render() {
     const {traffic} = this.props
     const peakTraffic = !!traffic.size && traffic.first().has('totals') ?
@@ -122,7 +118,6 @@ AnalyticsTabTraffic.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    serviceTypes: state.ui.get('analysisServiceTypes'),
     metrics: state.metrics,
     traffic: state.traffic.get('traffic'),
     trafficByTime: state.traffic.get('byTime'),
@@ -138,4 +133,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabTraffic);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);

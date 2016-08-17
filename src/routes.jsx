@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
 import {
@@ -7,7 +7,8 @@ import {
   UserCanListAccounts,
   UserCanManageAccounts,
   UserCanTicketAccounts,
-  UserCanViewAnalyticsTab
+  UserCanViewAnalyticsTab,
+  UserCanViewDns
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -156,7 +157,8 @@ const analyticsTabs = [
 /* helper for creating Analytics Tab-Routes */
 const getAnalyticsTabRoutes = store => <Route>
   <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component]) => <Route path={path}
+  {analyticsTabs.map(([permission, path, component], i) => <Route
+    path={path} key={i}
     component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
   )}
 </Route>
@@ -278,7 +280,7 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
           <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
           <Route path={routes.accountManagementTabSystemBrands} component={AccountManagementBrands}/>
-          <Route path={routes.accountManagementTabSystemDNS} component={AccountManagementDNS}/>
+          <Route path={routes.accountManagementTabSystemDNS} component={UserCanViewDns(store)(AccountManagementDNS)}/>
           <Route path={routes.accountManagementTabSystemRoles} component={AccountManagementRoles}/>
           <Route path={routes.accountManagementTabSystemServices} component={AccountManagementServices}/>
         </Route>
