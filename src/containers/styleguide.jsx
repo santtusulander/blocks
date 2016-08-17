@@ -131,9 +131,10 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Buttons</h1>
 
           <ButtonToolbar className="styleguide-row">
-            <Button bsStyle="primary">Default button</Button>
-            <Button className="btn-secondary">Secondary button</Button>
-            <Button className="btn-secondary active">Active secondary button</Button>
+            <Button bsStyle="primary">Primary</Button>
+            <Button bsStyle="secondary">Secondary</Button>
+            <Button bsStyle="danger">Destructive</Button>
+            <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
             <Button bsStyle="primary" className="btn-icon">?</Button>
             <Button bsStyle="primary" className="btn-icon btn-round">+</Button>

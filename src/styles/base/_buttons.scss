@@ -4,16 +4,27 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 
-$btn-horizontal-padding: em(18px);
+$btn-font-size: 15px;
+$btn-top-padding: em(8px, $btn-font-size);
+$btn-horizontal-padding: em(18px, $btn-font-size);
+$btn-bottom-padding: em(7px, $btn-font-size);
+$btn-text-color: $white;
+$btn-primary-background: $pale-blue;
+$btn-secondary-background: transparent;
+$btn-danger-background: $red;
+$btn-success-background: $gradient-teal;
+
 
 .btn {
   min-width: $btn-min-width;
-  padding: 0 $btn-horizontal-padding;
-  font-size: rem(15px);
+  padding: $btn-top-padding $btn-horizontal-padding $btn-bottom-padding;
+  font-size: rem($btn-font-size);
   font-weight: 700;
-  color: $white;
+  color: $btn-text-color;
+  text-transform: uppercase;
   border: 0;
   border-radius: 2px;
+  outline: none;
   box-shadow: none;
 
   @include print {
@@ -29,26 +40,13 @@ $btn-horizontal-padding: em(18px);
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
-    opacity: 0.3;
+    opacity: 0.2;
   }
 
   &.dropdown-toggle,
   &.btn-icon,
   &.btn-link {
     min-width: 0;
-  }
-
-  &.btn-primary {
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      text-transform: uppercase;
-      outline: none;
-      box-shadow: none;
-    }
   }
 
   &.btn-outline {
@@ -77,6 +75,7 @@ $btn-horizontal-padding: em(18px);
   &.btn-icon {
     position: relative;
     width: $btn-height;
+    height: $btn-height;
     padding: 0;
     line-height: $btn-height;
     vertical-align: middle;
@@ -423,24 +422,29 @@ $btn-horizontal-padding: em(18px);
   }
 
   .btn-primary {
+    background-color: $btn-primary-background;
 
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $dt-text-color;
-      background-color: rgba($pale-blue, 0.1);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
     }
 
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
+    // &,
+    // &:hover,
+    // &:active,
+    // &.active {
+    //   color: $dt-text-color;
+    //   background-color: rgba($pale-blue, 0.1);
+    //   fill: $dt-text-color;
+    //   stroke: $dt-text-color;
+    // }
+    //
+    // &:hover:not(:disabled),
+    // &:active:not(:disabled),
+    // &.active:not(:disabled) {
+    //   color: $pale-blue;
+    //   fill: $pale-blue;
+    //   stroke: $pale-blue;
+    // }
   }
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
@@ -471,11 +475,12 @@ $btn-horizontal-padding: em(18px);
   }
 
   .btn-secondary {
+    background-color: $btn-secondary-background;
+    box-shadow: inset 0 0 0 2px rgba($pale-blue, 0.2);
 
-    &,
     &:hover {
-      color: $dt-text-color;
-      background-color: $purple;
+      background-color: rgba($pale-blue, 0.3);
+      box-shadow: 0 0;
     }
 
     &:hover:not(:disabled) {
@@ -520,19 +525,32 @@ $btn-horizontal-padding: em(18px);
   }
 
   .btn-success {
+    background-color: $btn-success-background;
 
-    &,
     &:hover {
-      color: $dt-text-color;
-      background-color: $btn-success-bg;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
+      background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
     }
 
-    &:hover:not(:disabled) {
-      color: $white;
-      fill: $white;
-      stroke: $white;
+    // &,
+    // &:hover {
+    //   color: $dt-text-color;
+    //   background-color: $btn-success-bg;
+    //   fill: $dt-text-color;
+    //   stroke: $dt-text-color;
+    // }
+    //
+    // &:hover:not(:disabled) {
+    //   color: $white;
+    //   fill: $white;
+    //   stroke: $white;
+    // }
+  }
+
+  .btn-danger {
+    background-color: $btn-danger-background;
+
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.15), rgba($white, 0.15));
     }
   }
 
