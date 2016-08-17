@@ -24,6 +24,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   render() {
+    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain } = this.props
     const dnsListProps = {
       // activeRecordType: activeRecordType,
       // dnsEditOnSave: this.dnsEditOnSave,
@@ -34,18 +35,18 @@ class AccountManagementSystemDNS extends Component {
         value: this.state.domainSearchValue,
         onChange: ({ target: { value } }) => this.setState({ domainSearchValue: value })
       },
-      activeDomain: 'heippa',
-      domains: this.props.domains.filter(domain => domain.includes(this.state.domainSearchValue)),
-      changeActiveDomain: this.props.changeActiveDomain,
-      onAddDomain: this.props.onAddDomain,
-      onEditDomain: this.props.onEditDomain
+      activeDomain: activeDomain || 'none selected',
+      domains: domains.filter(domain => domain.includes(this.state.domainSearchValue)),
+      changeActiveDomain: ({ target }) => changeActiveDomain(target.getAttribute('data-value')),
+      onAddDomain: onAddDomain,
+      onEditDomain: onEditDomain
     }
     return (
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList
-          onAddEntry={() => console.log('add entry')}
-          onDeleteEntry={() => console.log('delete entry')}
+          onAddEntry={() => {/*noop*/}}
+          onDeleteEntry={() => {/*noop*/}}
           {...dnsListProps}
         />
         {/*activeModal === EDIT_DNS &&
