@@ -239,33 +239,19 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Forms</h1>
 
           <div className="row">
-
             <div className="col-xs-6">
-
               <Input type="text" label="Default Input" placeholder="Enter text" />
-
               <Input type="email" label="Email Input" placeholder="Enter email" />
-
               <Input type="password" label="Password Input" />
-
               <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
-
               <Input type="textarea" label="Text Area" placeholder="Enter text" />
-
             </div>
 
             <div className="col-xs-6">
-
-              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={true} />
-
-              <Input type="text" label="Has Warning" bsStyle="warning" help="Helper text" hasFeedback={true} />
-
-              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={true} />
-
+              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={false} />
+              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={false} />
             </div>
-
           </div>
-
 
           <hr />
 

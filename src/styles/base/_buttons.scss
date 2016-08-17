@@ -23,6 +23,8 @@ $btn-success-background: $gradient-teal;
   text-transform: uppercase;
   border: 0;
   border-radius: 2px;
+  stroke: $btn-text-color;
+  fill: $btn-text-color;
 
   @include print {
     // scss-lint:disable ImportantRule

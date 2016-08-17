@@ -51,11 +51,7 @@
     + .btn-group,
     + .input-group,
     + .form-group {
-      margin-left: 15px;
-
-      @include md {
-        margin-left: 10px;
-      }
+      margin-left: 12px;
     }
   }
 
