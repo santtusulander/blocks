@@ -41,7 +41,6 @@ const autoClose = WrappedComponent => class AutoClose extends Component {
   }
 
   render() {
-    this.props
     let newProps = {}
     if(this.props.open === undefined) {
       newProps.open = this.state.open
@@ -54,11 +53,12 @@ const autoClose = WrappedComponent => class AutoClose extends Component {
 }
 
 const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
-  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="global-account-selector">
+  <Dropdown id="" onSelect={onSelect} open={open} className="global-account-selector">
     <div className="global-account-selector__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
-      <MenuItem>
+      <MenuItem id="search-item">
         <Input
+          id="search-field"
           className="header-search-input"
           type="text"
           placeholder="Search"

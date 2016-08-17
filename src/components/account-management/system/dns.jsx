@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { ButtonToolbar } from 'react-bootstrap'
 import { connect } from 'react-redux'
 
 import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
@@ -82,30 +83,31 @@ AccountManagementSystemDNS.propTypes = {}
 // }
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, domainSearchData }) =>
-  <div className="account-management-header">
+  <div className="domain-toolbar">
       <DomainSelector
         items={domains.map(domain => [domain, domain])}
         onSelect={changeActiveDomain}
         searchValue={domainSearchData.value}
         onSearch={domainSearchData.onChange}>
-        <span>{activeDomain}</span>
+        <h3>{activeDomain}<span className="caret"></span></h3>
       </DomainSelector>
-      <UDNButton
-        id="add-domain"
-        bsStyle="primary"
-        icon={true}
-        addNew={true}
-        onClick={onAddDomain}>
-        <IconAdd/>
-      </UDNButton>
-
-      <UDNButton
-        id="edit-domain"
-        bsStyle="primary"
-        icon={true}
-        onClick={onEditDomain}>
-        <IconEdit/>
-      </UDNButton>
+      <ButtonToolbar className='pull-right'>
+        <UDNButton
+          id="add-domain"
+          bsStyle="primary"
+          icon={true}
+          addNew={true}
+          onClick={onAddDomain}>
+          <IconAdd/>
+        </UDNButton>
+        <UDNButton
+          id="edit-domain"
+          bsStyle="primary"
+          icon={true}
+          onClick={onEditDomain}>
+          <IconEdit/>
+        </UDNButton>
+      </ButtonToolbar>
 
   </div>
 
