@@ -399,7 +399,7 @@ export class AccountManagement extends Component {
               </IsAllowed>
               <li className="navbar">
                 <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
-              </li>}
+              </li>
               {/*
                <li className="navbar">
                <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
