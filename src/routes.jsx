@@ -23,6 +23,7 @@ import AccountManagementRoles from './components/account-management/system/roles
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
+import AnalyticsTabCacheHitRate from './containers/analytics/tabs/tab-cache-hit-rate.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
 import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
@@ -62,6 +63,7 @@ const routes = {
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
+  analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabServiceProviders: 'service-providers',
   analyticsTabFileError: 'file-error',
@@ -147,6 +149,7 @@ export function getRoute(name, params) {
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
   [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
+  [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabCacheHitRate, AnalyticsTabCacheHitRate],
   [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
