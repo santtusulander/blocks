@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 
 import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
 
-import Select from '../../select'
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
-import { DNSList } from '../dns-list'
+import DNSList from '../dns-list'
+// import SoaEditForm from '../soa-edit-form'
+// import DnsEditForm from '../dns-edit-form'
 
 class AccountManagementSystemDNS extends Component {
   componentWillMount() {
@@ -16,20 +17,15 @@ class AccountManagementSystemDNS extends Component {
 
   render() {
     const dnsListProps = {
-      // soaEditOnSave: this.editSOARecord,
-      // modalActive: this.state.modalVisible,
-      // //changeActiveDomain: dnsActions.changeActiveDomain,
-      // activeDomain: activeDomain,
-      // domains: dnsData && dnsData.get('domains'),
-      // changeRecordType: dnsActions.changeActiveRecordType,
       // activeRecordType: activeRecordType,
       // dnsEditOnSave: this.dnsEditOnSave,
-      // accountManagementModal: accountManagementModal,
-      // toggleModal: toggleModal,
-      // dnsFormInitialValues: dnsInitialValues,
-      // soaFormInitialValues: soaFormInitialValues
+      // toggleModal: toggleModal
     }
     const domainHeaderProps = {
+      domainSearchData: {
+        value: this.state.domainSearchValue,
+        onChange: value => this.setState({ domainSearchValue: value })
+      },
       activeDomain: this.props.activeDomain,
       domains: this.props.domains,
       changeActiveDomain: this.props.changeActiveDomain,
@@ -44,6 +40,25 @@ class AccountManagementSystemDNS extends Component {
           onDeleteEntry={() => console.log('delete entry')}
           {...dnsListProps}
         />
+        {/*activeModal === EDIT_DNS &&
+          <DnsEditForm
+            id="dns-form"
+            show={true}
+            edit={true}
+            domain='foobar.com'
+            onSave={dnsEditOnSave}
+            onCancel={() => toggleModal(null)}
+            { ...dnsFormInitialValues }
+          />*/}
+
+        {/*activeModal === EDIT_SOA &&
+          <SoaEditForm
+            id="soa-form"
+            onCancel={() => toggleModal(null)}
+            activeDomain={activeDomain}
+            onSave={soaEditOnSave}
+            { ...soaFormInitialValues }
+          />*/}
       </div>
     )
   }
@@ -57,14 +72,15 @@ AccountManagementSystemDNS.propTypes = {}
 //   }
 // }
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain }) =>
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, domainSearchData }) =>
   <div className="account-management-header">
-    <Select
-      value={activeDomain}
-      className="dns-dropdowns"
-      onSelect={id => (changeActiveDomain(id))}
-      options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-
+      <DomainSelector
+        items={domains.map(domain => [domain, domain])}
+        onSelect={changeActiveDomain}
+        searchValue={domainSearchData.value}
+        onSearch={domainSearchData.onChange}>
+        {activeDomain}
+      </DomainSelector>
       <UDNButton
         id="add-domain"
         bsStyle="primary"
@@ -87,7 +103,8 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
 function mapStateToProps(state) {
   return {
     domains: state.dns.get('domains'),
-    activeDomain: state.dns.get('activeDomain')
+    activeDomain: state.dns.get('activeDomain'),
+    activeModal: state.ui.get('accountManagementModal')
   }
 }
 

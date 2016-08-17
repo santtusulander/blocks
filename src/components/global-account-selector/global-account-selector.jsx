@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'multireducer';
 import { Map, List, is } from 'immutable'
@@ -28,12 +27,10 @@ class AccountSelector extends Component {
     this.fetchItems = this.fetchItems.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
-    this.handleClick = this.handleClick.bind(this)
   }
 
   componentWillMount() {
     this.fetchByTier(this.props.params)
-    document.addEventListener('click', this.handleClick, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +48,6 @@ class AccountSelector extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClick, false)
-    this.props.accountSelectorActions.setOpen(false)
   }
 
   canSeeAccounts() {
@@ -60,16 +56,6 @@ class AccountSelector extends Component {
       this.props.currentUser,
       PERMISSIONS.VIEW_CONTENT_ACCOUNTS
     )
-  }
-
-  handleClick(e) {
-    if (findDOMNode(this).contains(e.target)) {
-      return
-    }
-
-    if (this.props.open) {
-      this.props.accountSelectorActions.setOpen(false)
-    }
   }
 
   setInitialTier(params) {
@@ -180,6 +166,7 @@ class AccountSelector extends Component {
     const { topBarTexts, resetChanged, getChangedItem, restrictedTo, open, searchValue, accountSelectorActions, ...other } = this.props
     const topBarText = this.tier === 'group' && !this.canSeeAccounts() ? '' : topBarTexts[this.tier]
     const menuProps = Object.assign(other, {
+      toClose: () => this.props.accountSelectorActions.setOpen(false),
       toggle: () => {
         getChangedItem(this.tier) !== null && !open && resetChanged(this.tier)
         accountSelectorActions.setOpen(!open)

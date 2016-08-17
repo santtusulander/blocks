@@ -1,5 +1,60 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
+
+import { findDOMNode } from 'react-dom'
+
+const autoClose = WrappedComponent => class AutoClose extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      open: false
+    }
+    this.close = this.close.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  componentWillMount() {
+    document.addEventListener('click', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, false)
+    this.props.toClose && this.props.toClose()
+  }
+
+  handleClick(e) {
+    if (findDOMNode(this).contains(e.target)) {
+      return
+    }
+
+    if (this.props.open || this.state.open) {
+      this.close()
+    }
+  }
+
+  close() {
+    if(this.props.toClose) {
+      this.props.toClose()
+    } else {
+      this.setState({ open: !this.state.open })
+    }
+  }
+
+  render() {
+    this.props
+    let newProps = {}
+    if(this.props.open === undefined) {
+      newProps.open = this.state.open
+    }
+    if(!this.props.toggle) {
+      newProps.toggle = () => this.setState({ open: !this.state.open })
+    }
+    // Object.assign(props, {
+    //   open: this.props.open || this.state.open
+    // })
+    return (<WrappedComponent {...this.props}{...newProps}/>)
+  }
+}
 
 const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
   <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="global-account-selector">
@@ -40,4 +95,4 @@ AccountSelector.propTypes = {
   topBarText: PropTypes.string
 }
 
-export default AccountSelector
+export default autoClose(AccountSelector)
