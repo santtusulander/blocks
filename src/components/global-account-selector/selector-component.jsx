@@ -17,6 +17,10 @@ const autoClose = WrappedComponent => class AutoClose extends Component {
     document.addEventListener('click', this.handleClick, false)
   }
 
+  componentWillReceiveProps() {
+    this.props.toClose && this.props.open && this.props.toClose()
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClick, false)
     this.props.toClose && this.props.toClose()
