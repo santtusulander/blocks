@@ -25,8 +25,9 @@ class AccountSelector extends Component {
     this.account = null
     this.group = null
     this.fetchItems = this.fetchItems.bind(this)
-    this.selectOption = this.selectOption.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
+    this.onItemClick = this.onItemClick.bind(this)
+    this.onTopbarClick = this.onTopbarClick.bind(this)
   }
 
   componentWillMount() {
@@ -93,54 +94,55 @@ class AccountSelector extends Component {
     this.tier = nextTier
   }
 
-  selectOption(e) {
-    let { onSelect, topBarAction, params: { brand, account, group, property } } = this.props
+  /**
+   * Item name pressed -> should route to that item. Since the same menu items are displayed
+   * in brand and account tiers, in both cases 'account' gets passed
+   */
+  onItemClick(value) {
+    let { onSelect, params: { brand, account, group } } = this.props
     if(!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
-    switch(e.target.id) {
-      /**
-       * Item name pressed -> should route to that item. Since the same menu items are displayed
-       * in brand and account tiers, in both cases 'account' gets passed
-       */
-      case 'name':
-      case 'menu-item':
-        this.props.accountSelectorActions.setOpen(false)
-        onSelect(
-          this.tier === 'brand' ? 'account' : this.tier,
-          e.target.getAttribute('data-value'),
-          {
-            brand,
-            account: this.account || account,
-            group: this.group || group
-          }
-        )
-        break
-      /**
-       * top bar pressed -> calls to function from parent with desired effects
-       */
-      case 'top-bar':
-        topBarAction(
-          this.tier,
-          this.fetchItems,
-          {
-            account: this.account || account,
-            group: this.group || group,
-            property: this.property || property,
-            brand
-          })
-        break
-    }
+    this.props.accountSelectorActions.setOpen(false)
+    onSelect(
+      this.tier === 'brand' ? 'account' : this.tier,
+      value,
+      {
+        brand,
+        account: this.account || account,
+        group: this.group || group
+      }
+    )
   }
 
-  onCaretClick(e) {
+   /**
+    * top bar pressed -> calls to function from parent with desired effects
+    */
+  onTopbarClick() {
+    let { topBarAction, params: { brand, account, group, property } } = this.props
+    if(!this.canSeeAccounts() && !account) {
+      account = this.props.currentUser.get('account_id')
+    }
+    topBarAction(
+      this.tier,
+      this.fetchItems,
+      {
+        account: this.account || account,
+        group: this.group || group,
+        property: this.property || property,
+        brand
+      }
+    )
+  }
+
+  onCaretClick(value) {
     let fetchArgs;
     if(this.tier === 'group') {
-      this.group = e.target.getAttribute('data-value')
+      this.group = value
       fetchArgs = ['property', 'udn', this.account, this.group]
     }
     else {
-      this.account = e.target.getAttribute('data-value')
+      this.account = value
       fetchArgs = ['group', 'udn', this.account]
     }
     this.fetchItems(...fetchArgs)
@@ -164,7 +166,7 @@ class AccountSelector extends Component {
     const { topBarTexts, resetChanged, getChangedItem, restrictedTo, open, searchValue, accountSelectorActions, ...other } = this.props
     const topBarText = this.tier === 'group' && !this.canSeeAccounts() ? '' : topBarTexts[this.tier]
     const menuProps = Object.assign(other, {
-      toClose: () => this.props.accountSelectorActions.setOpen(false),
+      close: () => this.props.accountSelectorActions.setOpen(false),
       toggle: () => {
         getChangedItem(this.tier) !== null && !open && resetChanged(this.tier)
         accountSelectorActions.setOpen(!open)
@@ -178,6 +180,8 @@ class AccountSelector extends Component {
       onSelect: this.selectOption,
       searchValue,
       open,
+      onItemClick: this.onItemClick,
+      onTopbarClick: this.onTopbarClick,
       onCaretClick: this.onCaretClick
     })
     return (

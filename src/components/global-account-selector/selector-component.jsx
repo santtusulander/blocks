@@ -3,75 +3,100 @@ import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
 import { findDOMNode } from 'react-dom'
 
-const autoClose = WrappedComponent => class AutoClose extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false
-    }
-    this.close = this.close.bind(this)
-    this.handleClick = this.handleClick.bind(this)
-  }
-
-  componentWillMount() {
-    document.addEventListener('click', this.handleClick, false)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick, false)
-    this.props.toClose && this.props.toClose()
-  }
-
-  handleClick(e) {
-    if (findDOMNode(this).contains(e.target)) {
-      return
+export const autoClose = WrappedComponent => {
+  class AutoClose extends Component {
+    constructor(props) {
+      super(props)
+      this.state = {
+        open: false
+      }
+      this.close = this.close.bind(this)
+      this.handleClick = this.handleClick.bind(this)
     }
 
-    if (this.props.open || this.state.open) {
-      this.close()
+    componentWillMount() {
+      document.addEventListener('click', this.handleClick, false)
     }
-  }
 
-  close() {
-    if(this.props.toClose) {
-      this.props.toClose()
-    } else {
-      this.setState({ open: !this.state.open })
+    componentWillUnmount() {
+      document.removeEventListener('click', this.handleClick, false)
+      this.props.close && this.props.close()
     }
-  }
 
-  render() {
-    let newProps = {}
-    if(this.props.open === undefined) {
-      newProps.open = this.state.open
+    handleClick(e) {
+      if (findDOMNode(this).contains(e.target)) {
+        return
+      }
+
+      if (this.props.open || this.state.open) {
+        this.close()
+      }
     }
-    if(!this.props.toggle) {
-      newProps.toggle = () => this.setState({ open: !this.state.open })
+
+    close() {
+      if(this.props.close) {
+        this.props.close()
+      } else {
+        this.setState({ open: !this.state.open })
+      }
     }
-    return (<WrappedComponent {...this.props}{...newProps}/>)
+
+    render() {
+      let newProps = {}
+      if(this.props.open === undefined) {
+        newProps.open = this.state.open
+        newProps.onItemClick = value => {
+          this.props.onItemClick(value)
+          this.setState({ open: !this.state.open })
+        }
+      }
+      if(!this.props.toggle) {
+        newProps.toggle = () => this.setState({ open: !this.state.open })
+      }
+      return (<WrappedComponent {...this.props}{...newProps}/>)
+    }
   }
+  AutoClose.propTypes = {
+    close: PropTypes.func,
+    onItemClick: PropTypes.func,
+    open: PropTypes.bool,
+    toggle: PropTypes.func
+  }
+  return AutoClose
 }
 
-const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
-  <Dropdown id="" onSelect={onSelect} open={open} className="global-account-selector">
+
+const AccountSelector = ({
+  items,
+  drillable,
+  children,
+  onSelect,
+  open,
+  toggle,
+  topBarText,
+  searchValue,
+  onSearch,
+  onCaretClick,
+  onItemClick,
+  onTopbarClick }) =>
+  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="global-account-selector">
     <div className="global-account-selector__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
-      <MenuItem id="search-item">
+      <MenuItem>
         <Input
-          id="search-field"
           className="header-search-input"
           type="text"
           placeholder="Search"
           value={searchValue}
           onChange={onSearch}/>
       </MenuItem>
-      {topBarText && <MenuItem id="top-bar" className="top-bar-link">{topBarText}</MenuItem>}
+      {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
       {items.map((option, i) =>
-        <MenuItem key={i} data-value={option[0]} id="menu-item">
-          <span id="name" className="name" data-value={option[0]}>{option[1]}</span>
+        <MenuItem key={i} id="menu-item">
+          <span id="name" className="name"onClick={() => onItemClick(option[0])}>{option[1]}</span>
           {drillable &&
-            <span className="caret-container" data-value={option[0]} onClick={onCaretClick}>
-              <span className="caret" data-value={option[0]}></span>
+            <span className="caret-container" onClick={() => onCaretClick(option[0])}>
+              <span className="caret"></span>
             </span>}
         </MenuItem>
       )}
@@ -84,8 +109,10 @@ AccountSelector.propTypes = {
   drillable: PropTypes.bool,
   items: PropTypes.array,
   onCaretClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   onSearch: PropTypes.func,
   onSelect: PropTypes.func,
+  onTopbarClick: PropTypes.func,
   open: PropTypes.bool,
   searchValue: PropTypes.string,
   toggle: PropTypes.func,

@@ -38,7 +38,7 @@ class AccountManagementSystemDNS extends Component {
       },
       activeDomain: activeDomain || 'none selected',
       domains: domains.filter(domain => domain.includes(this.state.domainSearchValue)),
-      changeActiveDomain: ({ target }) => changeActiveDomain(target.getAttribute('data-value')),
+      changeActiveDomain: value => changeActiveDomain(value),
       onAddDomain: onAddDomain,
       onEditDomain: onEditDomain
     }
@@ -86,7 +86,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
   <div className="domain-toolbar">
       <DomainSelector
         items={domains.map(domain => [domain, domain])}
-        onSelect={changeActiveDomain}
+        onItemClick={changeActiveDomain}
         searchValue={domainSearchData.value}
         onSearch={domainSearchData.onChange}>
         <h3>{activeDomain}<span className="caret"></span></h3>
