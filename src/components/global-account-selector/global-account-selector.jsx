@@ -40,6 +40,7 @@ class AccountSelector extends Component {
     if(JSON.stringify(nextProps.params) !== JSON.stringify(params) ||
       (nextChangedItem && !is(prevChangedItem, nextChangedItem))) {
       this.fetchByTier(nextProps.params)
+      this.props.accountSelectorActions.setOpen(false)
     }
   }
 

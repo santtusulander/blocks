@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
 
 import UDNButton from '../../button'
+import DomainSelector from '../../global-account-selector/selector-component'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import DNSList from '../dns-list'
@@ -11,8 +12,15 @@ import DNSList from '../dns-list'
 // import DnsEditForm from '../dns-edit-form'
 
 class AccountManagementSystemDNS extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      domainSearchValue: ''
+    }
+  }
+
   componentWillMount() {
-    !this.props.domains.size && this.props.fetchDomains()
+    !this.props.domains.size && this.props.fetchDomains(this.props.params.brand)
   }
 
   render() {
@@ -24,10 +32,10 @@ class AccountManagementSystemDNS extends Component {
     const domainHeaderProps = {
       domainSearchData: {
         value: this.state.domainSearchValue,
-        onChange: value => this.setState({ domainSearchValue: value })
+        onChange: ({ target: { value } }) => this.setState({ domainSearchValue: value })
       },
-      activeDomain: this.props.activeDomain,
-      domains: this.props.domains,
+      activeDomain: 'heippa',
+      domains: this.props.domains.filter(domain => domain.includes(this.state.domainSearchValue)),
       changeActiveDomain: this.props.changeActiveDomain,
       onAddDomain: this.props.onAddDomain,
       onEditDomain: this.props.onEditDomain
@@ -79,7 +87,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
         onSelect={changeActiveDomain}
         searchValue={domainSearchData.value}
         onSearch={domainSearchData.onChange}>
-        {activeDomain}
+        <span>{activeDomain}</span>
       </DomainSelector>
       <UDNButton
         id="add-domain"
@@ -102,7 +110,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
 
 function mapStateToProps(state) {
   return {
-    domains: state.dns.get('domains'),
+    domains: state.dns.get('domains').toJS(),
     activeDomain: state.dns.get('activeDomain'),
     activeModal: state.ui.get('accountManagementModal')
   }
