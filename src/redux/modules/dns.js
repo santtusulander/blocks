@@ -14,7 +14,7 @@ const CHANGE_ACTIVE_RECORD_TYPE = 'CHANGE_ACTIVE_RECORD_TYPE'
 
 export const initialState = fromJS({
   activeRecordType: null,
-  activeDomain: { id: 1, name: 'kung-fu.com' },
+  activeDomain: null,
   domains: []
 })
 

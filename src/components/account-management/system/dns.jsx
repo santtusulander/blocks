@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
+
 import Select from '../../select'
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
@@ -8,6 +10,10 @@ import IconEdit from '../../icons/icon-edit'
 import { DNSList } from '../dns-list'
 
 class AccountManagementSystemDNS extends Component {
+  componentWillMount() {
+    !this.props.domains.size && this.props.fetchDomains()
+  }
+
   render() {
     const dnsListProps = {
       // soaEditOnSave: this.editSOARecord,
@@ -23,9 +29,16 @@ class AccountManagementSystemDNS extends Component {
       // dnsFormInitialValues: dnsInitialValues,
       // soaFormInitialValues: soaFormInitialValues
     }
+    const domainHeaderProps = {
+      activeDomain: this.props.activeDomain,
+      domains: this.props.domains,
+      changeActiveDomain: this.props.changeActiveDomain,
+      onAddDomain: this.props.onAddDomain,
+      onEditDomain: this.props.onEditDomain
+    }
     return (
       <div className="account-management-system-dns">
-        <DomainToolbar/>
+        <DomainToolbar {...domainHeaderProps}/>
         <DNSList
           onAddEntry={() => console.log('add entry')}
           onDeleteEntry={() => console.log('delete entry')}
@@ -71,4 +84,11 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
 
   </div>
 
-export default connect(() => ({}))(AccountManagementSystemDNS)
+function mapStateToProps(state) {
+  return {
+    domains: state.dns.get('domains'),
+    activeDomain: state.dns.get('activeDomain')
+  }
+}
+
+export default connect(mapStateToProps, { fetchDomains, changeActiveDomain })(AccountManagementSystemDNS)

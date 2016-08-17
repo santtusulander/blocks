@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react'
 import { List, Map, is } from 'immutable'
 
 import UDNButton from '../button'
-import ActionLinks from './action-links.jsx'
-import IconAdd from '../icons/icon-add.jsx'
-import SoaEditForm from './soa-edit-form.jsx'
-import DnsEditForm from './dns-edit-form.jsx'
+import ActionLinks from './action-links'
+import IconAdd from '../icons/icon-add'
+import SoaEditForm from './soa-edit-form'
+import DnsEditForm from './dns-edit-form'
+import Select from '../select'
 
-import Select from '../select.jsx'
-import recordTypes from '../../constants/dns-record-types.js'
-import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals.js'
+import recordTypes from '../../constants/dns-record-types'
+import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals'
 
 export const DNSList = props => {
   const {
