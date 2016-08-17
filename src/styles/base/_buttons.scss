@@ -14,7 +14,6 @@ $btn-secondary-background: transparent;
 $btn-danger-background: $red;
 $btn-success-background: $gradient-teal;
 
-
 .btn {
   min-width: $btn-min-width;
   padding: $btn-top-padding $btn-horizontal-padding $btn-bottom-padding;
@@ -24,8 +23,6 @@ $btn-success-background: $gradient-teal;
   text-transform: uppercase;
   border: 0;
   border-radius: 2px;
-  outline: none;
-  box-shadow: none;
 
   @include print {
     // scss-lint:disable ImportantRule
@@ -49,20 +46,22 @@ $btn-success-background: $gradient-teal;
     min-width: 0;
   }
 
+  &,
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  &:active:hover,
+  &.active:focus {
+    color: $btn-text-color;
+    outline: none;
+    box-shadow: none;
+  }
+
   &.btn-outline {
     color: $dt-text-color;
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      text-transform: uppercase;
-      outline: none;
-      box-shadow: none;
-    }
 
     .light-theme & {
       color: $lt-text-color;
@@ -428,6 +427,14 @@ $btn-success-background: $gradient-teal;
       background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
     }
 
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-primary-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
+    }
+
     // &,
     // &:hover,
     // &:active,
@@ -480,17 +487,15 @@ $btn-success-background: $gradient-teal;
 
     &:hover {
       background-color: rgba($pale-blue, 0.3);
-      box-shadow: 0 0;
+      box-shadow: none;
     }
 
-    &:hover:not(:disabled) {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &.active {
-      background-color: $pale-blue;
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: rgba($pale-blue, 0.3);
+      background-image: linear-gradient(rgba($black, 0.6), rgba($black, 0.6));
     }
   }
 
@@ -531,6 +536,14 @@ $btn-success-background: $gradient-teal;
       background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
     }
 
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-success-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
+    }
+
     // &,
     // &:hover {
     //   color: $dt-text-color;
@@ -551,6 +564,14 @@ $btn-success-background: $gradient-teal;
 
     &:hover {
       background-image: linear-gradient(rgba($white, 0.15), rgba($white, 0.15));
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-danger-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
     }
   }
 
