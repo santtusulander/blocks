@@ -169,8 +169,8 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
               },
               configuration_status: {
                 last_edited_by: "Test User"
-              },
-              default_policy: defaultPolicy
+              }//,
+              // default_policy: defaultPolicy
             }
           ]
         }
