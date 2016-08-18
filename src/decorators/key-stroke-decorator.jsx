@@ -5,8 +5,8 @@ export default function(WrappedModal) {
   class KeyStrokeSupport extends Component {
     constructor(props) {
       super(props)
-      this.submitOnce = once(props.onSubmit)
-      this.cancelOnce = once(props.onCancel)
+      this.submitOnce = once(props.submit)
+      this.cancelOnce = once(props.cancel)
       this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
@@ -18,9 +18,11 @@ export default function(WrappedModal) {
       document.removeEventListener('keydown', this.handleKeyDown)
     }
 
-    handleKeyDown({ keyCode }) {
-      switch(keyCode) {
-        case 13: !this.props.invalid && this.submitOnce()
+    handleKeyDown(e) {
+      switch(e.keyCode) {
+        case 13:
+          e.preventDefault()
+          !this.props.invalid && this.submitOnce()
           break
         case 27: this.cancelOnce()
           break
@@ -33,9 +35,9 @@ export default function(WrappedModal) {
   }
 
   KeyStrokeSupport.propTypes = {
+    cancel: PropTypes.func,
     invalid: PropTypes.bool,
-    onCancel: PropTypes.func,
-    onSubmit: PropTypes.func
+    submit: PropTypes.func
   }
 
   return KeyStrokeSupport

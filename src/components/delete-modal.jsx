@@ -4,7 +4,7 @@ import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-const DeleteModal = ({ itemToDelete, description, onSubmit, onCancel, fields: { delField }, invalid }) => {
+const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delField }, invalid }) => {
   const defaultDescription = `Please confirm by writing "delete" below, and pressing the delete button.
         This ${itemToDelete} will be removed immediately. This action can't be undone`;
   return (
@@ -21,8 +21,8 @@ const DeleteModal = ({ itemToDelete, description, onSubmit, onCancel, fields: { 
       </Modal.Body>
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
-          <Button onClick={onCancel} className="btn-outline">Cancel</Button>
-          <Button onClick={onSubmit}
+          <Button onClick={cancel} className="btn-outline">Cancel</Button>
+          <Button onClick={submit}
             bsStyle="secondary"
             className="delete-modal-submit"
             disabled={invalid}>
@@ -35,12 +35,12 @@ const DeleteModal = ({ itemToDelete, description, onSubmit, onCancel, fields: { 
 }
 
 DeleteModal.propTypes = {
+  cancel: PropTypes.func,
   description: PropTypes.string,
   fields: PropTypes.object,
   invalid: PropTypes.bool,
   itemToDelete: PropTypes.string,
-  onCancel: PropTypes.func,
-  onSubmit: PropTypes.func
+  submit: PropTypes.func
 }
 
 export default reduxForm({

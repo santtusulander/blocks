@@ -3,7 +3,7 @@ import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 
-const DeleteUserModal = ({ itemToDelete, onSubmit, onCancel }) =>
+const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
   <Modal show={true} className="delete-modal">
     <Modal.Header  className="delete-modal-header">
       <h1>Delete User?</h1>
@@ -18,8 +18,8 @@ const DeleteUserModal = ({ itemToDelete, onSubmit, onCancel }) =>
     </Modal.Body>
     <Modal.Footer className="delete-modal-footer">
       <ButtonToolbar className="pull-right">
-        <Button onClick={onCancel} className="btn-outline">Cancel</Button>
-        <Button onClick={onSubmit}
+        <Button onClick={cancel} className="btn-outline">Cancel</Button>
+        <Button onClick={submit}
                 type="submit"
                 bsStyle="secondary"
                 className="delete-modal-submit delete-user-submit">
@@ -30,10 +30,10 @@ const DeleteUserModal = ({ itemToDelete, onSubmit, onCancel }) =>
   </Modal>
 
 DeleteUserModal.propTypes = {
+  cancel: PropTypes.func,
   fields: PropTypes.object,
   itemToDelete: PropTypes.string,
-  onCancel: PropTypes.func,
-  onSubmit: PropTypes.func
+  submit: PropTypes.func
 }
 
 export default keyStrokeSupport(DeleteUserModal)
