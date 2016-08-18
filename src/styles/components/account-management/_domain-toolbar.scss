@@ -1,7 +1,10 @@
 .domain-toolbar {
-  margin: -25px -60px 40px;
+  display: flex;
   padding: 30px 60px;
-  background-color: #0c273a;
+  margin: -25px -60px 40px;
+  background-color: rgba($black, 0.2);
+  align-items: center;
+  justify-content: space-between;
 
   .selector-component {
     display: inline-flex;

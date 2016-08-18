@@ -26,7 +26,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
            <h3>{activeDomain}<span className="caret"></span></h3>
         </DomainSelector> :
         <h3 className="selector-component">NO DOMAINS</h3>}
-      <ButtonToolbar className='pull-right'>
+      <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
             id="add-domain"
