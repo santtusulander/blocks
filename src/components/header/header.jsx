@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
-import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
+import { Button, Input, Nav, Navbar } from 'react-bootstrap'
 
 import UserMenu from './user-menu'
 import TruncatedTitle from '../truncated-title'

@@ -1,9 +1,9 @@
-.global-account-selector {
+.selector-component {
   display: block;
 }
 
-.global-account-selector,
-.navbar-nav .global-account-selector.open {
+.selector-component,
+.navbar-nav .selector-component.open {
 
   &__toggle {
     display: flex;
@@ -43,11 +43,25 @@
         width: 100%;
         align-items: center;
         flex-direction: row;
+        padding: 0;
+
+        .name, .top-bar-link {
+          padding-left: 20px;
+          height: 100%;
+          line-height: 58px;
+        }
+        .caret-container {
+          height: 100%;
+          padding-right: 15px;
+          align-items: center;
+          padding-left: 7px;
+          display: flex;
+        }
       }
     }
 
     .form-group {
-      padding: 0;
+      padding: 20px;
       flex: 1;
 
       input {
