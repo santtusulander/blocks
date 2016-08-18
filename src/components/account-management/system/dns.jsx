@@ -24,17 +24,17 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
-    !this.props.domains.size && this.props.fetchDomains(this.props.params.brand)
+    !this.props.domains.size && this.props.fetchDomains(this.props.params.brand).then(({ payload }) => {
+      !this.props.activeDomain && this.props.changeActiveDomain(payload[0])
+    })
   }
 
   render() {
     const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain } = this.props
     const dnsListProps = {}
     const domainHeaderProps = {
-      domainSearchData: {
-        value: this.state.domainSearchValue,
-        onChange: ({ target: { value } }) => this.setState({ domainSearchValue: value })
-      },
+      searchValue: this.state.domainSearchValue,
+      searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
       domains: domains.filter(domain => domain.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
@@ -83,16 +83,21 @@ AccountManagementSystemDNS.propTypes = {
   params: PropTypes.object
 }
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, domainSearchData }) => {
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue }) => {
+  const sortedDomains = domains.sort((a,b) => {
+    if (a.toLowerCase() < b.toLowerCase()) return -1
+    if (a.toLowerCase() > b.toLowerCase()) return 1
+    return 0
+  })
   return (
     <div className="domain-toolbar">
-      {domains.length > 0 ?
+      {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
-          items={domains.map(domain => [domain, domain])}
+          items={sortedDomains.map(domain => [domain, domain])}
           onItemClick={changeActiveDomain}
-          searchValue={domainSearchData.value}
-          onSearch={domainSearchData.onChange}>
-           <h3>{activeDomain || domains[0]}<span className="caret"></span></h3>
+          searchValue={searchValue}
+          onSearch={searchFunc}>
+           <h3>{activeDomain}<span className="caret"></span></h3>
         </DomainSelector> :
         <h3 className="selector-component">NO DOMAINS</h3>}
       <ButtonToolbar className='pull-right'>
@@ -123,11 +128,12 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
 DomainToolbar.propTypes = {
   activeDomain: PropTypes.string,
   changeActiveDomain: PropTypes.func,
-  domainSearchData: PropTypes.object,
   domains: PropTypes.array,
   fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
-  onEditDomain: PropTypes.func
+  onEditDomain: PropTypes.func,
+  searchFunc: PropTypes.func,
+  searchValue: PropTypes.string
 }
 
 function mapStateToProps(state) {
