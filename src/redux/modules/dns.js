@@ -1,53 +1,22 @@
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
+import axios from 'axios'
 
-//import {urlBase} from '../util'
+import { urlBase, parseResponseData, mapReducers } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_CREATED = 'DOMAIN_CREATED'
+const DOMAIN_EDITED = 'DOMAIN_EDITED'
+const DOMAIN_FETCHED_ALL = 'DOMAIN_FETCHED_ALL'
+const DOMAIN_FETCHED = 'DOMAIN_FETCHED'
 const CHANGE_ACTIVE_DOMAIN = 'CHANGE_ACTIVE_DOMAIN'
 const CHANGE_ACTIVE_RECORD_TYPE = 'CHANGE_ACTIVE_RECORD_TYPE'
 
 export const initialState = fromJS({
   activeRecordType: null,
-  activeDomain: { id: 1, name: 'kung-fu.com' },
-  domains: [
-    {
-      id: 1,
-      name: 'kung-fu.com',
-      SOARecord: {
-        domainName: 'aaa',
-        nameServer: 'bbb',
-        personResponsible: 'aaa@bbb.com',
-        zoneSerialNumber: 123,
-        refresh: 123
-      },
-      subDomains: [
-        {id: 1, hostName: 'aaa.com', type: 'A', address: 'UDN Superuser', ttl: '3300'},
-        {id: 2, hostName: 'bbb.com', type: 'AAAA', address: 'UDN Superuser', ttl: '3600'},
-        {id: 3, hostName: 'vvv.com', type: 'SOA', address: 'UDN Superuser', ttl: '3600'},
-        {id: 4, hostName: 'ccc.com', type: 'SOA', address: 'UDN Superuser', ttl: '3600'},
-        {id: 5, hostName: 'nnn.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'}
-      ]
-    },
-    {
-      id: 2,
-      name: 'kunfu.fi',
-      SOARecord: {
-        domainName: 'bbb',
-        nameServer: 'ccc',
-        personResponsible: 'ooo@ggg.com',
-        zoneSerialNumber: 123,
-        refresh: 123
-      },
-      subDomains: [
-        {id: 1, hostName: 'eee.com', type: 'AAAA', address: 'UDN Superuser', ttl: '3600'},
-        {id: 2, hostName: 'rrr.com', type: 'A', address: 'UDN Superuser', ttl: '3600'},
-        {id: 3, hostName: 'ttt.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'},
-        {id: 5, hostName: 'uuu.com', type: 'TXT', address: 'UDN Superuser', ttl: '3600'}
-      ]
-    }
-  ]
+  activeDomain: undefined,
+  domainToEdit: undefined,
+  domains: []
 })
 
 // REDUCERS
@@ -60,6 +29,18 @@ export function editSOARecord(state, action) {
 export function createSuccess(state, action) {
   return state.merge({
     SOARecord: action.payload
+  })
+}
+
+export function fetchedAllDomainsSuccess(state, action) {
+  return state.merge({
+    domains: action.payload
+  })
+}
+
+export function fetchedAllDomainsFailure(state) {
+  return state.merge({
+    domains: []
   })
 }
 
@@ -76,6 +57,7 @@ export function activeRecordTypeChange(state, action) {
 }
 
 export default handleActions({
+  DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
   SOA_RECORD_EDITED: editSOARecord,
   DOMAIN_CREATED: createSuccess,
   CHANGE_ACTIVE_DOMAIN: activeDomainChange,
@@ -83,9 +65,31 @@ export default handleActions({
 }, initialState)
 
 // ACTIONS
+export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
+  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones`).then(parseResponseData))
+
+export const fetchDomain = createAction(DOMAIN_FETCHED_ALL, (brand, domain) =>
+  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`).then(parseResponseData))
+
+export const createDomain = createAction(DOMAIN_CREATED, (brand, name, data) =>
+  axios.post(`${urlBase}/VCDN/v2/brands/${brand}/zones/${name}`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(parseResponseData)
+)
+export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
+  axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${name}`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(parseResponseData)
+)
+
+
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
-export const createDomain = createAction(DOMAIN_CREATED)
+export const fetchDomain = createAction(DOMAIN_FETCHED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
 export const changeActiveRecordType = createAction(CHANGE_ACTIVE_RECORD_TYPE)
 
