@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
+import keyStrokeSupport from '../../decorators/key-stroke-decorator'
+
 const DeleteUserModal = ({ itemToDelete, onSubmit, onCancel }) =>
   <Modal show={true} className="delete-modal">
     <Modal.Header  className="delete-modal-header">
@@ -33,3 +35,5 @@ DeleteUserModal.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func
 }
+
+export default keyStrokeSupport(DeleteUserModal)

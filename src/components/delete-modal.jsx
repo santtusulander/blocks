@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal, Input } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
+import keyStrokeSupport from '../decorators/key-stroke-decorator'
+
 const DeleteModal = ({ itemToDelete, description, onSubmit, onCancel, fields: { delField }, invalid }) => {
   const defaultDescription = `Please confirm by writing "delete" below, and pressing the delete button.
         This ${itemToDelete} will be removed immediately. This action can't be undone`;
@@ -49,5 +51,5 @@ export default reduxForm({
       return { delField: true }
     }
   }
-})(DeleteModal)
+})(keyStrokeSupport(DeleteModal))
 

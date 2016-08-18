@@ -278,7 +278,7 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           itemToDelete: 'Account',
           onCancel: () => toggleModal(null),
-          onDelete: () => onDelete(brand, account || this.accountToDelete, router)
+          onSubmit: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
@@ -286,7 +286,7 @@ export class AccountManagement extends Component {
           itemToDelete: this.state.groupToDelete.get('name'),
           description: 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
           onCancel: () => toggleModal(null),
-          onDelete: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          onSubmit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
     }
 
@@ -423,7 +423,7 @@ export class AccountManagement extends Component {
           <DeleteUserModal
             itemToDelete={this.userToDelete}
             onCancel={() => toggleModal(null)}
-            onDelete={this.deleteUser}/>}
+            onSubmit={this.deleteUser}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupForm
             id="group-form"
