@@ -72,7 +72,6 @@ class AnalysisCacheHitRate extends React.Component {
   }
   render() {
     const stats = this.props.traffic.first() || Immutable.Map()
-    //const statsToday = this.props.onOffStatsToday
 
     let chart = null
 
@@ -85,10 +84,6 @@ class AnalysisCacheHitRate extends React.Component {
         timestamp: datapoint.get('timestamp')
       }
     })
-
-    //let dataSets = [];
-    //if ( this.props.onOffFilter.contains('on-net') ) dataSets.push( onNet.toJS() )
-    //if ( this.props.onOffFilter.contains('off-net') ) dataSets.push( offNet.toJS() )
 
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
@@ -123,7 +118,7 @@ class AnalysisCacheHitRate extends React.Component {
         <h3>Cache Hit Rate By Day</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
-            <div>AAA Loading...</div> : chart}
+            <div>Loading...</div> : chart}
         </div>
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
