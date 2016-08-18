@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 
 // React-Bootstrap
 // ===============
@@ -23,6 +24,10 @@ import {
   Tab,
   Tabs
 } from 'react-bootstrap';
+
+import SelectWrapper from '../components/select-wrapper'
+import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import AccountSelector from '../components/global-account-selector/selector-component'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -58,6 +63,17 @@ import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
 
+const filterCheckboxOptions = Immutable.fromJS([
+  { value: 'link1', label: 'Property 1', checked: true },
+  { value: 'link2', label: 'Property 2', checked: true },
+  { value: 'link3', label: 'Property 3', checked: false },
+  { value: 'link4', label: 'Property 4', checked: false },
+  { value: 'link5', label: 'Property 5', checked: true },
+  { value: 'link6', label: 'Property 6', checked: false },
+  { value: 'link7', label: 'Property 7', checked: false },
+  { value: 'link8', label: 'Property 8', checked: false },
+  { value: 'link9', label: 'Property 9', checked: false }
+]);
 
 class Styleguide extends React.Component {
   render() {
@@ -129,10 +145,9 @@ class Styleguide extends React.Component {
 
 
           <h1 className="page-header">Buttons</h1>
-
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary">Primary</Button>
-            <Button bsStyle="secondary">Secondary</Button>
+            <Button className="btn-secondary">Secondary</Button>
             <Button bsStyle="danger">Destructive</Button>
             <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
@@ -142,7 +157,7 @@ class Styleguide extends React.Component {
 
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary" disabled={true}>Primary</Button>
-            <Button bsStyle="secondary" disabled={true}>Secondary</Button>
+            <Button className="btn-secondary" disabled={true}>Secondary</Button>
             <Button bsStyle="danger" disabled={true}>Destructive</Button>
             <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
@@ -152,33 +167,30 @@ class Styleguide extends React.Component {
 
 
           <h1 className="page-header">Dropdowns</h1>
+          <div className="row">
+            <div className="col-xs-3">
+              <SelectWrapper options={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} value={1}/>
+            </div>
+          </div>
+          <br/>
+          <div className="row">
+            <div className="col-xs-6">
+              <FilterChecklistDropdown options={filterCheckboxOptions}/>
+            </div>
+          </div>
 
-          <ButtonToolbar>
-            <DropdownButton bsStyle="primary" id="dropdown1" title="Dropdown menu">
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </DropdownButton>
-
-            <SplitButton bsStyle="primary" id="dropdown2" title="Split Button with Dropdown">
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </SplitButton>
-
-            <DropdownButton bsStyle="primary" id="dropdown3" title="Dropup menu" dropup={true}>
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </DropdownButton>
-          </ButtonToolbar>
-
+          <div className="row">
+            <div className="col-xs-6">
+              <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
+                <div className="btn btn-link dropdown-toggle header-toggle">
+                  <h1>Select Account</h1>
+                  <span className="caret"/>
+                </div>
+              </AccountSelector>
+            </div>
+          </div>
 
           <h1 className="page-header">Tables</h1>
-
           <Table striped={true}>
             <thead>
               <tr>
@@ -321,12 +333,10 @@ class Styleguide extends React.Component {
           <hr />
 
           <label>Select</label>
-
           <div>
-
             <Dropdown id="dropdown-select" className="dropdown-select">
               <Dropdown.Toggle>
-                View <b>Production</b>
+                View Production
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <MenuItem eventKey="1" active={true}>Production</MenuItem>
@@ -335,7 +345,6 @@ class Styleguide extends React.Component {
                 <MenuItem eventKey="4">History</MenuItem>
               </Dropdown.Menu>
             </Dropdown>
-
           </div>
 
 

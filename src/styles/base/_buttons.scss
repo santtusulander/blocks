@@ -5,6 +5,8 @@
 // Need to override BootStrap
 
 $btn-font-size: 15px;
+$btn-min-width: rem(120px);
+$dropdown-min-width: rem(320px);
 $btn-top-padding: em(8px, $btn-font-size);
 $btn-horizontal-padding: em(18px, $btn-font-size);
 $btn-bottom-padding: em(7px, $btn-font-size);
@@ -246,12 +248,8 @@ $btn-success-background: $gradient-teal;
   text-align: left;
 
   h3 {
-    max-width: calc(100% - #{$btn-height});
+    max-width: calc(100% - #{$bar-height});
     white-space: normal;
-
-    @include md {
-      max-width: calc(100% - #{$md-btn-height});
-    }
   }
 
   .caret {
@@ -259,8 +257,8 @@ $btn-success-background: $gradient-teal;
     top: 50%;
     right: 0;
     display: block;
-    width: $btn-height / 2;
-    height: $btn-height / 2;
+    width: $bar-height / 2;
+    height: $bar-height / 2;
     color: $white;
     border: 0;
     transform: translateY(-50%);
@@ -357,6 +355,9 @@ $btn-success-background: $gradient-teal;
 
 .dark-theme,
 .light-theme {
+
+  // BUTTONS
+  // =======
   .btn-primary {
     background-color: $btn-primary-background;
 
@@ -422,6 +423,82 @@ $btn-success-background: $gradient-teal;
       box-shadow: none;
     }
   }
+
+  // DROPDOWN BUTTONS (SELECT, TOGGLE)
+  // =================================
+  .dropdown-select {
+    width: 100%;
+    min-width: $dropdown-min-width;
+
+    .dropdown-toggle {
+      width: 100%;
+      padding-right: calc(#{$btn-horizontal-padding} * 2);  // Prevents the text from flowing under the caret
+      color: $dt-text-color;
+      text-align: left;
+      text-transform: capitalize;
+      background-color: rgba($black, 0.3);
+      fill: $dt-text-color;
+      stroke: $dt-text-color;
+
+      &:focus {
+        box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
+      }
+
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-color: rgba($black, 0.5);
+        box-shadow: none;
+      }
+
+      > .icon {
+        position: absolute;
+        top: 50%;
+        right: $btn-horizontal-padding;
+        transform: translateY(-50%);
+        fill: $dt-text-color;
+        stroke: $dt-text-color;
+
+        @include print {
+          display: none;
+        }
+      }
+
+      span,
+      .dropdown-select__selected-item {
+        display: flex;
+        width: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+
+      &,
+      &:hover {
+        color: $pale-blue;
+        background-color: rgba($black, 0.3);
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      .icon {
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+    }
+  }
 }
 
 .dark-theme {
@@ -438,13 +515,14 @@ $btn-success-background: $gradient-teal;
     &.active,
     &:active:hover,
     &.active:focus {
+      color: $btn-text-color;
       background-color: rgba($btn-primary-background, 0.3);
       background-image: linear-gradient(rgba($black, 0.6), rgba($black, 0.6));
       box-shadow: inset 0 0 0 2px rgba($black, 0.6);
     }
 
     &:focus {
-      box-shadow: inset 0 0 0 2px rgba($black, 0.4);
+      box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px rgba($btn-primary-background, 0.2);
     }
   }
 }
@@ -474,7 +552,7 @@ $btn-success-background: $gradient-teal;
     }
 
     &:focus {
-      box-shadow: inset 0 0 0 2px rgba($black, 0.4);
+      box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px $btn-primary-background;
     }
   }
 }
@@ -482,73 +560,6 @@ $btn-success-background: $gradient-teal;
 .dark-theme,
 // TODO: Should this be removed? .light-theme .configuration-sidebar
 .light-theme .header {
-
-  .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        color: $dt-text-color;
-        background-color: rgba($black, 0.2);
-        fill: $dt-text-color;
-        stroke: $dt-text-color;
-      }
-
-      &:hover:not(:disabled),
-      &:hover:not(:disabled) .icon {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      &.active {
-        background-color: rgba($black, 0.2);
-      }
-
-      .icon {
-        fill: $dt-text-color;
-        stroke: $dt-text-color;
-
-        @include print {
-          display: none;
-        }
-      }
-
-      span,
-      .dropdown-select__selected-item {
-        display: flex;
-        width: auto;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    &.open .dropdown-toggle {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-
-      &,
-      &:hover {
-        font-weight: 500;
-        color: $pale-blue;
-        background-color: $black;
-        background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
-        background-size: 100%;
-        box-shadow: none;
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      .icon {
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-    }
-  }
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
 
