@@ -83,15 +83,18 @@ AccountManagementSystemDNS.propTypes = {
   params: PropTypes.object
 }
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, domainSearchData }) =>
-  <div className="domain-toolbar">
-      <DomainSelector
-        items={domains.map(domain => [domain, domain])}
-        onItemClick={changeActiveDomain}
-        searchValue={domainSearchData.value}
-        onSearch={domainSearchData.onChange}>
-        <h3>{activeDomain || domains[0]}<span className="caret"></span></h3>
-      </DomainSelector>
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, domainSearchData }) => {
+  return (
+    <div className="domain-toolbar">
+      {domains.length > 0 ?
+        <DomainSelector
+          items={domains.map(domain => [domain, domain])}
+          onItemClick={changeActiveDomain}
+          searchValue={domainSearchData.value}
+          onSearch={domainSearchData.onChange}>
+           <h3>{activeDomain || domains[0]}<span className="caret"></span></h3>
+        </DomainSelector> :
+        <h3 className="selector-component">NO DOMAINS</h3>}
       <ButtonToolbar className='pull-right'>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
@@ -114,8 +117,9 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           </UDNButton>
         </IsAllowed>}
       </ButtonToolbar>
-  </div>
-
+    </div>
+  )
+}
 DomainToolbar.propTypes = {
   activeDomain: PropTypes.string,
   changeActiveDomain: PropTypes.func,
