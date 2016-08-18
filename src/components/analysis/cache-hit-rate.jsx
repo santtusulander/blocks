@@ -118,9 +118,9 @@ class AnalysisCacheHitRate extends React.Component {
     }
     const sortedStats = this.sortedData(detail, this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-on-off-net-report">
+      <div className="analysis-cache-hit-rate">
 
-        <h3>Cache Hit Rate</h3>
+        <h3>Cache Hit Rate By Day</h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>AAA Loading...</div> : chart}
