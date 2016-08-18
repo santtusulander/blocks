@@ -16,8 +16,8 @@ const SelectorComponent = ({
   onCaretClick,
   onItemClick,
   onTopbarClick }) =>
-  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="global-account-selector">
-    <div className="global-account-selector__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
+  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="selector-component">
+    <div className="selector-component__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
       <MenuItem>
         <Input

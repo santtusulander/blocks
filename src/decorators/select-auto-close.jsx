@@ -1,7 +1,7 @@
 import { findDOMNode } from 'react-dom'
 import React, { PropTypes, Component } from 'react'
 
-export const autoClose = WrappedSelect => {
+export default function(WrappedSelect) {
   class AutoClose extends Component {
     constructor(props) {
       super(props)
