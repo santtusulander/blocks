@@ -5,7 +5,7 @@ export default function(WrappedModal) {
   class KeyStrokeSupport extends Component {
     constructor(props) {
       super(props)
-      this.submitOnce = once(props.submit)
+      this.submitOnce = once(props.submit || props.cancel)
       this.cancelOnce = once(props.cancel)
       this.handleKeyDown = this.handleKeyDown.bind(this)
     }
