@@ -1,9 +1,10 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
+import AnalysisCacheHitRate from '../../../components/analysis/cache-hit-rate.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
@@ -35,9 +36,9 @@ class AnalyticsTabCacheHitRate extends React.Component {
       granularity: rangeDiff >= 2 ? 'day' : 'hour'
     }, fetchOpts)
 
-    this.props.trafficActions.fetchByTime(byTimeOpts)
-    this.props.trafficActions.fetchByCountry(fetchOpts)
-    this.props.trafficActions.fetchTotalEgress(fetchOpts)
+    //this.props.trafficActions.fetchByTime(byTimeOpts)
+    //this.props.trafficActions.fetchByCountry(fetchOpts)
+    //this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     //REFACTOR:
     if (params.property) {
@@ -48,7 +49,8 @@ class AnalyticsTabCacheHitRate extends React.Component {
         property: params.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type
+        service_type: fetchOpts.service_type,
+        field_filter: 'chit_ratio'
       })
     } else if(params.group) {
       this.setState({ metricKey: 'groupMetrics' })
@@ -57,7 +59,8 @@ class AnalyticsTabCacheHitRate extends React.Component {
         group: params.group,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type
+        service_type: fetchOpts.service_type,
+        field_filter: 'chit_ratio'
       })
     } else if(params.account) {
       this.setState({ metricKey: 'accountMetrics' })
@@ -65,33 +68,22 @@ class AnalyticsTabCacheHitRate extends React.Component {
         account: params.account,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type
+        service_type: fetchOpts.service_type,
+        field_filter: 'chit_ratio'
       })
     }
   }
 
   render() {
     const {traffic} = this.props
-    const peakTraffic = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'peak']) : 0
-    const avgTraffic  = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'average']) : 0
-    const lowTraffic  = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'low']) : 0
 
     return (
       <div>
-        <h3>Cache hit rate tab</h3>
-        <AnalysisTraffic
-          avgTraffic={formatBitsPerSecond(avgTraffic, 2)}
-          byCountry={this.props.trafficByCountry}
-          byTime={this.props.trafficByTime}
+        <AnalysisCacheHitRate
+          traffic={ traffic }
           dateRange={this.props.filters.get('dateRangeLabel')}
-          fetching={false}
-          lowTraffic={formatBitsPerSecond(lowTraffic, 2)}
-          peakTraffic={formatBitsPerSecond(peakTraffic, 2)}
+          fetching={this.props.fetching}
           serviceTypes={this.props.filters.get('serviceTypes')}
-          totalEgress={this.props.totalEgress}
         />
       </div>
     )
@@ -113,21 +105,15 @@ AnalyticsTabCacheHitRate.propTypes = {
 
 AnalyticsTabCacheHitRate.defaultProps = {
   filters: Immutable.Map(),
-  metrics: Immutable.Map(),
-  traffic: Immutable.List(),
-  trafficByCountry: Immutable.List(),
-  trafficByTime: Immutable.List()
+  traffic: Immutable.List()
 }
 
-function mapStateToProps(state) {
-  return {
-    /*metrics: state.metrics,
-    traffic: state.traffic.get('traffic'),
-    trafficByTime: state.traffic.get('byTime'),
-    trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress')*/
-  }
-}
+const mapStateToProps = (state) => ({
+  fetching: state.traffic.get('fetching'),
+  filters: state.filters.get('filters'),
+  traffic: state.traffic.get('traffic'),
+  trafficByTime: state.traffic.get('byTime')
+})
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -136,4 +122,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate);
+export default withRouter( connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate) );
