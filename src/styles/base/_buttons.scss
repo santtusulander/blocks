@@ -404,6 +404,24 @@ $btn-success-background: $gradient-teal;
       background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
     }
   }
+
+  .btn-link {
+    color: $btn-primary-background;
+    text-transform: capitalize;
+    background-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      color: $btn-primary-background;
+      text-decoration: underline;
+      outline: none;
+      box-shadow: none;
+    }
+  }
 }
 
 .dark-theme {
@@ -605,23 +623,6 @@ $btn-success-background: $gradient-teal;
       stroke: $lt-button-color;
     }
   }
-
-  .btn-link {
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      color: $pale-blue;
-      text-decoration: none;
-      background-color: transparent;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-    }
-  }
 }
 
 .light-theme .header {
@@ -806,27 +807,6 @@ $btn-success-background: $gradient-teal;
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-
-  .btn-link {
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      color: inherit;
-      text-decoration: none;
-      background-color: transparent;
-      fill: inherit;
-      stroke: inherit;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
     }
   }
 }
