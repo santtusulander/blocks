@@ -16,6 +16,8 @@ import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
 
 import './account.scss'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
 // });
@@ -85,16 +87,16 @@ class AccountManagementAccountDetails extends React.Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.isDirty() && this.props.account.size) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the Account and/or Group(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.title'/>,
+        content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
         buttons: [
           <UDNButton key="button-1" onClick={() => {
             //this.leavePage()
             this.isLeaving = true
             this.props.router.push(pathname)
             this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary">Continue</UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
+          }} bsStyle="primary"><FormattedMessage id="portal.button.continue"/></UDNButton>,
+          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id='portal.button.stay'/></UDNButton>
         ]
       })
 
@@ -164,7 +166,7 @@ class AccountManagementAccountDetails extends React.Component {
                 <input
                   {...accountName}
                   type="text"
-                  placeholder="Enter Account Name"
+                  placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
                   className="form-control"/>
               </IsAllowed>
               <IsAllowed not={true} to={MODIFY_ACCOUNTS}>
@@ -195,7 +197,7 @@ class AccountManagementAccountDetails extends React.Component {
           </div>
 
           <div className="form-group">
-            <label className="col-xs-3 control-label">Account Type</label>
+            <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.accountType.text"/></label>
             <Col xs={3}>
               {/* Not editable in 0.8
               <div className="input-group">
@@ -230,7 +232,7 @@ class AccountManagementAccountDetails extends React.Component {
           </div>
 
           <div className="form-group">
-            <label className="col-xs-3 control-label">Services</label>
+            <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.services.text"/></label>
             <Col xs={3}>
               <CheckboxArray iterable={checkBoxes} field={services}/>
             </Col>
@@ -269,4 +271,4 @@ AccountManagementAccountDetails.defaultProps = {
 export default reduxForm({
   fields: ['accountName', 'brand', 'accountType', 'services'],
   form: 'account-details'
-})(withRouter(AccountManagementAccountDetails))
+})(withRouter(injectIntl(AccountManagementAccountDetails)))
