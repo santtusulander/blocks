@@ -1,72 +1,9 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
-import { findDOMNode } from 'react-dom'
+import autoClose from '../../decorators/select-auto-close'
 
-export const autoClose = WrappedComponent => {
-  class AutoClose extends Component {
-    constructor(props) {
-      super(props)
-      this.state = {
-        open: false
-      }
-      this.close = this.close.bind(this)
-      this.handleClick = this.handleClick.bind(this)
-    }
-
-    componentWillMount() {
-      document.addEventListener('click', this.handleClick, false)
-    }
-
-    componentWillUnmount() {
-      document.removeEventListener('click', this.handleClick, false)
-      this.props.close && this.props.close()
-    }
-
-    handleClick(e) {
-      if (findDOMNode(this).contains(e.target)) {
-        return
-      }
-
-      if (this.props.open || this.state.open) {
-        this.close()
-      }
-    }
-
-    close() {
-      if(this.props.close) {
-        this.props.close()
-      } else {
-        this.setState({ open: !this.state.open })
-      }
-    }
-
-    render() {
-      let newProps = {}
-      if(this.props.open === undefined) {
-        newProps.open = this.state.open
-        newProps.onItemClick = value => {
-          this.props.onItemClick(value)
-          this.setState({ open: !this.state.open })
-        }
-      }
-      if(!this.props.toggle) {
-        newProps.toggle = () => this.setState({ open: !this.state.open })
-      }
-      return (<WrappedComponent {...this.props}{...newProps}/>)
-    }
-  }
-  AutoClose.propTypes = {
-    close: PropTypes.func,
-    onItemClick: PropTypes.func,
-    open: PropTypes.bool,
-    toggle: PropTypes.func
-  }
-  return AutoClose
-}
-
-
-const AccountSelector = ({
+const SelectorComponent = ({
   items,
   drillable,
   children,
@@ -103,7 +40,8 @@ const AccountSelector = ({
     </Dropdown.Menu>
   </Dropdown>
 
-AccountSelector.propTypes = {
+SelectorComponent.displayName = 'SelectorComponent'
+SelectorComponent.propTypes = {
   children: PropTypes.object,
   classname: PropTypes.string,
   drillable: PropTypes.bool,
@@ -119,4 +57,4 @@ AccountSelector.propTypes = {
   topBarText: PropTypes.string
 }
 
-export default autoClose(AccountSelector)
+export default autoClose(SelectorComponent)
