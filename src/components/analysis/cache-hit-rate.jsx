@@ -104,10 +104,7 @@ class AnalysisCacheHitRate extends React.Component {
         <AnalysisByTime axes={true} padding={40}
           dataKey="chit_ratio"
           primaryData={ details.toJS() }
-          secondaryData={details.toJS() }
           primaryLabel='Cache Hit Ratio'
-          secondaryLabel=''
-          yAxisCustomFormat={(val, setMax) => formatBytes(val, false, 100)}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
           showTooltip={false}
