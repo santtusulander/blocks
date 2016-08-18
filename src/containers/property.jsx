@@ -160,7 +160,7 @@ export class Property extends React.Component {
     )
   }
   fetchData(params, queryParams) {
-    const {brand, account, group, property} = this.props.params
+    const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
