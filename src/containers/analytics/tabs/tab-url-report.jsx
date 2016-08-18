@@ -25,10 +25,6 @@ class AnalyticsTabUrlReport extends React.Component {
     this.props.reportsActions.fetchURLMetrics(fetchOpts)
   }
 
-  export(exporters) {
-    exporters.urlReport(this.props.urlMetrics)
-  }
-
   render(){
     if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
       <p>No error data found.</p>
@@ -52,13 +48,14 @@ AnalyticsTabUrlReport.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   reportsActions: React.PropTypes.object,
-  urlMetrics: React.PropTypes.array
+  urlMetrics: React.PropTypes.instanceOf(Immutable.List)
 }
 
 AnalyticsTabUrlReport.defaultProps = {
   fileErrorSummary: Immutable.Map(),
   fileErrorURLs: Immutable.List(),
-  filters: Immutable.Map()
+  filters: Immutable.Map(),
+  urlMetrics: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -78,4 +75,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabUrlReport);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabUrlReport);

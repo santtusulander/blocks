@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar, Button, Dropdown } from 'react-bootstrap'
+import { Nav, ButtonToolbar } from 'react-bootstrap'
+
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
-import IconExport from '../icons/icon-export.jsx'
-
-
+import TruncatedTitle from '../truncated-title'
+import AnalyticsExport from '../../containers/analytics/export.jsx'
 
 import './analytics-view-control.scss'
 
@@ -113,7 +113,7 @@ const AnalyticsViewControl = (props) => {
 
   return (
     <div className="analytics-view-control">
-      <p className="analytics-view-control__title">{title}</p>
+      <h5 className="analytics-view-control__title">{title}</h5>
       <div className="analytics-view-control__header">
         <AccountSelector
           as="analytics"
@@ -133,20 +133,17 @@ const AnalyticsViewControl = (props) => {
             }
             props.router.push(url)
           }}>
-          <Dropdown.Toggle bsStyle="link" className="header-toggle">
-            <h1>{activeItem || "select account"}</h1>
-          </Dropdown.Toggle>
+          <div className="btn btn-link dropdown-toggle header-toggle">
+            <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <span className="caret"></span>
+          </div>
         </AccountSelector>
         {props.params.account &&
           <ButtonToolbar>
-            <Button
-              bsStyle="primary"
-              className="has-icon"
-              disabled={getTabName(props.location.pathname) === 'playback-demo'}
-              onClick={props.exportCSV}>
-              <IconExport />
-              Export
-            </Button>
+            <AnalyticsExport
+              activeTab={getTabName(props.location.pathname)}
+              params={props.params}
+              />
           </ButtonToolbar>
         }
       </div>
@@ -182,7 +179,6 @@ AnalyticsViewControl.propTypes = {
   accounts: PropTypes.instanceOf(Immutable.List),
   activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
-  exportCSV: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   params: PropTypes.object,

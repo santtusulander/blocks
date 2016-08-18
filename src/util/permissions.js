@@ -48,6 +48,17 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
 
+// Account Permissions
+permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+
+
+// DNS permissions
+// Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
+
+permissionMapping[PERMISSIONS.VIEW_DNS] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'list', 'allowed']) && role.getIn(['permissions', 'north', 'rr', 'list', 'allowed'])
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.

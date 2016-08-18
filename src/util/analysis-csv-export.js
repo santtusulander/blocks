@@ -23,17 +23,17 @@ export function createCSVExporters(filenamePart) {
   }
 
   return {
-    traffic: (traffic, serviceTypes) => {
+    'traffic': (traffic, serviceTypes) => {
       const data = traffic
         .filter(filterByServiceType(serviceTypes))
         .map(mapTimestamps)
       generate('Traffic', data)
     },
-    visitors: visitors => {
+    'visitors': visitors => {
       const data = visitors.map(mapTimestamps)
       generate('Visitors', data)
     },
-    onOffNet: onOffNet => {
+    'on-off-net': onOffNet => {
       const data = onOffNet
         .map(item => Immutable.Map({
           timestamp: moment(item.get('timestamp')).format(),
@@ -43,7 +43,7 @@ export function createCSVExporters(filenamePart) {
         }))
       generate('On Off Net', data)
     },
-    serviceProviders: onOffNet => {
+    'service-providers': onOffNet => {
       const data = onOffNet
         .map(item => Immutable.Map({
           timestamp: moment(item.get('timestamp')).format(),
@@ -53,14 +53,14 @@ export function createCSVExporters(filenamePart) {
         }))
       generate('Service Provider', data)
     },
-    fileError: (fileErrorURLs, serviceTypes) => {
+    'file-error': (fileErrorURLs, serviceTypes) => {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
       generate('File Errors', data)
     },
-    urlReport: urlMetrics => {
+    'url-report': urlMetrics => {
       generate('URL Report', urlMetrics)
     },
-    storageUsage: storageStats => {
+    'storage-usage': storageStats => {
       const data = storageStats.map(mapTimestamps)
       generate('Storage Usage', data)
     }
