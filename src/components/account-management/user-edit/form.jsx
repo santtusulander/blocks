@@ -13,6 +13,8 @@ import SelectWrapper from '../../select-wrapper.jsx'
 
 import IconEye from '../../icons/icon-eye.jsx'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+
 let errors = {}
 const validate = (values) => {
   errors = {}
@@ -25,15 +27,15 @@ const validate = (values) => {
   } = values
 
   if(!email || email.length === 0) {
-    errors.email = 'Email is required'
+    errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
   }
 
   if(password && password !== confirm) {
-    errors.password = 'Passwords do not match'
+    errors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
   }
 
   if(!role || role.length === 0) {
-    errors.role = 'Role is required'
+    errors.role = <FormattedMessage id="portal.user.edit.roleRequired.text"/>
   }
 
   return errors;
@@ -111,7 +113,7 @@ class UserEditForm extends React.Component {
           {...email}
           type="text"
           disabled={true}
-          label="Email"/>
+          label={this.props.intl.formatMessage({id: 'portal.user.edit.email.text'})}/>
         {email.touched && email.error &&
         <div className="error-msg">{email.error}</div>}
 
@@ -121,7 +123,7 @@ class UserEditForm extends React.Component {
               <Input
                 {...first_name}
                 type="text"
-                label="First name"/>
+                label={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
               {first_name.touched && first_name.error &&
               <div className="error-msg">{first_name.error}</div>}
             </Col>
@@ -130,7 +132,7 @@ class UserEditForm extends React.Component {
               <Input
                 {...last_name}
                 type="text"
-                label="Last name"/>
+                label={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
               {last_name.touched && last_name.error &&
               <div className="error-msg">{last_name.error}</div>}
             </Col>
@@ -138,7 +140,7 @@ class UserEditForm extends React.Component {
         </div>
 
         <div className="user-form__telephone">
-          <label className="control-label">Phone Number</label>
+          <label className="control-label"><FormattedMessage id="portal.user.edit.phoneNumber.text"/></label>
           <ReactTelephoneInput
             value={phone_number.value !== '+' ? phone_number.value : '1'}
             defaultCountry="us"
@@ -169,13 +171,13 @@ class UserEditForm extends React.Component {
         <div className="user-form__password">
           <Row>
             <Col xs={11}>
-              <label>Reset password</label>
+              <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
               <Row>
                 <Col xs={6}>
                   <Input
                     {...password}
                     type={this.state.passwordVisible ? 'text' : 'password'}
-                    placeholder="New Password"/>
+                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.newPassword.text'})} />
                   {password.touched && password.error && !password.active && !confirm.active &&
                     <div className="error-msg">{password.error}</div>}
                 </Col>
@@ -184,7 +186,7 @@ class UserEditForm extends React.Component {
                   <Input
                     {...confirm}
                     type={this.state.passwordVisible ? 'text' : 'password'}
-                    placeholder="Confirm New Password"
+                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
                     wrapperClassName="input-addon-after-outside"
                     addonAfter={<a className={'input-addon-link' +
                         (this.state.passwordVisible ? ' active' : '')}
@@ -200,7 +202,7 @@ class UserEditForm extends React.Component {
         <hr/>
 
         <div className='form-group'>
-          <label className='control-label'>Role</label>
+          <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
           <SelectWrapper
             {...role}
             className="input-select"
@@ -222,9 +224,9 @@ class UserEditForm extends React.Component {
         */}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
           <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
-                  onClick={this.save}>Save</Button>
+                  onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
     )
@@ -252,4 +254,4 @@ export default reduxForm({
     'groups'
   ],
   validate: validate
-})(UserEditForm)
+})(injectIntl(UserEditForm))
