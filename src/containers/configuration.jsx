@@ -358,8 +358,8 @@ export class Configuration extends React.Component {
         </Content>
         {this.state.deleteModal && <DeleteModal
           itemToDelete="Property"
-          onCancel={toggleDelete}
-          onDelete={() => {
+          cancel={toggleDelete}
+          submit={() => {
             deleteHost(brand, account, group, property)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>

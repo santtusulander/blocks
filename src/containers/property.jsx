@@ -463,8 +463,8 @@ export class Property extends React.Component {
           showNotification={this.showNotification}/>}
         {this.state.deleteModal && <DeleteModal
           itemToDelete="Property"
-          onCancel={toggleDelete}
-          onDelete={() => {
+          cancel={toggleDelete}
+          submit={() => {
             deleteHost(brand, account, group, property)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>}
