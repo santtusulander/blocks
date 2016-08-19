@@ -58,6 +58,7 @@ export function activeRecordTypeChange(state, action) {
 
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
+  DOMAIN_FETCHED: null,
   SOA_RECORD_EDITED: editSOARecord,
   DOMAIN_CREATED: createSuccess,
   CHANGE_ACTIVE_DOMAIN: activeDomainChange,
@@ -71,8 +72,8 @@ export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
 export const fetchDomain = createAction(DOMAIN_FETCHED_ALL, (brand, domain) =>
   axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`).then(parseResponseData))
 
-export const createDomain = createAction(DOMAIN_CREATED, (brand, name, data) =>
-  axios.post(`${urlBase}/VCDN/v2/brands/${brand}/zones/${name}`, data, {
+export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =>
+  axios.post(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -89,7 +90,6 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
 
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
-export const fetchDomain = createAction(DOMAIN_FETCHED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
 export const changeActiveRecordType = createAction(CHANGE_ACTIVE_RECORD_TYPE)
 
