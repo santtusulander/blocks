@@ -1,25 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconEmail extends React.Component {
-  render() {
-    return (
-      <Icon width="30" height="22">
-        <g>
-          <polygon points="20,13.1 15,16.9 10,13.1 0,20.6 0,22.5 30,22.5 30,20.6 "/>
-          <polygon points="30,18.8 30,5.6 21.3,12.2 "/>
-          <polygon points="8.7,12.2 0,5.6 0,18.8 "/>
-          <polygon points="0,3.8 15,15 30,3.8 30,0 0,0 "/>
-        </g>
-      </Icon>
-    );
-  }
+const IconEmail = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <path d="M18,21.1L18,21.1L18,21.1L6,13v12h24V13L18,21.1z M30,10H6l12,8L30,10z"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconEmail.displayName = 'IconEmail'
 IconEmail.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
-module.exports = IconEmail
+export default IconEmail

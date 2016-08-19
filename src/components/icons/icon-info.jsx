@@ -1,15 +1,26 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
-const IconInfo = () => {
+const IconInfo = (props) => {
+  const {className, height, width} = props
+  let classNames = 'two-tone';
+  if(className) {
+    classNames = classNames + ' ' + className;
+  }
   return (
-    <Icon width="30" height="30" className="two-tone">
+    <Icon className={classNames} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <circle className="base" cx="15" cy="15" r="15"/>
-        <path className="pale-blue" d="M63.42,9.83H60.57V7.69h2.85V9.83Zm0,13.1H60.57V12.36h2.85V22.93Z" transform="translate(-47)"/>
+        <circle className="base" cx="18" cy="18" r="12"/>
+        <path className="primary pale-blue" d="M20,14h-4v-3h4V14z M20,25h-4v-9h4V25z"/>
       </g>
     </Icon>
   )
+}
+
+IconInfo.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconInfo

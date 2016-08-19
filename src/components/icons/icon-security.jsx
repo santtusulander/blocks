@@ -2,13 +2,22 @@ import React from 'react'
 import Icon from '../icon.jsx'
 
 const IconSecurity = (props) => {
+  const {className, height, width} = props
   return (
-    <Icon width="44" height="44">
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <path d="M7562.82,9078.88v-6.29a13,13,0,0,0-13-12.66c-7.08,0-13.07,5.8-13.07,12.66v6.29h-7.59v27.05h40.58v-27.05h-6.92ZM7551,9093v6.37h-3V9093A4,4,0,1,1,7551,9093Zm6.48-14.12h-15.28v-6.29a7.65,7.65,0,0,1,15.28,0v6.29Z" transform="translate(-7529.16 -9059.93)"/>
+        <path d="M25.3,16.1v-3.7c0-4.1-3.3-7.3-7.3-7.3s-7.3,3.3-7.3,7.3v3.7H7v14.7h22V16.1H25.3z M18.9,24.2v2.9H17v-2.9
+          c-1.1-0.4-1.8-1.4-1.8-2.6c0-1.5,1.2-2.8,2.8-2.8s2.8,1.2,2.8,2.8C20.7,22.8,19.9,23.8,18.9,24.2z M21.6,16.1h-7.3v-3.7
+          c0-2,1.6-3.7,3.7-3.7c2,0,3.7,1.6,3.7,3.7V16.1z"/>
       </g>
     </Icon>
   )
 }
 
-export default  IconSecurity
+IconSecurity.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
+}
+
+export default IconSecurity

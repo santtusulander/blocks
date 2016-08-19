@@ -2,13 +2,20 @@ import React from 'react'
 import Icon from '../icon.jsx'
 
 const IconAnalytics = (props) => {
+  const {className, height, width} = props
   return (
-    <Icon width="44" height="44">
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <path d="M7534.66,8923.86a0.24,0.24,0,0,1,.18,0v18.32a0.24,0.24,0,0,1-.18,0h-7a0.24,0.24,0,0,1-.18,0V8923.9a0.24,0.24,0,0,1,.18,0h7Zm5.89-18.4a0.17,0.17,0,0,0-.18.08v36.64a0.17,0.17,0,0,0,.18.08h7a0.17,0.17,0,0,0,.18-0.08v-36.64a0.17,0.17,0,0,0-.18-0.08h-7Zm12.88,9.2a0.19,0.19,0,0,0-.18.06v27.48a0.19,0.19,0,0,0,.18.06h7a0.19,0.19,0,0,0,.18-0.06v-27.48a0.19,0.19,0,0,0-.18-0.06h-7Zm12.88-8a0.17,0.17,0,0,0-.18.08v35.42a0.17,0.17,0,0,0,.18.08h7a0.17,0.17,0,0,0,.18-0.08v-35.42a0.17,0.17,0,0,0-.18-0.08h-7Z" transform="translate(-7527.48 -8905.46)"/>
+        <path d="M8,18v11H4V18H8z M12,7v22h4V7H12z M20,13v16h4V13H20z M28,8v21h4V8H28z"/>
       </g>
     </Icon>
   )
 }
 
-export default  IconAnalytics
+IconAnalytics.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
+}
+
+export default IconAnalytics
