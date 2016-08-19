@@ -8,6 +8,8 @@ import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class AnalysisTraffic extends React.Component {
   constructor(props) {
     super(props);
@@ -84,33 +86,33 @@ class AnalysisTraffic extends React.Component {
          <h4>Total Egress Yesterday</h4>
          <p>{formatBytes(this.props.totalEgress)}</p>
          </div>*/}
-        <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
+        <h3><FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/> {this.props.dateRange.toUpperCase()}</h3>
         <div className="analysis-data-box wide">
           <Row>
             <Col xs={4} className="right-separator">
-              <h4>Peak</h4>
+              <h4><FormattedMessage id="portal.analytics.peak.text"/></h4>
               <p>{this.props.peakTraffic && this.props.peakTraffic}</p>
             </Col>
             <Col xs={4} className="right-separator">
-              <h4>Average</h4>
+              <h4><FormattedMessage id="portal.analytics.average.text"/></h4>
               <p>{this.props.avgTraffic && this.props.avgTraffic}</p>
             </Col>
             <Col xs={4}>
-              <h4>Low</h4>
+              <h4><FormattedMessage id="portal.analytics.low.text"/></h4>
               <p>{this.props.lowTraffic && this.props.lowTraffic}</p>
             </Col>
           </Row>
         </div>
-        <h3>TRANSFER BY TIME</h3>
+        <h3><FormattedMessage id="portal.analytics.trafficOverview.transferByTime.text"/></h3>
         <div ref="byTimeHolder" className="transfer-by-time">
           {this.props.fetching ?
-            <div>Loading...</div> :
+            <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisByTime axes={true} padding={40}
                             dataKey="bits_per_second"
                             primaryData={httpData.toJS()}
                             secondaryData={httpsData.toJS()}
-                            primaryLabel='HTTP'
-                            secondaryLabel='HTTPS'
+                            primaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.primaryLabel.text'})}
+                            secondaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.secondaryLabel.text'})}
                             stacked={true}
                             showLegend={true}
                             showTooltip={false}
@@ -118,10 +120,10 @@ class AnalysisTraffic extends React.Component {
                             width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
           }
         </div>
-        <h3>BY GEOGRAPHY</h3>
+        <h3><FormattedMessage id="portal.analytics.trafficOverview.byGeography.text"/></h3>
         <div ref="byLocationHolder">
           {this.props.fetching ?
-            <div>Loading...</div> :
+            <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisByLocation
               dataKey="average_bits_per_second"
               tooltipCustomFormat={(val) => formatBitsPerSecond(val, true)}
@@ -131,17 +133,17 @@ class AnalysisTraffic extends React.Component {
               countryData={this.props.byCountry}/>
           }
         </div>
-        <h3>BY COUNTRY</h3>
+        <h3><FormattedMessage id="portal.analytics.trafficOverview.byCountry.text"/></h3>
         <table className="table table-striped table-analysis by-country-table">
           <thead>
           <tr>
             <TableSorter {...sorterProps} column="name">
-              Country
+              <FormattedMessage id="portal.analytics.trafficOverview.byCountry.country.header"/>
             </TableSorter>
             <TableSorter {...sorterProps} column="average_bits_per_second">
-              Bandwidth
+              <FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwith.header"/>
             </TableSorter>
-            <th className="text-center">Period Trend</th>
+            <th className="text-center"><FormattedMessage id="portal.analytics.trafficOverview.byCountry.periodTrend.header"/></th>
           </tr>
           </thead>
           <tbody>
@@ -166,7 +168,7 @@ class AnalysisTraffic extends React.Component {
               </tr>
             )
           }) : <tr>
-            <td colSpan="3">Loading...</td>
+            <td colSpan="3"><FormattedMessage id="portal.loading.text"/></td>
           </tr>}
           </tbody>
         </table>
@@ -194,4 +196,4 @@ AnalysisTraffic.defaultProps = {
   serviceTypes: Immutable.List()
 }
 
-module.exports = AnalysisTraffic
+module.exports = injectIntl(AnalysisTraffic)

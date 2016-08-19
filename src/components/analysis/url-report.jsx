@@ -6,6 +6,8 @@ import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
 import {Input} from 'react-bootstrap'
 
+import {FormattedMessage} from 'react-intl'
+
 class AnalysisURLReport extends React.Component {
   constructor(props) {
     super(props);
@@ -64,7 +66,7 @@ class AnalysisURLReport extends React.Component {
       <div className="analysis-url-report">
         <div className="chart-holder" ref="chartHolder">
           <header>
-            <h3>15 Top URLs</h3>
+            <h3><FormattedMessage id="portal.analytics.urlList.top15.text"/></h3>
             <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
             <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
           </header>
@@ -77,7 +79,7 @@ class AnalysisURLReport extends React.Component {
             padding={20}
             xAxisCustomFormat={xAxisCustomFormat}/>
         </div>
-        <h3>All URLs</h3>
+        <h3><FormattedMessage id="portal.analytics.urlList.allUrls.text"/></h3>
         <AnalysisURLList
           urls={filteredUrls}
           labelFormat={url => url.get('url')}/>

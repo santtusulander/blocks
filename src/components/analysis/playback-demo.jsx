@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import { isSafari } from '../../util/helpers'
 import AnalysisByKey from './by-key'
 
-const videoErrorMsgOnSafari = 'This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox'
+import {FormattedMessage} from 'react-intl'
 
 export class PlaybackDemo extends React.Component {
   constructor(props) {
@@ -128,33 +128,33 @@ export class PlaybackDemo extends React.Component {
       <div className="analysis-playback-demo">
         <div className="container-fluid low-pad">
           <div className="summary-stat">
-            <h4>Time to First Play</h4>
+            <h4><FormattedMessage id="portal.analytics.demoPlayback.ttfp.text"/></h4>
             <div className="stat">
-              {this.state.ttfp} <span className="unit">ms</span>
+              {this.state.ttfp} <span className="unit"><FormattedMessage id="portal.units.ms"/></span>
             </div>
           </div>
           <div className="summary-stat">
-            <h4>Dominant Bitrate</h4>
+            <h4><FormattedMessage id="portal.analytics.demoPlayback.dominantBitrate.text"/></h4>
             <div className="stat">
               {numeral(dominantBitrate / 1000000).format('0,0.00')}
-              <span className="unit"> Mb/s</span>
+              <span className="unit"> <FormattedMessage id="portal.units.Mbs"/></span>
             </div>
           </div>
           <div className="summary-stat">
-            <h4>Client Buffer Events</h4>
+            <h4><FormattedMessage id="portal.analytics.demoPlayback.clientBufferEvents.text"/></h4>
             <div className="stat">
               {0/*this.state.bufferErrors*/}
             </div>
           </div>
           <div className="summary-stat">
-            <h4>Dropped Frames</h4>
+            <h4><FormattedMessage id="portal.analytics.demoPlayback.droppedFrames.text"/></h4>
             <div className="stat">
               {this.state.droppedFrames}
             </div>
           </div>
         </div>
         <div className="container-fluid container-fluid-video text-center">
-          {!isSafari() ? <video ref="player" controls={true}></video> : <p className="video-error-msg">{videoErrorMsgOnSafari}</p>}
+          {!isSafari() ? <video ref="player" controls={true}></video> : <p className="video-error-msg"><FormattedMessage id="portal.analytics.demoPlayback.safariNotSupported.text'"/></p>}
         </div>
         <div className="container-fluid low-pad">
           <div className="chart-row" ref="chartHolder">
@@ -163,13 +163,13 @@ export class PlaybackDemo extends React.Component {
               primaryData={this.state.events.toJS()}
               xKey="index" yKey="bitrate"/>
             <div className="title">
-              Bitrate by Segment
+              <FormattedMessage id="portal.analytics.demoPlayback.bitrateBySegment.text"/>
             </div>
             <div className="stat">
               {this.state.events.size ?
                 numeral(this.state.events.last().get('bitrate') / 1000000).format('0,0.00')
                 : 0}
-              <span className="unit"> Mb/s</span>
+              <span className="unit"> <FormattedMessage id="portal.units.Mbs"/></span>
             </div>
           </div>
           <div className="chart-row">
@@ -178,13 +178,13 @@ export class PlaybackDemo extends React.Component {
               primaryData={this.state.events.toJS()}
               xKey="index" yKey="bandwidth"/>
             <div className="title">
-              Bandwidth by Segment
+              <FormattedMessage id="portal.analytics.demoPlayback.bandwithBySegment.text"/>
             </div>
             <div className="stat">
               {this.state.events.size ?
                 numeral(this.state.events.last().get('bandwidth') / 1000).format('0,0')
                 : 0}
-              <span className="unit"> Kb/s</span>
+              <span className="unit"> <FormattedMessage id="portal.units.Kbs"/></span>
             </div>
           </div>
         </div>

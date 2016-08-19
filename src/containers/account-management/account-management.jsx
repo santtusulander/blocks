@@ -28,7 +28,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 
-import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
@@ -39,6 +39,8 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
+
+import {FormattedMessage} from 'react-intl'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -246,7 +248,15 @@ export class AccountManagement extends Component {
       accountName: [
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-          errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>
+                                                                            <div style={{marginTop: '0.5em'}}>
+                                                                              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                                                                              <ul>
+                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                                                                              </ul>
+                                                                            </div>
+                                                                          </div>]}</div>
         }
       ]
     }

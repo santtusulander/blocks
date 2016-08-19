@@ -9,6 +9,8 @@ import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
+import {formatMessage, injectIntl} from 'react-intl'
+
 class AnalysisOnOffNetReport extends React.Component {
   constructor(props) {
     super(props);
@@ -107,8 +109,8 @@ class AnalysisOnOffNetReport extends React.Component {
           dataKey="bytes"
           primaryData={dataSets && dataSets[0]}
           secondaryData={dataSets[1] && dataSets[1]}
-          primaryLabel='On Net'
-          secondaryLabel='Off Net'
+          primaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.primaryLabel.text'})}
+          secondaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.secondaryLabel.text'})}
           yAxisCustomFormat={(val, setMax) => formatBytes(val, false, setMax)}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
@@ -235,4 +237,4 @@ AnalysisOnOffNetReport.defaultProps = {
   onOffFilter: Immutable.Map()
 }
 
-module.exports = AnalysisOnOffNetReport
+module.exports = injectIntl(AnalysisOnOffNetReport)

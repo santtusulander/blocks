@@ -9,6 +9,16 @@ const TRANSLATED_MESSAGES = {
 	'portal.account.manage.accountType.text' : 'Account Type',
 	'portal.account.manage.services.text' : 'Account Type',
 	'portal.account.manage.invalidAccountName.text' : 'Account name is invalid.',
+	'portal.account.manage.nameValidationRequirements.line1.text' : 'Requirements:',
+	'portal.account.manage.nameValidationRequirements.line2.text' : 'minimum of 3 and maximum of 40 characters',
+	'portal.account.manage.nameValidationRequirements.line3.text' : 'allowed special characters: _ . , - & ( ) [ ]',
+	'portal.account.manage.editAccount.title' : 'Edit Account',
+	'portal.account.manage.newAccount.title' : 'Add New Account',
+	'portal.account.manage.noAccounts.text' : 'No accounts.',
+
+	'portal.account.manage.brand.title' : 'Brand',
+	'portal.account.manage.accountType.title' : 'Account Type',
+	'portal.account.manage.services.title' : 'Services',
 
 	'portal.account.list.accountName.title' : 'ACCOUNT NAME',
 	'portal.account.list.type.title' : 'TYPE',
@@ -19,6 +29,10 @@ const TRANSLATED_MESSAGES = {
 	'portal.account.list.search.empty.text' : 'No accounts found',
 
 	'portal.user.list.accountNotSelected.text' : 'Please select an account{br}from top left to see users',
+	'portal.user.list.name.column.title' : 'NAME',
+	'portal.user.list.role.column.title' : 'ROLE',
+	'portal.user.list.email.column.title' : 'EMAIL',
+	'portal.user.list.noUsers.text' : 'No users',
 
 	'portal.user.edit.passwordDoNotMatch.text' : 'Passwords do not match',
 	'portal.user.edit.roleRequired.text' : 'Role is required',
@@ -32,9 +46,122 @@ const TRANSLATED_MESSAGES = {
 	'portal.user.edit.resetPassword.text' : 'Reset Password',
 	'portal.user.edit.role.text' : 'Role',
 
+	'portal.user.delete.disclaimer.text' : 'Will lose access to UDN immediately and will not be able to log in anymore.',
+
+	'portal.brand.edit.editBrand.title' : 'Edit Brand',
+	'portal.brand.edit.newBrand.title' : 'New Brand',
+	'portal.brand.edit.brandName.text' : 'Brand Name',
+	'portal.brand.edit.brandName.placeholder' : 'Enter Brand Name',
+	'portal.brand.edit.logo.text' : 'Brand Logo',
+	'portal.brand.edit.logo.placeholder' : 'Provide Brand Logo',
+	'portal.brand.edit.favicon.text' : 'Favicon',
+	'portal.brand.edit.favicon.placeholder' : 'Enter Favicon',
+	'portal.brand.edit.favicon.addonAfter' : 'Best in SVG format (logo may be scaled)',
+	'portal.brand.edit.chooseColorTheme.text' : 'Choose Color Theme',
+	'portal.brand.edit.availability.text' : 'Availability',
+	'portal.brand.edit.availability.label' : 'Keep private (only I can assign this brand to accounts)',
+
+	'portal.brand.list.brand.text' : 'Brand',
+	'portal.brand.list.availability.text' : 'Availability',
+	'portal.brand.list.lastEdited.text' : 'Last Edited',
+	'portal.brand.list.usedBy.text' : 'Used By',
+
+	'portal.group.edit.name.required.text' : 'Group name is required',
+	'portal.group.edit.name.label' : 'Group Name',
+	'portal.group.edit.name.enter.text' : 'Enter Group Name',
+	'portal.group.edit.editGroup.title' : 'Edit Group',
+	'portal.group.edit.newGroup.title' : 'Add new group',
+
+	'portal.manage.tabs.users.title' : 'Users',
+	'portal.manage.tabs.brands.title' : 'Brands',
+	'portal.manage.tabs.dns.title' : 'DNS',
+	'portal.manage.tabs.roles.title' : 'Roles',
+
+	'portal.role.edit.roleNameRequired.text' : 'Role name is required',
+	'portal.role.edit.title' : 'Edit Role',
+	'portal.role.edit.discalimer.text' : 'Lorem Ipsum',
+	'portal.role.edit.enterRoleName.text' : 'Enter Role Name',
+	'portal.role.edit.name.text' : 'Name',
+
+	'portal.role.list.search.placeholder' : 'Search',
+	'portal.role.list.header.role.title' : 'Role',
+	'portal.role.list.header.permissions.title' : 'Permissions',
+	'portal.role.list.header.assignedTo.title' : 'Assigned To',
+	'portal.role.list.search.noResults.text' : 'No roles found',
+	'portal.role.list.search.noResultsWithTerm.text' : 'No roles found with the search term {searchTerm}',	
+
+	'portal.analytics.fileErrors.clientErrors.label' : 'Client errors',
+	'portal.analytics.fileErrors.serverErrors.label' : 'Server errors',
+
+	'portal.analytics.dataRangeFilter.pleaseSelect.label' : 'Server errors',
+
+	'portal.analytics.onOfNet.noOptionsSelected.text' : 'There must be at least one option selected.',
+	'portal.analytics.onOfNet.noOptionsSelected.title' : 'Error',
+	'portal.analytics.onOfNet.primaryLabel.text' : 'On Net',
+	'portal.analytics.onOfNet.secondaryLabel.text' : 'Off Net',
+
+	'portal.analytics.demoPlayback.safariNotSupported.text' : 'This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox',
+	'portal.analytics.demoPlayback.ttfp.text' : 'Time to First Play',
+	'portal.analytics.demoPlayback.dominantBitrate.text' : 'Dominant Bitrate',
+	'portal.analytics.demoPlayback.clientBufferEvents.text' : 'Client Buffer Events',
+	'portal.analytics.demoPlayback.droppedFrames.text' : 'Dropped Frames',
+	'portal.analytics.demoPlayback.bitrateBySegment.text' : 'Bitrate by Segment',
+	'portal.analytics.demoPlayback.bandwithBySegment.text' : 'Bandwith by Segment',
+
+	'portal.analytics.serviceProviderContribution.onNetHttp.label' : 'On-Net HTTP',
+	'portal.analytics.serviceProviderContribution.onNetHttps.label' : 'On-Net HTTPS',
+	'portal.analytics.serviceProviderContribution.ofNetHttp.label' : 'Of-Net HTTP',
+	'portal.analytics.serviceProviderContribution.ofNetHttps.label' : 'Of-Net HTTPS',
+	'portal.analytics.serviceProviderContribution.totalTraffic.label' : 'TOTAL TRAFFIC BY SERVICE PROVIDER',
+
+	'portal.analytics.trafficOverview.primaryLabel.text' : 'HTTP',
+	'portal.analytics.trafficOverview.secondaryLabel.text' : 'HTTPS',
+	'portal.analytics.trafficOverview.bandwith.text' : 'BANDWIDTH',
+	'portal.analytics.trafficOverview.transferByTime.text' : 'TRANSFER BY TIME',
+	'portal.analytics.trafficOverview.byGeography.text' : 'BY GEOGRAPHY',
+	'portal.analytics.trafficOverview.byCountry.text' : 'BY COUNTRY',
+	'portal.analytics.trafficOverview.byCountry.country.header' : 'Country',
+	'portal.analytics.trafficOverview.byCountry.bandwith.header' : 'Bandwith',
+	'portal.analytics.trafficOverview.byCountry.periodTrend.header' : 'Period Trend',
+
+	'portal.analytics.urlList.searchForUrl.text' : 'Search for URL',
+	'portal.analytics.urlList.url.text' : 'URL',
+	'portal.analytics.urlList.bytes.text' : 'Bytes',
+	'portal.analytics.urlList.requests.text' : 'Requests',
+	'portal.analytics.urlList.top15.text' : '15 Top URLs',
+	'portal.analytics.urlList.allUrls.text' : 'All URLs',
+
+	'portal.analytics.visitors.visiorsByTime.text' : 'VISITORS BY TIME',
+	'portal.analytics.visitors.byGeography.text' : 'BY GEOGRAPHY',
+	'portal.analytics.visitors.byCountry.text' : 'BY COUNTRY',
+	'portal.analytics.visitors.byBrowser.text' : 'BY BROWSER',
+	'portal.analytics.visitors.byOS.text' : 'BY OPERATING SYSTEM',
+	'portal.analytics.visitors.chart.visitors.label' : 'Visitors',
+	'portal.analytics.visitors.grid.os.header' : 'Operating System',
+	'portal.analytics.visitors.grid.browser.header' : 'Browser',
+	'portal.analytics.visitors.grid.totalVisitors.header' : 'Total Visitors',
+	'portal.analytics.visitors.grid.percentage.header' : '% of Visitors',
+	'portal.analytics.visitors.grid.periodTrend.header' : 'Period Trend',
+
+	'portal.analytics.noServiceTypeSelected.text' : 'There must be at least one service type selected.',
+	'portal.analytics.noServiceTypeSelected.title' : 'Error',
+
+	'portal.analytics.peak.text' : 'Peak',
+	'portal.analytics.average.text' : 'Average',
+	'portal.analytics.low.text' : 'Low',
+
+	'portal.units.ms' : 'ms',
+	'portal.units.Mbs' : 'Mb/s',
+	'portal.units.Kbs' : 'Kb/s',
+
+	'portal.loading.text' : 'Loading...',
+
 	'portal.button.continue' : 'Continue',
 	'portal.button.cancel' : 'Cancel',
 	'portal.button.save' : 'Save',
+	'portal.button.add' : 'Add',
+	'portal.button.delete' : 'Delete',
+	'portal.button.ok' : 'OK',
 	'portal.button.stay' : 'Stay'
 }
 
