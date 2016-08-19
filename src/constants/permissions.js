@@ -43,3 +43,5 @@ export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
 
 //DNS Permissions
 export const VIEW_DNS = 'VIEW_DNS'
+export const CREATE_ZONE = 'CREATE_ZONE'
+export const MODIFY_ZONE = 'MODIFY_ZONE'

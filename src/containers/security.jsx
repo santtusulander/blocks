@@ -137,8 +137,8 @@ export class Security extends React.Component {
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
-            onCancel={() => toggleModal(null)}
-            onDelete={() => onDelete(toDelete)}/>}
+            cancel={() => toggleModal(null)}
+            submit={() => onDelete(toDelete)}/>}
       </PageContainer>
     )
   }
