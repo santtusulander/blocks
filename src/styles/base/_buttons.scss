@@ -5,16 +5,21 @@
 // Need to override BootStrap
 
 $btn-font-size: 15px;
+$dropdown-font-size: 14px;
 $btn-min-width: rem(120px);
 $dropdown-min-width: rem(320px);
 $btn-top-padding: em(8px, $btn-font-size);
 $btn-horizontal-padding: em(18px, $btn-font-size);
 $btn-bottom-padding: em(7px, $btn-font-size);
+$dropdown-top-padding: em(9px, $dropdown-font-size);
+$dropdown-horizontal-padding: em(18px, $dropdown-font-size);
+$dropdown-bottom-padding: em(8px, $dropdown-font-size);
 $btn-text-color: $white;
 $btn-primary-background: $pale-blue;
 $btn-secondary-background: transparent;
 $btn-danger-background: $red;
 $btn-success-background: $gradient-teal;
+$lt-caret-color: $silver-60;
 
 .btn {
   min-width: $btn-min-width;
@@ -432,7 +437,9 @@ $btn-success-background: $gradient-teal;
 
     .dropdown-toggle {
       width: 100%;
-      padding-right: calc(#{$btn-horizontal-padding} * 2);  // Prevents the text from flowing under the caret
+      padding: $dropdown-top-padding calc(#{$dropdown-horizontal-padding} * 2) $dropdown-bottom-padding $dropdown-horizontal-padding;  // Calculation prevents the text from flowing under the caret
+      font-size: $dropdown-font-size;
+      font-weight: 300;
       color: $dt-text-color;
       text-align: left;
       text-transform: capitalize;
@@ -442,16 +449,6 @@ $btn-success-background: $gradient-teal;
 
       &:focus {
         box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
-      }
-
-      &:hover:not(:disabled),
-      &:hover:not(:disabled) .icon,
-      &:active,
-      &.active,
-      &:active:hover,
-      &.active:focus {
-        background-color: rgba($black, 0.5);
-        box-shadow: none;
       }
 
       > .icon {
@@ -480,23 +477,6 @@ $btn-success-background: $gradient-teal;
     &.open .dropdown-toggle {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
-
-      &,
-      &:hover {
-        color: $pale-blue;
-        background-color: rgba($black, 0.3);
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-
-      .icon {
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
     }
   }
 }
@@ -523,6 +503,41 @@ $btn-success-background: $gradient-teal;
 
     &:focus {
       box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px rgba($btn-primary-background, 0.2);
+    }
+  }
+
+  .dropdown-select {
+    .dropdown-toggle {
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon {
+        color: $white;
+        fill: $white;
+        stroke: $white;
+      }
+
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-color: rgba($black, 0.5);
+        box-shadow: none;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      &,
+      &:hover,
+      &:hover .icon,
+      .icon {
+        color: $pale-blue;
+        background-color: rgba($black, 0.3);
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
   }
 }
@@ -553,6 +568,47 @@ $btn-success-background: $gradient-teal;
 
     &:focus {
       box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px $btn-primary-background;
+    }
+  }
+
+  .dropdown-select {
+    .dropdown-toggle {
+      color: $lt-text-color;
+      background-color: $white;
+
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        color: $black;
+        box-shadow: none;
+        fill: $black;
+        stroke: $black;
+      }
+
+      .icon {
+        fill: $lt-caret-color;
+        stroke: $lt-caret-color;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      background-color: $white;
+
+      &,
+      &:hover,
+      &:hover .icon,
+      .icon {
+        color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
   }
 }
@@ -658,55 +714,30 @@ $btn-success-background: $gradient-teal;
 
 .light-theme {
 
-  .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        color: $lt-text-color;
-        background-color: $white;
-      }
-
-      .icon {
-        fill: $lt-text-color;
-        stroke: $lt-text-color;
-      }
-
-      &:hover:not(:disabled),
-      &:hover:not(:disabled) .icon {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      &.active {
-        background-color: $white;
-      }
-    }
-
-    &.open .dropdown-toggle {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-
-      &,
-      &:hover {
-        font-weight: 500;
-        color: $pale-blue;
-        background-color: $silver-30;
-        border-right: 1px solid rgba($black, 0.1);
-        border-bottom: 1px solid rgba($black, 0.1);
-        box-shadow: none;
-      }
-
-      .icon {
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-    }
-  }
+  // .dropdown-select {
+  //
+  //   .dropdown-toggle {
+  //
+  //   &.open .dropdown-toggle {
+  //     border-bottom-right-radius: 0;
+  //     border-bottom-left-radius: 0;
+  //
+  //     &,
+  //     &:hover {
+  //       font-weight: 500;
+  //       color: $pale-blue;
+  //       background-color: $silver-30;
+  //       border-right: 1px solid rgba($black, 0.1);
+  //       border-bottom: 1px solid rgba($black, 0.1);
+  //       box-shadow: none;
+  //     }
+  //
+  //     .icon {
+  //       fill: $pale-blue;
+  //       stroke: $pale-blue;
+  //     }
+  //   }
+  // }
 
   .page-header-layout .dropdown-select {
 

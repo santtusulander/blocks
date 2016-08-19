@@ -1,5 +1,9 @@
 // Dropdowns
 // =========
+$dropdown-font-size: 15px;
+$dropdown-top-padding: em(14px, $dropdown-font-size);
+$dropdown-horizontal-padding: em(18px, $dropdown-font-size);
+$dropdown-bottom-padding: em(13px, $dropdown-font-size);
 
 .caret {
   border-width: 5px;
@@ -12,10 +16,6 @@
     border-top-style: none;
     border-bottom-style: solid;
   }
-}
-
-.dropdown {
-  outline: none;
 }
 
 // scss-lint:disable SelectorDepth NestingDepth
@@ -314,22 +314,24 @@
   }
 
   > li {
-    display: table;
-    width: 100%;
-    height: $bar-height;
-
-    @include md {
-      height: $md-bar-height;
-    }
+    // display: table;
+    // width: 100%;
+    // height: $bar-height;
+    //
+    // @include md {
+    //   height: $md-bar-height;
+    // }
 
     > a,
     > ul > li > a {
-      display: table-cell;
-      padding: 15px $dropdown-padding;
-      line-height: 1.1em;
-      color: inherit;
-      white-space: normal;
-      vertical-align: middle;
+      // display: table-cell;
+      // padding: 15px $dropdown-padding;
+      // line-height: 1.1em;
+      // color: inherit;
+      // white-space: normal;
+      // vertical-align: middle;
+      padding: $dropdown-top-padding $dropdown-horizontal-padding $dropdown-bottom-padding;
+      font-size: $dropdown-font-size;
 
       .dark-theme & {
         color: $dt-text-color;
