@@ -1,5 +1,7 @@
 import moment from 'moment'
 
+import * as domainSelectors from './modules/dns'
+
 export const urlBase = ''
 
 export const topoBase = () => {
@@ -61,3 +63,13 @@ export function getDateRange( filters ) {
     endDate
   }
 }
+
+/**
+ *
+ * Selectors
+ */
+
+export const shouldCallApi = (state, item) => {
+  return domainSelectors.shouldCallApi(state.get('domains'), item)
+}
+

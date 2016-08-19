@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
+import * as dnsActionCreators from '../../../redux/modules/dns'
 
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
@@ -17,6 +18,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
+    //this.props.fetchDomain(this.props.params.brand, 'cdx-dev.unifieddeliverynetwork.net')
     !this.props.domains.size && this.props.fetchDomains(this.props.params.brand).then(({ payload }) => {
       !this.props.activeDomain && this.props.changeActiveDomain(payload[0])
     })
@@ -81,4 +83,17 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDomains, changeActiveDomain })(AccountManagementSystemDNS)
+const shouldCallApi = (state, item) => {
+  return dnsActionCreators.shouldCallApi(state.get('domains'), item)
+}
+
+function mapDispatchToProps(dispatch) {
+  const { fetchDomain, fetchDomains, changeActiveDomain } = bindActionCreators(dnsActionCreators, dispatch)
+  return {
+    fetchDomains,
+    fetchDomain: (brand, domain) => fetchDomain(brand, domain, shouldCallApi),
+    changeActiveDomain
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountManagementSystemDNS)

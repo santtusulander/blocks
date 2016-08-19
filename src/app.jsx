@@ -15,8 +15,22 @@ import { LogPageView } from './util/google-analytics'
 
 import './styles/style.scss'
 
+const shouldCallApiMiddleware = ({ getState, dispatch }) => next => action => {
+  if (!action.meta || !action.meta.shouldCallApi) {
+    return next(action)
+  }
+  if (typeof action.meta.shouldCallApi !== 'function') {
+    throw new Error('shouldCallApi must be a function.')
+  }
+  if (!action.meta.shouldCallApi(getState)) {
+    return
+  }
+  dispatch(action)
+}
+
 const createStoreWithMiddleware = applyMiddleware(
-  promiseMiddleware
+  promiseMiddleware,
+  shouldCallApiMiddleware
 )(createStore)
 const stateReducer = combineReducers(reducers)
 const store = createStoreWithMiddleware(stateReducer)

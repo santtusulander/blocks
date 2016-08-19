@@ -38,6 +38,14 @@ export function fetchedAllDomainsSuccess(state, action) {
   })
 }
 
+export function fetchedDomain(state, { payload }) {
+  const index = state.get('domains')
+    .findIndex(domain => domain.get('id') === payload.id && !domain.get('details'))
+  return state.merge({
+    domains: state.get('domains').set(index, payload)
+  })
+}
+
 export function fetchedAllDomainsFailure(state) {
   return state.merge({
     domains: []
@@ -56,6 +64,14 @@ export function activeRecordTypeChange(state, action) {
   })
 }
 
+/**
+ *
+ * Selectors
+ */
+
+export const shouldCallApi = (domains, item) =>
+  domains.findIndex(domain => domain.get('id') === item && !domain.get('details')) >= 0
+
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
   DOMAIN_FETCHED: null,
@@ -69,8 +85,11 @@ export default handleActions({
 export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
   axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones`).then(parseResponseData))
 
-export const fetchDomain = createAction(DOMAIN_FETCHED_ALL, (brand, domain) =>
-  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`).then(parseResponseData))
+export const fetchDomain = createAction(DOMAIN_FETCHED, [
+  (brand, domain) =>
+    axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`).then(parseResponseData),
+  shouldCallApi => shouldCallApi
+])
 
 export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =>
   axios.post(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
@@ -79,6 +98,7 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
     }
   }).then(parseResponseData)
 )
+
 export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
   axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${name}`, data, {
     headers: {
@@ -86,8 +106,6 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
     }
   }).then(parseResponseData)
 )
-
-
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
