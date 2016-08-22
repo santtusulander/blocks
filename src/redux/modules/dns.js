@@ -52,6 +52,10 @@ export function editDomainSuccess(state, { payload: { domain, data } }) {
   })
 }
 
+export function editDomainFailure(state) {
+  return state
+}
+
 export function fetchedAllDomainsSuccess(state, action) {
   return state.merge({
     domains: fromJS(action.payload.map(domain => ({ id: domain })))
@@ -108,15 +112,8 @@ export const fetchDomainsIfNeeded = (domains, brand) => dispatch => {
   }
 }
 
-export const domainCreation = (brand, domain, data) => dispatch => {
-  dispatch(startFetching())
-  dispatch(createDomain(brand, domain, data))
-    .then(dispatch(stopFetching))
-}
-
 export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
   if (shouldFetchDomain(domains, domain)) {
-    dispatch(startFetching())
     dispatch(fetchDomain(brand, domain)).then(dispatch(stopFetching()))
   }
 }
@@ -150,8 +147,8 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
   }).then(data => ({ data, domain }))
 )
 
-export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
-  axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${name}`, data, {
+export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
+  axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
