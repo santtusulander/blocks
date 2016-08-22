@@ -69,6 +69,12 @@ export function fetchedAllDomainsSuccess(state, action) {
   })
 }
 
+export function fetchedAllDomainsFailure(state) {
+  return state.merge({
+    domains: []
+  })
+}
+
 export function fetchedDomainSuccess(state, { payload: { data, domain } }) {
   const index = state.get('domains')
     .findIndex(item => item.get('id') === domain && !item.get('details'))
@@ -79,12 +85,6 @@ export function fetchedDomainSuccess(state, { payload: { data, domain } }) {
 
 export function fetchedDomainFailure(state) {
   return state
-}
-
-export function fetchedAllDomainsFailure(state) {
-  return state.merge({
-    domains: []
-  })
 }
 
 export function activeDomainChange(state, action) {
