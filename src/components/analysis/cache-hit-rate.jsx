@@ -10,6 +10,8 @@ import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 import Select from '../select'
 
+import './cache-hit-rate.scss'
+
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
     super(props);
