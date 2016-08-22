@@ -5,6 +5,7 @@ import axios from 'axios'
 import { urlBase, parseResponseData, mapReducers } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
+const DOMAIN_DELETED = 'DOMAIN_DELETED'
 const DOMAIN_CREATED = 'DOMAIN_CREATED'
 const DOMAIN_EDITED = 'DOMAIN_EDITED'
 const DOMAIN_FETCHED_ALL = 'DOMAIN_FETCHED_ALL'
@@ -22,11 +23,6 @@ export const initialState = fromJS({
 
 // REDUCERS
 
-export function editSOARecord(state, action) {
-  const index = state.get('domains').findIndex(domain => domain.get('id') === action.payload.id)
-  return state.setIn(['domains', index, 'SOARecord'], fromJS(action.payload.data))
-}
-
 export function startedFetching(state) {
   return state.merge({ loading: true })
 }
@@ -42,6 +38,17 @@ export function createDomainSuccess(state, { payload: { data, domain } }) {
 }
 
 export function createDomainFailure(state) {
+  return state
+}
+
+export function deleteDomainSuccess(state, { payload }) {
+  const index = state.get('domains').findIndex(domain => domain.get('id') === payload)
+  return state.merge({
+    domains: state.get('domains').delete(index)
+  })
+}
+
+export function deleteDomainFailure(state) {
   return state
 }
 
@@ -123,7 +130,7 @@ export default handleActions({
   DOMAIN_FETCHED: mapReducers(fetchedDomainSuccess, fetchedDomainFailure),
   DNS_START_FETCHING: startedFetching,
   DNS_STOP_FETCHING: stoppedFetching,
-  SOA_RECORD_EDITED: editSOARecord,
+  DOMAIN_DELETED: mapReducers(deleteDomainSuccess, deleteDomainFailure),
   DOMAIN_CREATED: mapReducers(createDomainSuccess, createDomainFailure),
   DOMAIN_EDITED: mapReducers(editDomainSuccess, editDomainFailure),
   CHANGE_ACTIVE_DOMAIN: activeDomainChange,
@@ -137,6 +144,11 @@ export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
 export const fetchDomain = createAction(DOMAIN_FETCHED,
   (brand, domain) => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
     .then(data => ({ data, domain }))
+)
+
+export const deleteDomain = createAction(DOMAIN_DELETED, (brand, domain) =>
+  axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
+    .then(() => domain)
 )
 
 export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =>
