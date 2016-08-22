@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Dropdown, Nav, Button } from 'react-bootstrap'
+import { Nav, Button } from 'react-bootstrap'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
 
@@ -26,6 +26,7 @@ import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
+import TruncatedTitle from '../../components/truncated-title'
 
 import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../constants/account-management-options'
 import {
@@ -276,16 +277,16 @@ export class AccountManagement extends Component {
       case DELETE_ACCOUNT:
         deleteModalProps = {
           itemToDelete: 'Account',
-          onCancel: () => toggleModal(null),
-          onDelete: () => onDelete(brand, account || this.accountToDelete, router)
+          cancel: () => toggleModal(null),
+          submit: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
           itemToDelete: this.state.groupToDelete.get('name'),
           description: 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
-          onCancel: () => toggleModal(null),
-          onDelete: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          cancel: () => toggleModal(null),
+          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
     }
 
@@ -344,12 +345,12 @@ export class AccountManagement extends Component {
       permissions: this.props.permissions,
       users: this.props.users
     }
-
     return (
       <PageContainer className="account-management">
         <Content>
           <div className="account-management-manage-account">
             <PageHeader>
+              <p>ACCOUNT MANAGEMENT</p>
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"
@@ -358,9 +359,11 @@ export class AccountManagement extends Component {
                   topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
                   onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                   restrictedTo="account">
-                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                    <h1>{activeAccount.get('name') || 'No active account'}</h1>
-                  </Dropdown.Toggle>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
+                      tooltipPlacement="bottom" className="account-property-title"/></h1>
+                    <span className="caret"></span>
+                  </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
@@ -385,14 +388,14 @@ export class AccountManagement extends Component {
               <li className="navbar">
                 <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
               </li>
-              {/*
-              <li className="navbar">
+              {/*<li className="navbar">
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-              </li>
-               <li className="navbar">
-               <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
-               </li>
-               */}
+              </li>*/}
+              <IsAllowed to={PERMISSIONS.VIEW_DNS}>
+                <li className="navbar">
+                  <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
+                </li>
+              </IsAllowed>
               <li className="navbar">
                 <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
               </li>
@@ -417,8 +420,8 @@ export class AccountManagement extends Component {
           {accountManagementModal === DELETE_USER &&
           <DeleteUserModal
             itemToDelete={this.userToDelete}
-            onCancel={() => toggleModal(null)}
-            onDelete={this.deleteUser}/>}
+            cancel={() => toggleModal(null)}
+            submit={this.deleteUser}/>}
           {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
           <GroupForm
             id="group-form"
@@ -500,7 +503,6 @@ function mapDispatchToProps(dispatch) {
   function onDelete(brandId, accountId, router) {
     // Hide the delete modal.
     toggleModal(null)
-
     // Delete the account.
     accountActions.deleteAccount(brandId, accountId)
       .then((response) => {

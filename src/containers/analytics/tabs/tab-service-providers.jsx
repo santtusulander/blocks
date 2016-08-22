@@ -33,12 +33,6 @@ class AnalyticsTabServiceProviders extends React.Component {
     this.props.trafficActions.fetchServiceProviders(onOffOpts)
   }
 
-  export() {
-    //There is no valid exporter for SP report yet
-    //exporters.serviceProviders(this.props.serviceProviders.get('detail'))
-    console.log('No valid exporter for SP report!')
-  }
-
   render(){
     return (
       <AnalysisServiceProviders
@@ -77,4 +71,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabServiceProviders);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabServiceProviders);

@@ -16,6 +16,10 @@ class TruncatedTitle extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
 
+  componentWillReceiveProps(){
+    this.measureContainers()
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
   }
@@ -46,7 +50,6 @@ class TruncatedTitle extends React.Component {
 TruncatedTitle.displayName = 'TruncatedTitle'
 TruncatedTitle.propTypes = {
   className: React.PropTypes.string,
-  content: React.PropTypes.string,
   tooltipPlacement: React.PropTypes.string
 };
 
