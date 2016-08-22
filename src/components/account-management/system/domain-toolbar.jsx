@@ -11,15 +11,15 @@ import IconEdit from '../../icons/icon-edit'
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue }) => {
   const sortedDomains = domains.sort((a,b) => {
-    if (a.toLowerCase() < b.toLowerCase()) return -1
-    if (a.toLowerCase() > b.toLowerCase()) return 1
+    if (a.id.toLowerCase() < b.id.toLowerCase()) return -1
+    if (a.id.toLowerCase() > b.id.toLowerCase()) return 1
     return 0
   })
   return (
     <div className="domain-toolbar">
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
-          items={sortedDomains.map(domain => [domain, domain])}
+          items={sortedDomains.map(domain => [domain.id, domain.id])}
           onItemClick={changeActiveDomain}
           searchValue={searchValue}
           onSearch={searchFunc}>
@@ -43,7 +43,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
             id="edit-domain"
             bsStyle="primary"
             icon={true}
-            onClick={onEditDomain}>
+            onClick={() => onEditDomain(domains, activeDomain)}>
             <IconEdit/>
           </UDNButton>
         </IsAllowed>}

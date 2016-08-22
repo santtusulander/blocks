@@ -18,10 +18,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
-    //this.props.fetchDomain(this.props.params.brand, 'cdx-dev.unifieddeliverynetwork.net')
-    !this.props.domains.size && this.props.fetchDomains(this.props.params.brand).then(({ payload }) => {
-      !this.props.activeDomain && this.props.changeActiveDomain(payload[0])
-    })
+    this.props.fetchDomains(this.props.domains, this.props.params.brand)
   }
 
   render() {
@@ -30,7 +27,7 @@ class AccountManagementSystemDNS extends Component {
       searchValue: this.state.domainSearchValue,
       searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
-      domains: domains.filter(domain => domain.includes(this.state.domainSearchValue)),
+      domains: domains && domains.filter(domain => domain.id.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
       onAddDomain,
       onEditDomain
@@ -83,15 +80,12 @@ function mapStateToProps(state) {
   }
 }
 
-const shouldCallApi = (state, item) => {
-  return dnsActionCreators.shouldCallApi(state.get('domains'), item)
-}
-
-function mapDispatchToProps(dispatch) {
-  const { fetchDomain, fetchDomains, changeActiveDomain } = bindActionCreators(dnsActionCreators, dispatch)
+function mapDispatchToProps(dispatch, { params: { brand } }) {
+  const { fetchDomainsIfNeeded, fetchDomainIfNeeded } = dnsActionCreators
+  const { changeActiveDomain } = bindActionCreators(dnsActionCreators, dispatch)
   return {
-    fetchDomains,
-    fetchDomain: (brand, domain) => fetchDomain(brand, domain, shouldCallApi),
+    fetchDomains: domains => dispatch(fetchDomainsIfNeeded(domains, brand)),
+    onEditDomain: (domains, activeDomain) => dispatch(fetchDomainIfNeeded(domains, activeDomain, brand)),
     changeActiveDomain
   }
 }

@@ -5,6 +5,7 @@ import { Router, browserHistory } from 'react-router'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
+import thunkMiddleware from 'redux-thunk'
 import axios from 'axios'
 import { Button } from 'react-bootstrap'
 
@@ -15,22 +16,28 @@ import { LogPageView } from './util/google-analytics'
 
 import './styles/style.scss'
 
-const shouldCallApiMiddleware = ({ getState, dispatch }) => next => action => {
-  if (!action.meta || !action.meta.shouldCallApi) {
+const shouldCallApiMiddleware = ({ getState }) => next => action => {
+  const { payload } = action
+  if (!payload || !payload.shouldCallApi) {
     return next(action)
   }
-  if (typeof action.meta.shouldCallApi !== 'function') {
+  const { shouldCallApi, toFetch, typeToFetch, callApi } = payload
+  if (typeof shouldCallApi !== 'function') {
     throw new Error('shouldCallApi must be a function.')
   }
-  if (!action.meta.shouldCallApi(getState)) {
+
+  if (!shouldCallApi(getState(), typeToFetch, toFetch)) {
     return
   }
-  dispatch(action)
+  callApi().then(res => {
+    return next(Promise.resolve({ type: action.type, payload: res }))
+  })
 }
 
 const createStoreWithMiddleware = applyMiddleware(
-  promiseMiddleware,
-  shouldCallApiMiddleware
+  //shouldCallApiMiddleware,
+  thunkMiddleware,
+  promiseMiddleware
 )(createStore)
 const stateReducer = combineReducers(reducers)
 const store = createStoreWithMiddleware(stateReducer)
