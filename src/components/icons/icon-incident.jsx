@@ -1,15 +1,27 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
-const IconIncident = () => {
+const IconIncident = (props) => {
+  const {className, height, width} = props
+  let classNames = 'two-tone';
+  if(className) {
+    classNames = classNames + ' ' + className;
+  }
   return (
-    <Icon width="30" height="30" className="two-tone">
+    <Icon className={classNames} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <circle className="base" cx="15" cy="15" r="15"/>
-        <polygon className="primary" points="15 9 18.09 5.49 18.53 10.15 23.09 9.12 20.71 13.15 25 15 20.71 16.85 23.09 20.88 18.53 19.85 18.09 24.51 15 21 11.91 24.51 11.47 19.85 6.91 20.88 9.29 16.85 5 15 9.29 13.15 6.91 9.12 11.47 10.15 11.91 5.49 15 9"/>
+        <circle className="base" cx="18" cy="18" r="12"/>
+        <polygon className="primary" points="15.5,10.4 15.2,14.1 11.5,13.3 13.4,16.5 10,18 13.4,19.5 11.5,22.7 15.2,21.9 15.5,25.6 18,22.8
+          20.5,25.6 20.8,21.9 24.5,22.7 22.6,19.5 26,18 22.6,16.5 24.5,13.3 20.8,14.1 20.5,10.4 18,13.2"/>
       </g>
     </Icon>
   )
+}
+
+IconIncident.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconIncident

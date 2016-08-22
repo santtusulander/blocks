@@ -1,17 +1,24 @@
 // Styleguide
 // ==========
 
-.styleguide-row {
-  display: block;
-  margin-bottom: 10px;
+.styleguide-page {
 
-  &::before,
-  &::after {
-    display: table;
-    content: ' ';
+  .styleguide-row {
+    display: block;
+    margin-bottom: 10px;
+
+    &::before,
+    &::after {
+      display: table;
+      content: ' ';
+    }
+
+    &::after {
+      clear: both;
+    }
   }
 
-  &::after {
-    clear: both;
+  .icon:hover {
+    background: rgba($pale-blue, 0.2);
   }
 }

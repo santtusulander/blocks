@@ -2,13 +2,21 @@ import React from 'react'
 import Icon from '../icon.jsx'
 
 const IconServices = (props) => {
+  const {className, height, width} = props
   return (
-    <Icon width="44" height="44">
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <polygon points="35.12 24.4 35.12 17.96 23.06 17.96 23.06 13.6 31.5 13.6 31.5 0 12.2 0 12.2 13.6 20.64 13.6 20.64 17.96 8.58 17.96 8.58 24.4 0 24.4 0 38 19.3 38 19.3 24.4 10.99 24.4 10.99 20.38 32.71 20.38 32.71 24.4 24.4 24.4 24.4 38 43.7 38 43.7 24.4 35.12 24.4"/>
+        <polygon points="26,21 26,17 19,17 19,15 24,15 24,7 12,7 12,15 17,15 17,17 10,17 10,21 5,21 5,29
+          17,29 17,21 12,21 12,19 24,19 24,21 19,21 19,29 31,29 31,21"/>
       </g>
     </Icon>
   )
+}
+
+IconServices.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconServices
