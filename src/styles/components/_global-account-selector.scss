@@ -1,8 +1,10 @@
+// GLOBAL ACCOUNT SELECTOR DROPDOWN
+// ================================
+
 $dropdown-selector-width: rem(320px);
 $dropdown-selector-max-height: rem(480px);
 
-// GLOBAL ACCOUNT SELECTOR DROPDOWN
-.global-account-selector {
+.selector-component {
   display: block;
 }
 
@@ -43,25 +45,16 @@ $dropdown-selector-max-height: rem(480px);
         width: 100%;
         align-items: center;
         flex-direction: row;
-        padding: 0;
 
-        .name, .top-bar-link {
-          padding-left: 20px;
-          height: 100%;
-          line-height: 58px;
-        }
         .caret-container {
-          height: 100%;
-          padding-right: 15px;
-          align-items: center;
-          padding-left: 7px;
           display: flex;
+          align-items: center;
         }
       }
     }
 
     .form-group {
-      padding: 20px;
+      padding: 0;
       flex: 1;
     }
   }
