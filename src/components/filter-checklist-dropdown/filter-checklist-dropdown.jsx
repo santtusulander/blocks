@@ -1,7 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import {List} from 'immutable'
-import { Dropdown, Button, Input } from 'react-bootstrap'
+import { List } from 'immutable'
+import { Dropdown, Button, Input, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import './filter-checklist-dropdown.scss'
@@ -161,28 +161,29 @@ export class FilterChecklistDropdown extends React.Component {
             <IconSelectCaret/>
             {this.getLabel()}
           </Dropdown.Toggle>
-          {dropdownOpen &&
-          <div className="filter-container">
-            <input
-              ref="filterInput"
-              type="text"
-              placeholder="search"
-              className="form-control"
-              onChange={this.handleFilter}
-              value={filterValue}
-            />
-          </div>
-          }
           <Dropdown.Menu>
+            {dropdownOpen &&
+              <MenuItem className="search-container">
+                <Input
+                  className="header-search-input"
+                  type="text"
+                  onChange={this.handleFilter}
+                  value={filterValue}
+                  placeholder="Search"
+                />
+              </MenuItem>
+            }
             <li>
               <ul className='scrollable-menu'>
                 {itemList}
               </ul>
             </li>
-            {!this.props.noClear && <li className="clear-container">
-              <Button bsClass="btn btn-block btn-primary"
+            {!this.props.noClear &&
+              <MenuItem className="search-container">
+                <Button bsClass="btn btn-block btn-primary"
                       onClick={this.handleClear}>Clear</Button>
-            </li>}
+              </MenuItem>
+            }
           </Dropdown.Menu>
         </Dropdown>
       </div>

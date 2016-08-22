@@ -1,6 +1,6 @@
 // Icons
 // =====
-
+$icon-base-color: $white;
 $icon-two-tone-base: $silver-20;
 $icon-two-tone-primary: $dark-blue;
 
@@ -12,12 +12,9 @@ $icon-two-tone-primary: $dark-blue;
   background-position: center center;
   background-repeat: no-repeat;
 
-  .dark-theme & {
-    fill: $dt-text-color;
-  }
-
+  .dark-theme &,
   .light-theme & {
-    fill: $lt-text-color;
+    fill: $icon-base-color;
   }
 
   &.no-fill,

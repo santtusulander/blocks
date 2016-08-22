@@ -3,11 +3,9 @@
 $dropdown-font-size: 14px;
 $search-font-size: 12px;
 $dropdown-menu-min-width: rem(320px);
-$dropdown-top-padding: em(14px, $dropdown-font-size);
+$dropdown-vertical-padding: em(14px, $dropdown-font-size);
 $dropdown-horizontal-padding: em(18px, $dropdown-font-size);
-$dropdown-bottom-padding: em(14px, $dropdown-font-size);
-$search-top-padding: em(9px, $search-font-size);
-$search-bottom-padding: em(9px, $search-font-size);
+$search-vertical-padding: em(9px, $search-font-size);
 $search-input-vertical-padding: em(8px, $search-font-size);
 $search-input-left-padding: em(36px, $search-font-size);
 $dt-dropdown-menu-color: $dt-text-color;
@@ -77,6 +75,10 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 
   .header-toggle + & {
     top: 110%;
+  }
+
+  .form-group {
+    width: 100%;
   }
 
   &.dropdown-account-menu {
@@ -326,7 +328,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
       // color: inherit;
       // white-space: normal;
       // vertical-align: middle;
-      padding: $dropdown-top-padding $dropdown-horizontal-padding $dropdown-bottom-padding;
+      padding: $dropdown-vertical-padding $dropdown-horizontal-padding;
       font-size: $dropdown-font-size;
 
       &:hover,
@@ -374,8 +376,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 
     &.search-container  {
       > a {
-        padding-top: $search-top-padding;
-        padding-bottom: $search-bottom-padding;
+        padding: $search-vertical-padding $dropdown-horizontal-padding;
       }
 
       .header-search-input {
