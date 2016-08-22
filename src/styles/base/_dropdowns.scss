@@ -40,37 +40,29 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
     animation: showDropup 250ms ease-out;
   }
 
-  .dark-theme & {
-    color: $dt-dropdown-menu-color;
-    background-color: $dt-dropdown-menu-bg-color;
-    background-image: $dt-dropdown-menu-bg-image;
-    background-size: 100%;
-
-    .active > a,
-    li > .active {
-
-      &,
-      &:hover,
-      &:focus {
-        color: $pale-blue;
-        background-color: rgba($pale-blue, 0.1);
-      }
-    }
-  }
-
+  .dark-theme &,
   .light-theme & {
-    color: $lt-text-color;
-    background-color: $white;
-
     .active > a {
 
       &,
       &:hover,
       &:focus {
-        color: $black;
-        background-color: rgba($black, 0.1);
+        color: $pale-blue;
+        background-color: transparent;
       }
     }
+  }
+
+  .dark-theme & {
+    color: $dt-dropdown-menu-color;
+    background-color: $dt-dropdown-menu-bg-color;
+    background-image: $dt-dropdown-menu-bg-image;
+    background-size: 100%;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
   }
 
   .header-toggle + & {
@@ -220,9 +212,9 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
             right: $btn-sm-height / 2;
             margin: -5px 12px 0 0;
             vertical-align: middle;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px dashed;
+            border-top: $caret-width-base solid transparent;
+            border-bottom: $caret-width-base solid transparent;
+            border-left: $caret-width-base dashed;
             content: '';
 
             @include md {
@@ -343,7 +335,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 
         .caret-container {
           .caret {
-            border-left: 5px solid $pale-blue;
+            border-left: $caret-width-base solid $pale-blue;
           }
         }
       }
@@ -412,16 +404,16 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
       width: auto;
 
       .caret {
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-width: 5px;
+        border-top: $caret-width-base solid transparent;
+        border-bottom: $caret-width-base solid transparent;
+        border-width: $caret-width-base;
 
         .dark-theme & {
-          border-left: 5px solid $dt-text-color;
+          border-left: $caret-width-base solid $dt-text-color;
         }
 
         .light-theme & {
-          border-left: 5px solid $silver-60;
+          border-left: $caret-width-base solid $silver-60;
         }
       }
     }

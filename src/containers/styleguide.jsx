@@ -286,7 +286,7 @@ class Styleguide extends React.Component {
                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         </Popover>
                       }>
-                        <Button bsStyle="link" className="col-xs-2 btn-icon">?</Button>
+                        <Button bsStyle="link" className="col-xs-2">?</Button>
                       </OverlayTrigger>
                   </Row>
                 </Input>
