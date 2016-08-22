@@ -79,7 +79,11 @@ export class Property extends React.Component {
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
-    this.fetchData(this.props.params, this.props.location.query)
+    this.fetchData(
+      this.props.params,
+      this.props.location.query,
+      this.props.activeHostConfiguredName
+    )
   }
   componentDidMount() {
     this.measureContainers()
@@ -92,17 +96,25 @@ export class Property extends React.Component {
 
     const newQuery = nextProps.location.query
     const oldQuery = this.props.location.query
+    const fetch = () => {
+      this.fetchData(
+        nextProps.params,
+        newQuery,
+        nextProps.activeHostConfiguredName
+      )
+    }
     if(params !== prevParams) {
       this.fetchHost(nextProps.params.property)
-      this.fetchData(nextProps.params, newQuery)
+      fetch()
     }
     else if(newQuery.startDate !== oldQuery.startDate ||
       newQuery.endDate !== oldQuery.endDate) {
       this.setState({
         activeSlice: null
-      }, () => {
-        this.fetchData(nextProps.params, newQuery)
-      })
+      }, fetch)
+    }
+    else if( this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      fetch()
     }
     this.measureContainers()
   }
@@ -155,8 +167,9 @@ export class Property extends React.Component {
       property
     )
   }
-  fetchData(params, queryParams) {
-    const {brand, account, group, property} = this.props.params
+
+  fetchData(params, queryParams, hostConfiguredName) {
+    const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
@@ -166,7 +179,7 @@ export class Property extends React.Component {
       this.props.visitorsActions.fetchByCountry({
         account: account,
         group: group,
-        property: property,
+        property: hostConfiguredName,
         startDate: startDate,
         endDate: endDate,
         granularity: 'day',
@@ -188,7 +201,7 @@ export class Property extends React.Component {
       group: group,
       startDate: startDate,
       endDate: endDate,
-      property: property,
+      property: hostConfiguredName,
       list_children: 'false'
     }
     this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
@@ -464,10 +477,10 @@ Property.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
@@ -509,6 +522,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
