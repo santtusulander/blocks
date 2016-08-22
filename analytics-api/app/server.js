@@ -1,16 +1,20 @@
 'use strict';
 
-let compression = require('compression');
-let express     = require('express');
-let morgan      = require('morgan');
-let router      = require('./router');
-let log         = require('./logger');
-let app         = express();
+let compression  = require('compression');
+let express      = require('express');
+let morgan       = require('morgan');
+var responseTime = require('response-time')
+let router       = require('./router');
+let log          = require('./logger');
+let app          = express();
 
 // NOTE: This file exports a function that must be executed when the module is
 // required. This is done to allow mocking of the morgan module in the unit test.
 // e.g. let server = require('./server')();
 module.exports = function runServer() {
+
+  // Measure response times
+  app.use(responseTime());
 
   // gzip responses
   app.use(compression());

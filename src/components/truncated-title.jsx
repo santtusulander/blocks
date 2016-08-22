@@ -48,7 +48,6 @@ class TruncatedTitle extends React.Component {
 TruncatedTitle.displayName = 'TruncatedTitle'
 TruncatedTitle.propTypes = {
   className: React.PropTypes.string,
-  content: React.PropTypes.string,
   tooltipPlacement: React.PropTypes.string
 };
 
