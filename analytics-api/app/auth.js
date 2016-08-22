@@ -31,6 +31,7 @@ function auth(req, res, next) {
 
   // If the token doesn't exist, throw a 401
   } else {
+    log.debug('No token was provided.');
     return unauthorized(res, 401, 'No token was provided');
   }
 
@@ -38,7 +39,6 @@ function auth(req, res, next) {
   log.debug('Checking validity of token');
   axiosAAA.get(`/tokens/${token}`).then(resp => {
     const data                             = resp.data;
-    const username                         = data.username;
     // NOTE: userAccount is the account ID the user is associated with
     const userAccount                      = data.account_id;
     const requestedAccount                 = req.query.account;
@@ -48,16 +48,18 @@ function auth(req, res, next) {
     // If the user is not allowed to list accounts, and they are trying to request
     // data for an account (or all accounts) they do not belong to, respond with 403.
     if (userIsTryingToAccessWrongAccount) {
-      return unauthorized(res, 403, `The user (${username}) may only access data for account_id: ${userAccount}`);
+      log.debug(`User is trying to access wrong account.`);
+      return unauthorized(res, 403, `This user may only access data for their account.`);
     }
 
     // Allow the request to continue on to the router
-    log.debug(`Token authorized for user ${username}`);
+    log.debug(`Token authorized for user.`);
     next();
 
   // We couldn't validate the user token with the AAA API
-  }).catch((err) => {
+  }).catch(err => {
     const data = err.response.data;
+    log.debug(`Token could not be validated by AAA.`);
     return unauthorized(res, data.status, data.message);
   });
 }
