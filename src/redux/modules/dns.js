@@ -93,12 +93,6 @@ export function activeDomainChange(state, action) {
   })
 }
 
-export function activeRecordTypeChange(state, action) {
-  return state.merge({
-    activeRecordType: action.payload
-  })
-}
-
 /**
  *
  * Thunks and helper functions
@@ -133,8 +127,7 @@ export default handleActions({
   DOMAIN_DELETED: mapReducers(deleteDomainSuccess, deleteDomainFailure),
   DOMAIN_CREATED: mapReducers(createDomainSuccess, createDomainFailure),
   DOMAIN_EDITED: mapReducers(editDomainSuccess, editDomainFailure),
-  CHANGE_ACTIVE_DOMAIN: activeDomainChange,
-  CHANGE_ACTIVE_RECORD_TYPE: activeRecordTypeChange
+  CHANGE_ACTIVE_DOMAIN: activeDomainChange
 }, initialState)
 
 // ACTIONS
