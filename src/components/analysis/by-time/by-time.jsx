@@ -151,7 +151,7 @@ class AnalysisByTime extends React.Component {
       secondaryData = secondaryData.map((data, i) => {
         const newData = Object.assign({}, data)
         newData.bits_per_second += primaryData[i].bits_per_second
-        newData.bytes += primaryData[i].bytes
+        newData[this.props.dataKey] += primaryData[i].value
         return newData
       })
     }
