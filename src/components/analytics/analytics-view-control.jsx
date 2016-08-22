@@ -180,6 +180,9 @@ const AnalyticsViewControl = (props) => {
 
 AnalyticsViewControl.propTypes = {
   accounts: PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
   exportCSV: PropTypes.func,
@@ -192,6 +195,9 @@ AnalyticsViewControl.propTypes = {
 
 AnalyticsViewControl.defaultProps = {
   accounts: Immutable.List(),
+  activeAccount: Immutable.Map(),
+  activeGroup: Immutable.Map(),
+  activeHost: Immutable.Map(),
   brands: Immutable.List(),
   groups: Immutable.List(),
   properties: Immutable.List(),

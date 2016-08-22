@@ -50,12 +50,14 @@ class AnalyticsContainer extends React.Component {
 
   fetchActiveItems(props) {
     const {
-      params: { brand, account, group },
+      params: { brand, account, group, property },
       accountActions,
-      groupActions } = props
+      groupActions,
+      propertyActions } = props
     Promise.all([
       account && accountActions.fetchAccount(brand, account),
-      group && groupActions.fetchGroup(brand, account, group)
+      group && groupActions.fetchGroup(brand, account, group),
+      property && propertyActions.fetchHost(brand, account, group, property)
     ])
   }
 
@@ -223,7 +225,6 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    activeHost: state.host.get('activeHost'),
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),

@@ -10,16 +10,30 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabUrlReport extends React.Component {
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
-      this.fetchData(nextProps.params, nextProps.filters)
+    if(changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters){
+  fetchData(params, filters, hostConfiguredName){
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts = buildAnalyticsOpts(params, filters)
     this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
     this.props.reportsActions.fetchURLMetrics(fetchOpts)
@@ -45,6 +59,7 @@ class AnalyticsTabUrlReport extends React.Component {
 }
 
 AnalyticsTabUrlReport.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
@@ -63,6 +78,7 @@ AnalyticsTabUrlReport.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.reports.get('fetching'),
     filters: state.filters.get('filters'),
     urlMetrics: state.reports.get('urlMetrics'),
