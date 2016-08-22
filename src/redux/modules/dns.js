@@ -35,15 +35,20 @@ export function stoppedFetching(state) {
   return state.merge({ loading: false })
 }
 
-export function createDomainSuccess(state, action) {
+export function createDomainSuccess(state, { payload: { data, domain } }) {
   return state.merge({
-    SOARecord: action.payload
+    domains: state.get('domains').push(fromJS({ details: data, id: domain }))
   })
 }
 
-export function createDomainFailure(state, action) {
+export function createDomainFailure(state) {
+  return state
+}
+
+export function editDomainSuccess(state, { payload: { domain, data } }) {
+  const index = state.get('domains').findIndex(domain => domain.get('id') === domain)
   return state.merge({
-    SOARecord: action.payload
+    domains: state.get('domains').set(index, fromJS({ details: data, id: domain }))
   })
 }
 
@@ -85,7 +90,7 @@ export function activeRecordTypeChange(state, action) {
 
 /**
  *
- * Thunks, helpers and selectors
+ * Thunks and helper functions
  */
 
 export const shouldFetchDomain = (domains, item) =>
@@ -99,9 +104,14 @@ export const fetchDomainsIfNeeded = (domains, brand) => dispatch => {
     dispatch(fetchDomains(brand))
       .then(({ payload }) => {
         dispatch(changeActiveDomain(payload[0]))
-        dispatch(stopFetching())
-      })
+      }).then(dispatch(stopFetching()))
   }
+}
+
+export const domainCreation = (brand, domain, data) => dispatch => {
+  dispatch(startFetching())
+  dispatch(createDomain(brand, domain, data))
+    .then(dispatch(stopFetching))
 }
 
 export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
@@ -110,6 +120,7 @@ export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
     dispatch(fetchDomain(brand, domain)).then(dispatch(stopFetching()))
   }
 }
+
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
   DOMAIN_FETCHED: mapReducers(fetchedDomainSuccess, fetchedDomainFailure),
@@ -117,6 +128,7 @@ export default handleActions({
   DNS_STOP_FETCHING: stoppedFetching,
   SOA_RECORD_EDITED: editSOARecord,
   DOMAIN_CREATED: mapReducers(createDomainSuccess, createDomainFailure),
+  DOMAIN_EDITED: mapReducers(editDomainSuccess, editDomainFailure),
   CHANGE_ACTIVE_DOMAIN: activeDomainChange,
   CHANGE_ACTIVE_RECORD_TYPE: activeRecordTypeChange
 }, initialState)
@@ -135,7 +147,7 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(parseResponseData)
+  }).then(data => ({ data, domain }))
 )
 
 export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
