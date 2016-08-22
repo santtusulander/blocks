@@ -224,20 +224,11 @@ export class Property extends React.Component {
     this.props.purgeActions.resetActivePurge()
   }
   savePurge() {
-    let targetUrl = this.props.activeHost.get('services').get(0)
-      .get('configurations').get(0).get('edge_configuration')
-      .get('published_name')
-    if(this.props.activeHost.get('services').get(0)
-      .get('deployment_mode') === 'trial') {
-      targetUrl = this.props.activeHost.get('services').get(0)
-        .get('configurations').get(0).get('edge_configuration')
-        .get('trial_name')
-    }
     this.props.purgeActions.createPurge(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      targetUrl,
+      this.props.activeHostConfiguredName,
       this.props.activePurge.toJS()
     ).then((action) => {
       if(action.payload instanceof Error) {
