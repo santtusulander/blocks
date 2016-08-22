@@ -22,7 +22,8 @@ let environmentConfigs = {
     dbHost: 'metrics-db.sea.cdx-dev.unifieddeliverynetwork.net',
     dbUser: 'ro',
     dbPassword: 'Read0nLy',
-    dbName: 'metrics'
+    dbName: 'metrics',
+    aaaBaseURL: 'http://saltmaster.cdx-dev.unifieddeliverynetwork.net/v2'
   },
   staging: {
     port: 3040
