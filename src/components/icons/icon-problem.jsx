@@ -1,15 +1,26 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
-const IconProblem = () => {
+const IconProblem = (props) => {
+  const {className, height, width} = props
+  let classNames = 'two-tone';
+  if(className) {
+    classNames = classNames + ' ' + className;
+  }
   return (
-    <Icon width="30" height="30" className="two-tone">
+    <Icon className={classNames} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <circle className="base" cx="15" cy="15" r="15"/>
-        <path className="primary" d="M86.89,10930.66H83.08v-10.56h3.81v10.56Zm0,5.79H83.08v-3.18h3.81v3.18Z" transform="translate(-69.96 -10913.29)"/>
+        <circle className="base" cx="18" cy="18" r="12"/>
+        <path className="primary" d="M20,20h-4v-9h4V20z M20,25h-4v-3h4V25z"/>
       </g>
     </Icon>
   )
+}
+
+IconProblem.propTypes = {
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconProblem
