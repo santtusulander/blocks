@@ -19,7 +19,6 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
 
-    this.activatePurge = this.activatePurge.bind(this)
     this.resetGradientAnimation = this.resetGradientAnimation.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
     this.toggleAccountMenu = this.toggleAccountMenu.bind(this)
@@ -63,11 +62,6 @@ class Header extends React.Component {
     e.preventDefault()
     this.props.router.push(getAccountManagementUrlFromParams(this.props.params))
     this.toggleUserMenu()
-  }
-
-  activatePurge(e) {
-    e.preventDefault()
-    this.props.activatePurge()
   }
 
   toggleAccountMenu() {
@@ -277,7 +271,6 @@ Header.defaultProps = {
 
 Header.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
-  activatePurge: React.PropTypes.func,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
