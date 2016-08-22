@@ -14,19 +14,6 @@ $dt-dropdown-menu-color: $dt-text-color;
 $dt-dropdown-menu-bg-color: $black;
 $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
 
-.caret {
-  border-width: 5px;
-
-  @include print {
-    display: none;
-  }
-
-  &.up {
-    border-top-style: none;
-    border-bottom-style: solid;
-  }
-}
-
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override bootstrap styles
 .dropdown-menu,
@@ -426,6 +413,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
       .caret {
         border-top: 5px solid transparent;
         border-bottom: 5px solid transparent;
+        border-width: 5px;
 
         .dark-theme & {
           border-left: 5px solid $dt-text-color;
