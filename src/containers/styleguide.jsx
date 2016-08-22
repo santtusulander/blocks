@@ -154,8 +154,8 @@ class Styleguide extends React.Component {
             <Button bsStyle="danger">Destructive</Button>
             <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
-            <Button bsStyle="primary" className="btn-icon">?</Button>
-            <Button bsStyle="primary" className="btn-icon btn-round">+</Button>
+            <Button bsStyle="success" className="btn-icon"><IconAdd/></Button>
+            <Button bsStyle="primary" className="btn-icon btn-round"><IconQuestionMark/></Button>
           </ButtonToolbar>
 
           <ButtonToolbar className="styleguide-row">
@@ -164,8 +164,8 @@ class Styleguide extends React.Component {
             <Button bsStyle="danger" disabled={true}>Destructive</Button>
             <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
-            <Button bsStyle="primary" className="btn-icon" disabled={true}>?</Button>
-            <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}>+</Button>
+            <Button bsStyle="success" className="btn-icon" disabled={true}><IconAdd/></Button>
+            <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}><IconQuestionMark/></Button>
           </ButtonToolbar>
 
 

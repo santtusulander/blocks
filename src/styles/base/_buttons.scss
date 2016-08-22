@@ -30,7 +30,6 @@ $lt-caret-color: $silver-60;
   text-transform: uppercase;
   border: 0;
   border-radius: 2px;
-  stroke: $btn-text-color;
   fill: $btn-text-color;
 
   @include print {
@@ -84,28 +83,6 @@ $lt-caret-color: $silver-60;
     }
   }
 
-  &.btn-icon {
-    position: relative;
-    width: $btn-height;
-    height: $btn-height;
-    padding: 0;
-    line-height: $btn-height;
-    vertical-align: middle;
-
-    @include md {
-      width: $md-btn-height;
-      line-height: $md-btn-height;
-    }
-
-    &.btn-header {
-      width: $header-btn-height;
-
-      @include md {
-        width: $md-header-btn-height;
-      }
-    }
-  }
-
   &.btn-sm {
     height: $btn-sm-height;
     line-height: $btn-sm-height;
@@ -119,16 +96,6 @@ $lt-caret-color: $silver-60;
       min-width: 0;
       text-transform: uppercase;
     }
-
-    &.btn-icon {
-      width: $btn-sm-height;
-      line-height: $btn-sm-height;
-
-      @include md {
-        width: $md-btn-sm-height;
-        line-height: $md-btn-sm-height;
-      }
-    }
   }
 
   &.sm-padding {
@@ -137,10 +104,6 @@ $lt-caret-color: $silver-60;
     @include md {
       padding: 0 ($md-btn-height / 4);
     }
-  }
-
-  &.btn-round {
-    border-radius: 50%;
   }
 
   &.btn-header {
@@ -159,12 +122,6 @@ $lt-caret-color: $silver-60;
       margin-top: ($md-header-height - $md-header-btn-height) / 2;
       margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
       line-height: $md-header-btn-height;
-    }
-
-    &.btn-icon {
-      .icon {
-        transform: translate(-50%, -50%) scale(1, 1);
-      }
     }
 
     &.btn-alerts {
@@ -429,6 +386,16 @@ $lt-caret-color: $silver-60;
     }
   }
 
+  .btn-icon {
+    padding: 0;
+    line-height: 0;
+    fill: inherit;
+  }
+
+  .btn-round {
+    border-radius: 50%;
+  }
+
   // DROPDOWN BUTTONS (SELECT, TOGGLE)
   // =================================
   .dropdown-select {
@@ -445,7 +412,6 @@ $lt-caret-color: $silver-60;
       text-transform: capitalize;
       background-color: rgba($black, 0.3);
       fill: $dt-text-color;
-      stroke: $dt-text-color;
 
       &:focus {
         box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
@@ -454,10 +420,9 @@ $lt-caret-color: $silver-60;
       > .icon {
         position: absolute;
         top: 50%;
-        right: $btn-horizontal-padding;
+        right: 0;
         transform: translateY(-50%);
         fill: $dt-text-color;
-        stroke: $dt-text-color;
 
         @include print {
           display: none;
@@ -516,7 +481,6 @@ $lt-caret-color: $silver-60;
       &:hover:not(:disabled) .icon {
         color: $white;
         fill: $white;
-        stroke: $white;
       }
 
       &:active,
@@ -536,7 +500,6 @@ $lt-caret-color: $silver-60;
         color: $pale-blue;
         background-color: rgba($black, 0.3);
         fill: $pale-blue;
-        stroke: $pale-blue;
       }
 
       // &:focus {
@@ -589,7 +552,6 @@ $lt-caret-color: $silver-60;
       &.active:focus {
         color: $black;
         fill: $black;
-        stroke: $black;
       }
 
       .icon {
@@ -607,7 +569,6 @@ $lt-caret-color: $silver-60;
       .icon {
         color: $pale-blue;
         fill: $pale-blue;
-        stroke: $pale-blue;
       }
     }
   }
