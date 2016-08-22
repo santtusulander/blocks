@@ -1,9 +1,18 @@
 // Dropdowns
 // =========
-$dropdown-font-size: 15px;
+$dropdown-font-size: 14px;
+$search-font-size: 12px;
+$dropdown-menu-min-width: rem(320px);
 $dropdown-top-padding: em(14px, $dropdown-font-size);
 $dropdown-horizontal-padding: em(18px, $dropdown-font-size);
-$dropdown-bottom-padding: em(13px, $dropdown-font-size);
+$dropdown-bottom-padding: em(14px, $dropdown-font-size);
+$search-top-padding: em(9px, $search-font-size);
+$search-bottom-padding: em(9px, $search-font-size);
+$search-input-vertical-padding: em(8px, $search-font-size);
+$search-input-left-padding: em(36px, $search-font-size);
+$dt-dropdown-menu-color: $dt-text-color;
+$dt-dropdown-menu-bg-color: $black;
+$dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
 
 .caret {
   border-width: 5px;
@@ -24,7 +33,7 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
 .navbar-nav .open .dropdown-menu {
   position: absolute;
   width: 100%;
-  min-width: 250px;
+  min-width: $dropdown-menu-min-width;
   padding: 0;
   margin: 0;
   font-size: inherit;
@@ -47,9 +56,9 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
   }
 
   .dark-theme & {
-    color: $dt-text-color;
-    background-color: $black;
-    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    color: $dt-dropdown-menu-color;
+    background-color: $dt-dropdown-menu-bg-color;
+    background-image: $dt-dropdown-menu-bg-image;
     background-size: 100%;
 
     .active > a,
@@ -66,7 +75,7 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
 
   .light-theme & {
     color: $lt-text-color;
-    background-color: $silver-30;
+    background-color: $white;
 
     .active > a {
 
@@ -333,6 +342,23 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
       padding: $dropdown-top-padding $dropdown-horizontal-padding $dropdown-bottom-padding;
       font-size: $dropdown-font-size;
 
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        font-weight: 500;
+        background-color: transparent;
+        outline: none;
+
+        .caret-container {
+          .caret {
+            border-left: 5px solid $pale-blue;
+          }
+        }
+      }
+
       .dark-theme & {
         color: $dt-text-color;
 
@@ -343,7 +369,6 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
         &:hover,
         &:focus {
           color: $white;
-          background-color: transparent;
         }
       }
 
@@ -351,22 +376,63 @@ $dropdown-bottom-padding: em(13px, $dropdown-font-size);
         color: $lt-text-color;
         border-right: 1px solid rgba($black, 0.1);
         border-bottom: 1px solid rgba($black, 0.1);
+        border-left: 1px solid rgba($black, 0.1);
 
         &:hover,
         &:focus {
           color: $black;
-          background-color: transparent;
         }
       }
     }
 
-    .form-control.header-search-input {
-      width: calc(100% + #{$dropdown-padding});
-      height: 50px;
-      margin: 0 0 0 (-$dropdown-padding / 2);
+    &.search-container  {
+      > a {
+        padding-top: $search-top-padding;
+        padding-bottom: $search-bottom-padding;
+      }
 
-      @include md {
-        height: 40px;
+      .header-search-input {
+        width: 100%;
+        padding: $search-input-vertical-padding $search-input-vertical-padding $search-input-vertical-padding $search-input-left-padding;
+        font-size: $search-font-size;
+        border-radius: 20px;
+        box-shadow: 0 0 0 1px rgba($white, 0.2);
+
+        .dark-theme & {
+          background: url('../assets/icons/dt-icon-search.svg') 14px center no-repeat;
+          background-size: 14px;
+        }
+
+        .light-theme & {
+          background: url('../assets/icons/lt-icon-search.svg') 14px center no-repeat;
+          background-size: 14px;
+        }
+
+        &:hover {
+          font-weight: 300;
+        }
+
+        &:focus {
+          font-weight: 300;
+          box-shadow: 0 0 0 1px $pale-blue;
+        }
+      }
+    }
+
+    .caret-container {
+      width: auto;
+
+      .caret {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+
+        .dark-theme & {
+          border-left: 5px solid $dt-text-color;
+        }
+
+        .light-theme & {
+          border-left: 5px solid $lt-text-color;
+        }
       }
     }
 

@@ -1,3 +1,7 @@
+$dropdown-selector-width: rem(320px);
+$dropdown-selector-max-height: rem(480px);
+
+// GLOBAL ACCOUNT SELECTOR DROPDOWN
 .global-account-selector {
   display: block;
 }
@@ -24,13 +28,9 @@
   }
 
   .dropdown-menu {
-    width: 328px !important;
-    max-height: 500px !important;
+    width: $dropdown-selector-width;
+    max-height: $dropdown-selector-max-height;
     overflow-y: auto !important;
-
-    @include md {
-      width: 246px !important;
-    }
 
     & > li,
     li {
@@ -49,13 +49,11 @@
     .form-group {
       padding: 0;
       flex: 1;
-
-      input {
-        border-radius: 20px;
-      }
     }
   }
 
+  // TODO: This needs to be updated once the back to accounts functionality is implemented
+  /*
   .back-text {
     font-weight: bold;
 
@@ -67,21 +65,12 @@
       border-bottom: 5px solid transparent;
     }
   }
+  */
 
   .name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1;
-  }
-
-  .caret-container {
-    width: auto;
-
-    .caret {
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-      border-left: 5px solid $pale-blue;
-    }
   }
 }

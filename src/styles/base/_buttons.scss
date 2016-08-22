@@ -535,9 +535,9 @@ $lt-caret-color: $silver-60;
         stroke: $pale-blue;
       }
 
-      &:focus {
-        box-shadow: none;
-      }
+      // &:focus {
+      //   box-shadow: none;
+      // }
     }
   }
 }
@@ -575,6 +575,7 @@ $lt-caret-color: $silver-60;
     .dropdown-toggle {
       color: $lt-text-color;
       background-color: $white;
+      box-shadow: inset 0 0 0 1px rgba($black, 0.1);
 
       &:hover:not(:disabled),
       &:hover:not(:disabled) .icon,
@@ -583,7 +584,6 @@ $lt-caret-color: $silver-60;
       &:active:hover,
       &.active:focus {
         color: $black;
-        box-shadow: none;
         fill: $black;
         stroke: $black;
       }
@@ -604,10 +604,6 @@ $lt-caret-color: $silver-60;
         color: $pale-blue;
         fill: $pale-blue;
         stroke: $pale-blue;
-      }
-
-      &:focus {
-        box-shadow: none;
       }
     }
   }
@@ -713,45 +709,6 @@ $lt-caret-color: $silver-60;
 }
 
 .light-theme {
-
-  // .dropdown-select {
-  //
-  //   .dropdown-toggle {
-  //
-  //   &.open .dropdown-toggle {
-  //     border-bottom-right-radius: 0;
-  //     border-bottom-left-radius: 0;
-  //
-  //     &,
-  //     &:hover {
-  //       font-weight: 500;
-  //       color: $pale-blue;
-  //       background-color: $silver-30;
-  //       border-right: 1px solid rgba($black, 0.1);
-  //       border-bottom: 1px solid rgba($black, 0.1);
-  //       box-shadow: none;
-  //     }
-  //
-  //     .icon {
-  //       fill: $pale-blue;
-  //       stroke: $pale-blue;
-  //     }
-  //   }
-  // }
-
-  .page-header-layout .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        background-color: rgba($black, 0.1);
-      }
-    }
-  }
-
   .configuration-sidebar .btn-outline {
     color: $pale-blue;
     background-color: $white !important;
