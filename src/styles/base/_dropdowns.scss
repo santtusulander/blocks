@@ -396,16 +396,17 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
         padding: $search-input-vertical-padding $search-input-vertical-padding $search-input-vertical-padding $search-input-left-padding;
         font-size: $search-font-size;
         border-radius: 20px;
-        box-shadow: 0 0 0 1px rgba($white, 0.2);
 
         .dark-theme & {
           background: url('../assets/icons/dt-icon-search.svg') 14px center no-repeat;
           background-size: 14px;
+          box-shadow: 0 0 0 1px rgba($white, 0.2);
         }
 
         .light-theme & {
           background: url('../assets/icons/lt-icon-search.svg') 14px center no-repeat;
           background-size: 14px;
+          box-shadow: 0 0 0 1px $silver-80;
         }
 
         &:hover {
@@ -431,7 +432,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
         }
 
         .light-theme & {
-          border-left: 5px solid $lt-text-color;
+          border-left: 5px solid $silver-60;
         }
       }
     }
