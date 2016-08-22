@@ -22,6 +22,7 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AnalysisByTime from '../components/analysis/by-time'
+import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
@@ -30,6 +31,7 @@ import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -60,6 +62,7 @@ export class Property extends React.Component {
     super(props)
 
     this.state = {
+      deleteModal: false,
       activeSlice: null,
       activeSliceX: 100,
       byTimeWidth: 0,
@@ -267,6 +270,8 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
     const activeHost = this.props.activeHost
@@ -328,6 +333,9 @@ export class Property extends React.Component {
                       to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                   <IconConfiguration/>
                 </Link>
+                <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                  <IconTrash/>
+                </Button>
               </ButtonToolbar>
             </div>
           </PageHeader>
@@ -447,12 +455,19 @@ export class Property extends React.Component {
             </div>
           </div>
         </Content>
-        {this.state.purgeActive ? <PurgeModal
+        {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
-          showNotification={this.showNotification}/> : ''}
+          showNotification={this.showNotification}/>}
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          cancel={toggleDelete}
+          submit={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>}
       </PageContainer>
     )
   }
