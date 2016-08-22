@@ -52,6 +52,20 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
 
+
+// DNS permissions
+// Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
+
+permissionMapping[PERMISSIONS.VIEW_DNS] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'list', 'allowed']) && role.getIn(['permissions', 'north', 'rr', 'list', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_ZONE] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_ZONE] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'modify', 'allowed'])
+
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.

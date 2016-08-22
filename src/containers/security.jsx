@@ -77,7 +77,7 @@ export class Security extends React.Component {
           </li>
         </Nav>
         <Content className="tab-bodies">
-          {subPage === 'ssl-certificate' && <SSLList { ...sslListProps }/>}
+          {subPage === 'ssl-certificate' && <SSLList {...sslListProps}/>}
           {subPage === 'token-authentication' && <h3>token-authentication</h3>}
           {subPage === 'content-targeting' && <h3>content-targeting</h3>}
         </Content>
@@ -133,12 +133,12 @@ export class Security extends React.Component {
            {/* ----- REMOVE ME AFTER ----- */}
            <Content className="tab-bodies">Coming soon!</Content>
         </div>
-        {activeModal === EDIT_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
-        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm { ...certificateFormProps }/>}
+        {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
+        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
-            onCancel={() => toggleModal(null)}
-            onDelete={() => onDelete(toDelete)}/>}
+            cancel={() => toggleModal(null)}
+            submit={() => onDelete(toDelete)}/>}
       </PageContainer>
     )
   }

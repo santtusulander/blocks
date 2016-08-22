@@ -2,30 +2,21 @@ import React, { PropTypes } from 'react'
 import { List, Map, is } from 'immutable'
 
 import UDNButton from '../button'
-import ActionLinks from './action-links.jsx'
-import IconAdd from '../icons/icon-add.jsx'
-import SoaEditForm from './soa-edit-form.jsx'
-import DnsEditForm from './dns-edit-form.jsx'
+import ActionLinks from './action-links'
+import IconAdd from '../icons/icon-add'
+import Select from '../select'
 
-import Select from '../select.jsx'
-import recordTypes from '../../constants/dns-record-types.js'
-import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals.js'
+import recordTypes from '../../constants/dns-record-types'
+import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals'
 
-export const DNSList = props => {
+const DNSList = props => {
   const {
     domains,
     onDeleteEntry,
-    soaEditOnSave,
-    dnsEditOnSave,
-    onAddDomain,
     activeDomain,
     changeRecordType,
-    changeActiveDomain,
     activeRecordType,
-    toggleModal,
-    accountManagementModal,
-    soaFormInitialValues,
-    dnsFormInitialValues
+    toggleModal
   } = props
   const entries = activeDomain && domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
@@ -37,17 +28,6 @@ export const DNSList = props => {
   ]
   return (
     <div>
-      <div className="account-management-header">
-        Select Domain
-        <Select
-          value={activeDomain && activeDomain.get('id')}
-          className="dns-dropdowns"
-          onSelect={id => (changeActiveDomain(id))}
-          options={domains && domains.map(domain => [domain.get('id'), domain.get('name')]).toJS()}/>
-        <UDNButton id="add-domain" bsStyle="primary" onClick={onAddDomain}>
-          <strong>ADD DOMAIN</strong>
-        </UDNButton>
-      </div>
       <h3 className="account-management-header">
         <span id="domain-stats">
           {activeDomain ?
@@ -100,29 +80,11 @@ export const DNSList = props => {
           }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
         </tbody>
       </table>
-      {accountManagementModal === EDIT_DNS &&
-        <DnsEditForm
-          id="dns-form"
-          show={accountManagementModal === EDIT_DNS}
-          edit={true}
-          domain='foobar.com'
-          onSave={dnsEditOnSave}
-          onCancel={() => toggleModal(null)}
-          { ...dnsFormInitialValues }
-        />
-      }
-
-      {accountManagementModal === EDIT_SOA &&
-        <SoaEditForm
-          id="soa-form"
-          onCancel={() => toggleModal(null)}
-          activeDomain={activeDomain}
-          onSave={soaEditOnSave}
-          { ...soaFormInitialValues }
-          />}
     </div>
   )
 }
+
+export default DNSList
 
 DNSList.propTypes = {
   accountManagementModal: PropTypes.string,

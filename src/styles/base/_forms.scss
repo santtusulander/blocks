@@ -185,6 +185,16 @@ label {
     padding-bottom: 0;
   }
 
+  &.inline {
+    display: inline-block;
+    margin-right: 1em;
+
+    > .search-input,
+    > .dropdown-select {
+      width: 16em;
+    }
+  }
+
   .header &,
   .sidebar-content &:only-child,
   .sidebar-content &:last-child {
