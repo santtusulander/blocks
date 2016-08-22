@@ -19,7 +19,7 @@ class AnalysisCacheHitRate extends React.Component {
       sortBy: 'timestamp',
       sortDir: -1,
       sortFunc: '',
-      chartType: 'column'
+      chartType: 'area'
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -132,7 +132,7 @@ class AnalysisCacheHitRate extends React.Component {
           <Col sm={4}>
             <Select
               className='pull-right'
-              options={ [{value: 'line', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}] }
+              options={ [{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}] }
               value={ this.state.chartType }
               onSelect= { this.changeChartType }
             />
