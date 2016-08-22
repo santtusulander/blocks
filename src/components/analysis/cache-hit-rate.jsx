@@ -8,6 +8,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
+import Select from '../select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
@@ -17,11 +18,13 @@ class AnalysisCacheHitRate extends React.Component {
       stacksWidth: 100,
       sortBy: 'timestamp',
       sortDir: -1,
-      sortFunc: ''
+      sortFunc: '',
+      chartType: 'column'
     }
 
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
+    this.changeChartType = this.changeChartType.bind(this)
     this.sortedData = this.sortedData.bind(this)
   }
   componentDidMount() {
@@ -70,6 +73,9 @@ class AnalysisCacheHitRate extends React.Component {
     }
     return sortFunc
   }
+  changeChartType( value ) {
+    this.setState({chartType: value})
+  }
   render() {
     const stats = this.props.traffic.first() || Immutable.Map()
 
@@ -85,20 +91,24 @@ class AnalysisCacheHitRate extends React.Component {
       }
     })
 
-    if(this.props.onOffNetChartType === 'bar') {
+    let dataSets = [];
+    dataSets.push( details.toJS() )
+
+    if(this.state.chartType === 'column') {
       chart = (
-        <AnalysisStackedByTime padding={40}
-          dataSets={ details.toJS() }
+        <AnalysisStackedByTime
+          padding={40}
+          dataKey='chit_ratio'
+          dataSets={ dataSets }
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
-    }
-    else {
+    } else {
 
       chart = (
 
         <AnalysisByTime axes={true} padding={40}
           dataKey="chit_ratio"
-          primaryData={ details.toJS() }
+          primaryData={ dataSets && dataSets[0] }
           primaryLabel='Cache Hit Ratio'
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
@@ -114,32 +124,46 @@ class AnalysisCacheHitRate extends React.Component {
     const sortedStats = this.sortedData(detail, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-cache-hit-rate">
+        <Row>
+          <Col sm={8}>
+            <h3>Cache Hit Rate By Day</h3>
+          </Col>
 
-        <h3>Cache Hit Rate By Day</h3>
+          <Col sm={4}>
+            <Select
+              className='pull-right'
+              options={ [{value: 'line', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}] }
+              value={ this.state.chartType }
+              onSelect= { this.changeChartType }
+            />
+          </Col>
+        </Row>
+
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> : chart}
         </div>
+
         <table className="table table-striped table-analysis extra-margin-top">
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="timestamp">
-                Date
+              Date
               </TableSorter>
               <TableSorter {...sorterProps} column="chit_ratio,percent_total" sortFunc="specific">
-                Cache Hit Rate (%)
+              Cache Hit Rate (%)
               </TableSorter>
             </tr>
           </thead>
           <tbody>
-            {sortedStats.map((day, i) => {
-              return (
-                <tr key={i}>
-                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{numeral(day.get('chit_ratio') / 100 ).format('0%')}</td>
-                </tr>
-              )
-            })}
+                {sortedStats.map((day, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                      <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
+                    </tr>
+                  )
+                })}
           </tbody>
         </table>
       </div>
