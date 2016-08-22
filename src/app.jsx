@@ -16,26 +16,7 @@ import { LogPageView } from './util/google-analytics'
 
 import './styles/style.scss'
 
-const shouldCallApiMiddleware = ({ getState }) => next => action => {
-  const { payload } = action
-  if (!payload || !payload.shouldCallApi) {
-    return next(action)
-  }
-  const { shouldCallApi, toFetch, typeToFetch, callApi } = payload
-  if (typeof shouldCallApi !== 'function') {
-    throw new Error('shouldCallApi must be a function.')
-  }
-
-  if (!shouldCallApi(getState(), typeToFetch, toFetch)) {
-    return
-  }
-  callApi().then(res => {
-    return next(Promise.resolve({ type: action.type, payload: res }))
-  })
-}
-
 const createStoreWithMiddleware = applyMiddleware(
-  //shouldCallApiMiddleware,
   thunkMiddleware,
   promiseMiddleware
 )(createStore)

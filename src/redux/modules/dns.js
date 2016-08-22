@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { urlBase, parseResponseData, mapReducers, shouldCallApi } from '../util'
+import { urlBase, parseResponseData, mapReducers } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_CREATED = 'DOMAIN_CREATED'
@@ -11,11 +11,12 @@ const DOMAIN_FETCHED_ALL = 'DOMAIN_FETCHED_ALL'
 const DOMAIN_FETCHED = 'DOMAIN_FETCHED'
 const CHANGE_ACTIVE_DOMAIN = 'CHANGE_ACTIVE_DOMAIN'
 const CHANGE_ACTIVE_RECORD_TYPE = 'CHANGE_ACTIVE_RECORD_TYPE'
+const DNS_START_FETCHING = 'DNS_START_FETCHING'
+const DNS_STOP_FETCHING = 'DNS_STOP_FETCHING'
 
 export const initialState = fromJS({
-  activeRecordType: null,
+  loading: false,
   activeDomain: undefined,
-  domainToEdit: undefined,
   domains: []
 })
 
@@ -26,7 +27,21 @@ export function editSOARecord(state, action) {
   return state.setIn(['domains', index, 'SOARecord'], fromJS(action.payload.data))
 }
 
-export function createSuccess(state, action) {
+export function startedFetching(state) {
+  return state.merge({ loading: true })
+}
+
+export function stoppedFetching(state) {
+  return state.merge({ loading: false })
+}
+
+export function createDomainSuccess(state, action) {
+  return state.merge({
+    SOARecord: action.payload
+  })
+}
+
+export function createDomainFailure(state, action) {
   return state.merge({
     SOARecord: action.payload
   })
@@ -38,12 +53,16 @@ export function fetchedAllDomainsSuccess(state, action) {
   })
 }
 
-export function fetchedDomain(state, { payload: { data, domain } }) {
+export function fetchedDomainSuccess(state, { payload: { data, domain } }) {
   const index = state.get('domains')
     .findIndex(item => item.get('id') === domain && !item.get('details'))
   return state.merge({
     domains: state.get('domains').set(index, fromJS({ details: data, id: domain }))
   })
+}
+
+export function fetchedDomainFailure(state) {
+  return state
 }
 
 export function fetchedAllDomainsFailure(state) {
@@ -76,23 +95,28 @@ export const shouldFetchDomains = (domains) => domains.length === 0
 
 export const fetchDomainsIfNeeded = (domains, brand) => dispatch => {
   if (shouldFetchDomains(domains)) {
+    dispatch(startFetching())
     dispatch(fetchDomains(brand))
       .then(({ payload }) => {
         dispatch(changeActiveDomain(payload[0]))
+        dispatch(stopFetching())
       })
   }
 }
 
 export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
   if (shouldFetchDomain(domains, domain)) {
-    dispatch(fetchDomain(brand, domain))
+    dispatch(startFetching())
+    dispatch(fetchDomain(brand, domain)).then(dispatch(stopFetching()))
   }
 }
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
-  DOMAIN_FETCHED: fetchedDomain,
+  DOMAIN_FETCHED: mapReducers(fetchedDomainSuccess, fetchedDomainFailure),
+  DNS_START_FETCHING: startedFetching,
+  DNS_STOP_FETCHING: stoppedFetching,
   SOA_RECORD_EDITED: editSOARecord,
-  DOMAIN_CREATED: createSuccess,
+  DOMAIN_CREATED: mapReducers(createDomainSuccess, createDomainFailure),
   CHANGE_ACTIVE_DOMAIN: activeDomainChange,
   CHANGE_ACTIVE_RECORD_TYPE: activeRecordTypeChange
 }, initialState)
@@ -121,6 +145,9 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, name, data) =>
     }
   }).then(parseResponseData)
 )
+
+const startFetching = createAction(DNS_START_FETCHING)
+const stopFetching = createAction(DNS_STOP_FETCHING)
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
