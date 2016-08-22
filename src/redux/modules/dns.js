@@ -42,9 +42,11 @@ export function createDomainFailure(state) {
 }
 
 export function deleteDomainSuccess(state, { payload }) {
-  const index = state.get('domains').findIndex(domain => domain.get('id') === payload)
+  const domains = state.get('domains')
+  const index = domains.findIndex(domain => domain.get('id') === payload)
   return state.merge({
-    domains: state.get('domains').delete(index)
+    domains: domains.delete(index),
+    activeDomain: domains.get(0) && domains.get(0).get('id')
   })
 }
 
@@ -52,8 +54,8 @@ export function deleteDomainFailure(state) {
   return state
 }
 
-export function editDomainSuccess(state, { payload: { domain, data } }) {
-  const index = state.get('domains').findIndex(domain => domain.get('id') === domain)
+export function editDomainSuccess(state, { payload: { data, domain } }) {
+  const index = state.get('domains').findIndex(item => item.get('id') === domain)
   return state.merge({
     domains: state.get('domains').set(index, fromJS({ details: data, id: domain }))
   })
@@ -115,7 +117,7 @@ export const fetchDomainsIfNeeded = (domains, brand) => dispatch => {
 
 export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
   if (shouldFetchDomain(domains, domain)) {
-    dispatch(fetchDomain(brand, domain)).then(dispatch(stopFetching()))
+    dispatch(fetchDomain(brand, domain))
   }
 }
 
@@ -136,7 +138,7 @@ export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
 
 export const fetchDomain = createAction(DOMAIN_FETCHED,
   (brand, domain) => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
-    .then(data => ({ data, domain }))
+    .then(({ data }) => ({ data, domain }))
 )
 
 export const deleteDomain = createAction(DOMAIN_DELETED, (brand, domain) =>
@@ -149,7 +151,7 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(data => ({ data, domain }))
+  }).then(({ data }) => ({ data, domain }))
 )
 
 export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
@@ -157,7 +159,7 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(parseResponseData)
+  }).then(({ data }) => ({ data, domain }))
 )
 
 const startFetching = createAction(DNS_START_FETCHING)
