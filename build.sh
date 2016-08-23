@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+set -e
+
 # Obtaining app version
 app_version=$(git describe --always --dirty)
 
