@@ -8,6 +8,7 @@ const initialState = Immutable.fromJS({
       endDate: null
     }, //startDate: , endDate: },
     dateRangeLabel: '',
+    recordType: 'transfer_rates',
     serviceTypes: ['http', 'https'],
     serviceProviders: ['All'],
     onOffNet: ['on-net', 'off-net'],
@@ -15,6 +16,7 @@ const initialState = Immutable.fromJS({
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
+    recordType: [{label: 'Bandwidth', value: 'transfer_rates'}, {label: 'Requests', value: 'requests'}],
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
     serviceProviders: [{label: 'All', value: 'all'} ],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
@@ -45,7 +47,7 @@ export function setValue(state, action) {
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
-export function resetDefaults(state, action){
+export function resetDefaults(state){
   return initialState
 }
 

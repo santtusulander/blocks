@@ -11,6 +11,7 @@ import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterRecordType from '../analysis/filters/record-type.jsx'
 
 import './analytics-filters.scss'
 
@@ -161,6 +162,7 @@ const AnalyticsFilters = (props) => {
           />
         </div>
       }
+
       {props.showFilters.includes('service-type') &&
         <div className='filter'>
           <div className="sidebar-section-header">
@@ -173,6 +175,19 @@ const AnalyticsFilters = (props) => {
               props.onFilterChange(
                 'serviceTypes',
                 getToggledValues( props.filters.get('serviceTypes'), val)
+              )
+            }}
+          />
+        </div>
+      }
+
+      {props.showFilters.includes('record-type') &&
+        <div className='filter'>
+          <FilterRecordType
+            recordType={props.filters.get('recordType')}
+            toggleRecordType={val => {
+              props.onFilterChange(
+                'recordType', val
               )
             }}
           />
