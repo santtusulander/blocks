@@ -6,6 +6,11 @@
   z-index: 5;
   width: calc(100% - #{$navigation-sidebar-width});
 
+  .btn-secondary {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
+  }
+
   .nav-tabs {
     padding: 0 35px;
   }
