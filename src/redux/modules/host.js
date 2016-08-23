@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase, mapReducers} from '../util'
+import {urlBase, mapReducers, parseResponseData} from '../util'
 
 const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'
@@ -19,25 +19,6 @@ const emptyHosts = Immutable.Map({
   allHosts: Immutable.List(),
   fetching: false
 })
-
-const defaultPolicy = {policy_rules: [
-  {
-    set: {
-      cache_control: {
-        honor_origin: false,
-        check_etag: "weak",
-        max_age: 0
-      }
-    }
-  },
-  {
-    set: {
-      cache_name: {
-        ignore_case: false
-      }
-    }
-  }
-]}
 
 // REDUCERS
 
@@ -169,8 +150,7 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
               },
               configuration_status: {
                 last_edited_by: "Test User"
-              }//,
-              // default_policy: defaultPolicy
+              }
             }
           ]
         }
@@ -198,20 +178,12 @@ export const deleteHost = createAction(HOST_DELETED, (brand, account, group, id)
 
 export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) => {
   return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  });
+  .then(parseResponseData);
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
@@ -220,11 +192,7 @@ export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id,
       'Content-Type': 'application/json'
     }
   })
-  .then((res) => {
-    if(res) {
-      return res.data;
-    }
-  })
+  .then(parseResponseData)
 })
 
 export const startFetching = createAction(HOST_START_FETCH)
