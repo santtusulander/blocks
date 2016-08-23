@@ -3,7 +3,7 @@
 set -e
 
 # Obtaining app version
-app_version=$(git describe --always --dirty)
+app_version=$(git describe --always --dirty| tr -d v)
 
 # Building dist
 npm run dist
