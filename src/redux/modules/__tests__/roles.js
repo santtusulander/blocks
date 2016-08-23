@@ -12,7 +12,7 @@ describe('Roles Module', () => {
       const oldState = Immutable.fromJS({
         roles: []
       })
-      const newState = rolesFetchSuccess(oldState, { payload: {data: [1,2] } })
+      const newState = rolesFetchSuccess(oldState, { payload: [1,2] })
       const expectedState = Immutable.fromJS({
         roles: [1,2]
       })
