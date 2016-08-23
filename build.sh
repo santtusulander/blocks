@@ -11,7 +11,7 @@ npm run dist
 # Replacing version in package.json
 search='("version":[[:space:]]*").+(")'
 replace="\1${app_version}\2"
-sed -E "s/${search}/${replace}/g" "package.json"
+sed -i ".tmp" -E "s/${search}/${replace}/g" "package.json"
 
 # Creating tar.gz
 tar -zcvf udnportal-$app_version.tar.gz dist
