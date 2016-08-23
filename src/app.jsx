@@ -61,7 +61,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 ReactDOM.render(
-  <IntlProvider locale="en" messages={ TRANSLATED_MESSAGES }>
+  <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
     <Provider store={store}>
       <Router onUpdate={LogPageView} history={browserHistory}>
         {getRoutes(store)}

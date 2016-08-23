@@ -4,6 +4,7 @@ let compression  = require('compression');
 let express      = require('express');
 let morgan       = require('morgan');
 var responseTime = require('response-time')
+let auth         = require('./auth');
 let router       = require('./router');
 let log          = require('./logger');
 let app          = express();
@@ -36,6 +37,9 @@ module.exports = function runServer() {
     stream: log.infoStream,
     skip: (req, res) => { return res.statusCode > 399; }
   }));
+
+  // Ensure the request is coming from an authenticated user (via token in X-Auth-Token header)
+  app.use(auth);
 
   // Attach the router
   app.use('/', router);

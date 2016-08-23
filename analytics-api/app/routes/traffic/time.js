@@ -40,11 +40,11 @@ function routeTrafficTime(req, res) {
 
   db.getEgress(options).then((trafficData) => {
     let optionsFinal       = db._getQueryOptions(options);
-    let finalTrafficData   = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes']));
+    let finalTrafficData   = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes', 'requests']));
     let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
     let filledTrafficData  = _.mapValues(groupedTrafficData, (data) => {
       return dataUtils.buildContiguousTimeline(
-        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, 'bytes'
+        data, optionsFinal.start, optionsFinal.end, optionsFinal.granularity, ['bytes', 'requests']
       );
     });
 
