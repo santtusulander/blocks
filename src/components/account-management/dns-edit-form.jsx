@@ -11,8 +11,6 @@ import './dns-edit-form.scss'
 
 const validate = (values) => checkForErrors(values)
 
-const recordTypeOptions = recordTypes.map((value, i) => <option key={i} value={value}>{value}</option>)
-
 const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
   const actionButtonTitle = edit ? 'Save' : 'Add'
@@ -26,9 +24,8 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
         <form>
           <SelectWrapper
             {...recordType}
-            label="Select Record Type">
-            {recordTypeOptions}
-          </SelectWrapper>
+            options={recordTypes.map(type => [type, type])}
+            label="Select Record Type"/>
           <hr/>
           <Input
             {...recordName}
