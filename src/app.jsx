@@ -5,7 +5,6 @@ import { Router, browserHistory } from 'react-router'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
-import thunkMiddleware from 'redux-thunk'
 import axios from 'axios'
 import { Button } from 'react-bootstrap'
 
@@ -21,7 +20,6 @@ import './styles/style.scss'
 import TRANSLATED_MESSAGES from './locales/en.js'
 
 const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware,
   promiseMiddleware
 )(createStore)
 const stateReducer = combineReducers(reducers)
@@ -63,7 +61,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 ReactDOM.render(
-  <IntlProvider locale="en" messages={ TRANSLATED_MESSAGES }>
+  <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
     <Provider store={store}>
       <Router onUpdate={LogPageView} history={browserHistory}>
         {getRoutes(store)}

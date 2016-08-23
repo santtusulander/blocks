@@ -18,7 +18,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchDomains(this.props.domains, this.props.params.brand)
+    this.props.fetchDomains(this.props.params.brand)
   }
 
   render() {
@@ -81,11 +81,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch, { params: { brand } }) {
-  const { fetchDomainsIfNeeded, fetchDomainIfNeeded } = dnsActionCreators
-  const { changeActiveDomain } = bindActionCreators(dnsActionCreators, dispatch)
+  const { changeActiveDomain, fetchDomains, fetchDomain } = bindActionCreators(dnsActionCreators, dispatch)
   return {
-    fetchDomains: domains => dispatch(fetchDomainsIfNeeded(domains, brand)),
-    onEditDomain: (domains, activeDomain) => dispatch(fetchDomainIfNeeded(domains, activeDomain, brand)),
+    fetchDomains,
+    onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain
   }
 }

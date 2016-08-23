@@ -65,9 +65,10 @@ export function editDomainFailure(state) {
   return state
 }
 
-export function fetchedAllDomainsSuccess(state, action) {
+export function fetchedAllDomainsSuccess(state, { payload }) {
   return state.merge({
-    domains: fromJS(action.payload.map(domain => ({ id: domain })))
+    domains: fromJS(payload.map(domain => ({ id: domain }))),
+    activeDomain: state.get('activeDomain') || payload[0]
   })
 }
 
@@ -97,29 +98,9 @@ export function activeDomainChange(state, action) {
 
 /**
  *
- * Thunks and helper functions
+ * Selectors
  */
-
-export const shouldFetchDomain = (domains, item) =>
-  domains.findIndex(domain => domain.id === item && domain.details) < 0
-
-export const shouldFetchDomains = (domains) => domains.length === 0
-
-export const fetchDomainsIfNeeded = (domains, brand) => dispatch => {
-  if (shouldFetchDomains(domains)) {
-    dispatch(startFetching())
-    dispatch(fetchDomains(brand))
-      .then(({ payload }) => {
-        dispatch(changeActiveDomain(payload[0]))
-      }).then(dispatch(stopFetching()))
-  }
-}
-
-export const fetchDomainIfNeeded = (domains, domain, brand) => dispatch => {
-  if (shouldFetchDomain(domains, domain)) {
-    dispatch(fetchDomain(brand, domain))
-  }
-}
+export const domainToEdit = (domains, id) => domains.find(domain => domain.get('id') === id)
 
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
@@ -162,8 +143,8 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
   }).then(({ data }) => ({ data, domain }))
 )
 
-const startFetching = createAction(DNS_START_FETCHING)
-const stopFetching = createAction(DNS_STOP_FETCHING)
+export const startFetching = createAction(DNS_START_FETCHING)
+export const stopFetching = createAction(DNS_STOP_FETCHING)
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)

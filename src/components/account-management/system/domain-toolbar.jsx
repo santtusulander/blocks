@@ -43,7 +43,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
             id="edit-domain"
             bsStyle="primary"
             icon={true}
-            onClick={() => onEditDomain(domains, activeDomain)}>
+            onClick={() => onEditDomain(activeDomain)}>
             <IconEdit/>
           </UDNButton>
         </IsAllowed>}
