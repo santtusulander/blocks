@@ -42,7 +42,6 @@ class AnalyticsTabTraffic extends React.Component {
       granularity: rangeDiff >= 2 ? 'day' : 'hour'
     }, fetchOpts)
 
-    this.props.trafficActions.fetchTotals(fetchOpts)
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
