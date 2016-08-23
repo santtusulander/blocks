@@ -22,10 +22,11 @@ describe('Account Module', () => {
     const state = Immutable.fromJS({
       allAccounts: []
     });
-    const newState = createSuccess(state, {payload: {id: 1}});
+    const newState = createSuccess(state, {payload: {id: 1, name: 'aaa'}});
     const expectedState = Immutable.fromJS({
-      allAccounts: [{id: 1}],
-      activeAccount: {id: 1}
+      allAccounts: [{id: 1, name: 'aaa'}],
+      activeAccount: {id: 1, name: 'aaa'},
+      changedAccount: { id: 1, name: 'aaa', action: 'add' }
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });
