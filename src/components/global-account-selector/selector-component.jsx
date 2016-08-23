@@ -29,13 +29,15 @@ const SelectorComponent = ({
       </MenuItem>
       {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
       {items.map((option, i) =>
-        <MenuItem key={i} id="menu-item">
-          <span id="name" className="name" onClick={() => onItemClick(option[0])}>{option[1]}</span>
+        <li key={i} role="presentation">
+          <a id="menu-item" role="menu-item" onClick={() => onItemClick(option[0])} tabIndex="-1">
+            <span id="name" className="name">{option[1]}</span>
+          </a>
           {drillable &&
-            <span className="caret-container" onClick={() => onCaretClick(option[0])}>
+            <a className="caret-container" onClick={() => onCaretClick(option[0])} tabIndex="-1">
               <span className="caret"></span>
-            </span>}
-        </MenuItem>
+            </a>}
+        </li>
       )}
     </Dropdown.Menu>
   </Dropdown>
