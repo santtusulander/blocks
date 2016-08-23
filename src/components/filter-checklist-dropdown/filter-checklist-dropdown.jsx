@@ -121,7 +121,8 @@ export class FilterChecklistDropdown extends React.Component {
         <li
             key="all"
             role="presentation"
-            className="children">
+            className="children"
+            tabIndex="-1">
           <Input type="checkbox"
                  label={`SELECT ALL (${this.props.options.size})`}
                  value="all"
@@ -135,7 +136,8 @@ export class FilterChecklistDropdown extends React.Component {
         return (
           <li key={i}
               role="presentation"
-              className="children">
+              className="children"
+              tabIndex="-1">
             <Input type="checkbox"
                    label={option.get('label')}
                    value={option.get('value')}
@@ -146,7 +148,7 @@ export class FilterChecklistDropdown extends React.Component {
       }))
     } else {
       itemList = (
-        <li role="presentation" className="children">
+        <li role="presentation" className="children" tabIndex="-1">
           <div className="form-group">No results...</div>
         </li>
       )
