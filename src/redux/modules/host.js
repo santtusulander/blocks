@@ -48,7 +48,7 @@ export function createSuccess(state, { payload }) {
   })
 }
 
-export function createFailure(state, { payload }) {
+export function createFailure(state) {
   return state.merge({
     activeHost: null,
     fetching: false

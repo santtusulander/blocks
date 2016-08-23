@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -11,12 +11,17 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import { getContentUrl } from '../util/helpers'
+
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
+import IconTrash from '../components/icons/icon-trash.jsx'
+import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -38,6 +43,7 @@ export class Configuration extends React.Component {
     const config = props.activeHost ? props.activeHost.getIn(['services',0,'configurations',0]) : null
 
     this.state = {
+      deleteModal: false,
       activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
@@ -199,10 +205,11 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-    console.log(activeConfig.toJS())
 
     return (
       <PageContainer className="configuration-container">
@@ -210,51 +217,57 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
             <PageHeader>
-              <ButtonToolbar className="pull-right">
-                {activeEnvironment === 2 ||
-                  activeEnvironment === 1 ||
-                  !activeEnvironment ?
-                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                    Publish
-                  </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                  Copy
-                </Button>
-                {activeEnvironment === 2 || activeEnvironment === 3 ?
-                  <Button bsStyle="primary"
-                    onClick={() => this.changeActiveVersionEnvironment(1)}>
-                    Retire
-                  </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                  className="versions-btn has-icon">
-                  <div className="icon-holder">
-                    <IconArrowLeft/>
+              <h5>CONFIGURATION</h5>
+              <div className="content-layout__header">
+                <AccountSelector
+                  as="configuration"
+                  params={this.props.params}
+                  topBarTexts={{}}
+                  onSelect={(tier, value, params) => {
+                    const { brand, account, group } = params, { hostActions } = this.props
+                    hostActions.startFetching()
+                    hostActions.fetchHost(brand, account, group, value).then(() => {
+                      this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                    })
+                  }}
+                  drillable={true}>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                    <span className="caret"></span>
                   </div>
-                  Versions
-                </Button>
-              </ButtonToolbar>
-              <p>CONFIGURATION</p>
-              <AccountSelector
-                as="configuration"
-                params={this.props.params}
-                topBarTexts={{}}
-                onSelect={(tier, value, params) => {
-                  const { brand, account, group } = params, { hostActions } = this.props
-                  hostActions.startFetching()
-                  hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                  })
-                }}
-                drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
-              </AccountSelector>
-              <p className="text-sm">
+                </AccountSelector>
+                <ButtonToolbar className="pull-right">
+                  <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                    <IconTrash/>
+                  </Button>
+                  {activeEnvironment === 2 ||
+                    activeEnvironment === 1 ||
+                    !activeEnvironment ?
+                    <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                      Publish
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                    Copy
+                  </Button>
+                  {activeEnvironment === 2 || activeEnvironment === 3 ?
+                    <Button bsStyle="primary"
+                      onClick={() => this.changeActiveVersionEnvironment(1)}>
+                      Retire
+                    </Button>
+                    : ''
+                  }
+                  <Button bsStyle="primary" onClick={this.toggleVersionModal}
+                    className="versions-btn has-icon">
+                    <div className="icon-holder">
+                      <IconArrowLeft/>
+                    </div>
+                    Versions
+                  </Button>
+                </ButtonToolbar>
+              </div>
+              <p className="text-sm content-layout__header__aside">
                 <span className="right-separator">
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </span>
@@ -343,8 +356,15 @@ export class Configuration extends React.Component {
             />
 
         </Content>
-
-        {this.state.showPublishModal ?
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          cancel={toggleDelete}
+          submit={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>
+        }
+        {this.state.showPublishModal &&
           <Modal show={true}
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
@@ -359,10 +379,9 @@ export class Configuration extends React.Component {
                 versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}
                 publishing={this.props.fetching}/>
             </Modal.Body>
-          </Modal>
-          : ''}
+          </Modal>}
 
-          {this.state.showVersionModal ?
+          {this.state.showVersionModal &&
             <Modal show={true}
               dialogClassName="configuration-sidebar configuration-versions-sidebar"
               onHide={this.toggleVersionModal}>
@@ -377,8 +396,7 @@ export class Configuration extends React.Component {
                   status={this.props.activeHost.get('status')}
                   activeHost={this.props.activeHost}/>
               </Sidebar>
-            </Modal>
-            : ''}
+            </Modal>}
       </PageContainer>
     );
   }
@@ -397,6 +415,7 @@ Configuration.propTypes = {
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
+  router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {

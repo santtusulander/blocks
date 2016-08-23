@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Dropdown, Row } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -22,6 +22,7 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AnalysisByTime from '../components/analysis/by-time'
+import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
@@ -29,6 +30,8 @@ import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
+import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -59,6 +62,7 @@ export class Property extends React.Component {
     super(props)
 
     this.state = {
+      deleteModal: false,
       activeSlice: null,
       activeSliceX: 100,
       byTimeWidth: 0,
@@ -156,7 +160,7 @@ export class Property extends React.Component {
     )
   }
   fetchData(params, queryParams) {
-    const {brand, account, group, property} = this.props.params
+    const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
     if(!this.props.activeHost || !this.props.activeHost.size) {
@@ -266,6 +270,8 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
     const activeHost = this.props.activeHost
@@ -304,18 +310,18 @@ export class Property extends React.Component {
       <PageContainer className="property-container">
         <Content>
           <PageHeader>
-            <p>PROPERTY SUMMARY</p>
+            <h5>PROPERTY SUMMARY</h5>
             <div className="content-layout__header">
               <AccountSelector
                 as="propertySummary"
                 params={this.props.params}
                 topBarTexts={itemSelectorTexts}
                 topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}
-                drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
+                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+                <div className="btn btn-link dropdown-toggle header-toggle">
+                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
+                  <span className="caret"></span>
+                </div>
               </AccountSelector>
               <ButtonToolbar>
                 <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
@@ -327,6 +333,9 @@ export class Property extends React.Component {
                       to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                   <IconConfiguration/>
                 </Link>
+                <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                  <IconTrash/>
+                </Button>
               </ButtonToolbar>
             </div>
           </PageHeader>
@@ -446,12 +455,19 @@ export class Property extends React.Component {
             </div>
           </div>
         </Content>
-        {this.state.purgeActive ? <PurgeModal
+        {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
-          showNotification={this.showNotification}/> : ''}
+          showNotification={this.showNotification}/>}
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          cancel={toggleDelete}
+          submit={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>}
       </PageContainer>
     )
   }

@@ -34,10 +34,6 @@ class AnalyticsTabOnOffNet extends React.Component {
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
   }
 
-  export(exporters) {
-    exporters.onOffNet(this.props.onOffStats.get('detail'))
-  }
-
   render(){
     return (
       <AnalysisOnOffNetReport
@@ -84,4 +80,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabOnOffNet);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabOnOffNet);

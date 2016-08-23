@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes, Component, Children } from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 
@@ -13,7 +13,7 @@ class IsAllowed extends Component {
       isAllowed = !isAllowed
     }
     return (
-      isAllowed && children
+      isAllowed && Children.only(children)
     )
   }
 }

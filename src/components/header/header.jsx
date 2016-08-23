@@ -2,9 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
-import { Button, Dropdown, Input, Nav, Navbar } from 'react-bootstrap'
+import { Button, Input, Nav, Navbar } from 'react-bootstrap'
 
 import UserMenu from './user-menu'
+import TruncatedTitle from '../truncated-title'
 import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
@@ -219,9 +220,10 @@ class Header extends React.Component {
                   topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
                   onSelect={itemSelectorFunc}
                   restrictedTo="account">
-                  <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                    {activeAccount && activeAccountName}
-                  </Dropdown.Toggle>
+                  <div className="btn btn-link dropdown-toggle header-toggle">
+                    <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
+                    <span className="caret"></span>
+                  </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>

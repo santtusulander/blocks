@@ -1,9 +1,23 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
-const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, topBarText, searchValue, onSearch, onCaretClick}) =>
-  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="global-account-selector">
-    <div className="global-account-selector__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
+import autoClose from '../../decorators/select-auto-close'
+
+const SelectorComponent = ({
+  items,
+  drillable,
+  children,
+  onSelect,
+  open,
+  toggle,
+  topBarText,
+  searchValue,
+  onSearch,
+  onCaretClick,
+  onItemClick,
+  onTopbarClick }) =>
+  <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="selector-component">
+    <div className="selector-component__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
       <MenuItem>
         <Input
@@ -13,31 +27,34 @@ const AccountSelector = ({ items, drillable, children, onSelect, open, toggle, t
           value={searchValue}
           onChange={onSearch}/>
       </MenuItem>
-      {topBarText && <MenuItem id="top-bar" className="top-bar-link">{topBarText}</MenuItem>}
+      {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
       {items.map((option, i) =>
-        <MenuItem key={i} data-value={option[0]} id="menu-item">
-          <span id="name" className="name" data-value={option[0]}>{option[1]}</span>
+        <MenuItem key={i} id="menu-item">
+          <span id="name" className="name" onClick={() => onItemClick(option[0])}>{option[1]}</span>
           {drillable &&
-            <span className="caret-container" data-value={option[0]} onClick={onCaretClick}>
-              <span className="caret" data-value={option[0]}></span>
+            <span className="caret-container" onClick={() => onCaretClick(option[0])}>
+              <span className="caret"></span>
             </span>}
         </MenuItem>
       )}
     </Dropdown.Menu>
   </Dropdown>
 
-AccountSelector.propTypes = {
+SelectorComponent.displayName = 'SelectorComponent'
+SelectorComponent.propTypes = {
   children: PropTypes.object,
   classname: PropTypes.string,
   drillable: PropTypes.bool,
   items: PropTypes.array,
   onCaretClick: PropTypes.func,
+  onItemClick: PropTypes.func,
   onSearch: PropTypes.func,
   onSelect: PropTypes.func,
+  onTopbarClick: PropTypes.func,
   open: PropTypes.bool,
   searchValue: PropTypes.string,
   toggle: PropTypes.func,
   topBarText: PropTypes.string
 }
 
-export default AccountSelector
+export default autoClose(SelectorComponent)

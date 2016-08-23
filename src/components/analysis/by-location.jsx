@@ -185,8 +185,8 @@ class AnalysisByLocation extends React.Component {
               // if(hideCountry) {
               //   classes += ' hiddenpath'
               // }
-              let label = '0'
-              if(this.props.countryData.get(dataIndex)) {
+              let label = ''
+              if(dataIndex >= 0 && this.props.countryData.get(dataIndex)) {
                 label = this.props.tooltipCustomFormat ?
                   this.props.tooltipCustomFormat(
                     this.props.countryData.get(dataIndex).get(this.props.dataKey) || 0

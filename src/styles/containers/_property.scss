@@ -25,7 +25,7 @@
 
   .kpi {
     h3 {
-      margin: 5px 0 0;
+      margin-top: 5px;
       word-wrap: break-word;
     }
   }
@@ -111,5 +111,10 @@
 
   .slice-tooltip {
     width: 200px;
+  }
+
+  .btn-secondary {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
   }
 }

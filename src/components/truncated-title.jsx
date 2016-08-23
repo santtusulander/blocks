@@ -1,41 +1,55 @@
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Overlay, Tooltip } from 'react-bootstrap'
 
 class TruncatedTitle extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isTitleTruncated: false
     }
 
     this.measureContainers = this.measureContainers.bind(this)
-  }
-
-  componentDidMount() {
-    this.measureContainers()
-    window.addEventListener('resize', this.measureContainers)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
+    this.resetTooltip = this.resetTooltip.bind(this)
   }
 
   measureContainers() {
     this.setState({
-      isTitleTruncated: this.refs.contentItemName.scrollWidth > this.refs.contentItemName.clientWidth
+      isTitleTruncated: this.refs.truncatedTitle.scrollWidth > this.refs.truncatedTitle.clientWidth
+    })
+  }
+
+  resetTooltip() {
+    this.setState({
+      isTitleTruncated: false
     })
   }
 
   render() {
-    const tooltip = (<Tooltip id="truncated-title-tooltip" className="display-long-name-tooltip"><h3>{this.props.content}</h3></Tooltip>)
+    let className = 'truncated-title'
+    if(this.props.className) {
+      className += ' ' + this.props.className
+    }
+    const tooltip = (
+      <Tooltip
+        id="truncated-title-tooltip"
+        className="display-long-name-tooltip">
+        <h3>{this.props.content}</h3>
+      </Tooltip>
+    )
     return (
-      <div>
-        {this.state.isTitleTruncated ?
-          <OverlayTrigger placement={this.props.tooltipPlacement} overlay={tooltip}>
-            <div className={this.props.className} ref="contentItemName">{this.props.content}</div>
-          </OverlayTrigger> :
-          <div className={this.props.className} ref="contentItemName">{this.props.content}</div>
-        }
+      <div
+        className={className}
+        ref="truncatedTitle"
+        onMouseOver={this.measureContainers}
+        onMouseOut={this.resetTooltip}>
+        {this.props.content}
+        <Overlay
+          placement={this.props.tooltipPlacement || 'top'}
+          show={this.state.isTitleTruncated}
+          target={() => this.refs.truncatedTitle}>
+          {tooltip}
+        </Overlay>
       </div>
     );
   }
