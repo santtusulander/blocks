@@ -162,6 +162,12 @@ class AnalysisTraffic extends React.Component {
           </thead>
           <tbody>
           {!this.props.fetching ? sortedCountries.map((country, i) => {
+            const primaryData = country.get('detail').map(datapoint => {
+              return datapoint.set(
+                'timestamp',
+                moment(datapoint.get('timestamp'), 'X').toDate()
+              )
+            }).toJS()
             return (
               <tr key={i}>
                 <td>{country.get('name')}</td>
@@ -171,12 +177,7 @@ class AnalysisTraffic extends React.Component {
                     axes={false}
                     padding={0}
                     area={false}
-                    primaryData={country.get('detail').map(datapoint => {
-                      return datapoint.set(
-                        'timestamp',
-                        moment(datapoint.get('timestamp'), 'X').toDate()
-                      )
-                    }).toJS()}
+                    primaryData={primaryData}
                     dataKey={byTimeDataKey}
                     showTooltip={true}
                     yAxisCustomFormat={byTimeYAxisFormat}
