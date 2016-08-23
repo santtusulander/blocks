@@ -9,7 +9,19 @@ import { checkForErrors } from '../../util/helpers'
 
 import './dns-edit-form.scss'
 
-const validate = (values) => checkForErrors(values)
+const validate = ({ recordType, recordName, targetValue, ttl }) => {
+  const conditions = {
+    ttl: {
+      condition: !new RegExp('^[0-9]*$').test(ttl),
+      errorText: 'TTL value must be a number.'
+    },
+    targetValue: {
+      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(targetValue),
+      errorText: 'Address must be an IP address.'
+    }
+  }
+  return checkForErrors({ recordType, recordName, targetValue, ttl }, conditions)
+}
 
 const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
@@ -18,7 +30,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
         <h1>{title}</h1>
-        {edit && <p>{recordName}</p>}
+        {edit && <p>{recordName.value}</p>}
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -40,7 +52,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             {...targetValue}
             type="text"
             label="Address"
-            placeholder="Enter Target Value"
+            placeholder="Enter Address"
           />
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
           <hr/>
