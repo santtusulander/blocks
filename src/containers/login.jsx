@@ -62,7 +62,7 @@ export class Login extends React.Component {
         // NOTE: We wait to go to the account page until we receive data because
         // we need to know about roles and permissions before determining what
         // the user is allowed to see.
-        this.getLoggedInData()
+        return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
             this.props.userActions.finishFetching()

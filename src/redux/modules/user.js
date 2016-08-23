@@ -56,8 +56,7 @@ export function userLoggedInSuccess(state, action){
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
-    loggedIn: true,
-    username: action.payload.username
+    loggedIn: true
   })
 }
 
@@ -138,11 +137,7 @@ export function userTokenChecked(state, action){
     localStorage.setItem('EricssonUDNUserToken', action.payload.token)
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
-    return state.merge({
-      loggedIn: true,
-      username: action.payload.user.email,
-      currentUser: fromJS(action.payload.user)
-    })
+    return state.set('loggedIn', true)
   }
   else {
     localStorage.removeItem('EricssonUDNUserToken')
@@ -183,7 +178,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   )
   .then((res) => {
     if(res) {
-      return {username: username, token: res.data}
+      return {token: res.data}
     }
   }, (res) => {
     throw new Error(res.data.message)
@@ -197,17 +192,17 @@ export const startFetching = createAction(USER_START_FETCH)
 export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  const username = localStorage.getItem('EricssonUDNUserName')
+  // const username = localStorage.getItem('EricssonUDNUserName')
   const token = localStorage.getItem('EricssonUDNUserToken')
-  if(username && token) {
-    return loginAxios.get(`${urlBase}/v2/users/${username}`,
+  if(token) {
+    return loginAxios.get(`${urlBase}/v2/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
       if(res) {
         return {
           token: token,
-          user: res.data
+          username: res.data.username
         }
       }
     })
