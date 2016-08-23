@@ -1,16 +1,20 @@
 // Dropdowns
 // =========
-$dropdown-font-size: 14px;
+$dd-font-size: 14px;
+$dd-line-height: 1.6;
+$dd-menu-max-height: rem(480px);
+$dd-menu-min-width: rem(150px);
+$dd-vertical-padding: em(13px, $dd-font-size);
+$dd-horizontal-padding: em(18px, $dd-font-size);
+
+$dt-dd-menu-color: $dt-text-color;
+$dt-dd-menu-bg-color: $black;
+$dt-dd-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+
 $search-font-size: 12px;
-$dropdown-menu-min-width: rem(320px);
-$dropdown-vertical-padding: em(14px, $dropdown-font-size);
-$dropdown-horizontal-padding: em(18px, $dropdown-font-size);
-$search-vertical-padding: em(9px, $search-font-size);
-$search-input-vertical-padding: em(8px, $search-font-size);
-$search-input-left-padding: em(36px, $search-font-size);
-$dt-dropdown-menu-color: $dt-text-color;
-$dt-dropdown-menu-bg-color: $black;
-$dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+$search-vertical-padding: em(10px, $dd-font-size);
+$search-input-vertical-padding: em(8px, $dd-font-size);
+$search-input-left-padding: em(36px, $dd-font-size);
 
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override bootstrap styles
@@ -18,10 +22,13 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 .navbar-nav .open .dropdown-menu {
   position: absolute;
   width: 100%;
-  min-width: $dropdown-menu-min-width;
+  max-height: $dd-menu-max-height;
+  min-width: $dd-menu-min-width;
   padding: 0;
   margin: 0;
-  font-size: inherit;
+  overflow-y: auto !important;
+  font-size: $dd-font-size;
+  line-height: $dd-line-height;
   text-transform: none;
   border: 0;
   border-radius: 0 0 2px 2px;
@@ -54,15 +61,16 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
   }
 
   .dark-theme & {
-    color: $dt-dropdown-menu-color;
-    background-color: $dt-dropdown-menu-bg-color;
-    background-image: $dt-dropdown-menu-bg-image;
+    color: $dt-dd-menu-color;
+    background-color: $dt-dd-menu-bg-color;
+    background-image: $dt-dd-menu-bg-image;
     background-size: 100%;
   }
 
   .light-theme & {
     color: $lt-text-color;
     background-color: $white;
+    box-shadow: 0 5px 10px rgba($black, 0.2);
   }
 
   .header-toggle + & {
@@ -320,8 +328,9 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
       // color: inherit;
       // white-space: normal;
       // vertical-align: middle;
-      padding: $dropdown-vertical-padding $dropdown-horizontal-padding;
-      font-size: $dropdown-font-size;
+      padding: $dd-vertical-padding $dd-horizontal-padding;
+      font-size: $dd-font-size;
+      line-height: $dd-line-height;
 
       &:hover,
       &:focus,
@@ -344,7 +353,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
         color: $dt-text-color;
 
         &:not(.active) {
-          border-top: 1px solid rgba($pale-blue, 0.1);
+          box-shadow: inset 0 1px 0 0 rgba($pale-blue, 0.1);
         }
 
         &:hover,
@@ -355,9 +364,7 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 
       .light-theme & {
         color: $lt-text-color;
-        border-right: 1px solid rgba($black, 0.1);
-        border-bottom: 1px solid rgba($black, 0.1);
-        border-left: 1px solid rgba($black, 0.1);
+        box-shadow: inset 0 1px 0 0 rgba($black, 0.1);
 
         &:hover,
         &:focus {
@@ -368,7 +375,11 @@ $dt-dropdown-menu-bg-image: radial-gradient(circle, rgba($purple, 0), rgba($purp
 
     &.search-container  {
       > a {
-        padding: $search-vertical-padding $dropdown-horizontal-padding;
+        padding: $search-vertical-padding $dd-horizontal-padding;
+
+        .light-theme & {
+          box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+        }
       }
 
       .header-search-input {

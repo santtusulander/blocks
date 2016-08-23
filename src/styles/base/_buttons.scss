@@ -4,28 +4,31 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 
-$btn-font-size: 15px;
-$dropdown-font-size: 14px;
+$btn-font-size: 14px;
+$btn-line-height: 1.6;
 $btn-min-width: rem(120px);
-$dropdown-min-width: rem(320px);
-$btn-top-padding: em(8px, $btn-font-size);
+$btn-vertical-padding: em(7px, $btn-font-size);
 $btn-horizontal-padding: em(18px, $btn-font-size);
-$btn-bottom-padding: em(7px, $btn-font-size);
-$dropdown-top-padding: em(9px, $dropdown-font-size);
-$dropdown-horizontal-padding: em(18px, $dropdown-font-size);
-$dropdown-bottom-padding: em(8px, $dropdown-font-size);
 $btn-text-color: $white;
 $btn-primary-background: $pale-blue;
 $btn-secondary-background: transparent;
 $btn-danger-background: $red;
 $btn-success-background: $gradient-teal;
+
+$dd-font-size: 14px;
+$dd-line-height: 1.6;
+$dd-min-width: rem(150px);
+$dd-vertical-padding: em(7px, $dd-font-size);
+$dd-horizontal-padding: em(18px, $dd-font-size);
+
 $lt-caret-color: $silver-60;
 
 .btn {
   min-width: $btn-min-width;
-  padding: $btn-top-padding $btn-horizontal-padding $btn-bottom-padding;
+  padding: $btn-vertical-padding $btn-horizontal-padding;
   font-size: rem($btn-font-size);
   font-weight: 700;
+  line-height: $btn-line-height;
   color: $btn-text-color;
   text-transform: uppercase;
   border: 0;
@@ -405,13 +408,12 @@ $lt-caret-color: $silver-60;
   // DROPDOWN BUTTONS (SELECT, TOGGLE)
   // =================================
   .dropdown-select {
-    width: 100%;
-    min-width: $dropdown-min-width;
+    min-width: $dd-min-width;
 
     .dropdown-toggle {
       width: 100%;
-      padding: $dropdown-top-padding calc(#{$dropdown-horizontal-padding} * 2) $dropdown-bottom-padding $dropdown-horizontal-padding;  // Calculation prevents the text from flowing under the caret
-      font-size: $dropdown-font-size;
+      padding: $dd-vertical-padding calc(#{$dd-horizontal-padding} * 2) $dd-vertical-padding $dd-horizontal-padding;  // Calculation prevents the text from flowing under the caret
+      font-size: $dd-font-size;
       font-weight: 300;
       color: $dt-text-color;
       text-align: left;
@@ -447,7 +449,7 @@ $lt-caret-color: $silver-60;
       .caret {
         position: absolute;
         top: 50%;
-        right: $dropdown-horizontal-padding;
+        right: $dd-horizontal-padding;
         border-width: $caret-width-base;
         transform: translateY(-50%);
       }
@@ -458,7 +460,7 @@ $lt-caret-color: $silver-60;
       border-bottom-left-radius: 0;
 
       &:focus {
-        box-shadow: inset 0 0 0 1px rgba($black, 0.1);
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
       }
     }
   }
@@ -467,7 +469,7 @@ $lt-caret-color: $silver-60;
 .dark-theme {
   .btn-secondary {
     background-color: $btn-secondary-background;
-    box-shadow: inset 0 0 0 2px rgba($btn-primary-background, 0.2);
+    box-shadow: 0 0 0 2px rgba($btn-primary-background, 0.2);
 
     &:hover {
       background-color: rgba($btn-primary-background, 0.3);
@@ -515,10 +517,6 @@ $lt-caret-color: $silver-60;
         background-color: rgba($black, 0.3);
         fill: $pale-blue;
       }
-
-      // &:focus {
-      //   box-shadow: none;
-      // }
     }
   }
 }
@@ -556,7 +554,7 @@ $lt-caret-color: $silver-60;
     .dropdown-toggle {
       color: $lt-text-color;
       background-color: $white;
-      box-shadow: inset 0 0 0 1px rgba($black, 0.1);
+      box-shadow: 0 0 0 1px rgba($black, 0.1);
 
       &:hover:not(:disabled),
       &:hover:not(:disabled) .icon,
