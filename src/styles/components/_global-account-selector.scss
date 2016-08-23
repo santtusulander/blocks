@@ -14,7 +14,7 @@
     flex-wrap: nowrap;
     align-items: center;
 
-    :first-child {
+    > :first-child {
       float: left;
       width: 100%;
       overflow: hidden;

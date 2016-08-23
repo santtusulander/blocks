@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { fetchDomains, changeActiveDomain } from '../../../redux/modules/dns'
+import * as dnsActionCreators from '../../../redux/modules/dns'
 
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
@@ -17,9 +18,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
-    !this.props.domains.size && this.props.fetchDomains(this.props.params.brand).then(({ payload }) => {
-      !this.props.activeDomain && this.props.changeActiveDomain(payload[0])
-    })
+    this.props.fetchDomains(this.props.params.brand)
   }
 
   render() {
@@ -28,7 +27,7 @@ class AccountManagementSystemDNS extends Component {
       searchValue: this.state.domainSearchValue,
       searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
-      domains: domains.filter(domain => domain.includes(this.state.domainSearchValue)),
+      domains: domains && domains.filter(domain => domain.id.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
       onAddDomain,
       onEditDomain
@@ -81,4 +80,13 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDomains, changeActiveDomain })(AccountManagementSystemDNS)
+function mapDispatchToProps(dispatch, { params: { brand } }) {
+  const { changeActiveDomain, fetchDomains, fetchDomain } = bindActionCreators(dnsActionCreators, dispatch)
+  return {
+    fetchDomains,
+    onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
+    changeActiveDomain
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountManagementSystemDNS)

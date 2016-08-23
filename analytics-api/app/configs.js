@@ -22,7 +22,8 @@ let environmentConfigs = {
     dbHost: 'metrics-db.sea.cdx-dev.unifieddeliverynetwork.net',
     dbUser: 'ro',
     dbPassword: 'Read0nLy',
-    dbName: 'metrics'
+    dbName: 'metrics',
+    aaaBaseURL: 'http://aaa.dal.cdx-dev.unifieddeliverynetwork.net:7999/v2'
   },
   staging: {
     port: 3040
