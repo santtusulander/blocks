@@ -22,10 +22,10 @@ var server = new WebpackDevServer(compiler, {
   //was: true,
   proxy: {
     '/v2*': {
-      target: 'http://aaa.dal.cdx-dev.unifieddeliverynetwork.net:7999'
+      target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net'
     },
     '/VCDN*': {
-      target: 'http://saltmaster.cdx-dev.unifieddeliverynetwork.net:8076'
+      target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net'
     },
     /*'/VCDN*': {
       target: 'http://localhost:8080'
