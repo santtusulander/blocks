@@ -54,6 +54,7 @@ function routeTrafficCountry(req, res) {
       _.forOwn(allCountryTrafficData, (countryData, code) => {
         let trafficRecords;
         let total = 0;
+        let requests = 0;
         let historicalTotal = 0;
         let countryRecord = {
           code: dataUtils.get3CharCountryCodeFromCode(code),
@@ -62,6 +63,7 @@ function routeTrafficCountry(req, res) {
           percent_total: 0.20,
           historical_total: 0,
           total: 0,
+          requests: 0,
           detail: []
         };
 
@@ -72,7 +74,8 @@ function routeTrafficCountry(req, res) {
         // over the network.
         trafficRecords = countryData.map((data) => {
           total += data.bytes;
-          return _.pick(data, ['bytes', 'timestamp']);
+          requests += data.requests;
+          return _.pick(data, ['bytes', 'timestamp', 'requests']);
         });
 
         // Ensure there is a record for each time interval
@@ -81,7 +84,7 @@ function routeTrafficCountry(req, res) {
           optionsFinal.start,
           optionsFinal.end,
           optionsFinal.granularity,
-          'bytes'
+          ['bytes', 'requests']
         );
 
         // Add bits per second to each traffic record
@@ -92,6 +95,9 @@ function routeTrafficCountry(req, res) {
 
         // Save the country total to the countryRecord
         countryRecord.total = total;
+
+        // Save the total country requests to the countryRecord
+        countryRecord.requests = requests;
 
         // Save total bits per second to the countryRecord
         countryRecord.bits_per_second = Math.round((total * dataUtils.bitsPerByte) / (optionsFinal.end - optionsFinal.start));
