@@ -17,16 +17,33 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps) ) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if( this.props.filters !== nextProps.filters ||
+        changedParamsFiltersQS(this.props, nextProps) ||
+        this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location) {
+  fetchData(params, filters, location, hostConfiguredName) {
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -96,6 +113,7 @@ class AnalyticsTabTraffic extends React.Component {
 }
 
 AnalyticsTabTraffic.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.Map),
@@ -118,6 +136,7 @@ AnalyticsTabTraffic.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     metrics: state.metrics,
     traffic: state.traffic.get('traffic'),
     trafficByTime: state.traffic.get('byTime'),
