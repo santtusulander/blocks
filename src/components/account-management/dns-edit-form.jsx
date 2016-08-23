@@ -1,18 +1,17 @@
 import React, { PropTypes } from 'react'
 import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
+import SelectWrapper from '../select-wrapper'
 
 import recordTypes from '../../constants/dns-record-types.js'
 
-import checkForErrors from '../../util/helpers'
+import { checkForErrors } from '../../util/helpers'
 
 import './dns-edit-form.scss'
 
 const validate = (values) => checkForErrors(values)
 
-const recordTypeOptions = recordTypes.map((e, i) => {
-  return <option key={i} value={e}>{e}</option>;
-});
+const recordTypeOptions = recordTypes.map((value, i) => <option key={i} value={value}>{value}</option>)
 
 const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
@@ -25,13 +24,11 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
       </Modal.Header>
       <Modal.Body>
         <form>
-          <Input
+          <SelectWrapper
             {...recordType}
-            type="select"
-            label="Select Record Type"
-            placeholder="Select">
+            label="Select Record Type">
             {recordTypeOptions}
-          </Input>
+          </SelectWrapper>
           <hr/>
           <Input
             {...recordName}
