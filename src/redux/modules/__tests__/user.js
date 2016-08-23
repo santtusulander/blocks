@@ -14,7 +14,8 @@ import {
   deleteUserSuccess,
   deleteUserFailure,
   createUserSuccess,
-  createUserFailure
+  createUserFailure,
+  userNameSave
 } from '../user.js'
 
 import Immutable from 'immutable'
@@ -167,5 +168,10 @@ describe('User Module', () => {
       })
       const newState = createUserFailure(initialState)
       expect( Immutable.is(newState, initialState)).toBeTruthy()
+    })
+
+    it('should handle userNameSave', () => {
+      const newState = userNameSave(state, {payload: 'aaa'})
+      expect( newState.get('username')).toBe('aaa')
     })
 })
