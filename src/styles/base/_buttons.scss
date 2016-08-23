@@ -116,6 +116,7 @@ $lt-caret-color: $silver-60;
   }
 
   &.btn-header {
+    width: $header-btn-height;
     height: $header-btn-height;
     margin-top: ($header-height - $header-btn-height) / 2;
     margin-right: 8px;
@@ -127,21 +128,17 @@ $lt-caret-color: $silver-60;
     fill: $dt-text-color;
     stroke: $dt-text-color;
 
-    @include md {
-      margin-top: ($md-header-height - $md-header-btn-height) / 2;
-      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
-      line-height: $md-header-btn-height;
-    }
-
     &.btn-alerts {
       svg {
-        width: 11px;
+        width: 24px;
+        height: 24px;
       }
     }
 
     &.btn-help {
       svg {
-        width: 8px;
+        width: 30px;
+        height: 30px;
       }
     }
   }
