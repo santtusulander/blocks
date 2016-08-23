@@ -14,7 +14,7 @@ $icon-two-tone-primary: $dark-blue;
 
   .dark-theme &,
   .light-theme & {
-    fill: $icon-base-color;
+    fill: inherit;
   }
 
   &.no-fill,

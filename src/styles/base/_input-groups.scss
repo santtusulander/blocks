@@ -11,6 +11,10 @@
   color: inherit;
   background-color: transparent;
   border: 0;
+
+  .icon {
+    fill: $white;
+  }
 }
 
 .input-addon-before .input-group-addon:first-child {
