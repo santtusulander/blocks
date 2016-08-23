@@ -137,6 +137,7 @@ class AnalysisByTime extends React.Component {
       this.props.yAxisCustomFormat(numeral(val).format('0'), setMax)
     : numeral(val).format('0,0')
   }
+
   render() {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
       return <div>Loading...</div>
@@ -152,6 +153,7 @@ class AnalysisByTime extends React.Component {
         const newData = Object.assign({}, data)
         newData.bits_per_second += primaryData[i].bits_per_second
         newData.bytes += primaryData[i].bytes
+        newData.requests += primaryData[i].requests
         return newData
       })
     }

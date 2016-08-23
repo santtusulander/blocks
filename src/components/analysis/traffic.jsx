@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import Immutable from 'immutable'
 import { Col, Row } from 'react-bootstrap'
+import numeral from 'numeral'
 
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
@@ -76,15 +77,28 @@ class AnalysisTraffic extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-
+    const byTimeDataKey = this.props.recordType === 'transfer_rates' ?
+      'bits_per_second' : 'requests'
+    const byCountryDataKey = this.props.recordType === 'transfer_rates' ?
+      'average_bits_per_second' : 'requests'
+    const byTimeYAxisFormat = this.props.recordType === 'transfer_rates' ?
+      (val, setMax) => formatBitsPerSecond(val, true, setMax) :
+      (val) => numeral(val).format('0,0')
+    const byCountryDataFormat = this.props.recordType === 'transfer_rates' ?
+      val => formatBitsPerSecond(val, true) :
+      val => numeral(val).format('0,0')
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
+
     return (
       <div className="analysis-traffic">
         {/*<div className="analysis-data-box">
          <h4>Total Egress Yesterday</h4>
          <p>{formatBytes(this.props.totalEgress)}</p>
          </div>*/}
-        <h3>BANDWIDTH {this.props.dateRange.toUpperCase()}</h3>
+        <h3>
+          {this.props.recordType === 'transfer_rates' ? 'BANDWIDTH ' : 'REQUESTS '}
+          {this.props.dateRange.toUpperCase()}
+        </h3>
         <div className="analysis-data-box wide">
           <Row>
             <Col xs={4} className="right-separator">
@@ -105,17 +119,19 @@ class AnalysisTraffic extends React.Component {
         <div ref="byTimeHolder" className="transfer-by-time">
           {this.props.fetching ?
             <div>Loading...</div> :
-            <AnalysisByTime axes={true} padding={40}
-                            dataKey="bits_per_second"
-                            primaryData={httpData.toJS()}
-                            secondaryData={httpsData.toJS()}
-                            primaryLabel='HTTP'
-                            secondaryLabel='HTTPS'
-                            stacked={true}
-                            showLegend={true}
-                            showTooltip={false}
-                            yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, true, setMax)}
-                            width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
+            <AnalysisByTime
+              axes={true}
+              padding={40}
+              dataKey={byTimeDataKey}
+              primaryData={httpData.toJS()}
+              secondaryData={httpsData.toJS()}
+              primaryLabel='HTTP'
+              secondaryLabel='HTTPS'
+              stacked={true}
+              showLegend={true}
+              showTooltip={false}
+              yAxisCustomFormat={byTimeYAxisFormat}
+              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
           }
         </div>
         <h3>BY GEOGRAPHY</h3>
@@ -123,8 +139,8 @@ class AnalysisTraffic extends React.Component {
           {this.props.fetching ?
             <div>Loading...</div> :
             <AnalysisByLocation
-              dataKey="average_bits_per_second"
-              tooltipCustomFormat={(val) => formatBitsPerSecond(val, true)}
+              dataKey={byCountryDataKey}
+              tooltipCustomFormat={byCountryDataFormat}
               timelineKey="detail"
               width={this.state.byLocationWidth}
               height={this.state.byLocationWidth / 1.6}
@@ -138,8 +154,8 @@ class AnalysisTraffic extends React.Component {
             <TableSorter {...sorterProps} column="name">
               Country
             </TableSorter>
-            <TableSorter {...sorterProps} column="average_bits_per_second">
-              Bandwidth
+            <TableSorter {...sorterProps} column={byCountryDataKey}>
+              {this.props.recordType === 'transfer_rates' ? 'Bandwidth' : 'Requests'}
             </TableSorter>
             <th className="text-center">Period Trend</th>
           </tr>
@@ -149,19 +165,23 @@ class AnalysisTraffic extends React.Component {
             return (
               <tr key={i}>
                 <td>{country.get('name')}</td>
-                <td>{formatBitsPerSecond(country.get('average_bits_per_second'))}</td>
+                <td>{byCountryDataFormat(country.get(byCountryDataKey))}</td>
                 <td width={this.state.byTimeWidth / 2}>
-                  <AnalysisByTime axes={false} padding={0} area={false}
-                                  primaryData={country.get('detail').map(datapoint => {
-                        return datapoint.set(
-                          'timestamp',
-                          moment(datapoint.get('timestamp'), 'X').toDate()
-                        )
-                      }).toJS()}
-                                  dataKey='bits_per_second'
-                                  showTooltip={true}
-                                  width={this.state.byTimeWidth / 2}
-                                  height={50}/>
+                  <AnalysisByTime
+                    axes={false}
+                    padding={0}
+                    area={false}
+                    primaryData={country.get('detail').map(datapoint => {
+                      return datapoint.set(
+                        'timestamp',
+                        moment(datapoint.get('timestamp'), 'X').toDate()
+                      )
+                    }).toJS()}
+                    dataKey={byTimeDataKey}
+                    showTooltip={true}
+                    yAxisCustomFormat={byTimeYAxisFormat}
+                    width={this.state.byTimeWidth / 2}
+                    height={50}/>
                 </td>
               </tr>
             )
@@ -184,6 +204,7 @@ AnalysisTraffic.propTypes   = {
   fetching: React.PropTypes.bool,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
+  recordType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   totalEgress: React.PropTypes.number
 }
