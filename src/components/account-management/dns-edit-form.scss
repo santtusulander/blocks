@@ -2,4 +2,18 @@
 
 .dns-edit-form-sidebar {
   @extend .modal-form-panel;
+
+  .dropdown-select {
+    width: 350px;
+    margin-bottom: 60px;
+
+    .dropdown-toggle {
+      height: 60px;
+    }
+  }
+
+  .form-control.record-name-input,
+  .form-control.ttl-value-input {
+        width: 350px;
+  }
 }

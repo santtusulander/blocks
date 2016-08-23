@@ -3,7 +3,7 @@ import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import SelectWrapper from '../select-wrapper'
 
-import recordTypes from '../../constants/dns-record-types.js'
+import recordTypes from '../../constants/dns-record-types'
 
 import { checkForErrors } from '../../util/helpers'
 
@@ -26,21 +26,20 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             {...recordType}
             options={recordTypes.map(type => [type, type])}
             label="Select Record Type"/>
-          <hr/>
           <Input
             {...recordName}
             type="text"
-            label="Record Name"
+            label="Host Name"
             placeholder="Enter Record Name"
             addonAfter={`.${domain}`}
-            className='input-narrow recordNameInput'/>
+            className='input-narrow record-name-input'/>
           {recordName.touched && recordName.error &&
           <div className='error-msg errorRecordName'>{recordName.error}</div>}
           <hr/>
           <Input
             {...targetValue}
             type="text"
-            label="Target Value"
+            label="Address"
             placeholder="Enter Target Value"
           />
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
@@ -50,7 +49,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             type="text"
             label="TTL Value"
             placeholder="Enter TTL Value"
-            className='input-narrow'
+            className='input-narrow ttl-value-input'
             addonAfter='seconds'/>
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
           <ButtonToolbar className="text-right extra-margin-top">

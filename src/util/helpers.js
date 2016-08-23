@@ -391,15 +391,17 @@ export function checkForErrors(fields, customConditions) {
     if(isEmptyArray || field === '') {
       errors[fieldName] = 'Required'
     }
-    else if (Array.isArray(customConditions[fieldName])) {
-      for(const customCondition in customConditions[fieldName]) {
-        if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
-          errors[fieldName] = customConditions[fieldName][customCondition].errorText
+    else if (customConditions) {
+      if(Array.isArray(customConditions[fieldName])) {
+        for(const customCondition in customConditions[fieldName]) {
+          if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
+            errors[fieldName] = customConditions[fieldName][customCondition].errorText
+          }
         }
       }
-    }
-    else if(customConditions[fieldName] && customConditions[fieldName].condition) {
-      errors[fieldName] = customConditions[fieldName].errorText
+      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
+        errors[fieldName] = customConditions[fieldName].errorText
+      }
     }
   }
   return errors

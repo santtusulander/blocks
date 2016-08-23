@@ -26,5 +26,11 @@ storiesOf('AccountManagement', module)
     </ThemeWrap>
   ))
   .add('DnsEditForm', () => (
-    <DnsEditForm show={true} domain={'test.com'} onSave={action('onSave')} onCancel={action('onSave')}  />
+    <DnsEditForm
+      show={true}
+      domain={'test.com'}
+      onSave={action('onSave')}
+      onCancel={action('onSave')}
+      edit={true}
+      initialValues={{ recordType: 'asddasas', recordName:'asd', targetValue: 'qwewqewq', ttl: 'qwewqeqwe' }}/>
   ))
