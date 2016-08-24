@@ -331,6 +331,7 @@ $search-input-left-padding: em(36px, $dd-font-size);
       padding: $dd-vertical-padding $dd-horizontal-padding;
       font-size: $dd-font-size;
       line-height: $dd-line-height;
+      cursor: pointer;
 
       &:hover,
       &:focus,
