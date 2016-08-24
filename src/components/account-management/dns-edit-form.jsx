@@ -63,10 +63,9 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
               placeholder="Enter Record Name"
               addonAfter={`.${domain}`}
               className='input-narrow record-name-input'/>}
-          {recordName.touched && recordName.error &&
-          <div className='error-msg errorRecordName'>{recordName.error}</div>}
-          <hr/>
+          {recordName.touched && recordName.error && <div className='error-msg'>{recordName.error}</div>}
 
+          {shouldShowField('targetValue') && <hr/>}
           {shouldShowField('targetValue') &&
             <Input
               {...targetValue}
@@ -74,8 +73,8 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
               label="Address"
               placeholder="Enter Address"/>}
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
-            <hr/>
 
+          {shouldShowField('ttl') && <hr/>}
           {shouldShowField('ttl') &&
             <Input
               {...ttl}
