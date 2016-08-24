@@ -29,7 +29,6 @@ h1 {
   font-size: rem(36px);
   font-weight: 700;
   line-height: 1.1;
-  text-transform: capitalize;
 
   @include print {
     font-size: $print-font-size * 3;
