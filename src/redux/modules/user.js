@@ -14,17 +14,19 @@ const USER_FETCHED_ALL = 'USER_FETCHED_ALL'
 const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
+const USER_NAME_SAVED = 'USER_NAME_SAVED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
-// TODO: This is all fake and insecure until Keystone sign on is ready
 
+const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
   fetching: false,
-  loggedIn: false
+  loggedIn: false,
+  username: username
 })
 
 // REDUCERS
@@ -51,13 +53,11 @@ export function updateFailure(state) {
 
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-  localStorage.setItem('EricssonUDNUserName', action.payload.username)
 
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
-    loggedIn: true,
-    username: action.payload.username
+    loggedIn: true
   })
 }
 
@@ -94,7 +94,6 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
-  localStorage.removeItem('EricssonUDNUserName')
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.set('loggedIn', false)
@@ -138,19 +137,24 @@ export function userTokenChecked(state, action){
     localStorage.setItem('EricssonUDNUserToken', action.payload.token)
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
-    return state.merge({
-      loggedIn: true,
-      username: action.payload.user.email,
-      currentUser: fromJS(action.payload.user)
-    })
+    return state.set('loggedIn', true)
   }
   else {
     localStorage.removeItem('EricssonUDNUserToken')
-    localStorage.removeItem('EricssonUDNUserName')
     delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
   }
+}
+
+export function userNameSave(state, action){
+  if(action.payload) {
+    localStorage.setItem('EricssonUDNUserName', action.payload)
+  }
+  else {
+    localStorage.removeItem('EricssonUDNUserName')
+  }
+  return state.set('username', action.payload)
 }
 
 export default handleActions({
@@ -163,7 +167,8 @@ export default handleActions({
   USER_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
-  USER_UPDATED: mapReducers(updateSuccess, updateFailure)
+  USER_UPDATED: mapReducers(updateSuccess, updateFailure),
+  USER_NAME_SAVED: userNameSave
 }, emptyUser)
 
 // ACTIONS
@@ -183,7 +188,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   )
   .then((res) => {
     if(res) {
-      return {username: username, token: res.data}
+      return {token: res.data}
     }
   }, (res) => {
     throw new Error(res.data.message)
@@ -197,17 +202,16 @@ export const startFetching = createAction(USER_START_FETCH)
 export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  const username = localStorage.getItem('EricssonUDNUserName')
   const token = localStorage.getItem('EricssonUDNUserToken')
-  if(username && token) {
-    return loginAxios.get(`${urlBase}/v2/users/${username}`,
+  if(token) {
+    return loginAxios.get(`${urlBase}/v2/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
       if(res) {
         return {
           token: token,
-          user: res.data
+          username: res.data.username
         }
       }
     })
@@ -264,13 +268,4 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
     .then(parseResponseData)
 })
 
-//
-// export const fetchToken = createAction(USER_TOKEN_FETCHED, () => {
-//   return axios.post(`${urlBase}/v2/tokens`, {
-//     "username": "superuser",
-//     "brand_id": "udn",
-//     "password": "Video4All!",
-//     "account_id": 1}
-//   })
-//   .then(parseResponseData)
-// })
+export const saveName = createAction(USER_NAME_SAVED)

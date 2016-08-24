@@ -14,6 +14,7 @@ const Login = require('../login.jsx').Login
 function userActionsMaker(cbResponse) {
   return {
     startFetching: jest.genMockFunction(),
+    fetchUser: jest.genMockFunction().mockImplementation(() => Promise.resolve()),
     logIn: jest.genMockFunction().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     }),
@@ -29,6 +30,12 @@ function accountActionsMaker(cbResponse) {
     fetchAccounts: jest.genMockFunction().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     })
+  }
+}
+
+function rolesActionsMaker() {
+  return {
+    fetchRoles: jest.genMockFunction().mockImplementation(() => Promise.resolve())
   }
 }
 
@@ -109,17 +116,20 @@ describe('Login', () => {
         ]
       }
     })
+    const rolesActions = rolesActionsMaker()
     const fakeRouter = {
       push: jest.genMockFunction()
     }
     const login = TestUtils.renderIntoDocument(
       <Login userActions={userActions}
         accountActions={accountActions}
+        rolesActions={rolesActions}
         router={fakeRouter}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
-    expect(fakeRouter.push.mock.calls[0][0]).toBe('/path/after/login')
+    expect(rolesActions.fetchRoles.mock.calls.length).toBe(1)
+    expect(userActions.fetchUser.mock.calls[0][0]).toBe('aaa')
   })
 })

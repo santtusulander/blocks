@@ -41,6 +41,7 @@ export class Main extends React.Component {
           return false
         }
         else {
+          this.props.userActions.fetchUser(action.payload.username)
           this.props.rolesActions.fetchRoles()
           const accountId = this.props.activeAccount.size ?
             this.props.activeAccount.get('id') :
