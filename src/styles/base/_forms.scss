@@ -2,7 +2,8 @@
 // =====
 
 $form-font-size: 14px;
-$form-vertical-padding: em(10px, $form-font-size);
+$form-line-height: 1.6;
+$form-vertical-padding: em(7px, $form-font-size);
 $form-horizontal-padding: em(12px, $form-font-size);
 $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
@@ -18,9 +19,11 @@ label {
 }
 
 .form-control {
-  height: 100%;
+  height: auto;
   max-width: 900px;
   padding: $form-vertical-padding $form-horizontal-padding;
+  font-size: rem($form-font-size);
+  line-height: $form-line-height;
   border: 0;
   border-radius: 2px;
   box-shadow: none;
