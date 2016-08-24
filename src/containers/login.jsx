@@ -24,7 +24,8 @@ export class Login extends React.Component {
       password: '',
       passwordActive: false,
       passwordVisible: false,
-      username: '',
+      rememberUsername: !!props.username,
+      username: props.username,
       usernameActive: false
     }
 
@@ -34,6 +35,7 @@ export class Login extends React.Component {
     this.changeField = this.changeField.bind(this)
     this.goToAccountPage = this.goToAccountPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.toggleRemember = this.toggleRemember.bind(this)
   }
   goToAccountPage() {
     this.props.router.push(getContentUrl('brand', 'udn', {}))
@@ -62,7 +64,13 @@ export class Login extends React.Component {
         // NOTE: We wait to go to the account page until we receive data because
         // we need to know about roles and permissions before determining what
         // the user is allowed to see.
-        this.getLoggedInData()
+        if(this.state.rememberUsername) {
+          this.props.userActions.saveName(this.state.username)
+        }
+        else {
+          this.props.userActions.saveName()
+        }
+        return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
             this.props.userActions.finishFetching()
@@ -102,6 +110,9 @@ export class Login extends React.Component {
       newState[key] = e.target.value
       this.setState(newState)
     }
+  }
+  toggleRemember() {
+    this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
     return (
@@ -147,7 +158,9 @@ export class Login extends React.Component {
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
-                <Input type="checkbox" label="Remember me" />
+                <Input type="checkbox" label="Remember me"
+                  onChange={this.toggleRemember}
+                  checked={this.state.rememberUsername} />
               </Col>
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
@@ -174,13 +187,15 @@ Login.propTypes = {
   loggedIn: React.PropTypes.bool,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  userActions: React.PropTypes.object
+  userActions: React.PropTypes.object,
+  username: React.PropTypes.string
 }
 
 function mapStateToProps(state) {
   return {
     fetching: state.user.get('fetching') || state.account.get('fetching'),
-    loggedIn: state.user.get('loggedIn')
+    loggedIn: state.user.get('loggedIn'),
+    username: state.user.get('username')
   };
 }
 
