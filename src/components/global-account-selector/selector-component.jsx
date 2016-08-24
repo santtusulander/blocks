@@ -19,14 +19,14 @@ const SelectorComponent = ({
   <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="selector-component">
     <div className="selector-component__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
-      <MenuItem className="search-container">
+      <li role="presentation" className="action-container">
         <Input
           className="header-search-input"
           type="text"
           placeholder="Search"
           value={searchValue}
           onChange={onSearch}/>
-      </MenuItem>
+      </li>
       {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
       {items.map((option, i) =>
         <li key={i} role="presentation">

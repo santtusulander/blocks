@@ -165,7 +165,7 @@ export class FilterChecklistDropdown extends React.Component {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             {dropdownOpen &&
-              <MenuItem className="search-container">
+              <li role="presentation" className="action-container">
                 <Input
                   ref="filterInput"
                   className="header-search-input"
@@ -174,7 +174,7 @@ export class FilterChecklistDropdown extends React.Component {
                   value={filterValue}
                   placeholder="Search"
                 />
-              </MenuItem>
+            </li>
             }
             <li>
               <ul className='scrollable-menu'>
@@ -182,10 +182,10 @@ export class FilterChecklistDropdown extends React.Component {
               </ul>
             </li>
             {!this.props.noClear &&
-              <MenuItem className="search-container">
+              <li role="presentation" className="action-container">
                 <Button bsClass="btn btn-block btn-primary"
                       onClick={this.handleClear}>Clear</Button>
-              </MenuItem>
+              </li>
             }
           </Dropdown.Menu>
         </Dropdown>
