@@ -7,7 +7,7 @@ class SupportToolPanel extends React.Component {
     const {active, body, className, icon, onClick, title} = this.props
     let classNames = 'support-tool-panel text-center'
     if(className) {
-      classNames += className
+      classNames += ' ' + className
     }
     if(active === this) {
       classNames += ' active'
