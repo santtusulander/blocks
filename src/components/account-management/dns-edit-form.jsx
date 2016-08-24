@@ -3,13 +3,13 @@ import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import SelectWrapper from '../select-wrapper'
 
-import recordTypes from '../../constants/dns-record-types'
+import recordTypes, { recordFields } from '../../constants/dns-record-types'
 
 import { checkForErrors } from '../../util/helpers'
 
 import './dns-edit-form.scss'
 
-const validate = ({ recordType, recordName, targetValue, ttl }) => {
+const validate = ({ recordType = '', recordName = '', targetValue = '', ttl = '' }) => {
   const conditions = {
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(ttl),
@@ -38,31 +38,34 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             {...recordType}
             options={recordTypes.map(type => [type, type])}
             label="Select Record Type"/>
-          <Input
-            {...recordName}
-            type="text"
-            label="Host Name"
-            placeholder="Enter Record Name"
-            addonAfter={`.${domain}`}
-            className='input-narrow record-name-input'/>
+
+          {recordFields.recordName.has(recordTypes.value) &&
+            <Input
+              {...recordName}
+              type="text"
+              label="Host Name"
+              placeholder="Enter Record Name"
+              addonAfter={`.${domain}`}
+              className='input-narrow record-name-input'/>}
           {recordName.touched && recordName.error &&
           <div className='error-msg errorRecordName'>{recordName.error}</div>}
           <hr/>
-          <Input
+
+          {recordFields.recordName.has(recordTypes.value) && <Input
             {...targetValue}
             type="text"
             label="Address"
-            placeholder="Enter Address"
-          />
+            placeholder="Enter Address"/>}
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
           <hr/>
-          <Input
+
+          {recordFields.ttl.has(recordTypes.value) && <Input
             {...ttl}
             type="text"
             label="TTL Value"
             placeholder="Enter TTL Value"
             className='input-narrow ttl-value-input'
-            addonAfter='seconds'/>
+            addonAfter='seconds'/>}
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
           <ButtonToolbar className="text-right extra-margin-top">
             <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
