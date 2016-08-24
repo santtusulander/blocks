@@ -1,8 +1,9 @@
-import { fromJS } from 'immutable'
-
 //CREATE
-export const createSuccess = (state, action) => {
-  return state
+export const createSuccess = (state, {payload: {resource, data}}) => {
+  const index = state.get('domains').findIndex(item => item.get('id') === resource)
+  return state.merge({
+    resources: state.get('resources').set(index, {rr: data, name: resource})
+  })
 }
 
 export const createFailed = (state, action) => {
@@ -18,8 +19,8 @@ export const receiveResourcesList = (state, action ) => {
   })
 }
 
-export function failedResourcesList( state ){
-  return state
+export const resourcesListFailed = ( state ) => {
+  return state.merge( {resources: [], loading: false })
 }
 
 //DETAILS
@@ -32,14 +33,15 @@ export const receiveResourceDetails = (state, action) => {
   const resources = state.get('resources')
   const newRes = resources.merge(resourceObj)
 
-  return state.merge( { resources: newRes } )
+  return state.merge( { resources: newRes, loading: false } )
 }
 
-export function failedResourceDetails( state ){
-  return state
+//TODO: Should decide how to handle fail?
+export const resourceDetailsFailed = ( state , action) => {
+  return state.set('loading', false)
 }
 
-//UPDATE
+//TODO: UPDATE
 export const updateSuccess = (state, action) => {
   return state
 }
@@ -47,7 +49,7 @@ export const updateFailed = (state, action) => {
   return state
 }
 
-//DELETE
+//TODO: DELETE
 export const deleteSuccess = (state, action) => {
   return state
 }
