@@ -1,20 +1,18 @@
 import React from 'react'
+import classNames from 'classnames'
 
 import './support-tool-panel.scss'
 
 class SupportToolPanel extends React.Component {
   render() {
     const {active, body, className, icon, onClick, title} = this.props
-    let classNames = 'support-tool-panel text-center'
-    if(className) {
-      classNames += ' ' + className
-    }
-    if(active === this) {
-      classNames += ' active'
-    }
     return (
       <div
-        className={classNames}
+        className={classNames(
+          'support-tool-panel text-center',
+          {'active': active === this},
+          className
+        )}
         onClick={() => {onClick(this)}}>
         {icon}
         <h2>{title}</h2>
