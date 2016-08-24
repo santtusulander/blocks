@@ -180,14 +180,6 @@ label {
   padding-bottom: $form-group-padding;
   margin-bottom: 0;
 
-  @include md {
-    padding-bottom: $md-form-group-padding;
-  }
-
-  @include print {
-    padding-bottom: 0;
-  }
-
   &.inline {
     display: inline-block;
     margin-right: 1em;
