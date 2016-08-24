@@ -60,7 +60,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
               {...recordName}
               type="text"
               label="Host Name"
-              placeholder="Enter Record Name"
+              placeholder="Enter Host Name"
               addonAfter={`.${domain}`}
               className='input-narrow record-name-input'/>}
           {recordName.touched && recordName.error && <div className='error-msg'>{recordName.error}</div>}
