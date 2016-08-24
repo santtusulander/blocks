@@ -11,6 +11,8 @@ import {
   parsePolicy
 } from '../../util/policy-config'
 
+import {FormattedMessage} from 'react-intl'
+
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
     super(props);
@@ -157,14 +159,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_header', 'Response Header']
         ] */}
         <Modal.Header>
-          <h1>Add Policy</h1>
+          <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
           <p>
             {this.props.location.query.name}
           </p>
         </Modal.Header>
         <Modal.Body>
 
-          <h3>Rule Name</h3>
+          <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
 
           <Input type="text" id="configure__edge__add-cache-rule__rule-name"
             value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
@@ -172,7 +174,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col sm={8}>
-              <h3>Match Conditions</h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
             <Col sm={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -217,7 +219,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                             match.values.join(', ')
                           }
                       </p>
-                      : <p>Choose condition</p>
+                      : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
                   <Col xs={3}>
@@ -239,7 +241,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col xs={8}>
-              <h3>Actions</h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -290,10 +292,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="primary" onClick={this.cancelChanges}>
-              Cancel
+              <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.props.hideAction}>
-              Add
+              <FormattedMessage id="portal.button.add"/>
             </Button>
           </ButtonToolbar>
 

@@ -6,6 +6,8 @@ import ConfigurationDefaultPolicies from './default-policies'
 import Toggle from '../toggle'
 import Select from '../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 function secondsToUnit(value, unit) {
   value = parseInt(value || 0)
   switch(unit) {
@@ -81,7 +83,7 @@ class ConfigurationDefaults extends React.Component {
     let config = this.props.config;
     if(!config || !config.size) {
       return (
-        <div className="container">Loading...</div>
+        <div className="container"><FormattedMessage id="portal.loading.text"/></div>
       )
     }
     const policyPath = Immutable.List([
@@ -114,12 +116,12 @@ class ConfigurationDefaults extends React.Component {
 
         {/* Origin Cache Control */}
 
-        <h2>Origin Cache Control</h2>
+        <h2><FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/></h2>
 
         { /* Ignore case from origin */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
-            Ignore case from origin
+            <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
           </Col>
           <Col lg={8} xs={6}>
             <Toggle value={config.getIn(policyPaths.ignore_case)}
@@ -130,23 +132,23 @@ class ConfigurationDefaults extends React.Component {
         { /* Enable e-Tag support */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
-            Enable e-Tag support
+            <FormattedMessage id="portal.policy.edit.defaults.enableEtag.text"/>
           </Col>
           <Col lg={5} xs={6}>
             <Select className="input-select"
               onSelect={this.handleEtagChange(policyPaths.honor_etags)}
               value={config.getIn(policyPaths.honor_etags)}
               options={[
-                ['strong', 'Strong'],
-                ['weak', 'Weak'],
-                ['false', 'False']]}/>
+                ['strong', <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>],
+                ['weak', <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>],
+                ['false', <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>]]}/>
           </Col>
         </Row>
 
         { /* Honor Origin Cache Control */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
-            Honor Origin Cache Control
+            <FormattedMessage id="portal.policy.edit.defaults.honorOriginCacheControl.text"/>
           </Col>
           <Col lg={8} xs={6}>
             <Toggle
@@ -158,11 +160,11 @@ class ConfigurationDefaults extends React.Component {
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             {config.getIn(policyPaths.honor_origin_cache_policies) ?
-              'TTL if not present' :
+              <FormattedMessage id="portal.policy.edit.defaults.ttlIfNotPresent.text"/> :
               'CDN TTL'}
           </Col>
           <Col lg={2} xs={3}>
-            <Input type="text" placeholder="Time to live"
+            <Input type="text" placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.defaults.timeToLive.text'})}
               value={ttlValue}
               onChange={this.changeTTLValue(policyPaths.max_age)}/>
           </Col>
@@ -171,41 +173,41 @@ class ConfigurationDefaults extends React.Component {
               onSelect={this.changeTTLUnit(policyPaths.max_age)}
               value={this.state.ttlUnit}
               options={[
-                ['seconds', 'Seconds'],
-                ['minutes', 'Minutes'],
-                ['hours', 'Hours'],
-                ['days', 'Days']]}/>
+                ['seconds', <FormattedMessage id="portal.units.seconds"/>],
+                ['minutes', <FormattedMessage id="portal.units.minutes"/>],
+                ['hours', <FormattedMessage id="portal.units.hours"/>],
+                ['days', <FormattedMessage id="portal.units.days"/>]]}/>
           </Col>
         </Row>
 
         <hr/>
 
-        <h3>Cache Key - Query String</h3>
+        <h3><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h3>
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
-            Cache Key
+            <FormattedMessage id="portal.policy.edit.defaults.cacheKey.text"/>
           </Col>
           <Col lg={5} xs={6}>
             <Select className="input-select"
               options={[
-                ['include_all_query_parameters', 'Include all query parameters'],
-                ['ignore_all_query_parameters', 'Ignore all query parameters'],
-                ['include_some_parameters', 'Include some parameters'],
-                ['ignore_some_parameters', 'Ignore some parameters']]}/>
+                ['include_all_query_parameters', <FormattedMessage id="portal.policy.edit.defaults.includeAllQueryTerms.text"/>],
+                ['ignore_all_query_parameters', <FormattedMessage id="portal.policy.edit.defaults.ignoreAllQueryTerms.text"/>],
+                ['include_some_parameters', <FormattedMessage id="portal.policy.edit.defaults.includeAllQueryTerms.text"/>],
+                ['ignore_some_parameters', <FormattedMessage id="portal.policy.edit.defaults.ignoreSomeParams.text"/>]]}/>
           </Col>
         </Row>
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
-            Query Name
+            <FormattedMessage id="portal.policy.edit.defaults.queryName.text"/>
           </Col>
           <Col lg={5} xs={6}>
-            <Input type="text" placeholder="Enter Query Name"/>
+            <Input type="text" placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.defaults.queryName.placeholder'})}/>
           </Col>
         </Row>
 
         <hr/>
 
-        <h3>Edge Cache Default Rules</h3>
+        <h3><FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/></h3>
         <ConfigurationDefaultPolicies/>
       </div>
     )
@@ -218,4 +220,4 @@ ConfigurationDefaults.propTypes = {
   config: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = ConfigurationDefaults
+module.exports = injectIntl(ConfigurationDefaults)

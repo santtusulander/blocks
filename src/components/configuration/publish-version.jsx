@@ -1,6 +1,8 @@
 import React from 'react'
 import {Button, Input, ButtonToolbar, FormControls} from 'react-bootstrap'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class ConfigurationPublishVersion extends React.Component {
   constructor(props) {
     super(props);
@@ -24,31 +26,31 @@ class ConfigurationPublishVersion extends React.Component {
       <form className="configuration-publish-version">
 
         {/* Version Name */}
-        <FormControls.Static label="Version Name"
+        <FormControls.Static label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.versionName.text'})}
           value={this.props.versionName}/>
 
         <hr/>
 
         {/* Publish To */}
-        <label>Publish to</label>
+        <label><FormattedMessage id="portal.policy.edit.publishVersion.publishTo.text"/></label>
         <Input type="radio"
-          label="Staging Platform"
+          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.stagingPlatform.text'})}
           onChange={this.setPublishTarget(2)}
           checked={this.state.publishTarget === 2}/>
         <Input type="radio"
-          label="Production Platform"
+          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.productionPlatform.text'})}
           onChange={this.setPublishTarget(3)}
           checked={this.state.publishTarget === 3}/>
 
         {/* Action buttons */}
         <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.props.hideAction}>
-            Cancel
+            <FormattedMessage id="'portal.button.cancel' : 'Cancel',"/>
           </Button>
           <Button bsStyle="primary"
             onClick={this.handleSave}
             disabled={this.props.publishing || !this.state.publishTarget}>
-            {this.props.publishing ? 'PUBLISHING...' : 'PUBLISH'}
+            {this.props.publishing ? <FormattedMessage id="portal.button.PUBLISHING"/> : <FormattedMessage id="portal.button.PUBLISH"/>}
           </Button>
         </ButtonToolbar>
       </form>
@@ -64,4 +66,4 @@ ConfigurationPublishVersion.propTypes = {
   versionName: React.PropTypes.string
 }
 
-module.exports = ConfigurationPublishVersion
+module.exports = injectIntl(ConfigurationPublishVersion)
