@@ -9,7 +9,14 @@ import { checkForErrors } from '../../util/helpers'
 
 import './dns-edit-form.scss'
 
-const validate = ({ recordType = '', recordName = '', targetValue = '', ttl = '' }) => {
+const validate = fields => {
+  let filteredFields = {}
+  fields.forEach(field => {
+    if (recordFields[field].has(fields.recordType)) {
+      filteredFields[field] = fields[field]
+    }
+  })
+  const { targetValue = '', ttl = '' } = filteredFields
   const conditions = {
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(ttl),
@@ -20,7 +27,7 @@ const validate = ({ recordType = '', recordName = '', targetValue = '', ttl = ''
       errorText: 'Address must be an IP address.'
     }
   }
-  return checkForErrors({ recordType, recordName, targetValue, ttl }, conditions)
+  return checkForErrors(filteredFields, conditions)
 }
 
 const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
