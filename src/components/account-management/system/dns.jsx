@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
+import * as dnsRecordsActionCreators from '../../../redux/modules/dns-records/actions'
 
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
@@ -85,7 +86,8 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
   return {
     fetchDomains,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
-    changeActiveDomain
+    changeActiveDomain,
+    dnsRecordsActions: bindActionCreators(dnsRecordsActionCreators, dispatch)
   }
 }
 
