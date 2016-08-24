@@ -16,14 +16,45 @@ const HOST_CLEAR_FETCHED = 'HOST_CLEAR_FETCHED'
 
 const emptyHosts = Immutable.Map({
   activeHost: undefined,
+  activeHostConfiguredName: null,
   allHosts: Immutable.List(),
   fetching: false
 })
+
+const defaultPolicy = {policy_rules: [
+  {
+    set: {
+      cache_control: {
+        honor_origin: false,
+        check_etag: "weak",
+        max_age: 0
+      }
+    }
+  },
+  {
+    set: {
+      cache_name: {
+        ignore_case: false
+      }
+    }
+  }
+]}
+
+const getConfiguredName = host => {
+  if(!host.size) {
+    return null
+  }
+  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
+    return host.getIn(['services',0,'configurations',0,'edge_configuration','trial_name'])
+  }
+  return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
+}
 
 // REDUCERS
 
 export function createSuccess(state, { payload }) {
   return state.merge({
+    activeHostConfiguredName: getConfiguredName(payload),
     activeHost: payload,
     allHosts: state.get('allHosts').push(payload.get('id'))
   })
@@ -31,6 +62,7 @@ export function createSuccess(state, { payload }) {
 
 export function createFailure(state) {
   return state.merge({
+    activeHostConfiguredName: null,
     activeHost: null,
     fetching: false
   })
@@ -71,14 +103,17 @@ export function fetchSuccess(state, action) {
   if(!host.services[0].active_configurations) {
     host.services[0].active_configurations = []
   }
+  const newActive = Immutable.fromJS(host)
   return state.merge({
-    activeHost: Immutable.fromJS(host),
+    activeHostConfiguredName: getConfiguredName(newActive),
+    activeHost: newActive,
     fetching: false
   })
 }
 
 export function fetchFailure(state) {
   return state.merge({
+    activeHostConfiguredName: null,
     activeHost: null,
     fetching: false
   })
@@ -103,8 +138,10 @@ export function startFetch(state) {
 }
 
 export function updateSuccess(state, action) {
+  const newActive = Immutable.fromJS(action.payload)
   return state.merge({
-    activeHost: Immutable.fromJS(action.payload),
+    activeHostConfiguredName: getConfiguredName(newActive),
+    activeHost: newActive,
     fetching: false
   })
 }
@@ -116,7 +153,10 @@ export function updateFailure(state) {
 }
 
 export function changeActive(state, action) {
-  return state.set('activeHost', action.payload)
+  return state.merge({
+    activeHostConfiguredName: getConfiguredName(action.payload),
+    activeHost: action.payload
+  })
 }
 
 export function clearFetched(state) {
