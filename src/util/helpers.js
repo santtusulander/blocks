@@ -382,6 +382,7 @@ export function filterAccountsByUserName (accounts) {
  * Check if empty, check if custom error condition is true per field
  * @param {Object} fields
  * @param {Object} customConditions
+ * returns {Object} errors
  */
 export function checkForErrors(fields, customConditions) {
   let errors = {}

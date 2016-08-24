@@ -9,30 +9,39 @@ import { checkForErrors } from '../../util/helpers'
 
 import './dns-edit-form.scss'
 
+/**
+ *
+ * Filter fields to validate according to the fields that get rendered for the active record type.
+ * The 'recordFields' -constant dictates which fields get rendered per record type.
+ */
+
+const isShown = recordType => field => recordFields[field].includes(recordType)
+
 const validate = fields => {
   let filteredFields = {}
-  fields.forEach(field => {
-    if (recordFields[field].has(fields.recordType)) {
+  for(const field in fields) {
+    if (isShown(fields.recordType)(field)) {
       filteredFields[field] = fields[field]
     }
-  })
-  const { targetValue = '', ttl = '' } = filteredFields
+  }
   const conditions = {
     ttl: {
-      condition: !new RegExp('^[0-9]*$').test(ttl),
+      condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
       errorText: 'TTL value must be a number.'
     },
     targetValue: {
-      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(targetValue),
+      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(filteredFields.targetValue),
       errorText: 'Address must be an IP address.'
     }
   }
   return checkForErrors(filteredFields, conditions)
 }
 
+
 const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
   const actionButtonTitle = edit ? 'Save' : 'Add'
+  const shouldShowField = isShown(recordType.value)
   return (
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
@@ -46,7 +55,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             options={recordTypes.map(type => [type, type])}
             label="Select Record Type"/>
 
-          {recordFields.recordName.has(recordTypes.value) &&
+          {shouldShowField('recordName') &&
             <Input
               {...recordName}
               type="text"
@@ -58,21 +67,23 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
           <div className='error-msg errorRecordName'>{recordName.error}</div>}
           <hr/>
 
-          {recordFields.recordName.has(recordTypes.value) && <Input
-            {...targetValue}
-            type="text"
-            label="Address"
-            placeholder="Enter Address"/>}
+          {shouldShowField('targetValue') &&
+            <Input
+              {...targetValue}
+              type="text"
+              label="Address"
+              placeholder="Enter Address"/>}
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
-          <hr/>
+            <hr/>
 
-          {recordFields.ttl.has(recordTypes.value) && <Input
-            {...ttl}
-            type="text"
-            label="TTL Value"
-            placeholder="Enter TTL Value"
-            className='input-narrow ttl-value-input'
-            addonAfter='seconds'/>}
+          {shouldShowField('ttl') &&
+            <Input
+              {...ttl}
+              type="text"
+              label="TTL Value"
+              placeholder="Enter TTL Value"
+              className='input-narrow ttl-value-input'
+              addonAfter='seconds'/>}
           {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
           <ButtonToolbar className="text-right extra-margin-top">
             <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
