@@ -167,6 +167,7 @@ export class FilterChecklistDropdown extends React.Component {
             {dropdownOpen &&
               <MenuItem className="search-container">
                 <Input
+                  ref="filterInput"
                   className="header-search-input"
                   type="text"
                   onChange={this.handleFilter}
