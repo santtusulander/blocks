@@ -46,8 +46,8 @@ describe("DnsEditFormContainer", () => {
     expect( inputs.length ).toBe(3)
   })
 
-  it("shows error if recordName set to blank", () => {
-    const input = subject.find(".recordNameInput")
+  it("shows error if hostName set to blank", () => {
+    const input = subject.find(".hostNameInput")
 
     input.simulate('change', { target: { value: '' } })
     input.simulate('click')

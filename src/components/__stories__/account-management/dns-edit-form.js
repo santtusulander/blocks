@@ -32,5 +32,5 @@ storiesOf('AccountManagement', module)
       onSave={action('onSave')}
       onCancel={action('onSave')}
       edit={true}
-      initialValues={{ recordType: 'asddasas', recordName:'asd', targetValue: 'qwewqewq', ttl: 'qwewqeqwe' }}/>
+      initialValues={{ recordType: 'asddasas', hostName:'asd', targetValue: 'qwewqewq', ttl: 'qwewqeqwe' }}/>
   ))

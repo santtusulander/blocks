@@ -17,7 +17,7 @@ const RECORD_TYPES = [
 export default RECORD_TYPES
 export const recordFields = {
   recordType: RECORD_TYPES,
-  recordName: RECORD_TYPES,
+  hostName: RECORD_TYPES,
   targetValue: RECORD_TYPES,
   ttl: RECORD_TYPES.filter(type => type !== 'DNAME')
 }

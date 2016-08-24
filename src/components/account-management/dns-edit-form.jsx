@@ -24,6 +24,7 @@ const validate = fields => {
       filteredFields[field] = fields[field]
     }
   }
+  delete filteredFields.hostName
   const conditions = {
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
@@ -38,7 +39,7 @@ const validate = fields => {
 }
 
 
-const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, recordName, targetValue, ttl } }) => {
+const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, hostName, targetValue, ttl } }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
   const actionButtonTitle = edit ? 'Save' : 'Add'
   const shouldShowField = isShown(recordType.value)
@@ -46,7 +47,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
         <h1>{title}</h1>
-        {edit && <p>{recordName.value}</p>}
+        {edit && <p>{hostName.value}</p>}
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -54,15 +55,15 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
             {...recordType}
             options={recordTypes.map(type => [type, type])}
             label="Select Record Type"/>
-          {shouldShowField('recordName') &&
+          {shouldShowField('hostName') &&
             <Input
-              {...recordName}
+              {...hostName}
               type="text"
               label="Host Name"
               placeholder="Enter Host Name"
               addonAfter={`.${domain}`}
-              className='input-narrow record-name-input'/>}
-          {recordName.touched && recordName.error && <div className='error-msg'>{recordName.error}</div>}
+              className='input-narrow host-name-input'/>}
+          {hostName.touched && hostName.error && <div className='error-msg'>{hostName.error}</div>}
           {shouldShowField('targetValue') &&
             <Input
               {...targetValue}
@@ -104,6 +105,6 @@ DnsEditForm.propTypes = {
 
 export default reduxForm({
   form: 'dns-edit',
-  fields: ['recordType', 'recordName', 'targetValue', 'ttl'],
+  fields: ['recordType', 'hostName', 'targetValue', 'ttl'],
   validate
 })(DnsEditForm)
