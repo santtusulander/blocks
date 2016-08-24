@@ -21,25 +21,6 @@ const emptyHosts = Immutable.Map({
   fetching: false
 })
 
-const defaultPolicy = {policy_rules: [
-  {
-    set: {
-      cache_control: {
-        honor_origin: false,
-        check_etag: "weak",
-        max_age: 0
-      }
-    }
-  },
-  {
-    set: {
-      cache_name: {
-        ignore_case: false
-      }
-    }
-  }
-]}
-
 const getConfiguredName = host => {
   if(!host.size) {
     return null
