@@ -14,8 +14,8 @@ export function permissionsFetchSuccess(state, action) {
   return state.merge(fromJS(action.payload))
 }
 
-export function permissionsFetchFailure(state) {
-  return state.merge(fromJS({}))
+export function permissionsFetchFailure() {
+  return fromJS({})
 }
 
 export default handleActions({
