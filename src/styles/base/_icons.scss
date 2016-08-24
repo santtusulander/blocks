@@ -45,6 +45,27 @@ $icon-two-tone-primary: $dark-blue;
     fill: transparent;
   }
 
+  &.pale-blue {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $pale-blue;
+      fill: $pale-blue;
+    }
+
+    &.two-tone {
+
+      .base {
+        fill: $pale-blue;
+      }
+
+      .primary {
+        color: $icon-two-tone-base;
+        fill: $icon-two-tone-base;
+      }
+    }
+  }
+
   // Two tone icons used primarily for support tickets
   &.two-tone {
     stroke: none;
