@@ -12,9 +12,12 @@ $icon-two-tone-primary: $dark-blue;
   background-position: center center;
   background-repeat: no-repeat;
 
-  .dark-theme &,
+  .dark-theme & {
+    fill: $icon-base-color;
+  }
+
   .light-theme & {
-    fill: inherit;
+    fill: $lt-text-color;
   }
 
   &.no-fill,
