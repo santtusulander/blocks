@@ -2,13 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 import * as dnsActionCreators from '../../../redux/modules/dns'
 
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
-import RecordModal from '../dns-edit-form'
 // import SoaEditForm from '../soa-edit-form'
+// import DnsEditForm from '../dns-edit-form'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -23,23 +22,15 @@ class AccountManagementSystemDNS extends Component {
   }
 
   render() {
-    const { changeActiveDomain, onAddDomain, activeModal, onEditDomain, domains, toggleAccountManagementModal, activeDomain } = this.props
+    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain } = this.props
     const domainHeaderProps = {
       searchValue: this.state.domainSearchValue,
       searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
       domains: domains && domains.filter(domain => domain.id.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
-      onAddDomain: () => toggleAccountManagementModal('EDIT_DNS'),
+      onAddDomain,
       onEditDomain
-    }
-    const dnsFormInitialValues = {
-      initialValues: {
-        recordType: 'AAAA',
-        recordName: 'qlli',
-        targetValue: 'asdsdsdsa',
-        ttl: 3600
-      }
     }
     return (
       <div className="account-management-system-dns">
@@ -47,15 +38,16 @@ class AccountManagementSystemDNS extends Component {
         <DNSList
           onAddEntry={() => {/*noop*/}}
           onDeleteEntry={() => {/*noop*/}}/>
-        {activeModal === 'EDIT_DNS' &&
-          <RecordModal
+        {/*activeModal === EDIT_DNS &&
+          <DnsEditForm
             id="dns-form"
             show={true}
             edit={true}
             domain='foobar.com'
-            onSave={() => {}}
-            onCancel={() => toggleAccountManagementModal(null)}
-            {...dnsFormInitialValues}/>}
+            onSave={dnsEditOnSave}
+            onCancel={() => toggleModal(null)}
+            { ...dnsFormInitialValues }
+          />*/}
 
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
