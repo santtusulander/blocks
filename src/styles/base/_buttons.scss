@@ -93,6 +93,7 @@ $lt-caret-color: $silver-60;
     }
   }
 
+  // TODO: remove this after updating other areas in the site
   &.btn-sm {
     height: $btn-sm-height;
     line-height: $btn-sm-height;
@@ -208,6 +209,7 @@ $lt-caret-color: $silver-60;
   }
 }
 
+// TODO: move to header file and update styling
 .header-toggle {
   position: relative;
   height: auto;
@@ -303,6 +305,7 @@ $lt-caret-color: $silver-60;
   }
 }
 
+// TODO: remove this
 .btn-alerts {
   position: relative;
 
@@ -594,8 +597,8 @@ $lt-caret-color: $silver-60;
   }
 }
 
+// TODO: remove this / move to other files
 .dark-theme,
-// TODO: Should this be removed? .light-theme .configuration-sidebar
 .light-theme .header {
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
@@ -673,6 +676,7 @@ $lt-caret-color: $silver-60;
   }
 }
 
+// TODO: remove this
 .light-theme .header {
   .btn-tertiary {
 
@@ -693,6 +697,7 @@ $lt-caret-color: $silver-60;
   }
 }
 
+// TODO: remove this / move to other files
 .light-theme {
   .configuration-sidebar .btn-outline {
     color: $pale-blue;
