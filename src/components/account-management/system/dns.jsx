@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux'
 import * as dnsActionCreators from '../../../redux/modules/dns'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
+import { RECORD_EDIT } from '../../../constants/account-management-modals'
+
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
 // import SoaEditForm from '../soa-edit-form'
@@ -13,6 +15,7 @@ import RecordForm from '../record-form'
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
     super(props)
+    this.editingRecord = true
     this.state = {
       domainSearchValue: ''
     }
@@ -33,24 +36,24 @@ class AccountManagementSystemDNS extends Component {
       onAddDomain,
       onEditDomain
     }
-    const editingRecord = activeModal === 'EDIT_RECORD'
-    const addingRecord = activeModal === 'ADD_REDORD'
     const dnsFormInitialValues = {}
     return (
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList
-          onAddEntry={() => toggleModal('ADD_RECORD')}
+          onAddEntry={() => {
+            this.editingRecord = false
+            toggleModal(RECORD_EDIT)}
+          }
           onDeleteEntry={() => {/*noop*/}}/>
-        {editingRecord || addingRecord &&
+        {activeModal === RECORD_EDIT &&
           <RecordForm
-            id="dns-form"
-            edit={editingRecord}
+            id="record-form"
+            edit={this.editingRecord}
             domain='foobar.com'
             onSave={values => console.log(values)}
             onCancel={() => toggleModal(null)}
-            {...dnsFormInitialValues}
-          />}
+            {...dnsFormInitialValues}/>}
 
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
