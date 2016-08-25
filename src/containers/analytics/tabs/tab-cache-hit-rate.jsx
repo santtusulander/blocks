@@ -71,7 +71,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
     return (
       <div>
         <AnalysisCacheHitRate
-          traffic={ traffic }
+          traffic={traffic}
           dateRange={this.props.filters.get('dateRangeLabel')}
           fetching={this.props.fetching}
           serviceTypes={this.props.filters.get('serviceTypes')}
@@ -82,11 +82,12 @@ class AnalyticsTabCacheHitRate extends React.Component {
 }
 
 AnalyticsTabCacheHitRate.propTypes = {
+  fetching: React.PropTypes.boolean,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   traffic: React.PropTypes.instanceOf(Immutable.List),
-  trafficActions: React.PropTypes.object,
+  trafficActions: React.PropTypes.object
 }
 
 AnalyticsTabCacheHitRate.defaultProps = {
@@ -103,7 +104,7 @@ const mapStateToProps = (state) => ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
 }
 

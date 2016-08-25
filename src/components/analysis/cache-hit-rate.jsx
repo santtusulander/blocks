@@ -101,7 +101,7 @@ class AnalysisCacheHitRate extends React.Component {
         <AnalysisStackedByTime
           padding={40}
           dataKey='chit_ratio'
-          dataSets={ dataSets }
+          dataSets={dataSets}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     } else {
@@ -110,7 +110,7 @@ class AnalysisCacheHitRate extends React.Component {
 
         <AnalysisByTime axes={true} padding={40}
           dataKey="chit_ratio"
-          primaryData={ dataSets && dataSets[0] }
+          primaryData={dataSets && dataSets[0]}
           primaryLabel='Cache Hit Ratio'
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}
@@ -134,9 +134,9 @@ class AnalysisCacheHitRate extends React.Component {
           <Col sm={4}>
             <Select
               className='pull-right'
-              options={ [{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}] }
-              value={ this.state.chartType }
-              onSelect= { this.changeChartType }
+              options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
+              value={this.state.chartType}
+              onSelect= {this.changeChartType}
             />
           </Col>
         </Row>
@@ -176,7 +176,8 @@ class AnalysisCacheHitRate extends React.Component {
 AnalysisCacheHitRate.displayName = 'AnalysisCacheHitRate'
 AnalysisCacheHitRate.propTypes = {
   fetching: React.PropTypes.bool,
-  onOffNetChartType: React.PropTypes.string
+  onOffNetChartType: React.PropTypes.string,
+  traffic: React.PropTypes.instanceOf(Immutable.List)
 }
 
 AnalysisCacheHitRate.defaultProps = {
