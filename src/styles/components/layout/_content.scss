@@ -19,11 +19,6 @@
     .selector-component {
       min-width: 0;
     }
-
-    &__aside,
-    .page-header-layout &__aside {
-      margin: -10px 0 10px;
-    }
   }
 
   &::after {

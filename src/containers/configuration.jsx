@@ -258,16 +258,12 @@ export class Configuration extends React.Component {
                     </Button>
                     : null
                   }
-                  <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                    className="has-icon">
-                    <div className="icon-holder">
-                      <IconArrowLeft/>
-                    </div>
+                  <Button bsStyle="primary" onClick={this.toggleVersionModal}>
                     Versions
                   </Button>
                 </ButtonToolbar>
               </div>
-              <p className="text-sm content-layout__header__aside">
+              <p className="text-sm">
                 <span className="right-separator">
                   {activeConfig.get('edge_configuration').get('origin_host_name')}
                 </span>
