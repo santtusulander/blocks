@@ -16,16 +16,24 @@ import './dns-edit-form.scss'
  */
 
 const isShown = recordType => field => recordFields[field].includes(recordType)
-
-const validate = fields => {
+const filterFields = fields => {
   let filteredFields = {}
   for(const field in fields) {
     if (isShown(fields.recordType)(field)) {
       filteredFields[field] = fields[field]
     }
   }
+  return filteredFields
+}
+
+const validate = fields => {
+  let filteredFields = filterFields(fields)
   delete filteredFields.hostName
   const conditions = {
+    priority: {
+      condition: !new RegExp('^[0-9]*$').test(filteredFields.priority),
+      errorText: 'Priority must be a number.'
+    },
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
       errorText: 'TTL value must be a number.'
@@ -39,7 +47,7 @@ const validate = fields => {
 }
 
 
-const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, hostName, targetValue, ttl } }) => {
+const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, hostName, targetValue, ttl, priority }, values }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
   const actionButtonTitle = edit ? 'Save' : 'Add'
   const shouldShowField = isShown(recordType.value)
@@ -71,6 +79,14 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
               label="Address"
               placeholder="Enter Address"/>}
           {targetValue.touched && targetValue.error && <div className='error-msg'>{targetValue.error}</div>}
+          {shouldShowField('priority') &&
+            <Input
+              {...priority}
+              type="text"
+              label="Priority"
+              placeholder="Enter Priority"
+              className='input-narrow priority-input'/>}
+            {priority.touched && priority.error && <div className='error-msg'>{priority.error}</div>}
           {shouldShowField('ttl') && <hr/>}
           {shouldShowField('ttl') &&
             <Input
@@ -84,7 +100,7 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
           <ButtonToolbar className="text-right extra-margin-top">
             <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
             <Button disabled={invalid} bsStyle="primary"
-              onClick={onSave}>{actionButtonTitle}</Button>
+              onClick={() => onSave(filterFields(values))}>{actionButtonTitle}</Button>
           </ButtonToolbar>
         </form>
       </Modal.Body>
@@ -105,6 +121,6 @@ DnsEditForm.propTypes = {
 
 export default reduxForm({
   form: 'dns-edit',
-  fields: ['recordType', 'hostName', 'targetValue', 'ttl'],
+  fields: ['recordType', 'hostName', 'targetValue', 'ttl', 'priority'],
   validate
 })(DnsEditForm)

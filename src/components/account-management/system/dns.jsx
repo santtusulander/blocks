@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
+import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
 // import SoaEditForm from '../soa-edit-form'
-// import DnsEditForm from '../dns-edit-form'
+import RecordForm from '../record-form'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   render() {
-    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain } = this.props
+    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain, toggleModal, activeModal } = this.props
     const domainHeaderProps = {
       searchValue: this.state.domainSearchValue,
       searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
@@ -32,22 +33,24 @@ class AccountManagementSystemDNS extends Component {
       onAddDomain,
       onEditDomain
     }
+    const editingRecord = activeModal === 'EDIT_RECORD'
+    const addingRecord = activeModal === 'ADD_REDORD'
+    const dnsFormInitialValues = {}
     return (
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList
-          onAddEntry={() => {/*noop*/}}
+          onAddEntry={() => toggleModal('ADD_RECORD')}
           onDeleteEntry={() => {/*noop*/}}/>
-        {/*activeModal === EDIT_DNS &&
-          <DnsEditForm
+        {editingRecord || addingRecord &&
+          <RecordForm
             id="dns-form"
-            show={true}
-            edit={true}
+            edit={editingRecord}
             domain='foobar.com'
-            onSave={dnsEditOnSave}
+            onSave={values => console.log(values)}
             onCancel={() => toggleModal(null)}
-            { ...dnsFormInitialValues }
-          />*/}
+            {...dnsFormInitialValues}
+          />}
 
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
@@ -85,7 +88,8 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
   return {
     fetchDomains,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
-    changeActiveDomain
+    changeActiveDomain,
+    toggleModal: modal => dispatch(toggleAccountManagementModal(modal))
   }
 }
 

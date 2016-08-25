@@ -19,6 +19,7 @@ export const recordFields = {
   recordType: RECORD_TYPES,
   hostName: RECORD_TYPES,
   targetValue: RECORD_TYPES,
-  ttl: RECORD_TYPES.filter(type => type !== 'DNAME')
+  ttl: RECORD_TYPES.filter(type => type !== 'DNAME'),
+  priority: ['MX']
 }
 

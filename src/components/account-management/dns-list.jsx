@@ -16,7 +16,8 @@ const DNSList = props => {
     activeDomain,
     changeRecordType,
     activeRecordType,
-    toggleModal
+    toggleModal,
+    onAddEntry
   } = props
   const entries = activeDomain && domains
     .find(domain => is(activeDomain.get('id'), domain.get('id')))
@@ -46,7 +47,7 @@ const DNSList = props => {
             bsStyle="primary"
             icon={true}
             addNew={true}
-            onClick={() => toggleModal(EDIT_DNS)} >
+            onClick={onAddEntry} >
             <IconAdd/>
           </UDNButton>
         </div>
