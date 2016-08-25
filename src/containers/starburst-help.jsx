@@ -2,6 +2,8 @@ import React from 'react'
 import { Button } from 'react-bootstrap'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
 
+import {FormattedMessage} from 'react-intl'
+
 class StarburstHelp extends React.Component {
   render() {
     return (
@@ -12,7 +14,7 @@ class StarburstHelp extends React.Component {
             <div className="icon-holder">
               <IconArrowLeft/>
             </div>
-            Back
+            <FormattedMessage id="portal.button.back"/>
           </Button>
         </div>
         <div className="starburst-help-container">
@@ -21,7 +23,7 @@ class StarburstHelp extends React.Component {
           <svg x="0px" y="0px" viewBox="0 0 2061 1271">
             {/* Date labels */}
             <text transform="matrix(1 0 0 1 851.9116 373.5339)">
-              Today
+              <FormattedMessage tagName="tspan" id="portal.startburstHelp.today.text"/>
             </text>
             <text transform="matrix(1 0 0 1 1198.3925 706.3748)">
               6/21/16
@@ -40,7 +42,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 1540.6591 663.3898)"
                 className="heading">
-                Health Ring
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.healthRing.text"/>
               </text>
               {/* Color circles*/}
               <circle fill="#89BA17" cx="1560.7" cy="724.8" r="20"/>
@@ -61,7 +63,7 @@ class StarburstHelp extends React.Component {
                 <tspan x="0" y="28">previous month</tspan>
               </text>
               <text transform="matrix(1 0 0 1 1620.0648 1025.8904)">
-                No data
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.noData.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer" x1="1560.7" y1="422.9"
@@ -72,7 +74,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 1780.0575 281.6164)"
                 className="heading">
-                Blue Lines
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.blueLines.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer"
@@ -81,16 +83,16 @@ class StarburstHelp extends React.Component {
               {/* Description */}
               <text transform="matrix(1 0 0 1 1780.057 324.5964)">
                 <tspan x="0" y="0">
-                  Each line represents
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.eachLine.text"/>
                 </tspan>
                 <tspan x="0" y="28">
-                  relative bandwidth
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.relativeBandwidth.text"/>
                 </tspan>
                 <tspan x="0" y="56">
-                   delivered for a 4-hour
+                   <FormattedMessage tagName="tspan" id="portal.startburstHelp.4hour.text"/>
                 </tspan>
                 <tspan x="0" y="84">
-                   period
+                   <FormattedMessage tagName="tspan" id="portal.startburstHelp.period.text"/>
                 </tspan>
               </text>
             </g>
@@ -98,15 +100,15 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 1083.8729 212.6252)"
                 className="heading">
-                Blue Halo
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.blueHalo.text"/>
               </text>
               {/* Description */}
               <text transform="matrix(1 0 0 1 1083.8729 255.6057)">
                 <tspan x="0" y="0">
-                  Comparison period for
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.comparisonPeriod.text"/>
                 </tspan>
                 <tspan x="0" y="28">
-                  previous 28 days
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.prev28.text"/>
                 </tspan>
               </text>
               {/* Pointer */}
@@ -118,7 +120,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 0 877)"
                 className="heading">
-                Action Buttons
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.actionButtons.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer"
@@ -126,13 +128,13 @@ class StarburstHelp extends React.Component {
               <circle className="pointer-dot" cx="764" cy="837" r="3.8"/>
               {/* Description */}
               <text transform="matrix(1 0 0 1 82 945)">
-                Metrics
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.metrics.text"/>
               </text>
               <text transform="matrix(1 0 0 1 82 1043)">
-                Settings
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.settings.text"/>
               </text>
               <text transform="matrix(1 0 0 1 82 1142)">
-                Help
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.help.text"/>
               </text>
               {/* Metrics Icon */}
               <g className="example-icon">
@@ -164,7 +166,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 0 309)"
                 className="heading">
-                Starburst
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.starburst.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer" x1="832" y1="563" x2="464" y2="374"/>
@@ -172,13 +174,13 @@ class StarburstHelp extends React.Component {
               {/* Description */}
               <text transform="matrix(1 0 0 1 0 353)">
                 <tspan x="0" y="0">
-                  Average bandwidth for the prior 4 weeks
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwith.text"/>
                 </tspan>
                 <tspan x="0" y="28">
-                  Average Cache Hit Rate for the prior 4 weeks
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwithCacheHit.text"/>
                 </tspan>
                 <tspan x="0" y="56">
-                  Average Time to First Byte for the prior 4 weeks
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwithFttb.text"/>
                 </tspan>
               </text>
             </g>
@@ -186,7 +188,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 438 184)"
                 className="heading">
-                Day Wedge
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.dayWedge.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer" x1="886" y1="417"
@@ -194,14 +196,14 @@ class StarburstHelp extends React.Component {
               <circle className="pointer-dot" cx="886" cy="417" r="3.8"/>
               {/* Descrition */}
               <text transform="matrix(1 0 0 1 440 228)">
-                Each wedge represents one day of data
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.wedgeDisclaimer.text"/>
               </text>
             </g>
             {/* TTFB */}
             <g>
               <text transform="matrix(1 0 0 1 1038 1104)"
                 className="heading">
-                TTFB (Time to First Byte)
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.ttfb.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer" x1="935" y1="772"
@@ -210,10 +212,10 @@ class StarburstHelp extends React.Component {
               {/* Descrition */}
               <text transform="matrix(1 0 0 1 1040 1148)">
                 <tspan x="0" y="0">
-                  The latency between the first request for
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.latency.text"/>
                 </tspan>
                 <tspan x="0" y="28">
-                  content and the serving of the response.
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.content.text"/>
                 </tspan>
               </text>
             </g>
@@ -221,7 +223,7 @@ class StarburstHelp extends React.Component {
             <g>
               <text transform="matrix(1 0 0 1 0 609)"
                 className="heading">
-                Cache Hit Rate
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.cacheHitRate.text"/>
               </text>
               {/* Pointer */}
               <line className="pointer" x1="795" y1="745" x2="514" y2="650"/>
@@ -229,10 +231,10 @@ class StarburstHelp extends React.Component {
               {/* Description */}
               <text transform="matrix(1 0 0 1 0 653)">
                 <tspan x="0" y="0">
-                  Percentage of requests served out from the edge
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.percentageServed.text"/>
                 </tspan>
                 <tspan x="0" y="28">
-                  cache without needing to go back to the origin.
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.backToOrigin.text"/>
                 </tspan>
               </text>
             </g>

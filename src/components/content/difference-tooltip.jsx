@@ -1,24 +1,26 @@
 import React, { PropTypes } from 'react'
 
+import {FormattedMessage} from 'react-intl';
+
 const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">
     <h3>{name}</h3>
-    <b>Bandwidth</b> vs 28 days ago
+    <FormattedMessage id="portal.content.tooltip.bandwithVsLast28.text" values={{b: <b>, bClos: </b>}}/>
   </div>
   <div>
-    Higher
+    <FormattedMessage id="portal.content.tooltip.higher.text"/>
     <div className="pull-right difference-legend above-avg" />
   </div>
   <div>
-    Same
+    <FormattedMessage id="portal.content.tooltip.same.text"/>
     <div className="pull-right difference-legend avg" />
   </div>
   <div>
-    Lower
+    <FormattedMessage id="portal.content.tooltip.lower.text"/>
     <div className="pull-right difference-legend below-avg" />
   </div>
   <div>
-    Comparison Data Missing
+    <FormattedMessage id="portal.content.tooltip.compDataMissing.text"/>
     <div className="pull-right difference-legend no-data" />
   </div>
 </div>

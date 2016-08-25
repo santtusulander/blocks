@@ -24,6 +24,8 @@ import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 
+import {FormattedMessage} from 'react-intl'
+
 export class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -117,7 +119,7 @@ export class Main extends React.Component {
       }
       else {
         this.setState({activePurge: null})
-        this.showNotification('Purge request succesfully submitted')
+        this.showNotification(<FormattedMessage id="portal.purge.purgeSubmitted.text"/>)
       }
     })
   }
