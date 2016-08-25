@@ -5,6 +5,8 @@ import { Button, ButtonToolbar, Col, Image, Input, Label,
 import SelectWrapper from '../../../../components/select-wrapper'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
 
+import '../../../../assets/img/temp-support-tools-modals-mtr-map.png'
+
 class ModalMtr extends React.Component {
   constructor(props) {
     super(props)
