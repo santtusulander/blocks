@@ -6,7 +6,7 @@ import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import DnsEditForm from '../../account-management/dns-edit-form.jsx'
+import RecordForm from '../../account-management/record-form.jsx'
 
 const reducers = {
   form: formReducer
@@ -25,8 +25,8 @@ storiesOf('AccountManagement', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('DnsEditForm', () => (
-    <DnsEditForm
+  .add('RecordForm', () => (
+    <RecordForm
       show={true}
       domain={'test.com'}
       onSave={action('onSave')}

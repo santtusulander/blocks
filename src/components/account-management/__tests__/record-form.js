@@ -5,7 +5,7 @@ import React from 'react'
 import { mount, shallow, render } from 'enzyme'
 
 //import DnsEditFormContainer from '../../../containers/dns-edit-form-container'
-import DnsEditForm from '../../../components/account-management/dns-edit-form'
+import DnsEditForm from '../../../components/account-management/record-form'
 
 import { createStore, combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'

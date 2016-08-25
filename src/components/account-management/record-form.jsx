@@ -7,7 +7,7 @@ import recordTypes, { recordFields } from '../../constants/dns-record-types'
 
 import { checkForErrors } from '../../util/helpers'
 
-import './dns-edit-form.scss'
+import './record-form.scss'
 
 /**
  *
