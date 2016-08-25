@@ -47,7 +47,7 @@ const validate = fields => {
 }
 
 
-const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, hostName, targetValue, ttl, priority }, values }) => {
+const RecordForm = ({ domain, edit, onSave, onCancel, invalid, fields: { recordType, hostName, targetValue, ttl, priority }, values }) => {
   const title             = edit ? 'Edit DNS Record' : 'New DNS Record'
   const actionButtonTitle = edit ? 'Save' : 'Add'
   const shouldShowField = isShown(recordType.value)
@@ -108,9 +108,9 @@ const DnsEditForm = ({ domain, edit, onSave, onCancel, invalid, fields: { record
   )
 }
 
-DnsEditForm.displayName = 'DnsEditForm'
+RecordForm.displayName = 'RecordForm'
 
-DnsEditForm.propTypes = {
+RecordForm.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object.isRequired,
@@ -123,4 +123,4 @@ export default reduxForm({
   form: 'dns-edit',
   fields: ['recordType', 'hostName', 'targetValue', 'ttl', 'priority'],
   validate
-})(DnsEditForm)
+})(RecordForm)
