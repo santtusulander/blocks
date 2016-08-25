@@ -48,7 +48,7 @@ class ActionsSelection extends React.Component {
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text'"/>
+                <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>
               </a>
             </li>
             <li>

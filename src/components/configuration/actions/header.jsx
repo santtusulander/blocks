@@ -70,7 +70,7 @@ class Header extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.header.header'"/></h1>
+          <h1><FormattedMessage id="portal.policy.edit.header.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 

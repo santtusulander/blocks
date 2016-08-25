@@ -45,7 +45,7 @@ class ConfigurationPublishVersion extends React.Component {
         {/* Action buttons */}
         <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.props.hideAction}>
-            <FormattedMessage id="'portal.button.cancel' : 'Cancel',"/>
+            <FormattedMessage id="portal.button.cancel"/>
           </Button>
           <Button bsStyle="primary"
             onClick={this.handleSave}
