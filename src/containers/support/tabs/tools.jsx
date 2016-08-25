@@ -1,6 +1,8 @@
 import React from 'react'
 
 import SupportToolPanel from '../../../components/support/tools/support-tool-panel'
+import ModalMtr from '../tools/modals/mtr.jsx'
+
 import IconDig from '../../../components/icons/icon-dig'
 import IconContent from '../../../components/icons/icon-content'
 import IconMtr from '../../../components/icons/icon-mtr'
@@ -14,15 +16,17 @@ class SupportTabTools extends React.Component {
 
     this.state = {
       activePanel: null,
+      showMtrDetails: false
     }
 
-    this.resetActivePanel = this.resetActivePanel.bind(this)
+    this.closeModal = this.closeModal.bind(this)
     this.setActivePanel = this.setActivePanel.bind(this)
   }
 
-  resetActivePanel() {
+  closeModal() {
     this.setState({
-      activePanel: null
+      activePanel: null,
+      showMtrDetails: false
     })
   }
 
@@ -64,6 +68,14 @@ class SupportTabTools extends React.Component {
             body="Determine whether or not a particular IP address is from the UDN network"
             title="Server Validation"/>
         </div>
+
+        {this.state.activePanel === 'mtr' &&
+          <ModalMtr
+            handleCloseModal={this.closeModal}
+            toggleShowDetails={() => this.setState({ showMtrDetails: !this.state.showMtrDetails })}
+            showDetails={this.state.showMtrDetails}/>
+        }
+
       </div>
     )
   }
