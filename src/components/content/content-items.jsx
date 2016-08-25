@@ -237,7 +237,6 @@ class ContentItems extends React.Component {
                 {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
                 <UDNButton bsStyle="success"
                            icon={true}
-                           addNew={true}
                            onClick={this.addItem}>
                   <IconAdd/>
                 </UDNButton>

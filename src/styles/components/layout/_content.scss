@@ -7,13 +7,12 @@
 
   &__header {
     display: flex;
-    margin: 0 0 10px;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
 
     .btn-toolbar {
-      padding-left: 20px;
+      padding-left: 18px;
       white-space: nowrap;
     }
 
@@ -25,10 +24,6 @@
     .page-header-layout &__aside {
       margin: -10px 0 10px;
     }
-  }
-
-  @include md {
-    min-height: calc(100vh - #{$md-header-total-height});
   }
 
   &::after {

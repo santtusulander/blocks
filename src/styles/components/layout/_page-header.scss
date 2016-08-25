@@ -1,52 +1,29 @@
 // Page Header Layout
 // ==================
+$page-header-padding-top: rem(18px);
+$page-header-horizontal-padding: rem(30px);
+$page-header-padding-bottom: rem(6px);
+$page-header-dropdown-width: rem(250px);
 
 .page-header-layout {
-  min-height: $page-header-height;
-  padding-top: $page-header-padding-top;
-  padding-right: $bar-height;
-  padding-bottom: $page-header-padding-bottom;
-  padding-left: $bar-height;
-
-  @include lg {
-    padding-top: ($page-header-padding-top * 0.75);
-    padding-bottom: ($page-header-padding-bottom * 0.75);
-  }
-
-  @include md {
-    min-height: $md-page-header-height;
-    padding-right: $md-bar-height;
-    padding-left: $md-bar-height;
-  }
-
-  @include sm {
-    padding-right: ($md-bar-height / 2);
-    padding-left: ($md-bar-height / 2);
-  }
-
-  @include print {
-    min-height: 0;
-    padding: 0 0 20px;
-  }
+  padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
 
   .dark-theme & {
     background-color: rgba($pale-blue, 0.2);
+    border-bottom: 3px solid rgba($black, 0.4);
   }
 
   .light-theme & {
     background-color: $white;
+    border-bottom: 3px solid rgba($black, 0.1);
   }
 
   p {
     margin: 0;
   }
 
-  .btn-toolbar {
-    margin-top: 5px;
-
-    @include print {
-      display: none;
-    }
+  .dropdown-select {
+    min-width: $page-header-dropdown-width;
   }
 
   .form-control {
@@ -59,19 +36,5 @@
 
   h1 {
     color: $pale-blue;
-  }
-
-  .btn.btn-primary {
-    color: $white;
-    background-color: $pale-blue;
-    fill: $white;
-    stroke: $white;
-
-    &:hover {
-      color: $white;
-      background-color: rgba($pale-blue, 0.8);
-      fill: $white;
-      stroke: $white;
-    }
   }
 }
