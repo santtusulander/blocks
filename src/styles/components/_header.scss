@@ -17,7 +17,7 @@
 
     .logo {
       display: flex;
-      padding: 0 17.5px !important;
+      padding: 0 9px !important;
       margin-right: 15px;
       align-items: center;
       flex: 1;
@@ -25,10 +25,6 @@
     }
 
     svg {
-      width: 19px;
-      height: 25px;
-      transform: scale(1, 1);
-
       .dark-theme & {
         fill: $white;
       }

@@ -1,27 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconClose extends React.Component {
-  render() {
-    let width = this.props.width ? this.props.width : '12'
-    let height = this.props.height ? this.props.height : '12'
-    return (
-      <Icon width={width} height={height}>
-        <g>
-          <line x1="0" y1="0" x2={width} y2={height} strokeWidth="2"/>
-          <line x1="0" y1={height} x2={width} y2="0" strokeWidth="2"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconClose = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <polygon points="24.7,12.7 23.3,11.3 18,16.6 12.7,11.3 11.3,12.7 16.6,18 11.3,23.3 12.7,24.7 18,19.4 23.3,24.7 24.7,23.3 19.4,18"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconClose.displayName = 'IconClose'
 IconClose.propTypes = {
   className: React.PropTypes.string,
-  height: React.PropTypes.string,
-  width: React.PropTypes.string
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconClose

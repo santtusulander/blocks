@@ -1,25 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconAdd extends React.Component {
-  render() {
-    return (
-      <Icon width="30" height="30">
-        <g>
-          <line x1="15" y1="30" x2="15" y2="0"
-            strokeWidth="2" strokeMiterlimit="10"/>
-          <line x1="30" y1="15" x2="0" y2="15"
-            strokeWidth="2" strokeMiterlimit="10"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconAdd = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <polygon points="28,17 19,17 19,8 17,8 17,17 8,17 8,19 17,19 17,28 19,28 19,19 28,19"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconAdd.displayName = 'IconAdd'
 IconAdd.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconAdd
