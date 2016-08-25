@@ -86,7 +86,7 @@ class ModalMtr extends React.Component {
             <hr/>
             <Image
               responsive={true}
-              src="../../../../assets/img/temp-support-tools-modals-mtr-map.png" />
+              src="/assets/img/temp-support-tools-modals-mtr-map.png" />
             <hr/>
             <h4>Network Connectivity Test</h4>
             <p>From US (New York) 115.145.60.200 to modernfamily.com</p>
