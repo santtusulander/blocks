@@ -2,6 +2,7 @@ import React from 'react'
 
 import SupportToolPanel from '../../../components/support/tools/support-tool-panel'
 import ModalMtr from '../tools/modals/mtr.jsx'
+import ModalServerValidation from '../tools/modals/server-validation.jsx'
 
 import IconDig from '../../../components/icons/icon-dig'
 import IconContent from '../../../components/icons/icon-content'
@@ -16,7 +17,8 @@ class SupportTabTools extends React.Component {
 
     this.state = {
       activePanel: null,
-      showMtrDetails: false
+      showMtrDetails: false,
+      showServerValidationDetails: false
     }
 
     this.closeModal = this.closeModal.bind(this)
@@ -26,7 +28,8 @@ class SupportTabTools extends React.Component {
   closeModal() {
     this.setState({
       activePanel: null,
-      showMtrDetails: false
+      showMtrDetails: false,
+      showServerValidationDetails: false
     })
   }
 
@@ -76,6 +79,15 @@ class SupportTabTools extends React.Component {
               showMtrDetails: val
             })}
             showDetails={this.state.showMtrDetails}/>
+        }
+
+        {this.state.activePanel === 'server-validation' &&
+          <ModalServerValidation
+            handleCloseModal={this.closeModal}
+            toggleShowDetails={val => this.setState({
+              showServerValidationDetails: val
+            })}
+            showDetails={this.state.showServerValidationDetails}/>
         }
 
       </div>
