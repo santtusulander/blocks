@@ -119,6 +119,9 @@ $dropdown-selector-max-height: rem(480px);
 
   // TODO: Maybe remove the btn and btn-link classes from the selector component
   // instead of overriding button styles here?
+  .btn-link:hover:active,
+  .btn-link:active,
+  .btn-link:focus,
   .btn-link:hover {
     text-decoration: none;
   }
