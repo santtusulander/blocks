@@ -336,7 +336,7 @@ export class Property extends React.Component {
                       to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
                   <IconConfiguration/>
                 </Link>
-                <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
                   <IconTrash/>
                 </Button>
               </ButtonToolbar>
