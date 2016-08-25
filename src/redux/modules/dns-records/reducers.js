@@ -1,6 +1,6 @@
 //CREATE
 export const createSuccess = (state, {payload: {resource, data}}) => {
-  const index = state.get('domains').findIndex(item => item.get('id') === resource)
+  const index = state.get('resources').findIndex(item => item.get('name') === resource)
   return state.merge({
     resources: state.get('resources').set(index, {rr: data, name: resource})
   })
@@ -45,20 +45,22 @@ export const receiveWithDetailsFailed = (state) => {
   return state
 }
 
-//TODO: Should decide how to handle fail?
-export const resourceDetailsFailed = ( state , action) => {
+export const resourceDetailsFailed = ( state ) => {
   return state.set('loading', false)
 }
 
-//TODO: UPDATE
-export const updateSuccess = (state, action) => {
-  return state
+//UPDATE
+export const updateSuccess = (state, {payload: {resource, data}}) => {
+  const index = state.get('resources').findIndex(item => item.get('name') === resource)
+  return state.merge({
+    resources: state.get('resources').set(index, {rr: data, name: resource})
+  })
 }
 export const updateFailed = (state, action) => {
   return state
 }
 
-//TODO: DELETE
+//DELETE
 export const deleteSuccess = (state, action) => {
   return state
 }

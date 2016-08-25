@@ -14,6 +14,28 @@ export const DNS_RECORD_RECEIVE_WITH_DETAILS = 'DNS_RECORD_RECEIVE_WITH_DETAILS'
 import * as dnsRecordsApi from './api'
 import * as dnsRecordsReducers from './reducers'
 
+//RESOURCE MODEL
+/*const resources = [
+ {
+ name: 'test resource',
+ rr: [
+ {
+ class: 'IN',
+ name: 'test.udn.com',
+ ttl: 3600,
+ type: 'A',
+ value: '85.184.251.171'
+ }
+ ]
+ }
+ ]
+ */
+
+const InitialState = fromJS({
+  loading: false,
+  resources: []
+})
+
 //ACTIONS
 export const fetchResourcesList = createAction(DNS_RECORDS_RECEIVE_RESOURCES, (zone)  => {
   return dnsRecordsApi.fetchAll( zone )
@@ -45,28 +67,6 @@ export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DE
           })
       }))
     })
-})
-
-//RESOURCE MODEL
-/*const resources = [
- {
- name: 'test resource',
- rr: [
- {
- class: 'IN',
- name: 'test.udn.com',
- ttl: 3600,
- type: 'A',
- value: '85.184.251.171'
- }
- ]
- }
- ]
- */
-
-const InitialState = fromJS({
-  loading: false,
-  resources: []
 })
 
 export const startFetching = createAction(DNS_RECORDS_START_FETCHING)
