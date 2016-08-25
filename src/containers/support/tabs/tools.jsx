@@ -72,7 +72,9 @@ class SupportTabTools extends React.Component {
         {this.state.activePanel === 'mtr' &&
           <ModalMtr
             handleCloseModal={this.closeModal}
-            toggleShowDetails={() => this.setState({ showMtrDetails: !this.state.showMtrDetails })}
+            toggleShowDetails={val => this.setState({
+              showMtrDetails: val
+            })}
             showDetails={this.state.showMtrDetails}/>
         }
 

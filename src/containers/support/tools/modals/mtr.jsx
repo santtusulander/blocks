@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, Image, Input, Label,
-  Modal, Row, Table, Well } from 'react-bootstrap'
+import { Button, Col, Image, Input, Label, Row, Table, Well } from 'react-bootstrap'
 
+import SupportToolModal from './support-tool-modal'
 import SelectWrapper from '../../../../components/select-wrapper'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
 
@@ -27,7 +27,7 @@ class ModalMtr extends React.Component {
         this.setState({
           showLoading: false
         })
-      }, 1500)
+      }, 1000)
     }
   }
   render() {
@@ -61,7 +61,7 @@ class ModalMtr extends React.Component {
           name="radioGroup1"
           onChange={() => null}/>
         <hr/>
-        <Button bsStyle="primary" onClick={toggleShowDetails}>TEST</Button>
+        <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>TEST</Button>
       </div>
     )
     const content = (
@@ -74,7 +74,7 @@ class ModalMtr extends React.Component {
               from <b>New York</b></p>
             </Col>
             <Col xs={4}>
-              <Button className="pull-right" bsStyle="link" onClick={toggleShowDetails}>EDIT</Button>
+              <Button className="pull-right" bsStyle="link" onClick={() => toggleShowDetails(false)}>EDIT</Button>
             </Col>
           </Row>
         </Well>
@@ -142,19 +142,17 @@ class ModalMtr extends React.Component {
       </div>
     )
     return (
-      <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={true}>
-        <Modal.Header>
-          <h1>MTR</h1>
-          <p>Test network connectivity to determine packet loss.</p>
-        </Modal.Header>
-
-        <Modal.Body>
-          {showDetails ? content : form}
-          <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary" onClick={handleCloseModal}>Close</Button>
-          </ButtonToolbar>
-        </Modal.Body>
-      </Modal>
+      <SupportToolModal
+        handleCloseModal={handleCloseModal}
+        showDetails={showDetails}
+        header={
+          <div>
+            <h1>MTR</h1>
+            <p>Test network connectivity to determine packet loss.</p>
+          </div>
+        }>
+        {showDetails ? content : form}
+      </SupportToolModal>
     )
   }
 }
