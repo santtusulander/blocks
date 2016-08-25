@@ -44,7 +44,7 @@ const Navigation = (props) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION}>
           <li>
-            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + contentActive}>
+            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
               <IconContent />
               <span>Content</span>
             </Link>
@@ -54,7 +54,7 @@ const Navigation = (props) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
               <span>Analytics</span>
             </Link>
