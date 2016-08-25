@@ -1,6 +1,12 @@
 // Type
 // ====
 
+/**
+* Line-height is calculated by dividing the pixel leading and pixel font-size.
+* In order to give the element the correct height divisible by the baseline (6px),
+* the line-height had to be specific enough to give it a whole number computed value.
+*/
+
 h1,
 h2,
 h3,
@@ -14,11 +20,15 @@ h6 {
   }
 }
 
+/**
+* This element breaks the base-line grid rule with its line-height.
+* The issue is the component using an h1 needs to be overflow:hidden to implement truncation, which causes the descender characters to be clipped.
+* I talked to a designer about this and updating the line-height to 1.1 and breaking the baseline grid for this element is okay.
+*/
 h1 {
   font-size: rem(36px);
   font-weight: 700;
   line-height: 1.1;
-  text-transform: capitalize;
 
   @include print {
     font-size: $print-font-size * 3;
@@ -54,7 +64,7 @@ h1 {
 h2 {
   font-size: rem(30px);
   font-weight: 700;
-  line-height: 1.133;
+  line-height: (34/30);
 
   @include print {
     font-size: $print-font-size * 2;
@@ -80,7 +90,7 @@ h2 {
 h3 {
   font-size: rem(21px);
   font-weight: 700;
-  line-height: 1.14285;
+  line-height: 1.1428571;
 
   @include print {
     font-size: $print-font-size * 1.5;
@@ -107,13 +117,13 @@ h3 {
 h4 {
   font-size: rem(18px);
   font-weight: 700;
-  line-height: 1.33;
+  line-height: 1.3333333;
 }
 
 h5 {
   font-size: rem(14px);
   font-weight: 500;
-  line-height: 1.28571;
+  line-height: 1.2857142;
   text-transform: uppercase;
 }
 

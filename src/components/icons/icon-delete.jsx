@@ -1,23 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconDelete extends React.Component {
-  render() {
-    return (
-      <Icon width="30" height="2">
-        <g>
-          <line x1="30" y1="1" x2="0" y2="1"
-            strokeWidth="2" strokeMiterlimit="10"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconDelete = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <rect x="8" y="17" width="20" height="2"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconDelete.displayName = 'IconDelete'
 IconDelete.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
-module.exports = IconDelete
+export default IconDelete

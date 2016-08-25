@@ -38,7 +38,6 @@
   .form-group {
     display: inline-block;
     float: none;
-    padding-bottom: 0;
     vertical-align: top;
   }
 
@@ -52,11 +51,7 @@
     + .btn-group,
     + .input-group,
     + .form-group {
-      margin-left: 15px;
-
-      @include md {
-        margin-left: 10px;
-      }
+      margin-left: 12px;
     }
   }
 
