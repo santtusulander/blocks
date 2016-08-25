@@ -1,8 +1,8 @@
 // Navs
 // ====
 $nav-tab-vertical-padding: rem(10px);
-$nav-tab-horizontal-padding: rem(30px);
-$nav-tab-horizontal-margin: rem(15px);
+$nav-tab-horizontal-padding: rem(24px);
+$nav-tab-horizontal-margin: rem(12px);
 $nav-tab-line-height: (24/14);
 $nav-tab-border-width: 4px;
 $dt-tab-color: $dt-text-color;
@@ -55,6 +55,21 @@ $lt-tab-color: $lt-text-color;
       margin-left: 30px;
     }
 
+    &.active {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          font-weight: 700;
+          color: $pale-blue;
+          background-color: transparent;
+          border: 0;
+          border-bottom: 4px solid $pale-blue;
+          outline: 0;
+        }
+      }
+    }
+
     > a {
       padding: $nav-tab-vertical-padding $nav-tab-horizontal-padding;
       margin: 0;
@@ -100,23 +115,6 @@ $lt-tab-color: $lt-text-color;
           font-weight: 700;
           color: $pale-blue;
           border-bottom: 4px solid $pale-blue;
-        }
-      }
-    }
-
-    &.active {
-      > a {
-        &,
-        &:hover,
-        &:focus {
-          .dark-theme &,
-          .light-theme & {
-            font-weight: 700;
-            color: $pale-blue;
-            background-color: transparent;
-            border-bottom: 4px solid $pale-blue;
-            outline: 0;
-          }
         }
       }
     }

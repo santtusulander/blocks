@@ -237,7 +237,7 @@ export class Configuration extends React.Component {
                   </div>
                 </AccountSelector>
                 <ButtonToolbar className="pull-right">
-                  <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                  <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
                     <IconTrash/>
                   </Button>
                   {activeEnvironment === 2 ||
@@ -246,7 +246,7 @@ export class Configuration extends React.Component {
                     <Button bsStyle="primary" onClick={this.togglePublishModal}>
                       Publish
                     </Button>
-                    : ''
+                    : null
                   }
                   <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
                     Copy
@@ -256,10 +256,10 @@ export class Configuration extends React.Component {
                       onClick={() => this.changeActiveVersionEnvironment(1)}>
                       Retire
                     </Button>
-                    : ''
+                    : null
                   }
                   <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                    className="versions-btn has-icon">
+                    className="has-icon">
                     <div className="icon-holder">
                       <IconArrowLeft/>
                     </div>
