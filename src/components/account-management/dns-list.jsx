@@ -1,85 +1,111 @@
 import React, { PropTypes } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 
 import UDNButton from '../button'
 import ActionLinks from './action-links'
 import IconAdd from '../icons/icon-add'
-import Select from '../select'
 
 import recordTypes from '../../constants/dns-record-types'
-import { EDIT_SOA, EDIT_DNS } from '../../constants/account-management-modals'
+
+
+const records = [
+  {
+    class: "IN",
+    name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+    ttl: 3600,
+    type: "AAAA",
+    value: "85.184.251.171"
+  },
+  {
+    class: "IN",
+    name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+    ttl: 3600,
+    type: "AAAA",
+    value: "85.184.251.171"
+  },
+  {
+    class: "IN",
+    name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+    ttl: 3600,
+    type: "MX",
+    value: "85.184.251.171"
+  },
+  {
+    class: "IN",
+    name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+    ttl: 3600,
+    type: "A",
+    value: "85.184.251.171"
+  }
+]
 
 const DNSList = props => {
   const {
-    domains,
+    //records,
     onDeleteEntry,
-    activeDomain,
-    changeRecordType,
-    activeRecordType,
-    toggleModal
+    onEditEntry,
+    onAddEntry
   } = props
-  const entries = activeDomain && domains
-    .find(domain => is(activeDomain.get('id'), domain.get('id')))
-    .get('subDomains')
-    .filter(entry => !activeRecordType || entry.get('type') === activeRecordType)
-  const recordTypeOptions = [
-    [null, 'All Record Types'],
-    ...recordTypes.map(type => [type, type])
-  ]
+  let recordsByType = {}
+  records.forEach(record => {
+    if(!recordsByType[record.type]) {
+      recordsByType[record.type] = []
+    }
+    recordsByType[record.type].push(record)
+  })
+  let tables = []
+  const getContent = type =>
+    recordsByType[type].map((record, i) =>
+      <tr key={i}>
+        <td>{record.name}</td>
+        <td>{record.type}</td>
+        <td>{record.value}</td>
+        <td>{record.ttl}</td>
+        <td>
+        <ActionLinks
+        onEdit={() => onEditEntry(record)}
+        onDelete={() => onDeleteEntry(record)}/>
+        </td>
+      </tr>
+    )
   return (
     <div>
       <h3 className="account-management-header">
         <span id="domain-stats">
-          {activeDomain ?
-            `DNS: ${activeDomain.get('name')}: ${entries.size} resource entries ` :
-            'No active Domain'}
+          {`${records.size} resource entries `}
         </span>
-        {activeDomain && <a id="edit-soa" onClick={() => toggleModal(EDIT_SOA)}>Edit SOA</a>}
         <div className='dns-filter-wrapper'>
-          <Select
-            value={activeRecordType || null}
-            className="dns-dropdowns"
-            onSelect={type => changeRecordType(type)}
-            options={recordTypeOptions}/>
           <UDNButton
             id="add-dns-record"
             bsStyle="primary"
             icon={true}
             addNew={true}
-            onClick={() => toggleModal(EDIT_DNS)} >
+            onClick={onAddEntry}>
             <IconAdd/>
           </UDNButton>
         </div>
       </h3>
-      <table className="table table-striped cell-text-left">
-        <thead >
-          <tr>
-            <th width="30%">HOSTNAME</th>
-            <th width="17%">RECORD TYPE</th>
-            <th width="30%">ADDRESS</th>
-            <th width="30%">TTL</th>
-            <th width="8%"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {entries && !entries.isEmpty() ? entries.map((record, index) => {
-            const id = record.get('id')
-            return (
-              <tr key={index}>
-                <td>{record.get('hostName')}</td>
-                <td>{record.get('type')}</td>
-                <td>{record.get('address')}</td>
-                <td>{record.get('ttl')}</td>
-                <td>
-                  <ActionLinks
-                    onEdit={() => toggleModal(EDIT_DNS)}
-                    onDelete={() => onDeleteEntry(id)}/>
-                </td>
-              </tr>
-            )
-          }) : <tr id="empty-msg"><td colSpan="5">No entries.</td></tr>}
-        </tbody>
-      </table>
+      {recordTypes.sort().forEach(type => {
+        if (recordsByType.hasOwnProperty(type)) {
+          tables.push(
+            <table className="table table-striped cell-text-left">
+              <thead >
+                <tr>
+                  <th width="30%">HOSTNAME</th>
+                  <th width="17%">RECORD TYPE</th>
+                  <th width="30%">ADDRESS</th>
+                  <th width="30%">TTL</th>
+                  <th width="8%"></th>
+                </tr>
+              </thead>
+              <tbody>
+               {getContent(type)}
+              </tbody>
+            </table>
+          )
+        }
+      })}
+      {tables}
     </div>
   )
 }
