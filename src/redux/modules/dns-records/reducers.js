@@ -36,6 +36,15 @@ export const receiveResourceDetails = (state, action) => {
   return state.merge( { resources: newRes, loading: false } )
 }
 
+//LIST WITH DETAILS
+export const receiveWithDetails = (state, action) => {
+  return state.merge( {resources: action.payload, loading: false})
+}
+
+export const receiveWithDetailsFailed = (state) => {
+  return state
+}
+
 //TODO: Should decide how to handle fail?
 export const resourceDetailsFailed = ( state , action) => {
   return state.set('loading', false)
@@ -55,4 +64,13 @@ export const deleteSuccess = (state, action) => {
 }
 export const deleteFailed = (state, action) => {
   return state
+}
+
+//START / STOP FETCH
+export const startedFetching = (state) => {
+  return state.merge({ loading: true })
+}
+
+export const stoppedFetching = (state) => {
+  return state.merge({ loading: false })
 }
