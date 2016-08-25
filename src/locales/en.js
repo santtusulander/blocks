@@ -387,7 +387,8 @@ const TRANSLATED_MESSAGES = {
 
 	'portal.contentItemList.lastEdited.text' : 'Last Edited',
 
-	'portal.content.tooltip.bandwithVsLast28.text' : '{b}Bandwidth{bClos} vs 28 days ago',
+	'portal.content.tooltip.bandwith.text' : 'Bandwith',
+	'portal.content.tooltip.bandwithVsLast28.text' : '{bandwith} vs 28 days ago',
 	'portal.content.tooltip.higher.text' : 'Higher',
 	'portal.content.tooltip.same.text' : 'Same',
 	'portal.content.tooltip.lower.text' : 'Lower',
