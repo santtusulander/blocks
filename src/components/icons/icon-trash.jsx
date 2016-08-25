@@ -1,27 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconTrash extends React.Component {
-  render() {
-    return (
-      <Icon className={this.props.className} width="18" height="27">
-        <g>
-          <rect x="4" y="10" width="2" height="12"/>
-          <rect x="8" y="10" width="2" height="12"/>
-          <rect x="12" y="10" width="2" height="12"/>
-          <rect y="2" width="18" height="2"/>
-          <rect x="5" width="8" height="2"/>
-          <path d="M16,8v16H2V8H16 M18,6H0v20h18V6L18,6z"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconTrash = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <path d="M15,26h-2V15h2V26z M19,15h-2v11h2V15z M23,15h-2v11h2V15z M25,13H11v15h14V13z M27,11v19H9V11H27z M22,8V6h-8 v2H9v2h18V8H22z"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconTrash.displayName = 'IconTrash'
 IconTrash.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
-module.exports = IconTrash
+export default IconTrash

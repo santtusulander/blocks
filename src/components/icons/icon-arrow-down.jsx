@@ -1,22 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconArrowDown extends React.Component {
-  render() {
-    return (
-      <Icon width="18" height="14">
-        <g>
-          <polygon points="0,0 18,0 9,14"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconArrowDown = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <polygon points="12,15 18,21 24,15"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconArrowDown.displayName = 'IconArrowDown'
 IconArrowDown.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
-module.exports = IconArrowDown
+export default IconArrowDown

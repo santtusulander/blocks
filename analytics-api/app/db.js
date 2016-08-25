@@ -498,7 +498,8 @@ class AnalyticsDB {
         epoch_start AS timestamp,
         ${accountLevelData.select},
         ${selectedDimension}service_type,
-        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
+        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'},
+        ${(selectedDimension || isListingChildren) ? 'sum(requests) AS requests' : 'requests'}
       FROM ??
       WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'

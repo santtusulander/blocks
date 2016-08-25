@@ -9,16 +9,32 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabVisitors extends React.Component {
   componentDidMount(){
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if(changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location){
+  fetchData(params, filters, location, hostConfiguredName){
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: 'day'})
     this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: 'day'})
@@ -43,6 +59,7 @@ class AnalyticsTabVisitors extends React.Component {
 }
 
 AnalyticsTabVisitors.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   byBrowser: React.PropTypes.instanceOf(Immutable.Map),
   byCountry: React.PropTypes.instanceOf(Immutable.Map),
   byOS: React.PropTypes.instanceOf(Immutable.Map),
@@ -64,7 +81,7 @@ AnalyticsTabVisitors.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    metrics: Immutable.List(),
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     byBrowser: state.visitors.get('byBrowser'),
     byCountry: state.visitors.get('byCountry'),
     byOS: state.visitors.get('byOS'),

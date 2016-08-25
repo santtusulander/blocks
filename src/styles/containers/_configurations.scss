@@ -3,8 +3,13 @@
 
 .configuration-header {
   position: fixed;
-  z-index: 5;
+  z-index: 1030; // Dropdowns are set at 1000 by bootstrap. This is a temporary fix as these sections headers will not be position:fixed once updated.
   width: calc(100% - #{$navigation-sidebar-width});
+
+  .btn-secondary {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
+  }
 
   .nav-tabs {
     padding: 0 35px;

@@ -35,6 +35,25 @@
       min-height: $md-bar-height;
     }
 
+    .condition-name {
+      display: flex;
+      margin-top: $btn-height / 4;
+
+      @include md {
+        margin-top: $md-btn-height / 4;
+      }
+
+      > span,
+      > .truncated-title {
+        min-width: 0;
+      }
+
+      > .truncated-title {
+        white-space: nowrap;
+        flex: 1;
+      }
+    }
+
     .dark-theme & {
       color: $dt-text-color;
       background-color: rgba($white, 0.1);

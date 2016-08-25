@@ -7,7 +7,7 @@ import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../uti
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
-const TRAFFIC_FETCHED = 'TRAFFIC_FETCHED'
+const TOTALS_FETCHED = 'TOTALS_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
@@ -17,7 +17,7 @@ const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
-  traffic: Immutable.List(),
+  totals: Immutable.Map(),
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
   fetching: false,
@@ -49,21 +49,17 @@ const emptyTraffic = Immutable.Map({
 
 // REDUCERS
 
-export function trafficFetchSuccess(state, action){
+export function totalsFetchSuccess(state, action){
+  // API always returns an array, therefore we access the first child, [0]
+  const data = Immutable.fromJS(action.payload.data)
   return state.merge({
-    traffic: Immutable.fromJS(action.payload.data.map(entity => {
-      entity.detail = entity.detail.map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
-        return datapoint
-      })
-      return entity
-    }))
+    totals: data.getIn([0, 'totals']) || Immutable.Map()
   })
 }
 
-export function trafficFetchFailure(state){
+export function totalsFetchFailure(state){
   return state.merge({
-    traffic: Immutable.List()
+    totals: Immutable.Map()
   })
 }
 
@@ -98,7 +94,8 @@ export function trafficTotalEgressSuccess(state, action){
     totalEgress: Immutable.fromJS(action.payload.data.bytes)
   })
 }
-export function trafficTotalEgressFailure(state, action){
+
+export function trafficTotalEgressFailure(state){
   return state.merge({
     totalEgress: 0
   })
@@ -167,7 +164,7 @@ export function trafficFinishFetch(state){
 }
 
 export default handleActions({
-  TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
+  TOTALS_FETCHED: mapReducers(totalsFetchSuccess, totalsFetchFailure),
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
   TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
@@ -181,8 +178,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const fetchTraffic = createAction(TRAFFIC_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`)
+export const fetchTotals = createAction(TOTALS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}&show_detail=false`)
   .then(parseResponseData);
 })
 
