@@ -10,10 +10,10 @@ class SupportToolPanel extends React.Component {
       <div
         className={classNames(
           'support-tool-panel text-center',
-          {'active': active === this},
+          {'active': active},
           className
         )}
-        onClick={() => {onClick(this)}}>
+        onClick={onClick}>
         {icon}
         <h2>{title}</h2>
         <p>{body}</p>
@@ -24,7 +24,7 @@ class SupportToolPanel extends React.Component {
 
 SupportToolPanel.displayName = 'SupportToolPanel'
 SupportToolPanel.propTypes = {
-  active: React.PropTypes.object,
+  active: React.PropTypes.bool,
   body: React.PropTypes.string,
   className: React.PropTypes.string,
   icon: React.PropTypes.node,
