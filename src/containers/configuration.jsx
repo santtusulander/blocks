@@ -36,6 +36,8 @@ import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 import { getUrl } from '../util/helpers'
 
+const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
+
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
@@ -70,9 +72,12 @@ export class Configuration extends React.Component {
     this.props.hostActions.fetchHost(brand, account, group, property)
   }
   componentWillReceiveProps(nextProps) {
-    if(!this.props.activeHost && nextProps.activeHost) {
+    const currentHost = this.props.activeHost
+    const nextHost = nextProps.activeHost
+    if(!currentHost && nextHost ||
+      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
       this.setState({
-        activeConfigOriginal: nextProps.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
+        activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
     }
   }
