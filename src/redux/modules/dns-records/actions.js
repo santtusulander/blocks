@@ -70,7 +70,7 @@ export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DE
       return Promise.all( data.map( resource => {
         return dnsRecordsApi.fetchDetailsByName(zone, resource)
           .then( ({data}) => {
-            return data /*{rr: data, zone, name: resource, id: uniqid()}*/
+            return data
           })
       })).then( data => {
         //Flatten records to single array and add uniq Ids
