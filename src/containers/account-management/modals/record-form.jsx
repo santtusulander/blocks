@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
-import { getById } from '../../../redux/modules/dns-records/actions'
+import { getById, updateResource, createResource } from '../../../redux/modules/dns-records/actions'
 
 import { checkForErrors } from '../../../util/helpers'
 import { recordFields } from '../../../constants/dns-record-types'
@@ -52,7 +52,7 @@ const RecordFormContainer = props => {
     edit,
     values: filterFields(props.values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: values => edit ? saveRecord(values) : addRecord(values),
+    onSave: values => edit ? saveRecord(values, domain) : addRecord(values, domain),
     onCancel: closeModal,
     ...formProps
   }
@@ -82,17 +82,16 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const initialValues = edit ? getById(dnsRecords.get('activeRecord')) : {}
-    //activeRecordSelector(dnsRecords.get('resources'), dnsRecords.get('activeRecord')) :
   return {
     initialValues,
     domain: dns.get('activeDomain')
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, { closeModal }) {
   return {
-    addRecord: () => {},
-    saveRecord: () => {}
+    addRecord: (values, domain) => dispatch(createResource(domain, values.name, values)).then(closeModal()),
+    saveRecord: (values, domain) => dispatch(updateResource(domain, values.name, values)).then(closeModal())
   }
 }
 
