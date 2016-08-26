@@ -30,39 +30,24 @@ class AnalyticsTabCacheHitRate extends React.Component {
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
     const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-
-    //REFACTOR:
-    if (params.property) {
-      this.props.trafficActions.fetchTraffic({
-        account: params.account,
-        group: params.group,
-        property: params.property,
-        startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type,
-        field_filter: 'chit_ratio',
-        granularity: 'day'
-      })
-    } else if(params.group) {
-      this.props.trafficActions.fetchTraffic({
-        account: params.account,
-        group: params.group,
-        startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type,
-        field_filter: 'chit_ratio',
-        granularity: 'day'
-      })
-    } else if(params.account) {
-      this.props.trafficActions.fetchTraffic({
-        account: params.account,
-        startDate: fetchOpts.startDate,
-        endDate: fetchOpts.endDate,
-        service_type: fetchOpts.service_type,
-        field_filter: 'chit_ratio',
-        granularity: 'day'
-      })
+    let trafficParams = {
+      account: params.account,
+      startDate: fetchOpts.startDate,
+      endDate: fetchOpts.endDate,
+      service_type: fetchOpts.service_type,
+      field_filter: 'chit_ratio',
+      granularity: 'day'
     }
+
+    if (params.group) {
+      trafficParams.group = params.group;
+    }
+
+    if (params.property) {
+      trafficParams.property = params.property;
+    }
+
+    this.props.trafficActions.fetchTraffic(trafficParams);
   }
 
   render() {
@@ -82,7 +67,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
 }
 
 AnalyticsTabCacheHitRate.propTypes = {
-  fetching: React.PropTypes.boolean,
+  fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
