@@ -10,7 +10,7 @@ import { RECORD_EDIT } from '../../../constants/account-management-modals'
 import DomainToolbar from './domain-toolbar'
 import DNSList from '../dns-list'
 // import SoaEditForm from '../soa-edit-form'
-import RecordForm from '../record-form'
+import RecordForm from '../modals/record-form'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -46,7 +46,6 @@ class AccountManagementSystemDNS extends Component {
       },
       onDeleteEntry: () => {/*noop*/},
       onEditEntry: id => {
-        activeRecord = id
         this.editingRecord = true
         toggleModal(RECORD_EDIT)
       },
@@ -58,7 +57,7 @@ class AccountManagementSystemDNS extends Component {
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList {...DNSListProps}/>
-        {activeModal === RECORD_EDIT && <RecordForm edit={this.editingRecord} activeRecord={activeRecord}/>}
+        {activeModal === RECORD_EDIT && <RecordForm edit={this.editingRecord}/>}
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
             id="soa-form"

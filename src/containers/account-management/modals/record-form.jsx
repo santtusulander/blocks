@@ -2,6 +2,10 @@ import React, { Component, PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
+import { activeRecordSelector } from '../../../redux/modules/dns-records/reducers'
+import { toggleAccountManagementModal } from '../../../redux/modules/ui'
+
+
 import { checkForErrors } from '../../util/helpers'
 import { recordFields } from '../../../constants/dns-record-types'
 
@@ -53,7 +57,7 @@ class RecordFormContainer extends Component {
   }
 
   render() {
-    const { domain, edit, saveRecord, addRecord,  } = this.props
+    const { domain, edit, saveRecord, addRecord, toggleModal, ...formProps  } = this.props
     const recordFormProps = {
       domain,
       edit,
@@ -63,13 +67,13 @@ class RecordFormContainer extends Component {
       searchFunc: ({ target: { value } }) => this.setState({ search: value }),
       onSave: values => this.editingRecord ? saveRecord(values) : addRecord(values),
       onCancel: () => toggleModal(null),
-      initialValues: edit ? initialValues : {}
+      formProps
     }
     return (
       <Modal show={true} dialogClassName="dns-edit-form-sidebar">
         <Modal.Header>
           <h1>{edit ? 'Edit DNS Record' : 'New DNS Record'}</h1>
-          {edit && <p>{hostName.value}</p>}
+          {edit && <p>{name.value}</p>}
         </Modal.Header>
         <Modal.Body>
           <RecordForm {...recordFormProps}/>
@@ -79,8 +83,23 @@ class RecordFormContainer extends Component {
   }
 }
 
+function mapStateToProps({ dnsRecords }, { edit }) {
+  const initialValues = edit ?
+    activeRecordSelector(dnsRecords.get('resources'), dnsRecords.get('activeRecord')) :
+    {}
+  return {
+    initialValues
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleModal: value => dispatch(toggleAccountManagementModal(value))
+  }
+}
+
 export default reduxForm({
   form: 'dns-edit',
-  fields: ['recordType', 'hostName', 'targetValue', 'ttl', 'priority'],
+  fields: ['type', 'name', 'value', 'ttl', 'priority'],
   validate
-})(RecordFormContainer)
+}, mapStateToProps, mapDispatchToProps)(RecordFormContainer)
