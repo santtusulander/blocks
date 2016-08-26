@@ -105,5 +105,5 @@ export default handleActions({
 
 //SELECTOR
 export const getById = ( resources, id ) => {
-  return resources.find( item => item.id === id)
+  return resources.find( item => item.get('id') === id)
 }

@@ -81,7 +81,9 @@ RecordFormContainer.propTypes = {
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
-  const initialValues = edit ? getById(dnsRecords.get('activeRecord')) : {}
+  const initialValues = edit ?
+    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord')).toJS() :
+    {}
   return {
     initialValues,
     domain: dns.get('activeDomain')

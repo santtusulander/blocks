@@ -34,7 +34,7 @@ export const createSuccess = (state, {payload: {data}}) => {
   return state.merge( {loading: false, resources: state.get('resources').push( data.set('id', uniqid() ) ) } );
 }
 
-export const createFailed = (state, action) => {
+export const createFailed = (state) => {
   return state
 }
 
@@ -80,7 +80,7 @@ export const stoppedFetching = (state) => {
 }
 
 //SET ACTIVE
-export const setActive = (state, {payload: {data: {id} } }) => {
-  return state.set('activeRecord', id)
+export const setActive = (state, { payload }) => {
+  return state.set('activeRecord', payload)
 }
 
