@@ -13,7 +13,8 @@ class AccountManagementSystemDNS extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      domainSearchValue: ''
+      domainSearch: '',
+      recordSearch: ''
     }
   }
 
@@ -22,22 +23,30 @@ class AccountManagementSystemDNS extends Component {
   }
 
   render() {
-    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain } = this.props
+    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain, records } = this.props
+    const {domainSearch, recordSearch} = this.state
+    const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const domainHeaderProps = {
-      searchValue: this.state.domainSearchValue,
-      searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
-      domains: domains && domains.filter(domain => domain.id.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
+      domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       onAddDomain,
-      onEditDomain
+      onEditDomain,
+      searchValue: domainSearch,
+      searchFunc: e => setSearchValue(e, 'domainSearch')
+    }
+    const DNSListProps = {
+      onAddEntry: () => {/*noop*/},
+      onDeleteEntry: () => {/*noop*/},
+      onEditEntry: () => {/*noop*/},
+      records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch)),
+      searchFunc: e => setSearchValue(e, 'recordSearch'),
+      searchValue: recordSearch
     }
     return (
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
-        <DNSList
-          onAddEntry={() => {/*noop*/}}
-          onDeleteEntry={() => {/*noop*/}}/>
+        <DNSList {...DNSListProps}/>
         {/*activeModal === EDIT_DNS &&
           <DnsEditForm
             id="dns-form"
@@ -69,11 +78,42 @@ AccountManagementSystemDNS.propTypes = {
   fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
   onEditDomain: PropTypes.func,
-  params: PropTypes.object
+  params: PropTypes.object,
+  records: PropTypes.array
 }
 
 function mapStateToProps(state) {
   return {
+    records: [
+      {
+        class: "IN",
+        name: "aaa",
+        ttl: 3600,
+        type: "AAAA",
+        value: "85.184.251.171"
+      },
+      {
+        class: "IN",
+        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+        ttl: 3600,
+        type: "AAAA",
+        value: "85.184.251.171"
+      },
+      {
+        class: "IN",
+        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+        ttl: 3600,
+        type: "MX",
+        value: "85.184.251.171"
+      },
+      {
+        class: "IN",
+        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+        ttl: 3600,
+        type: "A",
+        value: "85.184.251.171"
+      }
+    ],
     domains: state.dns.get('domains').toJS(),
     activeDomain: state.dns.get('activeDomain'),
     activeModal: state.ui.get('accountManagementModal')
