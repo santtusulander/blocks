@@ -99,6 +99,7 @@ class AnalysisOnOffNetReport extends React.Component {
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
         <AnalysisStackedByTime padding={40}
+          dataKey="bytes"
           dataSets={ dataSets }
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )

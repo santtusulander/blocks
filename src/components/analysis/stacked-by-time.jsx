@@ -19,22 +19,23 @@ class AnalysisStackedByTime extends React.Component {
   }
 
   render() {
+    const dataKey = this.props.dataKey
+
     if(!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
     }
-
     const totals = this.props.dataSets.reduce((total, dataSet) => {
       return dataSet.map((datapoint, i) => {
-        const bytes = total[i] ? total[i].bytes : 0
+        const value = total[i] ? total[i].value : 0
         return {
-          bytes: datapoint.bytes + bytes,
+          value: datapoint[dataKey] + value,
           timestamp: datapoint.timestamp
         }
       })
     }, [])
 
     const yExtent = totals && totals.length ?
-      d3.extent(totals, d => d.bytes)
+      d3.extent(totals, d => d.value)
       : [0,0]
     const xExtent =  totals && totals.length ?
       d3.extent(totals, d => d.timestamp)
@@ -69,7 +70,7 @@ class AnalysisStackedByTime extends React.Component {
           ref='chart'>
           {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
             return dataset.map((day, i) => {
-              const newTotal = columnHeights[i] ? columnHeights[i] + day.bytes : day.bytes
+              const newTotal = columnHeights[i] ? columnHeights[i] + day[dataKey] : day[dataKey]
               const line = (
                 <line key={i} className={`line-${dataSetIndex}`}
                   x1={xScale(day.timestamp)}
@@ -123,8 +124,13 @@ class AnalysisStackedByTime extends React.Component {
 }
 
 AnalysisStackedByTime.displayName = 'AnalysisStackedByTime'
+AnalysisStackedByTime.defaultProps = {
+  dataKey: 'bytes'
+}
+
 AnalysisStackedByTime.propTypes = {
   className: React.PropTypes.string,
+  dataKey: React.PropTypes.string,
   dataSets: React.PropTypes.array,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
