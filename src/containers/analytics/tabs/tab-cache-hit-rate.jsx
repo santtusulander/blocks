@@ -8,7 +8,7 @@ import AnalysisCacheHitRate from '../../../components/analysis/cache-hit-rate.js
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 
-import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
+import { buildAnalyticsOpts, changedParamsFiltersQS } from '../../../util/helpers.js'
 
 class AnalyticsTabCacheHitRate extends React.Component {
   constructor(props) {
@@ -39,9 +39,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
 
   fetchData(params, filters, location, hostConfiguredName) {
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
-    const startDate  = filters.getIn(['dateRange', 'startDate'])
-    const endDate    = filters.getIn(['dateRange', 'endDate'])
-    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
+
     let trafficParams = {
       account: params.account,
       startDate: fetchOpts.startDate,
