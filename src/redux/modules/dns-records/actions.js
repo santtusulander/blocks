@@ -103,3 +103,7 @@ export default handleActions({
 
 }, InitialState)
 
+//SELECTOR
+export const getById = ( resources, id ) => {
+  return resources.find( item => item.id === id)
+}

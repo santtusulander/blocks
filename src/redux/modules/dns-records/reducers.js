@@ -84,7 +84,3 @@ export const setActive = (state, {payload: {data: {id} } }) => {
   return state.set('activeRecord', id)
 }
 
-//SELECTOR
-export const getById = ( resources, id ) => {
-  return resources.get(id)
-}
