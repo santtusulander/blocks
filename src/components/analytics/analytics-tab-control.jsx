@@ -26,13 +26,13 @@ const AnalyticsTabControl = (props) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
               <IsAllowed key={tab.key} to={tab.permission}>
-                <li>
+                <li role="tab">
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
               </IsAllowed>
             :
-              <li key={tab.key}>
+              <li key={tab.key} role="tab">
                 <Link to={getTabLink(props.location, tab.key)}
                 activeClassName='active'>{tab.label}</Link>
               </li>
