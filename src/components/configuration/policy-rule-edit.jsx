@@ -6,6 +6,7 @@ import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import IconArrowUp from '../icons/icon-arrow-up.jsx'
 import IconArrowDown from '../icons/icon-arrow-down.jsx'
+import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
   parsePolicy
@@ -213,12 +214,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <p>{match.field}: {
-                          match.fieldDetail ?
-                            match.fieldDetail :
-                            match.values.join(', ')
-                          }
-                      </p>
+                      <div className="condition-name">
+                        {match.field}&nbsp;:&nbsp;
+                        <TruncatedTitle
+                          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
+                      </div>
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>

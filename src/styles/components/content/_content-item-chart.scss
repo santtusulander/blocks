@@ -259,10 +259,7 @@
     width: 45%;
     transform: translate(-50%, -100%);
 
-    .btn.btn-sm.btn-icon {
-      width: $btn-sm-height;
-      height: $btn-sm-height;
-      line-height: $btn-sm-height;
+    .btn.btn-icon {
       color: $silver-30;
       background: linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
       fill: $silver-30;
@@ -290,10 +287,6 @@
         &.active {
           background: rgba($black, 0.15);
         }
-      }
-
-      .icon {
-        transform: translate(-50%, -50%) scale(1);
       }
     }
 

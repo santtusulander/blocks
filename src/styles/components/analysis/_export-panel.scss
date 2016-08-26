@@ -99,12 +99,12 @@
         .dark-theme &:checked + span::before,
         .light-theme &:checked + span::before,
         .light-theme .modal .configuration-sidebar &:checked + span::before {
-          background: $pale-blue url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background: $pale-blue url('../assets/icons/dt-icon-checkbox.svg') center center no-repeat;
           background-size: 17px 16px;
         }
 
         .light-theme .modal &:checked + span::before {
-          background: rgba($black, 0.2) url('../assets/icons/icon-checkbox.svg') center center no-repeat;
+          background: rgba($black, 0.2) url('../assets/icons/dt-icon-checkbox.svg') center center no-repeat;
           background-size: 17px 16px;
         }
       }

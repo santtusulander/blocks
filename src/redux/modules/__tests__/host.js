@@ -29,7 +29,8 @@ describe('Host Module', () => {
     const newState = createSuccess(state, {payload});
     const expectedState = Immutable.fromJS({
       allHosts: [1],
-      activeHost: {id: 1}
+      activeHost: {id: 1},
+      activeHostConfiguredName: null
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });
@@ -72,7 +73,8 @@ describe('Host Module', () => {
           }
         ]
       },
-      fetching: false
+      fetching: false,
+      activeHostConfiguredName: null
     })
     expect(Immutable.is(expectedState, newState)).toBeTruthy();
   });

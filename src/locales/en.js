@@ -117,11 +117,13 @@ const TRANSLATED_MESSAGES = {
 	'portal.analytics.trafficOverview.primaryLabel.text' : 'HTTP',
 	'portal.analytics.trafficOverview.secondaryLabel.text' : 'HTTPS',
 	'portal.analytics.trafficOverview.bandwith.text' : 'BANDWIDTH',
+	'portal.analytics.trafficOverview.requests.text' : 'REQUESTS',
 	'portal.analytics.trafficOverview.transferByTime.text' : 'TRANSFER BY TIME',
 	'portal.analytics.trafficOverview.byGeography.text' : 'BY GEOGRAPHY',
 	'portal.analytics.trafficOverview.byCountry.text' : 'BY COUNTRY',
 	'portal.analytics.trafficOverview.byCountry.country.header' : 'Country',
 	'portal.analytics.trafficOverview.byCountry.bandwith.header' : 'Bandwith',
+	'portal.analytics.trafficOverview.byCountry.request.header' : 'Requests',
 	'portal.analytics.trafficOverview.byCountry.periodTrend.header' : 'Period Trend',
 
 	'portal.analytics.urlList.searchForUrl.text' : 'Search for URL',

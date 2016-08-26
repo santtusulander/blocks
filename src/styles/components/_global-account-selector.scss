@@ -1,9 +1,15 @@
-.global-account-selector {
+// GLOBAL ACCOUNT SELECTOR DROPDOWN
+// ================================
+
+$dropdown-selector-width: rem(320px);
+$dropdown-selector-max-height: rem(480px);
+
+.selector-component {
   display: block;
 }
 
-.global-account-selector,
-.navbar-nav .global-account-selector.open {
+.selector-component,
+.navbar-nav .selector-component.open {
 
   &__toggle {
     display: flex;
@@ -14,7 +20,7 @@
     flex-wrap: nowrap;
     align-items: center;
 
-    :first-child {
+    > :first-child {
       float: left;
       width: 100%;
       overflow: hidden;
@@ -24,13 +30,9 @@
   }
 
   .dropdown-menu {
-    width: 328px !important;
-    max-height: 500px !important;
+    width: $dropdown-selector-width;
+    max-height: $dropdown-selector-max-height;
     overflow-y: auto !important;
-
-    @include md {
-      width: 246px !important;
-    }
 
     & > li,
     li {
@@ -43,19 +45,58 @@
         width: 100%;
         align-items: center;
         flex-direction: row;
+        flex-grow: 1;
+      }
+
+      .caret-container {
+        width: auto;
+        flex-shrink: 1;
+
+        .caret {
+          border-top: $caret-width-base solid transparent;
+          border-bottom: $caret-width-base solid transparent;
+          border-width: $caret-width-base;
+          border-right-width: 0;
+
+          .dark-theme & {
+            border-left: $caret-width-base solid $dt-text-color;
+          }
+
+          .light-theme & {
+            border-left: $caret-width-base solid $silver-60;
+          }
+        }
+
+        &:hover {
+          .dark-theme & {
+            .caret {
+              border-left-color: $white;
+            }
+          }
+
+          .light-theme & {
+            .caret {
+              border-left-color: $black;
+            }
+          }
+        }
+
+        &:focus {
+          .caret {
+            border-left-color: $pale-blue;
+          }
+        }
       }
     }
 
     .form-group {
       padding: 0;
       flex: 1;
-
-      input {
-        border-radius: 20px;
-      }
     }
   }
 
+  // TODO: This needs to be updated once the back to accounts functionality is implemented
+  /*
   .back-text {
     font-weight: bold;
 
@@ -67,6 +108,7 @@
       border-bottom: 5px solid transparent;
     }
   }
+  */
 
   .name {
     overflow: hidden;
@@ -75,13 +117,12 @@
     flex: 1;
   }
 
-  .caret-container {
-    width: auto;
-
-    .caret {
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-      border-left: 5px solid $pale-blue;
-    }
+  // TODO: Maybe remove the btn and btn-link classes from the selector component
+  // instead of overriding button styles here?
+  .btn-link:hover:active,
+  .btn-link:active,
+  .btn-link:focus,
+  .btn-link:hover {
+    text-decoration: none;
   }
 }

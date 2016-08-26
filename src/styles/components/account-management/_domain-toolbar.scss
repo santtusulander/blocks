@@ -1,0 +1,21 @@
+.domain-toolbar {
+  display: flex;
+  padding: 30px 60px;
+  margin: -25px -60px 40px;
+  background-color: rgba($black, 0.2);
+  align-items: center;
+  justify-content: space-between;
+
+  .selector-component {
+    display: inline-flex;
+
+    h3 {
+      text-transform: uppercase;
+      cursor: pointer;
+
+      .caret {
+        margin-left: 10px;
+      }
+    }
+  }
+}

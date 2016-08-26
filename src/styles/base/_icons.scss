@@ -1,48 +1,50 @@
 // Icons
 // =====
-
+$icon-base-color: $white;
 $icon-two-tone-base: $silver-20;
 $icon-two-tone-primary: $dark-blue;
 
 .icon {
   position: relative;
-  top: 1px;
   display: inline-block;
   line-height: 1;
+  background-color: transparent !important; // Due to the addition of a viewbox, the icons always need a transparent background
   background-position: center center;
   background-repeat: no-repeat;
 
-  @include md {
-    transform: scale(0.75, 0.75);
-  }
-
   .dark-theme & {
-    fill: $dt-text-color;
-    stroke: $dt-text-color;
+    fill: $icon-base-color;
   }
 
   .light-theme & {
     fill: $lt-text-color;
-    stroke: $lt-text-color;
-  }
-
-  .btn-icon & {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    fill: inherit;
-    stroke: inherit;
-
-    @include md {
-      transform: translate(-50%, -50%) scale(0.75, 0.75);
-    }
   }
 
   &.no-fill,
   .dark-theme &.no-fill,
   .light-theme &.no-fill {
     fill: transparent;
+  }
+
+  &.pale-blue {
+
+    .dark-theme &,
+    .light-theme & {
+      color: $pale-blue;
+      fill: $pale-blue;
+    }
+
+    &.two-tone {
+
+      .base {
+        fill: $pale-blue;
+      }
+
+      .primary {
+        color: $icon-two-tone-base;
+        fill: $icon-two-tone-base;
+      }
+    }
   }
 
   // Two tone icons used primarily for support tickets
@@ -75,9 +77,22 @@ $icon-two-tone-primary: $dark-blue;
     }
   }
 
-  &.icon-export {
-    stroke: none;
+  &.three-tone {
 
+    &.secondary-green .secondary {
+      fill: $green;
+    }
+
+    &.secondary-yellow .secondary {
+      fill: $yellow;
+    }
+
+    &.secondary-red .secondary {
+      fill: $red;
+    }
+  }
+
+  &.icon-export {
     .btn:not(.btn-icon) > & {
       top: -3px;
     }

@@ -398,8 +398,7 @@ export class AccountManagement extends Component {
               <li className="navbar">
                 <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
               </li>
-              {/*
-              <li className="navbar">
+              {/*<li className="navbar">
                 <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
               </li>*/}
               <IsAllowed to={PERMISSIONS.VIEW_DNS}>

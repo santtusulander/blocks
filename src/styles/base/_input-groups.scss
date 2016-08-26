@@ -6,21 +6,20 @@
 }
 
 .input-group-addon {
-  height: $bar-height;
+  height: 100%;
   min-width: $bar-height;
-  padding: 0;
-  font-size: inherit;
   color: inherit;
   background-color: transparent;
   border: 0;
 
-  @include md {
-    height: $md-bar-height;
-    min-width: $md-bar-height;
+  .icon {
+    fill: $white;
   }
 }
 
 .input-addon-before .input-group-addon:first-child {
+  padding: 0 6px;
+  line-height: 0;
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
