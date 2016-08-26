@@ -88,8 +88,6 @@ export const setActiveRecord = createAction(DNS_RECORDS_SET_ACTIVE)
 
 export default handleActions({
   DNS_RECORDS_CREATED: mapReducers(dnsRecordsReducers.createSuccess, dnsRecordsReducers.createFailed),
-  //DNS_RECORDS_RECEIVE_RESOURCES: mapReducers(dnsRecordsReducers.receiveResourcesList, dnsRecordsReducers.resourcesListFailed),
-  //DNS_RECORDS_RECEIVE_RESOURCE: mapReducers(dnsRecordsReducers.receiveResourceDetails, dnsRecordsReducers.resourceDetailsFailed),
   DNS_RECORDS_UPDATED: mapReducers(dnsRecordsReducers.updateSuccess, dnsRecordsReducers.updateFailed),
   DNS_RECORDS_DELETED: mapReducers(dnsRecordsReducers.deleteSuccess, dnsRecordsReducers.deleteFailed),
   DNS_RECORD_RECEIVE_WITH_DETAILS: mapReducers(dnsRecordsReducers.receiveWithDetails, dnsRecordsReducers.receiveWithDetailsFailed),
@@ -97,6 +95,11 @@ export default handleActions({
   DNS_RECORDS_START_FETCHING: dnsRecordsReducers.startedFetching,
   DNS_RECORDS_STOP_FETCHING: dnsRecordsReducers.stoppedFetching,
   DNS_RECORDS_SET_ACTIVE: dnsRecordsReducers.setActive
+
+  // These are not needed at the moment as list and details are fetched using single request (fetchResourcesWithDetails)
+  //DNS_RECORDS_RECEIVE_RESOURCES: mapReducers(dnsRecordsReducers.receiveResourcesList, dnsRecordsReducers.resourcesListFailed),
+  //DNS_RECORDS_RECEIVE_RESOURCE: mapReducers(dnsRecordsReducers.receiveResourceDetails, dnsRecordsReducers.resourceDetailsFailed),
+
 
 }, InitialState)
 

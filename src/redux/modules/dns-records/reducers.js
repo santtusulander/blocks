@@ -1,6 +1,6 @@
 import uniqid from 'uniqid'
 
-/* NOT NEEDED AT THE MOMENT as details are fetched with list
+/* NOT NEEDED AT THE MOMENT as details are fetched with receiveWithDetails
 //LIST
 export const receiveResourcesList = (state, action ) => {
   //TODO: Maybe we should check if record already found with rr field and not merge these records?
@@ -15,7 +15,6 @@ export const receiveResourcesList = (state, action ) => {
 export const resourcesListFailed = ( state ) => {
   return state.merge( {loading: false })
 }
-
 
 export const receiveResourceDetails = (state, action) => {
   const resourceObj = [{
