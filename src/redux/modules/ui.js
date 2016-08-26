@@ -3,6 +3,7 @@ import { fromJS } from 'immutable'
 
 import STATUS_CODES from '../../constants/status-codes.js'
 
+const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
@@ -42,7 +43,8 @@ export const defaultUI = fromJS({
   analysisSPChartType: 'bar',
   showErrorDialog: false,
   showInfoDialog: false,
-  infoDialogOptions: null
+  infoDialogOptions: null,
+  loginUrl: null
 })
 
 // REDUCERS
@@ -93,6 +95,10 @@ export function contentItemSorted(state, action) {
   })
 }
 
+export function loginUrlSet(state, action) {
+  return state.set('loginUrl', action.payload)
+}
+
 export function errorDialogShown(state) {
   return state.set('showErrorDialog', true);
 }
@@ -134,6 +140,7 @@ export default handleActions({
   UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED: analysisOnOffNetChartChanged,
   UI_ANALYSIS_SP_CHART_CHANGED: analysisSPChartChanged,
   UI_CONTENT_ITEM_SORTED: contentItemSorted,
+  UI_LOGIN_URL_SET: loginUrlSet,
   UI_SHOW_ERROR_DIALOG: errorDialogShown,
   UI_HIDE_ERROR_DIALOG: errorDialogHidden,
   UI_SHOW_INFO_DIALOG: infoDialogShown,
@@ -143,6 +150,7 @@ export default handleActions({
 
 // ACTIONS
 
+export const setLoginUrl = createAction(UI_LOGIN_URL_SET)
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
