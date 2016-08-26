@@ -49,7 +49,15 @@ const RecordFormContainer = props => {
     edit,
     values: filterFields(props.values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: values => edit ? saveRecord(values, domain) : addRecord(values, domain),
+    onSave: values => {
+      if (values.ttl) {
+        values.ttl = Number(values.ttl)
+      }
+      if (values.priority) {
+        values.priority = Number(values.priority)
+      }
+      edit ? saveRecord(values, domain) : addRecord(values, domain)
+    },
     onCancel: closeModal,
     ...formProps
   }
