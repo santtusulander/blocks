@@ -1,31 +1,25 @@
-//CREATE
-export const createSuccess = (state, {payload: {resource, data}}) => {
-  const index = state.get('resources').findIndex(item => item.get('name') === resource)
-  return state.merge({
-    resources: state.get('resources').set(index, {rr: data, name: resource})
-  })
-}
+import uniqid from 'uniqid'
 
-export const createFailed = (state, action) => {
-  return state
-}
-
+/* NOT NEEDED AT THE MOMENT as details are fetched with list
 //LIST
 export const receiveResourcesList = (state, action ) => {
   //TODO: Maybe we should check if record already found with rr field and not merge these records?
   return state.merge({
-    resources: action.payload.data.map( zone => ({ name: zone} ) ),
+    //resources: action.payload.data.map( zone => ({ name: zone} ) ),
     loading: false
   })
 }
 
+//DETAILS
+
 export const resourcesListFailed = ( state ) => {
-  return state.merge( {resources: [], loading: false })
+  return state.merge( {loading: false })
 }
 
-//DETAILS
+
 export const receiveResourceDetails = (state, action) => {
   const resourceObj = [{
+    id: uniqid(),
     name: action.payload.resource,
     rr: action.payload.data
   }]
@@ -34,6 +28,15 @@ export const receiveResourceDetails = (state, action) => {
   const newRes = resources.merge(resourceObj)
 
   return state.merge( { resources: newRes, loading: false } )
+}*/
+
+//CREATE
+export const createSuccess = (state, {payload: {data}}) => {
+  return state.merge( {loading: false, resources: state.get('resources').push( data.set('id', uniqid() ) ) } );
+}
+
+export const createFailed = (state, action) => {
+  return state
 }
 
 //LIST WITH DETAILS
@@ -50,21 +53,21 @@ export const resourceDetailsFailed = ( state ) => {
 }
 
 //UPDATE
-export const updateSuccess = (state, {payload: {resource, data}}) => {
-  const index = state.get('resources').findIndex(item => item.get('name') === resource)
-  return state.merge({
-    resources: state.get('resources').set(index, {rr: data, name: resource})
-  })
+export const updateSuccess = (state, {payload: {data}}) => {
+  const index = state.get('resources').findIndex( record => record.get('id') === data.id)
+
+  return state.merge( {loading: false, resources: state.get('resources').set(index, data) })
 }
-export const updateFailed = (state, action) => {
+export const updateFailed = (state) => {
   return state
 }
 
 //DELETE
-export const deleteSuccess = (state, action) => {
-  return state
+export const deleteSuccess = (state, {payload: {data}}) => {
+  const index = state.get('resources').findIndex( record => record.get('id') === data.id)
+  return state.merge( {loading: false, resources: state.get('resources').delete( index ) })
 }
-export const deleteFailed = (state, action) => {
+export const deleteFailed = (state) => {
   return state
 }
 
@@ -75,4 +78,14 @@ export const startedFetching = (state) => {
 
 export const stoppedFetching = (state) => {
   return state.merge({ loading: false })
+}
+
+//SET ACTIVE
+export const setActive = (state, {payload: {data: {id} } }) => {
+  return state.set('activeRecord', id)
+}
+
+//SELECTOR
+export const getById = ( resources, id ) => {
+  return resources.get(id)
 }
