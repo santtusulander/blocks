@@ -16,16 +16,28 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps) ) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if( this.props.filters !== nextProps.filters ||
+        changedParamsFiltersQS(this.props, nextProps) ||
+        this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location) {
+  fetchData(params, filters, location, hostConfiguredName) {
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -44,7 +56,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
     }
 
     if (params.property) {
-      trafficParams.property = params.property;
+      trafficParams.property = hostConfiguredName || params.property;
     }
 
     this.props.trafficActions.fetchTraffic(trafficParams);
@@ -67,6 +79,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
 }
 
 AnalyticsTabCacheHitRate.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -81,6 +94,7 @@ AnalyticsTabCacheHitRate.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
+  activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
   fetching: state.traffic.get('fetching'),
   filters: state.filters.get('filters'),
   traffic: state.traffic.get('traffic'),
