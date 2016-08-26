@@ -4,7 +4,6 @@ import { List, Map } from 'immutable'
 
 import UDNButton from '../button'
 import ActionLinks from './action-links'
-import IconAdd from '../icons/icon-add'
 
 import recordTypes from '../../constants/dns-record-types'
 
@@ -49,7 +48,7 @@ export default class DNSList extends Component {
   }
 
   render() {
-    const { onDeleteEntry, onEditEntry, onAddEntry } = this.props
+    const { onDeleteEntry, onEditEntry, onAddEntry/*, records*/ } = this.props
     let tables = []
     let recordsByType = {}
     let filteredRecords =
@@ -97,10 +96,10 @@ export default class DNSList extends Component {
           </div>
         </h3>
         <hr/>
-        {recordTypes.sort().forEach(type => {
+        {recordTypes.sort().forEach((type, index) => {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
-              <div className='table-container'>
+              <div key={index} className='table-container'>
                 <h4>{type} Records</h4>
                 <table className="table table-striped cell-text-left">
                   <thead >
