@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
-//import { activeRecordSelector } from '../../../redux/modules/dns-records/reducers'
+import { getById } from '../../../redux/modules/dns-records/actions'
 
 import { checkForErrors } from '../../../util/helpers'
 import { recordFields } from '../../../constants/dns-record-types'
@@ -81,14 +81,7 @@ RecordFormContainer.propTypes = {
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
-  const initialValues = edit ? {
-    id: 1,
-    class: "IN",
-    name: "aaa",
-    ttl: 3600,
-    type: "AAAA",
-    value: "aaaa"
-  } : {}
+  const initialValues = edit ? getById(dnsRecords.get('activeRecord')) : {}
     //activeRecordSelector(dnsRecords.get('resources'), dnsRecords.get('activeRecord')) :
   return {
     initialValues,

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
+import { fetchResourcesWithDetails } from '../../../redux/modules/dns-records/actions'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { setActiveRecord } from '../../../redux/modules/dns-records/actions'
 
@@ -24,7 +25,13 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchDomains(this.props.params.brand)
+    this.props.fetchDomains(this.props.params.brand).then(() =>
+      this.props.fetchRecords(this.props.activeDomain)
+    )
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.props.activeDomain !== nextProps.activeDomain && this.props.fetchRecords(nextProps.activeDomain)
   }
 
   render() {
@@ -90,56 +97,24 @@ AccountManagementSystemDNS.propTypes = {
   toggleModal: PropTypes.func
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ dns, dnsRecords, ui }) {
   return {
-    records: [
-      {
-        id: 1,
-        class: "IN",
-        name: "aaa",
-        ttl: 3600,
-        type: "AAAA",
-        value: "85.184.251.171"
-      },
-      {
-        id: 2,
-        class: "IN",
-        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
-        ttl: 3600,
-        type: "AAAA",
-        value: "85.184.251.171"
-      },
-      {
-        id: 3,
-        class: "IN",
-        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
-        ttl: 3600,
-        type: "MX",
-        value: "85.184.251.171"
-      },
-      {
-        id: 4,
-        class: "IN",
-        name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
-        ttl: 3600,
-        type: "A",
-        value: "85.184.251.171"
-      }
-    ],
-    domains: state.dns.get('domains').toJS(),
-    activeDomain: state.dns.get('activeDomain'),
-    activeModal: state.ui.get('accountManagementModal')
+    records: dnsRecords.get('resources').toJS(),
+    domains: dns.get('domains').toJS(),
+    activeDomain: dns.get('activeDomain'),
+    activeModal: ui.get('accountManagementModal')
   }
 }
 
 function mapDispatchToProps(dispatch, { params: { brand } }) {
   const { changeActiveDomain, fetchDomains, fetchDomain } = bindActionCreators(dnsActionCreators, dispatch)
   return {
+    fetchRecords: domain => dispatch(fetchResourcesWithDetails(domain)),
     fetchDomains,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
-    setActiveRecord: dispatch(setActiveRecord)
+    setActiveRecord: id => dispatch(setActiveRecord(id))
   }
 }
 
