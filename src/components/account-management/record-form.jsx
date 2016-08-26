@@ -59,7 +59,7 @@ RecordForm.displayName = 'RecordForm'
 RecordForm.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
-  fields: PropTypes.object.isRequired,
+  fields: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func

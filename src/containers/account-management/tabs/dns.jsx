@@ -7,8 +7,8 @@ import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
-import DomainToolbar from './domain-toolbar'
-import DNSList from '../dns-list'
+import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
+import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 

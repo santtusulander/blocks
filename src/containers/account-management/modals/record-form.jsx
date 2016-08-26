@@ -2,11 +2,10 @@ import React, { Component, PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
-import { activeRecordSelector } from '../../../redux/modules/dns-records/reducers'
+//import { activeRecordSelector } from '../../../redux/modules/dns-records/reducers'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
-
-import { checkForErrors } from '../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 import { recordFields } from '../../../constants/dns-record-types'
 
 import RecordForm from '../../../components/account-management/record-form'
@@ -16,12 +15,11 @@ import RecordForm from '../../../components/account-management/record-form'
  * Filter fields to validate according to the fields that get rendered for the active record type.
  * The 'recordFields' -constant dictates which fields get rendered per record type.
  */
-
 const isShown = recordType => field => recordFields[field].includes(recordType)
 const filterFields = fields => {
   let filteredFields = {}
   for(const field in fields) {
-    if (isShown(fields.recordType)(field)) {
+    if (isShown(fields.type)(field)) {
       filteredFields[field] = fields[field]
     }
   }
@@ -30,7 +28,7 @@ const filterFields = fields => {
 
 const validate = fields => {
   let filteredFields = filterFields(fields)
-  delete filteredFields.hostName
+  delete filteredFields.name
   const conditions = {
     priority: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.priority),
@@ -40,8 +38,8 @@ const validate = fields => {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
       errorText: 'TTL value must be a number.'
     },
-    targetValue: {
-      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(filteredFields.targetValue),
+    value: {
+      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(filteredFields.value),
       errorText: 'Address must be an IP address.'
     }
   }
@@ -63,11 +61,11 @@ class RecordFormContainer extends Component {
       edit,
       values: filterFields(this.props.values),
       searchValue: this.state.search,
-      shouldShowField: isShown(this.props.fields.recordType.value),
+      shouldShowField: isShown(this.props.fields.type.value),
       searchFunc: ({ target: { value } }) => this.setState({ search: value }),
       onSave: values => this.editingRecord ? saveRecord(values) : addRecord(values),
       onCancel: () => toggleModal(null),
-      formProps
+      ...formProps
     }
     return (
       <Modal show={true} dialogClassName="dns-edit-form-sidebar">
@@ -83,12 +81,19 @@ class RecordFormContainer extends Component {
   }
 }
 
-function mapStateToProps({ dnsRecords }, { edit }) {
-  const initialValues = edit ?
-    activeRecordSelector(dnsRecords.get('resources'), dnsRecords.get('activeRecord')) :
-    {}
+function mapStateToProps({ dnsRecords, dns }, { edit }) {
+  const initialValues = !edit ? {
+    id: 1,
+    class: "IN",
+    name: "aaa",
+    ttl: 3600,
+    type: "AAAA",
+    value: "aaaa"
+  } : {}
+    //activeRecordSelector(dnsRecords.get('resources'), dnsRecords.get('activeRecord')) :
   return {
-    initialValues
+    initialValues,
+    domain: dns.get('activeDomain')
   }
 }
 
