@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class QueryString extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +42,7 @@ class QueryString extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Query String</h1>
+          <h1><FormattedMessage id="portal.policy.edit.queryString.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
@@ -57,15 +59,15 @@ class QueryString extends React.Component {
                 )}
                 value={this.state.activeActivity}
                 options={[
-                  ['add', 'Add'],
-                  ['modify', 'Modify'],
-                  ['remove', 'Remove']]}/>
+                  ['add', <FormattedMessage id="portal.policy.edit.queryString.add.text"/>],
+                  ['modify', <FormattedMessage id="portal.policy.edit.queryString.modify.text"/>],
+                  ['remove', <FormattedMessage id="portal.policy.edit.queryString.remove.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity !== 'modify'}>
-              <Input type="text" label="Name"
-                placeholder="Enter Query String Name"
+              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.name.text'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.name.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
                 )}/>
@@ -73,8 +75,8 @@ class QueryString extends React.Component {
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity === 'add'}>
-              <Input type="text" label="Value"
-                placeholder="Enter Query String Value"
+              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.value.text'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.value.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_value']
                 )}/>
@@ -84,29 +86,29 @@ class QueryString extends React.Component {
               expanded={this.state.activeActivity === 'modify'}>
               <Row>
                 <Col xs={6}>
-                  <Input type="text" label="FROM Name"
-                    placeholder="Query String Name"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromName.text'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="TO Name"
-                    placeholder="Query String Name"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toName.text'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_to']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="FROM Value"
-                    placeholder="Query String Value"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromValue.text'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="TO Value"
-                    placeholder="Query String Value"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toValue.text'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_to']
                     )}/>
@@ -119,16 +121,16 @@ class QueryString extends React.Component {
         <hr />
 
         <div className="form-group">
-          <label className="control-label">Direction</label>
+          <label className="control-label"><FormattedMessage id="portal.policy.edit.queryString.direction.text"/></label>
           <Select className="input-select"
             onSelect={this.handleSelectChange('activeDirection',
               ['edge_configuration', 'cache_rule', 'actions', 'query_string_direction']
             )}
             value={this.state.activeDirection}
             options={[
-              ['to_origin', 'To Origin'],
-              ['to_client', 'To Client'],
-              ['to_both', 'To Both']]}/>
+              ['to_origin', <FormattedMessage id="portal.policy.edit.queryString.toOrigin.text"/>],
+              ['to_client', <FormattedMessage id="portal.policy.edit.queryString.toClient.text"/>],
+              ['to_both', <FormattedMessage id="portal.policy.edit.queryString.toBoth.text"/>]]}/>
         </div>
 
         </Modal.Body>
@@ -144,4 +146,4 @@ QueryString.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = QueryString
+module.exports = injectIntl(QueryString)

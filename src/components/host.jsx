@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
 
+import {FormattedMessage} from 'react-intl'
+
 class Host extends React.Component {
   constructor(props) {
     super(props);
@@ -20,8 +22,8 @@ class Host extends React.Component {
         <td>{this.props.description}</td>
         <td>
           <Link to={`/configurations/${this.props.brand}/${this.props.account}/${this.props.group}/${this.props.id}`}>
-            Configure
-          </Link> <a href="#" onClick={this.deleteHost}>Delete</a>
+            <FormattedMessage id="portal.button.configure"/>
+          </Link> <a href="#" onClick={this.deleteHost}><FormattedMessage id="portal.button.delete"/></a>
         </td>
       </tr>
     )

@@ -5,6 +5,8 @@ import { List } from 'immutable'
 import ActionLinks from '../account-management/action-links.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
   return (
     <div>
@@ -14,12 +16,12 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
           <tr>
             <th width="30%">
               <Input type="checkbox"
-                label="TITLE"
+                label={this.props.intl.formatMessage({id: 'portal.security.ssl.title.text'})}
                 onChange={() => onCheck('all')}
                 checked={false}/>
             </th>
-            <th width="30%">COMMON NAME</th>
-            <th width="30%">GROUP</th>
+            <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
+            <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
             <th width="8%"></th>
           </tr>
         </thead>
@@ -66,4 +68,4 @@ SSLList.defaultProps = {
   certificates: List()
 }
 
-export default SSLList
+export default injectIntl(SSLList)
