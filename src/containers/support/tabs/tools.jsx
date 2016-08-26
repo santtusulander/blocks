@@ -1,6 +1,7 @@
 import React from 'react'
 
 import SupportToolPanel from '../../../components/support/tools/support-tool-panel'
+import ModalDig from '../tools/modals/dig.jsx'
 import ModalGeoLookup from '../tools/modals/geo-lookup.jsx'
 import ModalMtr from '../tools/modals/mtr.jsx'
 import ModalServerValidation from '../tools/modals/server-validation.jsx'
@@ -18,6 +19,7 @@ class SupportTabTools extends React.Component {
 
     this.state = {
       activePanel: null,
+      showDigDetails: false,
       showGeoDetails: false,
       showMtrDetails: false,
       showServerValidationDetails: false
@@ -30,6 +32,7 @@ class SupportTabTools extends React.Component {
   closeModal() {
     this.setState({
       activePanel: null,
+      showDigDetails: false,
       showGeoDetails: false,
       showMtrDetails: false,
       showServerValidationDetails: false
@@ -74,6 +77,15 @@ class SupportTabTools extends React.Component {
             body="Determine whether or not a particular IP address is from the UDN network"
             title="Server Validation"/>
         </div>
+
+        {this.state.activePanel === 'dig' &&
+          <ModalDig
+            handleCloseModal={this.closeModal}
+            toggleShowDetails={val => this.setState({
+              showDigDetails: val
+            })}
+            showDetails={this.state.showDigDetails}/>
+        }
 
         {this.state.activePanel === 'geo-lookup' &&
           <ModalGeoLookup
