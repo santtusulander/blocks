@@ -9,6 +9,7 @@ import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
+import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
 import AnalyticsFilters from '../../components/analytics/analytics-filters'
 
 //layout
@@ -125,7 +126,7 @@ class AnalyticsContainer extends React.Component {
     }
 
     return (
-      <div className='analytics-tab-container'>
+      <div className='container-fluid content-container'>
         {
           /* Render tab -content */
           children && React.cloneElement(children, {
@@ -167,6 +168,10 @@ class AnalyticsContainer extends React.Component {
               activeTab={getTabName(pathname)}
             />
           </PageHeader>
+          <AnalyticsTabControl
+            params={params}
+            location={this.props.location}
+          />
           {this.renderFilters()}
           {this.renderContent(children, filters)}
         </Content>

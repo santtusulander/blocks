@@ -1,24 +1,21 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
-import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar } from 'react-bootstrap'
+import { withRouter } from 'react-router'
+import { ButtonToolbar } from 'react-bootstrap'
 
 import * as PERMISSIONS from '../../constants/permissions'
-import IsAllowed from '../is-allowed'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
-import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
+import { getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
-
-import './analytics-view-control.scss'
 
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview', permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW },
   { key: 'visitors', label: 'Unique Visitors', permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS },
-  { key: 'on-off-net', label: 'Service Provider On/Off Net', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET},
-  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION },
+  { key: 'on-off-net', label: 'SP On/Off Net', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET},
+  { key: 'service-providers', label: 'SP Contribution', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION },
   { key: 'file-error', label: 'File Error', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR },
   { key: 'url-report', label: 'URL', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_URL },
   { key: 'playback-demo', label: 'Playback demo', hideHierarchy: true }
@@ -112,9 +109,9 @@ const AnalyticsViewControl = (props) => {
   }
 
   return (
-    <div className="analytics-view-control">
-      <h5 className="analytics-view-control__title">{title}</h5>
-      <div className="analytics-view-control__header">
+    <div>
+      <h5>{title}</h5>
+      <div className="content-layout__header">
         <AccountSelector
           as="analytics"
           params={props.params}
@@ -147,30 +144,6 @@ const AnalyticsViewControl = (props) => {
           </ButtonToolbar>
         }
       </div>
-
-      {props.params.account &&
-      <Nav bsStyle="tabs">
-        {tabs.reduce((lis, tab) => {
-          if(!tab.propertyOnly || props.params.property) {
-            const tabContent = tab.permission ?
-              <IsAllowed key={tab.key} to={tab.permission}>
-                <li>
-                  <Link to={getTabLink(props.location, tab.key)}
-                  activeClassName='active'>{tab.label}</Link>
-                </li>
-              </IsAllowed>
-            :
-              <li key={tab.key}>
-                <Link to={getTabLink(props.location, tab.key)}
-                activeClassName='active'>{tab.label}</Link>
-              </li>
-
-            lis.push( tabContent )
-          }
-          return lis
-        }, [])}
-      </Nav>
-      }
     </div>
   )
 }
