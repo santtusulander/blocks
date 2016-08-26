@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
+import { setActiveRecord } from '../../../redux/modules/dns-records/actions'
 
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
@@ -46,6 +47,7 @@ class AccountManagementSystemDNS extends Component {
       },
       onDeleteEntry: () => {/*noop*/},
       onEditEntry: id => {
+        this.props.setActiveRecord(id)
         this.editingRecord = true
         toggleModal(RECORD_EDIT)
       },
@@ -57,7 +59,10 @@ class AccountManagementSystemDNS extends Component {
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList {...DNSListProps}/>
-        {activeModal === RECORD_EDIT && <RecordForm edit={this.editingRecord}/>}
+        {activeModal === RECORD_EDIT &&
+          <RecordForm
+            edit={this.editingRecord}
+            closeModal={() => toggleModal(null)}/>}
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
             id="soa-form"
@@ -73,13 +78,16 @@ class AccountManagementSystemDNS extends Component {
 
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
+  activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
   fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
   onEditDomain: PropTypes.func,
   params: PropTypes.object,
-  records: PropTypes.array
+  records: PropTypes.array,
+  setActiveRecord: PropTypes.func,
+  toggleModal: PropTypes.func
 }
 
 function mapStateToProps(state) {
@@ -130,7 +138,8 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
     fetchDomains,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
-    toggleModal: modal => dispatch(toggleAccountManagementModal(modal))
+    toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
+    setActiveRecord: dispatch(setActiveRecord)
   }
 }
 

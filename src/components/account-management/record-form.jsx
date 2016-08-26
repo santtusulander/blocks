@@ -62,7 +62,9 @@ RecordForm.propTypes = {
   fields: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func
+  onSave: PropTypes.func,
+  shouldShowField: PropTypes.func,
+  values: PropTypes.object
 }
 
 export default RecordForm

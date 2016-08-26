@@ -1,9 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
 //import { activeRecordSelector } from '../../../redux/modules/dns-records/reducers'
-import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import { checkForErrors } from '../../../util/helpers'
 import { recordFields } from '../../../constants/dns-record-types'
@@ -46,43 +45,43 @@ const validate = fields => {
   return checkForErrors(filteredFields, conditions)
 }
 
-class RecordFormContainer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      search: ''
-    }
+const RecordFormContainer = props => {
+  const { domain, edit, saveRecord, addRecord, closeModal, ...formProps  } = props
+  const recordFormProps = {
+    domain,
+    edit,
+    values: filterFields(props.values),
+    shouldShowField: isShown(props.fields.type.value),
+    onSave: values => edit ? saveRecord(values) : addRecord(values),
+    onCancel: closeModal,
+    ...formProps
   }
+  return (
+    <Modal show={true} dialogClassName="dns-edit-form-sidebar">
+      <Modal.Header>
+        <h1>{edit ? 'Edit DNS Record' : 'New DNS Record'}</h1>
+        {edit && <p>{name.value}</p>}
+      </Modal.Header>
+      <Modal.Body>
+        <RecordForm {...recordFormProps}/>
+      </Modal.Body>
+    </Modal>
+  )
+}
 
-  render() {
-    const { domain, edit, saveRecord, addRecord, toggleModal, ...formProps  } = this.props
-    const recordFormProps = {
-      domain,
-      edit,
-      values: filterFields(this.props.values),
-      searchValue: this.state.search,
-      shouldShowField: isShown(this.props.fields.type.value),
-      searchFunc: ({ target: { value } }) => this.setState({ search: value }),
-      onSave: values => this.editingRecord ? saveRecord(values) : addRecord(values),
-      onCancel: () => toggleModal(null),
-      ...formProps
-    }
-    return (
-      <Modal show={true} dialogClassName="dns-edit-form-sidebar">
-        <Modal.Header>
-          <h1>{edit ? 'Edit DNS Record' : 'New DNS Record'}</h1>
-          {edit && <p>{name.value}</p>}
-        </Modal.Header>
-        <Modal.Body>
-          <RecordForm {...recordFormProps}/>
-        </Modal.Body>
-      </Modal>
-    )
-  }
+RecordFormContainer.propTypes = {
+  addRecord: PropTypes.func,
+  closeModal: PropTypes.func,
+  domain: PropTypes.string,
+  edit: PropTypes.bool,
+  fields: PropTypes.object,
+  saveRecord: PropTypes.func,
+  values: PropTypes.object
+
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
-  const initialValues = !edit ? {
+  const initialValues = edit ? {
     id: 1,
     class: "IN",
     name: "aaa",
@@ -99,7 +98,8 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    toggleModal: value => dispatch(toggleAccountManagementModal(value))
+    addRecord: () => {},
+    saveRecord: () => {}
   }
 }
 
