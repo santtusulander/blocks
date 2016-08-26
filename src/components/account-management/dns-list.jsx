@@ -12,7 +12,7 @@ import recordTypes from '../../constants/dns-record-types'
 const records = [
   {
     class: "IN",
-    name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
+    name: "aaa",
     ttl: 3600,
     type: "AAAA",
     value: "85.184.251.171"
@@ -50,16 +50,16 @@ export default class DNSList extends Component {
 
   render() {
     const { onDeleteEntry, onEditEntry, onAddEntry } = this.props
-    let recordsByType = {}
-    records
-      .filter(({ name, value }) => name.includes(this.state.search) || value.includes(this.state.search))
-      .forEach(record => {
-        if(!recordsByType[record.type]) {
-          recordsByType[record.type] = []
-        }
-        recordsByType[record.type].push(record)
-      })
     let tables = []
+    let recordsByType = {}
+    let filteredRecords =
+      records.filter(({ name, value }) => name.includes(this.state.search) || value.includes(this.state.search))
+    filteredRecords.forEach(record => {
+      if(!recordsByType[record.type]) {
+        recordsByType[record.type] = []
+      }
+      recordsByType[record.type].push(record)
+    })
     const getContent = type =>
       recordsByType[type].map((record, i) =>
         <tr key={i}>
@@ -78,31 +78,30 @@ export default class DNSList extends Component {
       <div>
         <h3 className="account-management-header">
           <span id="domain-stats">
-            {`${records.size} resource entries `}
+            {`${filteredRecords.length} Records`}
           </span>
           <div className='dns-filter-wrapper'>
             <Input
               type="text"
               className="search-input"
               groupClassName="search-input-group"
-              placeholder="Search"
+              placeholder="Search records"
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
             <UDNButton
               id="add-dns-record"
-              bsStyle="primary"
-              icon={true}
-              addNew={true}
+              bsStyle="success"
               onClick={onAddEntry}>
-              <IconAdd/>
+              ADD RECORD
             </UDNButton>
           </div>
         </h3>
+        <hr/>
         {recordTypes.sort().forEach(type => {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
               <div className='table-container'>
-                <h3>{type} Records</h3>
+                <h4>{type} Records</h4>
                 <table className="table table-striped cell-text-left">
                   <thead >
                     <tr>
@@ -134,15 +133,11 @@ DNSList.propTypes = {
   activeDomain: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   changeActiveDomain: PropTypes.func,
-  changeRecordType: PropTypes.func,
-  dnsEditOnSave: PropTypes.func,
-  dnsFormInitialValues: PropTypes.object,
   domains: PropTypes.instanceOf(List),
   onAddDomain: PropTypes.func,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
-  soaEditOnSave: PropTypes.func,
-  soaFormInitialValues: PropTypes.object,
+  onEditEntry: PropTypes.func,
   toggleModal: PropTypes.func
 }
 
