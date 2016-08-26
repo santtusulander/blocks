@@ -4,14 +4,17 @@ import {
   Modal,
   Input,
   ButtonToolbar,
-  Button
+  Button,
+  Table
 } from 'react-bootstrap'
-import {Map, List, fromJS} from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
-import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import IconTrash from '../icons/icon-trash.jsx'
+
+import {NAME_VALIDATION_REGEXP} from '../../constants/account-management-options'
 
 import './group-form.scss'
 
@@ -20,11 +23,11 @@ let errors = {}
 const validate = (values) => {
   const {name} = values
   errors = {}
-  if(!name || name.length === 0) {
+  if (!name || name.length === 0) {
     errors.name = 'Group name is required'
   }
 
-  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
+  if (name && !new RegExp(NAME_VALIDATION_REGEXP).test(name)) {
     errors.name = 'Group name is invalid'
   }
 
@@ -57,9 +60,9 @@ class GroupForm extends React.Component {
   }
 
   save() {
-    if(!Object.keys(errors).length) {
+    if (!Object.keys(errors).length) {
       const {
-        fields: { name }
+        fields: {name}
       } = this.props
       // TODO: enable this when API is ready
       //const members = this.getMembers()
@@ -67,12 +70,12 @@ class GroupForm extends React.Component {
       if (!this.props.group.isEmpty()) {
         this.props.onSave(
           this.props.group.get('id'),
-          { name: name.value },
+          {name: name.value},
           this.state.usersToAdd,
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave({ name: name.value }, this.state.usersToAdd)
+        this.props.onSave({name: name.value}, this.state.usersToAdd)
       }
     }
   }
@@ -104,7 +107,7 @@ class GroupForm extends React.Component {
   }
 
   render() {
-    const { fields: {name}, show, onCancel } = this.props
+    const {fields: {name}, show, onCancel} = this.props
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -121,7 +124,7 @@ class GroupForm extends React.Component {
 
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
       const userEmail = user.get('email')
-      if(!user.get('group_id').includes(this.props.group.get('id'))) {
+      if (!user.get('group_id').includes(this.props.group.get('id'))) {
         return [...arr, {label: userEmail, value: userEmail}]
       }
       return arr;
@@ -129,6 +132,7 @@ class GroupForm extends React.Component {
 
     const title = !this.props.group.isEmpty() ? 'Edit Group' : 'Add new group'
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
+    const { hosts, onDeleteHost } = this.props
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -148,52 +152,85 @@ class GroupForm extends React.Component {
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
 
-            {/*
-              Disable until API support allows listing groups for user with some assigned
             <hr/>
-            <div className="form-group add-members">
-              <label className="control-label">Add Members</label>
-              <FilterChecklistDropdown
-                noClear={true}
-                options={addMembersOptions}
-                value={this.state.usersToAdd || List()}
-                handleCheck={val => {
-                  this.setState({usersToAdd: val})
-                }}
-              />
-            </div>
 
-            <div className="form-group">
-              <label className="control-label">
-                {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
-              </label>
-              <ul className="members-list">
-                {currentMembers.map((val) => {
-                  let className = 'members-list__member '
-                  className += val.get('toAdd') ? 'members-list__member--new ' : ''
-                  className += val.get('toDelete') ? 'members-list__member--delete ' : ''
-                  return(
-                    <li key={val.get('email')} className={className}>
-                      <span className="members-list__member__label">{val.get('email')}</span>
-                      <span className="members-list__member__actions">
-                        {val.get('toAdd') && <span className="members-list__member__actions__new">
-                          NEW
-                        </span>}
-                        {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
-                          onClick={() => this.undoDelete(val.get('email'))}>
-                          UNDO
-                        </Button> :
-                        <Button bsStyle="link" className="delete-button"
-                          onClick={() => this.deleteMember(val.get('email'))}>
-                          <IconClose width="20" height="20"/>
-                        </Button>}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-            */}
+            <label>Properties</label>
+            {!hosts.isEmpty() ?
+            <Table striped={true}>
+              <thead>
+              <tr>
+                <th>
+                  Name
+                </th>
+                <th width="8%"/>
+              </tr>
+              </thead>
+              <tbody>
+              {hosts.map((host, i) => {
+                return(
+                  <tr key={i}>
+                    <td>{host}</td>
+                    <td>
+                      <Button onClick={() => onDeleteHost(host, this.props.group)}
+                              className="btn-link btn-icon">
+                        <IconTrash/>
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              })
+              }
+              </tbody>
+            </Table>
+              : <p>No Properties</p>
+            }
+
+            {/*
+             Disable until API support allows listing groups for user with some assigned
+             <hr/>
+             <div className="form-group add-members">
+             <label className="control-label">Add Members</label>
+             <FilterChecklistDropdown
+             noClear={true}
+             options={addMembersOptions}
+             value={this.state.usersToAdd || List()}
+             handleCheck={val => {
+             this.setState({usersToAdd: val})
+             }}
+             />
+             </div>
+
+             <div className="form-group">
+             <label className="control-label">
+             {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
+             </label>
+             <ul className="members-list">
+             {currentMembers.map((val) => {
+             let className = 'members-list__member '
+             className += val.get('toAdd') ? 'members-list__member--new ' : ''
+             className += val.get('toDelete') ? 'members-list__member--delete ' : ''
+             return(
+             <li key={val.get('email')} className={className}>
+             <span className="members-list__member__label">{val.get('email')}</span>
+             <span className="members-list__member__actions">
+             {val.get('toAdd') && <span className="members-list__member__actions__new">
+             NEW
+             </span>}
+             {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
+             onClick={() => this.undoDelete(val.get('email'))}>
+             UNDO
+             </Button> :
+             <Button bsStyle="link" className="delete-button"
+             onClick={() => this.deleteMember(val.get('email'))}>
+             <IconClose width="20" height="20"/>
+             </Button>}
+             </span>
+             </li>
+             )
+             })}
+             </ul>
+             </div>
+             */}
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
