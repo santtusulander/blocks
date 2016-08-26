@@ -7,6 +7,8 @@ import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class AnalysisVisitors extends React.Component {
   constructor(props) {
     super(props);
@@ -129,24 +131,24 @@ class AnalysisVisitors extends React.Component {
     const sortedOS = !this.props.fetching ? this.sortedData(this.props.byOS, this.state.sortOSBy, this.state.sortOSDir, 'os') : ''
     return (
       <div className="analysis-traffic">
-        <h3>VISITORS BY TIME</h3>
+        <h3><FormattedMessage id="portal.analytics.visitors.visiorsByTime.text"/></h3>
         <div ref="byTimeHolder" className="visitors-by-time">
           {this.props.fetching ?
-            <div>Loading...</div> :
+            <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisByTime axes={true} padding={40}
               dataKey="uniq_vis"
               primaryData={this.props.byTime.toJS()}
-              primaryLabel={'Visitors'}
+              primaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.visitors.chart.visitors.label'})}
               stacked={true}
               showLegend={true}
               showTooltip={false}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
-        <h3>BY GEOGRAPHY</h3>
+        <h3><FormattedMessage id="portal.analytics.visitors.byGeography.text"/></h3>
         <div ref="byLocationHolder">
           {this.props.fetching ?
-            <div>Loading...</div> :
+            <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisByLocation
             dataKey="total"
             timelineKey="detail"
@@ -155,7 +157,7 @@ class AnalysisVisitors extends React.Component {
             countryData={this.props.byCountry}/>
           }
         </div>
-        <h3>BY COUNTRY</h3>
+        <h3><FormattedMessage id="portal.analytics.visitors.byCountry.text"/></h3>
         <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
@@ -206,20 +208,20 @@ class AnalysisVisitors extends React.Component {
             }
           </tbody>
         </table>
-        <h3>BY BROWSER</h3>
+        <h3><FormattedMessage id="portal.analytics.visitors.byBrowser.text"/></h3>
         <table className="table table-striped table-analysis by-browser-table">
           <thead>
             <tr>
               <TableSorter {...browserSorterProps} column="name">
-                Browser
+                <FormattedMessage id="portal.analytics.visitors.grid.browser.header"/>
               </TableSorter>
               <TableSorter {...browserSorterProps} column="total">
-                Total Visitors
+                <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
               </TableSorter>
               <TableSorter {...browserSorterProps} column="percent_total">
-                % of Visitors
+                <FormattedMessage id="portal.analytics.visitors.grid.percentage.header"/>
               </TableSorter>
-              <th className="text-center">Period Trend</th>
+              <th className="text-center"><FormattedMessage id="portal.analytics.visitors.grid.periodTrend.header"/></th>
                 {/* Hide in 0.8 UDNP-1109
                 <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
                   Change
@@ -229,7 +231,7 @@ class AnalysisVisitors extends React.Component {
           </thead>
           <tbody>
             {this.props.fetching ?
-              <tr><td colSpan="5">Loading...</td></tr> :
+              <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
               sortedBrowsers.map((browser, i) => {
                 return (
                   <tr key={i}>
@@ -257,15 +259,15 @@ class AnalysisVisitors extends React.Component {
             }
           </tbody>
         </table>
-        <h3>BY OPERATING SYSTEM</h3>
+        <h3><FormattedMessage id="portal.analytics.visitors.byOS.text"/></h3>
         <table className="table table-striped table-analysis by-os-table">
           <thead>
             <tr>
               <TableSorter {...OSSorterProps} column="name">
-                Operating System
+                <FormattedMessage id="portal.analytics.visitors.grid.os.header"/>
               </TableSorter>
               <TableSorter {...OSSorterProps} column="total">
-                Total Visitors
+                <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
               </TableSorter>
               <TableSorter {...OSSorterProps} column="percent_total">
                 % of Visitors
@@ -280,7 +282,7 @@ class AnalysisVisitors extends React.Component {
           </thead>
           <tbody>
             {this.props.fetching ?
-              <tr><td colSpan="5">Loading...</td></tr> :
+              <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
               sortedOS.map((os, i) => {
                 return (
                   <tr key={i}>
@@ -331,4 +333,4 @@ AnalysisVisitors.defaultProps = {
   serviceTypes: Immutable.List()
 }
 
-module.exports = AnalysisVisitors
+module.exports = injectIntl(AnalysisVisitors)

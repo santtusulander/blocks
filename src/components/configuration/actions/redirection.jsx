@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Toggle from '../../toggle'
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Redirection extends React.Component {
   constructor(props) {
     super(props);
@@ -46,14 +48,14 @@ class Redirection extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Redirection</h1>
+          <h1><FormattedMessage id="portal.policy.edit.redirection.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Change Protocol</label>
+                <label><FormattedMessage id="portal.policy.edit.redirection.changeProtocol.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -78,7 +80,7 @@ class Redirection extends React.Component {
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Change Domain</label>
+                <label><FormattedMessage id="portal.policy.edit.redirection.changeDomain.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -91,7 +93,7 @@ class Redirection extends React.Component {
 
           <Input type="text"
             id="actions_domain"
-            placeholder="Enter Domain"
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterDomain.text'})}
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
             )}/>
@@ -101,7 +103,7 @@ class Redirection extends React.Component {
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Change Path</label>
+                <label><FormattedMessage id="portal.policy.edit.redirection.changePath.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -114,7 +116,7 @@ class Redirection extends React.Component {
 
           <Input type="text"
             id="actions_path"
-            placeholder="Enter Path"
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterPath.text'})}
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
             )}/>
@@ -122,18 +124,18 @@ class Redirection extends React.Component {
           <hr />
 
           <div className="form-group">
-            <label className="control-label">Redirection Type</label>
+            <label className="control-label"><FormattedMessage id="portal.policy.edit.redirection.redirectionType.text"/></label>
             <Select className="input-select"
               onSelect={this.handleSelectChange('activeRedirectionType',
                 ['edge_configuration', 'cache_rule', 'actions', 'redirection_type']
               )}
               value={this.state.activeRedirectionType}
               options={[
-                ['301', '301 Permanently moved'],
-                ['302', '302 Found'],
-                ['307', '307 Temporarily moved'],
-                ['410', '410 Gone'],
-                ['418', '418 I`m a little tea pot']]}/>
+                ['301', <FormattedMessage id="portal.policy.edit.redirection.301.text"/>],
+                ['302', <FormattedMessage id="portal.policy.edit.redirection.302.text"/>],
+                ['307', <FormattedMessage id="portal.policy.edit.redirection.307.text"/>],
+                ['410', <FormattedMessage id="portal.policy.edit.redirection.410.text"/>],
+                ['418', <FormattedMessage id="portal.policy.edit.redirection.418.text"/>]]}/>
           </div>
 
         </Modal.Body>
@@ -149,4 +151,4 @@ Redirection.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Redirection
+module.exports = injectIntl(Redirection)

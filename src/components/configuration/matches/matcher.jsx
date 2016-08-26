@@ -9,6 +9,8 @@ import {
   getMatchFilterType
 } from '../../../util/policy-config'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Matcher extends React.Component {
   constructor(props) {
     super(props);
@@ -118,12 +120,12 @@ class Matcher extends React.Component {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
       this.state.activeFilter === 'does_not_contain';
     let matchOpts = [
-      ['exists', 'Exists'],
-      ['does_not_exist', 'Does not exist']
+      ['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>],
+      ['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>]
     ]
     if(this.props.contains) {
-      matchOpts.push(['contains', 'Contains'])
-      matchOpts.push(['does_not_contain', 'Does not contain'])
+      matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
+      matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
     }
     return (
       <div>
@@ -133,7 +135,7 @@ class Matcher extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="text" label="Name"
+          <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
             placeholder={`Enter ${this.props.name} Name`}
             id="matches_val"
             value={this.state.val}
@@ -184,4 +186,4 @@ Matcher.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = Matcher
+module.exports = injectIntl(Matcher)

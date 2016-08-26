@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {FormattedMessage} from 'react-intl';
+
 function getValue(stat) {
   return stat ? stat.split(' ')[0] : ''
 }
@@ -11,23 +13,23 @@ function getUnit(stat) {
 const ContentTrafficTooltip = ({name, avgTransfer, maxTransfer, minTransfer, date}) => <div>
   <div className="tooltip-header">
     <h3>{name}</h3>
-    <b>Bandwidth {date}</b>
+    <b><FormattedMessage id="portal.content.tooltip.badwith.text" values={{date: date}}/></b>
   </div>
   <div>
-    Peak
+    <FormattedMessage id="portal.analytics.peak.text"/>
     <span className="pull-right">
       {getValue(maxTransfer)}
       <span className="data-suffix"> {getUnit(maxTransfer)}</span>
     </span>
   </div>
   <div>
-    Average <span className="pull-right">
+    <FormattedMessage id="portal.analytics.average.text"/> <span className="pull-right">
       {getValue(avgTransfer)}
       <span className="data-suffix"> {getUnit(avgTransfer)}</span>
     </span>
   </div>
   <div>
-    Low <span className="pull-right">
+    <FormattedMessage id="portal.analytics.low.text"/> <span className="pull-right">
       {getValue(minTransfer)}
       <span className="data-suffix"> {getUnit(minTransfer)}</span>
     </span>
