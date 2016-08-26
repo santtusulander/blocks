@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Toggle from '../../toggle'
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Cache extends React.Component {
   constructor(props) {
     super(props);
@@ -59,13 +61,13 @@ class Cache extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Cache</h1>
+          <h1><FormattedMessage id="portal.policy.edit.cache.cache.text"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <Row className="no-gutters">
             <Col xs={8} className="toggle-label">
-              <label>No-Store</label>
+              <label><FormattedMessage id="portal.policy.edit.cache.noStore.text"/></label>
             </Col>
             <Col xs={4}>
               <Toggle className="pull-right"
@@ -78,7 +80,7 @@ class Cache extends React.Component {
 
           <Row className="no-gutters">
             <Col xs={8} className="toggle-label">
-              <label>Honor Origin Cache Control</label>
+              <label><FormattedMessage id="portal.policy.edit.cache.honorCacheControl.text"/></label>
             </Col>
             <Col xs={4}>
               <Toggle className="pull-right"
@@ -91,27 +93,27 @@ class Cache extends React.Component {
 
           <Row className="no-gutters">
             <Col xs={8} className="toggle-label">
-              <label>Honor e-Tag Values</label>
+              <label><FormattedMessage id="portal.policy.edit.cache.honorEtag.text"/></label>
             </Col>
             <Col xs={4}>
               <Select className="input-select small-select"
                 onSelect={this.handleEtagChange}
                 value={this.state.checkEtag}
                 options={[
-                  ['strong', 'Strong'],
-                  ['weak', 'Weak'],
-                  ['false', 'False']]}/>
+                  ['strong', <FormattedMessage id="portal.policy.edit.cache.honorEtagStrong.text"/>],
+                  ['weak', <FormattedMessage id="portal.policy.edit.cache.honorEtagWeak.text"/>],
+                  ['false', <FormattedMessage id="portal.policy.edit.cache.honorEtagFalse.text"/>]]}/>
             </Col>
           </Row>
 
           <hr />
 
-          <Input label="TTL Value">
+          <Input label={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.text'})}>
             <Row>
               <Col xs={6}>
                 <Input type="number"
                   id="actions_ttl-value-number"
-                  placeholder="Enter TTL Value"
+                  placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.placeholder'})}
                   value={this.state.maxAge}
                   onChange={this.handleChange('maxAge')}/>
               </Col>
@@ -120,10 +122,10 @@ class Cache extends React.Component {
                   onSelect={this.handleTTLTypeChange}
                   value={this.state.ttlType}
                   options={[
-                    ['seconds', 'Seconds'],
-                    ['minutes', 'Minutes'],
-                    ['hours', 'Hours'],
-                    ['days', 'Days']]}/>
+                    ['seconds', <FormattedMessage id="portal.policy.edit.cache.ttlValue.seconds"/>],
+                    ['minutes', <FormattedMessage id="portal.policy.edit.cache.ttlValue.minutes"/>],
+                    ['hours', <FormattedMessage id="portal.policy.edit.cache.ttlValue.hours"/>],
+                    ['days', <FormattedMessage id="portal.policy.edit.cache.ttlValue.days"/>]]}/>
               </Col>
             </Row>
           </Input>
@@ -151,4 +153,4 @@ Cache.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Cache
+module.exports = injectIntl(Cache)

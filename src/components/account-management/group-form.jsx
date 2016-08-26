@@ -18,17 +18,20 @@ import {NAME_VALIDATION_REGEXP} from '../../constants/account-management-options
 
 import './group-form.scss'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 let errors = {}
 
 const validate = (values) => {
   const {name} = values
   errors = {}
-  if (!name || name.length === 0) {
-    errors.name = 'Group name is required'
+
+  if(!name || name.length === 0) {
+    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
 
-  if (name && !new RegExp(NAME_VALIDATION_REGEXP).test(name)) {
-    errors.name = 'Group name is invalid'
+  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
+    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
 
   return errors;
@@ -130,7 +133,7 @@ class GroupForm extends React.Component {
       return arr;
     }, []))
 
-    const title = !this.props.group.isEmpty() ? 'Edit Group' : 'Add new group'
+    const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
     const { hosts, onDeleteHost } = this.props
 
@@ -147,8 +150,8 @@ class GroupForm extends React.Component {
             <Input
               {...name}
               type="text"
-              label="Group Name"
-              placeholder='Enter Group Name'/>
+              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
+              placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
 
@@ -234,7 +237,7 @@ class GroupForm extends React.Component {
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>{!this.props.group.isEmpty() ? 'Save' : 'Add'}</Button>
+                      onClick={this.save}>{!this.props.group.isEmpty() ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
@@ -262,4 +265,4 @@ export default reduxForm({
   fields: ['name'],
   form: 'group-edit',
   validate
-})(GroupForm)
+})(injectIntl(GroupForm))

@@ -28,11 +28,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 
-import {
-  ACCOUNT_TYPES,
-  NAME_VALIDATION_REGEXP,
-  NAME_VALIDATION_REQUIREMENTS
-} from '../../constants/account-management-options'
+import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
@@ -44,6 +40,8 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
+
+import { FormattedMessage } from 'react-intl'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -159,7 +157,8 @@ export class AccountManagement extends Component {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: response.payload.data.message,
-        buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+        buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
+          id="portal.button.ok"/></Button>
       })
     })
   }
@@ -190,7 +189,7 @@ export class AccountManagement extends Component {
     ])
       .then(() => {
         this.props.toggleModal(null)
-        this.showNotification('Group detail updates saved.')
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
       })
   }
 
@@ -238,7 +237,7 @@ export class AccountManagement extends Component {
     return this.props.accountActions.updateAccount(brandId, accountId, data)
       .then(() => {
         this.props.toggleModal(null)
-        this.showNotification('Account detail updates saved.')
+        this.showNotification(<FormattedMessage id="portal.accountManagement.accoutnUpdated.text"/>)
       })
   }
 
@@ -282,15 +281,23 @@ export class AccountManagement extends Component {
     if (this.props.activeAccount.get('name') !== accountName) {
       nameTaken = {
         condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
-        errorText: 'That account name is taken'
+        errorText: <FormattedMessage id="portal.accountManagement.accountNameAlreadyUsed.text"/>
       }
     }
     const conditions = {
       accountName: [
         {
           condition: !new RegExp(NAME_VALIDATION_REGEXP).test(accountName),
-          errorText: <div key={accountName}>{['Account name is invalid.',
-            <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText: <div key={accountName}>{[<FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>,
+            <div key={1}>
+              <div style={{ marginTop: '0.5em' }}>
+                <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text"/>
+                <ul>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text"/></li>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text"/></li>
+                </ul>
+              </div>
+            </div>]}</div>
         }
       ]
     }
@@ -328,7 +335,7 @@ export class AccountManagement extends Component {
       case DELETE_GROUP:
         deleteModalProps = {
           itemToDelete: this.state.groupToDelete.get('name'),
-          description: 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+          description: <FormattedMessage id="portal.accountManagement.deleetConfirmation.text"/>,
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
@@ -411,44 +418,53 @@ export class AccountManagement extends Component {
                   onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
-                    <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
+                    <h1><TruncatedTitle content={activeAccount.get('name') ||
+                    <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                                         tooltipPlacement="bottom" className="account-property-title"/></h1>
                     <span className="caret"></span>
                   </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <h1>{activeAccount.get('name') || 'No active account'}</h1>
+                <h1>{activeAccount.get('name') ||
+                <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
               </IsAllowed>
             </PageHeader>
             {account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
-                <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
+                <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.account.text"/></Link>
               </li>
               <li className="navbar">
-                <Link to={baseUrl + '/groups'} activeClassName="active">GROUPS</Link>
+                <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.groups.text"/></Link>
               </li>
               <li className="navbar">
-                <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+                <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.users.text"/></Link>
               </li>
             </Nav>}
             {!account && <Nav bsStyle="tabs" className="system-nav">
               <li className="navbar">
-                <Link to={baseUrl + '/accounts'} activeClassName="active">ACCOUNTS</Link>
+                <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.accounts.text"/></Link>
               </li>
               <li className="navbar">
-                <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
+                <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.users.text"/></Link>
               </li>
               {/*<li className="navbar">
                <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
                </li>*/}
               <IsAllowed to={PERMISSIONS.VIEW_DNS}>
                 <li className="navbar">
-                  <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
+                  <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage
+                    id="portal.accountManagement.dns.text"/></Link>
                 </li>
               </IsAllowed>
               <li className="navbar">
-                <Link to={baseUrl + '/roles'} activeClassName="active">ROLES</Link>
+                <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage
+                  id="portal.accountManagement.roles.text"/></Link>
               </li>
               {/*
                <li className="navbar">
@@ -478,7 +494,7 @@ export class AccountManagement extends Component {
             id="group-form"
             group={this.state.groupToUpdate}
             hosts={this.state.groupHosts}
-            onDeleteHost={(host) => this.setState({ hostToDelete: host}, () => toggleModal(DELETE_HOST))}
+            onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
             account={activeAccount}
             onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
             onCancel={() => toggleModal(null)}
