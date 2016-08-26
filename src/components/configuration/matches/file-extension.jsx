@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class FileExtension extends React.Component {
   constructor(props) {
     super(props);
@@ -32,20 +34,20 @@ class FileExtension extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>File Extension</h1>
-          <p>Match one or more file extensions like .GIF, JPG, .MOV, .MP3</p>
+          <h1><FormattedMessage id="portal.policy.edit.fileExtension.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.fileExtension.disclaimer.text"/></p>
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label="File Extension"
-            placeholder="Enter File Extensions separated by commas"
+          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.placeholder'})}
             id="matches_file-extension"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
               this.props.path.concat(['cases', 0, 0])
             )}/>
 
-          <Input type="checkbox" label="Ignore case"
+          <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.ignoreCase.text'})}
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'matches', 'file_extension_ignore_case']
             )}/>
@@ -56,8 +58,8 @@ class FileExtension extends React.Component {
             )}
             value={this.state.activeFilter}
             options={[
-              ['matches', 'Matches'],
-              ['does_not_match', 'Does not match']]}/>
+              ['matches', <FormattedMessage id="portal.policy.edit.fileExtension.matches.text"/>],
+              ['does_not_match', <FormattedMessage id="portal.policy.edit.fileExtension.doesntMatch.text"/>]]}/>
 
         </Modal.Body>
       </div>
@@ -72,4 +74,4 @@ FileExtension.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = FileExtension
+module.exports = injectIntl(FileExtension)

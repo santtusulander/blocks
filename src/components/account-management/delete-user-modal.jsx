@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
+import {FormattedMessage} from 'react-intl'
 
 const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
   <Modal show={true} className="delete-modal">
@@ -13,17 +14,17 @@ const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
         {itemToDelete}<br/>
       </h3>
       <p>
-        Will lose access to UDN immediately and will not be able to log in anymore.
+       <FormattedMessage id="portal.user.delete.disclaimer.text"/>
       </p>
     </Modal.Body>
     <Modal.Footer className="delete-modal-footer">
       <ButtonToolbar className="pull-right">
-        <Button onClick={cancel} className="btn-outline">Cancel</Button>
+        <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
         <Button onClick={submit}
                 type="submit"
                 bsStyle="secondary"
                 className="delete-modal-submit delete-user-submit">
-          Delete
+          <FormattedMessage id="portal.button.delete"/>
         </Button>
       </ButtonToolbar>
     </Modal.Footer>

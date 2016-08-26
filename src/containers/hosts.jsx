@@ -14,6 +14,8 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -70,11 +72,11 @@ export class Hosts extends React.Component {
     }
     const breadcrumbs = [
       {
-        label: activeAccount ? activeAccount.get('name') : 'Loading...',
+        label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/>,
         url: `/content/groups/udn/${account}`
       },
       {
-        label: activeGroup ? activeGroup.get('name') : 'Loading...'
+        label: activeGroup ? activeGroup.get('name') : <FormattedMessage id="portal.loading.text"/>
       }
     ]
     return (
@@ -93,8 +95,8 @@ export class Hosts extends React.Component {
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
         group={group}
-        headerText={{ summary: 'GROUP CONTENT SUMMARY', label: breadcrumbs[1].label }}
-        ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : 'Loading...'}
+        headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
+        ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}
@@ -189,4 +191,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Hosts);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Hosts));

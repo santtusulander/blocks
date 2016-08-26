@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Toggle from '../../toggle'
 import Select from '../../select'
 
+import {FormattedMessage} from 'react-intl'
+
 class Compression extends React.Component {
   constructor(props) {
     super(props);
@@ -33,14 +35,14 @@ class Compression extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Compression</h1>
+          <h1><FormattedMessage id="portal.policy.edit.compression.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Enable GZIP</label>
+                <label><FormattedMessage id="portal.policy.edit.compression.enabledGzip.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -57,9 +59,9 @@ class Compression extends React.Component {
             )}
             value={this.state.activeFilter}
             options={[
-              ['both_client_and_origin', 'To Both Client and Origin'],
-              ['client_only', 'To Client Only'],
-              ['origin_only', 'To Origin Only']]}/>
+              ['both_client_and_origin', <FormattedMessage id="portal.policy.edit.compression.bothClieintOrigin.text"/>],
+              ['client_only', <FormattedMessage id="portal.policy.edit.compression.clientOnly.text"/>],
+              ['origin_only', <FormattedMessage id="portal.policy.edit.compression.originOnly.text"/>]]}/>
 
         </Modal.Body>
       </div>

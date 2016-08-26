@@ -11,9 +11,11 @@ import {
 
 import Immutable from 'immutable'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 const frequencyOptions = [
-    {label: 'One-time, send now', value: 'one-time'},
-    {label: 'Weekly', value: 'weekly'},
+    {label: <FormattedMessage id="portal.exportEmail.oneTime.text"/>, value: 'one-time'},
+    {label: <FormattedMessage id="portal.exportEmail.weekly.text"/>, value: 'weekly'},
 ].map( (e) => {
     return <option value={e.value}>{e.label}</option>;
 });
@@ -51,29 +53,29 @@ class ExportEmailForm extends React.Component {
 
         <Input
           type="text"
-          label="Recipients"
-          placeholder="Enter recipients"
+          label={this.props.intl.formatMessage({id: 'portal.exportEmail.recipients.text'})}
+          placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.recipients.placeholder'})}
           addonBefore="To"
           onChange={this.changeValue(['to'])}
         />
 
         <Input
           type="text"
-          addonBefore="Cc"
-          placeholder="Enter text"
+          addonBefore={this.props.intl.formatMessage({id: 'portal.exportEmail.cc.text'})}
+          placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.cc.placeholder'})}
           onChange={this.changeValue(['cc'])}
         />
 
         <Input
           type='text'
-          label='Subject'
+          label={this.props.intl.formatMessage({id: 'portal.exportEmail.subject.text'})}
           placeholder={subject}
           onChange={this.changeValue(['subject'])}
         />
 
         <Input
           type='textarea'
-          label='Message'
+          label={this.props.intl.formatMessage({id: 'portal.exportEmail.message.text'})}
           placeholder=''
           onChange={this.changeValue(['message'])}
         />
@@ -88,8 +90,8 @@ class ExportEmailForm extends React.Component {
       */}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={this.onCancel}>Cancel</Button>
-          <Button type="submit" bsStyle="primary">Send</Button>
+          <Button className="btn-outline" onClick={this.onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button type="submit" bsStyle="primary"><FormattedMessage id="portal.button.send"/></Button>
         </ButtonToolbar>
 
       </form>
@@ -107,4 +109,4 @@ ExportEmailForm.defaultProps = {
   formValues: Immutable.Map()
 }
 
-module.exports = ExportEmailForm
+module.exports = injectIntl(ExportEmailForm)

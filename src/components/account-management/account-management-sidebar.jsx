@@ -5,6 +5,8 @@ import UDNButton from '../../components/button'
 import Sidebar from '../../components/layout/sidebar'
 import { SidebarLinks } from '../sidebar-links'
 
+import {formatMessage, injectIntl} from 'react-intl';
+
 export const AccountManagementSidebar = props => {
   const { accounts, activate, addAccount, activeAccount } = props
   return (
@@ -21,7 +23,7 @@ export const AccountManagementSidebar = props => {
         <SidebarLinks
           activeItem={activeAccount}
           activate={activate}
-          emptyMsg="No accounts."
+          emptyMsg={this.props.intl.formatMessage({id: 'portal.account.manage.noAccounts.text'})}
           items={accounts}/>
       </div>
 
@@ -36,4 +38,4 @@ AccountManagementSidebar.propTypes = {
   addAccount: PropTypes.func
 }
 
-export default AccountManagementSidebar
+export default injectIntl(AccountManagementSidebar)
