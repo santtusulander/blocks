@@ -77,6 +77,21 @@ $icon-two-tone-primary: $dark-blue;
     }
   }
 
+  &.three-tone {
+
+    &.secondary-green .secondary {
+      fill: $green;
+    }
+
+    &.secondary-yellow .secondary {
+      fill: $yellow;
+    }
+
+    &.secondary-red .secondary {
+      fill: $red;
+    }
+  }
+
   &.icon-export {
     .btn:not(.btn-icon) > & {
       top: -3px;
