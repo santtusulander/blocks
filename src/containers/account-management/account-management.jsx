@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
@@ -28,13 +28,18 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 
-import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPES,
+  NAME_VALIDATION_REGEXP,
+  NAME_VALIDATION_REQUIREMENTS
+} from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
   DELETE_GROUP,
   EDIT_GROUP,
-  DELETE_USER
+  DELETE_USER,
+  DELETE_HOST
 } from '../../constants/account-management-modals.js'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -48,7 +53,9 @@ export class AccountManagement extends Component {
     this.accountToUpdate = null
     this.state = {
       groupToDelete: null,
-      groupToUpdate: null
+      groupToUpdate: null,
+      groupHosts: null,
+      hostToDelete: null
     }
 
     this.notificationTimeout = null
@@ -66,6 +73,7 @@ export class AccountManagement extends Component {
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.deleteHost = this.deleteHost.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
@@ -74,20 +82,20 @@ export class AccountManagement extends Component {
     const { brand, account } = this.props.params
     this.props.permissionsActions.fetchPermissions()
     this.props.rolesActions.fetchRoles()
-    if(account) {
+    if (account) {
       this.props.userActions.fetchUsers(brand, account)
     }
-    else if(this.props.accounts.size) {
+    else if (this.props.accounts.size) {
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { brand, account } = nextProps.params
-    if(nextProps.params.account && nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
       this.props.userActions.fetchUsers(brand, account)
     }
-    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+    else if (!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
   }
@@ -148,11 +156,11 @@ export class AccountManagement extends Component {
     ).then(response => {
       this.props.toggleModal(null)
       response.error &&
-        this.props.uiActions.showInfoDialog({
-          title: 'Error',
-          content: response.payload.data.message,
-          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
-        })
+      this.props.uiActions.showInfoDialog({
+        title: 'Error',
+        content: response.payload.data.message,
+        buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+      })
     })
   }
 
@@ -180,15 +188,50 @@ export class AccountManagement extends Component {
       ...addUserActions,
       ...deleteUserActions
     ])
-    .then(() => {
-      this.props.toggleModal(null)
-      this.showNotification('Group detail updates saved.')
-    })
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification('Group detail updates saved.')
+      })
   }
 
   showEditGroupModal(group) {
-    this.setState({ groupToUpdate: group })
-    this.props.toggleModal(EDIT_GROUP)
+    const { activeAccount, hostActions } = this.props
+    hostActions.fetchHosts('udn', activeAccount.get('id'), group.get('id'))
+      .then(res => {
+        this.setState({ groupToUpdate: group, groupHosts: fromJS(res.payload) })
+        this.props.toggleModal(EDIT_GROUP)
+      })
+  }
+
+  deleteHost(host) {
+    const {
+      uiActions,
+      hostActions,
+      params: {
+        brand
+      },
+      activeAccount,
+      toggleModal
+    } = this.props
+
+    hostActions.deleteHost(
+      brand,
+      activeAccount.get('id'),
+      this.state.groupToUpdate.get('id'),
+      host
+    )
+      .then(res => {
+        toggleModal(null)
+        if (res.error) {
+          uiActions.showInfoDialog({
+            title: 'Error',
+            content: res.payload.data.message,
+            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+          })
+        } else {
+          this.showNotification(`Host ${host} deleted.`)
+        }
+      })
   }
 
   editAccount(brandId, accountId, data) {
@@ -236,7 +279,7 @@ export class AccountManagement extends Component {
 
   validateAccountDetails({ accountName, services }) {
     let nameTaken = null
-    if(this.props.activeAccount.get('name') !== accountName) {
+    if (this.props.activeAccount.get('name') !== accountName) {
       nameTaken = {
         condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
         errorText: 'That account name is taken'
@@ -245,8 +288,9 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-          errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          condition: !new RegExp(NAME_VALIDATION_REGEXP).test(accountName),
+          errorText: <div key={accountName}>{['Account name is invalid.',
+            <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
         }
       ]
     }
@@ -273,12 +317,12 @@ export class AccountManagement extends Component {
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
-    switch(accountManagementModal) {
+    switch (accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
           itemToDelete: 'Account',
           cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, account || this.accountToDelete, router)
+          submit: () => onDelete(brand, account, router)
         }
         break
       case DELETE_GROUP:
@@ -288,6 +332,13 @@ export class AccountManagement extends Component {
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
+      case DELETE_HOST:
+        deleteModalProps = {
+          itemToDelete: 'Host',
+          cancel: () => toggleModal(null),
+          submit: () => this.deleteHost(this.state.hostToDelete)
+        }
+        break
     }
 
     /* TODO: remove - TEST ONLY */
@@ -361,7 +412,7 @@ export class AccountManagement extends Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
-                      tooltipPlacement="bottom" className="account-property-title"/></h1>
+                                        tooltipPlacement="bottom" className="account-property-title"/></h1>
                     <span className="caret"></span>
                   </div>
                 </AccountSelector>
@@ -389,8 +440,8 @@ export class AccountManagement extends Component {
                 <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
               </li>
               {/*<li className="navbar">
-                <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-              </li>*/}
+               <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
+               </li>*/}
               <IsAllowed to={PERMISSIONS.VIEW_DNS}>
                 <li className="navbar">
                   <Link to={baseUrl + '/dns'} activeClassName="active">DNS</Link>
@@ -426,6 +477,8 @@ export class AccountManagement extends Component {
           <GroupForm
             id="group-form"
             group={this.state.groupToUpdate}
+            hosts={this.state.groupHosts}
+            onDeleteHost={(host) => this.setState({ hostToDelete: host}, () => toggleModal(DELETE_HOST))}
             account={activeAccount}
             onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
             onCancel={() => toggleModal(null)}
