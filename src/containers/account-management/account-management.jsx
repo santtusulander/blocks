@@ -294,7 +294,7 @@ export class AccountManagement extends Component {
     /*const dnsInitialValues = {
      initialValues: {
      recordType: 'MX',
-     recordName: 'mikkotest',
+     hostName: 'mikkotest',
      targetValue: '11.22.33.44',
      ttl: '3600'
      }
