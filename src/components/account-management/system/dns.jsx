@@ -86,6 +86,7 @@ function mapStateToProps(state) {
   return {
     records: [
       {
+        id: 1,
         class: "IN",
         name: "aaa",
         ttl: 3600,
@@ -93,6 +94,7 @@ function mapStateToProps(state) {
         value: "85.184.251.171"
       },
       {
+        id: 2,
         class: "IN",
         name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
         ttl: 3600,
@@ -100,6 +102,7 @@ function mapStateToProps(state) {
         value: "85.184.251.171"
       },
       {
+        id: 3,
         class: "IN",
         name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
         ttl: 3600,
@@ -107,6 +110,7 @@ function mapStateToProps(state) {
         value: "85.184.251.171"
       },
       {
+        id: 4,
         class: "IN",
         name: "pbtest01.fra.cdx-dev.unifieddeliverynetwork.net",
         ttl: 3600,

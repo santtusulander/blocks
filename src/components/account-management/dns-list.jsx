@@ -19,13 +19,12 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
     recordsByType[type].map((record, i) =>
       <tr key={i}>
         <td>{record.name}</td>
-        <td>{record.type}</td>
         <td>{record.value}</td>
         <td>{record.ttl}</td>
         <td>
         <ActionLinks
-        onEdit={() => onEditEntry(record)}
-        onDelete={() => onDeleteEntry(record)}/>
+        onEdit={() => onEditEntry(record.id)}
+        onDelete={() => onDeleteEntry(record.id)}/>
         </td>
       </tr>
     )
@@ -42,7 +41,7 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
             groupClassName="search-input-group"
             placeholder="Search records"
             value={searchValue}
-            onChange={searchFunc} />
+            onChange={searchFunc}/>
           <UDNButton
             id="add-dns-record"
             bsStyle="success"
@@ -61,7 +60,6 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
                 <thead >
                   <tr>
                     <th width="30%">HOSTNAME</th>
-                    <th width="17%">RECORD TYPE</th>
                     <th width="30%">ADDRESS</th>
                     <th width="30%">TTL</th>
                     <th width="8%"></th>
