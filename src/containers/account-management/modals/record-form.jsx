@@ -28,6 +28,7 @@ const filterFields = fields => {
 const validate = fields => {
   let filteredFields = filterFields(fields)
   delete filteredFields.name
+  const { type = '', ...rest } = filteredFields
   const conditions = {
     priority: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.priority),
@@ -36,13 +37,9 @@ const validate = fields => {
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
       errorText: 'TTL value must be a number.'
-    },
-    value: {
-      condition: !new RegExp('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').test(filteredFields.value),
-      errorText: 'Address must be an IP address.'
     }
   }
-  return checkForErrors(filteredFields, conditions)
+  return checkForErrors({ type, ...rest }, conditions)
 }
 
 const RecordFormContainer = props => {

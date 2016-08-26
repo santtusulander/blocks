@@ -89,6 +89,7 @@ AccountManagementSystemDNS.propTypes = {
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
   fetchDomains: PropTypes.func,
+  fetchRecords: PropTypes.func,
   onAddDomain: PropTypes.func,
   onEditDomain: PropTypes.func,
   params: PropTypes.object,
