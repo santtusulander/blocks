@@ -7,6 +7,7 @@ import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../uti
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
+const TRAFFIC_FETCHED = 'TRAFFIC_FETCHED'
 const TOTALS_FETCHED = 'TOTALS_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
@@ -17,6 +18,7 @@ const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
+  traffic: Immutable.List(),
   totals: Immutable.Map(),
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
@@ -48,6 +50,23 @@ const emptyTraffic = Immutable.Map({
 })
 
 // REDUCERS
+export function trafficFetchSuccess(state, action){
+  return state.merge({
+    traffic: Immutable.fromJS(action.payload.data.map(entity => {
+      entity.detail = entity.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return entity
+    }))
+  })
+}
+
+export function trafficFetchFailure(state){
+  return state.merge({
+    traffic: Immutable.List()
+  })
+}
 
 export function totalsFetchSuccess(state, action){
   // API always returns an array, therefore we access the first child, [0]
@@ -164,6 +183,7 @@ export function trafficFinishFetch(state){
 }
 
 export default handleActions({
+  TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
   TOTALS_FETCHED: mapReducers(totalsFetchSuccess, totalsFetchFailure),
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
@@ -177,6 +197,10 @@ export default handleActions({
 }, emptyTraffic)
 
 // ACTIONS
+export const fetchTraffic = createAction(TRAFFIC_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
 
 export const fetchTotals = createAction(TOTALS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}&show_detail=false`)
