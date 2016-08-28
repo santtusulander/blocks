@@ -155,10 +155,11 @@ export class AccountManagement extends Component {
       this.props.toggleModal(null)
       response.error &&
       this.props.uiActions.showInfoDialog({
-        title: 'Error',
+        title: <FormattedMessage id="portal.button.error"/>,
         content: response.payload.data.message,
-        buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
-          id="portal.button.ok"/></Button>
+        buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">
+          <FormattedMessage id="portal.button.ok"/>
+        </Button>
       })
     })
   }
@@ -225,7 +226,8 @@ export class AccountManagement extends Component {
           uiActions.showInfoDialog({
             title: 'Error',
             content: res.payload.data.message,
-            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
+              id="portal.accountManagement.accoutnUpdated.text"/></Button>
           })
         } else {
           this.showNotification(`Host ${host} deleted.`)

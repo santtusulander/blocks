@@ -14,23 +14,23 @@ import IconClose from '../icons/icon-close.jsx'
 
 import IconTrash from '../icons/icon-trash.jsx'
 
-import {NAME_VALIDATION_REGEXP} from '../../constants/account-management-options'
+import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './group-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, formatMessage, injectIntl } from 'react-intl'
 
 let errors = {}
 
 const validate = (values) => {
-  const {name} = values
+  const { name } = values
   errors = {}
 
-  if(!name || name.length === 0) {
+  if (!name || name.length === 0) {
     errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
 
-  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
+  if (name && !new RegExp(NAME_VALIDATION_REGEXP).test(name)) {
     errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
 
@@ -65,7 +65,7 @@ class GroupForm extends React.Component {
   save() {
     if (!Object.keys(errors).length) {
       const {
-        fields: {name}
+        fields: { name }
       } = this.props
       // TODO: enable this when API is ready
       //const members = this.getMembers()
@@ -73,12 +73,12 @@ class GroupForm extends React.Component {
       if (!this.props.group.isEmpty()) {
         this.props.onSave(
           this.props.group.get('id'),
-          {name: name.value},
+          { name: name.value },
           this.state.usersToAdd,
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave({name: name.value}, this.state.usersToAdd)
+        this.props.onSave({ name: name.value }, this.state.usersToAdd)
       }
     }
   }
@@ -105,12 +105,12 @@ class GroupForm extends React.Component {
   }
 
   isEdited() {
-    const {fields: {name}} = this.props
+    const { fields: { name } } = this.props
     return name.value !== name.initialValue || this.state.usersToAdd.size || this.state.usersToDelete.size
   }
 
   render() {
-    const {fields: {name}, show, onCancel} = this.props
+    const { fields: { name }, show, onCancel } = this.props
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -128,12 +128,13 @@ class GroupForm extends React.Component {
     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
       const userEmail = user.get('email')
       if (!user.get('group_id').includes(this.props.group.get('id'))) {
-        return [...arr, {label: userEmail, value: userEmail}]
+        return [...arr, { label: userEmail, value: userEmail }]
       }
       return arr;
     }, []))
 
-    const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
+    const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> :
+      <FormattedMessage id="portal.group.edit.newGroup.title"/>
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
     const { hosts, onDeleteHost } = this.props
 
@@ -150,42 +151,42 @@ class GroupForm extends React.Component {
             <Input
               {...name}
               type="text"
-              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-              placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+              label={this.props.intl.formatMessage({ id: 'portal.group.edit.name.label' })}
+              placeholder={this.props.intl.formatMessage({ id: 'portal.group.edit.name.enter.text' })}/>
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
 
             <hr/>
 
-            <label>Properties</label>
+            <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
             {!hosts.isEmpty() ?
-            <Table striped={true}>
-              <thead>
-              <tr>
-                <th>
-                  Name
-                </th>
-                <th width="8%"/>
-              </tr>
-              </thead>
-              <tbody>
-              {hosts.map((host, i) => {
-                return(
-                  <tr key={i}>
-                    <td>{host}</td>
-                    <td>
-                      <Button onClick={() => onDeleteHost(host, this.props.group)}
-                              className="btn-link btn-icon">
-                        <IconTrash/>
-                      </Button>
-                    </td>
-                  </tr>
-                )
-              })
-              }
-              </tbody>
-            </Table>
-              : <p>No Properties</p>
+              <Table striped={true}>
+                <thead>
+                <tr>
+                  <th>
+                    <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                  </th>
+                  <th width="8%"/>
+                </tr>
+                </thead>
+                <tbody>
+                {hosts.map((host, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{host}</td>
+                      <td>
+                        <Button onClick={() => onDeleteHost(host, this.props.group)}
+                                className="btn-link btn-icon">
+                          <IconTrash/>
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })
+                }
+                </tbody>
+              </Table>
+              : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
             }
 
             {/*
@@ -235,9 +236,10 @@ class GroupForm extends React.Component {
              </div>
              */}
             <ButtonToolbar className="text-right extra-margin-top">
-              <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+              <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
               <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>{!this.props.group.isEmpty() ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
+                      onClick={this.save}>{!this.props.group.isEmpty() ? <FormattedMessage id="portal.button.save"/> :
+                <FormattedMessage id="portal.button.add"/>}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
