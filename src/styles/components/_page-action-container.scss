@@ -4,7 +4,7 @@
 $page-action-container-vertical-padding: rem(18px);
 $page-action-container-horizontal-padding: rem(30px);
 $action-padding-right: rem(30px);
-$action-dropdown-min-width: rem(210px);
+$action-dropdown-min-width: rem(180px);
 
 .page-action-container {
   display: flex;
@@ -20,7 +20,7 @@ $action-dropdown-min-width: rem(210px);
     border-bottom: 3px solid rgba($black, 0.1);
   }
 
-  .action {
+  .action:not(:last-child) {
     padding-right: $action-padding-right;
   }
 
@@ -40,6 +40,7 @@ $action-dropdown-min-width: rem(210px);
   }
 
   h5 {
+    padding-bottom: 6px;
     text-transform: none;
   }
 
