@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class OriginHostname extends React.Component {
   constructor(props) {
     super(props);
@@ -39,14 +41,14 @@ class OriginHostname extends React.Component {
         <Modal.Body>
 
           <div className="form-group">
-            <label className="control-label">Origin Hostname</label>
+            <label className="control-label"><FormattedMessage id="portal.policy.edit.originHostname.header"/></label>
             <p>origin.foo.com</p>
           </div>
 
           <hr />
 
           <Input type="number" label="Origin Port"
-            placeholder="Enter Origin Port"
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originPort.placeholder'})}
             id="actions_origin-port"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_port']
@@ -57,22 +59,22 @@ class OriginHostname extends React.Component {
           <div className="form-groups">
             <InputConnector show={isOtherHostHeader} />
             <div className="form-group">
-              <label className="control-label">Origin Hostname Value</label>
+              <label className="control-label"><FormattedMessage id="portal.policy.edit.originHostname.originHostname.text"/></label>
               <Select className="input-select"
                 onSelect={this.handleSelectChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname']
                 )}
                 value={this.state.activeFilter}
                 options={[
-                  ['other_origin_hostname', 'Use Other Hostname Value'],
-                  ['origin_hostname', 'Use Origin Hostname'],
-                  ['published_name', 'Use Published Hostname']]}/>
+                  ['other_origin_hostname', <FormattedMessage id="portal.policy.edit.originHostname.useOtherHostname.text"/>],
+                  ['origin_hostname', <FormattedMessage id="portal.policy.edit.originHostname.useOriginHostname.text"/>],
+                  ['published_name', <FormattedMessage id="portal.policy.edit.originHostname.usePublishedHostname.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={isOtherHostHeader}>
               <Input type="text"
-                placeholder="Enter Hostname Value"
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.enterHostname.text'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_value']
                 )}/>
@@ -81,8 +83,8 @@ class OriginHostname extends React.Component {
 
         <hr />
 
-        <Input type="text" label="Origin Forward Path (optional)"
-          placeholder="Enter Origin Forward Path"
+        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.text'})}
+          placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.placeholder'})}
           id="actions_origin-forward-path"
           onChange={this.handleChange(
             ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_forward_path']
@@ -101,4 +103,4 @@ OriginHostname.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = OriginHostname
+module.exports = injectIntl(OriginHostname)

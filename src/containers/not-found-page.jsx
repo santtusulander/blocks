@@ -3,14 +3,16 @@ import { Button } from 'react-bootstrap'
 
 import './not-found-page.scss'
 
+import {FormattedMessage} from 'react-intl'
+
 const NotFoundPage = ({ history }) => {
 
   return (
     <div className="main-content downtime-content not-found-page-container">
       <div className="text-center">
         <div className="not-found-img"></div>
-        <p>We couldn&rsquo;t find the page you<br />were looking for</p>
-        <Button className="btn-save" onClick={history.goBack}>GO BACK</Button>
+        <p><FormattedMessage id="portal.notFound.pageNotFound.text"/></p>
+        <Button className="btn-save" onClick={history.goBack}><FormattedMessage id="portal.button.goBack"/></Button>
       </div>
     </div>
   )

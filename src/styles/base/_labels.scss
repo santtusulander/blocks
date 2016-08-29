@@ -1,0 +1,30 @@
+// Labels
+// ======
+
+.label {
+  font-size: inherit;
+}
+
+.label-default {
+  background-color: $grey;
+}
+
+.label-primary {
+  background-color: $pale-blue;
+}
+
+.label-success {
+  background-color: $green;
+}
+
+.label-info {
+  background-color: $dark-blue;
+}
+
+.label-warning {
+  background-color: $yellow;
+}
+
+.label-danger {
+  background-color: $red;
+}

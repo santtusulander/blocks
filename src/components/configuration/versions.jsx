@@ -5,12 +5,14 @@ import { Button } from 'react-bootstrap'
 import IconAdd from '../icons/icon-add.jsx'
 import { SidebarLinks } from '../sidebar-links'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 export class ConfigurationVersions extends React.Component {
 
   render() {
     if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
       || (!this.props.activeHost || !this.props.activeHost.size)) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
       config = config.set('active', i === this.props.activeIndex)
@@ -33,39 +35,39 @@ export class ConfigurationVersions extends React.Component {
             <IconAdd width="30" height="30" />
           </Button>
           <h1>
-            Versions
+            <FormattedMessage id="portal.policy.edit.versions.text"/>
           </h1>
         </div>
         <div className="sidebar-section-header">
-          Active Production
+          <FormattedMessage id="portal.policy.edit.versions.activeProduction.text"/>
         </div>
           <SidebarLinks
             activate={this.props.activate}
-            emptyMsg="None"
+            emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
             items={configs.production}
             tag={'config'}/>
         <div className="sidebar-section-header">
-          Active Staging
+          <FormattedMessage id="portal.policy.edit.versions.activeStaging.text"/>
         </div>
         <SidebarLinks
             activate={this.props.activate}
-            emptyMsg="None"
+            emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
             items={configs.staging}
             tag={'config'}/>
         <div className="sidebar-section-header">
-          Saved
+          <FormattedMessage id="portal.policy.edit.versions.saved.text"/>
         </div>
         <SidebarLinks
           activate={this.props.activate}
-          emptyMsg="None"
+          emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
           items={configs.inprocess}
           tag={'config'}/>
         <div className="sidebar-section-header">
-          De-Activated
+          <FormattedMessage id="portal.policy.edit.versions.deactivated.text"/>
         </div>
         <SidebarLinks
           activate={this.props.activate}
-          emptyMsg="None"
+          emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
           items={[]}
           tag={'config'}/>
       </div>
@@ -85,4 +87,4 @@ ConfigurationVersions.propTypes = {
   status: React.PropTypes.number
 }
 
-module.exports = ConfigurationVersions
+module.exports = injectIntl(ConfigurationVersions)

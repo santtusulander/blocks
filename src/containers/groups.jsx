@@ -15,6 +15,8 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 export class Groups extends React.Component {
   constructor(props) {
     super(props)
@@ -94,7 +96,7 @@ export class Groups extends React.Component {
     const analyticsURLBuilder = (...groupID) => {
       return getAnalyticsUrl('group', groupID, this.props.params)
     }
-    const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : 'Loading...' }]
+    const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
     return (
       <ContentItems
         activeAccount={activeAccount}
@@ -111,8 +113,8 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        headerText={{ summary: 'ACCOUNT CONTENT SUMMARY', label: breadcrumbs[0].label }}
-        ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : 'Loading...'}
+        headerText={{ summary: <FormattedMessage id="portal.groups.accountContentSummary.text"/>, label: breadcrumbs[0].label }}
+        ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionStartTier="group"
@@ -209,4 +211,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Groups);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Groups));

@@ -15,13 +15,14 @@ import {
   ACCOUNT_TYPES,
   SERVICE_TYPES,
   BRANDS,
-  NAME_VALIDATION_REGEXP,
-  NAME_VALIDATION_REQUIREMENTS
+  NAME_VALIDATION_REGEXP
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
+
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
 
@@ -38,7 +39,15 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
     accountName: [
       {
         condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-        errorText: <div key={accountName}>{['Account name is invalid.', <div key={1}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+        errorText: <div key={accountName}>{[<FormattedMessage id="portal.account.manage.invalidAccountName.text" />, <div key={1}>
+                    <div style={{marginTop: '0.5em'}}>
+                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                      <ul>
+                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                      </ul>
+                    </div></div>]}
+                  </div>
       }
     ]
   }
@@ -104,7 +113,7 @@ class AccountForm extends React.Component {
 
     accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
 
-    const title = this.props.account ? 'Edit Account' : 'Add new account'
+    const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
     return (
@@ -121,7 +130,7 @@ class AccountForm extends React.Component {
               {...accountName}
               type="text"
               label="Account name"
-              placeholder='Enter Account Name'/>
+              placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
             {accountName.touched && accountName.error &&
               <div className='error-msg'>{accountName.error}</div>
             }
@@ -129,7 +138,7 @@ class AccountForm extends React.Component {
             <hr/>
 
             <div className='form-group'>
-              <label className='control-label'>Brand</label>
+              <label className='control-label'><FormattedMessage id="portal.account.manage.brand.title" /></label>
               <SelectWrapper
                 {... accountBrand}
                 className="input-select"
@@ -143,7 +152,7 @@ class AccountForm extends React.Component {
             <hr/>
 
             <div className='form-group'>
-              <label className='control-label'>Account type</label>
+              <label className='control-label'><FormattedMessage id="portal.account.manage.accountType.title" /></label>
               {this.props.account ?
                 <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
               :
@@ -159,12 +168,12 @@ class AccountForm extends React.Component {
 
             <hr/>
 
-            <label>Services</label>
+            <label><FormattedMessage id="portal.account.manage.services.title" /></label>
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
-              <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+              <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
               <Button disabled={this.props.invalid} bsStyle="primary"
-                      onClick={this.save}>{this.props.account ? 'Save' : 'Add'}</Button>
+                      onClick={this.save}>{this.props.account ? <FormattedMessage id="portal.button.save" /> : <FormattedMessage id="portal.button.add" />}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
@@ -191,4 +200,4 @@ export default reduxForm({
     accountType: '',
     services: []
   }
-})(AccountForm)
+})(injectIntl(AccountForm))

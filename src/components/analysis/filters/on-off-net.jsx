@@ -7,14 +7,16 @@ import UDNButton from '../../button'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
+import {FormattedMessage} from 'react-intl'
+
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
   const toggle = type => () => {
     // TODO: Maybe some general error messaging box?
     if(onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
       showInfoDialog({
-        title: 'Error',
-        content: 'There must be at least one option selected.',
-        buttons: <UDNButton onClick={hideInfoDialog} bsStyle="primary">OK</UDNButton>
+        title: <FormattedMessage id="portal.analytics.onOfNet.noOptionsSelected.title"/>,
+        content: <FormattedMessage id="portal.analytics.onOfNet.noOptionsSelected.text"/>,
+        buttons: <UDNButton onClick={hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
       });
     }
     else {
