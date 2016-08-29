@@ -100,14 +100,12 @@ function mapDispatchToProps(dispatch, { closeModal }) {
     addRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
-      values.name.concat(domain)
-      dispatch(createResource(domain, values.name, values)).then(closeModal())
+      dispatch(createResource(domain, values.name, values)).then(() => closeModal())
     },
     saveRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
-      values.name.concat(domain)
-      dispatch(updateResource(domain, values.name, values)).then(closeModal())
+      dispatch(updateResource(domain, values.name, values)).then(() => closeModal())
     }
   }
 }
