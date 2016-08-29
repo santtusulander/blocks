@@ -110,7 +110,7 @@ function mapStateToProps({ dns, ui }) {
       {
         id: 5,
         class: "IN",
-        name: "pod1.ua.cdx-dev.unifieddeliverynetwork.net",
+        name: "aaaod1.ua.cdx-dev.unifieddeliverynetwork.net",
         ttl: 7200,
         type: "CNAME",
         value: "10.10.10.1"

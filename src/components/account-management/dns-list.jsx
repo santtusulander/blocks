@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
 
 import UDNButton from '../button'
 import ActionLinks from './action-links'
+import TableSorter from '../table-sorter'
 
 import recordTypes from '../../constants/dns-record-types'
 
@@ -15,8 +16,8 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
     }
     recordsByType[record.type].push(record)
   })
-  const getContent = type =>
-    recordsByType[type].map((record, i) =>
+  const getContent = type => sortingFunc =>
+    sortingFunc(recordsByType[type]).map((record, i) =>
       <tr key={i}>
         <td>{record.name}</td>
         <td>{record.value}</td>
@@ -56,19 +57,7 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
           tables.push(
             <div key={index} className='table-container'>
               <h4>{type} Records</h4>
-              <table className="table table-striped cell-text-left">
-                <thead >
-                  <tr>
-                    <th width="30%">HOSTNAME</th>
-                    <th width="30%">ADDRESS</th>
-                    <th width="30%">TTL</th>
-                    <th width="8%"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                 {getContent(type)}
-                </tbody>
-              </table>
+              <SortableTable content={getContent(type)}/>
             </div>
           )
         }
@@ -77,6 +66,44 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
     </div>
   )
 }
+
+class SortableTable extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      sortDirection: 1
+    }
+  }
+
+  render() {
+    const { sortDirection } = this.state
+    const changeSort = (column, direction) => this.setState({ sortDirection: direction })
+    const sort = array => array.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase ? -1 * sortDirection : 1 * sortDirection)
+    const sortedItems = this.props.content(sort)
+    const sorterProps = {
+      activateSort: changeSort,
+      activeDirection: sortDirection,
+      activeColumn: 'name'
+    }
+    return (
+      <table className="table table-striped cell-text-left">
+        <thead >
+          <tr>
+            <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
+            <th width="30%">ADDRESS</th>
+            <th width="30%">TTL</th>
+            <th width="8%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedItems}
+        </tbody>
+      </table>
+    )
+  }
+}
+
+SortableTable.propTypes = { content: PropTypes.func }
 
 export default DNSList
 
