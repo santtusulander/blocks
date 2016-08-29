@@ -27,7 +27,7 @@ const DNSList = props => {
     ...recordTypes.map(type => [type, type])
   ]
   return (
-    <div>
+    <div className="container-fluid content-container">
       <h3 className="account-management-header">
         <span id="domain-stats">
           {activeDomain ?
@@ -43,7 +43,7 @@ const DNSList = props => {
             options={recordTypeOptions}/>
           <UDNButton
             id="add-dns-record"
-            bsStyle="primary"
+            bsStyle="success"
             icon={true}
             addNew={true}
             onClick={() => toggleModal(EDIT_DNS)} >
@@ -102,4 +102,3 @@ DNSList.propTypes = {
   soaFormInitialValues: PropTypes.object,
   toggleModal: PropTypes.func
 }
-

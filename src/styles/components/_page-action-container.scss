@@ -20,6 +20,23 @@ $action-dropdown-min-width: rem(180px);
     border-bottom: 3px solid rgba($black, 0.1);
   }
 
+  &.distributed-columns {
+    align-items: center;
+    justify-content: space-between;
+
+    .selector-component {
+      display: inline-flex;
+
+      h2 {
+        cursor: pointer;
+
+        .caret {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
   .action:not(:last-child) {
     padding-right: $action-padding-right;
   }

@@ -33,7 +33,7 @@ class AccountManagementSystemDNS extends Component {
       onEditDomain
     }
     return (
-      <div className="account-management-system-dns">
+      <div>
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList
           onAddEntry={() => {/*noop*/}}

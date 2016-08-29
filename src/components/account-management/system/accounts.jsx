@@ -174,7 +174,7 @@ class AccountList extends Component {
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
-      <div>
+      <div className="container-fluid content-container">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -233,7 +233,7 @@ class AccountList extends Component {
             <tr id="empty-msg">
               <td colSpan="6">
                 {this.state.search.length > 0 ?
-                  <FormattedMessage id='portal.account.list.searchWithParams.empty.text' values={{searchTerm: this.state.search}}/> : 
+                  <FormattedMessage id='portal.account.list.searchWithParams.empty.text' values={{searchTerm: this.state.search}}/> :
                   <FormattedMessage id='portal.account.list.search.empty.text'/>}
               </td>
             </tr>}

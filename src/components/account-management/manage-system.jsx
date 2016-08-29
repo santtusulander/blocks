@@ -26,27 +26,25 @@ class AccountManagementManageSystem extends React.Component {
         <PageHeader>
           <h1>UDN Admin Account</h1>
         </PageHeader>
-        <Nav bsStyle="tabs" className="system-nav"
+        <Nav bsStyle="tabs"
           activeKey={this.state.activeTab} onSelect={this.changeTab}>
           <NavItem eventKey="users">Users</NavItem>
           <NavItem eventKey="brands">Brands</NavItem>
           <NavItem eventKey="dns">DNS</NavItem>
           <NavItem eventKey="roles">Roles</NavItem>
         </Nav>
-        <div className="tab-bodies">
-          {this.state.activeTab === 'users' &&
-            <Users/>
-          }
-          {this.state.activeTab === 'brands' &&
-            <Brands {...this.props.brandsList} />
-          }
-          {this.state.activeTab === 'dns' &&
-            <DNS {...this.props.dnsList}/>
-          }
-          {this.state.activeTab === 'roles' &&
-            <Roles/>
-          }
-        </div>
+        {this.state.activeTab === 'users' &&
+          <Users/>
+        }
+        {this.state.activeTab === 'brands' &&
+          <Brands {...this.props.brandsList} />
+        }
+        {this.state.activeTab === 'dns' &&
+          <DNS {...this.props.dnsList}/>
+        }
+        {this.state.activeTab === 'roles' &&
+          <Roles/>
+        }
       </div>
     )
   }

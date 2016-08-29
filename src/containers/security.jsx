@@ -65,7 +65,7 @@ export class Security extends React.Component {
     }
     return (
       <div>
-        <Nav bsStyle="tabs" className="system-nav">
+        <Nav bsStyle="tabs">
           <li className="navbar">
             <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active">SSL CERTIFICATE</Link>
           </li>

@@ -5,7 +5,7 @@ import {FormattedMessage} from 'react-intl';
 class AccountManagementSystemUsers extends React.Component {
   render() {
     return (
-      <div className="account-management-system-users">
+      <div className="container-fluid content-container">
         {/* Not in 0.8
           <UserList
           users={fakeUsers}

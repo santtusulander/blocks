@@ -16,23 +16,22 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
     return 0
   })
   return (
-    <div className="domain-toolbar">
+    <div className="page-action-container distributed-columns">
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
           items={sortedDomains.map(domain => [domain.id, domain.id])}
           onItemClick={changeActiveDomain}
           searchValue={searchValue}
           onSearch={searchFunc}>
-           <h3>{activeDomain}<span className="caret"></span></h3>
+           <h2>{activeDomain}<span className="caret"></span></h2>
         </DomainSelector> :
         <h3 className="selector-component">NO DOMAINS</h3>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
             id="add-domain"
-            bsStyle="primary"
+            bsStyle="success"
             icon={true}
-            addNew={true}
             onClick={onAddDomain}>
             <IconAdd/>
           </UDNButton>

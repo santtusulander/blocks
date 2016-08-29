@@ -370,7 +370,7 @@ export class AccountManagement extends Component {
                 <h1>{activeAccount.get('name') || 'No active account'}</h1>
               </IsAllowed>
             </PageHeader>
-            {account && <Nav bsStyle="tabs" className="system-nav">
+            {account && <Nav bsStyle="tabs">
               <li className="navbar">
                 <Link to={baseUrl + '/details'} activeClassName="active">ACCOUNT</Link>
               </li>
@@ -381,7 +381,7 @@ export class AccountManagement extends Component {
                 <Link to={baseUrl + '/users'} activeClassName="active">USERS</Link>
               </li>
             </Nav>}
-            {!account && <Nav bsStyle="tabs" className="system-nav">
+            {!account && <Nav bsStyle="tabs">
               <li className="navbar">
                 <Link to={baseUrl + '/accounts'} activeClassName="active">ACCOUNTS</Link>
               </li>
@@ -405,9 +405,7 @@ export class AccountManagement extends Component {
                </li>
                */}
             </Nav>}
-            <Content className="tab-bodies">
-              {this.props.children && React.cloneElement(this.props.children, childProps)}
-            </Content>
+            {this.props.children && React.cloneElement(this.props.children, childProps)}
           </div>
           {accountManagementModal === ADD_ACCOUNT &&
           <AccountForm
