@@ -1,5 +1,7 @@
 // Header
 // ======
+$dt-header-bg-color: #203149;
+$lt-header-bg-color: $white;
 
 .header {
   height: $header-total-height;
@@ -107,12 +109,12 @@
   }
 
   .dark-theme & {
-    background-color: $dt-header-background-color;
+    background-color: $dt-header-bg-color;
     border-bottom: 1px solid $black;
   }
 
   .light-theme & {
-    background-color: $silver-20;
+    background-color: $lt-header-bg-color;
     border-bottom: 1px solid $silver-80;
   }
 

@@ -149,9 +149,8 @@
       }
     }
 
-    .dark-theme &,
-    .light-theme .header & {
-      color: $dt-text-color;
+    .dark-theme & {
+      color: $pale-blue;
 
       &:hover {
         color: $white;
@@ -159,7 +158,7 @@
     }
 
     .light-theme & {
-      color: $pale-blue, 0.5;
+      color: $pale-blue;
 
       &:hover {
         color: $lt-text-color;
@@ -168,14 +167,16 @@
   }
 
   > .active {
-
-    .dark-theme &,
-    .light-theme & {
-      color: $white;
+    .dark-theme & {
+      a {
+        color: $white;
+      }
     }
 
     .light-theme & {
-      color: $lt-text-color;
+      a {
+        color: $lt-text-color;
+      }
     }
   }
 }
