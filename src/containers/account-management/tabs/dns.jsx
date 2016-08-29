@@ -60,7 +60,6 @@ class AccountManagementSystemDNS extends Component {
       },
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
-      domain: activeDomain,
       records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch))
     }
     return (

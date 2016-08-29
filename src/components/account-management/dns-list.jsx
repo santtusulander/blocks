@@ -7,7 +7,7 @@ import TableSorter from '../table-sorter'
 
 import recordTypes from '../../constants/dns-record-types'
 
-const DNSList = ({ domain, onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc }) => {
+const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc }) => {
   let tables = []
   let recordsByType = {}
   records.forEach(record => {
@@ -119,7 +119,6 @@ SortableTable.propTypes = { content: PropTypes.func }
 export default DNSList
 
 DNSList.propTypes = {
-  domain: PropTypes.string,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
   onEditEntry: PropTypes.func,
