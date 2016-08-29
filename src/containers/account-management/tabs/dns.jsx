@@ -113,7 +113,7 @@ function mapStateToProps({ dns, ui }) {
         name: "aaaod1.ua.cdx-dev.unifieddeliverynetwork.net",
         ttl: 7200,
         type: "CNAME",
-        value: "10.10.10.1"
+        value: "10.100000.10.1"
       },
       {
         id: 6,

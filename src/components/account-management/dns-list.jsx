@@ -19,7 +19,9 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
   const getContent = type => sortingFunc =>
     sortingFunc(recordsByType[type]).map((record, i) =>
       <tr key={i}>
-        <td>{record.name}</td>
+        <td>
+          <Input type="checkbox" label={record.name}/>
+        </td>
         <td>{record.value}</td>
         <td>{record.ttl}</td>
         <td>
