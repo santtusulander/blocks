@@ -7,7 +7,7 @@ import TableSorter from '../table-sorter'
 
 import recordTypes from '../../constants/dns-record-types'
 
-const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc }) => {
+const DNSList = ({ domain, onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc }) => {
   let tables = []
   let recordsByType = {}
   records.forEach(record => {
@@ -20,9 +20,11 @@ const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue,
     sortingFunc(recordsByType[type]).map((record, i) =>
       <tr key={i}>
         <td>
-          <Input type="checkbox" label={record.name}/>
+          <Input
+            type="checkbox"
+            label={record.name.replace(new RegExp(domain, 'i'), '')}/>
         </td>
-        <td>{record.value}</td>
+        <td><TruncatedTitle content={record.value} tooltipPlacement="bottom" className="account-management-title"/></td>
         <td>{record.ttl}</td>
         <td>
         <ActionLinks

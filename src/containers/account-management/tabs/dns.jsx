@@ -38,6 +38,7 @@ class AccountManagementSystemDNS extends Component {
       onEditEntry: id => console.log('record', id, 'pressed for edit'),
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
+      domain: activeDomain,
       records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch))
     }
     return (
