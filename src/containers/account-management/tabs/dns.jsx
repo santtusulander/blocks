@@ -7,54 +7,48 @@ import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
-import DomainToolbar from './domain-toolbar'
-import DNSList from '../dns-list'
+import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
+import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
-import RecordForm from '../record-form'
+import RecordForm from '../modals/record-form'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
     super(props)
-    this.editingRecord = true
+    this.editingRecord = false
     this.state = {
-      domainSearchValue: ''
+      domainSearch: '',
+      recordSearch: ''
     }
-  }
-
-  componentWillMount() {
-    this.props.fetchDomains(this.props.params.brand)
   }
 
   render() {
-    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain, toggleModal, activeModal } = this.props
+    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain, activeModal, toggleModal } = this.props
+    const { domainSearch } = this.state
+    const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const domainHeaderProps = {
-      searchValue: this.state.domainSearchValue,
-      searchFunc: ({ target: { value } }) => this.setState({ domainSearchValue: value }),
       activeDomain,
-      domains: domains && domains.filter(domain => domain.id.includes(this.state.domainSearchValue)),
       changeActiveDomain: value => changeActiveDomain(value),
+      domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       onAddDomain,
-      onEditDomain
+      onEditDomain,
+      searchValue: domainSearch,
+      searchFunc: e => setSearchValue(e, 'domainSearch')
     }
-    const dnsFormInitialValues = {}
+    const DNSListProps = {
+      onAddEntry: () => {
+        this.editingRecord = true
+        toggleModal(RECORD_EDIT)
+      }
+    }
     return (
       <div className="account-management-system-dns">
         <DomainToolbar {...domainHeaderProps}/>
-        <DNSList
-          onAddEntry={() => {
-            this.editingRecord = false
-            toggleModal(RECORD_EDIT)}
-          }
-          onDeleteEntry={() => {/*noop*/}}/>
+        <DNSList {...DNSListProps}/>
         {activeModal === RECORD_EDIT &&
           <RecordForm
-            id="record-form"
             edit={this.editingRecord}
-            domain='foobar.com'
-            onSave={values => console.log(values)}
-            onCancel={() => toggleModal(null)}
-            {...dnsFormInitialValues}/>}
-
+            closeModal={() => toggleModal(null)}/>}
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
             id="soa-form"
@@ -70,19 +64,24 @@ class AccountManagementSystemDNS extends Component {
 
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
+  activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
   fetchDomains: PropTypes.func,
+  fetchRecords: PropTypes.func,
   onAddDomain: PropTypes.func,
   onEditDomain: PropTypes.func,
-  params: PropTypes.object
+  params: PropTypes.object,
+  records: PropTypes.array,
+  setActiveRecord: PropTypes.func,
+  toggleModal: PropTypes.func
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ dns, ui }) {
   return {
-    domains: state.dns.get('domains').toJS(),
-    activeDomain: state.dns.get('activeDomain'),
-    activeModal: state.ui.get('accountManagementModal')
+    domains: dns.get('domains').toJS(),
+    activeDomain: dns.get('activeDomain'),
+    activeModal: ui.get('accountManagementModal')
   }
 }
 
