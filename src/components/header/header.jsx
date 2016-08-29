@@ -16,6 +16,8 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
   getUrl } from '../../util/helpers.js'
 
+import {FormattedMessage} from 'react-intl'
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -80,7 +82,7 @@ class Header extends React.Component {
     if (params.group === activeGroup) {
       links.push({
         url: params.property ? urlMethod('group', params.group, params) : null,
-        label:  params.group === activeGroup ? this.props.activeGroup.get('name') : 'GROUP'
+        label:  params.group === activeGroup ? this.props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
       })
     }
   }
@@ -106,7 +108,7 @@ class Header extends React.Component {
       let propertyLinkIsLast = true
       if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
         links.push({
-          label:  'Analytics'
+          label:  <FormattedMessage id="portal.header.analytics.text"/>
         })
 
         propertyLinkIsLast = false
@@ -114,7 +116,7 @@ class Header extends React.Component {
 
       if (router.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
-          label:  'Configuration'
+          label:  <FormattedMessage id="portal.header.configuration.text"/>
         })
 
         propertyLinkIsLast = false
@@ -124,7 +126,7 @@ class Header extends React.Component {
       this.addGroupLink(links, getContentUrl)
 
       links.push({
-        label:  'Content',
+        label:  <FormattedMessage id="portal.header.content.text"/>,
         url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
@@ -132,7 +134,7 @@ class Header extends React.Component {
       this.addGroupLink(links, getAnalyticsUrl)
 
       links.push({
-        label: 'Analytics',
+        label: <FormattedMessage id="portal.header.analytics.text"/>,
         url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) : null
       })
     } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {

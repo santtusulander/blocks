@@ -6,6 +6,8 @@ import { Input } from 'react-bootstrap'
 import {formatBytes} from '../../util/helpers'
 import TableSorter from '../table-sorter'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class AnalysisURLList extends React.Component {
   constructor(props) {
     super(props);
@@ -72,20 +74,20 @@ class AnalysisURLList extends React.Component {
     return (
       <div>
         <Input className="search-input" type="text"
-          placeholder="Search for URL"
+          placeholder={this.props.intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
           value={this.state.search}
           onChange={this.changeSearch}/>
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="url">
-                URL
+                <FormattedMessage id="portal.analytics.urlList.url.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="bytes" width="20%">
-                Bytes
+                <FormattedMessage id="portal.analytics.urlList.bytes.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="requests" width="20%">
-                Requests
+                <FormattedMessage id="portal.analytics.urlList.requests.text"/>
               </TableSorter>
             </tr>
           </thead>
@@ -127,4 +129,4 @@ AnalysisURLList.defaultProps = {
   urls: Immutable.List()
 }
 
-export default AnalysisURLList
+export default injectIntl(AnalysisURLList)

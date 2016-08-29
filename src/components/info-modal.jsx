@@ -38,9 +38,7 @@ InfoModal.propTypes = {
 }
 
 InfoModal.propTypes = {
-  children: PropTypes.array,
-  content: PropTypes.string,
-  title: PropTypes.string
+  children: PropTypes.array
 }
 
 export default InfoModal

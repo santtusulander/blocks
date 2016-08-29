@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Path extends React.Component {
   constructor(props) {
     super(props);
@@ -40,27 +42,27 @@ class Path extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Path</h1>
+          <h1><FormattedMessage id="portal.policy.edit.path.header'"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <div className="form-groups">
             <InputConnector show={true} />
             <div className="form-group">
-              <label className="control-label">Activity</label>
+              <label className="control-label"><FormattedMessage id="portal.policy.edit.path.activity.text"/></label>
               <Select className="input-select"
                 onSelect={this.handleSelectChange('activeActivity',
                   ['edge_configuration', 'cache_rule', 'actions', 'path_activity']
                 )}
                 value={this.state.activeActivity}
                 options={[
-                  ['add', 'Add'],
-                  ['modify', 'Modify'],
-                  ['remove', 'Remove']]}/>
+                  ['add', <FormattedMessage id="portal.policy.edit.path.add.text"/>],
+                  ['modify', <FormattedMessage id="portal.policy.edit.path.modify.text"/>],
+                  ['remove', <FormattedMessage id="portal.policy.edit.path.remove.text"/>]]}/>
             </div>
 
-            <Input type="text" label="Path"
-              placeholder="Enter Path"
+            <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.text'})}
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.placeholder'})}
               onChange={this.handleChange(
                 ['edge_configuration', 'cache_rule', 'actions', 'path_value']
               )}/>
@@ -76,9 +78,9 @@ class Path extends React.Component {
             )}
             value={this.state.activeDirection}
             options={[
-              ['to_origin', 'To Origin'],
-              ['to_client', 'To Client'],
-              ['to_both', 'To Both']]}/>
+              ['to_origin', <FormattedMessage id="portal.policy.edit.path.toOrigin.text"/>],
+              ['to_client', <FormattedMessage id="portal.policy.edit.path.toClient.text"/>],
+              ['to_both', <FormattedMessage id="portal.policy.edit.path.toBoth.text"/>]]}/>
         </div>
 
         </Modal.Body>
@@ -94,4 +96,4 @@ Path.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Path
+module.exports = injectIntl(Path)

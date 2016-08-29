@@ -20,8 +20,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
-  NAME_VALIDATION_REGEXP,
-  NAME_VALIDATION_REQUIREMENTS
+  NAME_VALIDATION_REGEXP
 } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
@@ -66,7 +65,15 @@ class AccountList extends Component {
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: <div>{[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>, <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText: <div>{[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>, <div key={name}>
+                                                                                                            <div style={{marginTop: '0.5em'}}>
+                                                                                                              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                                                                                                              <ul>
+                                                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                                                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                                                                                                              </ul>
+                                                                                                            </div>
+                                                                                                          </div>]}</div>
         }
       ]
     }

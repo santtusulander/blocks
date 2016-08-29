@@ -7,6 +7,8 @@ import Confirmation from '../confirmation.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import {parsePolicy} from '../../util/policy-config'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
     super(props);
@@ -60,9 +62,9 @@ class ConfigurationPolicyRules extends React.Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <th>Policy</th>
-              <th>Match Conditions</th>
-              <th>Actions</th>
+              <th><FormattedMessage id="portal.policy.edit.rules.policy.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
               <th></th>
             </tr>
           </thead>
@@ -77,7 +79,7 @@ class ConfigurationPolicyRules extends React.Component {
                   <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
-                      EDIT
+                      <FormattedMessage id="portal.button.EDIT"/>
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
@@ -95,11 +97,11 @@ class ConfigurationPolicyRules extends React.Component {
                         transitionAppearTimeout={10}>
                         {this.state.request_policy === i &&
                           <Confirmation
-                            cancelText="No"
-                            confirmText="Yes"
+                            cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                            confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
                             handleConfirm={this.deleteRule('request_policy', i)}
                             handleCancel={this.closeConfirmation('request_policy')}>
-                            Are you sure you want to delete the rule?
+                            <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                           </Confirmation>
                         }
                       </ReactCSSTransitionGroup>
@@ -118,7 +120,7 @@ class ConfigurationPolicyRules extends React.Component {
                   <td className="right-btns has-confirmation">
                     <Button bsStyle="primary" className="btn-link sm-padding"
                       onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
-                      EDIT
+                      <FormattedMessage id="portal.button.EDIT"/>
                     </Button>
                     <Button bsStyle="primary"
                       className="btn-link btn-icon"
@@ -136,11 +138,11 @@ class ConfigurationPolicyRules extends React.Component {
                         transitionAppearTimeout={10}>
                         {this.state.response_policy === i &&
                           <Confirmation
-                            cancelText="No"
-                            confirmText="Yes"
+                            cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                            confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
                             handleConfirm={this.deleteRule('response_policy', i)}
                             handleCancel={this.closeConfirmation('response_policy')}>
-                            Are you sure you want to delete the rule?
+                            <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                           </Confirmation>
                         }
                       </ReactCSSTransitionGroup>
@@ -151,7 +153,7 @@ class ConfigurationPolicyRules extends React.Component {
             })}
             {isEmpty ? <tr>
               <td colSpan={4}>
-                No policies rules have been added yet.
+                <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
               </td>
             </tr>
             : null}
@@ -170,4 +172,4 @@ ConfigurationPolicyRules.propTypes = {
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }
 
-module.exports = ConfigurationPolicyRules
+module.exports = injectIntl(ConfigurationPolicyRules)

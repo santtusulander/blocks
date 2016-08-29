@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 
 // React-Bootstrap
 // ===============
@@ -24,12 +25,18 @@ import {
   Tabs
 } from 'react-bootstrap';
 
+import SelectWrapper from '../components/select-wrapper'
+import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import AccountSelector from '../components/global-account-selector/selector-component'
+
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
 import IconAlerts        from '../components/icons/icon-alerts'
 import IconAnalytics     from '../components/icons/icon-analytics'
 import IconArrowDown     from '../components/icons/icon-arrow-down'
-import IconArrowRight    from '../components/icons/icon-arrow-left'
+import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
+import IconArrowLeft     from '../components/icons/icon-arrow-left'
+import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
 import IconArrowUp       from '../components/icons/icon-arrow-up'
 import IconChart         from '../components/icons/icon-chart'
 import IconClose         from '../components/icons/icon-close'
@@ -51,6 +58,7 @@ import IconItemList      from '../components/icons/icon-item-list'
 import IconPassword      from '../components/icons/icon-password'
 import IconProblem       from '../components/icons/icon-problem'
 import IconQuestion      from '../components/icons/icon-question'
+import IconQuestionMark  from '../components/icons/icon-question-mark'
 import IconSecurity      from '../components/icons/icon-security'
 import IconSelectCaret   from '../components/icons/icon-select-caret'
 import IconServices      from '../components/icons/icon-services'
@@ -58,6 +66,17 @@ import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
 
+const filterCheckboxOptions = Immutable.fromJS([
+  { value: 'link1', label: 'Property 1', checked: true },
+  { value: 'link2', label: 'Property 2', checked: true },
+  { value: 'link3', label: 'Property 3', checked: false },
+  { value: 'link4', label: 'Property 4', checked: false },
+  { value: 'link5', label: 'Property 5', checked: true },
+  { value: 'link6', label: 'Property 6', checked: false },
+  { value: 'link7', label: 'Property 7', checked: false },
+  { value: 'link8', label: 'Property 8', checked: false },
+  { value: 'link9', label: 'Property 9', checked: false }
+]);
 
 class Styleguide extends React.Component {
   render() {
@@ -75,20 +94,18 @@ class Styleguide extends React.Component {
           <h3>Heading H3</h3>
           <h4>Heading H4</h4>
           <h5>Heading H5</h5>
-          <h6>Heading H6</h6>
 
           <h3>Heading with label <Label>New</Label></h3>
-
 
           <hr />
 
           <p className="lead">Leading body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 
-
           <hr />
 
           <p>Body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan in nisi at suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec et sem posuere, pulvinar purus quis, varius augue. Praesent porttitor, mauris aliquet feugiat vestibulum, diam augue tempor turpis, id facilisis sapien massa ac eros. Vestibulum pretium cursus varius. Suspendisse sed enim vel orci fermentum consectetur. Cras metus risus, ultrices ut elit id, fringilla euismod quam. In pharetra tellus lectus. Aliquam erat volutpat. Morbi justo neque, pellentesque quis nunc a, varius euismod odio. Integer gravida quam sit amet ornare mattis. Proin molestie ex vitae ligula pellentesque, vitae placerat magna tincidunt. Aliquam sed purus id lectus volutpat suscipit quis a mauris. Fusce in est mattis, tristique mi id, auctor nibh. Proin venenatis id sapien id lobortis. Nullam cursus nisi mauris, eget interdum nisi porttitor nec.</p>
 
+          <p className="text-sm">Small body text.</p>
 
           <h1 className="page-header">Breadcrumbs</h1>
 
@@ -131,54 +148,52 @@ class Styleguide extends React.Component {
 
 
           <h1 className="page-header">Buttons</h1>
-
           <ButtonToolbar className="styleguide-row">
-            <Button bsStyle="primary">Default button</Button>
-            <Button className="btn-secondary">Secondary button</Button>
-            <Button className="btn-secondary active">Active secondary button</Button>
+            <Button bsStyle="primary">Primary</Button>
+            <Button className="btn-secondary">Secondary</Button>
+            <Button bsStyle="danger">Destructive</Button>
+            <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
-            <Button bsStyle="primary" className="btn-icon">?</Button>
-            <Button bsStyle="primary" className="btn-icon btn-round">+</Button>
+            <Button bsStyle="success" className="btn-icon"><IconAdd/></Button>
+            <Button bsStyle="primary" className="btn-icon btn-round"><IconQuestionMark/></Button>
           </ButtonToolbar>
 
           <ButtonToolbar className="styleguide-row">
-            <Button bsStyle="primary" disabled={true}>Default button</Button>
-            <Button className="btn-secondary" disabled={true}>Secondary button</Button>
-            <Button className="btn-secondary active" disabled={true}>Active secondary button</Button>
+            <Button bsStyle="primary" disabled={true}>Primary</Button>
+            <Button className="btn-secondary" disabled={true}>Secondary</Button>
+            <Button bsStyle="danger" disabled={true}>Destructive</Button>
+            <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
-            <Button bsStyle="primary" className="btn-icon" disabled={true}>?</Button>
-            <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}>+</Button>
+            <Button bsStyle="success" className="btn-icon" disabled={true}><IconAdd/></Button>
+            <Button bsStyle="primary" className="btn-icon btn-round" disabled={true}><IconQuestionMark/></Button>
           </ButtonToolbar>
 
 
           <h1 className="page-header">Dropdowns</h1>
+          <div className="row">
+            <div className="col-xs-3">
+              <SelectWrapper options={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} value={1}/>
+            </div>
+          </div>
+          <br/>
+          <div className="row">
+            <div className="col-xs-6">
+              <FilterChecklistDropdown options={filterCheckboxOptions}/>
+            </div>
+          </div>
 
-          <ButtonToolbar>
-            <DropdownButton bsStyle="primary" id="dropdown1" title="Dropdown menu">
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </DropdownButton>
-
-            <SplitButton bsStyle="primary" id="dropdown2" title="Split Button with Dropdown">
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </SplitButton>
-
-            <DropdownButton bsStyle="primary" id="dropdown3" title="Dropup menu" dropup={true}>
-              <MenuItem eventKey="1"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="2"><span>Dropdown item</span></MenuItem>
-              <MenuItem eventKey="3" active={true}><span>Active Dropdown item</span></MenuItem>
-              <MenuItem eventKey="4"><span>Dropdown item</span></MenuItem>
-            </DropdownButton>
-          </ButtonToolbar>
-
+          <div className="row">
+            <div className="col-xs-6">
+              <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
+                <div className="btn btn-link dropdown-toggle header-toggle">
+                  <h1>Select Account</h1>
+                  <span className="caret"/>
+                </div>
+              </AccountSelector>
+            </div>
+          </div>
 
           <h1 className="page-header">Tables</h1>
-
           <Table striped={true}>
             <thead>
               <tr>
@@ -239,33 +254,19 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Forms</h1>
 
           <div className="row">
-
             <div className="col-xs-6">
-
               <Input type="text" label="Default Input" placeholder="Enter text" />
-
               <Input type="email" label="Email Input" placeholder="Enter email" />
-
               <Input type="password" label="Password Input" />
-
               <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
-
               <Input type="textarea" label="Text Area" placeholder="Enter text" />
-
             </div>
 
             <div className="col-xs-6">
-
-              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={true} />
-
-              <Input type="text" label="Has Warning" bsStyle="warning" help="Helper text" hasFeedback={true} />
-
-              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={true} />
-
+              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={false} />
+              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={false} />
             </div>
-
           </div>
-
 
           <hr />
 
@@ -285,7 +286,7 @@ class Styleguide extends React.Component {
                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         </Popover>
                       }>
-                        <Button bsStyle="link" className="col-xs-2 btn-icon">?</Button>
+                        <Button bsStyle="link" className="col-xs-2">?</Button>
                       </OverlayTrigger>
                   </Row>
                 </Input>
@@ -335,12 +336,10 @@ class Styleguide extends React.Component {
           <hr />
 
           <label>Select</label>
-
           <div>
-
             <Dropdown id="dropdown-select" className="dropdown-select">
               <Dropdown.Toggle>
-                View <b>Production</b>
+                View Production
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <MenuItem eventKey="1" active={true}>Production</MenuItem>
@@ -349,7 +348,6 @@ class Styleguide extends React.Component {
                 <MenuItem eventKey="4">History</MenuItem>
               </Dropdown.Menu>
             </Dropdown>
-
           </div>
 
 
@@ -385,14 +383,24 @@ class Styleguide extends React.Component {
             IconArrowDown
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
-            <IconArrowRight />
+            <IconArrowLeft />
             <br />
-            IconArrowRight
+            IconArrowLeft
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowUp />
             <br />
             IconArrowUp
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowLgDown />
+            <br />
+            IconArrowLgDown
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowLgUp />
+            <br />
+            IconArrowLgUp
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconChart />
@@ -495,6 +503,11 @@ class Styleguide extends React.Component {
             IconQuestion
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconQuestionMark />
+            <br />
+            IconQuestionMark
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconSecurity />
             <br />
             IconSecurity
@@ -524,7 +537,6 @@ class Styleguide extends React.Component {
             <br />
             IconTrash
           </span>
-
 
         </div>
 

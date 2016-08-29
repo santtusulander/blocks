@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {FormattedMessage} from 'react-intl'
+
 class Group extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ class Group extends React.Component {
         <td>{this.props.name}</td>
         <td>{this.props.description}</td>
         <td>
-          <a href="#" onClick={this.deleteGroup}>Delete</a>
+          <a href="#" onClick={this.deleteGroup}><FormattedMessage id="portal.button.delete"/></a>
         </td>
       </tr>
     )

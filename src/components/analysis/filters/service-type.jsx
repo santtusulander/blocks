@@ -6,6 +6,8 @@ import {Input, Button} from 'react-bootstrap'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import {FormattedMessage} from 'react-intl'
+
 class FilterServiceType extends React.Component {
   constructor(props) {
     super(props);
@@ -17,9 +19,9 @@ class FilterServiceType extends React.Component {
       // TODO: Maybe some general error messaging box?
       if(this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
         this.props.uiActions.showInfoDialog({
-          title: 'Error',
-          content: 'There must be at least one service type selected.',
-          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+          title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
+          content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
+          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
         });
       }
       else {

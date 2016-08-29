@@ -11,6 +11,8 @@ import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class RolesList extends React.Component {
   constructor(props) {
     super(props);
@@ -92,7 +94,7 @@ class RolesList extends React.Component {
             type="text"
             className="search-input"
             groupClassName="search-input-group"
-            placeholder="Search"
+            placeholder={this.props.intl.formatMessage({id: 'portal.role.list.search.placeholder'})}
             value={this.state.search}
             onChange={({ target: { value } }) => this.setState({ search: value })} />
           </Col>
@@ -101,9 +103,9 @@ class RolesList extends React.Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="name">Role</TableSorter>
-              <th>Permissions</th>
-              <th>Assigned To</th>
+              <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
+              <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
+              <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
               <th width="1%"></th>
             </tr>
           </thead>
@@ -150,8 +152,8 @@ class RolesList extends React.Component {
               <tr id="empty-msg">
                 <td colSpan="6">
                 {this.state.search.length > 0 ?
-                  `No roles found with the search term ${this.state.search}` :
-                  "No roles found"}
+                  <FormattedMessage id="portal.role.list.search.noResultsWithTerm.text" values={{searchTerm: this.state.search}}/> :
+                  <FormattedMessage id="portal.role.list.search.noResults.text"/>}
                 </td>
               </tr>}
           </tbody>
@@ -190,4 +192,4 @@ RolesList.defaultProps = {
   users: Immutable.List()
 }
 
-module.exports = RolesList
+module.exports = injectIntl(RolesList)

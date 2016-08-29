@@ -1,0 +1,17 @@
+// Wells
+// =====
+
+// TODO: Fetch this color from common variables once it's added there with
+// updated styles
+$bg-well: #1e6a86;
+
+.well {
+  color: inherit;
+  background: $bg-well;
+  border: 0;
+  border-radius: 0;
+
+  p {
+    margin: 0;
+  }
+}

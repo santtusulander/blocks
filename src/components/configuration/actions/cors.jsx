@@ -6,6 +6,8 @@ import Toggle from '../../toggle'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Cors extends React.Component {
   constructor(props) {
     super(props);
@@ -40,14 +42,14 @@ class Cors extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>CORS</h1>
+          <h1><FormattedMessage id="portal.policy.edit.cors.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Support CORS for CSS</label>
+                <label><FormattedMessage id="portal.policy.edit.cors.corsForCss.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -63,7 +65,7 @@ class Cors extends React.Component {
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Support CORS for JS</label>
+                <label><FormattedMessage id="portal.policy.edit.cors.corsForJs.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -79,7 +81,7 @@ class Cors extends React.Component {
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Support CORS for XML</label>
+                <label><FormattedMessage id="portal.policy.edit.cors.corsForXml.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -93,7 +95,7 @@ class Cors extends React.Component {
           <hr />
 
           <div className="form-group">
-            <label className="control-label">Supported Methods</label>
+            <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.supportdMethods.text"/></label>
           </div>
 
           <Input type="checkbox"
@@ -120,7 +122,7 @@ class Cors extends React.Component {
           <hr />
 
           <div className="form-group">
-            <label className="control-label">HTTP Header matches</label>
+            <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.httpHeaderMatches.text"/></label>
           </div>
 
           <Input type="checkbox"
@@ -184,21 +186,21 @@ class Cors extends React.Component {
             <InputConnector
               show={this.state.activeFilter === 'restrict_domain'} />
             <div className="form-group">
-              <label className="control-label">Authorized Domains</label>
+              <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.authorizedDomains.text"/></label>
               <Select className="input-select"
                 onSelect={this.handleSelectChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cors_authorized_domains']
                 )}
                 value={this.state.activeFilter}
                 options={[
-                  ['any_domain', 'Any Domain'],
-                  ['restrict_domain', 'Restrict Domain']]}/>
+                  ['any_domain', <FormattedMessage id="portal.policy.edit.cors.anyDomain.text"/>],
+                  ['restrict_domain', <FormattedMessage id="portal.policy.edit.cors.restrictDomain.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeFilter === 'restrict_domain'}>
               <Input type="text"
-                placeholder="Enter Domain"
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cors.enterDomain.text'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cors_restrict_domain']
                 )}/>
@@ -210,7 +212,7 @@ class Cors extends React.Component {
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Overwrite Origin CORS Headers </label>
+                <label><FormattedMessage id="portal.policy.edit.cors.overwriteOriginCorsHeaders.text"/> </label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -234,4 +236,4 @@ Cors.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Cors
+module.exports = injectIntl(Cors)
