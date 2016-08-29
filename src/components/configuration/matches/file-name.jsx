@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Filename extends React.Component {
   constructor(props) {
     super(props);
@@ -32,13 +34,13 @@ class Filename extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>File Name</h1>
-          <p>Match one or more file names like index.html, home.htm</p>
+          <h1><FormattedMessage id="portal.policy.edit.fileName.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.fileName.disclaimer.text"/></p>
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label="File Name"
-            placeholder="Enter File Names separated by commas"
+          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.placeholder'})}
             id="matches_file-name"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
@@ -51,8 +53,8 @@ class Filename extends React.Component {
             )}
             value={this.state.activeFilter}
             options={[
-              ['matches', 'Matches'],
-              ['does_not_match', 'Does not match']]}/>
+              ['matches', <FormattedMessage id="portal.policy.edit.fileName.matches.text"/>],
+              ['does_not_match', <FormattedMessage id="portal.policy.edit.fileName.doesntMatch.text"/>]]}/>
 
         </Modal.Body>
       </div>
@@ -67,4 +69,4 @@ Filename.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = Filename
+module.exports = injectIntl(Filename)

@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class AllowBlock extends React.Component {
   constructor(props) {
     super(props);
@@ -54,8 +56,8 @@ class AllowBlock extends React.Component {
               )}
               value={this.state.activeAccessControl}
               options={[
-                ['allow', 'Allow'],
-                ['deny', 'Deny']]}/>
+                ['allow', <FormattedMessage id="portal.policy.edit.allowBlock.allow.text"/>],
+                ['deny', <FormattedMessage id="portal.policy.edit.allowBlock.deny.text"/>]]}/>
           </div>
 
           <hr />
@@ -71,19 +73,19 @@ class AllowBlock extends React.Component {
                 )}
                 value={this.state.activeErrorResponse}
                 options={[
-                  ['301', '301 Permanently moved'],
-                  ['302', '302 Found'],
-                  ['307', '307 Temporarily moved'],
-                  ['404', '404 Not Found'],
-                  ['410', '410 Gone'],
-                  ['418', '418 I`m a little tea pot'],
-                  ['503', '503 Service Unavailable']]}/>
+                  ['301', <FormattedMessage id="portal.policy.edit.allowBlock.301.text"/>],
+                  ['302', <FormattedMessage id="portal.policy.edit.allowBlock.302.text"/>],
+                  ['307', <FormattedMessage id="portal.policy.edit.allowBlock.307.text"/>],
+                  ['404', <FormattedMessage id="portal.policy.edit.allowBlock.404.text"/>],
+                  ['410', <FormattedMessage id="portal.policy.edit.allowBlock.410.text"/>],
+                  ['418', <FormattedMessage id="portal.policy.edit.allowBlock.418.text"/>],
+                  ['503', <FormattedMessage id="portal.policy.edit.allowBlock.503.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={requiresInput}>
-              <Input type="text" label="Redirect URL"
-                placeholder="Enter Redirect URL"
+              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.allowBlock.redirectUrl.text'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.allowBlock.redirectUrl.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'allow_block_redirect_url']
                 )}/>
@@ -103,4 +105,4 @@ AllowBlock.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = AllowBlock
+module.exports = injectIntl(AllowBlock)

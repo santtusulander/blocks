@@ -14,6 +14,8 @@ import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 
 export class Login extends React.Component {
   constructor(props) {
@@ -119,7 +121,7 @@ export class Login extends React.Component {
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
-          <h1>Log In</h1>
+          <h1><FormattedMessage id="portal.login.login.text"/></h1>
           <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
         </Modal.Header>
@@ -158,17 +160,17 @@ export class Login extends React.Component {
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
-                <Input type="checkbox" label="Remember me"
+                <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
                   onChange={this.toggleRemember}
                   checked={this.state.rememberUsername} />
               </Col>
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
                   disabled={this.props.fetching}>
-                  {this.props.fetching ? 'Logging in...' : 'Login'}
+                  {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
                 <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                  Forgot password?
+                  <FormattedMessage id="portal.login.forgotPassword.text"/>
                 </Link>
               </Col>
             </Row>
@@ -207,4 +209,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Login)));

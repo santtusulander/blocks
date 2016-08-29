@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -68,7 +70,7 @@ class Header extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Header</h1>
+          <h1><FormattedMessage id="portal.policy.edit.header.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
@@ -83,15 +85,15 @@ class Header extends React.Component {
                 onSelect={this.handleSelectChange('activeActivity')}
                 value={this.state.activeActivity}
                 options={[
-                  ['set', 'Add'],
+                  ['set', <FormattedMessage id="portal.policy.edit.header.add.text"/>],
                   /*['modify', 'Modify'],*/
-                  ['unset', 'Remove']]}/>
+                  ['unset', <FormattedMessage id="portal.policy.edit.header.remove.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity !== 'modify'}>
-              <Input type="text" label="Name"
-                placeholder="Enter Header Name"
+              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.label'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
                 value={this.state.to_header}
                 onChange={(e) => {this.setState({
                   to_header: e.target.value
@@ -100,8 +102,8 @@ class Header extends React.Component {
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity === 'set'}>
-              <Input type="text" label="Value"
-                placeholder="Enter Header Value"
+              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.label'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
                 value={this.state.to_value}
                 onChange={(e) => {this.setState({
                   to_value: e.target.value
@@ -112,32 +114,32 @@ class Header extends React.Component {
               expanded={this.state.activeActivity === 'modify'}>
               <Row>
                 <Col xs={6}>
-                  <Input type="text" label="FROM Name"
-                    placeholder="Enter Header Name"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.label'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
                     value={this.state.from_header}
                     onChange={(e) => {this.setState({
                       from_header: e.target.value
                     })}}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="TO Name"
-                    placeholder="Enter Header Name"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.label'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
                     value={this.state.to_header}
                     onChange={(e) => {this.setState({
                       to_header: e.target.value
                     })}}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="FROM Value"
-                    placeholder="Enter Header Value"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.label'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
                     value={this.state.from_value}
                     onChange={(e) => {this.setState({
                       from_value: e.target.value
                     })}}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label="TO Value"
-                    placeholder="Enter Header Value"
+                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.label'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
                     value={this.state.to_value}
                     onChange={(e) => {this.setState({
                       to_value: e.target.value
@@ -151,22 +153,22 @@ class Header extends React.Component {
           <hr />
 
           <div className="form-group">
-            <label className="control-label">Direction</label>
+            <label className="control-label"><FormattedMessage id="portal.policy.edit.header.direction.text"/></label>
             <Select className="input-select"
               onSelect={this.handleSelectChange('activeDirection')}
               value={this.state.activeDirection}
               options={[
-                ['to_origin', 'To Origin'],
-                ['to_client', 'To Client'],
-                ['to_both', 'To Both']]}/>
+                ['to_origin', <FormattedMessage id="portal.policy.edit.header.toOrigin.text"/>],
+                ['to_client', <FormattedMessage id="portal.policy.edit.header.toClient.text"/>],
+                ['to_both', <FormattedMessage id="portal.policy.edit.header.toBoth.text"/>]]}/>
           </div>
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="default" onClick={this.props.close}>
-              Cancel
+              <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
-              Save Action
+              <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>
 
@@ -184,4 +186,4 @@ Header.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = Header
+module.exports = injectIntl(Header)
