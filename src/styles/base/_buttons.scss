@@ -95,18 +95,7 @@ $lt-caret-color: $silver-60;
 
   // TODO: remove this after updating other areas in the site
   &.btn-sm {
-    height: $btn-sm-height;
-    line-height: $btn-sm-height;
-
-    @include md {
-      height: $md-btn-sm-height;
-      line-height: $md-btn-sm-height;
-    }
-
-    &.btn-tertiary {
-      min-width: 0;
-      text-transform: uppercase;
-    }
+    min-width: 0;
   }
 
   &.sm-padding {
@@ -628,36 +617,6 @@ $lt-caret-color: $silver-60;
     border-top-color: $pale-blue;
   }
 
-  .btn-tertiary {
-
-    &,
-    &:hover {
-      color: $dt-text-color;
-      background-color: rgba($black, 0.2);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
-  }
-
-  .open:not(.dropdown-select) > .dropdown-toggle.btn-tertiary {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus {
-      color: $pale-blue;
-      background-color: rgba($black, 0.2);
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
-  }
-
   .btn-save {
 
     &,
@@ -672,27 +631,6 @@ $lt-caret-color: $silver-60;
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-}
-
-// TODO: remove this
-.light-theme .header {
-  .btn-tertiary {
-
-    &,
-    &:hover {
-      color: $white;
-      background-color: $silver-80;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &:hover:not(:disabled) {
-      color: $white;
-      box-shadow: 0 0 0 1px $white;
-      fill: $white;
-      stroke: $white;
     }
   }
 }
@@ -763,23 +701,6 @@ $lt-caret-color: $silver-60;
 
   .open > .dropdown-toggle .caret {
     border-top-color: $pale-blue;
-  }
-
-  .btn-tertiary {
-
-    &,
-    &:hover {
-      color: $lt-text-color;
-      background-color: rgba($black, 0.2);
-      fill: $lt-text-color;
-      stroke: $lt-text-color;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
   }
 
   .btn-save {

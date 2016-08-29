@@ -61,69 +61,11 @@
       white-space: nowrap;
     }
 
-    &.breadcrumb-back {
-      width: $btn-height / 2;
-      height: $btn-height / 2;
-      margin-right: 20px;
-      margin-left: $btn-sm-height / 2 - 15;
-      border-radius: 50%;
-      content: '';
-
-      @include md {
-        width: $btn-sm-height / 2;
-        height: $btn-sm-height / 2;
-        margin-right: 15px;
-        margin-left: $md-btn-sm-height / 2 - 15;
-      }
-
-      @include print {
-        display: none;
-      }
-
-      .dark-theme &,
-      .light-theme & {
-        background-color: rgba($black, 0.2);
-      }
-
-      a {
-        position: relative;
-        display: block;
-        height: 100%;
-
-        &::after {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin: -5px 0 0 -3px;
-          vertical-align: middle;
-          border: 0;
-          border-top: 5px solid transparent;
-          border-right: 5px dashed;
-          border-bottom: 5px solid transparent;
-          content: '';
-
-          .dark-theme &,
-          .light-theme & {
-            border-right-color: $dt-text-color;
-          }
-        }
-
-        &:hover::after {
-
-          .dark-theme &,
-          .light-theme & {
-            border-right-color: $white;
-          }
-        }
-      }
-    }
-
-    &:not(.breadcrumb-back, :last-child)::after {
+    &:not(:last-child)::after {
       padding: 0 10px 0 0;
       content: '\203A';
 
-      .dark-theme &,
-      .light-theme .header & {
+      .dark-theme & {
         color: $dt-text-color;
       }
 
