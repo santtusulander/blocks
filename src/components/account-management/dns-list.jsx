@@ -22,7 +22,7 @@ const DNSList = ({ domain, onDeleteEntry, onEditEntry, onAddEntry, records, sear
         <td>
           <Input
             type="checkbox"
-            label={record.name.replace(new RegExp('.' + domain, 'i'), '')}/>
+            label={record.name}/>
         </td>
         <td>{record.value}</td>
         <td>{record.ttl}</td>
