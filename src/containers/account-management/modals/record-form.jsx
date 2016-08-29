@@ -103,11 +103,14 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 function mapDispatchToProps(dispatch, { closeModal }) {
   return {
     addRecord: (values, domain) => {
+      // Hardcode class-key as it is not set anywhere
+      values.class = 'IN'
       // dispatch(createResource(domain, values.name, values)).then(closeModal())
       closeModal()
     },
     saveRecord: (values, domain) => {
-      console.log(values)
+      // Hardcode class-key as it is not set anywhere
+      values.class = 'IN'
       /*dispatch(updateResource(domain, values.name, values)).then(closeModal())*/
       closeModal()
     }
