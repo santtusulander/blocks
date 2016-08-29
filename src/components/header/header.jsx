@@ -76,7 +76,8 @@ class Header extends React.Component {
   }
 
   addGroupLink(links, urlMethod) {
-    const activeGroup = this.props.activeGroup.size ? this.props.activeGroup.get('id').toString() : null,
+    const activeGroup = this.props.activeGroup && this.props.activeGroup.size ?
+      this.props.activeGroup.get('id').toString() : null,
       params = this.props.params;
 
     if (params.group === activeGroup) {
@@ -165,7 +166,8 @@ class Header extends React.Component {
 
   render() {
     const { activeAccount, router, user, params: { account, brand } } = this.props
-    const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
+    const activeAccountName = activeAccount && this.props.params.account ?
+      activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
