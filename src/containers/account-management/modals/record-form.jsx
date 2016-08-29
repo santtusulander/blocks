@@ -43,20 +43,20 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, saveRecord, addRecord, closeModal, ...formProps  } = props
+  const { domain, edit, saveRecord, addRecord, closeModal, values, ...formProps  } = props
   const recordFormProps = {
     domain,
     edit,
-    values: filterFields(props.values),
+    values: filterFields(values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: values => {
-      if (values.ttl) {
-        values.ttl = Number(values.ttl)
+    onSave: fields => {
+      if (fields.ttl) {
+        fields.ttl = Number(fields.ttl)
       }
-      if (values.priority) {
-        values.priority = Number(values.priority)
+      if (fields.priority) {
+        fields.priority = Number(fields.priority)
       }
-      edit ? saveRecord(values, domain) : addRecord(values, domain)
+      edit ? saveRecord(fields, domain) : addRecord(fields, domain)
     },
     onCancel: closeModal,
     ...formProps
@@ -87,8 +87,7 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const initialValues = edit ?
-    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord')).toJS() :
-    {}
+    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord')).toJS() : {}
   return {
     initialValues,
     domain: dns.get('activeDomain')
@@ -97,8 +96,16 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 
 function mapDispatchToProps(dispatch, { closeModal }) {
   return {
-    addRecord: (values, domain) => dispatch(createResource(domain, values.name, values)).then(closeModal()),
-    saveRecord: (values, domain) => dispatch(updateResource(domain, values.name, values)).then(closeModal())
+    addRecord: (values, domain) => {
+      // Hardcode class-key as it is not set anywhere
+      values.class = 'IN'
+      dispatch(createResource(domain, values.name, values)).then(closeModal())
+    },
+    saveRecord: (values, domain) => {
+      // Hardcode class-key as it is not set anywhere
+      values.class = 'IN'
+      dispatch(updateResource(domain, values.name, values)).then(closeModal())
+    }
   }
 }
 
