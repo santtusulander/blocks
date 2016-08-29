@@ -152,7 +152,7 @@ class AnalysisCacheHitRate extends React.Component {
               <TableSorter {...sorterProps} column="timestamp">
               Date
               </TableSorter>
-              <TableSorter {...sorterProps} column="chit_ratio,percent_total" sortFunc="specific">
+              <TableSorter {...sorterProps} column="chit_ratio">
               Cache Hit Rate (%)
               </TableSorter>
             </tr>
