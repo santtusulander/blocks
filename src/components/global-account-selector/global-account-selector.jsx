@@ -90,7 +90,9 @@ class AccountSelector extends Component {
     else if(nextTier === 'group') {
       fetchParams = [brand, account]
     }
-    this.props.accountSelectorActions.fetchItems(...fetchParams)
+    this.props.accountSelectorActions.fetchItems(...fetchParams).then(() => {
+      this.props.accountSelectorActions.setSearch('')
+    })
     this.tier = nextTier
   }
 
@@ -146,6 +148,7 @@ class AccountSelector extends Component {
       this.account = value
       fetchArgs = ['group', 'udn', this.account]
     }
+
     this.fetchItems(...fetchArgs)
   }
 
