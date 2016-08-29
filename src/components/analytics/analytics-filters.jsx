@@ -13,8 +13,6 @@ import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 
-import './analytics-filters.scss'
-
 const serviceProviderOpts = [
   ['all', 'All'],
   ['vodafone-group', 'Vodafone Group'],
@@ -102,13 +100,11 @@ StatusCodes.propTypes = {
 
 const AnalyticsFilters = (props) => {
   return (
-    <div className='analytics-filters'>
+    <div className='page-action-container'>
 
       {props.showFilters.includes('date-range') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-            Date Range
-          </div>
+        <div className='action'>
+          <h5>Date Range</h5>
           <DateRangeSelect
             changeDateRange={(startDate, endDate) => {
               props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
@@ -126,7 +122,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('service-provider') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterServiceProvider
           changeServiceProvider={val => {
             props.onFilterChange('serviceProvider', val)
@@ -138,7 +134,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('pop') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterPop
           changePop={val => {
             props.onFilterChange('pop', val)
@@ -150,7 +146,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('on-off-net') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterOnOffNet
             onOffNetValues={props.filters.get('onOffNet')}
             toggleFilter={val => {
@@ -164,10 +160,8 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('service-type') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-            Service Types
-          </div>
+        <div className='action'>
+          <h5>Service Types</h5>
 
           <FilterServiceType
             serviceTypes={props.filters.get('serviceTypes')}
@@ -182,7 +176,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('record-type') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterRecordType
             recordType={props.filters.get('recordType')}
             toggleRecordType={val => {
@@ -195,10 +189,8 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('error-code') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-          Status Codes
-          </div>
+        <div className='action'>
+          <h5>Status Codes</h5>
           <StatusCodes
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
@@ -207,7 +199,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('video') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterVideo
             value={props.filters.get('video')}
             changeVideo={val => {

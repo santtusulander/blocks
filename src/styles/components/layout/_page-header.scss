@@ -26,14 +26,6 @@ $page-header-dropdown-width: rem(250px);
     min-width: $page-header-dropdown-width;
   }
 
-  .form-control {
-    height: $btn-height;
-
-    @include md {
-      height: $md-btn-height;
-    }
-  }
-
   h1 {
     color: $pale-blue;
   }

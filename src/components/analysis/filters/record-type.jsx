@@ -5,10 +5,8 @@ export class FilterRecordType extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Show as
-        </div>
-        <div className="sidebar-content">
+        <h5>Show as</h5>
+        <div className="sidebar-content form-inline">
           <Input type="radio" label="Bandwidth"
             checked={this.props.recordType.includes('transfer_rates')}
             onChange={() => this.props.toggleRecordType('transfer_rates')}/>

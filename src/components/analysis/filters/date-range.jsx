@@ -9,9 +9,7 @@ export class FilterDateRange extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Date Range
-        </div>
+        <h5>Date Range</h5>
         <div className="sidebar-content">
           <DateRangeSelect
             changeDateRange={this.props.changeDateRange}

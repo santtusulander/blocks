@@ -8,9 +8,7 @@ export class FilterResponseCode extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Response Code
-        </div>
+        <h5>Response Code</h5>
         <div className="sidebar-content">
           <Input type="checkbox"
             label="All"

@@ -23,10 +23,8 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
   }
   return (
     <div>
-      <div className="sidebar-section-header">
-        On-Net/Off-Net
-      </div>
-      <div className="sidebar-content">
+      <h5>On-Net/Off-Net</h5>
+      <div className="sidebar-content form-inline">
         <Input type="checkbox" label="On-Net"
           checked={onOffNetValues.contains('on-net')}
           onChange={toggle('on-net')}

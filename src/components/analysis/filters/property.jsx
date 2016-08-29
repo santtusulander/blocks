@@ -6,9 +6,7 @@ export class FilterProperty extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Properties
-        </div>
+        <h5>Properties</h5>
         <div className="sidebar-content">
           <div className="form-group">
             <Select className="btn-block"

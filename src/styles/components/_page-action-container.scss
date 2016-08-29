@@ -1,0 +1,49 @@
+// Page Action Container Layout
+// ============================
+
+$page-action-container-vertical-padding: rem(18px);
+$page-action-container-horizontal-padding: rem(30px);
+$action-padding-right: rem(30px);
+$action-dropdown-min-width: rem(210px);
+
+.page-action-container {
+  display: flex;
+  padding: $page-action-container-vertical-padding $page-action-container-horizontal-padding;
+
+  .dark-theme & {
+    background-color: rgba($pale-blue, 0.2);
+    border-bottom: 3px solid rgba($black, 0.4);
+  }
+
+  .light-theme & {
+    background-color: $white;
+    border-bottom: 3px solid rgba($black, 0.1);
+  }
+
+  .action {
+    padding-right: $action-padding-right;
+  }
+
+  .form-group .dropdown-select,
+  .dropdown-select {
+    min-width: $action-dropdown-min-width;
+  }
+
+  .form-inline {
+    .form-group {
+      padding-top: 4px;
+
+      &:not(:last-child) {
+        padding-right: $action-padding-right;
+      }
+    }
+  }
+
+  h5 {
+    text-transform: none;
+  }
+
+  .form-group {
+    padding: 0;
+  }
+}

@@ -30,7 +30,7 @@ class FilterServiceType extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-content">
+        <div className="sidebar-content form-inline">
           <Input type="checkbox" label="HTTP"
             checked={this.props.serviceTypes.includes('http')}
             onChange={this.toggleServiceType('http') } />

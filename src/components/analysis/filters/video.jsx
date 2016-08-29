@@ -6,9 +6,7 @@ export class FilterVideo extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Video URL
-        </div>
+        <h5>Video URL</h5>
         <div className="sidebar-content">
           <Select className="btn-block"
             onSelect={this.props.changeVideo}

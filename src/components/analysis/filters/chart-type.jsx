@@ -6,9 +6,7 @@ export class FilterChartType extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          CHART TYPE
-        </div>
+        <h5>CHART TYPE</h5>
         <div className="sidebar-content">
           <div className="form-group">
             <Select className="btn-block"

@@ -6,16 +6,12 @@ export class FilterPop extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          POPs
-        </div>
+        <h5>POPs</h5>
         <div className="sidebar-content">
-          <div className="form-group">
-            <Select className="btn-block"
-              onSelect={this.props.changePop}
-              value={this.props.value}
-              options={this.props.options}/>
-          </div>
+          <Select className="btn-block"
+            onSelect={this.props.changePop}
+            value={this.props.value}
+            options={this.props.options}/>
         </div>
       </div>
     );

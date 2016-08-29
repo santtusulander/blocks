@@ -15,9 +15,7 @@ export const AccountManagementSidebar = props => {
             New Account
           </UDNButton>
         </div>
-        <div className="sidebar-section-header">
-          MANAGE ACCOUNTS
-        </div>
+        <h5>MANAGE ACCOUNTS</h5>
         <SidebarLinks
           activeItem={activeAccount}
           activate={activate}

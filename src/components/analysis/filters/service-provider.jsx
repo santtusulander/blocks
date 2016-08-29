@@ -6,16 +6,12 @@ export class FilterServiceProvider extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Service Providers
-        </div>
+        <h5>Service Providers</h5>
         <div className="sidebar-content">
-          <div className="form-group">
-            <Select className="btn-block"
-              onSelect={this.props.changeServiceProvider}
-              value={this.props.value}
-              options={this.props.options}/>
-          </div>
+          <Select className="btn-block"
+            onSelect={this.props.changeServiceProvider}
+            value={this.props.value}
+            options={this.props.options}/>
         </div>
       </div>
     );
