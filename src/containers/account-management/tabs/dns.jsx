@@ -58,9 +58,10 @@ class AccountManagementSystemDNS extends Component {
         this.editingRecord = true
         toggleModal(RECORD_EDIT)
       },
-      records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch)),
       searchFunc: e => setSearchValue(e, 'recordSearch'),
-      searchValue: recordSearch
+      searchValue: this.state.recordSearch,
+      domain: activeDomain,
+      records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch))
     }
     return (
       <div className="account-management-system-dns">

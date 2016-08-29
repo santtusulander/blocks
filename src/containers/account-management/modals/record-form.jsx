@@ -86,11 +86,13 @@ RecordFormContainer.propTypes = {
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
+  const domain = dns.get('activeDomain')
   const initialValues = edit ?
-    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord')).toJS() : {}
+    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
+    .get('name').replace(new RegExp('.' + domain, 'i'), '').toJS() : {}
   return {
     initialValues,
-    domain: dns.get('activeDomain')
+    domain
   }
 }
 
@@ -99,11 +101,13 @@ function mapDispatchToProps(dispatch, { closeModal }) {
     addRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
+      values.name.concat(domain)
       dispatch(createResource(domain, values.name, values)).then(closeModal())
     },
     saveRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
+      values.name.concat(domain)
       dispatch(updateResource(domain, values.name, values)).then(closeModal())
     }
   }
