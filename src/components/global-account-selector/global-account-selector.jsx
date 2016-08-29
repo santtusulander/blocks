@@ -90,7 +90,9 @@ class AccountSelector extends Component {
     else if(nextTier === 'group') {
       fetchParams = [brand, account]
     }
-    this.props.accountSelectorActions.fetchItems(...fetchParams)
+    this.props.accountSelectorActions.fetchItems(...fetchParams).then(() => {
+      this.props.accountSelectorActions.setSearch('')
+    })
     this.tier = nextTier
   }
 
@@ -99,11 +101,12 @@ class AccountSelector extends Component {
    * in brand and account tiers, in both cases 'account' gets passed
    */
   onItemClick(value) {
-    let { onSelect, params: { brand, account, group } } = this.props
+    let { onSelect, params: { brand, account, group }, accountSelectorActions } = this.props
     if(!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
     this.props.accountSelectorActions.setOpen(false)
+    accountSelectorActions.setSearch('')
     onSelect(
       this.tier === 'brand' ? 'account' : this.tier,
       value,
@@ -145,6 +148,7 @@ class AccountSelector extends Component {
       this.account = value
       fetchArgs = ['group', 'udn', this.account]
     }
+
     this.fetchItems(...fetchArgs)
   }
 
