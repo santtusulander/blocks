@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Input, Table } from 'react-bootstrap'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
@@ -42,7 +43,7 @@ class ModalServerValidation extends React.Component {
         </td>
         <td>
           <h2>123.123.123.12</h2>
-          <h3>is NOT a UDN Server</h3>
+          <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.notUdnServer.text"/></h3>
         </td>
       </tr>
     : randomNumber === 1 ?
@@ -54,7 +55,7 @@ class ModalServerValidation extends React.Component {
         </td>
         <td>
           <h2>123.123.123.12</h2>
-          <h3>is a UDN Partner Server</h3>
+          <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnPartnerServer.text"/></h3>
         </td>
       </tr>
     :
@@ -66,7 +67,7 @@ class ModalServerValidation extends React.Component {
         </td>
         <td>
           <h2>123.123.123.12</h2>
-          <h3>is a UDN Server</h3>
+          <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnServer.text"/></h3>
         </td>
       </tr>
     const content = (
@@ -91,19 +92,21 @@ class ModalServerValidation extends React.Component {
         showDetails={showDetails}
         header={
           <div>
-            <h1>UDN Server Validation</h1>
-            <p>Validate whether or not a particular IP address is from UDN network.</p>
+            <h1><FormattedMessage id="portal.support.tools.serverValidation.modal.title.text"/></h1>
+            <p><FormattedMessage id="portal.support.tools.serverValidation.modal.subTitle.text"/></p>
           </div>
         }>
         <div>
           <Input
             type="text"
-            placeholder="Enter IP Address"
-            label="IP Address"
+            placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.serverValidation.modal.ipAddressPlaceholder.text' })}
+            label={this.props.intl.formatMessage({ id: 'portal.support.tools.serverValidation.modal.ipAddressLabel.text' })}
             value="123.123.123.12"
             onChange={() => null}/>
           <hr />
-          <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>VALIDATE</Button>
+          <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>
+            <FormattedMessage id="portal.button.VALIDATE"/>
+          </Button>
           {showDetails && content}
         </div>
       </SupportToolModal>
@@ -118,4 +121,4 @@ ModalServerValidation.propTypes = {
   toggleShowDetails: React.PropTypes.func
 }
 
-export default ModalServerValidation;
+export default injectIntl(ModalServerValidation);
