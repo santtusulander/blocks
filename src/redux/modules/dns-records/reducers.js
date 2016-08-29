@@ -30,8 +30,9 @@ export const receiveResourceDetails = (state, action) => {
 }*/
 
 //CREATE
-export const createSuccess = (state, {payload: {data}}) => {
-  return state.merge( {loading: false, resources: state.get('resources').push( data.set('id', uniqid() ) ) } );
+export const createSuccess = (state, { payload: { data } }) => {
+  data.id = uniqid()
+  return state.merge({ loading: false, resources: state.get('resources').push(data) });
 }
 
 export const createFailed = (state) => {
