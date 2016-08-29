@@ -4,6 +4,8 @@ import { List } from 'immutable'
 import ActionLinks from './action-links.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
+import {FormattedMessage} from 'react-intl'
+
 const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props
   return (
@@ -12,9 +14,9 @@ const UserList = props => {
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <th width="30%">NAME</th>
-            <th width="30%">ROLE</th>
-            <th width="30%">EMAIL</th>
+            <th width="30%"><FormattedMessage id="portal.user.list.name.column.title"/></th>
+            <th width="30%"><FormattedMessage id="portal.user.list.role.column.title"/></th>
+            <th width="30%"><FormattedMessage id="portal.user.list.email.column.title"/></th>
             <th width="8%"></th>
           </tr>
         </thead>
@@ -33,7 +35,7 @@ const UserList = props => {
                 </td>
               </tr>
             )
-          }) : <tr id="empty-msg"><td colSpan="4">No users</td></tr>}
+          }) : <tr id="empty-msg"><td colSpan="4"><FormattedMessage id="portal.user.list.noUsers.text"/></td></tr>}
         </tbody>
       </table>
     </div>

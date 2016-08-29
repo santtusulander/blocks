@@ -8,6 +8,8 @@ const AVAILABILITY_SHARED = 'Shared'
 const AVAILABILITY_PRIVATE = 'Private'
 import { EDIT_BRAND } from '../../constants/account-management-modals.js'
 
+import {FormattedMessage} from 'react-intl'
+
 const BrandListRow = (props) => {
   return (
     <tr className='brandListRow'>
@@ -89,10 +91,10 @@ const BrandList = (props) => {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Brand</th>
-            <th>Availability</th>
-            <th>Last Edited</th>
-            <th>Used By</th>
+            <th><FormattedMessage id="portal.brand.list.brand.text"/></th>
+            <th><FormattedMessage id="portal.brand.list.availability.text"/></th>
+            <th><FormattedMessage id="portal.brand.list.lastEdited.text"/></th>
+            <th><FormattedMessage id="portal.brand.list.usedBy.text"/></th>
             <th>&nbsp;</th>
           </tr>
         </thead>

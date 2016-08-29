@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class IpAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -32,20 +34,19 @@ class IpAddress extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>MIME Type</h1>
-          <p>Match one or more IP Numbers or Ranges like 127.0.0.1,
-            63.55.23.1/24, 2001:0:9d38:6ab8:38bb:38d0:7e3f:4fb9</p>
+          <h1><FormattedMessage id="portal.policy.edit.idAddress.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.idAddress.disclaimer.text"/></p>
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label="Media Type"
-            placeholder="Enter Media Types separated by commas"
+          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.mediaType.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.mediaType.disclaimer'})}
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
               this.props.path.concat(['cases', 0, 0])
             )}/>
 
-          <Input type="checkbox" label="Include X-Forwarded-For value"
+          <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.includeXforwardedFor.tex'})}
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'matches', 'ip_address_include_x_forwarded_for']
             )}/>
@@ -56,8 +57,8 @@ class IpAddress extends React.Component {
             )}
             value={this.state.activeFilter}
             options={[
-              ['matches', 'Matches'],
-              ['does_not_match', 'Does not match']]}/>
+              ['matches', <FormattedMessage id="portal.policy.edit.idAddress.matches.text"/>],
+              ['does_not_match', <FormattedMessage id="portal.policy.edit.idAddress.doesntMatch.text"/>]]}/>
 
         </Modal.Body>
       </div>
@@ -72,4 +73,4 @@ IpAddress.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = IpAddress
+module.exports = injectIntl(IpAddress)

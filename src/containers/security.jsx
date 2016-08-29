@@ -24,6 +24,8 @@ import {
   DELETE_CERTIFICATE
 } from '../constants/account-management-modals.js'
 
+import {FormattedMessage} from 'react-intl'
+
 export class Security extends React.Component {
   constructor(props) {
     super(props)
@@ -67,13 +69,13 @@ export class Security extends React.Component {
       <div>
         <Nav bsStyle="tabs">
           <li className="navbar">
-            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active">SSL CERTIFICATE</Link>
+            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
           </li>
           <li className="navbar">
-            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active">TOKEN AUTHENTICATION</Link>
+            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
           </li>
           <li className="navbar">
-            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active">CONTENT TARGETING</Link>
+            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
           </li>
         </Nav>
         <Content className="tab-bodies">
@@ -101,7 +103,7 @@ export class Security extends React.Component {
     } = this.props
 
     const certificateFormProps = {
-      title: activeModal === EDIT_CERTIFICATE ? 'Edit Certificate' : 'Upload Certificate',
+      title: activeModal === EDIT_CERTIFICATE ? <FormattedMessage id="portal.security.editCertificate.text"/> : <FormattedMessage id="portal.security.uploadCertificate.text"/>,
       activeAccount,
       accounts,
       fetchAccount,

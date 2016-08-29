@@ -4,29 +4,29 @@ import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
+import {FormattedMessage} from 'react-intl'
+
 const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delField }, invalid }) => {
-  const defaultDescription = `Please confirm by writing "delete" below, and pressing the delete button.
-        This ${itemToDelete} will be removed immediately. This action can't be undone`;
   return (
     <Modal show={true} className="delete-modal">
       <Modal.Header  className="delete-modal-header">
-        <h1>{`Delete ${ itemToDelete }`}</h1>
+        <h1><FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: itemToDelete}}/></h1>
         <hr/>
       </Modal.Header>
       <Modal.Body className="delete-modal-body">
         <p>
-          {description || defaultDescription}
+          {description || <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : itemToDelete}}/>}
         </p>
         <Input type="text" label="Type 'delete'" placeholder="delete" {...delField}/>
       </Modal.Body>
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
-          <Button onClick={cancel} className="btn-outline">Cancel</Button>
+          <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
           <Button onClick={submit}
             bsStyle="secondary"
             className="delete-modal-submit"
             disabled={invalid}>
-            Delete
+            <FormattedMessage id="portal.button.delete"/>
           </Button>
         </ButtonToolbar>
       </Modal.Footer>

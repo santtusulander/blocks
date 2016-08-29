@@ -8,6 +8,8 @@ import Toggle from '../toggle'
 
 import './role-edit-form.scss'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 let errors = {}
 
 let formActivated = false
@@ -18,7 +20,7 @@ const validate = values => {
   const { roleName } = values
 
   if (!roleName || roleName.length === 0) {
-    errors.roleName = 'Role name is required'
+    errors.roleName = <FormattedMessage id="portal.role.edit.roleNameRequired.text"/>
   }
 
   return errors;
@@ -54,8 +56,8 @@ const RolesEditForm = (props) => {
       dialogClassName="role-edit-form-sidebar">
 
       <Modal.Header>
-        <h1>Edit Role</h1>
-        <p>Lorem ipsum</p>
+        <h1><FormattedMessage id="portal.role.edit.title"/></h1>
+        <p><FormattedMessage id="portal.role.edit.discalimer.text"/></p>
       </Modal.Header>
 
       <Modal.Body>
@@ -64,8 +66,8 @@ const RolesEditForm = (props) => {
         <Input
           {...roleName}
           type='text'
-          placeholder='Enter Role Name'
-          label='Name'
+          placeholder={this.props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
+          label={this.props.intl.formatMessage({id: 'portal.role.edit.name.text'})}
           value={props.editRole.get('name')}
           readOnly={true}
         />
@@ -146,4 +148,4 @@ export default reduxForm({
   fields: ['roleName', 'roles', 'roleTypes'],
   form: 'role-edit',
   validate
-})(RolesEditForm)
+})(injectIntl(RolesEditForm))

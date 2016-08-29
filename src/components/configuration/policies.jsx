@@ -29,6 +29,8 @@ import ConfigurationActionAllowBlock from './actions/allow-block'
 import ConfigurationActionPostSupport from './actions/post-support'
 import ConfigurationActionCors from './actions/cors'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
@@ -147,24 +149,24 @@ class ConfigurationPolicies extends React.Component {
           activeEditForm = (
             <ConfigurationMatcher
               contains={true}
-              description="Match a header like originvalue"
-              name="Header"
+              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
+              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.name.text'})}
               {...matcherProps}/>
           )
           break
         case 'request_path':
           activeEditForm = (
             <ConfigurationMatcher
-              description="Match a directory path like /wp-admin/"
-              name="Directory Path"
+              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
+              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
               {...matcherProps}/>
           )
           break
         case 'request_host':
           activeEditForm = (
             <ConfigurationMatcher
-              description="Match a hostname like www.foobar.com"
-              name="Hostname"
+              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
+              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
               {...matcherProps}/>
           )
           break
@@ -172,8 +174,8 @@ class ConfigurationPolicies extends React.Component {
           activeEditForm = (
             <ConfigurationMatcher
               contains={true}
-              description="Match a cookie like tracking"
-              name="Cookie"
+              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
+              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
               {...matcherProps}/>
           )
           break
@@ -181,8 +183,8 @@ class ConfigurationPolicies extends React.Component {
           activeEditForm = (
             <ConfigurationMatcher
               contains={true}
-              description="Match a query string like sessionID"
-              name="Query String"
+              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
+              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
               {...matcherProps}/>
           )
           break
@@ -248,7 +250,7 @@ class ConfigurationPolicies extends React.Component {
 
         <Row className="header-btn-row">
           <Col sm={8}>
-            <h3>Policy Rules</h3>
+            <h3><FormattedMessage id="portal.policy.edit.policies.policyRules.text"/></h3>
           </Col>
           <Col sm={4} className="text-right">
             <Button bsStyle="success" className="btn-icon"
@@ -296,4 +298,4 @@ ConfigurationPolicies.propTypes = {
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationPolicies
+module.exports = injectIntl(ConfigurationPolicies)

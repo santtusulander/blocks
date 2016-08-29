@@ -5,6 +5,8 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class CacheKeyQueryString extends React.Component {
   constructor(props) {
     super(props);
@@ -90,9 +92,9 @@ class CacheKeyQueryString extends React.Component {
                 onSelect={this.handleSelectChange}
                 value={this.state.activeFilter}
                 options={[
-                  ['include_all_query_parameters', 'Include all query parameters'],
-                  ['ignore_all_query_parameters', 'Ignore all query parameters'],
-                  ['include_some_parameters', 'Include some parameters']]}/>
+                  ['include_all_query_parameters', <FormattedMessage id="portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text"/>],
+                  ['ignore_all_query_parameters', <FormattedMessage id="portal.policy.edit.cacheKeyQueryString.ignoreAllQueryTerms.text"/>],
+                  ['include_some_parameters', <FormattedMessage id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
@@ -100,7 +102,7 @@ class CacheKeyQueryString extends React.Component {
               {this.state.queryArgs.map((queryArg, i) => {
                 return (
                   <Input type="text" label="Query Name" key={i}
-                    placeholder="Enter Query Name"
+                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text'})}
                     value={queryArg}
                     onChange={this.handleChangeArg(i)}/>
                 )
@@ -110,10 +112,10 @@ class CacheKeyQueryString extends React.Component {
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="default" onClick={this.props.close}>
-              Cancel
+              <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
-              Save Action
+              <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>
 
@@ -131,4 +133,4 @@ CacheKeyQueryString.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = CacheKeyQueryString
+module.exports = injectIntl(CacheKeyQueryString)

@@ -17,6 +17,7 @@ $tool-panel-border-width: 1em;
     margin: 0.5em 0;
   }
 
+  &:hover::after,
   &.active::after {
     position: absolute;
     bottom: 0;

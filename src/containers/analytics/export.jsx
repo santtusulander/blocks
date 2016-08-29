@@ -6,6 +6,8 @@ import { Button } from 'react-bootstrap'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 import IconExport from '../../components/icons/icon-export.jsx'
 
+import {FormattedMessage} from 'react-intl'
+
 class AnalyticsExport extends React.Component {
   constructor(props){
     super(props)
@@ -54,7 +56,7 @@ class AnalyticsExport extends React.Component {
         disabled={this.props.activeTab === 'playback-demo'}
         onClick={this.exportCSV}>
         <IconExport />
-        Export
+        <FormattedMessage id="portal.button.export"/>
       </Button>
     )
   }

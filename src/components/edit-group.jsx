@@ -2,6 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
+import {FormattedMessage} from 'react-intl'
+
 class EditGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -45,8 +47,8 @@ class EditGroup extends React.Component {
           value={this.props.group.getIn(['postal_code'])}
           onChange={this.changeValue(['postal_code'])}/>
         <ButtonToolbar>
-          <Button bsStyle="primary" onClick={this.cancelChanges}>Cancel</Button>
-          <Button type="submit" bsStyle="primary">Save</Button>
+          <Button bsStyle="primary" onClick={this.cancelChanges}><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button type="submit" bsStyle="primary"><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
     )

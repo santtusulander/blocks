@@ -13,6 +13,7 @@ import AnalyticsExport from '../../containers/analytics/export.jsx'
 
 const tabs = [
   { key: 'traffic', label: 'Traffic Overview', permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW },
+  { key: 'cache-hit-rate', label: 'Cache Hit Rate', permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW },
   { key: 'visitors', label: 'Unique Visitors', permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS },
   { key: 'on-off-net', label: 'SP On/Off Net', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET},
   { key: 'service-providers', label: 'SP Contribution', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION },

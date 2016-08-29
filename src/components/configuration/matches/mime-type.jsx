@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class MimeType extends React.Component {
   constructor(props) {
     super(props);
@@ -32,13 +34,13 @@ class MimeType extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>MIME Type</h1>
-          <p>Match one or more MIME types like text/html, application/javascript</p>
+          <h1><FormattedMessage id="portal.policy.edit.mimetype.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.mimetype.disclaimer"/></p>
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label="MIME Type"
-            placeholder="Enter MIME Types separated by commas"
+          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.mimetype.mimetype.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.mimetype.mimetype.placeholder'})}
             id="matches_mime-type"
             value={this.props.match.get('cases').get(0).get(0)}
             onChange={this.handleChange(
@@ -51,8 +53,8 @@ class MimeType extends React.Component {
             )}
             value={this.state.activeFilter}
             options={[
-              ['matches', 'Matches'],
-              ['does_not_match', 'Does not match']]}/>
+              ['matches', <FormattedMessage id="portal.policy.edit.mimetype.matches.text"/>],
+              ['does_not_match', <FormattedMessage id="portal.policy.edit.mimetype.doesntMatch.text"/>]]}/>
 
         </Modal.Body>
       </div>
@@ -67,4 +69,4 @@ MimeType.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = MimeType
+module.exports = injectIntl(MimeType)

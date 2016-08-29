@@ -35,6 +35,10 @@ import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 import { getUrl } from '../util/helpers'
 
+import {FormattedMessage} from 'react-intl'
+
+const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
+
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
@@ -69,9 +73,12 @@ export class Configuration extends React.Component {
     this.props.hostActions.fetchHost(brand, account, group, property)
   }
   componentWillReceiveProps(nextProps) {
-    if(!this.props.activeHost && nextProps.activeHost) {
+    const currentHost = this.props.activeHost
+    const nextHost = nextProps.activeHost
+    if(!currentHost && nextHost ||
+      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
       this.setState({
-        activeConfigOriginal: nextProps.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
+        activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
     }
   }
@@ -103,7 +110,7 @@ export class Configuration extends React.Component {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
         })
-        this.showNotification('Configurations succesfully saved')
+        this.showNotification(<FormattedMessage id="portal.configuration.updateSuccessfull.text"/>)
       }
     })
   }
@@ -171,7 +178,7 @@ export class Configuration extends React.Component {
             action.payload.status + ' ' +
             action.payload.statusText)
         } else {
-          this.showNotification('Configurations succesfully retired')
+          this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
       // env !== 1 is publishing
       } else {
@@ -182,7 +189,7 @@ export class Configuration extends React.Component {
             action.payload.statusText)
         } else {
           this.togglePublishModal()
-          this.showNotification('Configurations succesfully published')
+          this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
         }
       }
     })
@@ -216,7 +223,7 @@ export class Configuration extends React.Component {
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
             <PageHeader>
-              <h5>CONFIGURATION</h5>
+              <h5><FormattedMessage id="portal.configuration.header.text"/></h5>
               <div className="content-layout__header">
                 <AccountSelector
                   as="configuration"
@@ -243,22 +250,22 @@ export class Configuration extends React.Component {
                     activeEnvironment === 1 ||
                     !activeEnvironment ?
                     <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                      Publish
+                      <FormattedMessage id="portal.button.publish"/>
                     </Button>
                     : null
                   }
                   <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                    Copy
+                    <FormattedMessage id="portal.button.copy"/>
                   </Button>
                   {activeEnvironment === 2 || activeEnvironment === 3 ?
                     <Button bsStyle="primary"
                       onClick={() => this.changeActiveVersionEnvironment(1)}>
-                      Retire
+                      <FormattedMessage id="portal.button.retire"/>
                     </Button>
                     : null
                   }
                   <Button bsStyle="primary" onClick={this.toggleVersionModal}>
-                    Versions
+                    <FormattedMessage id="portal.button.versions"/>
                   </Button>
                 </ButtonToolbar>
               </div>
@@ -279,25 +286,25 @@ export class Configuration extends React.Component {
             <Nav bsStyle="tabs" activeKey={this.state.activeTab}
               onSelect={this.activateTab}>
               <NavItem eventKey={'details'}>
-                Hostname
+                <FormattedMessage id="portal.configuration.hostname.text"/>
               </NavItem>
               <NavItem eventKey={'defaults'}>
-                Defaults
+                <FormattedMessage id="portal.configuration.defaults.text"/>
               </NavItem>
               <NavItem eventKey={'policies'}>
-                Policies
+                <FormattedMessage id="portal.configuration.policies.text"/>
               </NavItem>
               <NavItem eventKey={'performance'}>
-                Performance
+                <FormattedMessage id="portal.configuration.performance.text"/>
               </NavItem>
               <NavItem eventKey={'security'}>
-                Security
+                <FormattedMessage id="portal.configuration.security.text"/>
               </NavItem>
               <NavItem eventKey={'certificates'}>
-                Certificates
+                <FormattedMessage id="portal.configuration.certificates.text"/>
               </NavItem>
               <NavItem eventKey={'change-log'}>
-                Change Log
+                <FormattedMessage id="portal.configuration.changeLog.text"/>
               </NavItem>
             </Nav>
           </div>
