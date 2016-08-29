@@ -22,9 +22,9 @@ const DNSList = ({ domain, onDeleteEntry, onEditEntry, onAddEntry, records, sear
         <td>
           <Input
             type="checkbox"
-            label={record.name.replace(new RegExp(domain, 'i'), '')}/>
+            label={record.name.replace(new RegExp('.' + domain, 'i'), '')}/>
         </td>
-        <td><TruncatedTitle content={record.value} tooltipPlacement="bottom" className="account-management-title"/></td>
+        <td>{record.value}</td>
         <td>{record.ttl}</td>
         <td>
         <ActionLinks
@@ -119,6 +119,7 @@ SortableTable.propTypes = { content: PropTypes.func }
 export default DNSList
 
 DNSList.propTypes = {
+  domain: PropTypes.string,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
   onEditEntry: PropTypes.func,
