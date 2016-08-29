@@ -93,17 +93,8 @@ $lt-caret-color: $silver-60;
     }
   }
 
-  // TODO: remove this after updating other areas in the site
   &.btn-sm {
     min-width: 0;
-  }
-
-  &.sm-padding {
-    padding: 0 ($btn-height / 4);
-
-    @include md {
-      padding: 0 ($md-btn-height / 4);
-    }
   }
 
   &.btn-header {

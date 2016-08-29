@@ -110,14 +110,18 @@
 
   > .active {
     .dark-theme & {
+      color: $white;
+
       a {
-        color: $white;
+        color: inherit;
       }
     }
 
     .light-theme & {
+      color: $lt-text-color;
+
       a {
-        color: $lt-text-color;
+        color: inherit;
       }
     }
   }
