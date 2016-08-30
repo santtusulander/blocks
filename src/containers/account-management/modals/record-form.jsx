@@ -103,21 +103,29 @@ function mapDispatchToProps(dispatch, { closeModal }) {
     addRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
-      dispatch(createResource(domain, values.name, values)).then(() => closeModal())
-    },
-    saveRecord: (values, domain) => {
-      // Hardcode class-key as it is not set anywhere
-      values.class = 'IN'
-      dispatch(updateResource(domain, values.name, values)).then(({ error, payload }) => {
+      dispatch(createResource(domain, values.name, values)).then(({ error, payload }) => {
         if(error) {
           dispatch(showInfoDialog({
-            title: 'Record Not Found',
+            title: 'Error',
             content: payload.data.message,
             buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
           }))
         }
-        closeModal()
       })
+    },
+    saveRecord: () => {
+      // Leave updating records out for now, since record identifying logic is unclear
+      // values.class = 'IN'
+      // dispatch(updateResource(domain, values.name, values)).then(({ error, payload }) => {
+      //   if(error) {
+      //     dispatch(showInfoDialog({
+      //       title: 'Record Not Found',
+      //       content: payload.data.message,
+      //       buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
+      //     }))
+      //   }
+      // })
+      closeModal()
     }
   }
 }
