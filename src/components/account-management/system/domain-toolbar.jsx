@@ -3,6 +3,8 @@ import { ButtonToolbar } from 'react-bootstrap'
 
 import { CREATE_ZONE, MODIFY_ZONE } from '../../../constants/permissions'
 
+import PageHeader from '../../layout/page-header'
+import TruncatedTitle from '../../truncated-title'
 import IsAllowed from '../../is-allowed'
 import UDNButton from '../../button'
 import DomainSelector from '../../global-account-selector/selector-component'
@@ -16,16 +18,18 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
     return 0
   })
   return (
-    <div className="page-action-container distributed-columns">
+    <PageHeader>
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
           items={sortedDomains.map(domain => [domain.id, domain.id])}
           onItemClick={changeActiveDomain}
           searchValue={searchValue}
           onSearch={searchFunc}>
-           <h2>{activeDomain}<span className="caret"></span></h2>
+            <div className="dropdown-toggle header-toggle">
+              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
+            </div>
         </DomainSelector> :
-        <h3 className="selector-component">NO DOMAINS</h3>}
+        <h4 className="selector-component">No Domains</h4>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
@@ -47,7 +51,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           </UDNButton>
         </IsAllowed>}
       </ButtonToolbar>
-    </div>
+    </PageHeader>
   )
 }
 

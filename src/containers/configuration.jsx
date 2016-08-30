@@ -222,65 +222,55 @@ export class Configuration extends React.Component {
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
           <div className="configuration-header">
-            <PageHeader>
-              <h5><FormattedMessage id="portal.configuration.header.text"/></h5>
-              <div className="content-layout__header">
-                <AccountSelector
-                  as="configuration"
-                  params={this.props.params}
-                  topBarTexts={{}}
-                  onSelect={(tier, value, params) => {
-                    const { brand, account, group } = params, { hostActions } = this.props
-                    hostActions.startFetching()
-                    hostActions.fetchHost(brand, account, group, value).then(() => {
-                      this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                    })
-                  }}
-                  drillable={true}>
-                  <div className="btn btn-link dropdown-toggle header-toggle">
-                    <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
-                    <span className="caret"></span>
-                  </div>
-                </AccountSelector>
-                <ButtonToolbar className="pull-right">
-                  <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                    <IconTrash/>
+            <PageHeader
+              pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
+              pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+                deployMoment.format('MMM, D YYYY'),
+                deployMoment.format('H:MMa'),
+                activeConfig.get('configuration_status').get('last_edited_by')]}>
+              <AccountSelector
+                as="configuration"
+                params={this.props.params}
+                topBarTexts={{}}
+                onSelect={(tier, value, params) => {
+                  const { brand, account, group } = params, { hostActions } = this.props
+                  hostActions.startFetching()
+                  hostActions.fetchHost(brand, account, group, value).then(() => {
+                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                  })
+                }}
+                drillable={true}>
+                <div className="btn btn-link dropdown-toggle header-toggle">
+                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                  <span className="caret"></span>
+                </div>
+              </AccountSelector>
+              <ButtonToolbar className="pull-right">
+                <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                  <IconTrash/>
+                </Button>
+                {activeEnvironment === 2 ||
+                  activeEnvironment === 1 ||
+                  !activeEnvironment ?
+                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                    <FormattedMessage id="portal.button.publish"/>
                   </Button>
-                  {activeEnvironment === 2 ||
-                    activeEnvironment === 1 ||
-                    !activeEnvironment ?
-                    <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                      <FormattedMessage id="portal.button.publish"/>
-                    </Button>
-                    : null
-                  }
-                  <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                    <FormattedMessage id="portal.button.copy"/>
+                  : null
+                }
+                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                  <FormattedMessage id="portal.button.copy"/>
+                </Button>
+                {activeEnvironment === 2 || activeEnvironment === 3 ?
+                  <Button bsStyle="primary"
+                    onClick={() => this.changeActiveVersionEnvironment(1)}>
+                    <FormattedMessage id="portal.button.retire"/>
                   </Button>
-                  {activeEnvironment === 2 || activeEnvironment === 3 ?
-                    <Button bsStyle="primary"
-                      onClick={() => this.changeActiveVersionEnvironment(1)}>
-                      <FormattedMessage id="portal.button.retire"/>
-                    </Button>
-                    : null
-                  }
-                  <Button bsStyle="primary" onClick={this.toggleVersionModal}>
-                    <FormattedMessage id="portal.button.versions"/>
-                  </Button>
-                </ButtonToolbar>
-              </div>
-              <p className="text-sm">
-                <span className="right-separator">
-                  {activeConfig.get('edge_configuration').get('origin_host_name')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('MMM, D YYYY')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('H:MMa')}
-                </span>
-                {activeConfig.get('configuration_status').get('last_edited_by')}
-              </p>
+                  : null
+                }
+                <Button bsStyle="primary" onClick={this.toggleVersionModal}>
+                  <FormattedMessage id="portal.button.versions"/>
+                </Button>
+              </ButtonToolbar>
             </PageHeader>
 
             <Nav bsStyle="tabs" activeKey={this.state.activeTab}

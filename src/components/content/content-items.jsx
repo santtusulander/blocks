@@ -215,51 +215,47 @@ class ContentItems extends React.Component {
     return (
       <PageContainer className={`${this.props.className} content-subcontainer`}>
         <Content>
-          <PageHeader>
-            <h5>{headerText.summary}</h5>
-
-            <div className="content-layout__header">
-              <AccountSelector
-                as="content"
-                params={this.props.params}
-                startTier={this.props.selectionStartTier}
-                topBarTexts={itemSelectorTexts}
-                topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-                <div className="btn btn-link dropdown-toggle header-toggle">
-                  <h1>
-                    <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
-                  </h1>
-                  <span className="caret"></span>
-                </div>
-              </AccountSelector>
-              <ButtonToolbar>
-                {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-                <UDNButton bsStyle="success"
-                           icon={true}
-                           onClick={this.addItem}>
-                  <IconAdd/>
-                </UDNButton>
-                <Select
-                  onSelect={this.handleSortChange}
-                  value={currentValue}
-                  options={sortOptions.map(opt => [opt.value, opt.label])}/>
-                <UDNButton bsStyle="primary"
-                           icon={true}
-                           toggleView={true}
-                           hidden={viewingChart}
-                           onClick={this.props.toggleChartView}>
-                  <IconItemChart/>
-                </UDNButton>
-                <UDNButton bsStyle="primary"
-                           icon={true}
-                           toggleView={true}
-                           hidden={!viewingChart}
-                           onClick={this.props.toggleChartView}>
-                  <IconItemList/>
-                </UDNButton>
-              </ButtonToolbar>
-            </div>
+          <PageHeader pageSubTitle={headerText.summary}>
+            <AccountSelector
+              as="content"
+              params={this.props.params}
+              startTier={this.props.selectionStartTier}
+              topBarTexts={itemSelectorTexts}
+              topBarAction={this.itemSelectorTopBarAction}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1>
+                  <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
+                </h1>
+                <span className="caret"></span>
+              </div>
+            </AccountSelector>
+            <ButtonToolbar>
+              {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
+              <UDNButton bsStyle="success"
+                         icon={true}
+                         onClick={this.addItem}>
+                <IconAdd/>
+              </UDNButton>
+              <Select
+                onSelect={this.handleSortChange}
+                value={currentValue}
+                options={sortOptions.map(opt => [opt.value, opt.label])}/>
+              <UDNButton bsStyle="primary"
+                         icon={true}
+                         toggleView={true}
+                         hidden={viewingChart}
+                         onClick={this.props.toggleChartView}>
+                <IconItemChart/>
+              </UDNButton>
+              <UDNButton bsStyle="primary"
+                         icon={true}
+                         toggleView={true}
+                         hidden={!viewingChart}
+                         onClick={this.props.toggleChartView}>
+                <IconItemList/>
+              </UDNButton>
+            </ButtonToolbar>
           </PageHeader>
 
           <div className="container-fluid body-content">

@@ -3,9 +3,12 @@
 $page-header-padding-top: rem(18px);
 $page-header-horizontal-padding: rem(30px);
 $page-header-padding-bottom: rem(12px);
+$page-header-secondary-vertical-padding: rem(18px);
 $page-header-dropdown-width: rem(250px);
+$page-header-secondary-dropdown-min-width: rem(180px);
+$action-padding-right: rem(30px);
 
-.page-header-layout {
+.page-header-container {
   padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
 
   .dark-theme & {
@@ -18,12 +21,71 @@ $page-header-dropdown-width: rem(250px);
     border-bottom: 3px solid rgba($black, 0.1);
   }
 
-  p {
-    margin: 0;
+  .page-header-layout {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+
+    .btn-toolbar {
+      padding-left: 18px;
+      white-space: nowrap;
+    }
+
+    .selector-component {
+      min-width: 0;
+    }
   }
 
+  .form-group .dropdown-select,
   .dropdown-select {
     min-width: $page-header-dropdown-width;
+  }
+
+  &.secondary-page-header {
+    padding: $page-header-secondary-vertical-padding $page-header-horizontal-padding;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.1);
+    }
+
+    .page-header-layout {
+      justify-content: inherit;
+    }
+
+    .form-group {
+      padding: 0;
+    }
+
+    .form-group .dropdown-select,
+    .dropdown-select {
+      min-width: $page-header-secondary-dropdown-min-width;
+    }
+
+    .form-inline {
+      .form-group {
+        padding-top: 4px;
+
+        &:not(:last-child) {
+          padding-right: $action-padding-right;
+        }
+      }
+    }
+
+    .action {
+      h5 {
+        padding-bottom: 6px;
+        text-transform: none;
+      }
+    }
+
+    .action:not(:last-child) {
+      padding-right: $action-padding-right;
+    }
+  }
+
+  p {
+    margin: 0;
   }
 
   h1 {

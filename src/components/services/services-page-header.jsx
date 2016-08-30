@@ -6,8 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 const ServicesPageHeader = ({ activeAccount }) => {
   return (
-    <PageHeader>
-      <h5><FormattedMessage id="portal.services.header.text"/></h5>
+    <PageHeader pageSubTitle={<FormattedMessage id="portal.services.header.text"/>}>
       <h1>{activeAccount || 'select account'}</h1>
     </PageHeader>
   )

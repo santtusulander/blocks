@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List, Map } from 'immutable'
 
+import PageHeader from '../layout/page-header'
+
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 
@@ -100,8 +102,7 @@ StatusCodes.propTypes = {
 
 const AnalyticsFilters = (props) => {
   return (
-    <div className='page-action-container'>
-
+    <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
         <div className='action'>
           <h5>Date Range</h5>
@@ -208,7 +209,7 @@ const AnalyticsFilters = (props) => {
           />
         </div>
       }
-    </div>
+    </PageHeader>
   )
 }
 

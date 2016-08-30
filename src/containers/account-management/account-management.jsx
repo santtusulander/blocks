@@ -40,7 +40,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
 
-import {FormattedMessage} from 'react-intl' 
+import {FormattedMessage} from 'react-intl'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -359,8 +359,7 @@ export class AccountManagement extends Component {
       <PageContainer className="account-management">
         <Content>
           <div className="account-management-manage-account">
-            <PageHeader>
-              <h5>ACCOUNT MANAGEMENT</h5>
+            <PageHeader pageSubTitle="Account Management">
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"

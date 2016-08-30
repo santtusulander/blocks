@@ -155,19 +155,17 @@ class AnalyticsContainer extends React.Component {
     return (
       <PageContainer className='analytics-container'>
         <Content>
-          <PageHeader>
-            <AnalyticsViewControl
-              activeAccount={activeAccount}
-              activeGroup={activeGroup}
-              brands={brands}
-              accounts={accounts}
-              groups={groups}
-              properties={properties}
-              params={params}
-              location={this.props.location}
-              activeTab={getTabName(pathname)}
-            />
-          </PageHeader>
+          <AnalyticsViewControl
+            activeAccount={activeAccount}
+            activeGroup={activeGroup}
+            brands={brands}
+            accounts={accounts}
+            groups={groups}
+            properties={properties}
+            params={params}
+            location={this.props.location}
+            activeTab={getTabName(pathname)}
+          />
           <AnalyticsTabControl
             params={params}
             location={this.props.location}

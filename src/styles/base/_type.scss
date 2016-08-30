@@ -34,10 +34,6 @@ h1 {
     font-size: $print-font-size * 3;
   }
 
-  .light-theme .page-header-layout & {
-    color: $pale-blue;
-  }
-
   .heading-suffix {
     font-size: 20px;
   }
@@ -133,12 +129,16 @@ p {
     display: inline-block;
     margin-right: 12px;
 
-    &::after {
+    &:not(:last-child)::after {
       margin-left: 12px;
       content: '';
 
       .dark-theme & {
         border-right: 1px solid $dt-text-color;
+      }
+
+      .light-theme & {
+        border-right: 1px solid $lt-text-color;
       }
     }
   }

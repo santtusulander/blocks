@@ -6,6 +6,7 @@ import { ButtonToolbar } from 'react-bootstrap'
 import * as PERMISSIONS from '../../constants/permissions'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
+import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
 import TruncatedTitle from '../truncated-title'
@@ -110,42 +111,39 @@ const AnalyticsViewControl = (props) => {
   }
 
   return (
-    <div>
-      <h5>{title}</h5>
-      <div className="content-layout__header">
-        <AccountSelector
-          as="analytics"
-          params={props.params}
-          topBarTexts={topBarTexts}
-          topBarAction={topBarFunc}
-          onSelect={(...params) => {
-            let url = isContentAnalytics ?
-              `${getContentUrl(...params)}/analytics` :
-              getAnalyticsUrl(...params)
-            if(active && !isContentAnalytics) {
-              let tab = active.key
-              if(active.propertyOnly && params[0] !== 'property') {
-                tab = ''
-              }
-              url = `${url}/${tab}`
+    <PageHeader pageSubTitle={title}>
+      <AccountSelector
+        as="analytics"
+        params={props.params}
+        topBarTexts={topBarTexts}
+        topBarAction={topBarFunc}
+        onSelect={(...params) => {
+          let url = isContentAnalytics ?
+            `${getContentUrl(...params)}/analytics` :
+            getAnalyticsUrl(...params)
+          if(active && !isContentAnalytics) {
+            let tab = active.key
+            if(active.propertyOnly && params[0] !== 'property') {
+              tab = ''
             }
-            props.router.push(url)
-          }}>
-          <div className="btn btn-link dropdown-toggle header-toggle">
-            <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
-            <span className="caret"></span>
-          </div>
-        </AccountSelector>
-        {props.params.account &&
-          <ButtonToolbar>
-            <AnalyticsExport
-              activeTab={getTabName(props.location.pathname)}
-              params={props.params}
-              />
-          </ButtonToolbar>
-        }
-      </div>
-    </div>
+            url = `${url}/${tab}`
+          }
+          props.router.push(url)
+        }}>
+        <div className="btn btn-link dropdown-toggle header-toggle">
+          <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
+          <span className="caret"></span>
+        </div>
+      </AccountSelector>
+      {props.params.account &&
+        <ButtonToolbar>
+          <AnalyticsExport
+            activeTab={getTabName(props.location.pathname)}
+            params={props.params}
+            />
+        </ButtonToolbar>
+      }
+    </PageHeader>
   )
 }
 
