@@ -233,17 +233,17 @@ $navbar-right-margin: rem(12px);
       font-size: 12px;
       border-radius: $navbar-right-size / 2;
 
-      &:focus,
-      &:active {
-        box-shadow: inset 0 0 0 1px $pale-blue;
-      }
-
       .dark-theme &,
       .light-theme & {
         background-image: url('../assets/icons/dt-icon-search.svg');
         background-position: 12px center;
         background-repeat: no-repeat;
         background-size: 18px;
+
+        &:focus,
+        &:active {
+          box-shadow: inset 0 0 0 2px $pale-blue;
+        }
       }
 
       .dark-theme & {
