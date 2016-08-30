@@ -130,7 +130,6 @@ $navbar-right-margin: rem(12px);
 
         .icon {
           transition: all 0.3s;
-          fill: $pale-blue;
         }
       }
 
@@ -156,19 +155,23 @@ $navbar-right-margin: rem(12px);
         &:active:hover,
         &.active:focus {
           background-color: $black;
+
+          .icon {
+            fill: $pale-blue;
+          }
         }
       }
 
       .light-theme & {
         &:hover {
-          background-color: rgba($black, 0.1);
+          background-color: $lt-text-color;
         }
 
         &:active,
         &.active,
         &:active:hover,
         &.active:focus {
-          background-color: rgba($black, 0.1);
+          background-color: $lt-text-color;
         }
       }
 
@@ -216,6 +219,10 @@ $navbar-right-margin: rem(12px);
         width: 100%;
         height: 100%;
       }
+
+      &:focus {
+        box-shadow: 0 0 0 2px $pale-blue;
+      }
     }
 
     .header-search-input {
@@ -225,6 +232,11 @@ $navbar-right-margin: rem(12px);
       margin: $navbar-right-vertical-margin $navbar-right-horizontal-margin;
       font-size: 12px;
       border-radius: $navbar-right-size / 2;
+
+      &:focus,
+      &:active {
+        box-shadow: inset 0 0 0 1px $pale-blue;
+      }
 
       .dark-theme &,
       .light-theme & {
@@ -247,11 +259,6 @@ $navbar-right-margin: rem(12px);
         color: $lt-text-color;
         background-color: transparent;
         box-shadow: inset 0 0 0 1px $silver-80;
-
-        &:focus,
-        &:active {
-          box-shadow: inset 0 0 0 1px $white;
-        }
 
         &::placeholder {
           color: $lt-text-color;
