@@ -63,8 +63,8 @@ export const updateFailed = (state) => {
 }
 
 //DELETE
-export const deleteSuccess = (state, {payload: {data}}) => {
-  const index = state.get('resources').findIndex( record => record.get('id') === data.id)
+export const deleteSuccess = (state, { payload }) => {
+  const index = state.get('resources').findIndex( record => record.get('id') === payload)
   return state.merge( {loading: false, resources: state.get('resources').delete( index ) })
 }
 export const deleteFailed = (state) => {

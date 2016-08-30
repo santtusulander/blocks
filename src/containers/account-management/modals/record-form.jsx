@@ -47,7 +47,7 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, saveRecord, addRecord, closeModal, values, oldRecord, records, ...formProps } = props
+  const { domain, edit, saveRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
   const recordFormProps = {
     domain,
     edit,
@@ -60,7 +60,7 @@ const RecordFormContainer = props => {
       if (fields.priority) {
         fields.priority = Number(fields.priority)
       }
-      edit ? saveRecord(fields, domain, records, oldRecord) : addRecord(fields, domain)
+      edit ? saveRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
     },
     onCancel: closeModal,
     ...formProps
@@ -79,12 +79,12 @@ const RecordFormContainer = props => {
 }
 
 RecordFormContainer.propTypes = {
+  activeRecord: PropTypes.string,
   addRecord: PropTypes.func,
   closeModal: PropTypes.func,
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  oldRecord: PropTypes.object,
   records: PropTypes.instanceOf(List),
   saveRecord: PropTypes.func,
   values: PropTypes.object
@@ -95,13 +95,11 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const domain = dns.get('activeDomain')
   const records = dnsRecords.get('resources')
   const activeRecord = dnsRecords.get('activeRecord')
-  const oldRecord = getById(records, activeRecord).toJS()
-  const initialValues = edit ? getById(records, activeRecord).toJS() : {}
+  const initialValues = edit && getById(records, activeRecord) ? getById(records, activeRecord).toJS() : {}
   return {
     initialValues,
     domain,
     records,
-    oldRecord,
     activeRecord
   }
 }
@@ -119,12 +117,14 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
           }))
         }
-      }).then(() => closeModal())
+        closeModal()
+      })
     },
-    saveRecord: (values, zone, records, oldRecord) => {
+    saveRecord: (values, zone, records, activeRecord) => {
+      const oldRecord = getById(records, activeRecord).toJS()
       values.class = 'IN'
       dispatch(removeResource(zone, oldRecord.name, oldRecord))
-        .then(() => dispatch(createResource(zone, values.name, values)))
+        .then(() => createResource(zone, values.name, values))
         .then(() => closeModal())
     }
   }

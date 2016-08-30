@@ -65,8 +65,7 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
-  resource = resource.concat('.' + zone)
-  return dnsRecordsApi.remove(zone, resource, data)
+  return dnsRecordsApi.remove(zone, resource.concat('.' + zone), data)
 })
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
