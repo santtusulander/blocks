@@ -29,8 +29,8 @@ export const update = (zone, resource, data) => {
   }).then(({ data }) => ({ data, zone, resource }))
 }
 
-export const remove = (zone, resource) => {
-  return axios.delete(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr/${resource}`, {
+export const remove = (zone, resource, data) => {
+  return axios.delete(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr/${resource}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
