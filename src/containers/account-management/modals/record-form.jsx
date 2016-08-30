@@ -3,7 +3,7 @@ import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import { getById, updateResource, createResource } from '../../../redux/modules/dns-records/actions'
+import { getById, createResource, updateResource } from '../../../redux/modules/dns-records/actions'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import UDNButton from '../../../components/button'
@@ -113,18 +113,10 @@ function mapDispatchToProps(dispatch, { closeModal }) {
         }
       })
     },
-    saveRecord: () => {
+    saveRecord: values => {
       // Leave updating records out for now, since record identifying logic is unclear
-      // values.class = 'IN'
-      // dispatch(updateResource(domain, values.name, values)).then(({ error, payload }) => {
-      //   if(error) {
-      //     dispatch(showInfoDialog({
-      //       title: 'Record Not Found',
-      //       content: payload.data.message,
-      //       buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
-      //     }))
-      //   }
-      // })
+      values.class = 'IN'
+      dispatch(updateResource())
       closeModal()
     }
   }
