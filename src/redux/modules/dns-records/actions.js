@@ -43,39 +43,52 @@ const InitialState = fromJS({
   resources: []
 })
 
+const domainlessRecordName = (zone, record) => record.name.replace(new RegExp('.' + zone + '$', 'i'), '')
+
 //ACTIONS
-export const fetchResourcesList = createAction(DNS_RECORDS_RECEIVE_RESOURCES, (zone)  => {
-  return dnsRecordsApi.fetchAll( zone )
+export const fetchResourcesList = createAction(DNS_RECORDS_RECEIVE_RESOURCES, zone  => {
+  return dnsRecordsApi.fetchAll(zone)
 })
 
 export const fetchResourceDetails = createAction(DNS_RECORDS_RECEIVE_RESOURCE, (zone, resource)  => {
-  return dnsRecordsApi.fetchDetailsByName( zone, resource )
+  return dnsRecordsApi.fetchDetailsByName(zone, resource)
 })
 
 export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) => {
-  return dnsRecordsApi.create( zone, resource, data)
+  data.name = data.name.concat('.' + zone)
+  resource = resource.concat('.' + zone)
+  return dnsRecordsApi.create(zone, resource, data).then(resource => {
+    resource.data.name = domainlessRecordName(zone, resource.data)
+    return resource
+  })
 })
 
 export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
-  return dnsRecordsApi.update( zone, resource, data)
+  data.name = data.name.concat('.' + zone)
+  resource = resource.concat('.' + zone)
+  return dnsRecordsApi.update(zone, resource, data).then(resource => {
+    resource.data.name = domainlessRecordName(zone, resource.data)
+    return resource
+  })
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource) => {
-  return dnsRecordsApi.remove( zone, resource)
+  return dnsRecordsApi.remove(zone, resource)
 })
 
-export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
-  return dnsRecordsApi.fetchAll( zone )
-    .then(({data}) => {
-      return Promise.all( data.map( resource => {
+export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, zone => {
+  return dnsRecordsApi.fetchAll(zone)
+    .then(({ data }) => {
+      return Promise.all( data.map(resource => {
         return dnsRecordsApi.fetchDetailsByName(zone, resource)
-          .then( ({data}) => {
+          .then(({ data }) => {
             return data
           })
-      })).then( data => {
+      })).then(data => {
         //Flatten records to single array and add uniq Ids
-        return _.flatten(data).map( record => {
+        return _.flatten(data).map(record => {
           record.id = uniqid()
+          record.name = domainlessRecordName(zone, record)
           return record
         })
       })
