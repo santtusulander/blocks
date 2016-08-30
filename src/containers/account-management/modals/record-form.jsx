@@ -46,7 +46,7 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, saveRecord, addRecord, closeModal, values, ...formProps  } = props
+  const { domain, edit, saveRecord, addRecord, closeModal, values, ...formProps } = props
   const recordFormProps = {
     domain,
     edit,
@@ -68,7 +68,7 @@ const RecordFormContainer = props => {
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
         <h1>{edit ? 'Edit DNS Record' : 'New DNS Record'}</h1>
-        {edit && <p>{name.value}</p>}
+        {edit && <p>{props.fields.name.value}</p>}
       </Modal.Header>
       <Modal.Body>
         <RecordForm {...recordFormProps}/>
