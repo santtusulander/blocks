@@ -5,6 +5,7 @@ import { Router, browserHistory } from 'react-router'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
+import thunkMiddleware from 'redux-thunk'
 import axios from 'axios'
 import { Button } from 'react-bootstrap'
 
@@ -20,6 +21,7 @@ import './styles/style.scss'
 import TRANSLATED_MESSAGES from './locales/en.js'
 
 const createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware,
   promiseMiddleware
 )(createStore)
 const stateReducer = combineReducers(reducers)
