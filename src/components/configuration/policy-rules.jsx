@@ -7,7 +7,7 @@ import Confirmation from '../confirmation.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import {parsePolicy} from '../../util/policy-config'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -168,6 +168,7 @@ ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
   deleteRule: React.PropTypes.func,
+  intl: React.PropTypes.object,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }

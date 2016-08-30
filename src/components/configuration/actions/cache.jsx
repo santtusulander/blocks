@@ -114,7 +114,7 @@ class Cache extends React.Component {
                 <Input type="number"
                   id="actions_ttl-value-number"
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.placeholder'})}
-                  value={this.state.maxAge}
+                  value={this.state.maxAge || 0}
                   onChange={this.handleChange('maxAge')}/>
               </Col>
               <Col xs={6}>
@@ -149,7 +149,7 @@ Cache.displayName = 'Cache'
 Cache.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

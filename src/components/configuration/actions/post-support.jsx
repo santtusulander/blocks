@@ -48,7 +48,7 @@ class PostSupport extends React.Component {
 PostSupport.displayName = 'PostSupport'
 PostSupport.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

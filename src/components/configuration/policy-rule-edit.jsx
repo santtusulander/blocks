@@ -92,7 +92,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       e.stopPropagation()
       const setContainerPath = path.slice(0, -3)
       const filtered = this.props.config.getIn(setContainerPath)
-        .filterNot((val, i) => i === path[path.length-3])
+        .filterNot((val, i) => i === path.get(path.size-3))
       this.props.changeValue(setContainerPath, filtered)
       this.props.activateSet(null)
     }
@@ -104,7 +104,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const set = this.props.config.getIn(path.slice(0, -2))
       const updated = this.props.config
         .getIn(path.slice(0, -3))
-        .filterNot((val, i) => i === path[path.length-3])
+        .filterNot((val, i) => i === path.get(path.size-3))
         .insert(newIndex, set)
       this.props.changeValue(path.slice(0, -3), updated)
       this.props.activateSet(null)
@@ -128,7 +128,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newConfig = this.state.originalConfig.setIn(
         parentPath,
         this.state.originalConfig.getIn(parentPath)
-          .splice(this.props.rulePath[this.props.rulePath.length - 1], 1)
+          .splice(this.props.rulePath.get(this.props.rulePath.size - 1), 1)
       )
       this.props.changeValue([], newConfig)
     }
@@ -192,7 +192,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 values = `${values} and ${match.values.length - 1} others`
               }
               let active = false
-              if(Immutable.fromJS(match.path).equals(Immutable.fromJS(this.props.activeMatchPath))) {
+              if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
               }
               let filterText = ''
@@ -254,7 +254,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <div className="conditions">
             {flattenedPolicy.sets.map((set, i) => {
               let active = false
-              if(Immutable.fromJS(set.path).equals(Immutable.fromJS(this.props.activeSetPath))) {
+              if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
                 active = true
               }
               return (
@@ -309,15 +309,15 @@ ConfigurationPolicyRuleEdit.displayName = 'ConfigurationPolicyRuleEdit'
 ConfigurationPolicyRuleEdit.propTypes = {
   activateMatch: React.PropTypes.func,
   activateSet: React.PropTypes.func,
-  activeMatchPath: React.PropTypes.array,
-  activeSetPath: React.PropTypes.array,
+  activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
+  activeSetPath: React.PropTypes.instanceOf(Immutable.List),
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
   location: React.PropTypes.object,
   rule: React.PropTypes.instanceOf(Immutable.Map),
-  rulePath: React.PropTypes.array,
+  rulePath: React.PropTypes.instanceOf(Immutable.List),
   saveChanges: React.PropTypes.func
 }
 

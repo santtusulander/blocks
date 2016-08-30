@@ -101,7 +101,7 @@ class AllowBlock extends React.Component {
 AllowBlock.displayName = 'AllowBlock'
 AllowBlock.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
