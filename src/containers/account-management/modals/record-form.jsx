@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
+import { List } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import { getById, createResource, updateResource } from '../../../redux/modules/dns-records/actions'
+import { getById, createResource, removeResource } from '../../../redux/modules/dns-records/actions'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import UDNButton from '../../../components/button'
@@ -46,7 +47,7 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, saveRecord, addRecord, closeModal, values, ...formProps } = props
+  const { domain, edit, saveRecord, addRecord, closeModal, values, oldRecord, records, ...formProps } = props
   const recordFormProps = {
     domain,
     edit,
@@ -59,7 +60,7 @@ const RecordFormContainer = props => {
       if (fields.priority) {
         fields.priority = Number(fields.priority)
       }
-      edit ? saveRecord(fields, domain) : addRecord(fields, domain)
+      edit ? saveRecord(fields, domain, records, oldRecord) : addRecord(fields, domain)
     },
     onCancel: closeModal,
     ...formProps
@@ -83,6 +84,8 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
+  oldRecord: PropTypes.object,
+  records: PropTypes.instanceOf(List),
   saveRecord: PropTypes.func,
   values: PropTypes.object
 
@@ -90,11 +93,16 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const domain = dns.get('activeDomain')
-  const initialValues = edit ?
-    getById(dnsRecords.get('resources'), dnsRecords.get('activeRecord')).toJS() : {}
+  const records = dnsRecords.get('resources')
+  const activeRecord = dnsRecords.get('activeRecord')
+  const oldRecord = getById(records, activeRecord).toJS()
+  const initialValues = edit ? getById(records, activeRecord).toJS() : {}
   return {
     initialValues,
-    domain
+    domain,
+    records,
+    oldRecord,
+    activeRecord
   }
 }
 
@@ -111,13 +119,13 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
           }))
         }
-      })
+      }).then(() => closeModal())
     },
-    saveRecord: values => {
-      // Leave updating records out for now, since record identifying logic is unclear
+    saveRecord: (values, zone, records, oldRecord) => {
       values.class = 'IN'
-      dispatch(updateResource())
-      closeModal()
+      dispatch(removeResource(zone, oldRecord.name, oldRecord))
+        .then(() => dispatch(createResource(zone, values.name, values)))
+        .then(() => closeModal())
     }
   }
 }
