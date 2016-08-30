@@ -31,7 +31,9 @@ class AccountManagementSystemDNS extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.props.activeDomain !== nextProps.activeDomain && this.props.fetchRecords(nextProps.activeDomain)
+    this.props.activeDomain &&
+    this.props.activeDomain !== nextProps.activeDomain &&
+    this.props.fetchRecords(nextProps.activeDomain)
   }
 
   render() {
