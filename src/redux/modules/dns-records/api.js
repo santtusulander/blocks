@@ -4,7 +4,7 @@ import {urlBase }  from '../../util.js'
 /* CRUD OPERATIONS FOR DNS Resource Records */
 
 export const fetchAll = ( zone ) => {
-  return axios.get(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr?format=detailed`)
     .then( ({data})  => ({ data, zone }))
 }
 
