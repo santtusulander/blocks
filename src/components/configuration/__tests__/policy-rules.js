@@ -2,7 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
 
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
+
+jest.dontMock('../../../util/policy-config.js')
 jest.dontMock('../policy-rules.jsx')
 const ConfigurationPolicyRules = require('../policy-rules.jsx')
 
@@ -114,10 +121,8 @@ const fakeResponsePolicyRules = Immutable.fromJS(
 
 describe('ConfigurationPolicyRules', () => {
   it('should exist', () => {
-    let policyRules = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRules />
-    );
-    expect(TestUtils.isCompositeComponent(policyRules)).toBeTruthy();
+    const policyRules = shallow(<ConfigurationPolicyRules />)
+    expect(policyRules).toBeDefined()
   });
 
   it('should show loading message', () => {
@@ -140,15 +145,15 @@ describe('ConfigurationPolicyRules', () => {
   });
 
   it('should activate a request policy rule', () => {
-    const activateRule = jest.genMockFunction()
-    let policyRules = TestUtils.renderIntoDocument(
+    const activateRule = jest.fn()
+    const policyRules = shallow(
       <ConfigurationPolicyRules
         requestPolicies={fakeRequestPolicyRules}
         responsePolicies={fakeResponsePolicyRules}
         activateRule={activateRule} />
-    );
-    let btn = TestUtils.scryRenderedDOMComponentsWithTag(policyRules, 'button');
-    TestUtils.Simulate.click(btn[0]);
+    )
+    const btn = policyRules.find('.activate-request-rule-0')
+    btn.simulate('click', {preventDefault: jest.fn()})
     expect(activateRule.mock.calls.length).toBe(1)
     expect(activateRule.mock.calls[0][0][0]).toBe('request_policy')
     expect(activateRule.mock.calls[0][0][1]).toBe('policy_rules')
@@ -156,15 +161,15 @@ describe('ConfigurationPolicyRules', () => {
   });
 
   it('should activate a response policy rule', () => {
-    const activateRule = jest.genMockFunction()
-    let policyRules = TestUtils.renderIntoDocument(
+    const activateRule = jest.fn()
+    let policyRules = shallow(
       <ConfigurationPolicyRules
         requestPolicies={fakeRequestPolicyRules}
         responsePolicies={fakeResponsePolicyRules}
         activateRule={activateRule} />
-    );
-    let btn = TestUtils.scryRenderedDOMComponentsWithTag(policyRules, 'button');
-    TestUtils.Simulate.click(btn[2]);
+    )
+    const btn = policyRules.find('.activate-response-rule-0')
+    btn.simulate('click', {preventDefault: jest.fn()})
     expect(activateRule.mock.calls.length).toBe(1)
     expect(activateRule.mock.calls[0][0][0]).toBe('response_policy')
     expect(activateRule.mock.calls[0][0][1]).toBe('policy_rules')

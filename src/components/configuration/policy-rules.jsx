@@ -77,7 +77,8 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.map(match => match.field).join(', ')}</td>
                   <td>{sets.map(set => set.setkey).join(', ')}</td>
                   <td className="right-btns has-confirmation">
-                    <Button bsStyle="primary" className="btn-link sm-padding"
+                    <Button bsStyle="primary"
+                      className={`btn-link sm-padding activate-request-rule-${i}`}
                       onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
                       <FormattedMessage id="portal.button.EDIT"/>
                     </Button>
@@ -118,7 +119,8 @@ class ConfigurationPolicyRules extends React.Component {
                   <td>{matches.map(match => match.field).join(', ')}</td>
                   <td>{sets.map(set => set.setkey).join(', ')}</td>
                   <td className="right-btns has-confirmation">
-                    <Button bsStyle="primary" className="btn-link sm-padding"
+                    <Button bsStyle="primary"
+                      className={`btn-link sm-padding activate-response-rule-${i}`}
                       onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
                       <FormattedMessage id="portal.button.EDIT"/>
                     </Button>

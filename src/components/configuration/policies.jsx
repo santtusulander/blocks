@@ -43,13 +43,13 @@ class ConfigurationPolicies extends React.Component {
   changeActiveRuleType(type) {
     let rulePath = this.props.activeRule
     if(type === 'request') {
-      rulePath[0] = 'request_policy'
+      rulePath = rulePath.set(0, 'request_policy')
     }
     else if(type === 'response') {
-      rulePath[0] = 'response_policy'
+      rulePath = rulePath.set(0, 'response_policy')
     }
     else if(type === 'default') {
-      rulePath[0] = 'default_policy'
+      rulePath = rulePath.set(0, 'default_policy')
     }
     this.props.activateRule(rulePath)
   }

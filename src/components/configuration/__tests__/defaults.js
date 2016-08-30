@@ -1,9 +1,21 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
+
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
 
 jest.dontMock('../defaults.jsx')
 const ConfigurationDefaults = require('../defaults.jsx')
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
   {
@@ -26,16 +38,14 @@ const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
 
 describe('ConfigurationDefaults', () => {
   it('should exist', () => {
-    let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults />
-    );
-    expect(TestUtils.isCompositeComponent(defaults)).toBeTruthy();
-  });
+    const defaults = shallow(<ConfigurationDefaults />)
+    expect(defaults).toBeDefined()
+  })
 
   it('should change values', () => {
-    const changeValue = jest.genMockFunction()
+    const changeValue = jest.fn()
     let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults changeValue={changeValue}
+      <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     );
     defaults.handleChange('some path')(true)
@@ -45,9 +55,9 @@ describe('ConfigurationDefaults', () => {
 
   it('should change ttl value based on unit', () => {
     const agePath = ['default_policy','policy_rules',0,'set','cache_control','max_age']
-    const changeValue = jest.genMockFunction()
+    const changeValue = jest.fn()
     let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults changeValue={changeValue}
+      <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     );
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(defaults, 'input')
