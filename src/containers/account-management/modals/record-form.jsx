@@ -124,7 +124,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       const oldRecord = getById(records, activeRecord).toJS()
       values.class = 'IN'
       dispatch(removeResource(zone, oldRecord.name, oldRecord))
-        .then(() => createResource(zone, values.name, values))
+        .then(() => dispatch(createResource(zone, values.name, values)))
         .then(() => closeModal())
     }
   }

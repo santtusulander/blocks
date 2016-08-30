@@ -54,7 +54,7 @@ export const fetchResourceDetails = createAction(DNS_RECORDS_RECEIVE_RESOURCE, (
   return dnsRecordsApi.fetchDetailsByName(zone, resource)
 })
 
-export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) =>{
+export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
   resource = resource.concat('.' + zone)
   return dnsRecordsApi.create(zone, resource, data).then(resource => {
