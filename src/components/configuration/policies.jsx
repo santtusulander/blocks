@@ -48,9 +48,6 @@ class ConfigurationPolicies extends React.Component {
     else if(type === 'response') {
       rulePath = rulePath.set(0, 'response_policy')
     }
-    else if(type === 'default') {
-      rulePath = rulePath.set(0, 'default_policy')
-    }
     this.props.activateRule(rulePath)
   }
   render() {

@@ -236,8 +236,6 @@ describe('ConfigurationPolicies', () => {
     expect(activateRule.mock.calls[0][0].get(0)).toEqual('request_policy')
     policies.instance().changeActiveRuleType('response')
     expect(activateRule.mock.calls[1][0].get(0)).toEqual('response_policy')
-    policies.instance().changeActiveRuleType('default')
-    expect(activateRule.mock.calls[2][0].get(0)).toEqual('default_policy')
   })
 
   it('should show sidebar when a rule is active', () => {

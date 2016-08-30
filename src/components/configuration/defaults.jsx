@@ -6,20 +6,20 @@ import ConfigurationDefaultPolicies from './default-policies'
 import Toggle from '../toggle'
 import Select from '../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 function secondsToUnit(value, unit) {
   value = parseInt(value || 0)
   switch(unit) {
     case 'minutes':
       value = value / 60
-    break
+      break
     case 'hours':
       value = value / 3600
-    break
+      break
     case 'days':
       value = value / 86400
-    break
+      break
   }
   return value
 }
@@ -28,13 +28,13 @@ function secondsFromUnit(value, unit) {
   switch(unit) {
     case 'minutes':
       value = value * 60
-    break
+      break
     case 'hours':
       value = value * 3600
-    break
+      break
     case 'days':
       value = value * 86400
-    break
+      break
   }
   return value
 }
@@ -118,7 +118,7 @@ class ConfigurationDefaults extends React.Component {
 
         <h2><FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/></h2>
 
-        { /* Ignore case from origin */}
+        {/* Ignore case from origin */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
@@ -129,7 +129,7 @@ class ConfigurationDefaults extends React.Component {
           </Col>
         </Row>
 
-        { /* Enable e-Tag support */}
+        {/* Enable e-Tag support */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.enableEtag.text"/>
@@ -145,7 +145,7 @@ class ConfigurationDefaults extends React.Component {
           </Col>
         </Row>
 
-        { /* Honor Origin Cache Control */}
+        {/* Honor Origin Cache Control */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.honorOriginCacheControl.text"/>
@@ -217,7 +217,11 @@ class ConfigurationDefaults extends React.Component {
 ConfigurationDefaults.displayName = 'ConfigurationDefaults'
 ConfigurationDefaults.propTypes = {
   changeValue: React.PropTypes.func,
-  config: React.PropTypes.instanceOf(Immutable.Map)
+  config: React.PropTypes.instanceOf(Immutable.Map),
+  intl: React.PropTypes.object
+}
+ConfigurationDefaults.defaultProps = {
+  config: Immutable.Map()
 }
 
 module.exports = injectIntl(ConfigurationDefaults)
