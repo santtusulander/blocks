@@ -5,16 +5,17 @@ import PageHeader from '../layout/page-header'
 
 import { FormattedMessage } from 'react-intl'
 
-const ServicesPageHeader = ({ activeAccount }) => {
+const ServicesPageHeader = ({ activeAccount, intl }) => {
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.services.header.text"/>}>
-      <h1>{activeAccount || this.props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}</h1>
+      <h1>{activeAccount || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}</h1>
     </PageHeader>
   )
 }
 
 ServicesPageHeader.propTypes = {
-  activeAccount: PropTypes.string
+  activeAccount: PropTypes.string,
+  intl: PropTypes.object
 }
 
 export default injectIntl(ServicesPageHeader)
