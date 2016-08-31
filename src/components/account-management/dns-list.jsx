@@ -7,68 +7,76 @@ import TableSorter from '../table-sorter'
 
 import recordTypes from '../../constants/dns-record-types'
 
-const DNSList = ({ onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc }) => {
-  let tables = []
-  let recordsByType = {}
-  records.forEach(record => {
-    if(!recordsByType[record.type]) {
-      recordsByType[record.type] = []
-    }
-    recordsByType[record.type].push(record)
-  })
-  const getContent = type => sortingFunc =>
-    sortingFunc(recordsByType[type]).map((record, i) =>
-      <tr key={i}>
-        <td>
-          <Input
-            type="checkbox"
-            label={record.name}/>
-        </td>
-        <td>{record.value}</td>
-        <td>{record.ttl}</td>
-        <td>
-        <ActionLinks
-        onEdit={() => onEditEntry(record.id)}
-        onDelete={() => onDeleteEntry(record.id)}/>
-        </td>
-      </tr>
+class DNSList extends Component {
+
+  shouldComponentUpdate(nextProps) {
+    return !nextProps.modalOpen
+  }
+
+  render() {
+    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc } = this.props
+    let tables = []
+    let recordsByType = {}
+    records.forEach(record => {
+      if(!recordsByType[record.type]) {
+        recordsByType[record.type] = []
+      }
+      recordsByType[record.type].push(record)
+    })
+    const getContent = type => sortingFunc =>
+      sortingFunc(recordsByType[type]).map((record, i) =>
+        <tr key={i}>
+          <td>
+            <Input
+              type="checkbox"
+              label={record.name}/>
+          </td>
+          <td>{record.value}</td>
+          <td>{record.ttl}</td>
+          <td>
+          <ActionLinks
+          onEdit={() => onEditEntry(record.id)}
+          onDelete={() => onDeleteEntry(record.id)}/>
+          </td>
+        </tr>
+      )
+    return (
+      <div>
+        <h3 className="account-management-header">
+          <span id="domain-stats">
+            {`${records.length} Records`}
+          </span>
+          <div className='dns-filter-wrapper'>
+            <Input
+              type="text"
+              className="search-input"
+              groupClassName="search-input-group"
+              placeholder="Search records"
+              value={searchValue}
+              onChange={searchFunc}/>
+            <UDNButton
+              id="add-dns-record"
+              bsStyle="success"
+              onClick={onAddEntry}>
+              ADD RECORD
+            </UDNButton>
+          </div>
+        </h3>
+        <hr/>
+        {recordTypes.sort().forEach((type, index) => {
+          if (recordsByType.hasOwnProperty(type)) {
+            tables.push(
+              <div key={index} className='table-container'>
+                <h4>{type} Records</h4>
+                <SortableTable content={getContent(type)}/>
+              </div>
+            )
+          }
+        })}
+        {tables}
+      </div>
     )
-  return (
-    <div>
-      <h3 className="account-management-header">
-        <span id="domain-stats">
-          {`${records.length} Records`}
-        </span>
-        <div className='dns-filter-wrapper'>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder="Search records"
-            value={searchValue}
-            onChange={searchFunc}/>
-          <UDNButton
-            id="add-dns-record"
-            bsStyle="success"
-            onClick={onAddEntry}>
-            ADD RECORD
-          </UDNButton>
-        </div>
-      </h3>
-      <hr/>
-      {recordTypes.sort().forEach((type, index) => {
-        if (recordsByType.hasOwnProperty(type)) {
-          tables.push(
-            <div key={index} className='table-container'>
-              <h4>{type} Records</h4>
-              <SortableTable content={getContent(type)}/>
-            </div>
-          )
-        }
-      })}
-      {tables}
-    </div>
-  )
+  }
 }
 
 class SortableTable extends Component {
