@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import { Col, Row } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import Select from './select'
 import DateRanges from '../constants/date-ranges'
@@ -162,7 +163,7 @@ export class DateRangeSelect extends React.Component {
         {this.state.activeDateRange === DateRanges.CUSTOM_TIMERANGE ?
           <Row className="no-gutters">
             <Col xs={6}>
-              <p className="text-sm">FROM</p>
+              <h5><FormattedMessage id="portal.analysis.filters.dateRangeFrom.title"/></h5>
               <div ref="startDateHolder"
                    className={'datepicker-input-wrapper start-date' +
                 (this.state.datepickerOpen ?
@@ -178,7 +179,7 @@ export class DateRangeSelect extends React.Component {
               </div>
             </Col>
             <Col xs={6}>
-              <p className="text-sm">TO</p>
+              <h5><FormattedMessage id="portal.analysis.filters.dateRangeTo.title"/></h5>
               <div ref="endDateHolder"
                    className={'datepicker-input-wrapper end-date' +
                 (this.state.datepickerOpen ?

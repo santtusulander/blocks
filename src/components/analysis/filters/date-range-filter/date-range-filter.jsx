@@ -123,7 +123,7 @@ export class DateRangeFilter extends React.Component {
 
     return (
 
-      <div className="form-group relative-positioned">
+      <div className="relative-positioned">
         <Dropdown id=""
                   open={dropdownOpen}
                   className={className}>

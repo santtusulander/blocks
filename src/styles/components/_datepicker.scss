@@ -14,21 +14,12 @@
 }
 
 .datepicker {
-  width: $sidebar-width - $bar-height;
+  width: 300px;
   padding: 15px 25px 25px;
   font-family: inherit;
   font-size: inherit;
   border: 0;
   border-radius: 0;
-
-  @include md {
-    width: $md-sidebar-width - $md-bar-height;
-  }
-
-  @include sm {
-    width: $sm-sidebar-width - ($md-bar-height / 3 * 2);
-    padding: 10px 15px;
-  }
 
   .dark-theme &,
   .light-theme & {
@@ -368,11 +359,7 @@
     .dark-theme &,
     .light-theme & {
       background: url('../assets/icons/dt-icon-calendar.svg') rgba($black, 0.2) right center no-repeat;
-      background-size: 60px 60px;
-
-      @include md {
-        background-image: none;
-      }
+      background-size: $bar-height;
     }
   }
 }

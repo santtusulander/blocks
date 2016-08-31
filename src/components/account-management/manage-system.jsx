@@ -7,7 +7,7 @@ import DNS from './system/dns'
 import Roles from './system/roles'
 import Users from './system/users'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AccountManagementManageSystem extends React.Component {
   constructor(props) {
@@ -28,27 +28,25 @@ class AccountManagementManageSystem extends React.Component {
         <PageHeader>
           <h1>UDN Admin Account</h1>
         </PageHeader>
-        <Nav bsStyle="tabs" className="system-nav"
+        <Nav bsStyle="tabs"
           activeKey={this.state.activeTab} onSelect={this.changeTab}>
           <NavItem eventKey="users"><FormattedMessage id="portal.manage.tabs.users.title"/></NavItem>
           <NavItem eventKey="brands"><FormattedMessage id="portal.manage.tabs.brands.title"/></NavItem>
           <NavItem eventKey="dns"><FormattedMessage id="portal.manage.tabs.dns.title"/></NavItem>
           <NavItem eventKey="roles"><FormattedMessage id="portal.manage.tabs.roles.title"/></NavItem>
         </Nav>
-        <div className="tab-bodies">
-          {this.state.activeTab === 'users' &&
-            <Users/>
-          }
-          {this.state.activeTab === 'brands' &&
-            <Brands {...this.props.brandsList} />
-          }
-          {this.state.activeTab === 'dns' &&
-            <DNS {...this.props.dnsList}/>
-          }
-          {this.state.activeTab === 'roles' &&
-            <Roles/>
-          }
-        </div>
+        {this.state.activeTab === 'users' &&
+          <Users/>
+        }
+        {this.state.activeTab === 'brands' &&
+          <Brands {...this.props.brandsList} />
+        }
+        {this.state.activeTab === 'dns' &&
+          <DNS {...this.props.dnsList}/>
+        }
+        {this.state.activeTab === 'roles' &&
+          <Roles/>
+        }
       </div>
     )
   }

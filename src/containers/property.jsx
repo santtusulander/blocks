@@ -5,6 +5,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import numeral from 'numeral'
 
@@ -312,35 +313,32 @@ export class Property extends React.Component {
     return (
       <PageContainer className="property-container">
         <Content>
-          <PageHeader>
-            <h5>PROPERTY SUMMARY</h5>
-            <div className="content-layout__header">
-              <AccountSelector
-                as="propertySummary"
-                params={this.props.params}
-                topBarTexts={itemSelectorTexts}
-                topBarAction={this.itemSelectorTopBarAction}
-                onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-                <div className="btn btn-link dropdown-toggle header-toggle">
-                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-                  <span className="caret"></span>
-                </div>
-              </AccountSelector>
-              <ButtonToolbar>
-                <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-                <Link className="btn btn-success btn-icon"
-                      to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
-                  <IconChart/>
-                </Link>
-                <Link className="btn btn-success btn-icon"
-                      to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
-                  <IconConfiguration/>
-                </Link>
-                <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                  <IconTrash/>
-                </Button>
-              </ButtonToolbar>
-            </div>
+          <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
+            <AccountSelector
+              as="propertySummary"
+              params={this.props.params}
+              topBarTexts={itemSelectorTexts}
+              topBarAction={this.itemSelectorTopBarAction}
+              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
+                <span className="caret"></span>
+              </div>
+            </AccountSelector>
+            <ButtonToolbar>
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+              <Link className="btn btn-success btn-icon"
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                <IconChart/>
+              </Link>
+              <Link className="btn btn-success btn-icon"
+                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
+                <IconConfiguration/>
+              </Link>
+              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+            </ButtonToolbar>
           </PageHeader>
           <div className="container-fluid">
 

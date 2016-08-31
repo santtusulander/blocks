@@ -76,9 +76,8 @@ export class Filters extends React.Component {
     const type = this.props.type ? this.props.type.toUpperCase() : ''
     return (
       <div className="filters">
-
         <div className="sidebar-header">
-          <p className="text-sm">{handleReportTitleChange(this.props.activeTab, type)}</p>
+          <h5>{handleReportTitleChange(this.props.activeTab, type)}</h5>
           <Dropdown id="dropdown-content" open={this.state.navMenuOpen}
                     onToggle={this.toggleNavMenu}>
             <Dropdown.Toggle bsStyle="link" className="header-toggle btn-block">

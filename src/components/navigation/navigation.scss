@@ -72,7 +72,7 @@ $dark-blue-navi: #070d1e;
           stroke-linejoin: round;
         }
 
-        span {
+        > span {
           display: block;
           transition: all $navigation-transition-time;
         }

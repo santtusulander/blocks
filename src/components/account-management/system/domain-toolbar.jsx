@@ -1,13 +1,17 @@
 import React, { PropTypes } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl';
 
 import { CREATE_ZONE, MODIFY_ZONE } from '../../../constants/permissions'
 
+import PageHeader from '../../layout/page-header'
+import TruncatedTitle from '../../truncated-title'
 import IsAllowed from '../../is-allowed'
 import UDNButton from '../../button'
 import DomainSelector from '../../global-account-selector/selector-component'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
+
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue }) => {
   const sortedDomains = domains.sort((a,b) => {
@@ -16,23 +20,24 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
     return 0
   })
   return (
-    <div className="domain-toolbar">
+    <PageHeader secondaryPageHeader={true} distributedColumns={true}>
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
           items={sortedDomains.map(domain => [domain.id, domain.id])}
           onItemClick={changeActiveDomain}
           searchValue={searchValue}
           onSearch={searchFunc}>
-           <h3>{activeDomain}<span className="caret"></span></h3>
+            <div className="dropdown-toggle header-toggle">
+              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
+            </div>
         </DomainSelector> :
-        <h3 className="selector-component">NO DOMAINS</h3>}
+        <h4 className="selector-component"><FormattedMessage id="portal.account.manage.system.empty.domain"/></h4>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
             id="add-domain"
-            bsStyle="primary"
+            bsStyle="success"
             icon={true}
-            addNew={true}
             onClick={onAddDomain}>
             <IconAdd/>
           </UDNButton>
@@ -48,7 +53,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           </UDNButton>
         </IsAllowed>}
       </ButtonToolbar>
-    </div>
+    </PageHeader>
   )
 }
 

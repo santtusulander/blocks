@@ -45,7 +45,7 @@ class Support extends React.Component {
       <PageContainer>
         <div className="account-support">
           <SupportPageHeader {...this.props} />
-          <Nav bsStyle="tabs" className="system-nav">
+          <Nav bsStyle="tabs">
             <li className="navbar">
               <Link to={baseUrl + '/tickets'} activeClassName="active">
                 <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
