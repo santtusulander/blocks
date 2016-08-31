@@ -14,17 +14,18 @@ import {
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import UDNButton from '../../../components/button'
-import { checkForErrors } from '../../../util/helpers'
-import { recordFields } from '../../../constants/dns-record-types'
-
 import RecordForm from '../../../components/account-management/record-form'
+
+import { checkForErrors } from '../../../util/helpers'
+
+import { getInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
+
 
 /**
  *
  * Filter fields to validate according to the fields that get rendered for the active record type.
  * The 'recordFields' -constant dictates which fields get rendered per record type.
  */
-const isShown = recordType => field => recordFields[field].includes(recordType)
 const filterFields = fields => {
   let filteredFields = {}
   for(const field in fields) {
@@ -100,8 +101,9 @@ RecordFormContainer.propTypes = {
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const records = dnsRecords.get('resources')
   const activeRecord = dnsRecords.get('activeRecord')
-  const toEdit = getById(records, activeRecord)
-  const initialValues = edit && toEdit && toEdit.toJS()
+  let toEdit = getById(records, activeRecord)
+  let initialValues = undefined
+  initialValues = toEdit && edit && getInitialValues(toEdit.toJS())
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
@@ -115,15 +117,6 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
-  const recordValues = values => {
-    if (isShown(values.type)('prio')) {
-      const value = { prio: values.prio, value: values.value }
-      delete values.prio
-      delete values.value
-      return { value, ...values }
-    }
-    return values
-  }
   return {
     addRecord: (values, domain) => {
       values = recordValues(values)
