@@ -39,7 +39,7 @@ PageHeader.displayName = 'PageHeader'
 PageHeader.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,
-  distributedColumns: React.PropTypes.string,
+  distributedColumns: React.PropTypes.bool,
   pageHeaderDetails: React.PropTypes.array,
   pageSubTitle: React.PropTypes.oneOfType([
     React.PropTypes.string,
