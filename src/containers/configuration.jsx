@@ -322,23 +322,29 @@ export class Configuration extends React.Component {
 
             {this.state.activeTab === 'defaults' ?
               <ConfigurationDefaults
-                config={activeConfig}
-                changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
-              : null}
-
-            {this.state.activeTab === 'policies' ?
-              <ConfigurationPolicies
-                config={activeConfig}
-                changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}
-                location={this.props.location}
                 activateMatch={this.props.uiActions.changePolicyActiveMatch}
                 activateRule={this.props.uiActions.changePolicyActiveRule}
                 activateSet={this.props.uiActions.changePolicyActiveSet}
                 activeMatch={this.props.policyActiveMatch}
                 activeRule={this.props.policyActiveRule}
-                activeSet={this.props.policyActiveSet}/>
+                activeSet={this.props.policyActiveSet}
+                changeValue={this.changeValue}
+                config={activeConfig}
+                saveChanges={this.saveActiveHostChanges}/>
+              : null}
+
+            {this.state.activeTab === 'policies' ?
+              <ConfigurationPolicies
+                activateMatch={this.props.uiActions.changePolicyActiveMatch}
+                activateRule={this.props.uiActions.changePolicyActiveRule}
+                activateSet={this.props.uiActions.changePolicyActiveSet}
+                activeMatch={this.props.policyActiveMatch}
+                activeRule={this.props.policyActiveRule}
+                activeSet={this.props.policyActiveSet}
+                changeValue={this.changeValue}
+                config={activeConfig}
+                location={this.props.location}
+                saveChanges={this.saveActiveHostChanges}/>
               : null}
 
             {this.state.activeTab === 'performance' ?

@@ -44,11 +44,11 @@ describe('ConfigurationDefaults', () => {
 
   it('should change values', () => {
     const changeValue = jest.fn()
-    let defaults = TestUtils.renderIntoDocument(
+    const defaults = shallow(
       <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
-    );
-    defaults.handleChange('some path')(true)
+    )
+    defaults.instance().handleChange('some path')(true)
     expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
@@ -56,7 +56,7 @@ describe('ConfigurationDefaults', () => {
   it('should change ttl value based on unit', () => {
     const agePath = ['default_policy','policy_rules',0,'set','cache_control','max_age']
     const changeValue = jest.fn()
-    let defaults = TestUtils.renderIntoDocument(
+    const defaults = TestUtils.renderIntoDocument(
       <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     );

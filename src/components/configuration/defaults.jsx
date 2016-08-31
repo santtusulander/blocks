@@ -2,7 +2,8 @@ import React from 'react'
 import {Row, Col, Input} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ConfigurationDefaultPolicies from './default-policies'
+import ConfigurationPolicyRules from './policy-rules'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import Toggle from '../toggle'
 import Select from '../select'
 
@@ -208,7 +209,30 @@ class ConfigurationDefaults extends React.Component {
         <hr/>
 
         <h3><FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/></h3>
-        <ConfigurationDefaultPolicies/>
+        <ConfigurationPolicyRules
+          defaultPolicies={config.getIn(['default_policy','policy_rules'])}
+          activateRule={this.props.activateRule}
+          deleteRule={this.deleteRule}/>
+        {/*this.props.activeRule ?
+          <ConfigurationSidebar
+            rightColVisible={!!activeEditForm}
+            handleRightColClose={()=>this.props.activateMatch(null)}
+            onHide={()=>this.props.activateRule(null)}
+            rightColContent={activeEditForm}>
+            <ConfigurationPolicyRuleEdit
+              activateMatch={this.props.activateMatch}
+              activateSet={this.props.activateSet}
+              activeMatchPath={this.props.activeMatch}
+              activeSetPath={this.props.activeSet}
+              changeValue={this.props.changeValue}
+              config={config}
+              rule={config.getIn(this.props.activeRule)}
+              rulePath={this.props.activeRule}
+              changeActiveRuleType={this.changeActiveRuleType}
+              hideAction={()=>this.props.activateRule(null)}
+              location={this.props.location}/>
+          </ConfigurationSidebar>
+        : ''*/}
       </div>
     )
   }
@@ -216,6 +240,12 @@ class ConfigurationDefaults extends React.Component {
 
 ConfigurationDefaults.displayName = 'ConfigurationDefaults'
 ConfigurationDefaults.propTypes = {
+  activateMatch: React.PropTypes.func,
+  activateRule: React.PropTypes.func,
+  activateSet: React.PropTypes.func,
+  activeMatch: React.PropTypes.instanceOf(Immutable.List),
+  activeRule: React.PropTypes.instanceOf(Immutable.List),
+  activeSet: React.PropTypes.instanceOf(Immutable.List),
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object

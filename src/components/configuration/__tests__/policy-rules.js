@@ -125,14 +125,6 @@ describe('ConfigurationPolicyRules', () => {
     expect(policyRules).toBeDefined()
   });
 
-  it('should show loading message', () => {
-    let policyRules = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRules />
-    );
-    let div = TestUtils.findRenderedDOMComponentWithTag(policyRules, 'div')
-    expect(ReactDOM.findDOMNode(div).textContent).toContain('Loading...');
-  });
-
   it('should set and reset policy types', () => {
     let policyRules = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRules />
