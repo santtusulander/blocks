@@ -6,6 +6,7 @@ import ActionLinks from './action-links'
 import TableSorter from '../table-sorter'
 
 import recordTypes from '../../constants/dns-record-types'
+import {getRecordValueString} from '../../util/dns-records-helpers'
 
 class DNSList extends Component {
 
@@ -24,12 +25,6 @@ class DNSList extends Component {
       recordsByType[record.type].push(record)
     })
 
-    const getRecordValueString = (value) => {
-      if (value.value ) return value.value
-
-      return value
-    }
-    
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
