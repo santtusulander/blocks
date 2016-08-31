@@ -1,4 +1,5 @@
 import uniqid from 'uniqid'
+import { fromJS } from 'immutable'
 
 /* NOT NEEDED AT THE MOMENT as details are fetched with receiveWithDetails
 //LIST
@@ -32,7 +33,7 @@ export const receiveResourceDetails = (state, action) => {
 //CREATE
 export const createSuccess = (state, { payload: { data } }) => {
   data.id = uniqid()
-  return state.merge({ loading: false, resources: state.get('resources').push(data) });
+  return state.merge({ loading: false, resources: state.get('resources').push(fromJS(data)) });
 }
 
 export const createFailed = (state) => {

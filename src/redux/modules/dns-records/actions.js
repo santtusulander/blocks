@@ -43,7 +43,7 @@ const InitialState = fromJS({
   resources: []
 })
 
-const domainlessRecordName = (zone, recordName) =>{
+const domainlessRecordName = (zone, recordName) => {
   return recordName.replace(new RegExp('.' + zone + '$', 'i'), '')
 }
 
