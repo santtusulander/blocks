@@ -110,7 +110,7 @@ class AccountManagementAccountDetails extends React.Component {
     const { fields: { accountName, accountType, services } } = this.props
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
-      <div className="account-management-account-details">
+      <div className="container-fluid content-container account-management-account-details">
         <h2>Account</h2>
         <form className='form-horizontal'>
 

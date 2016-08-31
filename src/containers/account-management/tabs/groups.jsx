@@ -235,7 +235,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     return (
-      <div className="account-management-account-groups">
+      <div className="container-fluid content-container account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>

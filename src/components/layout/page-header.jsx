@@ -9,6 +9,9 @@ class PageHeader extends React.Component {
     if(this.props.secondaryPageHeader){
       className = className + ' secondary-page-header'
     }
+    if(this.props.distributedColumns){
+      className = className + ' distributed-columns'
+    }
     return (
       <div className={className}>
         {this.props.pageSubTitle && <h5>{this.props.pageSubTitle}</h5>}

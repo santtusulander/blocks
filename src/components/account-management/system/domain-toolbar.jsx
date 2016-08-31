@@ -18,7 +18,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
     return 0
   })
   return (
-    <PageHeader>
+    <PageHeader secondaryPageHeader={true} distributedColumns={true}>
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
           items={sortedDomains.map(domain => [domain.id, domain.id])}

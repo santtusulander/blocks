@@ -84,6 +84,12 @@ $action-padding-right: rem(30px);
     }
   }
 
+  &.distributed-columns {
+    .page-header-layout {
+      justify-content: space-between;
+    }
+  }
+
   p {
     margin: 0;
   }
