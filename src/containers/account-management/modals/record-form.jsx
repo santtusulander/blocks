@@ -18,13 +18,11 @@ import RecordForm from '../../../components/account-management/record-form'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import { getInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
+import { getRecordFormInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
 
 
 /**
- *
  * Filter fields to validate according to the fields that get rendered for the active record type.
- * The 'recordFields' -constant dictates which fields get rendered per record type.
  */
 const filterFields = fields => {
   let filteredFields = {}
@@ -103,7 +101,7 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const activeRecord = dnsRecords.get('activeRecord')
   let toEdit = getById(records, activeRecord)
   let initialValues = undefined
-  initialValues = toEdit && edit && getInitialValues(toEdit.toJS())
+  initialValues = toEdit && edit && getRecordFormInitialValues(toEdit.toJS())
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),

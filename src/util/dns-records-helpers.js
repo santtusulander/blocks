@@ -6,7 +6,7 @@ export const getRecordValueString = (value) => {
   return value
 }
 
-export const getInitialValues = record => {
+export const getRecordFormInitialValues = record => {
   switch(record.type) {
     case 'MX':
       return {
