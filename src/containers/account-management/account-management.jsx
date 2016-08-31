@@ -359,7 +359,7 @@ export class AccountManagement extends Component {
       <PageContainer className="account-management">
         <Content>
           <div className="account-management-manage-account">
-            <PageHeader pageSubTitle="Account Management">
+            <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"

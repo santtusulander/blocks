@@ -16,6 +16,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.newAccount.title': 'Add New Account',
   'portal.account.manage.noAccounts.text': 'No accounts.',
 
+  'portal.account.manage.accountManagement.title': 'Account Management',
   'portal.account.manage.sidebar.title': 'MANAGE ACCOUNT',
   'portal.account.manage.account.title': 'Account',
   'portal.account.manage.brand.title': 'Brand',
@@ -432,6 +433,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.activeStaging.text': 'Active Staging',
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
+
   'portal.content.addHost.newHostanme.text': 'New Host Name',
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.trial.text': 'Trial',
@@ -538,7 +540,7 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
   'portal.groups.accountContentSummary.text': 'ACCOUNT CONTENT SUMMARY',
-
+  'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
   'portal.login.login.text': 'Log In',

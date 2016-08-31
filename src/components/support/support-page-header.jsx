@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/helpers'
@@ -20,7 +21,7 @@ const SupportPageHeader = (props) => {
   const subPage = getTabName(router, params);
 
   return (
-    <PageHeader pageSubTitle="Support">
+    <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
           as="support"

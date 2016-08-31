@@ -5,6 +5,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import numeral from 'numeral'
 
@@ -312,7 +313,7 @@ export class Property extends React.Component {
     return (
       <PageContainer className="property-container">
         <Content>
-          <PageHeader pageSubTitle="Property Summary">
+          <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
             <AccountSelector
               as="propertySummary"
               params={this.props.params}
