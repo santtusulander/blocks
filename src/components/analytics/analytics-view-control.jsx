@@ -209,7 +209,7 @@ const AnalyticsViewControl = (props) => {
           props.router.push(url)
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
-          <h1><TruncatedTitle content={activeItem || this.props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
+          <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <span className="caret"></span>
         </div>
       </AccountSelector>
@@ -233,6 +233,7 @@ AnalyticsViewControl.propTypes = {
   activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
+  intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
