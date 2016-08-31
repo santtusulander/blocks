@@ -9,6 +9,11 @@ export default Immutable.fromJS([
     permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW
   },
   {
+    key: 'cache-hit-rate',
+    filters: ['date-range'],
+    permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW
+  },
+  {
     key: 'on-off-net',
     filters: ['date-range', 'on-off-net', 'service-provider'],
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET

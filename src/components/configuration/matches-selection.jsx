@@ -1,6 +1,8 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 
+import {FormattedMessage} from 'react-intl'
+
 class MatchesSelection extends React.Component {
   constructor(props) {
     super(props);
@@ -17,34 +19,34 @@ class MatchesSelection extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Choose Condition</h1>
-          <p>Select the condition type. You can have multiple conditions of the same type in a policy.</p>
+          <h1><FormattedMessage id="portal.policy.edit.matchesSelection.chooseCondition.text"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.matchesSelection.chooseCondition.disclaimer"/></p>
         </Modal.Header>
         <Modal.Body>
           <ul className="condition-selection list-unstyled">
             <li>
               <a href="#" onClick={this.setMatchField('request_host')}>
-                Hostname
+                <FormattedMessage id="portal.policy.edit.matchesSelection.hostname.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_path')}>
-                Directory Path
+                <FormattedMessage id="portal.policy.edit.matchesSelection.directoryPath.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_query')}>
-                Query String
+                <FormattedMessage id="portal.policy.edit.matchesSelection.queryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_header')}>
-                Header
+                <FormattedMessage id="portal.policy.edit.matchesSelection.header.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_cookie')}>
-                Cookie
+                <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
               </a>
             </li>
             {/*<li>
@@ -59,17 +61,17 @@ class MatchesSelection extends React.Component {
             </li>*/}
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
-                File Extension
+                <FormattedMessage id="portal.policy.edit.matchesSelection.fileExtension.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
-                File Name
+                <FormattedMessage id="portal.policy.edit.matchesSelection.fileName.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
-                File Type
+                <FormattedMessage id="portal.policy.edit.matchesSelection.fileType.text"/>
               </a>
             </li>
           </ul>

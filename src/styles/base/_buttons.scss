@@ -3,28 +3,38 @@
 
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
+
+$btn-font-size: 14px;
+$btn-line-height: 1.6;
+$btn-min-width: rem(120px);
+$btn-vertical-padding: em(7px, $btn-font-size);
+$btn-horizontal-padding: em(18px, $btn-font-size);
+$btn-text-color: $white;
+$btn-primary-background: $pale-blue;
+$btn-secondary-background: transparent;
+$btn-danger-background: $red;
+$btn-success-background: $gradient-teal;
+$btn-icon-color: $white;
+
+$dd-font-size: 14px;
+$dd-line-height: 1.6;
+$dd-min-width: rem(150px);
+$dd-vertical-padding: em(7px, $dd-font-size);
+$dd-horizontal-padding: em(18px, $dd-font-size);
+
+$lt-caret-color: $silver-60;
+
 .btn {
-  height: $btn-height;
   min-width: $btn-min-width;
-  padding: 0 ($btn-height / 2);
-  font-size: rem(15px);
+  padding: $btn-vertical-padding $btn-horizontal-padding;
+  font-size: rem($btn-font-size);
   font-weight: 700;
-  line-height: $btn-height;
-  color: $white;
+  line-height: $btn-line-height;
+  color: $btn-text-color;
+  text-transform: uppercase;
   border: 0;
   border-radius: 2px;
-  box-shadow: none;
-
-  @include md {
-    height: $md-btn-height;
-    min-width: $md-btn-min-width;
-    padding: 0 ($md-btn-height / 2);
-    line-height: $md-btn-height;
-  }
-
-  @include sm {
-    min-width: $sm-btn-min-width;
-  }
+  fill: $btn-text-color;
 
   @include print {
     // scss-lint:disable ImportantRule
@@ -39,7 +49,7 @@
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
-    opacity: 0.3;
+    opacity: 0.2;
   }
 
   &.dropdown-toggle,
@@ -48,16 +58,25 @@
     min-width: 0;
   }
 
-  &.btn-primary {
+  &,
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  &:active:hover,
+  &.active:focus {
+    color: $btn-text-color;
+    outline: none;
+    box-shadow: none;
+  }
 
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      text-transform: uppercase;
-      outline: none;
-      box-shadow: none;
+  &:focus {
+    .dark-theme & {
+      box-shadow: 0 0 0 2px $white;
+    }
+
+    .light-theme & {
+      box-shadow: 0 0 0 2px rgba($black, 0.4);
     }
   }
 
@@ -65,16 +84,6 @@
     color: $dt-text-color;
     background-color: transparent !important;
     border: 2px solid rgba($pale-blue, 0.1);
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      text-transform: uppercase;
-      outline: none;
-      box-shadow: none;
-    }
 
     .light-theme & {
       color: $lt-text-color;
@@ -84,27 +93,7 @@
     }
   }
 
-  &.btn-icon {
-    position: relative;
-    width: $btn-height;
-    padding: 0;
-    line-height: $btn-height;
-    vertical-align: middle;
-
-    @include md {
-      width: $md-btn-height;
-      line-height: $md-btn-height;
-    }
-
-    &.btn-header {
-      width: $header-btn-height;
-
-      @include md {
-        width: $md-header-btn-height;
-      }
-    }
-  }
-
+  // TODO: remove this after updating other areas in the site
   &.btn-sm {
     height: $btn-sm-height;
     line-height: $btn-sm-height;
@@ -118,16 +107,6 @@
       min-width: 0;
       text-transform: uppercase;
     }
-
-    &.btn-icon {
-      width: $btn-sm-height;
-      line-height: $btn-sm-height;
-
-      @include md {
-        width: $md-btn-sm-height;
-        line-height: $md-btn-sm-height;
-      }
-    }
   }
 
   &.sm-padding {
@@ -138,11 +117,8 @@
     }
   }
 
-  &.btn-round {
-    border-radius: 50%;
-  }
-
   &.btn-header {
+    width: $header-btn-height;
     height: $header-btn-height;
     margin-top: ($header-height - $header-btn-height) / 2;
     margin-right: 8px;
@@ -154,27 +130,17 @@
     fill: $dt-text-color;
     stroke: $dt-text-color;
 
-    @include md {
-      margin-top: ($md-header-height - $md-header-btn-height) / 2;
-      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
-      line-height: $md-header-btn-height;
-    }
-
-    &.btn-icon {
-      .icon {
-        transform: translate(-50%, -50%) scale(1, 1);
-      }
-    }
-
     &.btn-alerts {
       svg {
-        width: 11px;
+        width: 24px;
+        height: 24px;
       }
     }
 
     &.btn-help {
       svg {
-        width: 8px;
+        width: 30px;
+        height: 30px;
       }
     }
   }
@@ -243,6 +209,7 @@
   }
 }
 
+// TODO: move to header file and update styling
 .header-toggle {
   position: relative;
   height: auto;
@@ -252,12 +219,8 @@
   text-align: left;
 
   h3 {
-    max-width: calc(100% - #{$btn-height});
+    max-width: calc(100% - #{$bar-height});
     white-space: normal;
-
-    @include md {
-      max-width: calc(100% - #{$md-btn-height});
-    }
   }
 
   .caret {
@@ -265,8 +228,8 @@
     top: 50%;
     right: 0;
     display: block;
-    width: $btn-height / 2;
-    height: $btn-height / 2;
+    width: $bar-height / 2;
+    height: $bar-height / 2;
     color: $white;
     border: 0;
     transform: translateY(-50%);
@@ -296,11 +259,11 @@
       width: 0;
       height: 0;
       vertical-align: middle;
-      border-top: 5px dashed;
-      border-right: 5px solid transparent;
-      border-left: 5px solid transparent;
+      border-top: 4px solid;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
       content: '';
-      transform: translate(-50%, -50%) scale(0.8, 0.8);
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -342,6 +305,7 @@
   }
 }
 
+// TODO: remove this
 .btn-alerts {
   position: relative;
 
@@ -362,37 +326,118 @@
 }
 
 .dark-theme,
-// TODO: Should this be removed? .light-theme .configuration-sidebar
-.light-theme .header {
+.light-theme {
 
+  // BUTTONS
+  // =======
+  .btn {
+    .icon {
+      fill: $btn-icon-color;
+    }
+  }
+
+  .btn-primary {
+    background-color: $btn-primary-background;
+
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-primary-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
+    }
+  }
+
+  .btn-success {
+    background-color: $btn-success-background;
+
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-success-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
+    }
+  }
+
+  .btn-danger {
+    background-color: $btn-danger-background;
+
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.15), rgba($white, 0.15));
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-color: $btn-danger-background;
+      background-image: linear-gradient(rgba($black, 0.1), rgba($black, 0.1));
+    }
+  }
+
+  .btn-link {
+    color: $btn-primary-background;
+    text-transform: capitalize;
+    background-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      color: $btn-primary-background;
+      text-decoration: underline;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .btn-icon {
+    padding: 0;
+    line-height: 0;
+    fill: inherit;
+  }
+
+  .btn-round {
+    border-radius: 50%;
+  }
+
+  // DROPDOWN BUTTONS (SELECT, TOGGLE)
+  // =================================
   .dropdown-select {
+    min-width: $dd-min-width;
 
     .dropdown-toggle {
+      width: 100%;
+      padding: $dd-vertical-padding calc(#{$dd-horizontal-padding} * 2) $dd-vertical-padding $dd-horizontal-padding;  // Calculation prevents the text from flowing under the caret
+      font-size: $dd-font-size;
+      font-weight: 300;
+      color: $dt-text-color;
+      text-align: left;
+      text-transform: capitalize;
+      background-color: rgba($black, 0.3);
+      fill: $dt-text-color;
 
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        color: $dt-text-color;
-        background-color: rgba($black, 0.2);
+      &:focus {
+        box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
+      }
+
+      > .icon {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
         fill: $dt-text-color;
-        stroke: $dt-text-color;
-      }
-
-      &:hover:not(:disabled),
-      &:hover:not(:disabled) .icon {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      &.active {
-        background-color: rgba($black, 0.2);
-      }
-
-      .icon {
-        fill: $dt-text-color;
-        stroke: $dt-text-color;
 
         @include print {
           display: none;
@@ -407,51 +452,154 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
+      .caret {
+        position: absolute;
+        top: 50%;
+        right: $dd-horizontal-padding;
+        border-width: $caret-width-base;
+        transform: translateY(-50%);
+      }
     }
 
     &.open .dropdown-toggle {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
+    }
+  }
+}
 
-      &,
-      &:hover {
-        font-weight: 500;
-        color: $pale-blue;
-        background-color: $black;
-        background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
-        background-size: 100%;
+.dark-theme {
+  .btn-secondary {
+    background-color: $btn-secondary-background;
+    box-shadow: 0 0 0 2px rgba($btn-primary-background, 0.2);
+
+    &:hover {
+      background-color: rgba($btn-primary-background, 0.3);
+      box-shadow: none;
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      color: $btn-text-color;
+      background-color: rgba($btn-primary-background, 0.3);
+      background-image: linear-gradient(rgba($black, 0.6), rgba($black, 0.6));
+      box-shadow: inset 0 0 0 2px rgba($black, 0.6);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px $white, inset 0 0 0 2px rgba($btn-primary-background, 0.2);
+    }
+  }
+
+  .dropdown-select {
+    .dropdown-toggle {
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon {
+        color: $white;
+        fill: $white;
+      }
+
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-color: rgba($black, 0.5);
         box-shadow: none;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      &,
+      &:hover,
+      &:hover .icon,
+      .icon {
+        color: $pale-blue;
+        background-color: rgba($black, 0.3);
         fill: $pale-blue;
-        stroke: $pale-blue;
+      }
+
+      &:focus {
+        box-shadow: inset 0 0 0 1px rgba($black, 0.1);
+      }
+    }
+  }
+}
+
+// Not merging with light-theme below in order to clean up light theme button styles
+.light-theme {
+  .btn-secondary {
+    color: $btn-primary-background;
+    background-color: $btn-secondary-background;
+    box-shadow: inset 0 0 0 2px $btn-primary-background;
+
+    &:hover {
+      color: $white;
+      background-color: $btn-primary-background;
+      background-image: linear-gradient(rgba($black, 0.3), rgba($black, 0.3));
+      box-shadow: none;
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      color: $white;
+      background-color: rgba($pale-blue, 0.3);
+      background-image: linear-gradient(rgba($black, 0.6), rgba($black, 0.6));
+      box-shadow: inset 0 0 0 2px rgba($black, 0.6);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px $btn-primary-background;
+    }
+  }
+
+  .dropdown-select {
+    .dropdown-toggle {
+      color: $lt-text-color;
+      background-color: $white;
+      box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+      &:hover:not(:disabled),
+      &:hover:not(:disabled) .icon,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        color: $black;
+        fill: $black;
       }
 
       .icon {
+        fill: $lt-caret-color;
+        stroke: $lt-caret-color;
+      }
+    }
+
+    &.open .dropdown-toggle {
+      background-color: $white;
+
+      &,
+      &:hover,
+      &:hover .icon,
+      .icon {
+        color: $pale-blue;
         fill: $pale-blue;
-        stroke: $pale-blue;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
       }
     }
   }
+}
 
-  .btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $dt-text-color;
-      background-color: rgba($pale-blue, 0.1);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
-    }
-  }
+// TODO: remove this / move to other files
+.dark-theme,
+.light-theme .header {
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
 
@@ -478,25 +626,6 @@
 
   .open > .dropdown-toggle .caret {
     border-top-color: $pale-blue;
-  }
-
-  .btn-secondary {
-
-    &,
-    &:hover {
-      color: $dt-text-color;
-      background-color: $purple;
-    }
-
-    &:hover:not(:disabled) {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &.active {
-      background-color: $pale-blue;
-    }
   }
 
   .btn-tertiary {
@@ -529,23 +658,6 @@
     }
   }
 
-  .btn-success {
-
-    &,
-    &:hover {
-      color: $dt-text-color;
-      background-color: $btn-success-bg;
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:not(:disabled) {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-  }
-
   .btn-save {
 
     &,
@@ -562,25 +674,9 @@
       stroke: $lt-button-color;
     }
   }
-
-  .btn-link {
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      color: $pale-blue;
-      text-decoration: none;
-      background-color: transparent;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-    }
-  }
 }
 
+// TODO: remove this
 .light-theme .header {
   .btn-tertiary {
 
@@ -601,71 +697,8 @@
   }
 }
 
+// TODO: remove this / move to other files
 .light-theme {
-
-  .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        color: $lt-text-color;
-        background-color: $white;
-      }
-
-      .icon {
-        fill: $lt-text-color;
-        stroke: $lt-text-color;
-      }
-
-      &:hover:not(:disabled),
-      &:hover:not(:disabled) .icon {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-
-      &.active {
-        background-color: $white;
-      }
-    }
-
-    &.open .dropdown-toggle {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-
-      &,
-      &:hover {
-        font-weight: 500;
-        color: $pale-blue;
-        background-color: $silver-30;
-        border-right: 1px solid rgba($black, 0.1);
-        border-bottom: 1px solid rgba($black, 0.1);
-        box-shadow: none;
-      }
-
-      .icon {
-        fill: $pale-blue;
-        stroke: $pale-blue;
-      }
-    }
-  }
-
-  .page-header-layout .dropdown-select {
-
-    .dropdown-toggle {
-
-      &,
-      &:hover,
-      &:active,
-      &.active {
-        background-color: rgba($black, 0.1);
-      }
-    }
-  }
-
   .configuration-sidebar .btn-outline {
     color: $pale-blue;
     background-color: $white !important;
@@ -691,27 +724,6 @@
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-
-  .btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $lt-text-color;
-      background-color: rgba($black, 0.1);
-      fill: $lt-text-color;
-      stroke: $lt-text-color;
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
     }
   }
 
@@ -753,25 +765,6 @@
     border-top-color: $pale-blue;
   }
 
-  .btn-secondary {
-
-    &,
-    &:hover {
-      color: $dt-text-color;
-      background-color: $purple;
-    }
-
-    &:hover:not(:disabled) {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &.active {
-      background-color: $pale-blue;
-    }
-  }
-
   .btn-tertiary {
 
     &,
@@ -789,23 +782,6 @@
     }
   }
 
-  .btn-success {
-
-    &,
-    &:hover {
-      color: $white;
-      background-color: $btn-success-bg;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &:hover:not(:disabled) {
-      color: $lt-button-color;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
-    }
-  }
-
   .btn-save {
 
     &,
@@ -820,27 +796,6 @@
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-
-  .btn-link {
-
-    &,
-    &:hover,
-    &:focus,
-    &:active,
-    &.active {
-      color: inherit;
-      text-decoration: none;
-      background-color: transparent;
-      fill: inherit;
-      stroke: inherit;
-    }
-
-    &:hover:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
     }
   }
 }

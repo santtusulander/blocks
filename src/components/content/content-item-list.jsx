@@ -10,6 +10,8 @@ import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import TruncatedTitle from '../truncated-title'
 
+import {FormattedMessage} from 'react-intl'
+
 class ContentItemList extends React.Component {
   constructor(props) {
     super(props);
@@ -43,7 +45,7 @@ class ContentItemList extends React.Component {
             <div className="content-item-details">
               <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
               <div className="content-item-list-details text-sm">
-                <p>Last Edited</p>
+                <p><FormattedMessage id="portal.contentItemList.lastEdited.text"/></p>
                 <p>Yesterday 12:30 pm</p>
                 <p>By John McKinley</p>
               </div>
@@ -53,18 +55,18 @@ class ContentItemList extends React.Component {
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
               <Link to={this.props.configurationLink}
-                className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
+                className="btn edit-content-item btn-primary btn-icon btn-round">
                 <IconConfiguration/>
               </Link> : ''
             }
             {this.props.onConfiguration &&
             <a onClick={this.props.onConfiguration}
-               className="btn btn-sm edit-content-item btn-primary btn-icon btn-round">
+               className="btn edit-content-item btn-primary btn-icon btn-round">
               <IconConfiguration/>
             </a>
             }
             <Link to={this.props.analyticsLink}
-              className="btn btn-sm btn-primary btn-icon btn-round">
+              className="btn btn-primary btn-icon btn-round">
               <IconChart/>
             </Link>
           </ButtonToolbar>
@@ -73,9 +75,9 @@ class ContentItemList extends React.Component {
         <Link className="content-item-list-link" to={this.props.linkTo}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
-              <p>Peak <b className="pull-right">{this.props.maxTransfer}</b></p>
-              <p>Lowest <b className="pull-right">{this.props.minTransfer}</b></p>
-              <p>Average <b className="pull-right">{this.props.avgTransfer}</b></p>
+              <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{this.props.maxTransfer}</b></p>
+              <p><FormattedMessage id="portal.analytics.low.text"/> <b className="pull-right">{this.props.minTransfer}</b></p>
+              <p><FormattedMessage id="portal.analytics.average.text"/> <b className="pull-right">{this.props.avgTransfer}</b></p>
             </div>
 
             <div className="content-item-list-section section-lg">
@@ -90,7 +92,7 @@ class ContentItemList extends React.Component {
                     {this.props.timeToFirstByte ? formatTime(this.props.timeToFirstByte.split(' ')[0]).split(' ')[0] : 0}
                     <span className="heading-suffix"> {this.props.timeToFirstByte ? formatTime(this.props.timeToFirstByte.split(' ')[0]).split(' ')[1] : 'ms'}</span>
                   </h1>
-                  <p className="text-sm">Avg. TTFB</p>
+                  <p className="text-sm"><FormattedMessage id="portal.analytics.avgTtfb.text"/></p>
                 </Col>
               </Row>
             </div>

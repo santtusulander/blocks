@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 class AddHost extends React.Component {
   constructor(props) {
     super(props);
@@ -30,20 +32,20 @@ class AddHost extends React.Component {
   render() {
     return (
       <form onSubmit={this.createHost}>
-        <Input type="text" label="New Host Name" id="new_host_name"
+        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.content.addHost.newHostanme.text'})} id="new_host_name"
           ref="new_host_name"/>
-        <label>Deployment Mode</label>
+        <label><FormattedMessage id="portal.content.addHost.deploymentMode.text"/></label>
         <Input type="radio"
-          label="Trial"
+          label={this.props.intl.formatMessage({id: 'portal.content.addHost.trial.text'})}
           onChange={this.setDeploymentMode('trial')}
           checked={this.state.deploymentMode === 'trial'}/>
         <Input type="radio"
-          label="Production"
+          label={this.props.intl.formatMessage({id: 'portal.content.addHost.production.text'})}
           onChange={this.setDeploymentMode('production')}
           checked={this.state.deploymentMode === 'production'}/>
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" onClick={this.cancelChanges}>Cancel</Button>
-          <Button type="submit" bsStyle="primary">Save</Button>
+          <Button bsStyle="primary" onClick={this.cancelChanges}><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button type="submit" bsStyle="primary"><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
     )
@@ -56,4 +58,4 @@ AddHost.propTypes = {
   createHost: React.PropTypes.func
 }
 
-module.exports = AddHost
+module.exports = injectIntl(AddHost)
