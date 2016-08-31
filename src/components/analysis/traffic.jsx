@@ -9,7 +9,7 @@ import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class AnalysisTraffic extends React.Component {
   constructor(props) {
@@ -74,6 +74,23 @@ class AnalysisTraffic extends React.Component {
     const httpsData   = this.props.serviceTypes.includes('https') ?
       this.props.byTime.filter(time => time.get('service_type') === 'https')
       : Immutable.List()
+    const httpDates = httpData.map(dataset => moment(dataset.get('timestamp'))).toJS()
+    const minDate = moment.min(httpDates)
+    const maxDate = moment.max(httpDates)
+    const dateSpan = maxDate - minDate
+    const timespanAdjust = direction => time => time.set(
+      'timestamp',
+      new Date(time.get('timestamp').getTime() + dateSpan * direction))
+    const comparisonHttpData  = this.props.serviceTypes.includes('http') ?
+      this.props.byTimeComparison
+        .filter(time => time.get('service_type') === 'http')
+        .map(timespanAdjust(1))
+      : Immutable.List()
+    const comparisonHttpsData = this.props.serviceTypes.includes('https') ?
+      this.props.byTimeComparison
+        .filter(time => time.get('service_type') === 'https')
+        .map(timespanAdjust(1))
+      : Immutable.List()
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -90,6 +107,55 @@ class AnalysisTraffic extends React.Component {
       val => formatBitsPerSecond(val, true) :
       val => numeral(val).format('0,0')
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
+
+
+    const datasets = []
+    if(this.props.serviceTypes.includes('http')) {
+      datasets.push({
+        area: true,
+        data: httpData.toJS(),
+        id: 'http',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpDatasetLabel.text'}),
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: (date) => moment.utc(date).format('MMM D H:mm')
+      })
+    }
+    if(this.props.serviceTypes.includes('https')){
+      datasets.push({
+        area: true,
+        data: httpsData.toJS(),
+        id: 'https',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsDatasetLabel.text'}),
+        line: true,
+        stackedAgainst: 'http',
+        xAxisFormatter: (date) => moment.utc(date).format('MMM D H:mm')
+      })
+    }
+    if(this.props.byTimeComparison.size) {
+      if(this.props.serviceTypes.includes('http')) {
+        datasets.push({
+          area: false,
+          data: comparisonHttpData.toJS(),
+          id: 'httpComparison',
+          label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text'}),
+          line: true,
+          stackedAgainst: false,
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date)).format('MMM D H:mm')
+        })
+      }
+      if(this.props.serviceTypes.includes('https')) {
+        datasets.push({
+          area: false,
+          data: comparisonHttpsData.toJS(),
+          id: 'httpsComparison',
+          label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text'}),
+          line: true,
+          stackedAgainst: 'httpComparison',
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date)).format('MMM D H:mm')
+        })
+      }
+    }
 
     return (
       <div className="analysis-traffic">
@@ -125,11 +191,7 @@ class AnalysisTraffic extends React.Component {
               axes={true}
               padding={40}
               dataKey={byTimeDataKey}
-              primaryData={httpData.toJS()}
-              secondaryData={httpsData.toJS()}
-              rimaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.primaryLabel.text'})}
-              secondaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.secondaryLabel.text'})}
-              stacked={true}
+              dataSets={datasets}
               showLegend={true}
               showTooltip={false}
               yAxisCustomFormat={byTimeYAxisFormat}
@@ -203,8 +265,10 @@ AnalysisTraffic.propTypes   = {
   avgTraffic: React.PropTypes.string,
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
+  byTimeComparison: React.PropTypes.instanceOf(Immutable.List),
   dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
@@ -215,6 +279,7 @@ AnalysisTraffic.propTypes   = {
 AnalysisTraffic.defaultProps = {
   byCountry: Immutable.List(),
   byTime: Immutable.List(),
+  byTimeComparison: Immutable.List(),
   serviceTypes: Immutable.List()
 }
 
