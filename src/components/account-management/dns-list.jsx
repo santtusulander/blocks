@@ -4,9 +4,11 @@ import { Input } from 'react-bootstrap'
 import UDNButton from '../button'
 import ActionLinks from './action-links'
 import TableSorter from '../table-sorter'
+import IsAllowed from '../is-allowed'
 
 import recordTypes from '../../constants/dns-record-types'
-import {getRecordValueString} from '../../util/dns-records-helpers'
+import { getRecordValueString } from '../../util/dns-records-helpers'
+import { CREATE_RECORD } from '../../constants/permissions'
 
 class DNSList extends Component {
 
@@ -33,7 +35,7 @@ class DNSList extends Component {
               type="checkbox"
               label={record.name}/>
           </td>
-          <td>{ getRecordValueString(record.value) }</td>
+          <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
           <td>
           <ActionLinks
@@ -56,12 +58,14 @@ class DNSList extends Component {
               placeholder="Search records"
               value={searchValue}
               onChange={searchFunc}/>
-            <UDNButton
-              id="add-dns-record"
-              bsStyle="success"
-              onClick={onAddEntry}>
-              ADD RECORD
-            </UDNButton>
+            <IsAllowed to={CREATE_RECORD}>
+              <UDNButton
+                id="add-dns-record"
+                bsStyle="success"
+                onClick={onAddEntry}>
+                ADD RECORD
+              </UDNButton>
+            </IsAllowed>
           </div>
         </h3>
         <hr/>
