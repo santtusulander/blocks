@@ -23,6 +23,13 @@ class DNSList extends Component {
       }
       recordsByType[record.type].push(record)
     })
+
+    const getRecordValueString = (value) => {
+      if (value.value ) return value.value
+
+      return value
+    }
+    
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
@@ -31,7 +38,7 @@ class DNSList extends Component {
               type="checkbox"
               label={record.name}/>
           </td>
-          <td>{record.value}</td>
+          <td>{ getRecordValueString(record.value) }</td>
           <td>{record.ttl}</td>
           <td>
           <ActionLinks
