@@ -221,83 +221,82 @@ export class Configuration extends React.Component {
       <PageContainer className="configuration-container">
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
-          <div className="configuration-header">
-            <PageHeader
-              pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
-              pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
-                deployMoment.format('MMM, D YYYY'),
-                deployMoment.format('H:MMa'),
-                activeConfig.get('configuration_status').get('last_edited_by')]}>
-              <AccountSelector
-                as="configuration"
-                params={this.props.params}
-                topBarTexts={{}}
-                onSelect={(tier, value, params) => {
-                  const { brand, account, group } = params, { hostActions } = this.props
-                  hostActions.startFetching()
-                  hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                  })
-                }}
-                drillable={true}>
-                <div className="btn btn-link dropdown-toggle header-toggle">
-                  <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
-                  <span className="caret"></span>
-                </div>
-              </AccountSelector>
-              <ButtonToolbar className="pull-right">
-                <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                  <IconTrash/>
+          <PageHeader
+            pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
+            pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+              deployMoment.format('MMM, D YYYY'),
+              deployMoment.format('H:MMa'),
+              activeConfig.get('configuration_status').get('last_edited_by')]}>
+            <AccountSelector
+              as="configuration"
+              params={this.props.params}
+              topBarTexts={{}}
+              onSelect={(tier, value, params) => {
+                const { brand, account, group } = params, { hostActions } = this.props
+                hostActions.startFetching()
+                hostActions.fetchHost(brand, account, group, value).then(() => {
+                  this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                })
+              }}
+              drillable={true}>
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                <span className="caret"></span>
+              </div>
+            </AccountSelector>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+              {activeEnvironment === 2 ||
+                activeEnvironment === 1 ||
+                !activeEnvironment ?
+                <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                  <FormattedMessage id="portal.button.publish"/>
                 </Button>
-                {activeEnvironment === 2 ||
-                  activeEnvironment === 1 ||
-                  !activeEnvironment ?
-                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                    <FormattedMessage id="portal.button.publish"/>
-                  </Button>
-                  : null
-                }
-                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                  <FormattedMessage id="portal.button.copy"/>
+                : null
+              }
+              <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                <FormattedMessage id="portal.button.copy"/>
+              </Button>
+              {activeEnvironment === 2 || activeEnvironment === 3 ?
+                <Button bsStyle="primary"
+                  onClick={() => this.changeActiveVersionEnvironment(1)}>
+                  <FormattedMessage id="portal.button.retire"/>
                 </Button>
-                {activeEnvironment === 2 || activeEnvironment === 3 ?
-                  <Button bsStyle="primary"
-                    onClick={() => this.changeActiveVersionEnvironment(1)}>
-                    <FormattedMessage id="portal.button.retire"/>
-                  </Button>
-                  : null
-                }
-                <Button bsStyle="primary" onClick={this.toggleVersionModal}>
-                  <FormattedMessage id="portal.button.versions"/>
-                </Button>
-              </ButtonToolbar>
-            </PageHeader>
+                : null
+              }
+              <Button bsStyle="primary" onClick={this.toggleVersionModal}>
+                <FormattedMessage id="portal.button.versions"/>
+              </Button>
+            </ButtonToolbar>
+          </PageHeader>
 
-            <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-              onSelect={this.activateTab}>
-              <NavItem eventKey={'details'}>
-                <FormattedMessage id="portal.configuration.hostname.text"/>
-              </NavItem>
-              <NavItem eventKey={'defaults'}>
-                <FormattedMessage id="portal.configuration.defaults.text"/>
-              </NavItem>
-              <NavItem eventKey={'policies'}>
-                <FormattedMessage id="portal.configuration.policies.text"/>
-              </NavItem>
-              <NavItem eventKey={'performance'}>
-                <FormattedMessage id="portal.configuration.performance.text"/>
-              </NavItem>
-              <NavItem eventKey={'security'}>
-                <FormattedMessage id="portal.configuration.security.text"/>
-              </NavItem>
-              <NavItem eventKey={'certificates'}>
-                <FormattedMessage id="portal.configuration.certificates.text"/>
-              </NavItem>
-              <NavItem eventKey={'change-log'}>
-                <FormattedMessage id="portal.configuration.changeLog.text"/>
-              </NavItem>
-            </Nav>
-          </div>
+          <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+            onSelect={this.activateTab}>
+            <NavItem eventKey={'details'}>
+              <FormattedMessage id="portal.configuration.hostname.text"/>
+            </NavItem>
+            <NavItem eventKey={'defaults'}>
+              <FormattedMessage id="portal.configuration.defaults.text"/>
+            </NavItem>
+            <NavItem eventKey={'policies'}>
+              <FormattedMessage id="portal.configuration.policies.text"/>
+            </NavItem>
+            <NavItem eventKey={'performance'}>
+              <FormattedMessage id="portal.configuration.performance.text"/>
+            </NavItem>
+            <NavItem eventKey={'security'}>
+              <FormattedMessage id="portal.configuration.security.text"/>
+            </NavItem>
+            <NavItem eventKey={'certificates'}>
+              <FormattedMessage id="portal.configuration.certificates.text"/>
+            </NavItem>
+            <NavItem eventKey={'change-log'}>
+              <FormattedMessage id="portal.configuration.changeLog.text"/>
+            </NavItem>
+          </Nav>
+
           <div className="container-fluid content-container">
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
