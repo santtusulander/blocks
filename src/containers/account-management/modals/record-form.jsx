@@ -96,13 +96,16 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const records = dnsRecords.get('resources')
   const activeRecord = dnsRecords.get('activeRecord')
   const toEdit = getById(records, activeRecord)
-  const initialValues = edit && toEdit ? toEdit.toJS() : {}
-  return {
-    initialValues,
+  const initialValues = edit && toEdit && toEdit.toJS()
+  let props = {
     domain,
     records,
     activeRecord
   }
+  if (initialValues) {
+    props.initialValues = initialValues
+  }
+  return props
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
