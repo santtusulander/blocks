@@ -95,7 +95,8 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const domain = dns.get('activeDomain')
   const records = dnsRecords.get('resources')
   const activeRecord = dnsRecords.get('activeRecord')
-  const initialValues = edit && getById(records, activeRecord) ? getById(records, activeRecord).toJS() : {}
+  const toEdit = getById(records, activeRecord)
+  const initialValues = edit && toEdit ? toEdit.toJS() : {}
   return {
     initialValues,
     domain,
