@@ -4,7 +4,7 @@ import {urlBase }  from '../../util.js'
 /* CRUD OPERATIONS FOR DNS Resource Records */
 
 export const fetchAll = ( zone ) => {
-  return axios.get(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr`)
+  return axios.get(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr?format=detailed`)
     .then( ({data})  => ({ data, zone }))
 }
 
@@ -18,7 +18,7 @@ export const create = (zone, resource, data) => {
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(({ data }) => ({ data, zone, resource }))
+  })
 }
 
 export const update = (zone, resource, data) => {
@@ -30,11 +30,14 @@ export const update = (zone, resource, data) => {
 }
 
 export const remove = (zone, resource, data) => {
-  return axios.delete(`${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr/${resource}`, data, {
+  return axios({
+    url: `${urlBase}/VCDN/v2/brands/udn/zones/${zone}/rr/${resource}`,
+    method: 'delete',
+    data,
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(() => ({ zone, resource }))
+  }).then(() => data.id)
 }
 
 

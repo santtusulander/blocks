@@ -43,7 +43,9 @@ const InitialState = fromJS({
   resources: []
 })
 
-const domainlessRecordName = (zone, record) => record.name.replace(new RegExp('.' + zone + '$', 'i'), '')
+const domainlessRecordName = (zone, recordName) => {
+  return recordName.replace(new RegExp('.' + zone + '$', 'i'), '')
+}
 
 //ACTIONS
 export const fetchResourcesList = createAction(DNS_RECORDS_RECEIVE_RESOURCES, zone => {
@@ -54,36 +56,32 @@ export const fetchResourceDetails = createAction(DNS_RECORDS_RECEIVE_RESOURCE, (
   return dnsRecordsApi.fetchDetailsByName(zone, resource)
 })
 
-export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) =>{
+export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
   resource = resource.concat('.' + zone)
   return dnsRecordsApi.create(zone, resource, data).then(resource => {
-    resource.data.name = domainlessRecordName(zone, resource.data)
+    resource.data.name = domainlessRecordName(zone, resource.data.name)
     return resource
   })
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
-  resource = resource.concat('.' + zone)
-  return dnsRecordsApi.remove(zone, resource, data)
+  return dnsRecordsApi.remove(zone, resource.concat('.' + zone), data)
 })
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
   return dnsRecordsApi.fetchAll(zone)
     .then(({ data }) => {
-      return Promise.all( data.map(resource => {
-        return dnsRecordsApi.fetchDetailsByName(zone, resource)
-          .then(({ data }) => {
-            return data
-          })
-      })).then(data => {
-        //Flatten records to single array and add uniq Ids
-        return _.flatten(data).map(record => {
-          record.id = uniqid()
-          record.name = domainlessRecordName(zone, record)
-          return record
-        })
+      let recArray = []
+      _.forEach(data, (record) => {
+        recArray.push( record )
+      })
+
+      return _.flatten(recArray).map( record => {
+        record.id = uniqid()
+        record.name = domainlessRecordName(zone, record.name)
+        return record
       })
     })
 })
