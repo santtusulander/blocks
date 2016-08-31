@@ -66,7 +66,7 @@ class AccountManagementSystemDNS extends Component {
       records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch))
     }
     return (
-      <div className="account-management-system-dns">
+      <div>
         <DomainToolbar {...domainHeaderProps}/>
         <DNSList {...DNSListProps}/>
         {activeModal === RECORD_EDIT &&

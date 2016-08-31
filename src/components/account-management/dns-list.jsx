@@ -45,7 +45,7 @@ class DNSList extends Component {
         </tr>
       )
     return (
-      <div>
+      <div className="container-fluid content-container">
         <h3 className="account-management-header">
           <span id="domain-stats">
             {`${records.length} Records`}

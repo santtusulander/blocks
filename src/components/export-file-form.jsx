@@ -9,7 +9,7 @@ import {
 
   } from 'react-bootstrap'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const EXPORT_TYPE_PDF = 'export_pdf'
 const EXPORT_TYPE_CSV = 'export_csv'

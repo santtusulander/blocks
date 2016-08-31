@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
   <Modal show={true} className="delete-modal">
