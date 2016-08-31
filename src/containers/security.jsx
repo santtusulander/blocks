@@ -24,7 +24,7 @@ import {
   DELETE_CERTIFICATE
 } from '../constants/account-management-modals.js'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export class Security extends React.Component {
   constructor(props) {

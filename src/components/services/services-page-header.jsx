@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 
 import PageHeader from '../layout/page-header'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const ServicesPageHeader = ({ activeAccount }) => {
   return (

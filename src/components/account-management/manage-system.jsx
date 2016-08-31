@@ -7,7 +7,7 @@ import DNS from './system/dns'
 import Roles from './system/roles'
 import Users from './system/users'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AccountManagementManageSystem extends React.Component {
   constructor(props) {

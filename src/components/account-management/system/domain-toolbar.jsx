@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl';
 
 import { CREATE_ZONE, MODIFY_ZONE } from '../../../constants/permissions'
 
@@ -10,6 +11,7 @@ import UDNButton from '../../button'
 import DomainSelector from '../../global-account-selector/selector-component'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
+
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue }) => {
   const sortedDomains = domains.sort((a,b) => {
@@ -29,7 +31,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
               <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
             </div>
         </DomainSelector> :
-        <h4 className="selector-component">No Domains</h4>}
+        <h4 className="selector-component"><FormattedMessage id="portal.account.manage.system.empty.domain"/></h4>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton

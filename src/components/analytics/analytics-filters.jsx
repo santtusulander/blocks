@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List, Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
 
@@ -105,7 +106,7 @@ const AnalyticsFilters = (props) => {
     <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
         <div className='action'>
-          <h5>Date Range</h5>
+          <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect
             changeDateRange={(startDate, endDate) => {
               props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
@@ -162,7 +163,7 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('service-type') &&
         <div className='action'>
-          <h5>Service Types</h5>
+          <h5><FormattedMessage id="portal.analysis.filters.serviceTypes.title"/></h5>
 
           <FilterServiceType
             serviceTypes={props.filters.get('serviceTypes')}
@@ -191,7 +192,7 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('error-code') &&
         <div className='action'>
-          <h5>Status Codes</h5>
+          <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}

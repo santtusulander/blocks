@@ -3,10 +3,9 @@ import Immutable from 'immutable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Input, Button} from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
-
-import {FormattedMessage} from 'react-intl'
 
 class FilterServiceType extends React.Component {
   constructor(props) {
@@ -35,10 +34,10 @@ class FilterServiceType extends React.Component {
         <div className="sidebar-content form-inline">
           <Input type="checkbox" label="HTTP"
             checked={this.props.serviceTypes.includes('http')}
-            onChange={this.toggleServiceType('http') } />
+            onChange={this.toggleServiceType('http')}/>
           <Input type="checkbox" label="HTTPS"
             checked={this.props.serviceTypes.includes('https')}
-            onChange={this.toggleServiceType('https') }/>
+            onChange={this.toggleServiceType('https')}/>
         </div>
       </div>
     );
@@ -48,8 +47,10 @@ class FilterServiceType extends React.Component {
 FilterServiceType.displayName = 'FilterServiceType'
 FilterServiceType.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  toggleServiceType: React.PropTypes.func
+  toggleServiceType: React.PropTypes.func,
+  uiActions: React.PropTypes.object
 }
+
 FilterServiceType.defaultProps = {
   serviceTypes: Immutable.List()
 }

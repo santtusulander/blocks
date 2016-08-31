@@ -21,7 +21,7 @@ import UDNButton from '../../../components/button'
 import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 
 class AccountManagementAccountGroups extends React.Component {

@@ -30,7 +30,7 @@ import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const Navigation = (props) => {
   const params = props.params,

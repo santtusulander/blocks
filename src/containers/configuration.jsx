@@ -35,7 +35,7 @@ import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 import { getUrl } from '../util/helpers'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 

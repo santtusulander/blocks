@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import Select from '../../../components/select'
 
@@ -6,7 +7,7 @@ export class FilterVideo extends React.Component {
   render() {
     return (
       <div>
-        <h5>Video URL</h5>
+        <h5><FormattedMessage id="portal.analysis.filters.video.title"/></h5>
         <div className="sidebar-content">
           <Select className="btn-block"
             onSelect={this.props.changeVideo}

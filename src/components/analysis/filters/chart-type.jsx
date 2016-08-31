@@ -1,12 +1,14 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl';
 
 import Select from '../../../components/select'
+
 
 export class FilterChartType extends React.Component {
   render() {
     return (
       <div>
-        <h5>CHART TYPE</h5>
+        <h5><FormattedMessage id="portal.analysis.filters.chart.title"/></h5>
         <div className="sidebar-content">
           <div className="form-group">
             <Select className="btn-block"

@@ -2,12 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
 import { Input } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import UDNButton from '../../button'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
-
-import {FormattedMessage} from 'react-intl'
 
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
   const toggle = type => () => {
@@ -25,7 +24,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
   }
   return (
     <div>
-      <h5>On-Net/Off-Net</h5>
+      <h5><FormattedMessage id="portal.analysis.filters.onOffNet.title"/></h5>
       <div className="sidebar-content form-inline">
         <Input type="checkbox" label="On-Net"
           checked={onOffNetValues.contains('on-net')}
