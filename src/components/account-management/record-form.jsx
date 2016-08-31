@@ -7,7 +7,7 @@ import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, priority }, values, shouldShowField }) =>
+const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, prio }, values, shouldShowField }) =>
   <form>
     <SelectWrapper
       {...type}
@@ -29,14 +29,14 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         label="Address"
         placeholder="Enter Address"/>}
     {value.touched && value.error && <div className='error-msg'>{value.error}</div>}
-    {shouldShowField('priority') &&
+    {shouldShowField('prio') &&
       <Input
-        {...priority}
+        {...prio}
         type="text"
         label="Priority"
         placeholder="Enter Priority"
         className='input-narrow priority-input'/>}
-      {priority.touched && priority.error && <div className='error-msg'>{priority.error}</div>}
+      {prio.touched && prio.error && <div className='error-msg'>{prio.error}</div>}
     {shouldShowField('ttl') && <hr/>}
     {shouldShowField('ttl') &&
       <Input
@@ -49,8 +49,10 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
     {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
     <ButtonToolbar className="text-right extra-margin-top">
       <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-      <Button disabled={invalid || loading} bsStyle="primary"
-        onClick={() => onSave(values)}>{edit ? 'Save' : 'Add'}</Button>
+      <Button
+        disabled={invalid || loading}
+        bsStyle="primary"
+        onClick={() => onSave(values)}>{loading ? 'Saving...' : edit ? 'Save' : 'Add'}</Button>
     </ButtonToolbar>
   </form>
 

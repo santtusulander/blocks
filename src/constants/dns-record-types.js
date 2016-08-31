@@ -20,5 +20,5 @@ export const recordFields = {
   name: RECORD_TYPES,
   value: RECORD_TYPES,
   ttl: RECORD_TYPES.filter(type => type !== 'DNAME'),
-  priority: ['MX']
+  prio: ['MX']
 }

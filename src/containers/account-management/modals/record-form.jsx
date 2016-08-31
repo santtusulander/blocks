@@ -40,9 +40,9 @@ const validate = fields => {
   delete filteredFields.name
   const { type = '', ...rest } = filteredFields
   const conditions = {
-    priority: {
-      condition: !new RegExp('^[0-9]*$').test(filteredFields.priority),
-      errorText: 'Priority must be a number.'
+    prio: {
+      condition: !new RegExp('^[0-9]*$').test(filteredFields.prio),
+      errorText: 'priority must be a number.'
     },
     ttl: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
@@ -63,8 +63,8 @@ const RecordFormContainer = props => {
       if (fields.ttl) {
         fields.ttl = Number(fields.ttl)
       }
-      if (fields.priority) {
-        fields.priority = Number(fields.priority)
+      if (fields.prio) {
+        fields.prio = Number(fields.prio)
       }
       edit ? saveRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
     },
@@ -105,7 +105,7 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
-    loading: dns.get('loading'),
+    loading: dnsRecords.get('loading'),
     records
   }
   if (initialValues) {
@@ -115,8 +115,18 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
+  const recordValues = values => {
+    if (isShown(values.type)('prio')) {
+      const value = { prio: values.prio, value: values.value }
+      delete values.prio
+      delete values.value
+      return { value, ...values }
+    }
+    return values
+  }
   return {
     addRecord: (values, domain) => {
+      values = recordValues(values)
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
       dispatch(startFetching())
@@ -132,7 +142,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
         closeModal()
       })
     },
-    saveRecord: (values, zone, records, activeRecord) => {
+    saveRecord: (formValues, zone, records, activeRecord) => {
+      const values = recordValues(formValues)
       const oldRecord = getById(records, activeRecord).toJS()
       values.class = 'IN'
       dispatch(startFetching())
@@ -148,6 +159,6 @@ function mapDispatchToProps(dispatch, { closeModal }) {
 
 export default reduxForm({
   form: 'dns-edit',
-  fields: ['type', 'name', 'value', 'ttl', 'priority'],
+  fields: ['type', 'name', 'value', 'ttl', 'prio'],
   validate
 }, mapStateToProps, mapDispatchToProps)(RecordFormContainer)
