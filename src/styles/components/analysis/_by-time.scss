@@ -43,12 +43,17 @@
       fill: transparent;
     }
 
-    &.secondary {
+    &.dataset-1 {
 
       .dark-theme &,
       .light-theme & {
         stroke: $green;
       }
+    }
+
+    &.dataset-2,
+    &.dataset-3 {
+      opacity: 0.5;
     }
   }
 

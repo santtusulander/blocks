@@ -114,8 +114,10 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
-  'portal.analytics.trafficOverview.primaryLabel.text': 'HTTP',
-  'portal.analytics.trafficOverview.secondaryLabel.text': 'HTTPS',
+  'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
+  'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
+  'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Historical HTTP',
+  'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Historical HTTPS',
   'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
