@@ -7,7 +7,7 @@ import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, priority }, values, shouldShowField }) =>
+const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, priority }, values, shouldShowField }) =>
   <form>
     <SelectWrapper
       {...type}
@@ -49,7 +49,7 @@ const RecordForm = ({ domain, edit, onSave, onCancel, invalid, fields: { type, n
     {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
     <ButtonToolbar className="text-right extra-margin-top">
       <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-      <Button disabled={invalid} bsStyle="primary"
+      <Button disabled={invalid || loading} bsStyle="primary"
         onClick={() => onSave(values)}>{edit ? 'Save' : 'Add'}</Button>
     </ButtonToolbar>
   </form>
@@ -61,6 +61,7 @@ RecordForm.propTypes = {
   edit: PropTypes.bool,
   fields: PropTypes.object,
   invalid: PropTypes.bool,
+  loading: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   shouldShowField: PropTypes.func,

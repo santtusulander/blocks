@@ -33,7 +33,7 @@ export const receiveResourceDetails = (state, action) => {
 //CREATE
 export const createSuccess = (state, { payload: { data } }) => {
   data.id = uniqid()
-  return state.merge({ loading: false, resources: state.get('resources').push(fromJS(data)) });
+  return state.merge({ resources: state.get('resources').push(fromJS(data)) });
 }
 
 export const createFailed = (state) => {
@@ -66,7 +66,7 @@ export const updateFailed = (state) => {
 //DELETE
 export const deleteSuccess = (state, { payload }) => {
   const index = state.get('resources').findIndex( record => record.get('id') === payload)
-  return state.merge( {loading: false, resources: state.get('resources').delete( index ) })
+  return state.merge( { resources: state.get('resources').delete( index ) })
 }
 export const deleteFailed = (state) => {
   return state

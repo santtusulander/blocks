@@ -4,7 +4,13 @@ import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import { getById, createResource, removeResource } from '../../../redux/modules/dns-records/actions'
+import {
+  getById,
+  createResource,
+  removeResource,
+  startFetching,
+  stopFetching
+} from '../../../redux/modules/dns-records/actions'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import UDNButton from '../../../components/button'
@@ -92,15 +98,15 @@ RecordFormContainer.propTypes = {
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
-  const domain = dns.get('activeDomain')
   const records = dnsRecords.get('resources')
   const activeRecord = dnsRecords.get('activeRecord')
   const toEdit = getById(records, activeRecord)
   const initialValues = edit && toEdit && toEdit.toJS()
   let props = {
-    domain,
-    records,
-    activeRecord
+    activeRecord,
+    domain: dns.get('activeDomain'),
+    loading: dns.get('loading'),
+    records
   }
   if (initialValues) {
     props.initialValues = initialValues
@@ -113,6 +119,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
     addRecord: (values, domain) => {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
+      dispatch(startFetching())
       dispatch(createResource(domain, values.name, values)).then(({ error, payload }) => {
         if(error) {
           dispatch(showInfoDialog({
@@ -121,15 +128,20 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
           }))
         }
+        dispatch(stopFetching())
         closeModal()
       })
     },
     saveRecord: (values, zone, records, activeRecord) => {
       const oldRecord = getById(records, activeRecord).toJS()
       values.class = 'IN'
+      dispatch(startFetching())
       dispatch(removeResource(zone, oldRecord.name, oldRecord))
         .then(() => dispatch(createResource(zone, values.name, values)))
-        .then(() => closeModal())
+        .then(() => {
+          dispatch(stopFetching())
+          closeModal()
+        })
     }
   }
 }

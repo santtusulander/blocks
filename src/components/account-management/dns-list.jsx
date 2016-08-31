@@ -90,15 +90,16 @@ class SortableTable extends Component {
   render() {
     const { sortDirection } = this.state
     const changeSort = (column, direction) => this.setState({ sortDirection: direction })
-    const sort = array => array.sort((a, b) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) {
-        return -1 * sortDirection
-      } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
-        return 1 * sortDirection
-      }
-      return 0
-    })
-    const sortedItems = this.props.content(sort)
+    const sort = array =>
+      array.sort((a, b) => {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+          return -1 * sortDirection
+        } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
+          return 1 * sortDirection
+        }
+        return 0
+      })
+    const sortedContent = this.props.content(sort)
     const sorterProps = {
       activateSort: changeSort,
       activeDirection: sortDirection,
@@ -115,7 +116,7 @@ class SortableTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {sortedItems}
+          {sortedContent}
         </tbody>
       </table>
     )
