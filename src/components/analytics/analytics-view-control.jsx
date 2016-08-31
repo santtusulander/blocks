@@ -209,7 +209,7 @@ const AnalyticsViewControl = (props) => {
           props.router.push(url)
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
-          <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
+          <h1><TruncatedTitle content={activeItem || this.props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <span className="caret"></span>
         </div>
       </AccountSelector>

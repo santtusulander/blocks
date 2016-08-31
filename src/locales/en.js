@@ -15,6 +15,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.editAccount.title': 'Edit Account',
   'portal.account.manage.newAccount.title': 'Add New Account',
   'portal.account.manage.noAccounts.text': 'No accounts.',
+  'portal.account.manage.selectAccount.text': 'Select Account',
 
   'portal.account.manage.accountManagement.title': 'Account Management',
   'portal.account.manage.sidebar.title': 'MANAGE ACCOUNT',
