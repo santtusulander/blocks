@@ -87,6 +87,7 @@ $action-padding-right: rem(30px);
 
   &.distributed-columns {
     .page-header-layout {
+      align-items: center;
       justify-content: space-between;
     }
   }

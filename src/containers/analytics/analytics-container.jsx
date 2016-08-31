@@ -15,7 +15,6 @@ import AnalyticsFilters from '../../components/analytics/analytics-filters'
 //layout
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
 
 import { getTabName } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
