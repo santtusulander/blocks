@@ -7,6 +7,7 @@ const initialState = Immutable.fromJS({
       startDate: null,
       endDate: null
     }, //startDate: , endDate: },
+    includeComparison: false,
     dateRangeLabel: '',
     recordType: 'transfer_rates',
     serviceTypes: ['http', 'https'],

@@ -12,6 +12,7 @@ import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
+import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
 import './analytics-filters.scss'
 
@@ -122,6 +123,13 @@ const AnalyticsFilters = (props) => {
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
             ]}/>
+          <FilterIncludeComparison
+            includeComparison={props.filters.get('includeComparison')}
+            toggleComparison={val => {
+              props.onFilterChange(
+                'includeComparison', val
+              )
+            }}/>
         </div>
       }
 
