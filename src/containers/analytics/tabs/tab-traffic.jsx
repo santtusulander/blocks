@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import numeral from 'numeral'
+import moment from 'moment'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
@@ -92,6 +93,17 @@ class AnalyticsTabTraffic extends React.Component {
         service_type: fetchOpts.service_type
       })
     }
+
+    if (filters.getIn(['includeComparison'])) {
+      const start = startDate || moment().utc().startOf('month').subtract(1, 'months')
+      const end   = endDate || moment().utc().endOf('day').subtract(1, 'months')
+      const dateSpan = end - start
+      const comparisonFilters = filters
+        .setIn(['dateRange', 'startDate'], moment(start - dateSpan))
+        .setIn(['dateRange', 'endDate'], moment(end - dateSpan))
+      const comparisonByTimeOpts = buildAnalyticsOpts(params, comparisonFilters, location)
+      this.props.trafficActions.fetchByTimeComparison(comparisonByTimeOpts)
+    }
   }
 
   formatTotals(value) {
@@ -117,6 +129,7 @@ class AnalyticsTabTraffic extends React.Component {
         avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
+        byTimeComparison={this.props.trafficByTimeComparison}
         dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
         lowTraffic={this.formatTotals(lowTraffic)}
@@ -140,7 +153,8 @@ AnalyticsTabTraffic.propTypes = {
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
-  trafficByTime: React.PropTypes.instanceOf(Immutable.List)
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
+  trafficByTimeComparison: React.PropTypes.instanceOf(Immutable.List)
 }
 
 AnalyticsTabTraffic.defaultProps = {
@@ -148,7 +162,8 @@ AnalyticsTabTraffic.defaultProps = {
   metrics: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCountry: Immutable.List(),
-  trafficByTime: Immutable.List()
+  trafficByTime: Immutable.List(),
+  trafficByTimeComparison: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -157,6 +172,7 @@ function mapStateToProps(state) {
     metrics: state.metrics,
     totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
+    trafficByTimeComparison: state.traffic.get('byTimeComparison'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress')
   }
