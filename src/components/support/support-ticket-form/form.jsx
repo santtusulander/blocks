@@ -18,8 +18,8 @@ import {
 } from '../../../util/support-helper'
 
 let errors = {}
-const maxSubjectLength = 100
-const maxDescriptionLength = 160
+const maxSubjectLength = 150
+const maxDescriptionLength = 5000
 
 const validate = (values) => {
   errors = {}
