@@ -6,6 +6,8 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
+import { FormattedMessage, formatMessage, injectIntl } from 'react-intl'
+
 import Toggle from '../../toggle'
 import SelectWrapper from '../../select-wrapper.jsx'
 import { STATUS_OPEN, STATUS_SOLVED } from '../../../constants/ticket'
@@ -16,6 +18,9 @@ import {
 } from '../../../util/support-helper'
 
 let errors = {}
+const maxSubjectLength = 150
+const maxDescriptionLength = 5000
+
 const validate = (values) => {
   errors = {}
 
@@ -29,31 +34,35 @@ const validate = (values) => {
   } = values
 
   if (!subject || subject.length === 0) {
-    errors.subject = 'Title is required'
+    errors.subject = <FormattedMessage id="portal.support.tickets.validation.title.required.text"/>
+  }
+
+  if (subject && subject.length > maxSubjectLength) {
+    errors.subject = <FormattedMessage id="portal.support.tickets.validation.title.maxLength.text" values={{maxLength: maxSubjectLength}}/>
   }
 
   if (!description || description.length === 0) {
-    errors.description = 'Description is required'
+    errors.description = <FormattedMessage id="portal.support.tickets.validation.description.required.text"/>
+  }
+
+  if (description && description.length > maxDescriptionLength) {
+    errors.description = <FormattedMessage id="portal.support.tickets.validation.description.maxLength.text" values={{maxLength: maxDescriptionLength}}/>
   }
 
   if (!status || status.length === 0) {
-    errors.status = 'Status is required'
+    errors.status = <FormattedMessage id="portal.support.tickets.validation.status.required.text"/>
   }
 
   if (!type || type.length === 0) {
-    errors.type = 'Type is required'
+    errors.type = <FormattedMessage id="portal.support.tickets.validation.type.required.text"/>
   }
 
   if (!priority || priority.length === 0) {
-    errors.priority = 'Priority is required'
-  }
-
-  if (!priority || priority.length === 0) {
-    errors.priority = 'Priority is required'
+    errors.priority = <FormattedMessage id="portal.support.tickets.validation.priority.required.text"/>
   }
 
   if (!assignee || assignee.length === 0) {
-    errors.assignee = 'Assignee is required'
+    errors.assignee = <FormattedMessage id="portal.support.tickets.validation.assignee.required.text"/>
   }
 
   return errors;
@@ -146,7 +155,7 @@ class SupportTicketForm extends React.Component {
         <Input
           {...subject}
           type="text"
-          label="Title"/>
+          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.title.text'})}/>
         {subject.touched && subject.error &&
         <div className="error-msg">{subject.error}</div>}
 
@@ -155,26 +164,26 @@ class SupportTicketForm extends React.Component {
         <Input
           {...description}
           type="textarea"
-          label="Description"/>
+          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.description.text'})}/>
         {description.touched && description.error &&
         <div className="error-msg">{description.error}</div>}
 
         <hr/>
 
         <div className='form-group ticket-form__status'>
-          <label className='control-label'>Status</label>
+          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.status.text"/></label>
           <Toggle
             value={isStatusOpen(status.value)}
             changeValue={this.toggleStatus}
-            onText="Open"
-            offText="Closed"
+            onText={this.props.intl.formatMessage({id: 'portal.support.tickets.status.open.text'})}
+            offText={this.props.intl.formatMessage({id: 'portal.support.tickets.status.closed.text'})}
           />
         </div>
 
         <hr/>
 
         <div className='form-group'>
-          <label className='control-label'>Type</label>
+          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.type.text"/></label>
           <SelectWrapper
             {...type}
             className="input-select"
@@ -185,7 +194,7 @@ class SupportTicketForm extends React.Component {
         <hr/>
 
         <div className='form-group'>
-          <label className='control-label'>Priority</label>
+          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.priority.text"/></label>
           <SelectWrapper
             {...priority}
             className="input-select"
@@ -196,18 +205,20 @@ class SupportTicketForm extends React.Component {
         <hr/>
 
         <div className='form-group'>
-          <label className='control-label'>Assignee</label>
+          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.assignee.text"/></label>
           <SelectWrapper
             {...assignee}
             className="input-select"
-            options={[{ value: 235323, label: 'Support'}]}
+            options={[
+              { value: 235323, label: <FormattedMessage id="portal.support.tickets.label.support.text"/>}
+            ]}
           />
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
           <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
-                  onClick={this.save}>{ticket ? 'Save' : 'Add'}</Button>
+                  onClick={this.save}>{ticket ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
         </ButtonToolbar>
       </form>
     )
@@ -236,4 +247,4 @@ export default reduxForm({
     assignee: null
   },
   validate: validate
-})(SupportTicketForm)
+})(injectIntl(SupportTicketForm))
