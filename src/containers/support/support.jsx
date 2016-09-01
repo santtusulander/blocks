@@ -42,31 +42,29 @@ class Support extends React.Component {
     const baseUrl = getSupportUrlFromParams(params);
 
     return (
-      <PageContainer>
-        <div className="account-support">
-          <SupportPageHeader {...this.props} />
-          <Nav bsStyle="tabs">
-            <li className="navbar">
-              <Link to={baseUrl + '/tickets'} activeClassName="active">
-                <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
-              </Link>
-            </li>
-            <li className="navbar">
-              <Link to={baseUrl + '/tools'} activeClassName="active">
-                <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
-              </Link>
-            </li>
-            <li className="navbar">
-              <Link to={baseUrl + '/documentation'} activeClassName="active">
-                <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
-              </Link>
-            </li>
-          </Nav>
-        </div>
+      <div>
+        <SupportPageHeader {...this.props} />
+        <Nav bsStyle="tabs">
+          <li className="navbar">
+            <Link to={baseUrl + '/tickets'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
+            </Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/tools'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
+            </Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/documentation'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
+            </Link>
+          </li>
+        </Nav>
         <Content>
           {this.renderTabContent(children)}
         </Content>
-      </PageContainer>
+      </div>
     )
   }
 }
