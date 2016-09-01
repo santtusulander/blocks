@@ -8,7 +8,7 @@ const AVAILABILITY_SHARED = 'Shared'
 const AVAILABILITY_PRIVATE = 'Private'
 import { EDIT_BRAND } from '../../constants/account-management-modals.js'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const BrandListRow = (props) => {
   return (

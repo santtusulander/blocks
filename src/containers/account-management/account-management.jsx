@@ -40,7 +40,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
 
-import {FormattedMessage} from 'react-intl' 
+import { FormattedMessage } from 'react-intl'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -304,7 +304,7 @@ export class AccountManagement extends Component {
     /*const dnsInitialValues = {
      initialValues: {
      recordType: 'MX',
-     recordName: 'mikkotest',
+     hostName: 'mikkotest',
      targetValue: '11.22.33.44',
      ttl: '3600'
      }
@@ -359,8 +359,7 @@ export class AccountManagement extends Component {
       <PageContainer className="account-management">
         <Content>
           <div className="account-management-manage-account">
-            <PageHeader>
-              <p>ACCOUNT MANAGEMENT</p>
+            <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <AccountSelector
                   as="accountManagement"
@@ -380,7 +379,7 @@ export class AccountManagement extends Component {
                 <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
               </IsAllowed>
             </PageHeader>
-            {account && <Nav bsStyle="tabs" className="system-nav">
+            {account && <Nav bsStyle="tabs">
               <li className="navbar">
                 <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
               </li>
@@ -391,7 +390,7 @@ export class AccountManagement extends Component {
                 <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
               </li>
             </Nav>}
-            {!account && <Nav bsStyle="tabs" className="system-nav">
+            {!account && <Nav bsStyle="tabs">
               <li className="navbar">
                 <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
               </li>
@@ -415,9 +414,7 @@ export class AccountManagement extends Component {
                </li>
                */}
             </Nav>}
-            <Content className="tab-bodies">
-              {this.props.children && React.cloneElement(this.props.children, childProps)}
-            </Content>
+            {this.props.children && React.cloneElement(this.props.children, childProps)}
           </div>
           {accountManagementModal === ADD_ACCOUNT &&
           <AccountForm

@@ -4,7 +4,7 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import Select from '../select'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl' 
 
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
   return (

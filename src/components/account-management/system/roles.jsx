@@ -40,7 +40,7 @@ class AccountManagementSystemRoles extends React.Component {
 
   render() {
     return (
-      <div className="account-management-system-roles">
+      <div className="container-fluid content-container">
         <RolesList
           editRole={this.state.editRole}
           roles={this.props.roles}

@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class EditGroup extends React.Component {
   constructor(props) {

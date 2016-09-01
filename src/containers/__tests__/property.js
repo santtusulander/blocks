@@ -371,7 +371,7 @@ describe('Property', () => {
         visitorsByCountry={fakeVisitors}
         visitorsActions={visitorsActionsMaker()}/>
     )
-    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'page-header-layout')
+    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'page-header-container')
     expect(header.textContent).toContain('www.abc.com')
   });
 

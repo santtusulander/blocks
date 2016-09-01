@@ -61,7 +61,7 @@ export class FilterDropdown extends React.Component {
     }
 
     return (
-      <div className="form-group">
+      <div>
         <Dropdown id=""
                   open={dropdownOpen}
                   className={className}>

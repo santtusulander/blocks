@@ -1,6 +1,6 @@
 export const EDIT_SOA = 'SoaEditForm'
 export const EDIT_BRAND = 'BrandsEditForm'
-export const EDIT_DNS = 'DnsEditForm'
+export const EDIT_RECORD = 'RecordForm'
 export const ADD_ACCOUNT = 'AccountAddForm'
 export const DELETE_ACCOUNT = 'AccountDeleteForm'
 export const DELETE_USER = 'UserDeleteForm'

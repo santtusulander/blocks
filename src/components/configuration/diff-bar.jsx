@@ -6,7 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Dialog from '../layout/dialog'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class ConfigurationDiffBar extends React.Component {
   constructor(props) {
