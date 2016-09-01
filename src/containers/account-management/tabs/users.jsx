@@ -14,6 +14,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
 import SelectWrapper from '../../../components/select-wrapper'
+// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconEye from '../../../components/icons/icon-eye'
