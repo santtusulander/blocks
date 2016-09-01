@@ -41,11 +41,10 @@
     }
   }
 
-  .scrollable-menu {
-    max-height: 300px;
-    padding-left: 0;
-    overflow-y: auto;
-    list-style-type: none;
+  .dropdown-menu {
+    .scrollable-menu {
+      max-height: 300px;
+    }  
   }
 }
 
