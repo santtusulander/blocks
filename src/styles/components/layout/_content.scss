@@ -11,20 +11,20 @@
     content: '';
   }
 
-  .container-fluid {
-    position: relative;
-    padding: $bar-height;
-
-    @include md {
-      padding: $md-bar-height;
-    }
-
-    @include sm {
-      padding: ($md-bar-height / 2);
-    }
-
-    @include print {
-      padding: 0;
-    }
-  }
+  // .container-fluid {
+  //   position: relative;
+  //   padding: $bar-height;
+  //
+  //   @include md {
+  //     padding: $md-bar-height;
+  //   }
+  //
+  //   @include sm {
+  //     padding: ($md-bar-height / 2);
+  //   }
+  //
+  //   @include print {
+  //     padding: 0;
+  //   }
+  // }
 }

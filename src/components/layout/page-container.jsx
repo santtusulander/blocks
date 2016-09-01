@@ -1,20 +1,15 @@
 import React from 'react'
 
-import Footer from '../footer'
-
 class PageContainer extends React.Component {
   render() {
-    let className = 'page-container-layout';
+    let className = 'page-container';
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    if(this.props.hasSidebar){
-      className = className + ' has-sidebar'
-    }
+
     return (
       <div className={className}>
         {this.props.children}
-        <Footer/>
       </div>
     )
   }

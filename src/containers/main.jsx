@@ -14,6 +14,7 @@ import * as rolesActionCreators from '../redux/modules/roles'
 
 import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
+import Footer from '../components/footer'
 
 import ErrorModal from '../components/error-modal'
 import InfoModal from '../components/info-modal'
@@ -146,7 +147,10 @@ export class Main extends React.Component {
             user={this.props.currentUser}/>
           : ''
         }
-        <div className="content-container">{this.props.children}</div>
+        <div className="content-container">
+          {this.props.children}
+          <Footer />
+        </div>
 
         <ErrorModal
           showErrorDialog={this.props.showErrorDialog}

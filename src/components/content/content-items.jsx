@@ -257,8 +257,7 @@ class ContentItems extends React.Component {
           </ButtonToolbar>
         </PageHeader>
 
-        <div className="container-fluid">
-
+        <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
             this.props.contentItems.isEmpty() ?
@@ -354,7 +353,7 @@ class ContentItems extends React.Component {
               </Modal.Body>
             </Modal>
           }
-        </div>
+        </PageContainer>
       </Content>
     )
   }
