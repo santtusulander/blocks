@@ -258,7 +258,7 @@ class ContentItems extends React.Component {
             </ButtonToolbar>
           </PageHeader>
 
-          <div className="container-fluid body-content">
+          <div className="container-fluid">
 
             {this.props.fetching || this.props.fetchingMetrics  ?
               <LoadingSpinner /> : (
