@@ -161,9 +161,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         ] */}
         <Modal.Header>
           <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
-          <p>
-            {this.props.location.query.name}
-          </p>
         </Modal.Header>
         <Modal.Body>
 
@@ -315,7 +312,6 @@ ConfigurationPolicyRuleEdit.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
-  location: React.PropTypes.object,
   rule: React.PropTypes.instanceOf(Immutable.Map),
   rulePath: React.PropTypes.instanceOf(Immutable.List),
   saveChanges: React.PropTypes.func

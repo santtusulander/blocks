@@ -103,8 +103,7 @@ class ConfigurationPolicies extends React.Component {
               rule={config.getIn(this.props.activeRule)}
               rulePath={this.props.activeRule}
               changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={()=>this.props.activateRule(null)}
-              location={this.props.location}/>
+              hideAction={()=>this.props.activateRule(null)}/>
           </ConfigurationSidebar>
         : ''}
 
@@ -124,7 +123,6 @@ ConfigurationPolicies.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
-  location: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }
 

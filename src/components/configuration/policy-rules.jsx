@@ -54,12 +54,10 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
   render() {
-    const isEmpty = (
-      this.props.defaultPolicies.size +
-      this.props.responsePolicies.size +
-      this.props.requestPolicies.size
-    ) < 1
     const policyMapper = type => (policy, i) => {
+      if(!policy.has('match')) {
+        return null
+      }
       const {matches, sets} = parsePolicy(policy, [])
       return (
         <tr key={i}>
@@ -101,6 +99,12 @@ class ConfigurationPolicyRules extends React.Component {
         </tr>
       )
     }
+    const rows = [
+      ...this.props.defaultPolicies.map(policyMapper('default')),
+      ...this.props.requestPolicies.map(policyMapper('request')),
+      ...this.props.responsePolicies.map(policyMapper('response'))
+    ]
+    const isEmpty = !rows.filter(Boolean).length
     return (
       <div className="configuration-cache-rules">
         <Table striped={true}>
@@ -113,9 +117,7 @@ class ConfigurationPolicyRules extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.defaultPolicies.map(policyMapper('default'))}
-            {this.props.requestPolicies.map(policyMapper('request'))}
-            {this.props.responsePolicies.map(policyMapper('response'))}
+            {rows}
             {isEmpty ? <tr>
               <td colSpan={4}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>

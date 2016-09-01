@@ -1,11 +1,14 @@
 import React from 'react'
-import {Row, Col, Input} from 'react-bootstrap'
+import {Row, Col, Input, Button} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
+import ConfigurationSidebar from './sidebar'
+import { getActiveMatchSetForm } from './helpers'
 import Toggle from '../toggle'
 import Select from '../select'
+import IconAdd from '../icons/icon-add.jsx'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -48,9 +51,24 @@ class ConfigurationDefaults extends React.Component {
       ttlUnit: 'seconds'
     }
 
+    this.addRule = this.addRule.bind(this)
     this.changeTTLUnit = this.changeTTLUnit.bind(this)
+    this.deleteRule = this.deleteRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
+  }
+  addRule(e) {
+    e.preventDefault()
+    const defaultPolicies = this.props.config.getIn(['default_policy','policy_rules']).push(Immutable.fromJS(
+      {match: {field: null, cases: [['',[]]]}}
+    ))
+    this.props.changeValue(['default_policy', 'policy_rules'], defaultPolicies)
+    this.props.activateRule(['default_policy', 'policy_rules', defaultPolicies.size - 1])
+    this.props.activateMatch(['default_policy', 'policy_rules', defaultPolicies.size - 1, 'match'])
+  }
+  deleteRule(policyType, index) {
+    const newPolicies = this.props.config.getIn(['default_policy','policy_rules']).splice(index, 1)
+    this.props.changeValue(['default_policy', 'policy_rules'], newPolicies)
   }
   handleChange(path) {
     return value => {
@@ -111,6 +129,17 @@ class ConfigurationDefaults extends React.Component {
     let ttlValue = secondsToUnit(
       this.props.config.getIn(policyPaths.max_age),
       this.state.ttlUnit
+    )
+    const activeEditFormActions = {
+      changeValue: this.props.changeValue,
+      formatMessage: this.props.intl.formatMessage,
+      activateSet: this.props.activateSet
+    }
+    const activeEditForm = getActiveMatchSetForm(
+      this.props.activeMatch,
+      this.props.activeSet,
+      config,
+      activeEditFormActions
     )
     return (
       <div className="configuration-defaults">
@@ -208,12 +237,25 @@ class ConfigurationDefaults extends React.Component {
 
         <hr/>
 
-        <h3><FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/></h3>
+        <Row className="header-btn-row">
+          <Col sm={8}>
+            <h3>
+              <FormattedMessage
+                id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>
+            </h3>
+          </Col>
+          <Col sm={4} className="text-right">
+            <Button bsStyle="success" className="btn-icon"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
+          </Col>
+        </Row>
         <ConfigurationPolicyRules
           defaultPolicies={config.getIn(['default_policy','policy_rules'])}
           activateRule={this.props.activateRule}
           deleteRule={this.deleteRule}/>
-        {/*this.props.activeRule ?
+        {this.props.activeRule ?
           <ConfigurationSidebar
             rightColVisible={!!activeEditForm}
             handleRightColClose={()=>this.props.activateMatch(null)}
@@ -229,10 +271,9 @@ class ConfigurationDefaults extends React.Component {
               rule={config.getIn(this.props.activeRule)}
               rulePath={this.props.activeRule}
               changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={()=>this.props.activateRule(null)}
-              location={this.props.location}/>
+              hideAction={()=>this.props.activateRule(null)}/>
           </ConfigurationSidebar>
-        : ''*/}
+        : ''}
       </div>
     )
   }

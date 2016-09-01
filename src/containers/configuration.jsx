@@ -343,7 +343,6 @@ export class Configuration extends React.Component {
                 activeSet={this.props.policyActiveSet}
                 changeValue={this.changeValue}
                 config={activeConfig}
-                location={this.props.location}
                 saveChanges={this.saveActiveHostChanges}/>
               : null}
 
@@ -431,7 +430,6 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
