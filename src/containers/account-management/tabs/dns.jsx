@@ -80,7 +80,7 @@ class AccountManagementSystemDNS extends Component {
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
-        {loadingRecords ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
+        {loadingDomains || loadingRecords ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
         {activeModal === RECORD_EDIT &&
           <RecordForm
             edit={this.editingRecord}
