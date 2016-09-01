@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import { isSafari } from '../../util/helpers'
 import AnalysisByKey from './by-key'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export class PlaybackDemo extends React.Component {
   constructor(props) {

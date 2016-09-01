@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">

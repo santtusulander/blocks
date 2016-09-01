@@ -3,7 +3,7 @@ import {Input } from 'react-bootstrap'
 
 import './udn-file-input.scss'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const UDNFileInput = (props) => {
 

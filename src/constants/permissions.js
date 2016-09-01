@@ -42,6 +42,7 @@ export const VIEW_CONTENT_PROPERTIES = 'VIEW_CONTENT_PROPERTIES'
 export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
 
 //DNS Permissions
+export const CREATE_RECORD = 'CREATE_RECORD'
 export const VIEW_DNS = 'VIEW_DNS'
 export const CREATE_ZONE = 'CREATE_ZONE'
 export const MODIFY_ZONE = 'MODIFY_ZONE'
