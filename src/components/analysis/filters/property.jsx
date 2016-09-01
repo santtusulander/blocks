@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import Select from '../../../components/select'
 
@@ -6,9 +7,7 @@ export class FilterProperty extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Properties
-        </div>
+        <h5><FormattedMessage id="portal.analysis.filters.property.title"/></h5>
         <div className="sidebar-content">
           <div className="form-group">
             <Select className="btn-block"

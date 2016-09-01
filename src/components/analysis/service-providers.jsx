@@ -7,7 +7,7 @@ import AnalysisStackedByGroup from './stacked-by-group'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AnalysisServiceProviders extends React.Component {
   constructor(props) {

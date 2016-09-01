@@ -1,77 +1,102 @@
 // Page Header Layout
 // ==================
+$page-header-padding-top: rem(18px);
+$page-header-horizontal-padding: rem(30px);
+$page-header-padding-bottom: rem(12px);
+$page-header-secondary-vertical-padding: rem(18px);
+$page-header-dropdown-width: rem(250px);
+$page-header-secondary-dropdown-min-width: rem(180px);
+$action-padding-right: rem(30px);
 
-.page-header-layout {
-  min-height: $page-header-height;
-  padding-top: $page-header-padding-top;
-  padding-right: $bar-height;
-  padding-bottom: $page-header-padding-bottom;
-  padding-left: $bar-height;
-
-  @include lg {
-    padding-top: ($page-header-padding-top * 0.75);
-    padding-bottom: ($page-header-padding-bottom * 0.75);
-  }
-
-  @include md {
-    min-height: $md-page-header-height;
-    padding-right: $md-bar-height;
-    padding-left: $md-bar-height;
-  }
-
-  @include sm {
-    padding-right: ($md-bar-height / 2);
-    padding-left: ($md-bar-height / 2);
-  }
-
-  @include print {
-    min-height: 0;
-    padding: 0 0 20px;
-  }
+.page-header-container {
+  padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
 
   .dark-theme & {
     background-color: rgba($pale-blue, 0.2);
+    border-bottom: 3px solid rgba($black, 0.4);
   }
 
   .light-theme & {
     background-color: $white;
+    border-bottom: 3px solid rgba($black, 0.1);
+  }
+
+  .page-header-layout {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+
+    .btn-toolbar {
+      padding-left: 18px;
+      white-space: nowrap;
+    }
+
+    .selector-component {
+      min-width: 0;
+    }
+  }
+
+  .form-group .dropdown-select,
+  .dropdown-select {
+    min-width: $page-header-dropdown-width;
+  }
+
+  &.secondary-page-header {
+    padding: $page-header-secondary-vertical-padding $page-header-horizontal-padding;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.1);
+    }
+
+    .page-header-layout {
+      align-items: flex-start;
+      justify-content: inherit;
+    }
+
+    .form-group {
+      padding: 0;
+    }
+
+    .form-group .dropdown-select,
+    .dropdown-select {
+      min-width: $page-header-secondary-dropdown-min-width;
+    }
+
+    .form-inline {
+      .form-group {
+        padding-top: 4px;
+
+        &:not(:last-child) {
+          padding-right: $action-padding-right;
+        }
+      }
+    }
+
+    .action {
+      h5 {
+        padding-bottom: 6px;
+        text-transform: none;
+      }
+    }
+
+    .action:not(:last-child) {
+      padding-right: $action-padding-right;
+    }
+  }
+
+  &.distributed-columns {
+    .page-header-layout {
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 
   p {
     margin: 0;
   }
 
-  .btn-toolbar {
-    margin-top: 5px;
-
-    @include print {
-      display: none;
-    }
-  }
-
-  .form-control {
-    height: $btn-height;
-
-    @include md {
-      height: $md-btn-height;
-    }
-  }
-
   h1 {
     color: $pale-blue;
-  }
-
-  .btn.btn-primary {
-    color: $white;
-    background-color: $pale-blue;
-    fill: $white;
-    stroke: $white;
-
-    &:hover {
-      color: $white;
-      background-color: rgba($pale-blue, 0.8);
-      fill: $white;
-      stroke: $white;
-    }
   }
 }

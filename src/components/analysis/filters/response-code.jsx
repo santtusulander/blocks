@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Input } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import STATUS_CODES from '../../../constants/status-codes'
 
@@ -8,9 +9,7 @@ export class FilterResponseCode extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Response Code
-        </div>
+        <h5><FormattedMessage id="portal.analysis.filters.responseCode.title"/></h5>
         <div className="sidebar-content">
           <Input type="checkbox"
             label="All"
