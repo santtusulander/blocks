@@ -18,8 +18,7 @@ class PageContainer extends React.Component {
 PageContainer.displayName = 'PageContainer'
 PageContainer.propTypes = {
   children: React.PropTypes.node,
-  className: React.PropTypes.string,
-  hasSidebar: React.PropTypes.bool
+  className: React.PropTypes.string
 };
 
 module.exports = PageContainer

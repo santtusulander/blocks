@@ -149,7 +149,7 @@ export class Main extends React.Component {
         }
         <div className="content-container">
           {this.props.children}
-          {this.props.user.get('loggedIn') && !this.props.fetching && !this.pageAllowsAnon() ?
+          {this.props.user.get('loggedIn') && !this.pageAllowsAnon() && !this.props.fetching ?
             <Footer />
             : null}
         </div>
