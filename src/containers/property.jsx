@@ -340,7 +340,7 @@ export class Property extends React.Component {
           </ButtonToolbar>
         </PageHeader>
 
-        <div className="container-fluid property-container">
+        <PageContainer className="property-container">
           <Row className="property-info-row no-end-gutters">
             <Col xs={3} className="kpi">
               Origin Hostname
@@ -453,7 +453,7 @@ export class Property extends React.Component {
               </div>
             </Tooltip>}
           </div>
-        </div>
+        </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}

@@ -296,7 +296,7 @@ export class Configuration extends React.Component {
           </NavItem>
         </Nav>
 
-        <div className="container-fluid content-container">
+        <PageContainer>
           {this.state.activeTab === 'details' ?
             <ConfigurationDetails
               edgeConfiguration={activeConfig.get('edge_configuration')}
@@ -333,7 +333,7 @@ export class Configuration extends React.Component {
           {this.state.activeTab === 'change-log' ?
             <ConfigurationChangeLog/>
             : null}
-        </div>
+        </PageContainer>
 
         <ConfigurationDiffBar
           changeValue={this.changeValue}

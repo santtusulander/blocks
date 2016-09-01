@@ -5,6 +5,7 @@ import { List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
+import PageContainer from '../../../components/layout/page-container'
 import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
 import InlineAdd from '../../inline-add'
@@ -185,7 +186,7 @@ class AccountList extends Component {
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -250,7 +251,7 @@ class AccountList extends Component {
             </tr>}
           </tbody>
         </table>
-      </div>
+      </PageContainer>
     )
   }
 }

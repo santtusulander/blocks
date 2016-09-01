@@ -123,7 +123,7 @@ class AnalyticsContainer extends React.Component {
     }
 
     return (
-      <div className='container-fluid content-container analytics-container'>
+      <PageContainer className='analytics-container'>
         {
           /* Render tab -content */
           children && React.cloneElement(children, {
@@ -132,7 +132,7 @@ class AnalyticsContainer extends React.Component {
             location: location
           } )
         }
-      </div>
+      </PageContainer>
     )
   }
 
