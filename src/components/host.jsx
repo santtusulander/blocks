@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Host extends React.Component {
   constructor(props) {

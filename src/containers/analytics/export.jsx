@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 import IconExport from '../../components/icons/icon-export.jsx'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AnalyticsExport extends React.Component {
   constructor(props){

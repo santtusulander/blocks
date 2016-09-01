@@ -1,14 +1,13 @@
 import React from 'react'
 import { Input } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 export class FilterRecordType extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Show as
-        </div>
-        <div className="sidebar-content">
+        <h5><FormattedMessage id="portal.analysis.filters.recordType.title"/></h5>
+        <div className="sidebar-content form-inline">
           <Input type="radio" label="Bandwidth"
             checked={this.props.recordType.includes('transfer_rates')}
             onChange={() => this.props.toggleRecordType('transfer_rates')}/>

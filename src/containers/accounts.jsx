@@ -14,7 +14,7 @@ import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 export class Accounts extends React.Component {
   constructor(props) {

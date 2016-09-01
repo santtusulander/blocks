@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class RemoveVary extends React.Component {
   constructor(props) {
