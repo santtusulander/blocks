@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal, Dropdown } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -11,12 +11,16 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import { getContentUrl } from '../util/helpers'
+
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
-import IconArrowLeft from '../components/icons/icon-arrow-left'
+import IconTrash from '../components/icons/icon-trash.jsx'
+import TruncatedTitle from '../components/truncated-title'
+import DeleteModal from '../components/delete-modal'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -31,6 +35,10 @@ import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
 import { getUrl } from '../util/helpers'
 
+import { FormattedMessage } from 'react-intl'
+
+const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
+
 export class Configuration extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +46,7 @@ export class Configuration extends React.Component {
     const config = props.activeHost ? props.activeHost.getIn(['services',0,'configurations',0]) : null
 
     this.state = {
+      deleteModal: false,
       activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
@@ -64,9 +73,12 @@ export class Configuration extends React.Component {
     this.props.hostActions.fetchHost(brand, account, group, property)
   }
   componentWillReceiveProps(nextProps) {
-    if(!this.props.activeHost && nextProps.activeHost) {
+    const currentHost = this.props.activeHost
+    const nextHost = nextProps.activeHost
+    if(!currentHost && nextHost ||
+      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
       this.setState({
-        activeConfigOriginal: nextProps.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
+        activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
     }
   }
@@ -98,7 +110,7 @@ export class Configuration extends React.Component {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
         })
-        this.showNotification('Configurations succesfully saved')
+        this.showNotification(<FormattedMessage id="portal.configuration.updateSuccessfull.text"/>)
       }
     })
   }
@@ -166,7 +178,7 @@ export class Configuration extends React.Component {
             action.payload.status + ' ' +
             action.payload.statusText)
         } else {
-          this.showNotification('Configurations succesfully retired')
+          this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
       // env !== 1 is publishing
       } else {
@@ -177,7 +189,7 @@ export class Configuration extends React.Component {
             action.payload.statusText)
         } else {
           this.togglePublishModal()
-          this.showNotification('Configurations succesfully published')
+          this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
         }
       }
     })
@@ -199,100 +211,92 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-    console.log(activeConfig.toJS())
 
     return (
       <PageContainer className="configuration-container">
         <Content>
           {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
-          <div className="configuration-header">
-            <PageHeader>
-              <ButtonToolbar className="pull-right">
-                {activeEnvironment === 2 ||
-                  activeEnvironment === 1 ||
-                  !activeEnvironment ?
-                  <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                    Publish
-                  </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                  Copy
+          <PageHeader
+            pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
+            pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+              deployMoment.format('MMM, D YYYY'),
+              deployMoment.format('H:MMa'),
+              activeConfig.get('configuration_status').get('last_edited_by')]}>
+            <AccountSelector
+              as="configuration"
+              params={this.props.params}
+              topBarTexts={{}}
+              onSelect={(tier, value, params) => {
+                const { brand, account, group } = params, { hostActions } = this.props
+                hostActions.startFetching()
+                hostActions.fetchHost(brand, account, group, value).then(() => {
+                  this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                })
+              }}
+              drillable={true}>
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+                <span className="caret"></span>
+              </div>
+            </AccountSelector>
+            <ButtonToolbar className="pull-right">
+              <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+              {activeEnvironment === 2 ||
+                activeEnvironment === 1 ||
+                !activeEnvironment ?
+                <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                  <FormattedMessage id="portal.button.publish"/>
                 </Button>
-                {activeEnvironment === 2 || activeEnvironment === 3 ?
-                  <Button bsStyle="primary"
-                    onClick={() => this.changeActiveVersionEnvironment(1)}>
-                    Retire
-                  </Button>
-                  : ''
-                }
-                <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                  className="versions-btn has-icon">
-                  <div className="icon-holder">
-                    <IconArrowLeft/>
-                  </div>
-                  Versions
+                : null
+              }
+              <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+                <FormattedMessage id="portal.button.copy"/>
+              </Button>
+              {activeEnvironment === 2 || activeEnvironment === 3 ?
+                <Button bsStyle="primary"
+                  onClick={() => this.changeActiveVersionEnvironment(1)}>
+                  <FormattedMessage id="portal.button.retire"/>
                 </Button>
-              </ButtonToolbar>
-              <p>CONFIGURATION</p>
-              <AccountSelector
-                as="configuration"
-                params={this.props.params}
-                topBarTexts={{}}
-                onSelect={(tier, value, params) => {
-                  const { brand, account, group } = params, { hostActions } = this.props
-                  hostActions.startFetching()
-                  hostActions.fetchHost(brand, account, group, value).then(() => {
-                    this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                  })
-                }}
-                drillable={true}>
-                <Dropdown.Toggle bsStyle="link" className="header-toggle">
-                  <h1>{this.props.params.property}</h1>
-                </Dropdown.Toggle>
-              </AccountSelector>
-              <p className="text-sm">
-                <span className="right-separator">
-                  {activeConfig.get('edge_configuration').get('origin_host_name')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('MMM, D YYYY')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('H:MMa')}
-                </span>
-                {activeConfig.get('configuration_status').get('last_edited_by')}
-              </p>
-            </PageHeader>
+                : null
+              }
+              <Button bsStyle="primary" onClick={this.toggleVersionModal}>
+                <FormattedMessage id="portal.button.versions"/>
+              </Button>
+            </ButtonToolbar>
+          </PageHeader>
 
-            <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-              onSelect={this.activateTab}>
-              <NavItem eventKey={'details'}>
-                Hostname
-              </NavItem>
-              <NavItem eventKey={'defaults'}>
-                Defaults
-              </NavItem>
-              <NavItem eventKey={'policies'}>
-                Policies
-              </NavItem>
-              <NavItem eventKey={'performance'}>
-                Performance
-              </NavItem>
-              <NavItem eventKey={'security'}>
-                Security
-              </NavItem>
-              <NavItem eventKey={'certificates'}>
-                Certificates
-              </NavItem>
-              <NavItem eventKey={'change-log'}>
-                Change Log
-              </NavItem>
-            </Nav>
-          </div>
+          <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+            onSelect={this.activateTab}>
+            <NavItem eventKey={'details'}>
+              <FormattedMessage id="portal.configuration.hostname.text"/>
+            </NavItem>
+            <NavItem eventKey={'defaults'}>
+              <FormattedMessage id="portal.configuration.defaults.text"/>
+            </NavItem>
+            <NavItem eventKey={'policies'}>
+              <FormattedMessage id="portal.configuration.policies.text"/>
+            </NavItem>
+            <NavItem eventKey={'performance'}>
+              <FormattedMessage id="portal.configuration.performance.text"/>
+            </NavItem>
+            <NavItem eventKey={'security'}>
+              <FormattedMessage id="portal.configuration.security.text"/>
+            </NavItem>
+            <NavItem eventKey={'certificates'}>
+              <FormattedMessage id="portal.configuration.certificates.text"/>
+            </NavItem>
+            <NavItem eventKey={'change-log'}>
+              <FormattedMessage id="portal.configuration.changeLog.text"/>
+            </NavItem>
+          </Nav>
+
           <div className="container-fluid content-container">
             {this.state.activeTab === 'details' ?
               <ConfigurationDetails
@@ -343,8 +347,15 @@ export class Configuration extends React.Component {
             />
 
         </Content>
-
-        {this.state.showPublishModal ?
+        {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          cancel={toggleDelete}
+          submit={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>
+        }
+        {this.state.showPublishModal &&
           <Modal show={true}
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
@@ -359,10 +370,9 @@ export class Configuration extends React.Component {
                 versionName={activeConfig.get('config_name') || activeConfig.get('config_id')}
                 publishing={this.props.fetching}/>
             </Modal.Body>
-          </Modal>
-          : ''}
+          </Modal>}
 
-          {this.state.showVersionModal ?
+          {this.state.showVersionModal &&
             <Modal show={true}
               dialogClassName="configuration-sidebar configuration-versions-sidebar"
               onHide={this.toggleVersionModal}>
@@ -377,8 +387,7 @@ export class Configuration extends React.Component {
                   status={this.props.activeHost.get('status')}
                   activeHost={this.props.activeHost}/>
               </Sidebar>
-            </Modal>
-            : ''}
+            </Modal>}
       </PageContainer>
     );
   }
@@ -397,6 +406,7 @@ Configuration.propTypes = {
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
+  router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {

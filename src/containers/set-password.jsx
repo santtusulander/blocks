@@ -11,6 +11,7 @@ import * as userActionCreators from '../redux/modules/user'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
+import { FormattedMessage } from 'react-intl'
 
 export class SetPassword extends React.Component {
   constructor(props) {
@@ -132,7 +133,7 @@ export class SetPassword extends React.Component {
 
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
-          <h1>{this.props.reset ? 'Reset' : 'Set'} Password</h1>
+          <h1>{this.props.reset ? <FormattedMessage id="portal.passsword.resetPassword.text"/> : <FormattedMessage id="portal.passsword.setPassword.text"/>}</h1>
           <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
         </Modal.Header>
@@ -163,8 +164,7 @@ export class SetPassword extends React.Component {
                 {this.state.passwordError ?
                   this.state.passwordError
                 :
-                  'Password is not valid'
-                }
+                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>                }
               </Tooltip>
             : null}
 
@@ -206,7 +206,7 @@ export class SetPassword extends React.Component {
 
             {showConfirmError ?
               <Tooltip id="confirm-error" placement="bottom" className="input-tooltip in">
-                Passwords do not match
+                <FormattedMessage id="portal.passsword.passwordDoNotMatch.text"/>
               </Tooltip>
             : null}
 
@@ -215,8 +215,8 @@ export class SetPassword extends React.Component {
                 <Button type="submit" bsStyle="primary" className="pull-right"
                   disabled={this.props.fetching || !this.state.confirmValid}>
                   {this.props.reset ?
-                    this.props.fetching ? 'Resetting...' : 'Reset'
-                  : this.props.fetching ? 'Setting...' : 'Set'}
+                    this.props.fetching ? <FormattedMessage id="portal.button.resetting"/> : <FormattedMessage id="portal.button.reset"/>
+                  : this.props.fetching ? <FormattedMessage id="portal.button.setting"/> : <FormattedMessage id="portal.button.set"/>}
                 </Button>
               </Col>
             </Row>

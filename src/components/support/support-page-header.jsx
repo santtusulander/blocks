@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react'
-import { Dropdown } from 'react-bootstrap'
 import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/helpers'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
+import TruncatedTitle from '../truncated-title'
+
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 const SupportPageHeader = (props) => {
@@ -19,8 +21,7 @@ const SupportPageHeader = (props) => {
   const subPage = getTabName(router, params);
 
   return (
-    <PageHeader>
-      <p>SUPPORT</p>
+    <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
           as="support"
@@ -29,9 +30,11 @@ const SupportPageHeader = (props) => {
           topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
           onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
           restrictedTo="account">
-          <Dropdown.Toggle bsStyle="link" className="header-toggle">
-            <h1>{activeAccount.get('name') || 'No active account'}</h1>
-          </Dropdown.Toggle>
+          <div className="btn btn-link dropdown-toggle header-toggle">
+            <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
+              tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <span className="caret"></span>
+          </div>
         </AccountSelector>
       </IsAllowed>
       <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>

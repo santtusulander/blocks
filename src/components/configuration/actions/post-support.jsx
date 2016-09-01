@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
+import { FormattedMessage } from 'react-intl'
+
 class PostSupport extends React.Component {
   constructor(props) {
     super(props);
@@ -19,14 +21,14 @@ class PostSupport extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>POST Support</h1>
+          <h1><FormattedMessage id="portal.policy.edit.postSupport.header"/></h1>
         </Modal.Header>
         <Modal.Body>
 
           <div className="form-group">
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label>Enable POST</label>
+                <label><FormattedMessage id="portal.policy.edit.postSupport.enablePost.text"/></label>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}

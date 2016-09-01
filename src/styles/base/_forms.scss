@@ -1,33 +1,44 @@
 // Forms
 // =====
 
+$form-font-size: 14px;
+$form-line-height: 1.6;
+$form-vertical-padding: em(7px, $form-font-size);
+$form-horizontal-padding: em(12px, $form-font-size);
+$textarea-min-height: em(96px, $form-font-size);
+$form-error-color: $red;
+$form-success-color: $green;
+
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
 label {
-  margin-bottom: $form-label-margin;
-  font-weight: bold;
+  margin-bottom: 0;
+  font-size: rem(18px);
+  font-weight: 700;
+  line-height: 1.3333333;
 }
 
 .form-control {
-  height: $bar-height;
+  height: auto;
   max-width: 900px;
-  padding: ($btn-sm-height / 3) ($btn-height / 2);
-  font-size: inherit;
-  color: inherit;
+  padding: $form-vertical-padding $form-horizontal-padding;
+  font-size: rem($form-font-size);
+  line-height: $form-line-height;
   border: 0;
   border-radius: 2px;
   box-shadow: none;
   transition: box-shadow 0s;
 
-  @include md {
-    height: $md-bar-height;
-    padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
-  }
-
   // Hide IE clear and reveal buttons for design purposes
   &::-ms-clear,
   &::-ms-reveal {
     display: none;
+  }
+
+  &::placeholder {
+    @include print {
+      color: transparent;
+    }
   }
 
   .dark-theme & {
@@ -36,29 +47,12 @@ label {
 
     &:focus,
     &:active {
-      box-shadow: inset 0 0 0 1px $pale-blue;
+      color: $white;
+      box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
     }
 
     &::placeholder {
       color: rgba($dt-text-color, 0.3);
-
-      @include print {
-        color: transparent;
-      }
-    }
-  }
-
-  .light-theme .configuration-sidebar & {
-    color: $lt-text-color;
-    background-color: $white;
-
-    &:focus,
-    &:active {
-      box-shadow: inset 0 0 0 1px $pale-blue;
-    }
-
-    &::placeholder {
-      color: rgba($lt-text-color, 0.3);
 
       @include print {
         color: transparent;
@@ -72,7 +66,7 @@ label {
 
     &:focus,
     &:active {
-      box-shadow: inset 0 0 0 1px $pale-blue;
+      box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
     }
 
     &::placeholder {
@@ -80,50 +74,75 @@ label {
     }
   }
 
-  .light-theme .page-header-layout & {
-    background-color: rgba($black, 0.1);
-
-    &:focus,
-    &:active {
-      box-shadow: inset 0 0 0 1px $pale-blue;
+  .has-success & {
+    .dark-theme & {
+      box-shadow: inset 0 0 0 2px $form-success-color, 0 0 0 1px rgba($black, 0.5);
     }
 
-    &::placeholder {
-      color: rgba($lt-text-color, 0.3);
-    }
-  }
-
-  .dark-theme .has-error &,
-  .light-theme .has-error & {
-    background-color: $purple;
-
-    &[type=textarea] {
-      color: rgba($dt-text-color, 0.3);
-    }
-
-    &::placeholder {
-      color: rgba($dt-text-color, 0.3);
+    .light-theme & {
+      box-shadow: inset 0 0 0 2px $form-success-color, 0 0 0 1px rgba($black, 0.1);
     }
   }
 
   &.valid,
   .valid & {
-
     &:focus,
     &:active {
-      box-shadow: inset 0 0 0 1px $green;
+      .dark-theme & {
+        box-shadow: inset 0 0 0 2px $form-success-color, 0 0 0 1px rgba($black, 0.5);
+      }
+
+      .light-theme & {
+        box-shadow: inset 0 0 0 2px $form-success-color, 0 0 0 1px rgba($black, 0.1);
+      }
     }
   }
 
+  .has-error & {
+    .dark-theme & {
+      box-shadow: inset 0 0 0 2px $form-error-color, 0 0 0 1px rgba($black, 0.5);
+    }
+
+    .light-theme & {
+      box-shadow: inset 0 0 0 2px $form-error-color, 0 0 0 1px rgba($black, 0.1);
+    }
+  }
+
+
   &.invalid,
   .invalid & {
-
-    &,
-    &:hover,
     &:focus,
     &:active {
-      box-shadow: inset 0 0 0 1px $purple;
+      .dark-theme & {
+        box-shadow: inset 0 0 0 2px $form-error-color, 0 0 0 1px rgba($black, 0.5);
+      }
+
+      .light-theme & {
+        box-shadow: inset 0 0 0 2px $form-error-color, 0 0 0 1px rgba($black, 0.1);
+      }
     }
+  }
+}
+
+.help-block {
+  &,
+  .has-warning &,
+  .has-error & {
+    .dark-theme &,
+    .light-theme & {
+      margin: 0;
+      color: inherit;
+    }
+  }
+}
+
+.control-label {
+  .has-success & {
+    color: $form-success-color;
+  }
+
+  .has-error & {
+    color: $form-error-color;
   }
 }
 
@@ -148,12 +167,14 @@ label {
   padding-bottom: $form-group-padding;
   margin-bottom: 0;
 
-  @include md {
-    padding-bottom: $md-form-group-padding;
-  }
+  &.inline {
+    display: inline-block;
+    margin-right: 1em;
 
-  @include print {
-    padding-bottom: 0;
+    > .search-input,
+    > .dropdown-select {
+      width: 16em;
+    }
   }
 
   .header &,
@@ -169,27 +190,14 @@ label {
 }
 
 .form-horizontal {
-
   .control-label {
-    padding-top: 26px;
     text-align: inherit;
-
-    @include md {
-      padding-top: 19px;
-    }
   }
+}
 
-  .form-groups .control-label {
-    position: absolute;
-    top: 50%;
-    left: -15px;
-    padding-top: 0;
-    padding-bottom: $form-group-padding;
-    transform: translateY(-50%);
-
-    @include md {
-      padding-bottom: $md-form-group-padding;
-    }
+textarea {
+  &.form-control {
+    min-height: $textarea-min-height;
   }
 }
 
@@ -285,11 +293,13 @@ label {
   }
 }
 
-.checkbox {
+.checkbox,
+.radio {
   margin: 0;
 
   label {
     padding-left: 0;
+    font-size: rem(14px);
   }
 
   input {
@@ -297,102 +307,66 @@ label {
 
     + span::before {
       display: inline-block;
-      width: 40px;
-      height: 40px;
-      margin: 0 20px 0 0;
+      width: calc(#{$bar-height} / 2);
+      height: calc(#{$bar-height} / 2);
+      margin: 0 calc(#{$bar-height} / 4) 0 0;
       vertical-align: middle;
       cursor: pointer;
-      border-radius: 2px;
       content: '';
 
-      @include md {
-        width: 30px;
-        height: 30px;
-        margin-right: 15px;
-      }
-
       .dark-theme &,
+      .light-theme &,
       .light-theme .sidebar-layout &,
       .light-theme .configuration-sidebar & {
         background: rgba($black, 0.2);
       }
+    }
+  }
+}
 
-      .light-theme & {
-        background: $white;
-      }
+.checkbox {
+  input {
+    + span::before {
+      border-radius: 2px;
     }
 
     .dark-theme &:checked + span::before,
-    .light-theme &:checked + span::before,
     .light-theme .modal .configuration-sidebar &:checked + span::before {
-      background: $pale-blue url('../assets/icons/icon-checkbox.svg') center center no-repeat;
-      background-size: 17px 16px;
+      background: $pale-blue url('../assets/icons/dt-icon-checkbox.svg') center center no-repeat;
+      background-size: 12px;
     }
 
+    .light-theme &:checked + span::before,
     .light-theme .modal &:checked + span::before {
-      background: rgba($black, 0.2) url('../assets/icons/icon-checkbox.svg') center center no-repeat;
-      background-size: 17px 16px;
+      background: $pale-blue url('../assets/icons/lt-icon-checkbox.svg') center center no-repeat;
+      background-size: 12px;
     }
   }
 }
 
 .radio {
-  margin: 0;
-
   label {
     position: relative;
-    padding-left: 0;
   }
 
   input {
-    display: none;
-
     + span::before {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      margin: 0 20px 0 0;
-      vertical-align: middle;
-      cursor: pointer;
       border-radius: 50%;
-      content: '';
-
-      @include md {
-        width: 30px;
-        height: 30px;
-        margin-right: 15px;
-      }
-
-      .dark-theme &,
-      .light-theme .configuration-sidebar & {
-        background-color: rgba($black, 0.2);
-      }
-
-      .light-theme & {
-        background-color: $white;
-      }
     }
 
     &:checked + span::after {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 20px;
-      height: 20px;
+      top: 50%;
+      left: 3px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       content: '';
-
-      @include md {
-        top: 7px;
-        left: 7px;
-        width: 16px;
-        height: 16px;
-      }
+      transform: translateY(-50%);
     }
 
     .dark-theme &:checked + span,
     .light-theme &:checked + span {
-
       &::after {
         background-color: $pale-blue;
       }
@@ -400,24 +374,9 @@ label {
   }
 }
 
-.help-block {
-
-  &,
-  .has-warning &,
-  .has-error & {
-
-    .dark-theme &,
-    .light-theme & {
-      margin-top: 10px;
-      margin-bottom: 0;
-      color: inherit;
-    }
-  }
-}
-
 .error-msg {
   margin-bottom: 10px;
-  color: $red;
+  color: $form-error-color;
 }
 
 .search-input {

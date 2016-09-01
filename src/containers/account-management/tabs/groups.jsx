@@ -19,7 +19,9 @@ import ArrayTd from '../../../components/array-td/array-td'
 import UDNButton from '../../../components/button'
 
 import { checkForErrors } from '../../../util/helpers'
-import { NAME_VALIDATION_REGEXP, NAME_VALIDATION_REQUIREMENTS } from '../../../constants/account-management-options'
+import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+
+import { FormattedMessage } from 'react-intl'
 
 
 class AccountManagementAccountGroups extends React.Component {
@@ -110,7 +112,15 @@ class AccountManagementAccountGroups extends React.Component {
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: <div>{['Group name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText: <div>{['Group name is invalid.', <div key={name}>
+                                                        <div style={{marginTop: '0.5em'}}>
+                                                          <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                                                          <ul>
+                                                            <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                                                            <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                                                          </ul>
+                                                        </div>
+                                                      </div>]}</div>
         }
       ]
     }
@@ -225,7 +235,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     return (
-      <div className="account-management-account-groups">
+      <div className="container-fluid content-container account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>

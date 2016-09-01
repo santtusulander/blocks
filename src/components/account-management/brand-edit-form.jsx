@@ -7,6 +7,8 @@ import UDNFileInput from '../udn-file-input.jsx'
 
 import './brand-edit-form.scss'
 
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+
 const colorThemeOptions = [
   { id: '1', themeName: 'Theme Name 1' },
   { id: '2', themeName: 'Theme Name 2' },
@@ -29,8 +31,8 @@ const validate = (values) => {
 
 const BrandEditForm = (props) => {
 
-  const title = props.edit ? 'Edit Brand' : 'New Brand'
-  const actionButtonTitle = props.edit ? 'Save' : 'Add'
+  const title = props.edit ? <FormattedMessage id="portal.brand.edit.editBrand.title"/> : <FormattedMessage id="portal.brand.edit.newBrand.title"/>
+  const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/> 
 
   const { fields: {brandName, brandLogo, favicon, colorTheme, availability} } = props
 
@@ -49,8 +51,8 @@ const BrandEditForm = (props) => {
           <Input
             { ...brandName }
             type="text"
-            label="Brand Name"
-            placeholder="Enter Brand Name"
+            label={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
           />
 
           {brandName.touched && brandName.error && <div className='error-msg errorBrandName'>{brandName.error}</div>}
@@ -60,8 +62,8 @@ const BrandEditForm = (props) => {
           <UDNFileInput
             { ...brandLogo }
             id='brand-input'
-            label="Brand Logo"
-            placeholder="Enter Brand Name"
+            label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
             addonAfter=' ICO, GIF or PNG'
             className='input-file'
           />
@@ -71,16 +73,16 @@ const BrandEditForm = (props) => {
           <UDNFileInput
             { ...favicon }
             id='favicon-input'
-            label="Favicon"
-            placeholder="Enter Favicon"
-            addonAfter=' Best in SVG format (logo may be scaled)'
+            label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
+            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
+            addonAfter={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
             className='input-file'
           />
 
           <hr/>
 
           <div className="form-group">
-            <label className='control-label'>Choose Color Theme</label>
+            <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
             <SelectWrapper
               { ... colorTheme }
               className="input-select"
@@ -91,8 +93,8 @@ const BrandEditForm = (props) => {
           <hr/>
 
           <div className="form-group">
-            <label className='control-label'>Availability</label>
-            <Input {...availability} value='private' type="radio" label='Keep private (only I can assign this brand to accounts)'/>
+            <label className='control-label'><FormattedMessage id="portal.brand.edit.availability.text"/></label>
+            <Input {...availability} value='private' type="radio" label={this.props.intl.formatMessage({id: 'portal.brand.edit.availability.label'})}/>
           </div>
 
           <div className="form-group">
@@ -125,4 +127,4 @@ export default reduxForm({
   form: 'brand-edit',
   fields: ['brandName', 'brandLogo', 'favicon', 'colorTheme', 'availability'],
   validate
-})(BrandEditForm)
+})(injectIntl(BrandEditForm))

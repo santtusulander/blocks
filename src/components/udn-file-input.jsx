@@ -3,6 +3,8 @@ import {Input } from 'react-bootstrap'
 
 import './udn-file-input.scss'
 
+import { FormattedMessage } from 'react-intl'
+
 const UDNFileInput = (props) => {
 
   const { addonAfter, ...otherProps } = props
@@ -16,7 +18,7 @@ const UDNFileInput = (props) => {
         onChange={() => {}}
       />
 
-      <label htmlFor={props.id} className='file-input-label'>Choose file</label>
+      <label htmlFor={props.id} className='file-input-label'><FormattedMessage id="portal.fileInput.chooseFile.text"/></label>
       <span>{addonAfter}</span>
     </div>
   )

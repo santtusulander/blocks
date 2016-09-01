@@ -2,11 +2,6 @@
 // ========
 
 .property-container {
-
-  .page-header-layout {
-    border-bottom: 5px solid rgba($black, 0.5);
-  }
-
   .content-layout > .container-fluid {
     padding-top: 0;
   }
@@ -25,7 +20,7 @@
 
   .kpi {
     h3 {
-      margin: 5px 0 0;
+      margin-top: 5px;
       word-wrap: break-word;
     }
   }
@@ -111,5 +106,10 @@
 
   .slice-tooltip {
     width: 200px;
+  }
+
+  .btn-secondary {
+    fill: $dt-text-color;
+    stroke: $dt-text-color;
   }
 }

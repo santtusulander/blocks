@@ -2,55 +2,54 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal, Input } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
-let submitDisabled
-const DeleteModal = ({ itemToDelete, description, onDelete, onCancel, fields: { delField } }) => {
-  if (!description) {
-    description = `Please confirm by writing "delete" below, and pressing the delete button.
-          This ${itemToDelete} will be removed immediately. This action can't be undone`;
-  }
+import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
+import { FormattedMessage } from 'react-intl'
+
+const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delField }, invalid }) => {
   return (
     <Modal show={true} className="delete-modal">
       <Modal.Header  className="delete-modal-header">
-        <h1>{`Delete ${ itemToDelete }`}</h1>
+        <h1><FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: itemToDelete}}/></h1>
         <hr/>
       </Modal.Header>
       <Modal.Body className="delete-modal-body">
         <p>
-          {description}
+          {description || <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : itemToDelete}}/>}
         </p>
         <Input type="text" label="Type 'delete'" placeholder="delete" {...delField}/>
       </Modal.Body>
-
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
-          <Button onClick={onCancel} className="btn-outline">Cancel</Button>
-          <Button onClick={onDelete}
+          <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button onClick={submit}
             bsStyle="secondary"
             className="delete-modal-submit"
-            disabled={submitDisabled}>
-            Delete
+            disabled={invalid}>
+            <FormattedMessage id="portal.button.delete"/>
           </Button>
         </ButtonToolbar>
       </Modal.Footer>
     </Modal>
-  );
+  )
 }
 
-DeleteModal.displayName = 'ErrorModal'
 DeleteModal.propTypes = {
+  cancel: PropTypes.func,
   description: PropTypes.string,
   fields: PropTypes.object,
+  invalid: PropTypes.bool,
   itemToDelete: PropTypes.string,
-  onCancel: PropTypes.func,
-  onDelete: PropTypes.func
+  submit: PropTypes.func
 }
 
 export default reduxForm({
   fields: ['delField'],
   form: 'deleteModal',
   validate: ({ delField }) => {
-    submitDisabled = !delField || delField.toLowerCase() !== 'delete'
+    if (!delField || delField.toLowerCase() !== 'delete') {
+      return { delField: true }
+    }
   }
-})(DeleteModal)
+})(keyStrokeSupport(DeleteModal))
 

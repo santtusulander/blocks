@@ -3,6 +3,7 @@ import { Nav } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import { getSupportUrlFromParams } from '../../util/helpers'
 import PageContainer from '../../components/layout/page-container'
@@ -20,16 +21,14 @@ class Support extends React.Component {
       return (
         <div className="support-tab-container">
           <p className="text-center">
-            Please select an account
-            <br/>
-            from top left to see support tickets
+            <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
           </p>
         </div>
       )
     } else {
       return (
         <div className="support-tab-container">
-          {children && React.cloneElement(children, {...this.props})}
+          {children && React.cloneElement(children, { ...this.props })}
         </div>
       )
     }
@@ -46,18 +45,23 @@ class Support extends React.Component {
       <PageContainer>
         <div className="account-support">
           <SupportPageHeader {...this.props} />
-          {/* TODO: enable the tab navigation when the tools and documentation sections have been designed */}
-          {false && <Nav bsStyle="tabs" className="system-nav">
+          <Nav bsStyle="tabs">
             <li className="navbar">
-              <Link to={baseUrl + '/tickets'} activeClassName="active">TICKETS</Link>
+              <Link to={baseUrl + '/tickets'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
+              </Link>
             </li>
             <li className="navbar">
-              <Link to={baseUrl + '/tools'} activeClassName="active">TOOLS</Link>
+              <Link to={baseUrl + '/tools'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
+              </Link>
             </li>
             <li className="navbar">
-              <Link to={baseUrl + '/documentation'} activeClassName="active">DOCUMENTATION</Link>
+              <Link to={baseUrl + '/documentation'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
+              </Link>
             </li>
-          </Nav>}
+          </Nav>
         </div>
         <Content>
           {this.renderTabContent(children)}

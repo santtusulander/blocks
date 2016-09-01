@@ -15,7 +15,7 @@ const fakeBrands = [
 class AccountManagementSystemBrands extends React.Component {
   render() {
     return (
-      <div className="account-management-system-brands">
+      <div className="container-fluid content-container">
         <BrandList {...this.props} brands={fakeBrands} />
       </div>
     )

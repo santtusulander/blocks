@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router'
+import Immutable from 'immutable'
 
 import { getRoute } from '../../routes.jsx'
 import {
@@ -29,6 +30,8 @@ import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
 
+import { FormattedMessage } from 'react-intl'
+
 const Navigation = (props) => {
   const params = props.params,
     router = props.router
@@ -37,15 +40,15 @@ const Navigation = (props) => {
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
   return (
-    <nav className='navigation-sidebar'>
+    <nav className='navigation-sidebar text-sm'>
       <ul>
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION}>
           <li>
-            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + contentActive}>
+            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
               <IconContent />
-              <span>Content</span>
+              <span><FormattedMessage id="portal.navigation.content.text"/></span>
             </Link>
           </li>
         </IsAllowed>
@@ -53,9 +56,9 @@ const Navigation = (props) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
-              <span>Analytics</span>
+              <span><FormattedMessage id="portal.navigation.analytics.text"/></span>
             </Link>
           </li>
         </IsAllowed>
@@ -64,7 +67,7 @@ const Navigation = (props) => {
           <li>
             <Link to={getSecurityUrlFromParams(params)} activeClassName="active">
               <IconSecurity />
-              <span>Security</span>
+              <span><FormattedMessage id="portal.navigation.security.text"/></span>
             </Link>
           </li>
         </IsAllowed>
@@ -73,7 +76,7 @@ const Navigation = (props) => {
           <li>
             <Link to={getServicesUrlFromParams(params)} activeClassName="active">
               <IconServices />
-              <span>Services</span>
+              <span><FormattedMessage id="portal.navigation.services.text"/></span>
             </Link>
           </li>
         </IsAllowed>
@@ -82,7 +85,7 @@ const Navigation = (props) => {
           <li>
             <Link to={getAccountManagementUrlFromParams(params)} activeClassName="active">
               <IconAccount />
-              <span>Account</span>
+              <span><FormattedMessage id="portal.navigation.account.text"/></span>
             </Link>
           </li>
         </IsAllowed>
@@ -91,13 +94,21 @@ const Navigation = (props) => {
           <li>
             <Link to={getSupportUrlFromParams(params)} activeClassName="active">
               <IconSupport />
-              <span>Support</span>
+              <span><FormattedMessage id="portal.navigation.support.text"/></span>
             </Link>
           </li>
         </IsAllowed>
       </ul>
     </nav>
   )
+}
+
+Navigation.displayName = 'Navigation'
+Navigation.propTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
+  router: React.PropTypes.object
 }
 
 export default withRouter(Navigation)

@@ -1,12 +1,14 @@
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
 import {
   UserHasPermission,
   UserCanListAccounts,
   UserCanManageAccounts,
-  UserCanTicketAccounts
+  UserCanTicketAccounts,
+  UserCanViewAnalyticsTab,
+  UserCanViewDns
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -16,11 +18,12 @@ import AccountManagementGroups from './containers/account-management/tabs/groups
 import AccountManagementAccounts from './components/account-management/system/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
-import AccountManagementDNS from './components/account-management/system/dns'
+import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementRoles from './components/account-management/system/roles'
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
+import AnalyticsTabCacheHitRate from './containers/analytics/tabs/tab-cache-hit-rate.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
 import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
@@ -35,6 +38,7 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
+import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
@@ -59,6 +63,7 @@ const routes = {
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
+  analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabServiceProviders: 'service-providers',
   analyticsTabFileError: 'file-error',
@@ -141,21 +146,25 @@ export function getRoute(name, params) {
   return route
 }
 
+const analyticsTabs = [
+  [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
+  [PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE, routes.analyticsTabCacheHitRate, AnalyticsTabCacheHitRate],
+  [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
+  [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
+  [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
+  [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
+  [null, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
+]
+
 /* helper for creating Analytics Tab-Routes */
-function getAnalyticsTabRoutes() {
-  return (
-    <Route>
-      <IndexRedirect to={routes.analyticsTabTraffic} />
-      <Route path={routes.analyticsTabTraffic} component={AnalyticsTabTraffic} />
-      <Route path={routes.analyticsTabVisitors} component={AnalyticsTabVisitors} />
-      <Route path={routes.analyticsTabOnOffNet} component={AnalyticsTabOnOffNet} />
-      <Route path={routes.analyticsTabServiceProviders} component={AnalyticsTabServiceProviders} />
-      <Route path={routes.analyticsTabFileError} component={AnalyticsTabFileError} />
-      <Route path={routes.analyticsTabUrlReport} component={AnalyticsTabUrlReport} />
-      <Route path={routes.analyticsTabPlaybackDemo} component={AnalyticsTabPlaybackDemo} />
-    </Route>
-  )
-}
+const getAnalyticsTabRoutes = store => <Route>
+  <IndexRedirect to={routes.analyticsTabTraffic} />
+  {analyticsTabs.map(([permission, path, component], i) => <Route
+    path={path} key={i}
+    component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+  )}
+</Route>
 
 /* helper for creating Support Tab-Routes */
 function getSupportTabRoutes() {
@@ -187,13 +196,13 @@ export const getRoutes = store => {
         <IndexRedirect to="udn" />
         <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)} />
         <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes()}
+            {getAnalyticsTabRoutes(store)}
         </Route>
       </Route>
 
@@ -207,7 +216,7 @@ export const getRoutes = store => {
         </Route>
         <Route path={routes.contentProperty} component={Property} />
         <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes()}
+          {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>
@@ -274,7 +283,7 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
           <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
           <Route path={routes.accountManagementTabSystemBrands} component={AccountManagementBrands}/>
-          <Route path={routes.accountManagementTabSystemDNS} component={AccountManagementDNS}/>
+          <Route path={routes.accountManagementTabSystemDNS} component={UserCanViewDns(store)(AccountManagementDNS)}/>
           <Route path={routes.accountManagementTabSystemRoles} component={AccountManagementRoles}/>
           <Route path={routes.accountManagementTabSystemServices} component={AccountManagementServices}/>
         </Route>
@@ -297,6 +306,8 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
         </Route>
       </Route>
+
+      <Route path="*" component={NotFoundPage} />
     </Route>
   )
 }

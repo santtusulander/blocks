@@ -16,6 +16,8 @@ import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
 import TableSorter from '../components/table-sorter'
 
+import { FormattedMessage } from 'react-intl'
+
 export class Configurations extends React.Component {
   constructor(props) {
     super(props);
@@ -130,12 +132,12 @@ export class Configurations extends React.Component {
               <Select onSelect={this.handleSelectChange()}
                 value={this.state.activeFilter}
                 options={[
-                  ['all', 'Show all properties'],
-                  ['1', 'Filter 1'],
-                  ['2', 'Filter 2']]}/>
+                  ['all', <FormattedMessage id="portal.configurationList.showAll.text"/>],
+                  ['1', <FormattedMessage id="portal.configurationList.filter1.text"/>],
+                  ['2', <FormattedMessage id="portal.configurationList.filter2.text"/>]]}/>
             </ButtonToolbar>
 
-            <p>CONFIGURE</p>
+            <p><FormattedMessage id="portal.configurationList.configure.text"/></p>
             <h1>{this.props.properties.size} Properties</h1>
           </PageHeader>
 
@@ -144,22 +146,22 @@ export class Configurations extends React.Component {
               <thead>
                 <tr>
                   <TableSorter {...sorterProps} column="property">
-                    Hostname
+                    <FormattedMessage id="portal.configurationList.hostname.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="last_edited" reversed={true}>
-                    Last Edited
+                    <FormattedMessage id="portal.configurationList.lastEdited.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="last_editor">
-                    By
+                    <FormattedMessage id="portal.configurationList.by.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="status">
-                    Status
+                    <FormattedMessage id="portal.configurationList.status.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="active_version">
-                    Active Version
+                    <FormattedMessage id="portal.configurationList.activeVersion.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="parents" sortFunc="parents">
-                    Belongs to
+                    <FormattedMessage id="portal.configurationList.belongsTo.text"/>
                   </TableSorter>
                   <th></th>
                 </tr>

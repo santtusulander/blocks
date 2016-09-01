@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
+import { FormattedMessage } from 'react-intl'
+
 class ErrorModal extends React.Component {
   constructor(props) {
     super(props);
@@ -22,19 +24,19 @@ class ErrorModal extends React.Component {
       <Modal show={this.props.showErrorDialog} className="error-modal" onHide={ this.closeModal }>
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
-          <h1>An error occured</h1>
+          <h1><FormattedMessage id="portal.errorModal.errorOccured.text"/></h1>
           <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
         </Modal.Header>
 
         <Modal.Body>
-          <p>Note: Reloading may lose all unsaved changes</p>
+          <p><FormattedMessage id="portal.errorModal.reloadNote.text"/></p>
         </Modal.Body>
 
         <Modal.Footer>
           <ButtonToolbar className="pull-right">
-            <Button onClick={ this.closeModal } bsStyle="primary" >Close</Button>
-            <Button onClick={ this.reloadPage } bsStyle="primary" >Reload</Button>
+            <Button onClick={ this.closeModal } bsStyle="primary" ><FormattedMessage id="portal.button.close"/></Button>
+            <Button onClick={ this.reloadPage } bsStyle="primary" ><FormattedMessage id="portal.button.reload"/></Button>
           </ButtonToolbar>
         </Modal.Footer>
       </Modal>

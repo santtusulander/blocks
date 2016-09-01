@@ -6,62 +6,13 @@ import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import IconArrowUp from '../icons/icon-arrow-up.jsx'
 import IconArrowDown from '../icons/icon-arrow-down.jsx'
+import TruncatedTitle from '../truncated-title'
+import {
+  matchFilterChildPaths,
+  parsePolicy
+} from '../../util/policy-config'
 
-function parsePolicy(policy, path) {
-  // if this is a match
-  if(policy.has('match')) {
-    let {matches, sets} = policy.get('match').get('cases').reduce((fields, policyCase, i) => {
-      const {matches, sets} = policyCase.get(1).reduce((combinations, subcase, j) => {
-        // build up a path to the nested rules
-        const nextPath = path.concat(['match','cases',i,1,j])
-        // recurse to parse the nested policy rules
-        const {matches, sets} = parsePolicy(subcase, nextPath)
-        // add any found matches / sets to the list
-        combinations.matches = combinations.matches.concat(matches)
-        combinations.sets = combinations.sets.concat(sets)
-        return combinations
-      }, {matches: [], sets: []})
-      // add any found matches / sets to the list
-      fields.matches = fields.matches.concat(matches)
-      fields.sets = fields.sets.concat(sets)
-      return fields
-    }, {matches: [], sets: []})
-    // add info about this match to the list of matches
-    const match = policy.get('match')
-    const fieldDetail = match.get('field_detail')
-    const caseKey = match.get('cases').get(0).get(0)
-    matches.push({
-      containsVal: fieldDetail ? caseKey : '',
-      field: match.get('field'),
-      fieldDetail: fieldDetail,
-      values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
-      path: path.concat(['match'])
-    })
-    return {
-      matches: matches,
-      sets: sets
-    }
-  }
-  // if this is a set
-  else if(policy.has('set')) {
-    // sets are the deepest level, so just return data about the sets
-    return {
-      matches: [],
-      sets: policy.get('set').keySeq().toArray().map((key) => {
-        return {
-          setkey: key,
-          path: path.concat(['set', key])
-        }
-      })
-    }
-  }
-  else {
-    return {
-      matches: [],
-      sets: []
-    }
-  }
-}
+import { FormattedMessage } from 'react-intl'
 
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
@@ -88,13 +39,15 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   addMatch(deepestMatch) {
     return e => {
       e.preventDefault()
-      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
       let newMatch = Immutable.fromJS([
         {match: {field: null, cases: [['',[]]]}}
       ])
       if(currentSet) {
-        newMatch = newMatch.setIn([0, 'match', 'cases', 0, 1], currentSet)
+        const newSetPath = [0, 'match'].concat(childPath)
+        newMatch = newMatch.setIn(newSetPath, currentSet)
       }
       this.props.changeValue([],
         this.props.config.setIn(
@@ -108,7 +61,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   addAction(deepestMatch) {
     return e => {
       e.preventDefault()
-      const newPath = deepestMatch.path.concat(['cases', 0, 1])
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const newPath = deepestMatch.path.concat(childPath)
       const currentSets = this.props.config.getIn(newPath)
       const newSets = currentSets.push(Immutable.fromJS({set: {"": {}}}))
       this.props.changeValue([],
@@ -206,14 +160,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_header', 'Response Header']
         ] */}
         <Modal.Header>
-          <h1>Add Policy</h1>
+          <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
           <p>
             {this.props.location.query.name}
           </p>
         </Modal.Header>
         <Modal.Body>
 
-          <h3>Rule Name</h3>
+          <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
 
           <Input type="text" id="configure__edge__add-cache-rule__rule-name"
             value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
@@ -221,7 +175,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col sm={8}>
-              <h3>Match Conditions</h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
             <Col sm={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -241,27 +195,36 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               if(Immutable.fromJS(match.path).equals(Immutable.fromJS(this.props.activeMatchPath))) {
                 active = true
               }
+              let filterText = ''
+              if(match.filterType === 'exists') {
+                filterText = 'Exists'
+              }
+              else if(match.filterType === 'does_not_exist') {
+                filterText = 'Does not exist'
+              }
+              else if(match.filterType === 'contains') {
+                filterText = `Contains ${match.containsVal}`
+              }
+              else if(match.filterType === 'does_not_contain') {
+                filterText = `Does not contain ${match.containsVal}`
+              }
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <p>{match.field}: {
-                          match.fieldDetail ?
-                            match.fieldDetail :
-                            match.values.join(', ')
-                          }
-                      </p>
-                      : <p>Choose condition</p>
+                      <div className="condition-name">
+                        {match.field}&nbsp;:&nbsp;
+                        <TruncatedTitle
+                          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
+                      </div>
+                      : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
                   <Col xs={3}>
                     <p>
-                      {match.containsVal && match.containsVal !== '.*' ?
-                        `Contains ${match.containsVal}` :
-                        'Exists'
-                      }
+                      {filterText}
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
@@ -278,7 +241,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col xs={8}>
-              <h3>Actions</h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
@@ -329,10 +292,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="primary" onClick={this.cancelChanges}>
-              Cancel
+              <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.props.hideAction}>
-              Add
+              <FormattedMessage id="portal.button.add"/>
             </Button>
           </ButtonToolbar>
 

@@ -5,6 +5,8 @@ import { reduxForm, getValues } from 'redux-form'
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
+import { FormattedMessage } from 'react-intl'
+
 /**
  * When to display errorTooltip
  * @param attributes
@@ -71,7 +73,7 @@ const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
         {index === inputs.length - 1 &&
         <ButtonToolbar className="pull-right">
           <UDNButton disabled={invalid} onClick={() => save(values)}>
-            SAVE
+            <FormattedMessage id="portal.button.SAVE"/>
           </UDNButton>
           <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
             <IconClose/>

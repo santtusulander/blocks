@@ -11,16 +11,32 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabServiceProviders extends React.Component {
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if(changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location){
+  fetchData(params, filters, location, hostConfiguredName){
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     const onOffOpts = Object.assign({}, fetchOpts)
@@ -31,12 +47,6 @@ class AnalyticsTabServiceProviders extends React.Component {
     onOffTodayOpts.endDate = moment().utc().format('X')
 
     this.props.trafficActions.fetchServiceProviders(onOffOpts)
-  }
-
-  export() {
-    //There is no valid exporter for SP report yet
-    //exporters.serviceProviders(this.props.serviceProviders.get('detail'))
-    console.log('No valid exporter for SP report!')
   }
 
   render(){
@@ -50,6 +60,7 @@ class AnalyticsTabServiceProviders extends React.Component {
 }
 
 AnalyticsTabServiceProviders.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -65,6 +76,7 @@ AnalyticsTabServiceProviders.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
     filters: state.filters.get('filters')
@@ -77,4 +89,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabServiceProviders);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabServiceProviders);

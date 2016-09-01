@@ -8,18 +8,18 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
 
-import AnalyticsViewControl from '../../components/analytics/analytics-view-control.jsx'
-import AnalyticsFilters from '../../components/analytics/analytics-filters.jsx'
+import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
+import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
+import AnalyticsFilters from '../../components/analytics/analytics-filters'
 
 //layout
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
 
 import { getTabName } from '../../util/helpers.js'
-import { createCSVExporters } from '../../util/analysis-csv-export'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
+import analyticsTabConfig from '../../constants/analytics-tab-config'
 
 
 import './analytics-container.scss'
@@ -50,12 +50,14 @@ class AnalyticsContainer extends React.Component {
 
   fetchActiveItems(props) {
     const {
-      params: { brand, account, group },
+      params: { brand, account, group, property },
       accountActions,
-      groupActions } = props
+      groupActions,
+      propertyActions } = props
     Promise.all([
       account && accountActions.fetchAccount(brand, account),
-      group && groupActions.fetchGroup(brand, account, group)
+      group && groupActions.fetchGroup(brand, account, group),
+      property && propertyActions.fetchHost(brand, account, group, property)
     ])
   }
 
@@ -98,23 +100,14 @@ class AnalyticsContainer extends React.Component {
       location: { pathname }
     } = this.props
 
-    /* TODO: should  be moved to consts ? */
-    const availableFilters = Immutable.fromJS({
-      'traffic': ['date-range', 'service-type'],
-      'visitors': ['date-range'],
-      'on-off-net': ['date-range', 'on-off-net', 'service-provider'],
-      'service-providers': ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
-      'file-error': ['date-range', 'error-code', 'service-type'],
-      'url-report': ['date-range', 'error-code', 'service-type'],
-      'playback-demo': ['video']
-    })
+    const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
 
     return (
       <AnalyticsFilters
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
-        showFilters={availableFilters.get(getTabName(pathname))}
+        showFilters={thisTabConfig.get('filters')}
       />
     )
   }
@@ -132,12 +125,11 @@ class AnalyticsContainer extends React.Component {
     }
 
     return (
-      <div className='analytics-tab-container'>
+      <div className='container-fluid content-container'>
         {
           /* Render tab -content */
           children && React.cloneElement(children, {
             params: params,
-            ref: 'tab',
             filters: filters,
             location: location
           } )
@@ -157,30 +149,26 @@ class AnalyticsContainer extends React.Component {
       filters,
       activeAccount,
       activeGroup,
-      location: { pathname, query: { property } }
+      location: { pathname }
     } = this.props
-    const exportCSV = () => {
-      const fileNamePart = (type, item) => params[type] ? ` - ${item.get('name')}` : ''
-      const fileName = `${activeAccount.get('name')}${fileNamePart('group', activeGroup)}${property ? ` - ${property}` : ''}`
-      this.refs.tab.getWrappedInstance().export(createCSVExporters(fileName))
-    }
     return (
       <PageContainer className='analytics-container'>
         <Content>
-          <PageHeader>
-            <AnalyticsViewControl
-              activeAccount={activeAccount}
-              activeGroup={activeGroup}
-              exportCSV={exportCSV}
-              brands={brands}
-              accounts={accounts}
-              groups={groups}
-              properties={properties}
-              params={params}
-              location={this.props.location}
-              activeTab={getTabName(pathname)}
-            />
-          </PageHeader>
+          <AnalyticsViewControl
+            activeAccount={activeAccount}
+            activeGroup={activeGroup}
+            brands={brands}
+            accounts={accounts}
+            groups={groups}
+            properties={properties}
+            params={params}
+            location={this.props.location}
+            activeTab={getTabName(pathname)}
+          />
+          <AnalyticsTabControl
+            params={params}
+            location={this.props.location}
+          />
           {this.renderFilters()}
           {this.renderContent(children, filters)}
         </Content>
@@ -223,7 +211,6 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    activeHost: state.host.get('activeHost'),
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),

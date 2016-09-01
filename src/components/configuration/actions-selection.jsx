@@ -2,6 +2,8 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import { FormattedMessage } from 'react-intl'
+
 class ActionsSelection extends React.Component {
   constructor(props) {
     super(props);
@@ -24,69 +26,69 @@ class ActionsSelection extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Choose Actions</h1>
-          <p>Select the action type</p>
+          <h1><FormattedMessage id="portal.policy.edit.actionSelection.chooseActions.text"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.actionSelection.selecetActionType.text"/></p>
         </Modal.Header>
         <Modal.Body>
           <ul className="condition-selection list-unstyled">
             <li>
               <a href="#" onClick={this.setSetKey('cache_control')}>
-                Cache
+                <FormattedMessage id="portal.policy.edit.actionSelection.cache.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setSetKey('cache_name')}>
-                Cache Key - Query String
+                <FormattedMessage id="portal.policy.edit.actionSelection.cacheKeyQueryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setSetKey('header')}>
-                Header
+                <FormattedMessage id="portal.policy.edit.actionSelection.header.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Redirection
+                <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Origin Hostname
+                <FormattedMessage id="portal.policy.edit.actionSelection.originHostname.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Compression
+                <FormattedMessage id="portal.policy.edit.actionSelection.compression.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Path
+                <FormattedMessage id="portal.policy.edit.actionSelection.path.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Query String
+                <FormattedMessage id="portal.policy.edit.actionSelection.queryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Remove Vary
+                <FormattedMessage id="portal.policy.edit.actionSelection.removeVary.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                Allow/Block
+                <FormattedMessage id="portal.policy.edit.actionSelection.allowBlock.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                POST Support
+                <FormattedMessage id="portal.policy.edit.actionSelection.postSupport.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
-                CORS
+                <FormattedMessage id="portal.policy.edit.actionSelection.cors.text"/>
               </a>
             </li>
           </ul>

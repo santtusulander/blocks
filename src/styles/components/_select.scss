@@ -2,8 +2,6 @@
 // ======
 
 .dropdown-select {
-  min-width: 300px;
-
   &__option-icon {
     display: flex;
     width: 35px;
@@ -28,10 +26,6 @@
     align-items: center;
   }
 
-  @include md {
-    min-width: 250px;
-  }
-
   .form-group & {
     min-width: 0;
   }
@@ -39,14 +33,6 @@
   &.input-select {
     width: 100%;
     max-width: 900px;
-
-    .dropdown-toggle {
-      height: $bar-height;
-
-      @include md {
-        height: $md-bar-height;
-      }
-    }
   }
 
   .dropdown-menu {
@@ -58,41 +44,6 @@
         flex: 1;
         align-items: center;
       }
-    }
-  }
-
-  .dropdown-toggle {
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      width: 100%;
-      text-align: left;
-      box-shadow: none;
-    }
-
-    > .icon {
-      top: 0;
-      float: right;
-      width: 10px;
-      height: 15px;
-      margin-top: ($btn-height / 2) - 7.5px;
-      margin-right: 0;
-      margin-left: 15px;
-      border: 0;
-      fill: inherit;
-      stroke: inherit;
-
-      @include md {
-        margin-top: ($md-btn-height / 2) - 7.5px;
-      }
-    }
-  }
-
-  &.open .dropdown-toggle {
-    &,
-    &:hover {
-      box-shadow: none;
     }
   }
 }

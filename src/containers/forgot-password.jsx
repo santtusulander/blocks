@@ -8,6 +8,8 @@ import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 
+import { FormattedMessage } from 'react-intl'
+
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -62,7 +64,7 @@ export class ForgotPassword extends React.Component {
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
           <div className="logo-ericsson">Ericsson</div>
-          <h1>Forgot Password</h1>
+          <h1><FormattedMessage id="portal.forgotPassword.forgotPassword.text"/></h1>
           <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
         </Modal.Header>
@@ -71,7 +73,7 @@ export class ForgotPassword extends React.Component {
 
           {this.state.submitted ?
             <div className="login-info">
-              <p>You will receive instructions email shortly to reset your password.</p>
+              <p><FormattedMessage id="portal.forgotPassword.instructions.text"/></p>
               <Link to={`/login`} className="btn btn-primary pull-right">
                 OK
               </Link>
@@ -80,7 +82,7 @@ export class ForgotPassword extends React.Component {
             <form onSubmit={this.onSubmit}>
 
               <div className="login-info">
-                <p>Enter your email address to receive instructions to reset your password.</p>
+                <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
               </div>
 
               {this.state.emailError ?
@@ -104,7 +106,7 @@ export class ForgotPassword extends React.Component {
                 <Col xs={12}>
                   <Button type="submit" bsStyle="primary" className="pull-right"
                     disabled={this.props.fetching}>
-                    {this.props.fetching ? 'Submitting...' : 'Submit'}
+                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
                   </Button>
                 </Col>
               </Row>

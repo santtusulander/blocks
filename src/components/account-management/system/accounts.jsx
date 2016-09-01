@@ -20,11 +20,12 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
-  NAME_VALIDATION_REGEXP,
-  NAME_VALIDATION_REQUIREMENTS
+  NAME_VALIDATION_REGEXP
 } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
+
+import {FormattedMessage, injectIntl} from 'react-intl';
 
 const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
 
@@ -64,7 +65,19 @@ class AccountList extends Component {
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: <div>{['Account name is invalid.', <div key={name}>{NAME_VALIDATION_REQUIREMENTS}</div>]}</div>
+          errorText:
+          <div>
+          {[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>,
+            <div key={name}>
+              <div style={{marginTop: '0.5em'}}>
+                <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                <ul>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                </ul>
+              </div>
+            </div>]}
+          </div>
         }
       ]
     }
@@ -80,7 +93,7 @@ class AccountList extends Component {
 
   getInlineAddFields() {
     return [
-      [ { input: <Input id='name' placeholder="Account name" type="text"/> } ],
+      [ { input: <Input id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.accountName.placeholder.text'})} type="text"/> } ],
       [ { input: <SelectWrapper
             numericValues={true}
             id='provider_type'
@@ -130,8 +143,8 @@ class AccountList extends Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.addingNew) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the Account(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.title'/>,
+        content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
         buttons:  [
           <UDNButton key="button-1" onClick={() => {
             this.isLeaving = true
@@ -172,7 +185,7 @@ class AccountList extends Component {
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
-      <div>
+      <div className="container-fluid content-container">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -187,7 +200,7 @@ class AccountList extends Component {
               placeholder="Search"
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
-            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={this.toggleInlineAdd}>
+            <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
               <IconAdd/>
             </Button>
           </Col>
@@ -195,11 +208,11 @@ class AccountList extends Component {
         <table className="table table-striped cell-text-left">
           <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%">ACCOUNT NAME</TableSorter>
-            <TableSorter {...sorterProps} column="provider_type_label" width="15%">TYPE</TableSorter>
-            <TableSorter {...sorterProps} column="id" width="10%">ID</TableSorter>
-            <TableSorter {...sorterProps} column="brand" width="15%">BRAND</TableSorter>
-            <TableSorter {...sorterProps} column="services" width="30%">SERVICES</TableSorter>
+            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.list.accountName.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="provider_type_label" width="15%"><FormattedMessage id='portal.account.list.type.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="services" width="30%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
             <th width="8%"/>
           </tr>
           </thead>
@@ -231,8 +244,8 @@ class AccountList extends Component {
             <tr id="empty-msg">
               <td colSpan="6">
                 {this.state.search.length > 0 ?
-                  `No accounts found with the search term ${this.state.search}` :
-                  "No accounts found"}
+                  <FormattedMessage id='portal.account.list.searchWithParams.empty.text' values={{searchTerm: this.state.search}}/> :
+                  <FormattedMessage id='portal.account.list.search.empty.text'/>}
               </td>
             </tr>}
           </tbody>
@@ -248,6 +261,7 @@ AccountList.propTypes = {
   addAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
+  intl: PropTypes.object,
   params: PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -272,4 +286,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountList))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountList)))

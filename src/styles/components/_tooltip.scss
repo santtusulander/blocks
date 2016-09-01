@@ -3,16 +3,21 @@
 
 .chart-tooltip {
   position: absolute;
-  z-index: 3;
+  z-index: 1040;
   padding: 10px 15px;
   white-space: nowrap;
   opacity: 1;
   transition: opacity 500ms;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: rgba($black, 0.8);
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
+    box-shadow: 0 5px 10px rgba($black, 0.2);
   }
 
   &.offset-top {

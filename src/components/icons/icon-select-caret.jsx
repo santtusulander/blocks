@@ -1,23 +1,21 @@
 import React from 'react'
-
 import Icon from '../icon.jsx'
 
-class IconSelectCaret extends React.Component {
-  render() {
-    return (
-      <Icon width="10" height="15">
-        <g>
-          <polygon points="0,10 5,15 10,10"/>
-          <polygon points="10,5 5,0 0,5"/>
-        </g>
-      </Icon>
-    );
-  }
+const IconSelectCaret = (props) => {
+  const {className, height, width} = props
+  return (
+    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+      <g>
+        <path d="M23,20l-5,5l-5-5H23z M23,17l-5-5l-5,5H23z"/>
+      </g>
+    </Icon>
+  )
 }
 
-IconSelectCaret.displayName = 'IconSelectCaret'
 IconSelectCaret.propTypes = {
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  height: React.PropTypes.number,
+  width: React.PropTypes.number
 }
 
 export default IconSelectCaret

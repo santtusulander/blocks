@@ -43,6 +43,7 @@ $screen-xl-min: 2500px;
 // Base
 // ====
 
+$base-font-size: 10px;
 $font-size: 20px;
 $md-font-size: 16px;
 $sm-font-size: 15px;
@@ -51,18 +52,18 @@ $font-size-sm: 16px;
 $md-font-size-sm: 13px;
 $sm-font-size-sm: 12px;
 
-$bar-height: 80px;
+$bar-height: 36px;
 $md-bar-height: 60px;
 $sm-bar-height: 50px;
 
-$btn-height: 60px;
-$md-btn-height: 40px;
+$btn-height: 36px;
+$md-btn-height: 36px;
 
-$btn-min-width: 180px;
+$btn-min-width: 120px;
 $md-btn-min-width: 120px;
 $sm-btn-min-width: 100px;
 
-$btn-sm-height: 50px;
+$btn-sm-height: 40px;
 $md-btn-sm-height: 40px;
 
 $header-btn-height: 30px;
@@ -70,7 +71,7 @@ $md-header-btn-height: 30px;
 
 $dropdown-padding: 24px;
 
-$form-group-padding: 25px;
+$form-group-padding: 12px;
 $md-form-group-padding: 15px;
 $form-label-margin: 15px;
 
@@ -87,8 +88,6 @@ $sm-sidebar-width: 300px;
 
 $page-header-height: 110px;
 $md-page-header-height: 90px;
-$page-header-padding-top: 30px;
-$page-header-padding-bottom: 10px;
 
 
 // Containers
@@ -130,6 +129,8 @@ $action-modal-width: 800px;
 $md-action-modal-width: 640px;
 
 $footer-height: 60px;
+
+$caret-width-base: 6px;
 
 
 // Print

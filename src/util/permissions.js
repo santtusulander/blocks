@@ -31,6 +31,8 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_unique_visitors'])
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_url'])
+permissionMapping[PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE] =
+  (role) => role.getIn(['permissions', 'ui', 'analytics_daily_cache_hit_rate'])
 
 // Misc Functionality
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
@@ -47,6 +49,26 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
+
+// Account Permissions
+permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+
+
+// DNS permissions
+// Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
+
+permissionMapping[PERMISSIONS.VIEW_DNS] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'list', 'allowed']) && role.getIn(['permissions', 'north', 'rr', 'list', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_ZONE] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_ZONE] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_RECORD] =
+  (role) => role.getIn(['permissions', 'north', 'rr', 'create', 'allowed'])
 
 /**
  * Determine if a user has a permission.

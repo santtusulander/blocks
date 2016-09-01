@@ -28,7 +28,7 @@ rules:
   no-color-keywords: 2
 
   # Prefer // comments over /* ... */
-  no-css-comments: 2
+  no-css-comments: 0
 
   # Reports !debug statements
   no-debug: 1

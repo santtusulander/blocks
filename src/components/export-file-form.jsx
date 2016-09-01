@@ -9,6 +9,8 @@ import {
 
   } from 'react-bootstrap'
 
+import { FormattedMessage } from 'react-intl'
+
 const EXPORT_TYPE_PDF = 'export_pdf'
 const EXPORT_TYPE_CSV = 'export_csv'
 
@@ -67,8 +69,8 @@ export class ExportFileForm extends React.Component {
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={ this.onCancel }>Cancel</Button>
-          <Button type="submit" bsStyle="primary" onClick={ this.onDownload(this.state.fileType) }>Download</Button>
+          <Button className="btn-outline" onClick={ this.onCancel }><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button type="submit" bsStyle="primary" onClick={ this.onDownload(this.state.fileType) }><FormattedMessage id="portal.button.download"/></Button>
         </ButtonToolbar>
 
       </div>

@@ -3,7 +3,9 @@ import numeral from 'numeral'
 import { getRoute } from '../routes.jsx'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
+import analyticsTabConfig from '../constants/analytics-tab-config.js'
 import filesize from 'filesize'
+import checkPermissions from './permissions'
 
 const BYTE_BASE = 1000
 
@@ -56,10 +58,12 @@ export function formatTime(milliseconds) {
   milliseconds  = milliseconds || 0
   let formatted = numeral(milliseconds).format('0,0') + ' ms'
 
-  if(milliseconds >= 1000) {
+  if(milliseconds >= 60000) {
+    formatted = numeral(milliseconds / 60000).format('0,0') + ' m'
+  }
+  else if(milliseconds >= 1000) {
     formatted = numeral(milliseconds / 1000).format('0,0') + ' s'
   }
-
   return formatted
 }
 
@@ -204,16 +208,20 @@ export function getContentUrl(linkType, val, params) {
   return url
 }
 
-export function getAnalyticsUrlFromParams(params) {
+export function getAnalyticsUrlFromParams(params, currentUser, roles) {
+  const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
+    roles, currentUser, tab.get('permission')
+  ))
+  const landingTab = allowedTab ? `/${allowedTab.get('key')}` : ''
   const { brand, account, group, property } = params,
     baseUrl = getRoute('analytics')
 
   if (property) {
-    return `${baseUrl}/${brand}/${account}/${group}/${property}`
+    return `${baseUrl}/${brand}/${account}/${group}/${property}${landingTab}`
   } else if (group) {
-    return `${baseUrl}/${brand}/${account}/${group}`
+    return `${baseUrl}/${brand}/${account}/${group}${landingTab}`
   } else if (account) {
-    return `${baseUrl}/${brand}/${account}`
+    return `${baseUrl}/${brand}/${account}${landingTab}`
   } else if (brand) {
     return `${baseUrl}/${brand}`
   } else {
@@ -374,6 +382,7 @@ export function filterAccountsByUserName (accounts) {
  * Check if empty, check if custom error condition is true per field
  * @param {Object} fields
  * @param {Object} customConditions
+ * returns {Object} errors
  */
 export function checkForErrors(fields, customConditions) {
   let errors = {}
@@ -383,15 +392,17 @@ export function checkForErrors(fields, customConditions) {
     if(isEmptyArray || field === '') {
       errors[fieldName] = 'Required'
     }
-    else if (Array.isArray(customConditions[fieldName])) {
-      for(const customCondition in customConditions[fieldName]) {
-        if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
-          errors[fieldName] = customConditions[fieldName][customCondition].errorText
+    else if (customConditions) {
+      if(Array.isArray(customConditions[fieldName])) {
+        for(const customCondition in customConditions[fieldName]) {
+          if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
+            errors[fieldName] = customConditions[fieldName][customCondition].errorText
+          }
         }
       }
-    }
-    else if(customConditions[fieldName] && customConditions[fieldName].condition) {
-      errors[fieldName] = customConditions[fieldName].errorText
+      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
+        errors[fieldName] = customConditions[fieldName].errorText
+      }
     }
   }
   return errors

@@ -163,8 +163,10 @@ class ContentItemChart extends React.Component {
     const tooltip = (<Tooltip className="content-item-chart-tooltip"
       id={'tooltip-' + (this.props.id)}>
         {this.state.showDiffLegend ?
-          <DifferenceTooltip/>
+          <DifferenceTooltip
+            name={this.props.name}/>
           : <TrafficTooltip
+            name={this.props.name}
             date={tooltipDate}
             avgTransfer={avgTransfer}
             maxTransfer={maxTransfer}
@@ -291,24 +293,24 @@ class ContentItemChart extends React.Component {
             <ButtonToolbar>
               {this.props.analyticsLink &&
                 <Link to={this.props.analyticsLink}
-                  className="btn btn-sm btn-primary btn-icon btn-round invisible">
+                  className="btn btn-primary btn-icon btn-round invisible">
                   <IconChart/>
                 </Link>
               }
               {this.props.configurationLink &&
                 <Link to={this.props.configurationLink}
-                  className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
               }
               {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
-                  className="btn btn-sm edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </a>
               }
               <Link to="/starburst-help"
-                className="btn btn-sm show-help btn-primary btn-icon btn-round invisible">
+                className="btn show-help btn-primary btn-icon btn-round invisible">
                 <IconQuestionMark/>
               </Link>
             </ButtonToolbar>

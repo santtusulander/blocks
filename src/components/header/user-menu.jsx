@@ -4,6 +4,8 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import Select from '../select'
 
+import { FormattedMessage } from 'react-intl' 
+
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
   return (
     <Dropdown id="user-menu" pullRight={true}
@@ -33,8 +35,8 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                           onSelect={handleThemeChange}
                           value={theme}
                           options={[
-                            ['dark', 'Ericsson Dark Theme'],
-                            ['light', 'Ericsson Light Theme']]}/>
+                            ['dark', <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>],
+                            ['light', <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>]]}/>
                 </div>
               </div>
             </li>
@@ -42,7 +44,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
         </li>
         <li className="bottom-item" >
           <a id="log-out" href="#" onClick={logout}>
-            <div className="user-menu-item">Log Out</div>
+            <div className="user-menu-item"><FormattedMessage id="portal.header.menu.logout.text"/></div>
           </a>
         </li>
       </Dropdown.Menu>

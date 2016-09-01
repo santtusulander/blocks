@@ -13,7 +13,11 @@ import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
 
+import {IntlProvider} from 'react-intl';
+
 import './styles/style.scss'
+
+import TRANSLATED_MESSAGES from './locales/en.js'
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware
@@ -24,7 +28,7 @@ const store = createStoreWithMiddleware(stateReducer)
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.timeout = 30000
+axios.defaults.timeout = 60000
 
 // Handle 401s with a redirect to login page
 // Handle 403s with a InfoDialod & display message
@@ -57,9 +61,11 @@ axios.interceptors.response.use(function (response) {
 });
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router onUpdate={LogPageView} history={browserHistory}>
-      {getRoutes(store)}
-    </Router>
-  </Provider>, document.getElementById('content')
+  <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
+    <Provider store={store}>
+      <Router onUpdate={LogPageView} history={browserHistory}>
+        {getRoutes(store)}
+      </Router>
+    </Provider>
+  </IntlProvider>, document.getElementById('content')
 );

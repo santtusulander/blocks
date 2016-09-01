@@ -1,28 +1,33 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
-const ContentDifferenceTooltip = () => <div>
+import { FormattedMessage } from 'react-intl';
+
+const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">
-    <b>Bandwidth</b> vs 28 days ago
+    <h3>{name}</h3>
+    <FormattedMessage id="portal.content.tooltip.bandwithVsLast28.text" values={{bandwith: <b><FormattedMessage id="portal.content.tooltip.bandwith.text"/></b>}}/>
   </div>
   <div>
-    Higher
+    <FormattedMessage id="portal.content.tooltip.higher.text"/>
     <div className="pull-right difference-legend above-avg" />
   </div>
   <div>
-    Same
+    <FormattedMessage id="portal.content.tooltip.same.text"/>
     <div className="pull-right difference-legend avg" />
   </div>
   <div>
-    Lower
+    <FormattedMessage id="portal.content.tooltip.lower.text"/>
     <div className="pull-right difference-legend below-avg" />
   </div>
   <div>
-    Comparison Data Missing
+    <FormattedMessage id="portal.content.tooltip.compDataMissing.text"/>
     <div className="pull-right difference-legend no-data" />
   </div>
 </div>
 
 ContentDifferenceTooltip.displayName = 'ContentDifferenceTooltip'
-ContentDifferenceTooltip.propTypes = {}
+ContentDifferenceTooltip.propTypes = {
+  name: PropTypes.string
+}
 
 module.exports = ContentDifferenceTooltip

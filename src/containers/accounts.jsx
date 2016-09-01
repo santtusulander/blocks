@@ -14,6 +14,8 @@ import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
+import { FormattedMessage } from 'react-intl';
+
 export class Accounts extends React.Component {
   constructor(props) {
     super(props);
@@ -73,7 +75,7 @@ export class Accounts extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
-        headerText={{ summary: 'BRAND CONTENT SUMMARY', label: 'All Accounts' }}
+        headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: <FormattedMessage id='portal.brand.allAccounts.message'/> }}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}

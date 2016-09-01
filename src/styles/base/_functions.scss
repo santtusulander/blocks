@@ -1,0 +1,24 @@
+// Sass Functions
+// ==============
+
+/**
+* Given a pixel number and an optional context, calculate a size in rem.
+*
+* @param  {number} $size    A unitless number to convert to a size in rem
+* @param  {number} $context A unitless number that acts as the divisor
+* @return {number}          The size in rem
+*/
+@function rem($size, $context: $base-font-size) {
+  @return ($size / $context) * 1rem;
+}
+
+/**
+* Given a pixel number and an optional context, calculate a size in em.
+*
+* @param  {number} $size    A unitless number to convert to a size in em
+* @param  {number} $context A unitless number that acts as the divisor
+* @return {number}          The size in em
+*/
+@function em($size, $context: $base-font-size) {
+  @return ($size / $context) * 1em;
+}

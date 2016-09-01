@@ -1,11 +1,11 @@
 import React from 'react'
 
-// import UserList from '../user-list.jsx'
+import { FormattedMessage } from 'react-intl';
 
 class AccountManagementSystemUsers extends React.Component {
   render() {
     return (
-      <div className="account-management-system-users">
+      <div className="container-fluid content-container">
         {/* Not in 0.8
           <UserList
           users={fakeUsers}
@@ -13,9 +13,7 @@ class AccountManagementSystemUsers extends React.Component {
           deleteUser={() => console.log('delete user')}
           editUser={() => console.log('edit user')}/>*/}
         <p className="text-center">
-          Please select an account
-          <br/>
-          from top left to see users
+          <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
         </p>
       </div>
 

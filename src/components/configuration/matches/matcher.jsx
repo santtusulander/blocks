@@ -4,16 +4,22 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
+import {
+  matchFilterChildPaths,
+  getMatchFilterType
+} from '../../../util/policy-config'
+
+import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class Matcher extends React.Component {
   constructor(props) {
     super(props);
     const fieldDetail = props.match.get('field_detail')
-    const caseKey = props.match.get('cases').get(0).get(0)
+    const caseKey = props.match.getIn(['cases', 0, 0])
     const containsVal = fieldDetail ? caseKey : ''
 
     this.state = {
-      activeFilter: containsVal && containsVal !== '.*' ? 'contains' : 'exists',
+      activeFilter: getMatchFilterType(props.match),
       containsVal: containsVal,
       val: fieldDetail ? fieldDetail : caseKey
     }
@@ -22,6 +28,18 @@ class Matcher extends React.Component {
     this.handleMatchesChange = this.handleMatchesChange.bind(this)
     this.handleContainsValChange = this.handleContainsValChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
+  }
+  componentWillReceiveProps(nextProps) {
+    if(!Immutable.is(nextProps.match, this.props.match)) {
+      const fieldDetail = nextProps.match.get('field_detail')
+      const caseKey = nextProps.match.getIn(['cases', 0, 0])
+      const containsVal = fieldDetail ? caseKey : ''
+      this.setState({
+        activeFilter: getMatchFilterType(nextProps.match),
+        containsVal: containsVal,
+        val: fieldDetail ? fieldDetail : caseKey
+      })
+    }
   }
   handleValChange(e) {
     this.setState({val: e.target.value})
@@ -38,35 +56,76 @@ class Matcher extends React.Component {
   saveChanges() {
     // matches with a contain value put val in field_detail and use containsVal
     // as child key
+    const children = this.props.match
+      .getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
+    let newMatch = this.props.match
     if(this.props.contains) {
-      // for now the api only supports Contains or Exists
-      const caseKey = this.state.activeFilter === 'contains' ?
-        this.state.containsVal :
-        '.*'
-      const newMatch = this.props.match
-        .set('field_detail', this.state.val)
-        .setIn(['cases', 0, 0], caseKey)
-      this.props.changeValue(this.props.path, newMatch)
+      newMatch = newMatch.set('field_detail', this.state.val)
+      switch (this.state.activeFilter) {
+        case 'exists':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              ['.*', children]
+            ]))
+            .delete('default')
+          break
+        case 'contains':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.containsVal, children]
+            ]))
+            .delete('default')
+          break
+        case 'does_not_exist':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              ['.*', []]
+            ]))
+            .set('default', children)
+          break
+        case 'does_not_contain':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.containsVal, []],
+              ['.*', children]
+            ]))
+            .delete('default')
+          break
+      }
     }
     // if there's no contain value, use val as the child key
     else {
-      this.props.changeValue(
-        this.props.path.concat(['cases', 0, 0]),
-        this.state.val
-      )
+      newMatch = newMatch.delete('field_detail')
+      switch (this.state.activeFilter) {
+        case 'exists':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.val, children]
+            ]))
+            .delete('default')
+          break
+        case 'does_not_exist':
+          newMatch = newMatch
+            .set('cases', Immutable.fromJS([
+              [this.state.val, []]
+            ]))
+            .set('default', children)
+          break
+      }
     }
+    this.props.changeValue(this.props.path, newMatch)
     this.props.close()
   }
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
       this.state.activeFilter === 'does_not_contain';
     let matchOpts = [
-      ['exists', 'Exists'],
-      ['does_not_exist', 'Does not exist']
+      ['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>],
+      ['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>]
     ]
     if(this.props.contains) {
-      matchOpts.push(['contains', 'Contains'])
-      matchOpts.push(['does_not_contain', 'Does not contain'])
+      matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
+      matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
     }
     return (
       <div>
@@ -76,7 +135,7 @@ class Matcher extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="text" label="Name"
+          <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
             placeholder={`Enter ${this.props.name} Name`}
             id="matches_val"
             value={this.state.val}
@@ -127,4 +186,4 @@ Matcher.propTypes = {
   path: React.PropTypes.array
 }
 
-module.exports = Matcher
+module.exports = injectIntl(Matcher)

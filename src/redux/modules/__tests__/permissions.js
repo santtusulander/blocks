@@ -9,24 +9,20 @@ import Immutable from 'immutable'
 
 describe('Permissions Module', () => {
     it('should handle permissionsFetchSuccess', () => {
-      const oldState = Immutable.fromJS({
-        permissions: []
-      })
-      const newState = permissionsFetchSuccess(oldState, { payload: {data: [1,2] } })
+      const oldState = Immutable.fromJS({})
+      const newState = permissionsFetchSuccess(oldState, { payload: {aaa: [1,2] } })
       const expectedState = Immutable.fromJS({
-        permissions: [1,2]
+        aaa: [1,2]
       })
       expect( Immutable.is(newState, expectedState)).toBeTruthy()
     })
 
     it('should handle permissionsFetchFailure', () => {
       const oldState = Immutable.fromJS({
-        permissions: [1,2]
+        aaa: [1,2]
       })
       const newState = permissionsFetchFailure(oldState)
-      const expectedState = Immutable.fromJS({
-        permissions: []
-      })
+      const expectedState = Immutable.fromJS({})
       expect( Immutable.is(newState, expectedState)).toBeTruthy()
     })
 })

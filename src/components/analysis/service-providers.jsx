@@ -7,6 +7,8 @@ import AnalysisStackedByGroup from './stacked-by-group'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
+import { FormattedMessage } from 'react-intl'
+
 class AnalysisServiceProviders extends React.Component {
   constructor(props) {
     super(props);
@@ -87,7 +89,7 @@ class AnalysisServiceProviders extends React.Component {
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-service-providers">
-        <h3>TOTAL TRAFFIC BY SERVICE PROVIDER</h3>
+        <h3><FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/></h3>
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
@@ -95,10 +97,10 @@ class AnalysisServiceProviders extends React.Component {
               chartLabel={`${month}, Month to Date`}
               datasets={providers}
               datasetLabels={[
-                "On-Net HTTP",
-                "On-Net HTTPS",
-                "Off-Net HTTP",
-                "Off-Net HTTPS"
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttp.label"/>,
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttps.label"/>
               ]}
               width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
           }

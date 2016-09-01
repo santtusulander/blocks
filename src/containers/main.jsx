@@ -8,7 +8,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
-import * as purgeActionCreators from '../redux/modules/purge'
 import * as userActionCreators from '../redux/modules/user'
 import * as hostActionCreators from '../redux/modules/host'
 import * as rolesActionCreators from '../redux/modules/roles'
@@ -18,7 +17,6 @@ import Navigation from '../components/navigation/navigation.jsx'
 
 import ErrorModal from '../components/error-modal'
 import InfoModal from '../components/info-modal'
-import PurgeModal from '../components/purge-modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import * as PERMISSIONS from '../constants/permissions.js'
@@ -28,13 +26,6 @@ export class Main extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      activePurge: null
-    }
-
-    this.activatePurge = this.activatePurge.bind(this)
-    this.saveActivePurge = this.saveActivePurge.bind(this)
-    this.changePurge = this.changePurge.bind(this)
     this.logOut = this.logOut.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.hideNotification = this.hideNotification.bind(this)
@@ -50,6 +41,7 @@ export class Main extends React.Component {
           return false
         }
         else {
+          this.props.userActions.fetchUser(action.payload.username)
           this.props.rolesActions.fetchRoles()
           const accountId = this.props.activeAccount.size ?
             this.props.activeAccount.get('id') :
@@ -78,67 +70,6 @@ export class Main extends React.Component {
     if(account) {
       this.props.accountActions.fetchAccount('udn', account)
       this.props.groupActions.fetchGroups('udn', account)
-    }
-  }
-
-  activatePurge(property) {
-    return e => {
-      if(e) {
-        e.preventDefault()
-      }
-      this.setState({activePurge: property})
-      this.props.purgeActions.resetActivePurge()
-    }
-  }
-  changePurge(property) {
-    this.setState({activePurge: property})
-    this.props.purgeActions.resetActivePurge()
-  }
-  submitPurge(property) {
-    let targetUrl = property.size ? property.get('services').get(0)
-      .get('configurations').get(0).get('edge_configuration')
-      .get('published_name') : ''
-    if(property.size && property.get('services').get(0).get('deployment_mode') === 'trial') {
-      targetUrl = property.get('services').get(0)
-        .get('configurations').get(0).get('edge_configuration')
-        .get('trial_name')
-    }
-    this.props.purgeActions.createPurge(
-      'udn',
-      this.props.activeAccount.get('id'),
-      this.props.activeGroup.get('id'),
-      targetUrl,
-      this.props.activePurge.toJS()
-    ).then((action) => {
-      if(action.payload instanceof Error) {
-        this.setState({activePurge: null})
-        this.showNotification('Purge request failed: ' +
-          action.payload.message)
-      }
-      else {
-        this.setState({activePurge: null})
-        this.showNotification('Purge request succesfully submitted')
-      }
-    })
-  }
-  saveActivePurge() {
-    const purgeProperty = this.props.properties.find(property => property === this.state.activePurge)
-    if(purgeProperty) {
-      if(!this.props.activeHost || this.props.activeHost.get('services').get(0)
-        .get('configurations').get(0).get('edge_configuration')
-        .get('published_name') !== purgeProperty) {
-        this.props.hostActions.fetchHost(
-          'udn',
-          this.props.activeAccount.get('id'),
-          this.props.activeGroup.get('id'),
-          purgeProperty
-        ).then(action => {
-          this.submitPurge(Immutable.fromJS(action.payload))
-        })
-      }
-      else {
-        this.submitPurge(this.props.activeHost)
-      }
     }
   }
   logOut() {
@@ -179,9 +110,6 @@ export class Main extends React.Component {
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
-    const firstProperty = this.props.properties && this.props.properties.size ?
-      this.props.properties.get(0)
-      : null
 
     return (
       <div className={classNames}>
@@ -190,8 +118,10 @@ export class Main extends React.Component {
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
+          currentUser={this.props.currentUser}
           params={this.props.params}
           pathname={this.props.location.pathname}
+          roles={this.props.roles}
           />
         : ''
       }
@@ -201,7 +131,6 @@ export class Main extends React.Component {
             activeAccount={this.props.activeAccount}
             activeGroup={this.props.activeGroup}
             activeHost={this.props.activeHost}
-            activatePurge={this.activatePurge(firstProperty)}
             breadcrumbs={this.props.breadcrumbs}
             fetching={this.props.fetching}
             fetchAccountData={this.fetchAccountData}
@@ -218,18 +147,6 @@ export class Main extends React.Component {
           : ''
         }
         <div className="content-container">{this.props.children}</div>
-        {this.state.activePurge !== null ?
-          <PurgeModal
-            activeProperty={this.state.activePurge}
-            activePurge={this.props.activePurge}
-            availableProperties={this.props.properties}
-            changeProperty={this.changePurge}
-            changePurge={this.props.purgeActions.updateActivePurge}
-            hideAction={this.activatePurge(null)}
-            savePurge={this.saveActivePurge}
-            showNotification={this.showNotification}/>
-          : ''
-        }
 
         <ErrorModal
           showErrorDialog={this.props.showErrorDialog}
@@ -266,7 +183,6 @@ Main.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
-  activePurge: React.PropTypes.instanceOf(Immutable.Map),
   breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
@@ -278,7 +194,6 @@ Main.propTypes = {
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  purgeActions: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -297,7 +212,6 @@ Main.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
-  activePurge: Immutable.Map(),
   currentUser: Immutable.Map(),
   properties: Immutable.List(),
   roles: Immutable.List(),
@@ -310,7 +224,6 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
-    activePurge: state.purge.get('activePurge'),
     currentUser: state.user.get('currentUser'),
     fetching: state.account.get('fetching') ||
       state.content.get('fetching') ||
@@ -337,7 +250,6 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
-    purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch)

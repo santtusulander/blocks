@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import numeral from 'numeral'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
@@ -13,20 +14,43 @@ import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { metricKey: 'account' }
+
+    this.state = {
+      metricKey: 'account'
+    }
+
+    this.fetchData = this.fetchData.bind(this)
+    this.formatTotals = this.formatTotals.bind(this)
   }
 
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters || changedParamsFiltersQS(this.props, nextProps) ) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if( this.props.filters !== nextProps.filters ||
+        changedParamsFiltersQS(this.props, nextProps) ||
+        this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location) {
+  fetchData(params, filters, location, hostConfiguredName) {
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -42,7 +66,7 @@ class AnalyticsTabTraffic extends React.Component {
     //REFACTOR:
     if (params.property) {
       this.setState({metricKey: 'hostMetrics'})
-      this.props.trafficActions.fetchTraffic({
+      this.props.trafficActions.fetchTotals({
         account: params.account,
         group: params.group,
         property: params.property,
@@ -52,7 +76,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
     } else if(params.group) {
       this.setState({ metricKey: 'groupMetrics' })
-      this.props.trafficActions.fetchTraffic({
+      this.props.trafficActions.fetchTotals({
         account: params.account,
         group: params.group,
         startDate: fetchOpts.startDate,
@@ -61,7 +85,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
     } else if(params.account) {
       this.setState({ metricKey: 'accountMetrics' })
-      this.props.trafficActions.fetchTraffic({
+      this.props.trafficActions.fetchTotals({
         account: params.account,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
@@ -70,28 +94,34 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  export(exporters) {
-    exporters.traffic(this.props.trafficByTime, this.props.serviceTypes)
+  formatTotals(value) {
+    if(this.props.filters.get('recordType') === 'transfer_rates') {
+      return formatBitsPerSecond(value, 2)
+    } else if(this.props.filters.get('recordType') === 'requests') {
+      return numeral(value).format('0,0')
+    }
   }
 
   render() {
-    const {traffic} = this.props
-    const peakTraffic = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'peak']) : 0
-    const avgTraffic  = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'average']) : 0
-    const lowTraffic  = !!traffic.size && traffic.first().has('totals') ?
-      traffic.first().getIn(['totals', 'transfer_rates', 'low']) : 0
+    const {filters, totals} = this.props
+    const recordType = filters.get('recordType')
+    const peakTraffic = totals.size ?
+      totals.getIn([recordType, 'peak']) : 0
+    const avgTraffic  = totals.size ?
+      totals.getIn([recordType, 'average']) : 0
+    const lowTraffic  = totals.size ?
+      totals.getIn([recordType, 'low']) : 0
 
     return (
       <AnalysisTraffic
-        avgTraffic={formatBitsPerSecond(avgTraffic, 2)}
+        avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
         dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
-        lowTraffic={formatBitsPerSecond(lowTraffic, 2)}
-        peakTraffic={formatBitsPerSecond(peakTraffic, 2)}
+        lowTraffic={this.formatTotals(lowTraffic)}
+        peakTraffic={this.formatTotals(peakTraffic)}
+        recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
       />
@@ -100,13 +130,14 @@ class AnalyticsTabTraffic extends React.Component {
 }
 
 AnalyticsTabTraffic.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.Map),
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   totalEgress: React.PropTypes.number,
-  traffic: React.PropTypes.instanceOf(Immutable.List),
+  totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List)
@@ -115,16 +146,16 @@ AnalyticsTabTraffic.propTypes = {
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
   metrics: Immutable.Map(),
-  traffic: Immutable.List(),
+  totals: Immutable.Map(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List()
 }
 
 function mapStateToProps(state) {
   return {
-    serviceTypes: state.ui.get('analysisServiceTypes'),
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     metrics: state.metrics,
-    traffic: state.traffic.get('traffic'),
+    totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress')
@@ -138,4 +169,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabTraffic);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabTraffic);

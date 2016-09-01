@@ -85,19 +85,6 @@
       }
     }
 
-    .light-theme .page-header-layout & {
-      background-color: rgba($black, 0.1);
-
-      &:focus,
-      &:active {
-        box-shadow: inset 0 0 0 1px $pale-blue;
-      }
-
-      &::placeholder {
-        color: rgba($lt-text-color, 0.3);
-      }
-    }
-
     .dark-theme .has-error &,
     .light-theme .has-error & {
       background-color: $purple;

@@ -11,16 +11,32 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabOnOffNet extends React.Component {
   componentDidMount() {
-    this.fetchData(this.props.params, this.props.filters, this.props.location)
+    this.fetchData(
+      this.props.params,
+      this.props.filters,
+      this.props.location,
+      this.props.activeHostConfiguredName
+    )
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.location)
+    if(changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.fetchData(
+        nextProps.params,
+        nextProps.filters,
+        nextProps.location,
+        nextProps.activeHostConfiguredName
+      )
     }
   }
 
-  fetchData(params, filters, location){
+  fetchData(params, filters, location, hostConfiguredName){
+    if(params.property && hostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: hostConfiguredName
+      })
+    }
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     const onOffOpts = Object.assign({}, fetchOpts)
@@ -32,10 +48,6 @@ class AnalyticsTabOnOffNet extends React.Component {
 
     this.props.trafficActions.fetchOnOffNet(onOffOpts)
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
-  }
-
-  export(exporters) {
-    exporters.onOffNet(this.props.onOffStats.get('detail'))
   }
 
   render(){
@@ -52,6 +64,7 @@ class AnalyticsTabOnOffNet extends React.Component {
 }
 
 AnalyticsTabOnOffNet.propTypes = {
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -70,6 +83,7 @@ AnalyticsTabOnOffNet.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffStats: state.traffic.get('onOffNet'),
@@ -84,4 +98,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AnalyticsTabOnOffNet);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabOnOffNet);

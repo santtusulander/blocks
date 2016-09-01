@@ -6,6 +6,8 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Dialog from '../layout/dialog'
 
+import { FormattedMessage } from 'react-intl'
+
 class ConfigurationDiffBar extends React.Component {
   constructor(props) {
     super(props)
@@ -31,12 +33,12 @@ class ConfigurationDiffBar extends React.Component {
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary"
                 onClick={this.resetConfig}>
-                CANCEL
+                <FormattedMessage id="portal.button.CANCEL"/>
               </Button>
               <Button className="btn btn-save"
                 onClick={this.props.saveConfig}
                 disabled={this.props.saving}>
-                {this.props.saving ? 'SAVING...' : 'SAVE'}
+                {this.props.saving ? <FormattedMessage id="portal.button.saving"/> : <FormattedMessage id="portal.button.SAVE"/>}
               </Button>
             </ButtonToolbar>
             <div className="configuration-dialog-content">

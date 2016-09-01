@@ -1,41 +1,6 @@
 // Configurations
 // ==============
 
-.configuration-header {
-  position: fixed;
-  z-index: 5;
-  width: calc(100% - #{$navigation-sidebar-width});
-
-  .nav-tabs {
-    padding: 0 35px;
-  }
-
-  .dark-theme & {
-    .nav-tabs {
-      background-color: rgb(1, 64, 82);
-    }
-
-    .page-header-layout {
-      background-color: rgb(1, 51, 66);
-    }
-  }
-}
-
-.configuration-container {
-
-  .content-container {
-    padding-top: calc(#{$page-header-height} + #{$bar-height} + #{$bar-height}) !important;
-
-    @include md {
-      padding-top: calc(#{$md-page-header-height} + #{$md-bar-height} + #{$md-bar-height}) !important;
-    }
-  }
-
-  .versions-btn {
-    margin-left: 10px;
-  }
-}
-
 .configuration-versions-sidebar {
 
   .sidebar-layout {
