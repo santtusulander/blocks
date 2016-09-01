@@ -68,7 +68,8 @@ export function editDomainFailure(state) {
 export function fetchedAllDomainsSuccess(state, { payload }) {
   return state.merge({
     domains: fromJS(payload.map(domain => ({ id: domain }))),
-    activeDomain: state.get('activeDomain') || payload[0]
+    activeDomain: state.get('activeDomain') || payload[0],
+    loading: false
   })
 }
 
@@ -143,8 +144,8 @@ export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
   }).then(({ data }) => ({ data, domain }))
 )
 
-export const startFetching = createAction(DNS_START_FETCHING)
-export const stopFetching = createAction(DNS_STOP_FETCHING)
+export const startFetchingDomains = createAction(DNS_START_FETCHING)
+export const stopFetchingDomains = createAction(DNS_STOP_FETCHING)
 
 export const editSOA = createAction(SOA_RECORD_EDITED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
