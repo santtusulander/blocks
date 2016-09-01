@@ -137,3 +137,35 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
   }
   return activeEditForm
 }
+
+export function secondsToUnit(value, unit) {
+  value = parseInt(value || 0)
+  switch(unit) {
+    case 'minutes':
+      value = value / 60
+      break
+    case 'hours':
+      value = value / 3600
+      break
+    case 'days':
+      value = value / 86400
+      break
+  }
+  return value
+}
+
+export function secondsFromUnit(value, unit) {
+  value = parseInt(value || 0)
+  switch(unit) {
+    case 'minutes':
+      value = value * 60
+      break
+    case 'hours':
+      value = value * 3600
+      break
+    case 'days':
+      value = value * 86400
+      break
+  }
+  return value
+}
