@@ -7,17 +7,19 @@ import { fetchResourcesWithDetails } from '../../../redux/modules/dns-records/ac
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { setActiveRecord } from '../../../redux/modules/dns-records/actions'
 
-import { RECORD_EDIT } from '../../../constants/account-management-modals'
+import { DNS_DOMAIN_EDIT, RECORD_EDIT } from '../../../constants/account-management-modals'
 
 import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
 import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
+import DomainForm from '../modals/domain-form'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
     super(props)
-    this.editingRecord = false
+    this.editingRecord = true
+    this.editingDomain = true
     this.state = {
       domainSearch: '',
       recordSearch: ''
@@ -37,15 +39,24 @@ class AccountManagementSystemDNS extends Component {
   }
 
   render() {
-    const { changeActiveDomain, onAddDomain, onEditDomain, domains, activeDomain, records, activeModal, toggleModal } = this.props
+    const { fetchDomain, changeActiveDomain, domains, activeDomain, records, activeModal, toggleModal } = this.props
     const {domainSearch, recordSearch} = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const domainHeaderProps = {
       activeDomain,
       changeActiveDomain: value => changeActiveDomain(value),
+      onEditDomain: (activeDomain) => {
+        console.log('onEditDomain()')
+        this.editingDomain = true
+        fetchDomain('udn', activeDomain)
+          .then(() => toggleModal(DNS_DOMAIN_EDIT))
+      },
+      onAddDomain: () => {
+        console.log('onAddDomain()')
+        this.editingDomain = false
+        toggleModal(DNS_DOMAIN_EDIT)
+      },
       domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
-      onAddDomain,
-      onEditDomain,
       searchValue: domainSearch,
       searchFunc: e => setSearchValue(e, 'domainSearch')
     }
@@ -72,6 +83,10 @@ class AccountManagementSystemDNS extends Component {
         {activeModal === RECORD_EDIT &&
           <RecordForm
             edit={this.editingRecord}
+            closeModal={() => toggleModal(null)}/>}
+        {activeModal === DNS_DOMAIN_EDIT &&
+          <DomainForm
+            edit={this.editingDomain}
             closeModal={() => toggleModal(null)}/>}
         {/*activeModal === EDIT_SOA &&
           <SoaEditForm
@@ -110,12 +125,13 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
+
 function mapDispatchToProps(dispatch, { params: { brand } }) {
   const { changeActiveDomain, fetchDomains, fetchDomain } = bindActionCreators(dnsActionCreators, dispatch)
   return {
     fetchRecords: domain => dispatch(fetchResourcesWithDetails(domain)),
+    fetchDomain,
     fetchDomains,
-    onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
     setActiveRecord: id => dispatch(setActiveRecord(id))
