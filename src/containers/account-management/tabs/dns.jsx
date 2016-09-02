@@ -7,6 +7,8 @@ import { fetchResourcesWithDetails } from '../../../redux/modules/dns-records/ac
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { setActiveRecord } from '../../../redux/modules/dns-records/actions'
 
+import { getRecordValueString } from '../../../util/dns-records-helpers'
+
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
 import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
@@ -63,7 +65,7 @@ class AccountManagementSystemDNS extends Component {
       },
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
-      records: records.filter(({ name, value }) => name.includes(recordSearch) || value.includes(recordSearch))
+      records: records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
     }
     return (
       <div>
