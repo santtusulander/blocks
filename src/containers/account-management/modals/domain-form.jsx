@@ -53,7 +53,6 @@ const DnsDomainEditFormContainer = (props) => {
     onSave: (fields) => {
       console.log('onSave()', edit, fields);
       saveDomain( edit, fields)
-
     },
     onCancel: () => {
       console.log('onCancel()')
@@ -130,19 +129,19 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       const domain = data.name
       delete data.name
 
-      dispatch( dnsActions[method]('udn', domain, data)
+      dnsActions[method]('udn', domain, data)
         .then(res => {
           if (res.error) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.button.error"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">
-                <FormattedMessage id="portal.button.ok"/>
-              </Button>
-            }) )
+              buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+            }))
           }
+
+          closeModal();
+          
         })
-      )
     }
   }
 }
