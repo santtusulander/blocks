@@ -94,7 +94,7 @@
       color: $pale-blue;
 
       &:hover {
-        color: $white;
+        color: rgba($pale-blue, 0.8);
       }
     }
 
@@ -102,7 +102,7 @@
       color: $pale-blue;
 
       &:hover {
-        color: $lt-text-color;
+        color: rgba($pale-blue, 0.8);
       }
     }
   }

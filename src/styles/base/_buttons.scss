@@ -481,8 +481,7 @@ $lt-caret-color: $silver-60;
 }
 
 // TODO: remove this / move to other files
-.dark-theme,
-.light-theme .header {
+.dark-theme {
 
   .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
 
@@ -494,22 +493,6 @@ $lt-caret-color: $silver-60;
     }
   }
 
-  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle, .btn-link),
-  .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus {
-      color: $pale-blue;
-      background-color: rgba($pale-blue, 0.1);
-      box-shadow: none;
-    }
-  }
-
-  .open > .dropdown-toggle .caret {
-    border-top-color: $pale-blue;
-  }
 
   .btn-save {
 
@@ -578,23 +561,6 @@ $lt-caret-color: $silver-60;
       fill: $pale-blue;
       stroke: $pale-blue;
     }
-  }
-
-  .open:not(.dropdown-select) > .dropdown-toggle:not(.header-toggle, .btn-link),
-  .open:not(.dropdown-select) > .dropdown-toggle.btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus {
-      color: $pale-blue;
-      background-color: rgba($pale-blue, 0.1);
-      box-shadow: none;
-    }
-  }
-
-  .open > .dropdown-toggle .caret {
-    border-top-color: $pale-blue;
   }
 
   .btn-save {

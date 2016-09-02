@@ -88,6 +88,10 @@ $header-seach-left-padding: rem(30px);
 
       .dropdown-toggle {
         font-weight: bold;
+
+        &:hover {
+          color: rgba($pale-blue, 0.8);
+        }
       }
     }
   }
@@ -165,7 +169,7 @@ $header-seach-left-padding: rem(30px);
 
       .light-theme & {
         &:hover {
-          background-color: $lt-text-color;
+          background-color: rgba($black, 0.4);
         }
 
         &:active,
@@ -220,10 +224,22 @@ $header-seach-left-padding: rem(30px);
         width: 100%;
         height: 100%;
       }
+    }
 
-      &:focus {
+    .btn-user-menu,
+    .open .btn-user-menu {
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
         box-shadow: 0 0 0 2px $pale-blue;
       }
+    }
+
+    .open .btn-user-menu {
+      box-shadow: 0 0 0 2px $pale-blue;
     }
 
     .header-search-input {
