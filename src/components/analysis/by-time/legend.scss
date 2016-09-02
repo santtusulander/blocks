@@ -6,51 +6,93 @@
 
 .chart-legend {
   position: absolute;
-  display: table;
   top: 10px;
   right: 10px;
-  padding: 10px;
   min-width: 400px;
+  padding: 10px;
   background-color: rgba($black, 0.2);
 
-  .legend-label::before {
-    content: "\2014 ";
-  }
-  .primary {
-    .legend-label::before {
+  .legend-label {
+
+    &::before {
+      font-weight: bold;
+      content: '\2014 ';
+    }
+
+    &.comparison::before {
+      opacity: 0.4;
+    }
+
+    &.purple::before {
+      color: $purple;
+    }
+
+    &.red::before {
+      color: $red;
+    }
+
+    &.orange::before {
+      color: $orange;
+    }
+
+    &.yellow::before {
+      color: $yellow;
+    }
+
+    &.green::before {
+      color: $green;
+    }
+
+    &.darkgreen::before {
+      color: $dark-green;
+    }
+
+    &.paleblue::before {
       color: $pale-blue;
     }
-  }
 
-  .secondary {
-    .legend-label::before {
-      color: $green;
+    &.black::before {
+      color: $black;
+    }
+
+    &.grey::before {
+      color: $grey;
+    }
+
+    &.silver::before {
+      color: $silver;
+    }
+
+    &.darkblue::before {
+      color: $dark-blue;
     }
   }
 
   .comparison {
+
     .legend-label {
       margin-right: 5px;
+
       &::before {
         content: none;
       }
     }
+
     .secondary-label {
       margin-right: 5px;
     }
   }
 
-  .legend-value {
-    text-align: right;
-    min-width: 130px;
-    display: inline-block;
-    font-weight: bold;
-    display: table-cell;
-  }
-
   .legend-item {
+    display: flex;
     width: auto;
     height: 20px;
-    display: table-row;
+    justify-content: space-between;
+  }
+
+  .legend-value {
+    min-width: 130px;
+    font-weight: bold;
+    text-align: right;
   }
 }
