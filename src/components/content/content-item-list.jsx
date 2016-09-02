@@ -38,6 +38,20 @@ class ContentItemList extends React.Component {
     })
   }
   render() {
+    const datasets = []
+    if(this.props.primaryData.size) {
+      datasets.push({
+        area: true,
+        color: 'paleblue',
+        comparisonData: false,
+        data: this.props.primaryData.toJS().reverse(),
+        id: '',
+        label: '',
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
     return (
       <div className="content-item-list">
         <div className="content-item-list-section section-lg">
@@ -106,9 +120,11 @@ class ContentItemList extends React.Component {
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
               {!this.props.fetchingMetrics ?
-                <AnalysisByTime axes={false} padding={0}
+                <AnalysisByTime
+                  axes={false}
+                  padding={0}
                   dataKey="bytes"
-                  primaryData={this.props.primaryData.toJS().reverse()}
+                  dataSets={datasets}
                   width={this.state.byTimeWidth}
                   height={this.state.byTimeHeight}
                   yAxisCustomFormat={formatBitsPerSecond}/>
@@ -128,7 +144,6 @@ ContentItemList.propTypes = {
   avgTransfer: React.PropTypes.string,
   cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,
-  onConfiguration: React.PropTypes.func,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   fetchingMetrics: React.PropTypes.bool,
@@ -137,6 +152,7 @@ ContentItemList.propTypes = {
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   timeToFirstByte: React.PropTypes.string,
   toggleActive: React.PropTypes.func

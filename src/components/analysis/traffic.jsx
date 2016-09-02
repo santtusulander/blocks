@@ -239,7 +239,21 @@ class AnalysisTraffic extends React.Component {
                 'timestamp',
                 moment(datapoint.get('timestamp'), 'X').toDate()
               )
-            }).toJS()
+            })
+            const datasets = []
+            if(primaryData.size) {
+              datasets.push({
+                area: false,
+                color: 'paleblue',
+                comparisonData: false,
+                data: primaryData.toJS(),
+                id: '',
+                label: '',
+                line: true,
+                stackedAgainst: false,
+                xAxisFormatter: false
+              })
+            }
             return (
               <tr key={i}>
                 <td>{country.get('name')}</td>
@@ -248,9 +262,8 @@ class AnalysisTraffic extends React.Component {
                   <AnalysisByTime
                     axes={false}
                     padding={0}
-                    area={false}
-                    primaryData={primaryData}
                     dataKey={byTimeDataKey}
+                    dataSets={datasets}
                     showTooltip={true}
                     yAxisCustomFormat={byTimeYAxisFormat}
                     width={this.state.byTimeWidth / 2}

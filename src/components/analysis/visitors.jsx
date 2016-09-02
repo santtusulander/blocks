@@ -129,17 +129,31 @@ class AnalysisVisitors extends React.Component {
       activeDirection: this.state.sortOSDir
     }
     const sortedOS = !this.props.fetching ? this.sortedData(this.props.byOS, this.state.sortOSBy, this.state.sortOSDir, 'os') : ''
+    const datasets = []
+    if(this.props.byTime.size) {
+      datasets.push({
+        area: false,
+        color: 'paleblue',
+        comparisonData: false,
+        data: this.props.byTime.toJS(),
+        id: '',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.visitors.chart.visitors.label'}),
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+      })
+    }
     return (
       <div className="analysis-traffic">
         <h3><FormattedMessage id="portal.analytics.visitors.visiorsByTime.text"/></h3>
         <div ref="byTimeHolder" className="visitors-by-time">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
-            <AnalysisByTime axes={true} padding={40}
+            <AnalysisByTime
+              axes={true}
+              padding={40}
               dataKey="uniq_vis"
-              primaryData={this.props.byTime.toJS()}
-              primaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.visitors.chart.visitors.label'})}
-              stacked={true}
+              dataSets={datasets}
               showLegend={true}
               showTooltip={false}
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
@@ -150,11 +164,11 @@ class AnalysisVisitors extends React.Component {
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisByLocation
-            dataKey="total"
-            timelineKey="detail"
-            width={this.state.byLocationWidth}
-            height={this.state.byLocationWidth / 1.6}
-            countryData={this.props.byCountry}/>
+              dataKey="total"
+              timelineKey="detail"
+              width={this.state.byLocationWidth}
+              height={this.state.byLocationWidth / 1.6}
+              countryData={this.props.byCountry}/>
           }
         </div>
         <h3><FormattedMessage id="portal.analytics.visitors.byCountry.text"/></h3>
@@ -182,20 +196,38 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5">Loading...</td></tr> :
               sortedCountries.map((country, i) => {
+                const countryData = country.get('detail').map(datapoint => {
+                  return datapoint.set(
+                    'timestamp',
+                    moment(datapoint.get('timestamp'), 'X').toDate()
+                  )
+                })
+                const datasets = []
+                if(countryData.size) {
+                  datasets.push({
+                    area: false,
+                    color: 'paleblue',
+                    comparisonData: false,
+                    data: countryData.toJS(),
+                    id: '',
+                    label: '',
+                    line: true,
+                    stackedAgainst: false,
+                    xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                  })
+                }
                 return (
                   <tr key={i}>
                     <td>{country.get('name')}</td>
                     <td>{numeral(country.get('total')).format('0,0')}</td>
                     <td>{numeral(country.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
-                      <AnalysisByTime axes={false} padding={0} area={false}
-                        primaryData={country.get('detail').map(datapoint => {
-                          return datapoint.set(
-                            'timestamp',
-                            moment(datapoint.get('timestamp'), 'X').toDate()
-                          )
-                        }).toJS()}
+                      <AnalysisByTime
+                        axes={false}
+                        padding={0}
+                        area={false}
                         dataKey='uniq_vis'
+                        dataSets={datasets}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -233,20 +265,38 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
               sortedBrowsers.map((browser, i) => {
+                const browserData = browser.get('detail').map(datapoint => {
+                  return datapoint.set(
+                    'timestamp',
+                    moment(datapoint.get('timestamp'), 'X').toDate()
+                  )
+                })
+                const datasets = []
+                if(browserData.size) {
+                  datasets.push({
+                    area: false,
+                    color: 'paleblue',
+                    comparisonData: false,
+                    data: browserData.toJS(),
+                    id: '',
+                    label: '',
+                    line: true,
+                    stackedAgainst: false,
+                    xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                  })
+                }
                 return (
                   <tr key={i}>
                     <td>{browser.get('name')}</td>
                     <td>{numeral(browser.get('total')).format('0,0')}</td>
                     <td>{numeral(browser.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
-                      <AnalysisByTime axes={false} padding={0} area={false}
-                        primaryData={browser.get('detail').map(datapoint => {
-                          return datapoint.set(
-                            'timestamp',
-                            moment(datapoint.get('timestamp'), 'X').toDate()
-                          )
-                        }).toJS()}
+                      <AnalysisByTime
+                        axes={false}
+                        padding={0}
+                        area={false}
                         dataKey='uniq_vis'
+                        dataSets={datasets}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -284,20 +334,38 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
               sortedOS.map((os, i) => {
+                const osData = os.get('detail').map(datapoint => {
+                  return datapoint.set(
+                    'timestamp',
+                    moment(datapoint.get('timestamp'), 'X').toDate()
+                  )
+                })
+                const datasets = []
+                if(osData.size) {
+                  datasets.push({
+                    area: false,
+                    color: 'paleblue',
+                    comparisonData: false,
+                    data: osData.toJS(),
+                    id: '',
+                    label: '',
+                    line: true,
+                    stackedAgainst: false,
+                    xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                  })
+                }
                 return (
                   <tr key={i}>
                     <td>{os.get('name')}</td>
                     <td>{numeral(os.get('total')).format('0,0')}</td>
                     <td>{numeral(os.get('percent_total')).format('0,0.0%')}</td>
                     <td width={this.state.byTimeWidth / 3}>
-                      <AnalysisByTime axes={false} padding={0} area={false}
-                        primaryData={os.get('detail').map(datapoint => {
-                          return datapoint.set(
-                            'timestamp',
-                            moment(datapoint.get('timestamp'), 'X').toDate()
-                          )
-                        }).toJS()}
+                      <AnalysisByTime
+                        axes={false}
+                        padding={0}
+                        area={false}
                         dataKey='uniq_vis'
+                        dataSets={datasets}
                         width={this.state.byTimeWidth / 3}
                         height={50} />
                     </td>
@@ -322,6 +390,7 @@ AnalysisVisitors.propTypes = {
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List)
 }
 
