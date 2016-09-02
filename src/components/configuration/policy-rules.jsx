@@ -7,13 +7,14 @@ import Confirmation from '../confirmation.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import {parsePolicy} from '../../util/policy-config'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      default_policy: null,
       request_policy: null,
       response_policy: null
     }
@@ -53,10 +54,57 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
   render() {
-    if(!this.props.requestPolicies) {
-      return <div>Loading...</div>
+    const policyMapper = type => (policy, i) => {
+      if(!policy.has('match')) {
+        return null
+      }
+      const {matches, sets} = parsePolicy(policy, [])
+      return (
+        <tr key={i}>
+          <td>{policy.get('rule_name')}</td>
+          <td>{matches.map(match => match.field).join(', ')}</td>
+          <td>{sets.map(set => set.setkey).join(', ')}</td>
+          <td className="right-btns has-confirmation">
+            <Button bsStyle="primary"
+              className={`btn-link sm-padding activate-${type}-rule-${i}`}
+              onClick={this.activateRule([`${type}_policy`, 'policy_rules', i])}>
+              <FormattedMessage id="portal.button.EDIT"/>
+            </Button>
+            <Button bsStyle="primary"
+              className="btn-link btn-icon"
+              onClick={this.showConfirmation(`${type}_policy`, i)}>
+              <IconTrash/>
+            </Button>
+            {this.state[`${type}_policy`] !== false &&
+              <ReactCSSTransitionGroup
+                component="div"
+                className="confirmation-transition"
+                transitionName="confirmation-transition"
+                transitionEnterTimeout={10}
+                transitionLeaveTimeout={500}
+                transitionAppear={true}
+                transitionAppearTimeout={10}>
+                {this.state[`${type}_policy`] === i &&
+                  <Confirmation
+                    cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                    confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
+                    handleConfirm={this.deleteRule(`${type}_policy`, i)}
+                    handleCancel={this.closeConfirmation(`${type}_policy`)}>
+                    <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
+                  </Confirmation>
+                }
+              </ReactCSSTransitionGroup>
+            }
+          </td>
+        </tr>
+      )
     }
-    const isEmpty = (this.props.responsePolicies.size + this.props.requestPolicies.size) < 1
+    const rows = [
+      ...this.props.defaultPolicies.map(policyMapper('default')),
+      ...this.props.requestPolicies.map(policyMapper('request')),
+      ...this.props.responsePolicies.map(policyMapper('response'))
+    ]
+    const isEmpty = !rows.filter(Boolean).length
     return (
       <div className="configuration-cache-rules">
         <Table striped={true}>
@@ -69,88 +117,7 @@ class ConfigurationPolicyRules extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.requestPolicies.map((policy, i) => {
-              const {matches, sets} = parsePolicy(policy, [])
-              return (
-                <tr key={i}>
-                  <td>{policy.get('rule_name')}</td>
-                  <td>{matches.map(match => match.field).join(', ')}</td>
-                  <td>{sets.map(set => set.setkey).join(', ')}</td>
-                  <td className="right-btns has-confirmation">
-                    <Button bsStyle="primary" className="btn-link sm-padding"
-                      onClick={this.activateRule(['request_policy', 'policy_rules', i])}>
-                      <FormattedMessage id="portal.button.EDIT"/>
-                    </Button>
-                    <Button bsStyle="primary"
-                      className="btn-link btn-icon"
-                      onClick={this.showConfirmation('request_policy', i)}>
-                      <IconTrash/>
-                    </Button>
-                    {this.state.request_policy !== false &&
-                      <ReactCSSTransitionGroup
-                        component="div"
-                        className="confirmation-transition"
-                        transitionName="confirmation-transition"
-                        transitionEnterTimeout={10}
-                        transitionLeaveTimeout={500}
-                        transitionAppear={true}
-                        transitionAppearTimeout={10}>
-                        {this.state.request_policy === i &&
-                          <Confirmation
-                            cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
-                            confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
-                            handleConfirm={this.deleteRule('request_policy', i)}
-                            handleCancel={this.closeConfirmation('request_policy')}>
-                            <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
-                          </Confirmation>
-                        }
-                      </ReactCSSTransitionGroup>
-                    }
-                  </td>
-                </tr>
-              )
-            })}
-            {this.props.responsePolicies.map((policy, i) => {
-              const {matches, sets} = parsePolicy(policy, [])
-              return (
-                <tr key={i}>
-                  <td>{policy.get('rule_name')}</td>
-                  <td>{matches.map(match => match.field).join(', ')}</td>
-                  <td>{sets.map(set => set.setkey).join(', ')}</td>
-                  <td className="right-btns has-confirmation">
-                    <Button bsStyle="primary" className="btn-link sm-padding"
-                      onClick={this.activateRule(['response_policy', 'policy_rules', i])}>
-                      <FormattedMessage id="portal.button.EDIT"/>
-                    </Button>
-                    <Button bsStyle="primary"
-                      className="btn-link btn-icon"
-                      onClick={this.showConfirmation('response_policy', i)}>
-                      <IconTrash/>
-                    </Button>
-                    {this.state.response_policy !== false &&
-                      <ReactCSSTransitionGroup
-                        component="div"
-                        className="confirmation-transition"
-                        transitionName="confirmation-transition"
-                        transitionEnterTimeout={10}
-                        transitionLeaveTimeout={500}
-                        transitionAppear={true}
-                        transitionAppearTimeout={10}>
-                        {this.state.response_policy === i &&
-                          <Confirmation
-                            cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
-                            confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
-                            handleConfirm={this.deleteRule('response_policy', i)}
-                            handleCancel={this.closeConfirmation('response_policy')}>
-                            <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
-                          </Confirmation>
-                        }
-                      </ReactCSSTransitionGroup>
-                    }
-                  </td>
-                </tr>
-              )
-            })}
+            {rows}
             {isEmpty ? <tr>
               <td colSpan={4}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
@@ -167,9 +134,16 @@ class ConfigurationPolicyRules extends React.Component {
 ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
+  defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
+  intl: React.PropTypes.object,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
+}
+ConfigurationPolicyRules.defaultProps = {
+  defaultPolicies: Immutable.List(),
+  requestPolicies: Immutable.List(),
+  responsePolicies: Immutable.List()
 }
 
 module.exports = injectIntl(ConfigurationPolicyRules)

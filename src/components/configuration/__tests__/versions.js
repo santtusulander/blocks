@@ -2,8 +2,19 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
+
 jest.dontMock('../versions.jsx')
 const ConfigurationVersions = require('../versions.jsx')
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const fakeConfigs = Immutable.fromJS([
   {config_id: 1, configuration_status: {deployment_status: 2}},
@@ -204,13 +215,13 @@ const fakeHost = Immutable.fromJS({
 
 describe('ConfigurationVersions', () => {
   it('should exist', () => {
-    let versions = shallow(<ConfigurationVersions fetching={true} />);
-    expect(versions.length).toBe(1);
-  });
+    let versions = shallow(<ConfigurationVersions fetching={true} />)
+    expect(versions.length).toBe(1)
+  })
 
   it('should display configurations', () => {
     const versions = shallow(
-      <ConfigurationVersions
+      <ConfigurationVersions intl={intlMaker()}
         configurations={fakeConfigs}
         activeHost={fakeHost}/>
     )
@@ -218,9 +229,9 @@ describe('ConfigurationVersions', () => {
   })
 
   it('should add a verson', () => {
-    const addVersion = jest.genMockFunction()
+    const addVersion = jest.fn()
     let versions = shallow(
-      <ConfigurationVersions
+      <ConfigurationVersions intl={intlMaker()}
         configurations={fakeConfigs}
         addVersion={addVersion}
         activeHost={fakeHost}/>
