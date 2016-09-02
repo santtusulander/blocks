@@ -147,7 +147,7 @@ class Redirection extends React.Component {
 Redirection.displayName = 'Redirection'
 Redirection.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

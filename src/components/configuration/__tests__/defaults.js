@@ -1,9 +1,26 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow, mount } from 'enzyme'
 
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
+
+jest.dontMock('../helpers.js')
 jest.dontMock('../defaults.jsx')
+jest.dontMock('../actions/cache-key-query-string-form.jsx')
+jest.dontMock('../policy-rules.jsx')
+jest.dontMock('../../icons/icon-add.jsx')
+jest.dontMock('../../icon.jsx')
 const ConfigurationDefaults = require('../defaults.jsx')
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
   {
@@ -26,36 +43,33 @@ const fakeConfig = Immutable.fromJS({"default_policy": {"policy_rules": [
 
 describe('ConfigurationDefaults', () => {
   it('should exist', () => {
-    let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults />
-    );
-    expect(TestUtils.isCompositeComponent(defaults)).toBeTruthy();
-  });
+    const defaults = shallow(<ConfigurationDefaults />)
+    expect(defaults).toBeDefined()
+  })
 
   it('should change values', () => {
-    const changeValue = jest.genMockFunction()
-    let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults changeValue={changeValue}
+    const changeValue = jest.fn()
+    const defaults = shallow(
+      <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
-    );
-    defaults.handleChange('some path')(true)
+    )
+    defaults.instance().handleChange('some path')(true)
     expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
 
   it('should change ttl value based on unit', () => {
-    const agePath = ['default_policy','policy_rules',0,'set','cache_control','max_age']
-    const changeValue = jest.genMockFunction()
-    let defaults = TestUtils.renderIntoDocument(
-      <ConfigurationDefaults changeValue={changeValue}
+    const agePath = Immutable.List(['default_policy','policy_rules',0,'set','cache_control','max_age'])
+    const changeValue = jest.fn()
+    const defaults = mount(
+      <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
-    );
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(defaults, 'input')
-    inputs[0].value = 30
-    TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0].toJS()).toEqual(agePath)
+    )
+    const ttlInput = defaults.find('.ttl-value')
+    ttlInput.simulate('change', {target: {value: 30}})
+    expect(changeValue.mock.calls[0][0].toJS()).toEqual(agePath.toJS())
     expect(changeValue.mock.calls[0][1]).toBe(30)
-    defaults.changeTTLUnit(agePath)('minutes')
+    defaults.instance().changeTTLUnit(agePath)('minutes')
     expect(changeValue.mock.calls[1][0]).toEqual(agePath)
     expect(changeValue.mock.calls[1][1]).toBe(600)
   });
