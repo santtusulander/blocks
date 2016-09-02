@@ -109,8 +109,13 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect
-            changeDateRange={(startDate, endDate) => {
-              props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
+            changeDateRange={(startDate, endDate, activeDateRange) => {
+              props.onFilterChange(
+                'dateRange', {startDate: startDate, endDate: endDate}
+              )
+              props.onFilterChange(
+                'dateRangeLabel', activeDateRange
+              )
             }}
             startDate={props.filters.getIn(['dateRange','startDate'])}
             endDate={props.filters.getIn(['dateRange','endDate'])}

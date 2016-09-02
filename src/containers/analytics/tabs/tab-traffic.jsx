@@ -11,6 +11,7 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
+import DateRanges from '../../../constants/date-ranges'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -95,13 +96,18 @@ class AnalyticsTabTraffic extends React.Component {
     }
 
     if (filters.getIn(['includeComparison'])) {
-      const start = startDate || moment().utc().startOf('month').subtract(1, 'months')
-      const end   = endDate || moment().utc().endOf('day').subtract(1, 'months')
-      const dateSpan = end - start
-      const comparisonFilters = filters
-        .setIn(['dateRange', 'startDate'], moment(start - dateSpan))
-        .setIn(['dateRange', 'endDate'], moment(end - dateSpan))
-      const comparisonByTimeOpts = buildAnalyticsOpts(params, comparisonFilters, location)
+      const dateRangeLabel = filters.get('dateRangeLabel')
+      const dateSpan = fetchOpts.endDate - fetchOpts.startDate + 1
+      let startDate = fetchOpts.startDate - dateSpan
+      let endDate = fetchOpts.endDate - dateSpan
+      if(dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
+        startDate = Number(moment(fetchOpts.startDate * 1000).subtract(1, 'months').format('X'))
+        endDate = startDate + dateSpan
+      }
+      const comparisonByTimeOpts = Object.assign({}, byTimeOpts, {
+        startDate: startDate,
+        endDate: endDate
+      })
       this.props.trafficActions.fetchByTimeComparison(comparisonByTimeOpts)
     }
   }

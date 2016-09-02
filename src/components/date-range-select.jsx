@@ -148,7 +148,7 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate)
+      this.props.changeDateRange(startDate, endDate, value)
     })
   }
 
