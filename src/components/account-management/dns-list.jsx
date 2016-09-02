@@ -40,7 +40,7 @@ class DNSList extends Component {
           <td>
           <ActionLinks
           onEdit={() => onEditEntry(record.id)}
-          onDelete={() => onDeleteEntry(record.id)}/>
+          onDelete={() => onDeleteEntry(record)}/>
           </td>
         </tr>
       )

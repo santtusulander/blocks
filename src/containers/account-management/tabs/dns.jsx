@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
-import { fetchResourcesWithDetails } from '../../../redux/modules/dns-records/actions'
+import { fetchResourcesWithDetails, removeResource } from '../../../redux/modules/dns-records/actions'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { setActiveRecord } from '../../../redux/modules/dns-records/actions'
 
@@ -13,6 +13,7 @@ import DomainToolbar from '../../../components/account-management/system/domain-
 import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
+import DeleteDnsRecordModal from '../../../components/account-management/delete-dns-record-modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class AccountManagementSystemDNS extends Component {
     this.editingRecord = false
     this.state = {
       domainSearch: '',
-      recordSearch: ''
+      recordSearch: '',
+      recordToDelete: null
     }
   }
 
@@ -55,7 +57,11 @@ class AccountManagementSystemDNS extends Component {
         this.editingRecord = false
         toggleModal(RECORD_EDIT)
       },
-      onDeleteEntry: () => {/*noop*/},
+      onDeleteEntry: (record) => {
+        this.setState({
+          recordToDelete: record
+        })
+      },
       onEditEntry: id => {
         this.props.setActiveRecord(id)
         this.editingRecord = true
@@ -81,6 +87,16 @@ class AccountManagementSystemDNS extends Component {
             onSave={soaEditOnSave}
             { ...soaFormInitialValues }
           />*/}
+        {this.state.recordToDelete && <DeleteDnsRecordModal
+          itemToDelete={this.state.recordToDelete.name}
+          cancel={() => { this.setState({ recordToDelete: null }) }}
+          submit={() => {
+            const { recordToDelete } = this.state
+            this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
+            this.setState({
+              recordToDelete: null
+            })
+          }}/>}
       </div>
     )
   }
@@ -115,6 +131,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
   return {
     fetchRecords: domain => dispatch(fetchResourcesWithDetails(domain)),
     fetchDomains,
+    removeResource,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
