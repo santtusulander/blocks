@@ -1,10 +1,13 @@
 import React, { PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
+
 import { List } from 'immutable'
-import { reduxForm } from 'redux-form'
+import { getValues, reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import * as dnsActions from '../../../redux/modules/dns'
+import * as dnsActionCreators from '../../../redux/modules/dns'
+
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import UDNButton from '../../../components/button'
@@ -44,11 +47,12 @@ const validate = (values) => {
 }
 
 const DnsDomainEditFormContainer = (props) => {
-  const { edit, updateDomain, createDomain, closeModal, ...formProps } = props
+  const { edit, saveDomain, closeModal, ...formProps } = props
   const domainFormProps = {
     edit,
     onSave: (fields) => {
       console.log('onSave()', edit, fields);
+      saveDomain( edit, fields)
 
     },
     onCancel: () => {
@@ -73,9 +77,7 @@ const DnsDomainEditFormContainer = (props) => {
 DnsDomainEditFormContainer.propTypes = {
   closeModal: PropTypes.func,
   edit: PropTypes.bool,
-  fields: PropTypes.object,
-  createDomain: PropTypes.func,
-  updateDomain: PropTypes.func,
+  fields: PropTypes.object
 }
 
 function mapStateToProps({ dns }, { edit }) {
@@ -86,7 +88,7 @@ function mapStateToProps({ dns }, { edit }) {
   if (edit) {
     const domains = dns.get('domains')
     const activeDomainId = dns.get('activeDomain')
-    const currentDomain = activeDomainId && dnsActions.domainToEdit(domains, activeDomainId)
+    const currentDomain = activeDomainId && dnsActionCreators.domainToEdit(domains, activeDomainId)
 
     let initialValues = currentDomain && currentDomain.get('details')
 
@@ -99,13 +101,48 @@ function mapStateToProps({ dns }, { edit }) {
   return props
 }
 
+
+function getDomainValues(fields){
+  let data = {}
+
+  for(const field in fields){
+    data[field] = fields[field].value
+  }
+
+  return data
+}
+
 function mapDispatchToProps(dispatch, { closeModal }) {
+  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
+
   return {
-    createDomain: (values, domain) => {
+    dnsActions: dnsActions,
+    saveDomain: (edit, fields) => {
+      const method = edit ? 'editDomain' : 'createDomain'
 
-    },
-    updateDomain: (formValues, zone, records, activeRecord) => {
+      // TODO: Are the required params ok (refresh, retry, expiry)?
+      const data = Object.assign({}, getDomainValues(fields), {
+        'class': 'IN',
+        retry: 1,
+        expiry: 1
+      })
 
+      const domain = data.name
+      delete data.name
+
+      dispatch( dnsActions[method]('udn', domain, data)
+        .then(res => {
+          if (res.error) {
+            dispatch( showInfoDialog({
+              title: <FormattedMessage id="portal.button.error"/>,
+              content: res.payload.data.message,
+              buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">
+                <FormattedMessage id="portal.button.ok"/>
+              </Button>
+            }) )
+          }
+        })
+      )
     }
   }
 }
