@@ -135,7 +135,7 @@ class AnalyticsTabTraffic extends React.Component {
         avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
-        byTimeComparison={this.props.trafficByTimeComparison}
+        byTimeComparison={filters.getIn(['includeComparison']) ? this.props.trafficByTimeComparison : Immutable.List()}
         dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
         lowTraffic={this.formatTotals(lowTraffic)}
