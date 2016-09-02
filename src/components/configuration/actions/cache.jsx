@@ -11,12 +11,25 @@ class Cache extends React.Component {
   constructor(props) {
     super(props);
 
+    let maxAge = Number(props.set.get('max_age'))
+    let ttlType = 'seconds'
+    if (maxAge / 86400 >= 1) {
+      maxAge = maxAge / 86400;
+      ttlType = 'days';
+    } else if (maxAge / 3600 >= 1) {
+      maxAge = maxAge / 3600;
+      ttlType = 'hours';
+    } else if (maxAge / 60 >= 1) {
+      maxAge = maxAge / 60;
+      ttlType = 'minutes';
+    }
+
     this.state = {
       checkEtag: props.set.get('check_etag') || 'false',
       honorOrigin: props.set.get('honor_origin'),
-      maxAge: props.set.get('max_age'),
+      maxAge: maxAge,
       noStore: props.set.get('no_store'),
-      ttlType: 'seconds'
+      ttlType: ttlType
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -47,7 +60,7 @@ class Cache extends React.Component {
     }
   }
   getMaxAge() {
-    let maxAge = parseInt(this.state.maxAge);
+    let maxAge = Number(this.state.maxAge);
 
     switch (this.state.ttlType) {
       case 'minutes':
