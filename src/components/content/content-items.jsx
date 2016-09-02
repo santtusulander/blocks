@@ -187,6 +187,13 @@ class ContentItems extends React.Component {
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
+      if(item.get('id').indexOf &&
+        item.get('id').indexOf('.cdx-dev.unifieddeliverynetwork.net') !== -1) {
+        item = item.merge({
+          id: item.get('id').replace('.cdx-dev.unifieddeliverynetwork.net', ''),
+          name: item.get('id').replace('.cdx-dev.unifieddeliverynetwork.net', '')
+        })
+      }
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
