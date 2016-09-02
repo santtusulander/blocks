@@ -126,13 +126,15 @@ const AnalyticsFilters = (props) => {
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
             ]}/>
-          <FilterIncludeComparison
-            includeComparison={props.filters.get('includeComparison')}
-            toggleComparison={val => {
-              props.onFilterChange(
-                'includeComparison', val
-              )
-            }}/>
+          {props.showFilters.includes('comparison') &&
+            <FilterIncludeComparison
+              includeComparison={props.filters.get('includeComparison')}
+              toggleComparison={val => {
+                props.onFilterChange(
+                  'includeComparison', val
+                )
+              }}/>
+          }
         </div>
       }
 
