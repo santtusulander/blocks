@@ -47,16 +47,18 @@ const validate = (values) => {
 }
 
 const DnsDomainEditFormContainer = (props) => {
-  const { edit, saveDomain, closeModal, ...formProps } = props
+  const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = props
   const domainFormProps = {
     edit,
     onSave: (fields) => {
-      console.log('onSave()', edit, fields);
       saveDomain( edit, fields)
     },
     onCancel: () => {
-      console.log('onCancel()')
       closeModal()
+    },
+    onDelete: (domainId) => {
+      deleteDomain(domainId)
+      console.log('onDelete()', domainId)
     },
     ...formProps
   }
@@ -116,6 +118,21 @@ function mapDispatchToProps(dispatch, { closeModal }) {
 
   return {
     dnsActions: dnsActions,
+    deleteDomain: (domainId) => {
+      dnsActions.deleteDomain('udn', domainId)
+        .then(res => {
+          if (res.error) {
+            uiActions.showInfoDialog({
+              title: <FormattedMessage id="portal.button.error"/>,
+              content: res.payload.data.message,
+              buttons: <Button onClick={uiActions.hideInfoDialog} bsStyle="primary">
+                <FormattedMessage id="portal.button.ok"/>
+              </Button>
+            })
+          }
+          closeModal();
+        })
+    },
     saveDomain: (edit, fields) => {
       const method = edit ? 'editDomain' : 'createDomain'
 
@@ -140,7 +157,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
           }
 
           closeModal();
-          
+
         })
     }
   }

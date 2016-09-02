@@ -89,7 +89,7 @@ const DnsDomainEditForm = (props) => {
 
       <ButtonToolbar className="text-right extra-margin-top">
         {props.edit &&
-        <Button bsStyle="danger" className="pull-left" onClick={props.onDelete}>
+        <Button bsStyle="danger" className="pull-left" onClick={() => props.onDelete(props.fields.name.value)}>
           <FormattedMessage id="portal.button.delete"/>
         </Button>
           }
