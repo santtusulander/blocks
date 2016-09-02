@@ -3,7 +3,7 @@ import uniqid from 'uniqid'
 import {fromJS} from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
 
-import { mapReducers, parseResponseData } from '../../util'
+import { mapReducers } from '../../util'
 
 export const DNS_RECORDS_CREATED = 'DNS_RECORDS_CREATED'
 export const DNS_RECORDS_RECEIVE_RESOURCES = 'DNS_RECORDS_RECEIVE_RESOURCES'
@@ -72,7 +72,12 @@ export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource,
 
 export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
-  return dnsRecordsApi.update(zone, resource.concat('.' + zone), data).then(res => parseResponseData(res))
+  const { id, ...apiData } = data
+  return dnsRecordsApi.update(zone, resource.concat('.' + zone), apiData)
+    .then(({ data }) => {
+      data.name = domainlessRecordName(zone, data.name)
+      return { data, id }
+    })
 })
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {

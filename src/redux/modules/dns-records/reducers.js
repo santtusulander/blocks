@@ -54,10 +54,9 @@ export const resourceDetailsFailed = ( state ) => {
 }
 
 //UPDATE
-export const updateSuccess = (state, {payload: {data}}) => {
-  const index = state.get('resources').findIndex( record => record.get('id') === data.id)
-
-  return state.merge( {loading: false, resources: state.get('resources').set(index, data) })
+export const updateSuccess = (state, {payload: { data, id }}) => {
+  const index = state.get('resources').findIndex( record => record.get('id') === id)
+  return state.merge( {loading: false, resources: state.get('resources').set(index, fromJS(data)) })
 }
 export const updateFailed = (state) => {
   return state.set('loading', false)

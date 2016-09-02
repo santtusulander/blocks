@@ -61,7 +61,7 @@ const RecordFormContainer = props => {
       if (fields.prio) {
         fields.prio = Number(fields.prio)
       }
-      edit ? updateRecord(fields, domain, records, activeRecord.get('name')) : addRecord(fields, domain)
+      edit ? updateRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
     },
     onCancel: closeModal,
     ...formProps
@@ -94,11 +94,11 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const records = dnsRecords.get('resources')
-  let toEdit = getById(records, dnsRecords.get('activeRecord'))
+  let activeRecord = getById(records, dnsRecords.get('activeRecord'))
   let initialValues = undefined
-  initialValues = toEdit && edit && getRecordFormInitialValues(toEdit.toJS())
+  initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
   let props = {
-    activeRecord: toEdit,
+    activeRecord,
     domain: dns.get('activeDomain'),
     loading: dnsRecords.get('loading'),
     records
@@ -120,10 +120,11 @@ function mapDispatchToProps(dispatch, { closeModal }) {
         .then(() => closeModal())
     },
     updateRecord: (formValues, zone, records, activeRecord) => {
-      const values = recordValues(formValues)
+      let values = recordValues(formValues)
+      values.id = activeRecord.get('id')
       values.class = 'IN'
       dispatch(startFetching())
-      dispatch(updateResource(zone, activeRecord, values))
+      dispatch(updateResource(zone, activeRecord.get('name'), values))
         .then(() => closeModal())
     }
   }
