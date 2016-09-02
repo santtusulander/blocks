@@ -121,8 +121,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
-  'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Historical HTTP',
-  'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Historical HTTPS',
+  'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
+  'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
   'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
