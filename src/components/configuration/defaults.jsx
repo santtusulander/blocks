@@ -73,7 +73,6 @@ class ConfigurationDefaults extends React.Component {
   }
   changeTTLValue(path) {
     return e => {
-      console.log(e.target.value)
       const value = secondsFromUnit(e.target.value, this.state.ttlUnit)
       this.props.changeValue(path, value)
     }
