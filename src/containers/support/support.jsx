@@ -10,8 +10,6 @@ import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import SupportPageHeader from '../../components/support/support-page-header'
 
-import './support.scss'
-
 class Support extends React.Component {
 
   renderTabContent(children) {
@@ -19,17 +17,17 @@ class Support extends React.Component {
 
     if (!params.account) {
       return (
-        <div className="support-tab-container">
+        <PageContainer>
           <p className="text-center">
             <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
           </p>
-        </div>
+        </PageContainer>
       )
     } else {
       return (
-        <div className="support-tab-container">
+        <PageContainer>
           {children && React.cloneElement(children, { ...this.props })}
-        </div>
+        </PageContainer>
       )
     }
   }
