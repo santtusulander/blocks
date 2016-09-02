@@ -6,7 +6,7 @@ import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
 import {Input} from 'react-bootstrap'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {

@@ -12,7 +12,7 @@ import {
   parsePolicy
 } from '../../util/policy-config'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {

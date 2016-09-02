@@ -16,7 +16,7 @@ import IconAdd from '../components/icons/icon-add.jsx'
 import Select from '../components/select'
 import TableSorter from '../components/table-sorter'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export class Configurations extends React.Component {
   constructor(props) {

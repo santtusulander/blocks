@@ -11,7 +11,7 @@ import * as userActionCreators from '../redux/modules/user'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export class SetPassword extends React.Component {
   constructor(props) {

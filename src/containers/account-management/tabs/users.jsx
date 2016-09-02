@@ -376,7 +376,7 @@ export class AccountManagementAccountUsers extends React.Component {
     ]).insert(0, ['all', 'All Groups']).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
     return (
-      <div className="account-management-account-users">
+      <div className="container-fluid content-container account-management-account-users">
         <Row className="header-btn-row">
           <Col lg={2}>
             <h3>

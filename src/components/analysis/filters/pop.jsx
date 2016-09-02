@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import Select from '../../../components/select'
 
@@ -6,16 +7,12 @@ export class FilterPop extends React.Component {
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          POPs
-        </div>
+        <h5><FormattedMessage id="portal.analysis.filters.pop.title"/></h5>
         <div className="sidebar-content">
-          <div className="form-group">
-            <Select className="btn-block"
-              onSelect={this.props.changePop}
-              value={this.props.value}
-              options={this.props.options}/>
-          </div>
+          <Select className="btn-block"
+            onSelect={this.props.changePop}
+            value={this.props.value}
+            options={this.props.options}/>
         </div>
       </div>
     );
