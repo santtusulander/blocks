@@ -73,6 +73,7 @@ class ConfigurationDefaults extends React.Component {
   }
   changeTTLValue(path) {
     return e => {
+      console.log(e.target.value)
       const value = secondsFromUnit(e.target.value, this.state.ttlUnit)
       this.props.changeValue(path, value)
     }
@@ -171,7 +172,11 @@ class ConfigurationDefaults extends React.Component {
               'CDN TTL'}
           </Col>
           <Col lg={2} xs={3}>
-            <Input type="text" placeholder={intl.formatMessage({id: 'portal.policy.edit.defaults.timeToLive.text'})}
+            <Input type="text"
+              className="ttl-value"
+              placeholder={intl.formatMessage({
+                id: 'portal.policy.edit.defaults.timeToLive.text'
+              })}
               value={ttlValue}
               onChange={this.changeTTLValue(policyPaths.max_age)}/>
           </Col>
