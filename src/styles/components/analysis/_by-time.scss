@@ -5,8 +5,6 @@
   position: relative;
 
   @include print {
-    // scss-lint:disable ImportantRule SelectorDepth
-    // Need to override default styles
     &:not(.bg-transparent) {
       border: 1px solid $silver-40;
     }
@@ -34,26 +32,57 @@
     background-color: transparent;
   }
 
+  .dataset-comparison {
+    opacity: 0.4;
+  }
+
   .line {
+    stroke: $pale-blue;
     stroke-width: 2px;
+    fill: transparent;
 
-    .dark-theme &,
-    .light-theme & {
+    &.purple {
+      stroke: $purple;
+    }
+
+    &.red {
+      stroke: $red;
+    }
+
+    &.orange {
+      stroke: $orange;
+    }
+
+    &.yellow {
+      stroke: $yellow;
+    }
+
+    &.green {
+      stroke: $green;
+    }
+
+    &.darkgreen {
+      stroke: $dark-green;
+    }
+
+    &.paleblue {
       stroke: $pale-blue;
-      fill: transparent;
     }
 
-    &.dataset-1 {
-
-      .dark-theme &,
-      .light-theme & {
-        stroke: $green;
-      }
+    &.black {
+      stroke: $black;
     }
 
-    &.dataset-2,
-    &.dataset-3 {
-      opacity: 0.5;
+    &.grey {
+      stroke: $grey;
+    }
+
+    &.silver {
+      stroke: $silver;
+    }
+
+    &.darkblue {
+      stroke: $dark-blue;
     }
   }
 
@@ -64,8 +93,6 @@
   text {
 
     @include print {
-      // scss-lint:disable ImportantRule
-      // Need to override default styles
       font-size: $font-size;
       fill: $black !important;
     }
@@ -95,7 +122,8 @@
   .crosshair {
     stroke-width: 1px;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       stroke: rgba($black, 0.2);
     }
   }

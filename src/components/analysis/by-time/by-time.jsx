@@ -8,6 +8,8 @@ import Immutable from 'immutable'
 import Tooltip from '../../tooltip'
 import Legend from './legend'
 
+import COLORS from '../../../constants/colors'
+
 const closestDate = d3.bisector(d => d.timestamp).left
 
 const getExtent = (datasets, key) => {
@@ -89,6 +91,8 @@ class AnalysisByTime extends React.Component {
       const d1 = sourceData[i]
       if(d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
         i = i -1
+      } else if (!d1) {
+        i = i -1
       }
       const tooltipData = datasets.map(dataset => {
         let realValue = dataset.data[i][this.props.dataKey]
@@ -99,11 +103,19 @@ class AnalysisByTime extends React.Component {
             realValue = realValue - against.data[i][this.props.dataKey]
           }
         }
+        const formatter = dataset.xAxisFormatter ?
+          (date, val) => {
+            const dateMap = Immutable.fromJS({timestamp: date})
+            const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+            const formattedValue = this.formatY(val)
+            return `${formattedDate} ${formattedValue}`
+          }
+        : null
         return configTooltip(
           dataset.data[i].timestamp,
           dataset.data[i][this.props.dataKey],
           realValue,
-          this.props.formatPrimaryTooltip
+          formatter
         )
       })
       this.setState({
@@ -133,14 +145,15 @@ class AnalysisByTime extends React.Component {
     if(!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
     }
-    if(!this.props.dataSets || !this.props.dataSets.length) {
+    if(!this.props.dataSets || !this.props.dataSets.length ||
+      !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
       return <div className="no-data-list-section section-sm text-sm"><p>No data found.</p></div>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
       if(dataset.get('stackedAgainst')) {
         const against = this.props.dataSets
           .find(otherDataset => otherDataset.id === dataset.get('stackedAgainst'))
-        if(against) {
+        if(against && against.data.length) {
           dataset = dataset.set('data', dataset.get('data').map((data, i) => {
             return data.merge({
               bits_per_second: data.get('bits_per_second') + against.data[i].bits_per_second,
@@ -219,15 +232,26 @@ class AnalysisByTime extends React.Component {
           height={this.props.height}
           ref='chart'>
           {stackedDatasets.map((dataset, i) => {
-            return (<g key={i}>
-              {dataset.line &&
-                <path d={trafficLine(dataset.data)}
-                  className={`line dataset-${i}`}/>}
-              {dataset.area &&
-                <path d={trafficArea(dataset.data)}
-                  className={`area dataset-${i}`}
-                  fill={`url(#dt-${i}-gradient)`} />}
-            </g>)
+            return (
+              <g key={i}
+                className={dataset.comparisonData ? 'dataset-comparison' : null}>
+                {dataset.line &&
+                  <path d={trafficLine(dataset.data)}
+                    className={`line ${dataset.color}`}/>}
+                {dataset.area &&
+                  <path d={trafficArea(dataset.data)}
+                    className="area"
+                    fill={`url(#dt-${i}-gradient)`} />}
+                <defs>
+                  <linearGradient key={i} id={`dt-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor={COLORS[dataset.color]} stopOpacity="0.5" />
+                    {dataset.noGradient ?
+                      <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity="0.5" />
+                    : <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity="0" />}
+                  </linearGradient>
+                </defs>
+              </g>
+            )
           })}
           {this.state.tooltipText.map((text, i) => {
             return(
@@ -326,24 +350,6 @@ class AnalysisByTime extends React.Component {
                 ].join(' ')}/>
             )
           })}
-          <defs>
-            <linearGradient id="dt-0-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#00a9d4" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="dt-1-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#89ba17" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#89ba17" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="dt-2-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#00a9d4" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="dt-3-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#89ba17" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#89ba17" stopOpacity="0" />
-            </linearGradient>
-          </defs>
         </svg>
 
       {this.props.showTooltip && <div className='tooltips'>
@@ -362,6 +368,8 @@ class AnalysisByTime extends React.Component {
       </div>}
 
       {this.props.showLegend && <Legend
+        colors={this.props.dataSets.map(dataset => dataset.color)}
+        isComparison={this.props.dataSets.map(dataset => dataset.comparisonData)}
         labels={this.props.dataSets.map(dataset => dataset.label)}
         values={this.props.dataSets.map((dataset, i) => this.state.tooltipText[i])}
       />}
