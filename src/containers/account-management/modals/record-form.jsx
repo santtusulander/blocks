@@ -2,18 +2,14 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
 
 import {
   getById,
   createResource,
-  removeResource,
-  startFetching,
-  stopFetching
+  updateResource,
+  startFetching
 } from '../../../redux/modules/dns-records/actions'
-import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
-import UDNButton from '../../../components/button'
 import RecordForm from '../../../components/account-management/record-form'
 
 import { checkForErrors } from '../../../util/helpers'
@@ -52,7 +48,7 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, saveRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
+  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
   const recordFormProps = {
     domain,
     edit,
@@ -65,7 +61,7 @@ const RecordFormContainer = props => {
       if (fields.prio) {
         fields.prio = Number(fields.prio)
       }
-      edit ? saveRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
+      edit ? updateRecord(fields, domain, records, activeRecord.get('name')) : addRecord(fields, domain)
     },
     onCancel: closeModal,
     ...formProps
@@ -84,26 +80,25 @@ const RecordFormContainer = props => {
 }
 
 RecordFormContainer.propTypes = {
-  activeRecord: PropTypes.string,
+  activeRecord: PropTypes.object,
   addRecord: PropTypes.func,
   closeModal: PropTypes.func,
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
   records: PropTypes.instanceOf(List),
-  saveRecord: PropTypes.func,
+  updateRecord: PropTypes.func,
   values: PropTypes.object
 
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const records = dnsRecords.get('resources')
-  const activeRecord = dnsRecords.get('activeRecord')
-  let toEdit = getById(records, activeRecord)
+  let toEdit = getById(records, dnsRecords.get('activeRecord'))
   let initialValues = undefined
   initialValues = toEdit && edit && getRecordFormInitialValues(toEdit.toJS())
   let props = {
-    activeRecord,
+    activeRecord: toEdit,
     domain: dns.get('activeDomain'),
     loading: dnsRecords.get('loading'),
     records
@@ -121,29 +116,15 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
       dispatch(startFetching())
-      dispatch(createResource(domain, values.name, values)).then(({ error, payload }) => {
-        if(error) {
-          dispatch(showInfoDialog({
-            title: 'Error',
-            content: payload.data.message,
-            buttons: <UDNButton onClick={() => dispatch(hideInfoDialog())} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
-          }))
-        }
-        dispatch(stopFetching())
-        closeModal()
-      })
+      dispatch(createResource(domain, values.name, values))
+        .then(() => closeModal())
     },
-    saveRecord: (formValues, zone, records, activeRecord) => {
+    updateRecord: (formValues, zone, records, activeRecord) => {
       const values = recordValues(formValues)
-      const oldRecord = getById(records, activeRecord).toJS()
       values.class = 'IN'
       dispatch(startFetching())
-      dispatch(removeResource(zone, oldRecord.name, oldRecord))
-        .then(() => dispatch(createResource(zone, values.name, values)))
-        .then(() => {
-          dispatch(stopFetching())
-          closeModal()
-        })
+      dispatch(updateResource(zone, activeRecord, values))
+        .then(() => closeModal())
     }
   }
 }

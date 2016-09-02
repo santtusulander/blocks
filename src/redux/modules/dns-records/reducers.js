@@ -60,7 +60,7 @@ export const updateSuccess = (state, {payload: {data}}) => {
   return state.merge( {loading: false, resources: state.get('resources').set(index, data) })
 }
 export const updateFailed = (state) => {
-  return state
+  return state.set('loading', false)
 }
 
 //DELETE
