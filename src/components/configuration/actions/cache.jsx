@@ -23,6 +23,7 @@ class Cache extends React.Component {
     this.handleEtagChange = this.handleEtagChange.bind(this)
     this.handleTTLTypeChange = this.handleTTLTypeChange.bind(this)
     this.handleToggleChange = this.handleToggleChange.bind(this)
+    this.getMaxAge = this.getMaxAge.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   handleChange(key) {
@@ -45,12 +46,29 @@ class Cache extends React.Component {
       this.setState(stateObj)
     }
   }
+  getMaxAge() {
+    let maxAge = parseInt(this.state.maxAge);
+
+    switch (this.state.ttlType) {
+      case 'minutes':
+        maxAge = maxAge * 60;
+        break;
+      case 'hours':
+        maxAge = maxAge * 3600;
+        break;
+      case 'days':
+        maxAge = maxAge * 86400;
+        break;
+    }
+
+    return maxAge;
+  }
   saveChanges() {
     this.props.changeValue(
       this.props.path,
       this.props.set.merge({
         check_etag: this.state.checkEtag,
-        max_age: parseInt(this.state.maxAge),
+        max_age: this.getMaxAge(),
         no_store: this.state.noStore,
         honor_origin: this.state.honorOrigin
       })
