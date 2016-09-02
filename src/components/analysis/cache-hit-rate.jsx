@@ -50,30 +50,15 @@ class AnalysisCacheHitRate extends React.Component {
     })
   }
   sortedData(data, sortBy, sortDir) {
-    let sortFunc = ''
-    if(this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
-      sortFunc = data.sort((a, b) => {
-        sortBy = sortBy.toString().split(',')
-        if(a.get(sortBy[0]).get(sortBy[1]) < b.get(sortBy[0]).get(sortBy[1])) {
-          return -1 * sortDir
-        }
-        else if(a.get(sortBy[0]).get(sortBy[1]) > b.get(sortBy[0]).get(sortBy[1])) {
-          return 1 * sortDir
-        }
-        return 0
-      })
-    } else {
-      sortFunc = data.sort((a, b) => {
-        if(a.get(sortBy) < b.get(sortBy)) {
-          return -1 * sortDir
-        }
-        else if(a.get(sortBy) > b.get(sortBy)) {
-          return 1 * sortDir
-        }
-        return 0
-      })
-    }
-    return sortFunc
+    return data.sort((a, b) => {
+      if(a.get(sortBy) < b.get(sortBy)) {
+        return -1 * sortDir
+      }
+      else if(a.get(sortBy) > b.get(sortBy)) {
+        return 1 * sortDir
+      }
+      return 0
+    })
   }
   changeChartType( value ) {
     this.setState({chartType: value})
@@ -152,7 +137,7 @@ class AnalysisCacheHitRate extends React.Component {
               <TableSorter {...sorterProps} column="timestamp">
               Date
               </TableSorter>
-              <TableSorter {...sorterProps} column="chit_ratio,percent_total" sortFunc="specific">
+              <TableSorter {...sorterProps} column="chit_ratio">
               Cache Hit Rate (%)
               </TableSorter>
             </tr>

@@ -10,7 +10,7 @@ import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import TruncatedTitle from '../truncated-title'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class ContentItemList extends React.Component {
   constructor(props) {

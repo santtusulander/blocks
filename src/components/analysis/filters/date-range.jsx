@@ -1,17 +1,17 @@
 import React from 'react'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl';
 
 import DateRangeSelect from '../../../components/date-range-select'
 import DateRanges from '../../../constants/date-ranges'
+
 
 export class FilterDateRange extends React.Component {
 
   render() {
     return (
       <div>
-        <div className="sidebar-section-header">
-          Date Range
-        </div>
+        <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
         <div className="sidebar-content">
           <DateRangeSelect
             changeDateRange={this.props.changeDateRange}

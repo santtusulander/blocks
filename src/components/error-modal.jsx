@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class ErrorModal extends React.Component {
   constructor(props) {

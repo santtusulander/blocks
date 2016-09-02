@@ -157,7 +157,7 @@ class AnalysisTraffic extends React.Component {
               <FormattedMessage id="portal.analytics.trafficOverview.byCountry.country.header"/>
             </TableSorter>
             <TableSorter {...sorterProps} column={byCountryDataKey}>
-              {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwith.header"/> : <FormattedMessage id="portal.analytics.trafficOverview.byCountry.requests.header"/>}
+              {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwith.header"/> : <FormattedMessage id="portal.analytics.trafficOverview.byCountry.request.header"/>}
             </TableSorter>
             <th className="text-center"><FormattedMessage id="portal.analytics.trafficOverview.byCountry.periodTrend.header"/></th>
           </tr>

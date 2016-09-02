@@ -21,7 +21,7 @@ import UDNButton from '../../../components/button'
 import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 
 class AccountManagementAccountGroups extends React.Component {
@@ -235,7 +235,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     return (
-      <div className="account-management-account-groups">
+      <div className="container-fluid content-container account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>

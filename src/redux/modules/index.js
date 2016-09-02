@@ -20,6 +20,7 @@ export const permissions = require('./permissions').default;
 export const support = require('./support').default;
 
 //Account Management
+export const dnsRecords = require('./dns-records/actions').default;
 export const dns = require('./dns').default;
 
 //Analytics

@@ -18,7 +18,7 @@ import AccountManagementGroups from './containers/account-management/tabs/groups
 import AccountManagementAccounts from './components/account-management/system/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
-import AccountManagementDNS from './components/account-management/system/dns'
+import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementRoles from './components/account-management/system/roles'
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'

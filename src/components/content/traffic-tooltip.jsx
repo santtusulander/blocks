@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 function getValue(stat) {
   return stat ? stat.split(' ')[0] : ''
