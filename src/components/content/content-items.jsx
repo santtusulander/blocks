@@ -186,6 +186,8 @@ class ContentItems extends React.Component {
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+)\.cdx-.+?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
+      const itemDailyTraffic = this.getDailyTraffic(item)
+
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
@@ -200,7 +202,7 @@ class ContentItems extends React.Component {
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
-        dailyTraffic: this.getDailyTraffic(item)
+        dailyTraffic: itemDailyTraffic
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
