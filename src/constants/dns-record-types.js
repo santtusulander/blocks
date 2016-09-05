@@ -10,8 +10,7 @@ const RECORD_TYPES = [
   'PTR',
   'SPF',
   'SRV',
-  'TXT',
-  'SOA'
+  'TXT'
 ]
 
 export default RECORD_TYPES
