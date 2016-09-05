@@ -155,7 +155,7 @@ const analyticsTabs = [
 /* helper for creating Analytics Tab-Routes */
 const getAnalyticsTabRoutes = store => <Route>
   <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component]) => <Route path={path}
+  {analyticsTabs.map(([permission, path, component]) => <Route key={path} path={path}
     component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
   )}
 </Route>
