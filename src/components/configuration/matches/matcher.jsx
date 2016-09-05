@@ -9,7 +9,7 @@ import {
   getMatchFilterType
 } from '../../../util/policy-config'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class Matcher extends React.Component {
   constructor(props) {
@@ -181,9 +181,10 @@ Matcher.propTypes = {
   close: React.PropTypes.func,
   contains: React.PropTypes.bool,
   description: React.PropTypes.string,
+  intl: React.PropTypes.object,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = injectIntl(Matcher)

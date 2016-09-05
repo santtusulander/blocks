@@ -142,7 +142,7 @@ class QueryString extends React.Component {
 QueryString.displayName = 'QueryString'
 QueryString.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

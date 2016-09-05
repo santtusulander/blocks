@@ -48,6 +48,7 @@ class ConfigurationPublishVersion extends React.Component {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
           <Button bsStyle="primary"
+            className="save-btn"
             onClick={this.handleSave}
             disabled={this.props.publishing || !this.state.publishTarget}>
             {this.props.publishing ? <FormattedMessage id="portal.button.PUBLISHING"/> : <FormattedMessage id="portal.button.PUBLISH"/>}
@@ -61,6 +62,7 @@ class ConfigurationPublishVersion extends React.Component {
 ConfigurationPublishVersion.displayName = 'ConfigurationPublishVersion'
 ConfigurationPublishVersion.propTypes = {
   hideAction: React.PropTypes.func,
+  intl: React.PropTypes.object,
   publishing: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   versionName: React.PropTypes.string

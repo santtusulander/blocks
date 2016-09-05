@@ -72,7 +72,7 @@ class Compression extends React.Component {
 Compression.displayName = 'Compression'
 Compression.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
