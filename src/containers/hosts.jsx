@@ -14,8 +14,6 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
-
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
