@@ -1,9 +1,16 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
+
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
 
 jest.dontMock('../policies.jsx')
 const ConfigurationPolicies = require('../policies.jsx')
+const ConfigurationSidebar = require('../sidebar.jsx')
 
 const fakeConfig = Immutable.fromJS(
   {"status": 1,
@@ -197,101 +204,56 @@ const fakeConfig = Immutable.fromJS(
   }
 )
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
+
 describe('ConfigurationPolicies', () => {
   it('should exist', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies />
-    );
-    expect(TestUtils.isCompositeComponent(policies)).toBeTruthy();
-  });
+    const policies = shallow(<ConfigurationPolicies intl={intlMaker()}/>)
+    expect(policies).toBeDefined()
+  })
 
   it('should change values', () => {
-    const changeValue = jest.genMockFunction()
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies changeValue={changeValue}
-        config={fakeConfig}/>
-    );
-    policies.handleChange('some path')(true)
+    const changeValue = jest.fn()
+    const policies = shallow(<ConfigurationPolicies changeValue={changeValue}
+      config={fakeConfig} intl={intlMaker()}/>)
+    policies.instance().handleChange('some path')(true)
     expect(changeValue.mock.calls[0][0]).toEqual('some path')
     expect(changeValue.mock.calls[0][1]).toBe(true)
   });
 
-  it('should clear active rule', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig} />
-    );
-    policies.activateRule([])
-    policies.changeActiveRuleType('request')
-    expect(policies.state.activeRulePath[0]).toBe('request_policy')
-    policies.clearActiveRule()
-    expect(policies.state.activeRulePath).toBe(null)
-    policies.activateMatch(0)
-    expect(policies.state.activeMatchPath).toBe(0)
-    policies.clearActiveRule()
-    expect(policies.state.activeMatchPath).toBe(null)
-    policies.activateSet('some path')
-    expect(policies.state.activeSetPath).toBe('some path')
-    policies.clearActiveRule()
-    expect(policies.state.activeSetPath).toBe(null)
-  });
+  it('should change active rule', () => {
+    const activateRule = jest.fn()
+    const policies = shallow(
+      <ConfigurationPolicies config={fakeConfig} intl={intlMaker()}
+        activateRule={activateRule} activeRule={Immutable.List()}/>
+    )
+    policies.instance().changeActiveRuleType('request')
+    expect(activateRule.mock.calls[0][0].get(0)).toEqual('request_policy')
+    policies.instance().changeActiveRuleType('response')
+    expect(activateRule.mock.calls[1][0].get(0)).toEqual('response_policy')
+  })
 
-  it('should handle right column close', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig} />
-    );
-    policies.activateMatch(0)
-    expect(policies.state.activeMatchPath).toBe(0)
-    policies.handleRightColClose()
-    expect(policies.state.activeMatchPath).toBe(null)
-    policies.activateSet('some path')
-    expect(policies.state.activeSetPath).toBe('some path')
-    policies.handleRightColClose()
-    expect(policies.state.activeSetPath).toBe(null)
-  });
+  it('should show sidebar when a rule is active', () => {
+    const policies = shallow(
+      <ConfigurationPolicies config={fakeConfig}
+        activeRule={Immutable.List([0])}
+        intl={intlMaker()}/>
+    )
+    const sidebar = policies.find(ConfigurationSidebar)
+    expect(sidebar.length).toBe(1)
+  })
 
-  it('should change active rule type', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig}/>
-    );
-    policies.activateRule([])
-    policies.changeActiveRuleType('request')
-    expect(policies.state.activeRulePath[0]).toBe('request_policy')
-    policies.changeActiveRuleType('response')
-    expect(policies.state.activeRulePath[0]).toBe('response_policy')
-  });
-
-  it('should activate rule', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig}/>
-    );
-    expect(policies.state.activeMatchPath).toBe(null)
-    expect(policies.state.activeRulePath).toBe(null)
-    expect(policies.state.activeSetPath).toBe(null)
-    policies.activateRule('some path')
-    expect(policies.state.activeMatchPath).toBe(null)
-    expect(policies.state.activeRulePath).toBe('some path')
-    expect(policies.state.activeSetPath).toBe(null)
-  });
-
-  it('should activate match', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig}/>
-    );
-    expect(policies.state.activeMatchPath).toBe(null)
-    expect(policies.state.activeSetPath).toBe(null)
-    policies.activateMatch(0)
-    expect(policies.state.activeMatchPath).toBe(0)
-    expect(policies.state.activeSetPath).toBe(null)
-  });
-
-  it('should activate set', () => {
-    let policies = TestUtils.renderIntoDocument(
-      <ConfigurationPolicies config={fakeConfig}/>
-    );
-    expect(policies.state.activeMatchPath).toBe(null)
-    expect(policies.state.activeSetPath).toBe(null)
-    policies.activateSet('some path')
-    expect(policies.state.activeMatchPath).toBe(null)
-    expect(policies.state.activeSetPath).toBe('some path')
-  });
+  it('should not show a sidebar when a rule is not active', () => {
+    const policies = shallow(
+      <ConfigurationPolicies config={fakeConfig} activeRule={null}
+        intl={intlMaker()}/>
+    )
+    const sidebar = policies.find(ConfigurationSidebar)
+    expect(sidebar.length).toBe(0)
+  })
 })

@@ -18,6 +18,10 @@ const UI_HIDE_ERROR_DIALOG = 'UI_HIDE_ERROR_DIALOG'
 const UI_SHOW_INFO_DIALOG = 'UI_SHOW_INFO_DIALOG'
 const UI_HIDE_INFO_DIALOG = 'UI_HIDE_INFO_DIALOG'
 
+const UI_POLICY_ACTIVE_MATCH_CHANGED = 'UI_POLICY_ACTIVE_MATCH_CHANGED'
+const UI_POLICY_ACTIVE_SET_CHANGED = 'UI_POLICY_ACTIVE_SET_CHANGED'
+const UI_POLICY_ACTIVE_RULE_CHANGED = 'UI_POLICY_ACTIVE_RULE_CHANGED'
+
 const theme = localStorage.getItem('EricssonUDNUiTheme') ?
   localStorage.getItem('EricssonUDNUiTheme') : 'dark'
 
@@ -42,7 +46,10 @@ export const defaultUI = fromJS({
   analysisSPChartType: 'bar',
   showErrorDialog: false,
   showInfoDialog: false,
-  infoDialogOptions: null
+  infoDialogOptions: null,
+  policyActiveMatch: null,
+  policyActiveRule: null,
+  policyActiveSet: null
 })
 
 // REDUCERS
@@ -125,6 +132,28 @@ export function analysisStatusCodeToggled(state, action) {
   return state.set('analysisErrorStatusCodes', newStatusCodes)
 }
 
+export function policyActiveMatchChanged(state, action) {
+  return state.merge({
+    policyActiveMatch: fromJS(action.payload),
+    policyActiveSet: null
+  })
+}
+
+export function policyActiveSetChanged(state, action) {
+  return state.merge({
+    policyActiveSet: fromJS(action.payload),
+    policyActiveMatch: null
+  })
+}
+
+export function policyActiveRuleChanged(state, action) {
+  return state.merge({
+    policyActiveRule: fromJS(action.payload),
+    policyActiveSet: null,
+    policyActiveMatch: null
+  })
+}
+
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
   UI_THEME_CHANGED: themeChanged,
@@ -138,7 +167,10 @@ export default handleActions({
   UI_HIDE_ERROR_DIALOG: errorDialogHidden,
   UI_SHOW_INFO_DIALOG: infoDialogShown,
   UI_HIDE_INFO_DIALOG: infoDialogHidden,
-  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled
+  UI_ANALYSIS_STATUS_CODE_TOGGLED: analysisStatusCodeToggled,
+  UI_POLICY_ACTIVE_MATCH_CHANGED: policyActiveMatchChanged,
+  UI_POLICY_ACTIVE_SET_CHANGED: policyActiveSetChanged,
+  UI_POLICY_ACTIVE_RULE_CHANGED: policyActiveRuleChanged
 }, defaultUI)
 
 // ACTIONS
@@ -156,3 +188,6 @@ export const showErrorDialog = createAction(UI_SHOW_ERROR_DIALOG)
 export const hideErrorDialog = createAction(UI_HIDE_ERROR_DIALOG)
 export const showInfoDialog = createAction(UI_SHOW_INFO_DIALOG)
 export const hideInfoDialog = createAction(UI_HIDE_INFO_DIALOG)
+export const changePolicyActiveMatch = createAction(UI_POLICY_ACTIVE_MATCH_CHANGED)
+export const changePolicyActiveSet = createAction(UI_POLICY_ACTIVE_SET_CHANGED)
+export const changePolicyActiveRule = createAction(UI_POLICY_ACTIVE_RULE_CHANGED)
