@@ -172,7 +172,7 @@ export class Property extends React.Component {
     const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
-    if(!this.props.activeHost || !this.props.activeHost.size) {
+    if(!this.props.activeHost || !this.props.activeHost.size || this.props.activeHostConfiguredName !== property) {
       this.fetchHost(property)
     }
     Promise.all([
