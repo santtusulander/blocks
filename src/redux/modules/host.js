@@ -4,6 +4,7 @@ import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
 import {urlBase, mapReducers, parseResponseData} from '../util'
+import {getConfiguredName} from '../../util/helpers'
 
 const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'
@@ -20,16 +21,6 @@ const emptyHosts = Immutable.Map({
   allHosts: Immutable.List(),
   fetching: false
 })
-
-const getConfiguredName = host => {
-  if(!host.size) {
-    return null
-  }
-  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
-    return host.getIn(['services',0,'configurations',0,'edge_configuration','trial_name'])
-  }
-  return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
-}
 
 // REDUCERS
 
