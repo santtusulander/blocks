@@ -183,19 +183,17 @@ class ContentItems extends React.Component {
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+)\.cdx-.+?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-
-      // Remove the trial url from trial property names
-      if (trialNameRegEx.test(item.get('id'))) {
+      if(item.get('id').indexOf &&
+        item.get('id').indexOf('.cdx-dev.unifieddeliverynetwork.net') !== -1) {
         item = item.merge({
-          id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1')
+          id: item.get('id').replace('.cdx-dev.unifieddeliverynetwork.net', ''),
+          name: item.get('id').replace('.cdx-dev.unifieddeliverynetwork.net', '')
         })
       }
       return Immutable.Map({
