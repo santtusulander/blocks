@@ -2,10 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as dnsActionCreators from '../../../redux/modules/dns'
-import { fetchResourcesWithDetails } from '../../../redux/modules/dns-records/actions'
+import * as domainActionCreators from '../../../redux/modules/dns'
+import * as dnsRecordActionCreators from '../../../redux/modules/dns-records/actions'
 import { toggleAccountManagementModal } from '../../../redux/modules/ui'
-import { setActiveRecord, startFetching } from '../../../redux/modules/dns-records/actions'
 
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
@@ -80,7 +79,7 @@ class AccountManagementSystemDNS extends Component {
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
-        {loadingDomains || loadingRecords ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
+        {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
         {activeModal === RECORD_EDIT &&
           <RecordForm
             edit={this.editingRecord}
@@ -91,8 +90,7 @@ class AccountManagementSystemDNS extends Component {
             onCancel={() => toggleModal(null)}
             activeDomain={activeDomain}
             onSave={soaEditOnSave}
-            { ...soaFormInitialValues }
-          />*/}
+            { ...soaFormInitialValues }/>*/}
       </div>
     )
   }
@@ -117,8 +115,8 @@ AccountManagementSystemDNS.propTypes = {
 
 function mapStateToProps({ dns, dnsRecords, ui }) {
   return {
-    loadingDomains: dns.get('loading'),
-    loadingRecords: dnsRecords.get('loading'),
+    loadingDomains: dns.get('fetching'),
+    loadingRecords: dnsRecords.get('fetching'),
     records: dnsRecords.get('resources').toJS(),
     domains: dns.get('domains').toJS(),
     activeDomain: dns.get('activeDomain'),
@@ -127,11 +125,12 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
 }
 
 function mapDispatchToProps(dispatch, { params: { brand } }) {
-  const { changeActiveDomain, fetchDomains, fetchDomain, startFetchingDomains } = bindActionCreators(dnsActionCreators, dispatch)
+  const { changeActiveDomain, fetchDomains, fetchDomain, startFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
+  const { fetchResourcesWithDetails, startFetching, setActiveRecord } = bindActionCreators(dnsRecordActionCreators, dispatch)
   return {
     fetchRecords: domain => {
-      dispatch(startFetching())
-      dispatch(fetchResourcesWithDetails(domain))
+      startFetching()
+      fetchResourcesWithDetails(domain)
     },
     fetchDomains: brand => {
       startFetchingDomains()
@@ -140,7 +139,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
-    setActiveRecord: id => dispatch(setActiveRecord(id))
+    setActiveRecord
   }
 }
 

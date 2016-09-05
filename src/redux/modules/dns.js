@@ -16,7 +16,7 @@ const DNS_START_FETCHING = 'DNS_START_FETCHING'
 const DNS_STOP_FETCHING = 'DNS_STOP_FETCHING'
 
 export const initialState = fromJS({
-  loading: false,
+  fetching: false,
   activeDomain: undefined,
   domains: []
 })
@@ -24,11 +24,11 @@ export const initialState = fromJS({
 // REDUCERS
 
 export function startedFetching(state) {
-  return state.merge({ loading: true })
+  return state.merge({ fetching: true })
 }
 
 export function stoppedFetching(state) {
-  return state.merge({ loading: false })
+  return state.merge({ fetching: false })
 }
 
 export function createDomainSuccess(state, { payload: { data, domain } }) {
@@ -69,7 +69,7 @@ export function fetchedAllDomainsSuccess(state, { payload }) {
   return state.merge({
     domains: fromJS(payload.map(domain => ({ id: domain }))),
     activeDomain: state.get('activeDomain') || payload[0],
-    loading: false
+    fetching: false
   })
 }
 
