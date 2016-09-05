@@ -53,21 +53,24 @@ const validate = fields => {
 
 const RecordFormContainer = props => {
   const { domain, edit, saveRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
+  const filteredValues = filterFields(values)
   const recordFormProps = {
     domain,
     edit,
-    values: filterFields(values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: fields => {
-      if (fields.ttl) {
-        fields.ttl = Number(fields.ttl)
+    submit: () => {
+      let { ttl, prio } = filteredValues
+      if (ttl) {
+        filteredValues.ttl = Number(ttl)
       }
-      if (fields.prio) {
-        fields.prio = Number(fields.prio)
+      if (prio) {
+        filteredValues.prio = Number(prio)
       }
-      edit ? saveRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
+      edit ?
+        saveRecord(filteredValues, domain, records, activeRecord) :
+        addRecord(filteredValues, domain)
     },
-    onCancel: closeModal,
+    cancel: closeModal,
     ...formProps
   }
   return (

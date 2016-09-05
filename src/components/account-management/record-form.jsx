@@ -5,9 +5,11 @@ import SelectWrapper from '../select-wrapper'
 
 import recordTypes from '../../constants/dns-record-types'
 
+import keyStrokeSupport from '../../decorators/key-stroke-decorator'
+
 import './record-form.scss'
 
-const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, prio }, values, shouldShowField }) =>
+const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField }) =>
   <form>
     <SelectWrapper
       {...type}
@@ -48,26 +50,26 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         addonAfter='seconds'/>}
     {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
     <ButtonToolbar className="text-right extra-margin-top">
-      <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+      <Button className="btn-outline" onClick={cancel}>Cancel</Button>
       <Button
         disabled={invalid || loading}
         bsStyle="primary"
-        onClick={() => onSave(values)}>{loading ? 'Saving...' : edit ? 'Save' : 'Add'}</Button>
+        onClick={submit}>{loading ? 'Saving...' : edit ? 'Save' : 'Add'}</Button>
     </ButtonToolbar>
   </form>
 
 RecordForm.displayName = 'RecordForm'
 
 RecordForm.propTypes = {
+  cancel: PropTypes.func,
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
-  onCancel: PropTypes.func,
-  onSave: PropTypes.func,
   shouldShowField: PropTypes.func,
+  submit: PropTypes.func,
   values: PropTypes.object
 }
 
-export default RecordForm
+export default keyStrokeSupport(RecordForm)
