@@ -6,22 +6,23 @@ import Toggle from '../../toggle'
 import Select from '../../select'
 
 import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { secondsToUnit, secondsFromUnit } from '../helpers'
 
 class Cache extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     let maxAge = Number(props.set.get('max_age'))
     let ttlType = 'seconds'
     if (maxAge / 86400 >= 1) {
-      maxAge = maxAge / 86400;
-      ttlType = 'days';
+      maxAge = secondsToUnit(maxAge, 'days')
+      ttlType = 'days'
     } else if (maxAge / 3600 >= 1) {
-      maxAge = maxAge / 3600;
-      ttlType = 'hours';
+      maxAge = secondsToUnit(maxAge, 'hours')
+      ttlType = 'hours'
     } else if (maxAge / 60 >= 1) {
-      maxAge = maxAge / 60;
-      ttlType = 'minutes';
+      maxAge = secondsToUnit(maxAge, 'minutes')
+      ttlType = 'minutes'
     }
 
     this.state = {
@@ -60,18 +61,18 @@ class Cache extends React.Component {
     }
   }
   getMaxAge() {
-    let maxAge = Number(this.state.maxAge);
+    let maxAge = Number(this.state.maxAge)
 
     switch (this.state.ttlType) {
       case 'minutes':
-        maxAge = maxAge * 60;
-        break;
+        maxAge = secondsFromUnit(maxAge, 'minutes')
+        break
       case 'hours':
-        maxAge = maxAge * 3600;
-        break;
+        maxAge = secondsFromUnit(maxAge, 'hours')
+        break
       case 'days':
-        maxAge = maxAge * 86400;
-        break;
+        maxAge = secondsFromUnit(maxAge, 'days')
+        break
     }
 
     return maxAge;
