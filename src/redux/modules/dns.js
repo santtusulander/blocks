@@ -43,9 +43,10 @@ export function createDomainFailure(state) {
 export function deleteDomainSuccess(state, { payload }) {
   const domains = state.get('domains')
   const index = domains.findIndex(domain => domain.get('id') === payload)
+  const newDomains = domains.delete(index)
   return state.merge({
-    domains: domains.delete(index),
-    activeDomain: domains.get(0) && domains.get(0).get('id')
+    domains: newDomains,
+    activeDomain: newDomains.get(0) && newDomains.get(0).get('id')
   })
 }
 
@@ -77,9 +78,9 @@ export function fetchedAllDomainsFailure(state) {
   })
 }
 
-export function activeDomainChange(state, action) {
+export function activeDomainChange(state, { payload }) {
   return state.merge({
-    activeDomain: action.payload
+    activeDomain: payload
   })
 }
 
