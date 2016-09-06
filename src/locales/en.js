@@ -415,6 +415,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.queryString.text': 'Query String',
   'portal.policy.edit.policies.policyRules.text': 'Policy Rules',
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
+  'portal.policy.edit.editRule.editPolicy.text': 'Edit Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
