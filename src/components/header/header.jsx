@@ -147,6 +147,10 @@ class Header extends React.Component {
       links.push( {label:  'Support'} )
     } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
       links.push( {label:  'Configuration'} )
+    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
+      links.push( {label:  'Network'} )
+    } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
+      links.push( {label:  'Dashboard'} )
     }
 
     return links.reverse()
