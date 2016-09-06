@@ -34,19 +34,17 @@ class SupportTicketPanel extends React.Component {
     return (
       <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
         <div className={priorityClassNames}></div>
-        <Grid componentClass="header" fluid={true}>
-          <Row>
-            <Col xs={6}>
-              <span className="support-ticket-panel-type">
-                {ticketTypeIcon}
-              </span>
-              <span className="support-ticket-panel-number">{this.props.number}</span>
-            </Col>
-            <Col xs={6} className="text-right">
-              <div className="support-ticket-panel-workflow">{this.props.status}</div>
-            </Col>
-          </Row>
-        </Grid>
+        <Row>
+          <Col xs={6}>
+            <span className="support-ticket-panel-type">
+              {ticketTypeIcon}
+            </span>
+            <span className="support-ticket-panel-number">{this.props.number}</span>
+          </Col>
+          <Col xs={6} className="text-right">
+            <div className="support-ticket-panel-workflow">{this.props.status}</div>
+          </Col>
+        </Row>
 
         <div className="support-ticket-panel-body">
           <h2>{this.props.title}</h2>
@@ -54,20 +52,18 @@ class SupportTicketPanel extends React.Component {
         </div>
 
         <footer>
-          <Grid componentClass="header" fluid={true}>
-            <Row>
-              <Col xs={6}>
-                <div className="support-ticket-panel-assignee">
-                  Assignee: <span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
-                </div>
-              </Col>
-              <Col xs={6} className="text-right">
-                <span className="support-ticket-panel-comments">
-                  <IconComments count={this.props.comments}/>
-                </span>
-              </Col>
-            </Row>
-          </Grid>
+          <Row>
+            <Col xs={6}>
+              <div className="support-ticket-panel-assignee">
+                Assignee: <span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
+              </div>
+            </Col>
+            <Col xs={6} className="text-right">
+              <span className="support-ticket-panel-comments">
+                <IconComments count={this.props.comments}/>
+              </span>
+            </Col>
+          </Row>
         </footer>
       </div>
     )
