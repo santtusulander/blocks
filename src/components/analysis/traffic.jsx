@@ -173,7 +173,6 @@ class AnalysisTraffic extends React.Component {
          </div>*/}
         <h3>
           {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/> : <FormattedMessage id="portal.analytics.trafficOverview.requests.text"/>}
-          {/*this.props.dateRange.toUpperCase()*/}
         </h3>
         <div className="analysis-data-box wide">
           <Row>
