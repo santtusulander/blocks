@@ -305,54 +305,66 @@ export class Configuration extends React.Component {
 
           {this.state.activeTab === 'defaults' ?
             <ConfigurationDefaults
-              config={activeConfig}
+              activateMatch={this.props.uiActions.changePolicyActiveMatch}
+              activateRule={this.props.uiActions.changePolicyActiveRule}
+              activateSet={this.props.uiActions.changePolicyActiveSet}
+              activeMatch={this.props.policyActiveMatch}
+              activeRule={this.props.policyActiveRule}
+              activeSet={this.props.policyActiveSet}
               changeValue={this.changeValue}
+              config={activeConfig}
               saveChanges={this.saveActiveHostChanges}/>
             : null}
 
           {this.state.activeTab === 'policies' ?
             <ConfigurationPolicies
-              config={activeConfig}
+              activateMatch={this.props.uiActions.changePolicyActiveMatch}
+              activateRule={this.props.uiActions.changePolicyActiveRule}
+              activateSet={this.props.uiActions.changePolicyActiveSet}
+              activeMatch={this.props.policyActiveMatch}
+              activeRule={this.props.policyActiveRule}
+              activeSet={this.props.policyActiveSet}
               changeValue={this.changeValue}
-              saveChanges={this.saveActiveHostChanges}
-              location={this.props.location}/>
+              config={activeConfig}
+              saveChanges={this.saveActiveHostChanges}/>
             : null}
 
-          {this.state.activeTab === 'performance' ?
-            <ConfigurationPerformance/>
-            : null}
+            {this.state.activeTab === 'performance' ?
+              <ConfigurationPerformance/>
+              : null}
 
-          {this.state.activeTab === 'security' ?
-            <ConfigurationSecurity/>
-            : null}
+            {this.state.activeTab === 'security' ?
+              <ConfigurationSecurity/>
+              : null}
 
-          {this.state.activeTab === 'certificates' ?
-            <ConfigurationCertificates/>
-            : null}
+            {this.state.activeTab === 'certificates' ?
+              <ConfigurationCertificates/>
+              : null}
 
-          {this.state.activeTab === 'change-log' ?
-            <ConfigurationChangeLog/>
-            : null}
-        </PageContainer>
+            {this.state.activeTab === 'change-log' ?
+              <ConfigurationChangeLog/>
+              : null}
+          </PageContainer>
 
-        <ConfigurationDiffBar
-          changeValue={this.changeValue}
-          currentConfig={!this.props.notification ?
-            activeConfig : Immutable.Map()}
-          originalConfig={!this.props.notification ?
-            this.state.activeConfigOriginal : Immutable.Map()}
-          saveConfig={this.saveActiveHostChanges}
-          saving={this.props.fetching}
-          />
+          <ConfigurationDiffBar
+            changeValue={this.changeValue}
+            currentConfig={!this.props.notification ?
+              activeConfig : Immutable.Map()}
+            originalConfig={!this.props.notification ?
+              this.state.activeConfigOriginal : Immutable.Map()}
+            saveConfig={this.saveActiveHostChanges}
+            saving={this.props.fetching}
+            />
 
-        {this.state.deleteModal && <DeleteModal
-        itemToDelete="Property"
-        cancel={toggleDelete}
-        submit={() => {
-          deleteHost(brand, account, group, property)
-            .then(() => router.push(getContentUrl('group', group, { brand, account })))
-        }}/>
-      }
+          {this.state.deleteModal && <DeleteModal
+          itemToDelete="Property"
+          cancel={toggleDelete}
+          submit={() => {
+            deleteHost(brand, account, group, property)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}/>
+        }
+
         {this.state.showPublishModal &&
           <Modal show={true}
             dialogClassName="configuration-sidebar"
@@ -401,9 +413,11 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
+  policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
+  policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
+  policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
@@ -419,7 +433,10 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching'),
-    notification: state.ui.get('notification')
+    notification: state.ui.get('notification'),
+    policyActiveMatch: state.ui.get('policyActiveMatch'),
+    policyActiveRule: state.ui.get('policyActiveRule'),
+    policyActiveSet: state.ui.get('policyActiveSet')
   };
 }
 

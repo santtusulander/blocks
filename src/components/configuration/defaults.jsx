@@ -1,55 +1,53 @@
 import React from 'react'
-import {Row, Col, Input} from 'react-bootstrap'
+import {Row, Col, Input, Button} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ConfigurationDefaultPolicies from './default-policies'
+import ConfigurationPolicyRules from './policy-rules'
+import ConfigurationPolicyRuleEdit from './policy-rule-edit'
+import ConfigurationSidebar from './sidebar'
+import CacheKeyQueryStringForm from './actions/cache-key-query-string-form'
+import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
 import Toggle from '../toggle'
 import Select from '../select'
+import IconAdd from '../icons/icon-add.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-function secondsToUnit(value, unit) {
-  value = parseInt(value || 0)
-  switch(unit) {
-    case 'minutes':
-      value = value / 60
-    break
-    case 'hours':
-      value = value / 3600
-    break
-    case 'days':
-      value = value / 86400
-    break
-  }
-  return value
-}
-function secondsFromUnit(value, unit) {
-  value = parseInt(value || 0)
-  switch(unit) {
-    case 'minutes':
-      value = value * 60
-    break
-    case 'hours':
-      value = value * 3600
-    break
-    case 'days':
-      value = value * 86400
-    break
-  }
-  return value
-}
+const policyPath = Immutable.List(['default_policy', 'policy_rules'])
+const getNameIndex = config => config.getIn(policyPath)
+  .findIndex(policy => {
+    if(policy.has('set')) {
+      return policy.get('set').has('cache_name')
+    }
+  })
 
 class ConfigurationDefaults extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       ttlUnit: 'seconds'
     }
 
+    this.addRule = this.addRule.bind(this)
     this.changeTTLUnit = this.changeTTLUnit.bind(this)
+    this.deleteRule = this.deleteRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
+    this.updateCacheKeyQueryString = this.updateCacheKeyQueryString.bind(this)
+  }
+  addRule(e) {
+    e.preventDefault()
+    const defaultPolicies = this.props.config.getIn(['default_policy','policy_rules']).push(Immutable.fromJS(
+      {match: {field: null, cases: [['',[]]]}}
+    ))
+    this.props.changeValue(['default_policy', 'policy_rules'], defaultPolicies)
+    this.props.activateRule(['default_policy', 'policy_rules', defaultPolicies.size - 1])
+    this.props.activateMatch(['default_policy', 'policy_rules', defaultPolicies.size - 1, 'match'])
+  }
+  deleteRule(policyType, index) {
+    const newPolicies = this.props.config.getIn(['default_policy','policy_rules']).splice(index, 1)
+    this.props.changeValue(['default_policy', 'policy_rules'], newPolicies)
   }
   handleChange(path) {
     return value => {
@@ -79,37 +77,46 @@ class ConfigurationDefaults extends React.Component {
       this.props.changeValue(path, value)
     }
   }
+  updateCacheKeyQueryString(set) {
+    const index = getNameIndex(this.props.config)
+    this.props.changeValue(policyPath.push(index,'set','cache_name'), set)
+  }
   render() {
-    let config = this.props.config;
+    const {config, intl} = this.props;
     if(!config || !config.size) {
       return (
         <div className="container"><FormattedMessage id="portal.loading.text"/></div>
       )
     }
-    const policyPath = Immutable.List([
-      'default_policy', 'policy_rules'])
-    let controlIndex = config.getIn(policyPath)
+    const controlIndex = config.getIn(policyPath)
       .findIndex(policy => {
         if(policy.has('set')) {
           return policy.get('set').has('cache_control')
         }
       })
-    let nameIndex = config.getIn(policyPath)
-      .findIndex(policy => {
-        if(policy.has('set')) {
-          return policy.get('set').has('cache_name')
-        }
-      })
+    const nameIndex = getNameIndex(config)
     const policyPaths = {
+      cache_name: policyPath.push(nameIndex,'set','cache_name'),
       honor_origin_cache_policies: policyPath.push(controlIndex,'set','cache_control','honor_origin'),
       honor_etags: policyPath.push(controlIndex,'set','cache_control','check_etag'),
       max_age: policyPath.push(controlIndex,'set','cache_control','max_age'),
       ignore_case: policyPath.push(nameIndex,'set','cache_name','ignore_case')
     };
 
-    let ttlValue = secondsToUnit(
-      this.props.config.getIn(policyPaths.max_age),
+    const ttlValue = secondsToUnit(
+      config.getIn(policyPaths.max_age),
       this.state.ttlUnit
+    )
+    const activeEditFormActions = {
+      changeValue: this.props.changeValue,
+      formatMessage: intl.formatMessage,
+      activateSet: this.props.activateSet
+    }
+    const activeEditForm = getActiveMatchSetForm(
+      this.props.activeMatch,
+      this.props.activeSet,
+      config,
+      activeEditFormActions
     )
     return (
       <div className="configuration-defaults">
@@ -118,7 +125,7 @@ class ConfigurationDefaults extends React.Component {
 
         <h2><FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/></h2>
 
-        { /* Ignore case from origin */}
+        {/* Ignore case from origin */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
@@ -129,7 +136,7 @@ class ConfigurationDefaults extends React.Component {
           </Col>
         </Row>
 
-        { /* Enable e-Tag support */}
+        {/* Enable e-Tag support */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.enableEtag.text"/>
@@ -145,7 +152,7 @@ class ConfigurationDefaults extends React.Component {
           </Col>
         </Row>
 
-        { /* Honor Origin Cache Control */}
+        {/* Honor Origin Cache Control */}
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">
             <FormattedMessage id="portal.policy.edit.defaults.honorOriginCacheControl.text"/>
@@ -164,7 +171,11 @@ class ConfigurationDefaults extends React.Component {
               'CDN TTL'}
           </Col>
           <Col lg={2} xs={3}>
-            <Input type="text" placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.defaults.timeToLive.text'})}
+            <Input type="text"
+              className="ttl-value"
+              placeholder={intl.formatMessage({
+                id: 'portal.policy.edit.defaults.timeToLive.text'
+              })}
               value={ttlValue}
               onChange={this.changeTTLValue(policyPaths.max_age)}/>
           </Col>
@@ -183,32 +194,52 @@ class ConfigurationDefaults extends React.Component {
         <hr/>
 
         <h3><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h3>
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            <FormattedMessage id="portal.policy.edit.defaults.cacheKey.text"/>
-          </Col>
-          <Col lg={5} xs={6}>
-            <Select className="input-select"
-              options={[
-                ['include_all_query_parameters', <FormattedMessage id="portal.policy.edit.defaults.includeAllQueryTerms.text"/>],
-                ['ignore_all_query_parameters', <FormattedMessage id="portal.policy.edit.defaults.ignoreAllQueryTerms.text"/>],
-                ['include_some_parameters', <FormattedMessage id="portal.policy.edit.defaults.includeAllQueryTerms.text"/>],
-                ['ignore_some_parameters', <FormattedMessage id="portal.policy.edit.defaults.ignoreSomeParams.text"/>]]}/>
-          </Col>
-        </Row>
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            <FormattedMessage id="portal.policy.edit.defaults.queryName.text"/>
-          </Col>
-          <Col lg={5} xs={6}>
-            <Input type="text" placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.defaults.queryName.placeholder'})}/>
-          </Col>
-        </Row>
+
+        <CacheKeyQueryStringForm
+          horizontal={true}
+          intl={intl}
+          set={config.getIn(policyPaths.cache_name)}
+          updateSet={this.updateCacheKeyQueryString}/>
 
         <hr/>
 
-        <h3><FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/></h3>
-        <ConfigurationDefaultPolicies/>
+        <Row className="header-btn-row">
+          <Col sm={8}>
+            <h3>
+              <FormattedMessage
+                id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>
+            </h3>
+          </Col>
+          <Col sm={4} className="text-right">
+            <Button bsStyle="success" className="btn-icon"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
+          </Col>
+        </Row>
+        <ConfigurationPolicyRules
+          defaultPolicies={config.getIn(['default_policy','policy_rules'])}
+          activateRule={this.props.activateRule}
+          deleteRule={this.deleteRule}/>
+        {this.props.activeRule ?
+          <ConfigurationSidebar
+            rightColVisible={!!activeEditForm}
+            handleRightColClose={()=>this.props.activateMatch(null)}
+            onHide={()=>this.props.activateRule(null)}
+            rightColContent={activeEditForm}>
+            <ConfigurationPolicyRuleEdit
+              activateMatch={this.props.activateMatch}
+              activateSet={this.props.activateSet}
+              activeMatchPath={this.props.activeMatch}
+              activeSetPath={this.props.activeSet}
+              changeValue={this.props.changeValue}
+              config={config}
+              rule={config.getIn(this.props.activeRule)}
+              rulePath={this.props.activeRule}
+              changeActiveRuleType={this.changeActiveRuleType}
+              hideAction={()=>this.props.activateRule(null)}/>
+          </ConfigurationSidebar>
+        : ''}
       </div>
     )
   }
@@ -216,8 +247,18 @@ class ConfigurationDefaults extends React.Component {
 
 ConfigurationDefaults.displayName = 'ConfigurationDefaults'
 ConfigurationDefaults.propTypes = {
+  activateMatch: React.PropTypes.func,
+  activateRule: React.PropTypes.func,
+  activateSet: React.PropTypes.func,
+  activeMatch: React.PropTypes.instanceOf(Immutable.List),
+  activeRule: React.PropTypes.instanceOf(Immutable.List),
+  activeSet: React.PropTypes.instanceOf(Immutable.List),
   changeValue: React.PropTypes.func,
-  config: React.PropTypes.instanceOf(Immutable.Map)
+  config: React.PropTypes.instanceOf(Immutable.Map),
+  intl: React.PropTypes.object
+}
+ConfigurationDefaults.defaultProps = {
+  config: Immutable.Map()
 }
 
 module.exports = injectIntl(ConfigurationDefaults)

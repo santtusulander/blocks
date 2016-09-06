@@ -31,11 +31,7 @@ class DNSList extends Component {
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
-          <td>
-            <Input
-              type="checkbox"
-              label={record.name}/>
-          </td>
+          <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
           <td>
