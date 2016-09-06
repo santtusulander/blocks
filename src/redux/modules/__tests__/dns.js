@@ -1,4 +1,4 @@
-jest.unmock('../user.js')
+jest.unmock('../dns')
 
 import {
   startedFetching,
@@ -11,14 +11,12 @@ import {
   editDomainFailure,
   fetchedAllDomainsSuccess,
   fetchedAllDomainsFailure,
-  fetchedDomainSuccess,
-  fetchedDomainFailure,
   activeDomainChange
 } from '../dns'
 
 import { is, fromJS } from 'immutable'
 
-describe('User Module', () => {
+describe('DNS Module', () => {
   let state = null
   beforeEach(() => {
     state = fromJS({
@@ -28,13 +26,13 @@ describe('User Module', () => {
 
   it('should handle startedFetching', () => {
     const newState = startedFetching(state)
-    expect(is(newState, state.set('loading', true)).toBeTruthy()
-  )
+    expect(is(newState, state.set('loading', true))).toBeTruthy()
+  })
 
   it('should handle stoppedFetching', () => {
     const newState = stoppedFetching(state)
-    expect(is(newState, state.set('loading', false)).toBeTruthy()
-  )
+    expect(is(newState, state.set('loading', false))).toBeTruthy()
+  })
 
   it('should handle createDomainSuccess', () => {
     const payload = { data: 'data', domain: 'domain' }
@@ -59,23 +57,18 @@ describe('User Module', () => {
   })
 
   it('should handle deleteDomainFailure', () => {
-    const newState = createDomainFailure(state)
+    const newState = deleteDomainFailure(state)
     expect(is(newState, state)).toBe(true)
-  })
-
-    expect( Immutable.is(newState, expectedState) ).toBeTruthy()
-
   })
 
   it('should handle editDomainSuccess', () => {
     const payload = { data: 'data', domain: 'aa' }
-    const newState = deleteDomainSuccess(state, { payload })
+    const newState = editDomainSuccess(state, { payload })
     const expectedState = fromJS({
-      activeDomain: 'bb',
       domains: fromJS([
         { id: payload.domain, details: payload.data },
         { id: 'bb' },
-        { id: 'cc' },
+        { id: 'cc' }
       ])
     })
     expect(is(newState, expectedState)).toBe(true)
@@ -87,65 +80,22 @@ describe('User Module', () => {
   })
 
   it('should handle fetchedAllDomainsSuccess', () => {
-    const newState = fetchedAllDomainsSuccess(state)
-    const expectedState = Immutable.fromJS({
-      currentUser: {},
-      fetching: false
+    const newDomains = [ 'qq', 'ww', 'ee' ]
+    const newState = fetchedAllDomainsSuccess(state, { payload: [ 'qq', 'ww', 'ee' ] })
+    const expectedState = state.merge({
+      domains: fromJS(newDomains.map(domain => ({ id: domain }))),
+      activeDomain: 'qq'
     })
-    expect( Immutable.is(newState, expectedState)).toBeTruthy()
+    expect(is(newState, expectedState)).toBeTruthy()
   })
 
   it('should handle fetchedAllDomainsFailure', () => {
-    const newState = fetchedAllDomainsFailure(state, { payload: [1] })
-    const expectedState = Immutable.fromJS({
-      allUsers: [1],
-      fetching: false
-    })
-    expect( Immutable.is(newState, expectedState)).toBeTruthy()
-  })
-
-  it('should handle fetchedDomainSuccess', () => {
-    const newState = fetchedDomainSuccess(state)
-    const expectedState = Immutable.fromJS({
-      allUsers: [],
-      fetching: false
-    })
-    expect( Immutable.is(newState, expectedState)).toBeTruthy()
+    const newState = fetchedAllDomainsFailure(state)
+    expect(is(newState, state.set('domains', fromJS([])))).toBe(true)
   })
 
   it('should handle activeDomainChange', () => {
-    const initialState = Immutable.fromJS({
-      allUsers: [
-        {email: 'abc'},
-        {email: 'def'}
-      ],
-      fetching: false
-    })
-    const newState = activeDomainChange(initialState, { payload: 'abc' })
-    const expectedState = Immutable.fromJS({
-      allUsers: [
-        {email: 'def'}
-      ],
-      fetching: false
-    })
-    expect( Immutable.is(newState, expectedState)).toBeTruthy()
-  })
-
-  it('should handle fetchedDomainFailure', () => {
-    const initialState = Immutable.fromJS({
-      allUsers: [
-        {email: 'abc'}
-      ],
-      fetching: false
-    })
-    const newState = fetchedDomainFailure(initialState, { payload: {email: 'def'} })
-    const expectedState = Immutable.fromJS({
-      allUsers: [
-        {email: 'abc'},
-        {email: 'def'}
-      ],
-      fetching: false
-    })
-    expect( Immutable.is(newState, expectedState)).toBeTruthy()
+    const newState = activeDomainChange(state, { payload: 'qqq' })
+    expect(is(newState, state.set('activeDomain', 'qqq'))).toBe(true)
   })
 })
