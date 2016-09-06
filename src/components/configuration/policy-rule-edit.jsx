@@ -142,6 +142,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.props.hideAction()
   }
   render() {
+    const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
@@ -160,7 +161,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_header', 'Response Header']
         ] */}
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
+          <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
         <Modal.Body>
 
