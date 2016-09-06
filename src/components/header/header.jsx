@@ -18,6 +18,8 @@ import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
 
 import { FormattedMessage } from 'react-intl'
 
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -187,6 +189,14 @@ class Header extends React.Component {
         router.push(getUrl('/support', ...params))
       }
     }
+
+    const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
+    const isSP = accountType ? accountType.value === 2 : false
+
+    const logoLink = isSP ?
+      `/dashboard/udn/${this.props.activeAccount.get('id')}` :
+      getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
+
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -203,10 +213,7 @@ class Header extends React.Component {
                 </Link>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <Link to={getRoute('contentAccount', {
-                  brand: 'udn',
-                  account: user.get('account_id')
-                })} className="logo">
+                <Link to={logoLink} className="logo">
                   <IconEricsson />
                 </Link>
               </IsAllowed>
