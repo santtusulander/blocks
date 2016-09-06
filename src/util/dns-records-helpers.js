@@ -1,4 +1,5 @@
 import { recordFields } from '../constants/dns-record-types'
+import { contains } from 'underscore'
 
 export const getRecordValueString = (value) => {
   if (value.value ) return value.value
@@ -20,7 +21,7 @@ export const getRecordFormInitialValues = record => {
   }
 }
 
-export const isShown = recordType => field => recordFields[field].includes(recordType)
+export const isShown = recordType => field => contains(recordFields[field], recordType)
 
 export const recordValues = values => {
   if (isShown(values.type)('prio')) {

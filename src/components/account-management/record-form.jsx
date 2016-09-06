@@ -19,39 +19,49 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
       <Input
         {...name}
         type="text"
+        id='name-field'
         label="Host Name"
         placeholder="Enter Host Name"
         addonAfter={`.${domain}`}
         className='input-narrow host-name-input'/>}
-    {name.touched && name.error && <div className='error-msg'>{name.error}</div>}
+    {name.touched && name.error && <div className='error-msg' id='name-err'>{name.error}</div>}
     {shouldShowField('value') &&
       <Input
         {...value}
+        id='value-field'
         type="text"
         label="Address"
         placeholder="Enter Address"/>}
-    {value.touched && value.error && <div className='error-msg'>{value.error}</div>}
+    {value.touched && value.error && <div className='error-msg' id='value-err'>{value.error}</div>}
     {shouldShowField('prio') &&
       <Input
         {...prio}
+        id='prio-field'
         type="text"
         label="Priority"
         placeholder="Enter Priority"
         className='input-narrow priority-input'/>}
-      {prio.touched && prio.error && <div className='error-msg'>{prio.error}</div>}
+      {prio.touched && prio.error && <div className='error-msg' id='prio-err'>{prio.error}</div>}
     {shouldShowField('ttl') && <hr/>}
     {shouldShowField('ttl') &&
       <Input
         {...ttl}
+        id='ttl-field'
         type="text"
         label="TTL Value"
         placeholder="Enter TTL Value"
         className='input-narrow ttl-value-input'
         addonAfter='seconds'/>}
-    {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
+    {ttl.touched && ttl.error && <div className='error-msg' id='ttl-err'>{ttl.error}</div>}
     <ButtonToolbar className="text-right extra-margin-top">
-      <Button className="btn-outline" onClick={cancel}>Cancel</Button>
       <Button
+        id='cancel-button'
+        className="btn-outline"
+        onClick={cancel}>
+        Cancel
+      </Button>
+      <Button
+        id='submit-button'
         disabled={invalid || loading}
         bsStyle="primary"
         onClick={submit}>{loading ? 'Saving...' : edit ? 'Save' : 'Add'}</Button>
