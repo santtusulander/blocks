@@ -22,14 +22,6 @@
     margin-left: 84px;
   }
 
-  @include md {
-    padding-top: $md-header-total-height;
-  }
-
-  @include print {
-    padding-top: 0;
-  }
-
   .modal-open & {
     filter: blur(20px);
     // Enable hardware acceleration
