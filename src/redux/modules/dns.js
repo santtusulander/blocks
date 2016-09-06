@@ -7,9 +7,8 @@ import { urlBase, parseResponseData, mapReducers } from '../util'
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_DELETED = 'DOMAIN_DELETED'
 const DOMAIN_CREATED = 'DOMAIN_CREATED'
-const DOMAIN_EDITED = 'DOMAIN_EDITED'
+const DOMAIN_EDITED_OR_FETCHED = 'DOMAIN_EDITED_OR_FETCHED'
 const DOMAIN_FETCHED_ALL = 'DOMAIN_FETCHED_ALL'
-const DOMAIN_FETCHED = 'DOMAIN_FETCHED'
 const CHANGE_ACTIVE_DOMAIN = 'CHANGE_ACTIVE_DOMAIN'
 const CHANGE_ACTIVE_RECORD_TYPE = 'CHANGE_ACTIVE_RECORD_TYPE'
 const DNS_START_FETCHING = 'DNS_START_FETCHING'
@@ -44,9 +43,10 @@ export function createDomainFailure(state) {
 export function deleteDomainSuccess(state, { payload }) {
   const domains = state.get('domains')
   const index = domains.findIndex(domain => domain.get('id') === payload)
+  const newDomains = domains.delete(index)
   return state.merge({
-    domains: domains.delete(index),
-    activeDomain: domains.get(0) && domains.get(0).get('id')
+    domains: newDomains,
+    activeDomain: newDomains.get(0) && newDomains.get(0).get('id')
   })
 }
 
@@ -79,21 +79,9 @@ export function fetchedAllDomainsFailure(state) {
   })
 }
 
-export function fetchedDomainSuccess(state, { payload: { data, domain } }) {
-  const index = state.get('domains')
-    .findIndex(item => item.get('id') === domain && !item.get('details'))
+export function activeDomainChange(state, { payload }) {
   return state.merge({
-    domains: state.get('domains').set(index, fromJS({ details: data, id: domain }))
-  })
-}
-
-export function fetchedDomainFailure(state) {
-  return state
-}
-
-export function activeDomainChange(state, action) {
-  return state.merge({
-    activeDomain: action.payload
+    activeDomain: payload
   })
 }
 
@@ -105,12 +93,11 @@ export const domainToEdit = (domains, id) => domains.find(domain => domain.get('
 
 export default handleActions({
   DOMAIN_FETCHED_ALL: mapReducers(fetchedAllDomainsSuccess, fetchedAllDomainsFailure),
-  DOMAIN_FETCHED: mapReducers(fetchedDomainSuccess, fetchedDomainFailure),
   DNS_START_FETCHING: startedFetching,
   DNS_STOP_FETCHING: stoppedFetching,
   DOMAIN_DELETED: mapReducers(deleteDomainSuccess, deleteDomainFailure),
   DOMAIN_CREATED: mapReducers(createDomainSuccess, createDomainFailure),
-  DOMAIN_EDITED: mapReducers(editDomainSuccess, editDomainFailure),
+  DOMAIN_EDITED_OR_FETCHED: mapReducers(editDomainSuccess, editDomainFailure),
   CHANGE_ACTIVE_DOMAIN: activeDomainChange
 }, initialState)
 
@@ -118,7 +105,7 @@ export default handleActions({
 export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
   axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones`).then(parseResponseData))
 
-export const fetchDomain = createAction(DOMAIN_FETCHED,
+export const fetchDomain = createAction(DOMAIN_EDITED_OR_FETCHED,
   (brand, domain) => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
     .then(({ data }) => ({ data, domain }))
 )
@@ -136,7 +123,7 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
   }).then(({ data }) => ({ data, domain }))
 )
 
-export const editDomain = createAction(DOMAIN_EDITED, (brand, domain, data) =>
+export const editDomain = createAction(DOMAIN_EDITED_OR_FETCHED, (brand, domain, data) =>
   axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
     headers: {
       'Content-Type': 'application/json'
