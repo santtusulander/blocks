@@ -52,4 +52,3 @@ export default reduxForm({
     }
   }
 })(keyStrokeSupport(DeleteModal))
-

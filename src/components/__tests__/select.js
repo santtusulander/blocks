@@ -1,25 +1,20 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-
-jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
+import { shallow } from 'enzyme'
 
 jest.dontMock('../select.jsx')
-const Select = require('../select.jsx')
+const Select = require('../select.jsx').default
+import { Dropdown } from 'react-bootstrap'
 
 describe('Select', () => {
   it('should exist', () => {
-    let select = TestUtils.renderIntoDocument(
-      <Select value={'foo'} options={[['foo', 'bar']]} />
-    );
-    expect(TestUtils.isCompositeComponent(select)).toBeTruthy();
+    const select = shallow(<Select value={'foo'} options={[['foo', 'bar']]} />)
+    expect(select).toBeDefined()
   });
 
   it('can be passed a custom css class', () => {
-    let select = TestUtils.renderIntoDocument(
+    const select = shallow(
       <Select className="aaa" value={'foo'} options={[['foo', 'bar']]} />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithTag(select, 'div');
-    expect(ReactDOM.findDOMNode(container).className).toContain('aaa');
+    )
+    expect(select.find(Dropdown).props().className).toContain('aaa')
   });
 })
