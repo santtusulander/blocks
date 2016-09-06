@@ -241,8 +241,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addAction(flattenedPolicy.matches[0])}>
+              <Button bsStyle="primary"
+                      className="btn-icon btn-add-new"
+                      onClick={this.addAction(flattenedPolicy.matches[0])}
+                      disabled={!flattenedPolicy.matches[0].field}
+              >
                 <IconAdd />
               </Button>
             </Col>
@@ -286,7 +289,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               )
             })}
           </div>
-
           <ButtonToolbar className="text-right">
             <Button bsStyle="primary" onClick={this.cancelChanges}>
               <FormattedMessage id="portal.button.cancel"/>
