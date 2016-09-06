@@ -5,6 +5,7 @@ import {Input} from 'react-bootstrap'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import {injectIntl} from 'react-intl';
 
 class FilterIncludeComparison extends React.Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class FilterIncludeComparison extends React.Component {
     return (
       <div>
         <div className="sidebar-content">
-          <Input type="checkbox" label="Versus Previous Date Range"
+          <Input type="checkbox"
+            label={this.props.intl.formatMessage({id: 'portal.analysis.filters.includeComparison.label'})}
             checked={this.props.includeComparison}
             onChange={() => this.props.toggleComparison(!this.props.includeComparison)} />
         </div>
@@ -26,6 +28,7 @@ class FilterIncludeComparison extends React.Component {
 FilterIncludeComparison.displayName = 'FilterIncludeComparison'
 FilterIncludeComparison.propTypes = {
   includeComparison: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   toggleComparison: React.PropTypes.func
 }
 
@@ -34,4 +37,4 @@ function mapDispatchToProps(dispatch) {
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
 }
-export default connect(null, mapDispatchToProps)(FilterIncludeComparison)
+export default connect(null, mapDispatchToProps)(injectIntl(FilterIncludeComparison))
