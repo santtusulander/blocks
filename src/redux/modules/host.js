@@ -10,6 +10,7 @@ const HOST_CREATED = 'HOST_CREATED'
 const HOST_DELETED = 'HOST_DELETED'
 const HOST_FETCHED = 'HOST_FETCHED'
 const HOST_FETCHED_ALL = 'HOST_FETCHED_ALL'
+const HOST_NAMES_FETCHED_ALL = 'HOST_NAMES_FETCHED_ALL'
 const HOST_START_FETCH = 'HOST_START_FETCH'
 const HOST_UPDATED = 'HOST_UPDATED'
 const ACTIVE_HOST_CHANGED = 'ACTIVE_HOST_CHANGED'
@@ -19,6 +20,7 @@ const emptyHosts = Immutable.Map({
   activeHost: undefined,
   activeHostConfiguredName: null,
   allHosts: Immutable.List(),
+  configuredHostNames: Immutable.List(),
   fetching: false
 })
 
@@ -105,6 +107,20 @@ export function fetchAllFailure(state) {
   })
 }
 
+export function fetchAllNamesSuccess(state, action) {
+  return state.merge({
+    configuredHostNames: Immutable.fromJS(action.payload),
+    fetching: false
+  })
+}
+
+export function fetchAllNamesFailure(state) {
+  return state.merge({
+    configuredHostNames: Immutable.List(),
+    fetching: false
+  })
+}
+
 export function startFetch(state) {
   return state.set('fetching', true)
 }
@@ -139,6 +155,7 @@ export default handleActions({
   HOST_CREATED: mapReducers(createSuccess, createFailure),
   HOST_DELETED: mapReducers(deleteSuccess, deleteFailure),
   HOST_FETCHED: mapReducers(fetchSuccess, fetchFailure),
+  HOST_NAMES_FETCHED_ALL: mapReducers(fetchAllNamesSuccess, fetchAllNamesFailure),
   HOST_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
   HOST_START_FETCH: startFetch,
   HOST_UPDATED: mapReducers(updateSuccess, updateFailure),
@@ -196,6 +213,14 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
   .then(parseResponseData);
+})
+
+export const fetchConfiguredHostNames = createAction(HOST_NAMES_FETCHED_ALL, (brand, account, group) => {
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+    .then(action => Promise.all(action.data.map(
+      property => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}`)
+    )))
+    .then(resp => resp.map(property => getConfiguredName(Immutable.fromJS(property.data))));
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {

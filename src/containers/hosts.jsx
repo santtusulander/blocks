@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl, getConfiguredName } from '../util/helpers.js'
+import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -20,25 +20,18 @@ export class Hosts extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      propertyNames: Immutable.List()
-    }
-
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    this.props.fetchGroupData()
-      .then(resp => {
-        return resp.map(property => {
-          return getConfiguredName(Immutable.fromJS(property.payload))
-        })
-      })
-      .then(propertyNames => {
-        this.setState({propertyNames: Immutable.List(propertyNames)})
+    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+      this.props.fetchGroupData().then(()=>{
         this.props.fetchMetricsData()
       })
+    } else {
+      this.props.fetchMetricsData()
+    }
   }
   createNewHost(id, deploymentMode) {
     return this.props.hostActions.createHost(
@@ -64,8 +57,8 @@ export class Hosts extends React.Component {
     const params = this.props.params
     const { brand, account, group } = this.props.params
     const { activeAccount, activeGroup } = this.props
-    const propertyNames = this.state.propertyNames.size ?
-      this.state.propertyNames : this.props.hosts
+    const propertyNames = this.props.propertyNames.size ?
+      this.props.propertyNames : this.props.hosts
     const properties = propertyNames.map(host => {
       return Immutable.Map({
         id: host,
@@ -139,6 +132,7 @@ Hosts.propTypes = {
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  propertyNames: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
@@ -151,6 +145,7 @@ Hosts.defaultProps = {
   dailyTraffic: Immutable.List(),
   hosts: Immutable.List(),
   metrics: Immutable.List(),
+  propertyNames: Immutable.List(),
   sortValuePath: Immutable.List(),
   user: Immutable.Map()
 }
@@ -163,6 +158,7 @@ function mapStateToProps(state) {
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
+    propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
@@ -187,10 +183,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     hostActions.startFetching()
     accountActions.fetchAccount(brand, account)
     groupActions.fetchGroup(brand, account, group)
-    return hostActions.fetchHosts(brand, account, group)
-      .then(action => Promise.all(action.payload.map(
-        property => hostActions.fetchHost(brand, account, group, property)
-      )))
+    hostActions.fetchHosts(brand, account, group)
+    return hostActions.fetchConfiguredHostNames(brand, account, group)
   }
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
