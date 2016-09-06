@@ -245,9 +245,7 @@ class AnalysisByTime extends React.Component {
                 <defs>
                   <linearGradient key={i} id={`dt-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor={COLORS[dataset.color]} stopOpacity="0.5" />
-                    {dataset.noGradient ?
-                      <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity="0.5" />
-                    : <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity="0" />}
+                    <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
                   </linearGradient>
                 </defs>
               </g>
