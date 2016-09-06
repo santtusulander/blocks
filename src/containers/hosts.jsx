@@ -14,7 +14,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -25,11 +25,13 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeGroup ||
-      String(this.props.activeGroup.get('id')) !== this.props.params.group) {
-      this.props.fetchGroupData()
+    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+      this.props.fetchGroupData().then(()=>{
+        this.props.fetchMetricsData()
+      })
+    } else {
+      this.props.fetchMetricsData()
     }
-    this.props.fetchMetricsData()
   }
   createNewHost(id, deploymentMode) {
     return this.props.hostActions.createHost(
@@ -55,7 +57,9 @@ export class Hosts extends React.Component {
     const params = this.props.params
     const { brand, account, group } = this.props.params
     const { activeAccount, activeGroup } = this.props
-    const properties = this.props.hosts.map(host => {
+    const propertyNames = this.props.propertyNames.size ?
+      this.props.propertyNames : this.props.hosts
+    const properties = propertyNames.map(host => {
       return Immutable.Map({
         id: host,
         name: host
@@ -128,6 +132,7 @@ Hosts.propTypes = {
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  propertyNames: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
@@ -140,6 +145,7 @@ Hosts.defaultProps = {
   dailyTraffic: Immutable.List(),
   hosts: Immutable.List(),
   metrics: Immutable.List(),
+  propertyNames: Immutable.List(),
   sortValuePath: Immutable.List(),
   user: Immutable.Map()
 }
@@ -152,6 +158,7 @@ function mapStateToProps(state) {
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
+    propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
@@ -177,6 +184,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     accountActions.fetchAccount(brand, account)
     groupActions.fetchGroup(brand, account, group)
     hostActions.fetchHosts(brand, account, group)
+    return hostActions.fetchConfiguredHostNames(brand, account, group)
   }
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
