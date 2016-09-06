@@ -9,7 +9,7 @@ import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField }) =>
+export const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField }) =>
   <form>
     <SelectWrapper
       {...type}

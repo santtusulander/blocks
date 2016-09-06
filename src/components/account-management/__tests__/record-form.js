@@ -4,7 +4,7 @@ jest.unmock('../record-form.jsx')
 jest.unmock('underscore')
 jest.unmock('../../../util/dns-records-helpers')
 jest.unmock('../../../constants/dns-record-types')
-import CertificateForm from '../record-form.jsx'
+import { RecordForm } from '../record-form.jsx'
 
 import { isShown } from '../../../util/dns-records-helpers'
 
@@ -31,7 +31,7 @@ describe('SoaEditForm', () => {
           certificate: { touched, error, value: '' }
         }
       }
-      return shallow(<CertificateForm {...props}/>)
+      return shallow(<RecordForm {...props}/>)
     }
   })
   it('should exist', () => {
@@ -44,11 +44,11 @@ describe('SoaEditForm', () => {
   })
 
   it('should show prio field for MX record', () => {
-    expect(subject('MX').find('#prio-field')).toBe(isShown('MX')('prio'))
+    expect(subject('MX').find('#prio-field').length).toBe(isShown('MX')('prio') ? 1 : 0)
   })
 
   it('should disable submit button', () => {
-    subject(null, true).find('#submit-button').simulate('click')
+    subject(null, true).find('#submit-button .disabled')
     expect(submit.mock.calls.length).toBe(1)
   })
 
@@ -60,6 +60,6 @@ describe('SoaEditForm', () => {
   it('should render an error message', () => {
     touched = true
     error = REQUIRED
-    expect(subject('MX').find('#name-error').length).toBe(isShown('MX')('name'))
+    expect(subject('MX').find('#name-err').length).toBe(isShown('MX')('name') ? 1 : 0)
   })
 })
