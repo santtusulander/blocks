@@ -66,7 +66,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{sets.map(set => set.setkey).join(', ')}</td>
           <td className="right-btns has-confirmation">
             <Button bsStyle="primary"
-              className={`btn-link sm-padding activate-${type}-rule-${i}`}
+              className={`btn-link activate-${type}-rule-${i}`}
               onClick={this.activateRule([`${type}_policy`, 'policy_rules', i])}>
               <FormattedMessage id="portal.button.EDIT"/>
             </Button>
