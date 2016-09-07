@@ -3,6 +3,8 @@ import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 
+import TimeAxisLabels from './time-axis-labels'
+
 class AnalysisStackedByTime extends React.Component {
   formatY(data) {
     if(this.props.yAxisCustomFormat) {
@@ -76,16 +78,12 @@ class AnalysisStackedByTime extends React.Component {
               return line
             })
           }) : null}
-          {xScale.ticks(d3.time.day.utc, 1).map((tick, i) => {
-            return (
-              <g key={i}>
-                <text x={xScale(tick)} y={this.props.height - this.props.padding}
-                  className="x-axis">
-                  {moment.utc(tick).format('D')}
-                </text>
-              </g>
-            )
-          })}
+          {<TimeAxisLabels
+            xScale={xScale}
+            padding={this.props.padding}
+            height={this.props.height}
+            showHours={xExtent[1] - xExtent[0] <= 24*60*60*1000}
+            />}
           {yScale.ticks(4).reduce((axes, tick, i) => {
             if(i) {
               axes.push(

@@ -6,6 +6,7 @@ import numeral from 'numeral'
 
 import Tooltip from '../../tooltip'
 import Legend from './legend'
+import TimeAxisLabels from '../time-axis-labels'
 
 const closestDate = d3.bisector(d => d.timestamp).left
 
@@ -203,22 +204,6 @@ class AnalysisByTime extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    let hourTicks = xScale.ticks(9)
-    let dayTicks = xScale.ticks(d3.time.day.utc, this.props.xAxisTickFrequency || 1)
-    if (dayTicks.length > 12) {
-      dayTicks = xScale.ticks(12)
-    }
-    let monthTicks = xScale.ticks(d3.time.month.utc, this.props.xAxisTickFrequency || 1)
-    if (monthTicks.length > 3) {
-      monthTicks = xScale.ticks(3)
-    }
-    /* Display the start month even if the date range doesn't start on the 1st
-       but only if it's not so close to the end of the month that it'll overlap
-       the next month's label */
-    const dayTicksStartDate = this.props.axes ? moment(dayTicks[0]).date() : 1
-    if(dayTicksStartDate < 25 && dayTicksStartDate > 1) {
-      monthTicks.unshift(dayTicks[0])
-    }
     const slices = []
     if(this.props.sliceGranularity) {
       slices.push(startDate)
@@ -275,49 +260,13 @@ class AnalysisByTime extends React.Component {
                 y1={0} y2={this.props.height}/>
             </g>
             : null}
-          { // Show hour ticks only when date range is 1 day
-            this.props.axes && endDate - startDate <= 24*60*60*1000 ?
-            hourTicks.map((tick, i) => {
-              return (
-                <g key={i}>
-                  <text x={xScale(tick)} y={this.props.height -  1.5 * this.props.padding}>
-                    {moment.utc(tick).format('HH[:]mm')}
-                  </text>
-                </g>
-              )
-            })
-            : null
-          }
-          {this.props.axes ?
-            dayTicks.map((tick, i) => {
-              return (
-                <g key={i}>
-                  <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                    {moment.utc(tick).format('D')}
-                  </text>
-                </g>
-              )
-            })
-            : null
-          }
-          {this.props.axes ?
-            monthTicks.map((tick, i) => {
-              if(tick) {
-                return (
-                  <g key={i}>
-                    <text x={xScale(tick)}
-                      y={this.props.height - (this.props.padding / 2)}>
-                      {moment.utc(tick).format('MMMM')}
-                    </text>
-                  </g>
-                )
-              }
-              else {
-                return null
-              }
-            })
-            : null
-          }
+          {this.props.axes && <TimeAxisLabels
+            xScale={xScale}
+            padding={this.props.padding}
+            height={this.props.height}
+            xAxisTickFrequency={this.props.xAxisTickFrequency}
+            showHours={endDate - startDate <= 24*60*60*1000}
+            />}
           {this.props.axes ? (() => {
             const yMax = Math.max(...yScale.ticks(4))
             return yScale.ticks(4).reduce((axes, tick, i) => {
