@@ -288,7 +288,6 @@ $lt-caret-color: $silver-60;
   .btn-icon {
     padding: 0;
     line-height: 0;
-    fill: inherit;
   }
 
   .btn-round {
@@ -539,27 +538,6 @@ $lt-caret-color: $silver-60;
       color: $lt-button-color;
       fill: $lt-button-color;
       stroke: $lt-button-color;
-    }
-  }
-
-  .content-item-chart .btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $dt-text-color;
-      background-color: rgba($pale-blue, 0.1);
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
-      color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
     }
   }
 
