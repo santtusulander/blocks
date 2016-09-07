@@ -92,7 +92,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       e.stopPropagation()
       const setContainerPath = path.slice(0, -3)
       const filtered = this.props.config.getIn(setContainerPath)
-        .filterNot((val, i) => i === path[path.length-3])
+        .filterNot((val, i) => i === path.get(path.size-3))
       this.props.changeValue(setContainerPath, filtered)
       this.props.activateSet(null)
     }
@@ -104,7 +104,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const set = this.props.config.getIn(path.slice(0, -2))
       const updated = this.props.config
         .getIn(path.slice(0, -3))
-        .filterNot((val, i) => i === path[path.length-3])
+        .filterNot((val, i) => i === path.get(path.size-3))
         .insert(newIndex, set)
       this.props.changeValue(path.slice(0, -3), updated)
       this.props.activateSet(null)
@@ -128,7 +128,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newConfig = this.state.originalConfig.setIn(
         parentPath,
         this.state.originalConfig.getIn(parentPath)
-          .splice(this.props.rulePath[this.props.rulePath.length - 1], 1)
+          .splice(this.props.rulePath.get(this.props.rulePath.size - 1), 1)
       )
       this.props.changeValue([], newConfig)
     }
@@ -142,6 +142,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.props.hideAction()
   }
   render() {
+    const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
@@ -160,10 +161,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_header', 'Response Header']
         ] */}
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
-          <p>
-            {this.props.location.query.name}
-          </p>
+          <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
         <Modal.Body>
 
@@ -192,7 +190,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 values = `${values} and ${match.values.length - 1} others`
               }
               let active = false
-              if(Immutable.fromJS(match.path).equals(Immutable.fromJS(this.props.activeMatchPath))) {
+              if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
               }
               let filterText = ''
@@ -244,8 +242,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addAction(flattenedPolicy.matches[0])}>
+              <Button bsStyle="primary"
+                      className="btn-icon btn-add-new"
+                      onClick={this.addAction(flattenedPolicy.matches[0])}
+                      disabled={!flattenedPolicy.matches[0].field}
+              >
                 <IconAdd />
               </Button>
             </Col>
@@ -254,7 +255,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <div className="conditions">
             {flattenedPolicy.sets.map((set, i) => {
               let active = false
-              if(Immutable.fromJS(set.path).equals(Immutable.fromJS(this.props.activeSetPath))) {
+              if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
                 active = true
               }
               return (
@@ -289,7 +290,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               )
             })}
           </div>
-
           <ButtonToolbar className="text-right">
             <Button bsStyle="primary" onClick={this.cancelChanges}>
               <FormattedMessage id="portal.button.cancel"/>
@@ -309,15 +309,14 @@ ConfigurationPolicyRuleEdit.displayName = 'ConfigurationPolicyRuleEdit'
 ConfigurationPolicyRuleEdit.propTypes = {
   activateMatch: React.PropTypes.func,
   activateSet: React.PropTypes.func,
-  activeMatchPath: React.PropTypes.array,
-  activeSetPath: React.PropTypes.array,
+  activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
+  activeSetPath: React.PropTypes.instanceOf(Immutable.List),
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
-  location: React.PropTypes.object,
   rule: React.PropTypes.instanceOf(Immutable.Map),
-  rulePath: React.PropTypes.array,
+  rulePath: React.PropTypes.instanceOf(Immutable.List),
   saveChanges: React.PropTypes.func
 }
 

@@ -116,6 +116,7 @@ const AnalyticsFilters = (props) => {
             availableRanges={[
               DateRanges.MONTH_TO_DATE,
               DateRanges.LAST_MONTH,
+              DateRanges.THIS_WEEK,
               DateRanges.TODAY,
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE

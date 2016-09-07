@@ -29,7 +29,7 @@ class Header extends React.Component {
     this.goToAccountManagement = this.goToAccountManagement.bind(this)
 
     this.state = {
-      animatingGradient: false,
+      animatingGradient: props.fetching || false,
       accountMenuOpen: false,
       userMenuOpen: false
     }
@@ -230,13 +230,13 @@ class Header extends React.Component {
           </Nav>
           <Nav className="header__right" pullRight={true}>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
+              <Button className="btn-header btn-icon btn-round btn-alerts">
                 <IconAlerts />
                 <span className="btn-alerts-indicator" />
               </Button>
             </li>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon btn-round btn-help"><IconQuestionMark /></Button>
+              <Button className="btn-header btn-icon btn-round btn-help"><IconQuestionMark /></Button>
             </li>
             <li>
               <Input className="header-search-input"
