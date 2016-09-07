@@ -103,7 +103,7 @@ ActionsSelection.propTypes = {
   activateSet: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = ActionsSelection

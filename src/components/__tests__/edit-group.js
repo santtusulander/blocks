@@ -2,6 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
+
 jest.dontMock('../edit-group.jsx')
 const EditGroup = require('../edit-group.jsx')
 
@@ -13,7 +18,7 @@ describe('EditGroup', () => {
     expect(TestUtils.isCompositeComponent(editGroup)).toBeTruthy();
   })
   it('should save changes', () => {
-    let saveChanges = jest.genMockFunction()
+    let saveChanges = jest.fn()
     let editGroup = TestUtils.renderIntoDocument(
       <EditGroup group={Immutable.Map()} saveChanges={saveChanges}/>
     )
@@ -22,7 +27,7 @@ describe('EditGroup', () => {
     expect(saveChanges.mock.calls.length).toEqual(1)
   })
   it('should update the group as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let editGroup = TestUtils.renderIntoDocument(
       <EditGroup group={Immutable.Map()} changeValue={changeValue}/>
     )

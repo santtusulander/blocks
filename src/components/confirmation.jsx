@@ -11,11 +11,13 @@ class Confirmation extends React.Component {
       <div className={className}>
         <div className="confirmation-content">{this.props.children}</div>
         <ButtonToolbar>
-          <Button className="btn-sm btn-tertiary"
+          <Button bsStyle="danger"
+            className="btn-sm"
             onClick={this.props.handleCancel}>
             {this.props.cancelText ? this.props.cancelText : 'Cancel'}
           </Button>
-          <Button className="btn-sm btn-tertiary"
+          <Button bsStyle="danger"
+            className="btn-sm"
             onClick={this.props.handleConfirm}>
             {this.props.confirmText ? this.props.confirmText : 'OK'}
           </Button>

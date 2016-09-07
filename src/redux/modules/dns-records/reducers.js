@@ -7,14 +7,14 @@ export const receiveResourcesList = (state, action ) => {
   //TODO: Maybe we should check if record already found with rr field and not merge these records?
   return state.merge({
     //resources: action.payload.data.map( zone => ({ name: zone} ) ),
-    loading: false
+    fetching: false
   })
 }
 
 //DETAILS
 
 export const resourcesListFailed = ( state ) => {
-  return state.merge( {loading: false })
+  return state.merge( {fetching: false })
 }
 
 export const receiveResourceDetails = (state, action) => {
@@ -27,7 +27,7 @@ export const receiveResourceDetails = (state, action) => {
   const resources = state.get('resources')
   const newRes = resources.merge(resourceObj)
 
-  return state.merge( { resources: newRes, loading: false } )
+  return state.merge( { resources: newRes, fetching: false } )
 }*/
 
 //CREATE
@@ -42,7 +42,7 @@ export const createFailed = (state) => {
 
 //LIST WITH DETAILS
 export const receiveWithDetails = (state, action) => {
-  return state.merge( {resources: action.payload, loading: false})
+  return state.merge( {resources: action.payload, fetching: false})
 }
 
 export const receiveWithDetailsFailed = (state) => {
@@ -50,7 +50,7 @@ export const receiveWithDetailsFailed = (state) => {
 }
 
 export const resourceDetailsFailed = ( state ) => {
-  return state.set('loading', false)
+  return state.set('fetching', false)
 }
 
 //UPDATE
@@ -58,6 +58,7 @@ export const updateSuccess = (state, { payload: { data, id } }) => {
   const index = state.get('resources').findIndex( record => record.get('id') === id)
   return state.merge( {loading: false, resources: state.get('resources').set(index, fromJS(data)) })
 }
+
 export const updateFailed = (state) => {
   return state.set('loading', false)
 }
@@ -73,11 +74,11 @@ export const deleteFailed = (state) => {
 
 //START / STOP FETCH
 export const startedFetching = (state) => {
-  return state.merge({ loading: true })
+  return state.merge({ fetching: true })
 }
 
 export const stoppedFetching = (state) => {
-  return state.merge({ loading: false })
+  return state.merge({ fetching: false })
 }
 
 //SET ACTIVE

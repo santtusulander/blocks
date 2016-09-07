@@ -184,14 +184,25 @@ class ContentItems extends React.Component {
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
+      const trialNameRegEx = /(.+)\.cdx-.+?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
+      const itemDailyTraffic = this.getDailyTraffic(item)
+
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
+      }
+
+      // Remove the trial url from trial property names
+      if (trialNameRegEx.test(item.get('id'))) {
+        item = item.merge({
+          id: item.get('id').replace(trialNameRegEx, '$1'),
+          name: item.get('id').replace(trialNameRegEx, '$1')
+        })
       }
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
-        dailyTraffic: this.getDailyTraffic(item)
+        dailyTraffic: itemDailyTraffic
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
@@ -213,151 +224,148 @@ class ContentItems extends React.Component {
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     return (
-      <PageContainer className={`${this.props.className} content-subcontainer`}>
-        <Content>
-          <PageHeader pageSubTitle={headerText.summary}>
-            <AccountSelector
-              as="content"
-              params={this.props.params}
-              startTier={this.props.selectionStartTier}
-              topBarTexts={itemSelectorTexts}
-              topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-              <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1>
-                  <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
-                </h1>
-                <span className="caret"></span>
+      <Content>
+        <PageHeader pageSubTitle={headerText.summary}>
+          <AccountSelector
+            as="content"
+            params={this.props.params}
+            startTier={this.props.selectionStartTier}
+            topBarTexts={itemSelectorTexts}
+            topBarAction={this.itemSelectorTopBarAction}
+            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+            <div className="btn btn-link dropdown-toggle header-toggle">
+              <h1>
+                <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
+              </h1>
+              <span className="caret"></span>
+            </div>
+          </AccountSelector>
+          <ButtonToolbar>
+            {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
+            <UDNButton bsStyle="success"
+                       icon={true}
+                       onClick={this.addItem}>
+              <IconAdd/>
+            </UDNButton>
+            <Select
+              onSelect={this.handleSortChange}
+              value={currentValue}
+              options={sortOptions.map(opt => [opt.value, opt.label])}/>
+            <UDNButton bsStyle="primary"
+                       icon={true}
+                       toggleView={true}
+                       hidden={viewingChart}
+                       onClick={this.props.toggleChartView}>
+              <IconItemChart/>
+            </UDNButton>
+            <UDNButton bsStyle="primary"
+                       icon={true}
+                       toggleView={true}
+                       hidden={!viewingChart}
+                       onClick={this.props.toggleChartView}>
+              <IconItemList/>
+            </UDNButton>
+          </ButtonToolbar>
+        </PageHeader>
+
+        <PageContainer>
+          {this.props.fetching || this.props.fetchingMetrics  ?
+            <LoadingSpinner /> : (
+            this.props.contentItems.isEmpty() ?
+              <NoContentItems content={ifNoContent} />
+            :
+            <ReactCSSTransitionGroup
+              component="div"
+              className="content-transition"
+              transitionName="content-transition"
+              transitionEnterTimeout={400}
+              transitionLeaveTimeout={250}>
+              <div
+                key={viewingChart}
+                className={viewingChart ?
+                  'content-item-grid' :
+                  'content-item-lists'}>
+                {contentItems.map(content => {
+                  const item = content.get('item')
+                  const contentMetrics = content.get('metrics')
+                  const id = String(item.get('id'))
+                  const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
+                  const itemProps = {
+                    id: id,
+                    linkTo: this.props.nextPageURLBuilder(id),
+                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
+                    onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
+                      this.editItem(id)
+                    } : null,
+                    analyticsLink: this.props.analyticsURLBuilder(id),
+                    name: item.get('name'),
+                    dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
+                    description: 'Desc',
+                    delete: this.props.deleteItem,
+                    primaryData: contentMetrics.get('traffic'),
+                    secondaryData: contentMetrics.get('historical_traffic'),
+                    differenceData: contentMetrics.get('historical_variance'),
+                    cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
+                    timeToFirstByte: contentMetrics.get('avg_ttfb'),
+                    maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
+                    minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
+                    avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
+                    fetchingMetrics: this.props.fetchingMetrics,
+                    chartWidth: scaledWidth.toString(),
+                    barMaxHeight: (scaledWidth / 7).toString(),
+                    showSlices: this.props.showSlices
+                  }
+
+                  return (
+                    <ContentItem key={id}
+                      isChart={viewingChart}
+                      itemProps={itemProps}
+                      scaledWidth={scaledWidth}
+                      deleteItem={this.props.deleteItem}/>
+                  )
+                })}
               </div>
-            </AccountSelector>
-            <ButtonToolbar>
-              {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-              <UDNButton bsStyle="success"
-                         icon={true}
-                         onClick={this.addItem}>
-                <IconAdd/>
-              </UDNButton>
-              <Select
-                onSelect={this.handleSortChange}
-                value={currentValue}
-                options={sortOptions.map(opt => [opt.value, opt.label])}/>
-              <UDNButton bsStyle="primary"
-                         icon={true}
-                         toggleView={true}
-                         hidden={viewingChart}
-                         onClick={this.props.toggleChartView}>
-                <IconItemChart/>
-              </UDNButton>
-              <UDNButton bsStyle="primary"
-                         icon={true}
-                         toggleView={true}
-                         hidden={!viewingChart}
-                         onClick={this.props.toggleChartView}>
-                <IconItemList/>
-              </UDNButton>
-            </ButtonToolbar>
-          </PageHeader>
+            </ReactCSSTransitionGroup>
+          )}
 
-          <div className="container-fluid body-content">
-
-            {this.props.fetching || this.props.fetchingMetrics  ?
-              <LoadingSpinner /> : (
-              this.props.contentItems.isEmpty() ?
-                <NoContentItems content={ifNoContent} />
-              :
-              <ReactCSSTransitionGroup
-                component="div"
-                className="content-transition"
-                transitionName="content-transition"
-                transitionEnterTimeout={400}
-                transitionLeaveTimeout={250}>
-                <div
-                  key={viewingChart}
-                  className={viewingChart ?
-                    'content-item-grid' :
-                    'content-item-lists'}>
-                  {contentItems.map(content => {
-                    const item = content.get('item')
-                    const contentMetrics = content.get('metrics')
-                    const id = String(item.get('id'))
-                    const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
-                    const itemProps = {
-                      id: id,
-                      linkTo: this.props.nextPageURLBuilder(id),
-                      configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
-                      onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-                        this.editItem(id)
-                      } : null,
-                      analyticsLink: this.props.analyticsURLBuilder(id),
-                      name: item.get('name'),
-                      dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
-                      description: 'Desc',
-                      delete: this.props.deleteItem,
-                      primaryData: contentMetrics.get('traffic'),
-                      secondaryData: contentMetrics.get('historical_traffic'),
-                      differenceData: contentMetrics.get('historical_variance'),
-                      cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
-                      timeToFirstByte: contentMetrics.get('avg_ttfb'),
-                      maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
-                      minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
-                      avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
-                      fetchingMetrics: this.props.fetchingMetrics,
-                      chartWidth: scaledWidth.toString(),
-                      barMaxHeight: (scaledWidth / 7).toString(),
-                      showSlices: this.props.showSlices
-                    }
-
-                    return (
-                      <ContentItem key={id}
-                        isChart={viewingChart}
-                        itemProps={itemProps}
-                        scaledWidth={scaledWidth}
-                        deleteItem={this.props.deleteItem}/>
-                    )
-                  })}
-                </div>
-              </ReactCSSTransitionGroup>
-            )}
-
-            {this.state.showModal && this.getTier() === 'brand' &&
-              <AccountForm
-                id="account-form"
-                account={this.state.itemToEdit}
-                onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
-                onCancel={this.hideModal}
-                show={true}/>
-            }
-            {this.state.showModal && this.getTier() === 'account' &&
-              <GroupForm
-                id="group-form"
-                users={this.props.user.get('allUsers')}
-                group={this.state.itemToEdit}
-                account={activeAccount}
-                onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
-                onCancel={this.hideModal}
-                show={true}/>
-            }
-            {this.state.showModal && this.getTier() === 'group' &&
-              <Modal show={true} dialogClassName="configuration-sidebar"
-                onHide={this.hideModal}>
-                <Modal.Header>
-                  <h1>Add Property</h1>
-                  <p>
-                    {activeAccount && activeGroup ?
-                      activeAccount.get('name') + ' / ' +
-                      activeGroup.get('name')
-                    : null}
-                  </p>
-                </Modal.Header>
-                <Modal.Body>
-                  <AddHost createHost={this.onItemAdd}
-                    cancelChanges={this.hideModal}/>
-                </Modal.Body>
-              </Modal>
-            }
-          </div>
-        </Content>
-      </PageContainer>
+          {this.state.showModal && this.getTier() === 'brand' &&
+            <AccountForm
+              id="account-form"
+              account={this.state.itemToEdit}
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              onCancel={this.hideModal}
+              show={true}/>
+          }
+          {this.state.showModal && this.getTier() === 'account' &&
+            <GroupForm
+              id="group-form"
+              users={this.props.user.get('allUsers')}
+              group={this.state.itemToEdit}
+              account={activeAccount}
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              onCancel={this.hideModal}
+              show={true}/>
+          }
+          {this.state.showModal && this.getTier() === 'group' &&
+            <Modal show={true} dialogClassName="configuration-sidebar"
+              onHide={this.hideModal}>
+              <Modal.Header>
+                <h1>Add Property</h1>
+                <p>
+                  {activeAccount && activeGroup ?
+                    activeAccount.get('name') + ' / ' +
+                    activeGroup.get('name')
+                  : null}
+                </p>
+              </Modal.Header>
+              <Modal.Body>
+                <AddHost createHost={this.onItemAdd}
+                  cancelChanges={this.hideModal}/>
+              </Modal.Body>
+            </Modal>
+          }
+        </PageContainer>
+      </Content>
     )
   }
 }
@@ -408,6 +416,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
+  router: React.PropTypes.object,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
   showInfoDialog: React.PropTypes.func,

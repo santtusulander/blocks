@@ -8,6 +8,7 @@ $icon-two-tone-primary: $dark-blue;
   position: relative;
   display: inline-block;
   line-height: 1;
+  vertical-align: middle;
   background-color: transparent !important; // Due to the addition of a viewbox, the icons always need a transparent background
   background-position: center center;
   background-repeat: no-repeat;
