@@ -2,17 +2,17 @@ import React from 'react'
 import classNames from 'classnames'
 import './legend.scss'
 
-const Legend = ({colors, isComparison, labels, values}) => {
+const Legend = ({dataSets, values}) => {
   return (
     <div className='chart-legend'>
-      {labels.map((label, i) => {
+      {dataSets.map((dataset, i) => {
         return (
           <div key={i} className="legend-item">
             <span className={classNames({
               'legend-label': true,
-              [`${colors[i]}`]: true,
-              'comparison': isComparison[i]})}>
-              {label}
+              [`${dataset.color}`]: true,
+              'comparison': dataset.isComparison})}>
+              {dataset.label}
             </span>
             <span className='legend-value'>{values[i]}</span>
           </div>
@@ -23,9 +23,7 @@ const Legend = ({colors, isComparison, labels, values}) => {
 }
 
 Legend.propTypes = {
-  colors: React.PropTypes.array,
-  isComparison: React.PropTypes.array,
-  labels: React.PropTypes.array,
+  dataSets: React.PropTypes.array,
   values: React.PropTypes.array
 }
 

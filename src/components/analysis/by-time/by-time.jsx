@@ -366,9 +366,7 @@ class AnalysisByTime extends React.Component {
       </div>}
 
       {this.props.showLegend && <Legend
-        colors={this.props.dataSets.map(dataset => dataset.color)}
-        isComparison={this.props.dataSets.map(dataset => dataset.comparisonData)}
-        labels={this.props.dataSets.map(dataset => dataset.label)}
+        dataSets={this.props.dataSets}
         values={this.props.dataSets.map((dataset, i) => this.state.tooltipText[i])}
       />}
       </div>
