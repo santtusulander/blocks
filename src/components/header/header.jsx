@@ -187,6 +187,10 @@ class Header extends React.Component {
         router.push(getUrl('/security', ...params))
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
+      } else if(router.isActive('/dashboard')) {
+        router.push(getContentUrl(...params))
+      } else if(router.isActive('/network')) {
+        router.push(getContentUrl(...params))
       }
     }
 
