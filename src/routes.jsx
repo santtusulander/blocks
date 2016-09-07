@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, IndexRedirect, IndexRoute } from 'react-router'
+import { Route, IndexRedirect } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
 import {
@@ -32,7 +32,6 @@ import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.js
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
-import Configurations from './containers/configurations'
 import Dashboard from './containers/dashboard'
 import ForgotPassword from './containers/forgot-password'
 import Groups from './containers/groups'
@@ -242,10 +241,6 @@ export const getRoutes = store => {
           {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
-      </Route>
-
-      <Route path="/configurations">
-        <Route path=":brand" component={Configurations}/>
       </Route>
 
       {/* Security - routes */}

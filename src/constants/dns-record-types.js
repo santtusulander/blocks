@@ -10,8 +10,7 @@ const RECORD_TYPES = [
   'PTR',
   'SPF',
   'SRV',
-  'TXT',
-  'SOA'
+  'TXT'
 ]
 
 export default RECORD_TYPES
@@ -20,5 +19,5 @@ export const recordFields = {
   name: RECORD_TYPES,
   value: RECORD_TYPES,
   ttl: RECORD_TYPES.filter(type => type !== 'DNAME'),
-  prio: ['MX']
+  prio: ['MX', 'NAPTR', 'SRV']
 }

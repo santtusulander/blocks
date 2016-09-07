@@ -1,6 +1,11 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
+
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')
 const momentFormatMock = jest.genMockFunction()

@@ -14,14 +14,20 @@ class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      isEditingRule: true
+    }
+
     this.addRule = this.addRule.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
+    this.handleHide = this.handleHide.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
   addRule(e) {
     e.preventDefault()
+    this.setState({ isEditingRule: false })
     const reqPolicies = this.props.config.get('request_policy').get('policy_rules').push(Immutable.fromJS(
       {match: {field: null, cases: [['',[]]]}}
     ))
@@ -49,6 +55,10 @@ class ConfigurationPolicies extends React.Component {
       rulePath = rulePath.set(0, 'response_policy')
     }
     this.props.activateRule(rulePath)
+  }
+  handleHide(){
+    this.setState({ isEditingRule: true })
+    this.props.activateRule(null)
   }
   render() {
     let config = this.props.config;
@@ -103,7 +113,9 @@ class ConfigurationPolicies extends React.Component {
               rule={config.getIn(this.props.activeRule)}
               rulePath={this.props.activeRule}
               changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={()=>this.props.activateRule(null)}/>
+              hideAction={this.handleHide}
+              isEditingRule={this.state.isEditingRule}
+            />
           </ConfigurationSidebar>
         : ''}
 

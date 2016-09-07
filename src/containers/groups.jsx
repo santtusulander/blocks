@@ -16,7 +16,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { ACCOUNT_TYPES } from '../constants/account-management-options'
 

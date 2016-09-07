@@ -31,7 +31,7 @@ class Header extends React.Component {
     this.goToAccountManagement = this.goToAccountManagement.bind(this)
 
     this.state = {
-      animatingGradient: false,
+      animatingGradient: props.fetching || false,
       accountMenuOpen: false,
       userMenuOpen: false
     }
