@@ -79,7 +79,8 @@ class AnalysisStackedByTime extends React.Component {
           {xScale.ticks(d3.time.day.utc, 1).map((tick, i) => {
             return (
               <g key={i}>
-                <text x={xScale(tick)} y={this.props.height - this.props.padding}>
+                <text x={xScale(tick)} y={this.props.height - this.props.padding}
+                  className="x-axis">
                   {moment.utc(tick).format('D')}
                 </text>
               </g>
@@ -89,7 +90,8 @@ class AnalysisStackedByTime extends React.Component {
             if(i) {
               axes.push(
                 <g key={i}>
-                  <text x={this.props.padding} y={yScale(tick)}>
+                  <text x={this.props.padding*1.5} y={yScale(tick)}
+                    className="y-axis">
                     {this.formatY(tick)}
                   </text>
                 </g>
