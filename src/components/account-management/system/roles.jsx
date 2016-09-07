@@ -1,8 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
 import PageContainer from '../../../components/layout/page-container'
 import RolesList from '../roles-list.jsx'
+
+import * as accountActionCreators from '../../../redux/modules/account'
 
 class AccountManagementSystemRoles extends React.Component {
   constructor(props){
@@ -17,6 +21,12 @@ class AccountManagementSystemRoles extends React.Component {
     this.showAddNewRoleDialog = this.showAddNewRoleDialog.bind(this)
     this.hideAddNewRoleDialog = this.hideAddNewRoleDialog.bind(this)
     this.saveRole = this.saveRole.bind(this)
+  }
+
+  componentWillMount() {
+    const { accountActions, router, route } = this.props
+
+    accountActions.fetchAccounts( this.props.params.brand )
   }
 
   showAddNewRoleDialog(){
@@ -69,4 +79,15 @@ AccountManagementSystemRoles.defaultProps = {
   users: Immutable.List()
 }
 
-module.exports = AccountManagementSystemRoles
+function mapStateToProps(state) {
+  return { }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountManagementSystemRoles)
+
