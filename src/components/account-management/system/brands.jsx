@@ -1,8 +1,7 @@
 import React from 'react'
-import {
-  BrandList,
-  AVAILABILITY_PRIVATE
-  }  from '../brand-list.jsx'
+
+import PageContainer from '../../../components/layout/page-container'
+import { BrandList, AVAILABILITY_PRIVATE }  from '../brand-list.jsx'
 
 const fakeBrands = [
   {id: 1, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
@@ -15,9 +14,9 @@ const fakeBrands = [
 class AccountManagementSystemBrands extends React.Component {
   render() {
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         <BrandList {...this.props} brands={fakeBrands} />
-      </div>
+      </PageContainer>
     )
   }
 }

@@ -13,7 +13,7 @@ import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue }) => {
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
   const sortedDomains = domains.sort((a,b) => {
     if (a.id.toLowerCase() < b.id.toLowerCase()) return -1
     if (a.id.toLowerCase() > b.id.toLowerCase()) return 1
@@ -31,7 +31,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
               <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
             </div>
         </DomainSelector> :
-        <h4 className="selector-component"><FormattedMessage id="portal.account.manage.system.empty.domain"/></h4>}
+        <h4 className="selector-component"><FormattedMessage id={emptyDomainsTxt}/></h4>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
           <UDNButton
@@ -61,6 +61,7 @@ DomainToolbar.propTypes = {
   activeDomain: PropTypes.string,
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
+  emptyDomainsTxt: PropTypes.string,
   fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
   onEditDomain: PropTypes.func,

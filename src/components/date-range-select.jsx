@@ -16,6 +16,9 @@ const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
+const startOfThisWeek = () => moment().utc().startOf('isoWeek')
+const endOfThisWeek = () => moment().utc().endOf('isoWeek')
+
 export class DateRangeSelect extends React.Component {
   constructor(props) {
     super(props)
@@ -72,6 +75,11 @@ export class DateRangeSelect extends React.Component {
     if(this.props.availableRanges.indexOf(DateRanges.YESTERDAY) !== -1 &&
       startOfYesterday().isSame(start, 'hour') && endOfYesterday().isSame(end, 'hour')) {
       return DateRanges.YESTERDAY
+    }
+
+    if(this.props.availableRanges.indexOf(DateRanges.THIS_WEEK) !== -1 &&
+      startOfThisWeek().isSame(start, 'hour') && endOfThisWeek().isSame(end, 'hour')) {
+      return DateRanges.THIS_WEEK
     }
     if(this.props.availableRanges.indexOf(DateRanges.LAST_MONTH) !== -1 &&
       startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
@@ -134,6 +142,10 @@ export class DateRangeSelect extends React.Component {
     else if(value === DateRanges.YESTERDAY) {
       startDate = startOfYesterday()
       endDate   = endOfYesterday()
+    }
+    else if(value === DateRanges.THIS_WEEK) {
+      startDate = startOfThisWeek()
+      endDate   = endOfThisWeek()
     }
     else if(value === DateRanges.LAST_MONTH) {
       startDate = startOfLastMonth()

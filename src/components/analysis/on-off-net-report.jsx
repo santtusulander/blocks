@@ -94,8 +94,15 @@ class AnalysisOnOffNetReport extends React.Component {
     })
 
     let dataSets = [];
-    if ( this.props.onOffFilter.contains('on-net') ) dataSets.push( onNet.toJS() )
-    if ( this.props.onOffFilter.contains('off-net') ) dataSets.push( offNet.toJS() )
+    if ( this.props.onOffFilter.contains('on-net') ) {
+      dataSets.push( onNet.toJS() )
+    } else {
+      dataSets.push( [] )
+    }
+
+    if ( this.props.onOffFilter.contains('off-net') ) {
+      dataSets.push( offNet.toJS() )
+    }
 
     const datasets = []
     if(this.props.onOffFilter.contains('on-net') && onNet) {
