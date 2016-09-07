@@ -4,6 +4,14 @@ import moment from 'moment'
 import numeral from 'numeral'
 
 class AnalysisStackedByTime extends React.Component {
+  formatY(data) {
+    if(this.props.yAxisCustomFormat) {
+      return this.props.yAxisCustomFormat(data)
+    }
+    else {
+      return numeral(data).format('0 a')
+    }
+  }
   render() {
     const dataKey = this.props.dataKey
 
@@ -82,7 +90,7 @@ class AnalysisStackedByTime extends React.Component {
               axes.push(
                 <g key={i}>
                   <text x={this.props.padding} y={yScale(tick)}>
-                    {numeral(tick).format('0 a')}
+                    {this.formatY(tick)}
                   </text>
                 </g>
               );
@@ -106,7 +114,8 @@ AnalysisStackedByTime.propTypes = {
   dataSets: React.PropTypes.array,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
-  width: React.PropTypes.number
+  width: React.PropTypes.number,
+  yAxisCustomFormat: React.PropTypes.func
 }
 
 module.exports = AnalysisStackedByTime

@@ -202,7 +202,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
-  'portal.analysis.filters.serviceProvider.title': 'Service Providers',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
@@ -545,7 +544,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.today': 'Today',
   'portal.constants.date-ranges.yesterday': 'Last Month',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
-  
+
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
