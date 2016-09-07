@@ -7,6 +7,7 @@ import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import IconTrash from '../components/icons/icon-trash.jsx'
 
+import '../assets/img/temp-ibc-network-start.png'
 import '../assets/img/temp-ibc-network.png'
 import '../assets/img/temp-ibc-network-config.png'
 
@@ -18,12 +19,14 @@ export class Network extends React.Component {
       page: 1
     }
   }
-
+  componentWillReceiveProps() {
+    this.setState({ page: 1 })
+  }
   render() {
     return (
       <Content>
         <PageHeader pageSubTitle="Network">
-          {this.state.page === 1 ?
+          {this.state.page !== 3 ?
             <h1>Datafone Inc.</h1>
           :
             <div className="header-toggle">
@@ -31,7 +34,7 @@ export class Network extends React.Component {
               <span className="caret"></span>
             </div>
           }
-          {this.state.page === 2 &&
+          {this.state.page === 3 &&
             <ButtonToolbar>
               <Button bsStyle="danger"
                 className="btn-icon">
@@ -41,7 +44,7 @@ export class Network extends React.Component {
             </ButtonToolbar>
           }
         </PageHeader>
-        {this.state.page === 2 && <Nav bsStyle="tabs">
+        {this.state.page === 3 && <Nav bsStyle="tabs">
           <li className="navbar">
             <a className="active">Edge</a>
           </li>
@@ -57,9 +60,14 @@ export class Network extends React.Component {
             className={classNames('center-block', {'hidden': this.state.page !== 1})}
             onClick={() => this.setState({page: 2})}
             responsive={true}
+            src="../../assets/img/temp-ibc-network-start.png"/>
+          <Image
+            className={classNames('center-block', {'hidden': this.state.page !== 2})}
+            onClick={() => this.setState({page: 3})}
+            responsive={true}
             src="../../assets/img/temp-ibc-network.png"/>
           <Image
-            className={classNames({'hidden': this.state.page !== 2})}
+            className={classNames({'hidden': this.state.page !== 3})}
             onClick={() => this.setState({page: 1})}
             responsive={true}
             src="../../assets/img/temp-ibc-network-config.png"/>
