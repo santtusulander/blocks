@@ -3,21 +3,7 @@ import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 
-import Tooltip from '../tooltip'
-
-const closestDate = d3.bisector(d => d.timestamp).left
-
 class AnalysisStackedByTime extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      tooltipText: null,
-      tooltipX: 0,
-      tooltipY: 0
-    }
-  }
-
   render() {
     const dataKey = this.props.dataKey
 
@@ -82,16 +68,6 @@ class AnalysisStackedByTime extends React.Component {
               return line
             })
           }) : null}
-          {this.state.tooltipText ?
-            <g>
-              <circle r="5"
-                cx={this.state.tooltipX}
-                cy={this.state.tooltipY}/>
-              <line className="crosshair"
-                x1={this.state.tooltipX} x2={this.state.tooltipX}
-                y1={0} y2={this.props.height}/>
-            </g>
-            : null}
           {xScale.ticks(d3.time.day, 1).map((tick, i) => {
             return (
               <g key={i}>
@@ -114,10 +90,6 @@ class AnalysisStackedByTime extends React.Component {
             return axes
           }, [])}
         </svg>
-        <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
-          hidden={!this.state.tooltipText}>
-          {this.state.tooltipText}
-        </Tooltip>
       </div>
     )
   }
