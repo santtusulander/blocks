@@ -1,14 +1,10 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
+import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
 
-import {
-  getById,
-  createResource,
-  updateResource,
-  startFetching
-} from '../../../redux/modules/dns-records/actions'
+import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
 
 import RecordForm from '../../../components/account-management/record-form'
 
@@ -93,8 +89,9 @@ RecordFormContainer.propTypes = {
 }
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
+  const getRecordById = recordActionCreators.getById
   const records = dnsRecords.get('resources')
-  let activeRecord = getById(records, dnsRecords.get('activeRecord'))
+  let activeRecord = getRecordById(records, dnsRecords.get('activeRecord'))
   let initialValues = undefined
   initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
   let props = {
@@ -110,21 +107,22 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
+  const { startFetching, createResource, updateResource } = bindActionCreators(recordActionCreators, dispatch)
   return {
     addRecord: (values, domain) => {
       values = recordValues(values)
       // Hardcode class-key as it is not set anywhere
       values.class = 'IN'
-      dispatch(startFetching())
-      dispatch(createResource(domain, values.name, values))
+      startFetching()
+      createResource(domain, values.name, values)
         .then(() => closeModal())
     },
     updateRecord: (formValues, zone, records, activeRecord) => {
       let values = recordValues(formValues)
       values.id = activeRecord.get('id')
       values.class = 'IN'
-      dispatch(startFetching())
-      dispatch(updateResource(zone, activeRecord.get('name'), values))
+      startFetching()
+      updateResource(zone, activeRecord.get('name'), values)
         .then(() => closeModal())
     }
   }
