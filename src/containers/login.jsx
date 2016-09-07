@@ -14,7 +14,7 @@ import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 
 export class Login extends React.Component {
@@ -120,10 +120,12 @@ export class Login extends React.Component {
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
-          <h1><FormattedMessage id="portal.login.login.text"/></h1>
-          <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
+          <h1>
+            <div className="logo-ericsson">Ericsson</div>
+            <FormattedMessage id="portal.login.login.text"/>
+          </h1>
+          <p className="login-subtitle">Ericsson UDN Service</p>
         </Modal.Header>
 
         <Modal.Body>
@@ -160,9 +162,11 @@ export class Login extends React.Component {
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
-                <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
-                  onChange={this.toggleRemember}
-                  checked={this.state.rememberUsername} />
+                <div className="remember-checkbox">
+                  <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
+                    onChange={this.toggleRemember}
+                    checked={this.state.rememberUsername} />
+                </div>
               </Col>
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
@@ -186,6 +190,7 @@ Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,

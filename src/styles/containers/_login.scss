@@ -2,77 +2,66 @@
 // =====
 
 .login-modal {
-
   .modal-dialog {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: $configuration-sidebar-width;
+    width: 654px;
     transform: translate(-50%, -50%);
-
-    @include md {
-      width: $md-configuration-sidebar-width;
-    }
-  }
-
-  .modal-content {
-    min-height: 710px;
-
-    @include md {
-      min-height: 520px;
-    }
   }
 
   .modal-body {
-    padding: 110px 120px 90px;
+    padding: 0 60px 72px;
 
-    @include md {
-      padding: 90px 100px 70px;
+    .form-group {
+      padding-bottom: 24px;
     }
+
+    .remember-checkbox {
+      padding: 6px 0;
+
+      .form-group {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  // TODO: this needs to be updated to be used on all modals
+  // Using important to override background properties on modals
+  // !important will be removed once the base modal colors are updated
+  .modal-content {
+    background-color: $medium-blue !important;
+    background-image: none !important;
   }
 }
 
 .login-header {
   position: relative;
-  padding: $btn-height 135px;
+  padding: 60px 60px 48px;
   color: $white;
   border: 0;
 
-  @include md {
-    padding: $md-btn-height 110px;
-  }
-
   .login-header-gradient {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    height: $header-gradient-height;
+    height: 6px;
     background: $gradient-full;
   }
 
   .logo-ericsson {
     float: left;
-    width: 45px;
-    height: 60px;
-    margin: 20px ($bar-height / 2) 10px 0;
+    width: 28px;
+    margin: 0 18px 18px 12px;
     text-indent: -9999em;
     background: url('../assets/img/logo-ericsson.svg') center center no-repeat;
     background-size: 100%;
-
-    @include md {
-      width: 36px;
-      height: 48px;
-      margin: 12px ($md-bar-height / 2) 10px 0;
-    }
-
-    @include sm {
-      margin-top: 8px;
-    }
   }
 
-  h1 {
-    margin-bottom: 5px;
+  .login-subtitle {
+    margin: 0;
+    color: $dt-text-color;
   }
 }
 
@@ -83,7 +72,7 @@
     position: absolute;
     top: 50%;
     left: $bar-height;
-    margin-left: 30px;
+    margin-left: 24px;
     transform: translate(0, -50%);
     transition: left 250ms, margin 250ms, transform 250ms;
   }
@@ -95,19 +84,19 @@
   }
 
   &.login-label-username::after {
-    content: 'EMAIL';
+    content: 'Email';
   }
 
   &.login-label-password::after {
-    content: 'PASSWORD';
+    content: 'Password';
   }
 
   &.login-label-confirm::after {
-    content: 'CONFIRM';
+    content: 'Confirm';
   }
 
   &.login-label-email::after {
-    content: 'EMAIL';
+    content: 'Email';
   }
 
   &.login-label-password.valid::after,
