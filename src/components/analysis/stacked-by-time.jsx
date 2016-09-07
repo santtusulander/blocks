@@ -76,11 +76,11 @@ class AnalysisStackedByTime extends React.Component {
               return line
             })
           }) : null}
-          {xScale.ticks(d3.time.day, 1).map((tick, i) => {
+          {xScale.ticks(d3.time.day.utc, 1).map((tick, i) => {
             return (
               <g key={i}>
                 <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                  {moment(tick).format('D')}
+                  {moment.utc(tick).format('D')}
                 </text>
               </g>
             )
