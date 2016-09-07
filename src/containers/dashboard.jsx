@@ -15,36 +15,34 @@ export class Dashboard extends React.Component {
 
   render() {
     return (
-      <PageContainer className="account-management">
-        <div className="account-management-system-users">
-          <PageHeader pageSubTitle="Dashboard">
-            <h1>Datafone Inc.</h1>
-          </PageHeader>
-          <PageHeader secondaryPageHeader={true}>
-            <div className="action">
-              <h5>Date Range</h5>
-              <SelectWrapper options={[[1, 'Today'], [2, 'Yesterday']]} value={1}/>
+      <Content>
+        <PageHeader pageSubTitle="Dashboard">
+          <h1>Datafone Inc.</h1>
+        </PageHeader>
+        <PageHeader secondaryPageHeader={true}>
+          <div className="action">
+            <h5>Date Range</h5>
+            <SelectWrapper options={[[1, 'Today'], [2, 'Yesterday']]} value={1}/>
+          </div>
+          <div className="action">
+            <h5>Services</h5>
+            <SelectWrapper options={[[1, 'Media Delivery'], [2, 'UDN Network Partner - On-Net']]} value={1}/>
+          </div>
+          <div className="action">
+            <h5>Traffic</h5>
+            <div className="form-inline">
+              <Input type="checkbox" label="HTTP" checked={true}/>
+              <Input type="checkbox" label="HTTPS"/>
             </div>
-            <div className="action">
-              <h5>Services</h5>
-              <SelectWrapper options={[[1, 'Media Delivery'], [2, 'UDN Network Partner - On-Net']]} value={1}/>
-            </div>
-            <div className="action">
-              <h5>Traffic</h5>
-              <div className="form-inline">
-                <Input type="checkbox" label="HTTP" checked={true}/>
-                <Input type="checkbox" label="HTTPS"/>
-              </div>
-            </div>
-          </PageHeader>
-          <Content className="tab-bodies">
+          </div>
+        </PageHeader>
+        <PageContainer>
           <Image
             className="center-block"
             responsive={true}
             src="../../assets/img/temp-ibc-dashboard.png"/>
-          </Content>
-        </div>
-      </PageContainer>
+        </PageContainer>
+      </Content>
     )
   }
 }

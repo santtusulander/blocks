@@ -21,39 +21,38 @@ export class Network extends React.Component {
 
   render() {
     return (
-      <PageContainer className="account-management">
-        <div className="account-management-system-users">
-          <PageHeader pageSubTitle="Network">
-            {this.state.page === 1 ?
-              <h1>Datafone Inc.</h1>
-            :
-              <div className="header-toggle">
-                <h1>ASN1.SYD.Tel.foo.bar</h1>
-                <span className="caret"></span>
-              </div>
-            }
-            {this.state.page === 2 &&
-              <ButtonToolbar>
-                <Button bsStyle="danger"
-                  className="btn-icon">
-                  <IconTrash/>
-                </Button>
-                <Button bsStyle="primary">PUBLISH</Button>
-              </ButtonToolbar>
-            }
-          </PageHeader>
-          {this.state.page === 2 && <Nav bsStyle="tabs">
-            <li className="navbar">
-              <a className="active">Edge</a>
-            </li>
-            <li className="navbar">
-              <a>Logging</a>
-            </li>
-            <li className="navbar">
-              <a>Purge</a>
-            </li>
-          </Nav>}
-          <Content className="tab-bodies">
+      <Content>
+        <PageHeader pageSubTitle="Network">
+          {this.state.page === 1 ?
+            <h1>Datafone Inc.</h1>
+          :
+            <div className="header-toggle">
+              <h1>ASN1.SYD.Tel.foo.bar</h1>
+              <span className="caret"></span>
+            </div>
+          }
+          {this.state.page === 2 &&
+            <ButtonToolbar>
+              <Button bsStyle="danger"
+                className="btn-icon">
+                <IconTrash/>
+              </Button>
+              <Button bsStyle="primary">PUBLISH</Button>
+            </ButtonToolbar>
+          }
+        </PageHeader>
+        {this.state.page === 2 && <Nav bsStyle="tabs">
+          <li className="navbar">
+            <a className="active">Edge</a>
+          </li>
+          <li className="navbar">
+            <a>Logging</a>
+          </li>
+          <li className="navbar">
+            <a>Purge</a>
+          </li>
+        </Nav>}
+        <PageContainer>
           <Image
             className={classNames('center-block', {'hidden': this.state.page !== 1})}
             onClick={() => this.setState({page: 2})}
@@ -64,9 +63,8 @@ export class Network extends React.Component {
             onClick={() => this.setState({page: 1})}
             responsive={true}
             src="../../assets/img/temp-ibc-network-config.png"/>
-          </Content>
-        </div>
-      </PageContainer>
+        </PageContainer>
+      </Content>
     )
   }
 }
