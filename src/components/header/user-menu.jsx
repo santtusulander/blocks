@@ -11,8 +11,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
     <Dropdown id="user-menu" pullRight={true}
               open={open}
               onToggle={onToggle}>
-      <Dropdown.Toggle bsStyle="primary"
-                       className="btn-icon btn-round btn-user-menu"
+      <Dropdown.Toggle className="btn-icon btn-round btn-user-menu"
                        noCaret={true} id="user-dropdown">
       </Dropdown.Toggle>
       <Dropdown.Menu className="dropdown-user-menu">

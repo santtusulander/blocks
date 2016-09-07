@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
 
+import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
 import ActionLinks from './action-links'
 import TableSorter from '../table-sorter'
@@ -30,11 +31,7 @@ class DNSList extends Component {
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
-          <td>
-            <Input
-              type="checkbox"
-              label={record.name}/>
-          </td>
+          <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
           <td>
@@ -45,7 +42,7 @@ class DNSList extends Component {
         </tr>
       )
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         <h3 className="account-management-header">
           <span id="domain-stats">
             {`${records.length} Records`}
@@ -80,7 +77,7 @@ class DNSList extends Component {
           }
         })}
         {tables}
-      </div>
+      </PageContainer>
     )
   }
 }

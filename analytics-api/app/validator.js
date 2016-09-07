@@ -108,7 +108,11 @@ class Validator {
         value: params[key],
         required: value.required
       });
-      errorMessage && errors.push(errorMessage);
+
+      if (errorMessage) {
+        log.error(errorMessage);
+        errors.push(errorMessage);
+      }
     });
 
     // Return an array of errors if any of the parameters failed validation

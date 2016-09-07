@@ -1,6 +1,12 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
+
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
 
 jest.autoMockOff()
 const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
@@ -295,19 +301,17 @@ const fakeConfig = Immutable.fromJS(
 
 describe('ConfigurationPolicyRuleEdit', () => {
   it('should exist', () => {
-    let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit rule={Immutable.Map()}
-        config={Immutable.Map()}
-        rulePath={[]}
-        activeAccount={fakeAccounts}
-        activeGroup={fakeGroups}
-        location={fakeLocation}/>
-    );
-    expect(TestUtils.isCompositeComponent(policyRule)).toBeTruthy();
+    const policyRule = shallow(<ConfigurationPolicyRuleEdit rule={Immutable.Map()}
+      config={Immutable.Map()}
+      rulePath={[]}
+      activeAccount={fakeAccounts}
+      activeGroup={fakeGroups}
+      location={fakeLocation}/>)
+    expect(policyRule).toBeDefined()
   });
 
   it('should change values', () => {
-    const changeValue = jest.genMockFunction()
+    const changeValue = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit changeValue={changeValue}
         rule={Immutable.Map()}
@@ -325,7 +329,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should save changes', () => {
-    const hideAction = jest.genMockFunction()
+    const hideAction = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit hideAction={hideAction}
         rule={Immutable.Map()}
@@ -341,7 +345,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should activate a match', () => {
-    const activateMatch = jest.genMockFunction()
+    const activateMatch = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit activateMatch={activateMatch}
         rule={Immutable.Map()}
@@ -356,7 +360,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should activate a set', () => {
-    const activateSet = jest.genMockFunction()
+    const activateSet = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit activateSet={activateSet}
         rule={Immutable.Map()}
@@ -371,8 +375,8 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should cancel changes', () => {
-    const changeValue = jest.genMockFunction()
-    const hideAction = jest.genMockFunction()
+    const changeValue = jest.fn()
+    const hideAction = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit
         rule={Immutable.Map()}
@@ -392,13 +396,13 @@ describe('ConfigurationPolicyRuleEdit', () => {
   });
 
   it('should move a set', () => {
-    const changeValue = jest.genMockFunction()
-    const activateSet = jest.genMockFunction()
+    const changeValue = jest.fn()
+    const activateSet = jest.fn()
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit
         rule={fakeSet}
         config={fakeConfig}
-        rulePath={[]}
+        rulePath={Immutable.List([])}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         changeValue={changeValue}
@@ -415,7 +419,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit
         rule={fakeMatch}
-        activeMatchPath={[ 'request_policy', 'policy_rules', 0, 'match' ]}
+        activeMatchPath={Immutable.List([ 'request_policy', 'policy_rules', 0, 'match' ])}
         config={Immutable.Map()}
         rulePath={fakeRulePath}
         activeAccount={fakeAccounts}
@@ -430,7 +434,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
     let policyRule = TestUtils.renderIntoDocument(
       <ConfigurationPolicyRuleEdit
         rule={fakeSet}
-        activeSetPath={[ 'request_policy', 'policy_rules', 0, 'set', 'zyx' ]}
+        activeSetPath={Immutable.List([ 'request_policy', 'policy_rules', 0, 'set', 'zyx' ])}
         config={Immutable.Map()}
         rulePath={fakeRulePath}
         activeAccount={fakeAccounts}

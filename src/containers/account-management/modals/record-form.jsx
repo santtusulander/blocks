@@ -105,7 +105,7 @@ function mapStateToProps({ dnsRecords, dns }, { edit }) {
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
-    loading: dnsRecords.get('loading'),
+    loading: dnsRecords.get('fetching'),
     records
   }
   if (initialValues) {
