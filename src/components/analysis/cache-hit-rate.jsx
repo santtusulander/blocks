@@ -8,6 +8,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
+import { paleblue } from '../../constants/colors'
 import Select from '../select'
 
 import './cache-hit-rate.scss'
@@ -93,7 +94,7 @@ class AnalysisCacheHitRate extends React.Component {
       if(dataSets) {
         datasets.push({
           area: false,
-          color: 'paleblue',
+          color: paleblue,
           comparisonData: false,
           data: dataSets[0],
           id: 'http',

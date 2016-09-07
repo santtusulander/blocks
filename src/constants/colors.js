@@ -1,13 +1,11 @@
-export default {
-  purple: '#7b0663',
-  red: '#e32119',
-  orange: '#f08a00',
-  yellow: '#fabb00',
-  green: '#89ba17',
-  darkgreen: '#00625f',
-  paleblue: '#00a9d4',
-  black: '#000',
-  grey: '#333',
-  silver: '#b1b3b4',
-  darkblue: '#0c546e'
-}
+export const purple = '#7b0663'
+export const red = '#e32119'
+export const orange = '#f08a00'
+export const yellow = '#fabb00'
+export const green = '#89ba17'
+export const darkgreen = '#00625f'
+export const paleblue = '#00a9d4'
+export const black = '#000'
+export const grey = '#333'
+export const silver = '#b1b3b4'
+export const darkblue = '#0c546e'

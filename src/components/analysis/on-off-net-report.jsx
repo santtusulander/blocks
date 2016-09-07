@@ -8,6 +8,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
+import { paleblue } from '../../constants/colors'
 
 import {injectIntl} from 'react-intl'
 
@@ -100,7 +101,7 @@ class AnalysisOnOffNetReport extends React.Component {
     if(this.props.onOffFilter.contains('on-net') && onNet) {
       datasets.push({
         area: false,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: false,
         data: onNet.toJS(),
         id: '',

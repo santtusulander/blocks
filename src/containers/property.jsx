@@ -33,6 +33,7 @@ import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
+import { paleblue } from '../constants/colors'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -318,7 +319,7 @@ export class Property extends React.Component {
     if(metrics_traffic.size) {
       datasets.push({
         area: false,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: false,
         data: metrics_traffic.toJS(),
         id: '',
@@ -331,7 +332,7 @@ export class Property extends React.Component {
     if(historical_traffic.size) {
       datasets.push({
         area: true,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: true,
         data: historical_traffic.toJS(),
         noGradient: true,

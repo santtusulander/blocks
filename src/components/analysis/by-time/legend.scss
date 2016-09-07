@@ -13,58 +13,14 @@
   background-color: rgba($black, 0.2);
 
   .legend-label {
+    white-space: nowrap;
 
-    &::before {
+    .legend-line {
       font-weight: bold;
-      content: '\2014 ';
     }
 
-    &.comparison::before {
+    &.comparison .legend-line {
       opacity: 0.4;
-    }
-
-    &.purple::before {
-      color: $purple;
-    }
-
-    &.red::before {
-      color: $red;
-    }
-
-    &.orange::before {
-      color: $orange;
-    }
-
-    &.yellow::before {
-      color: $yellow;
-    }
-
-    &.green::before {
-      color: $green;
-    }
-
-    &.darkgreen::before {
-      color: $dark-green;
-    }
-
-    &.paleblue::before {
-      color: $pale-blue;
-    }
-
-    &.black::before {
-      color: $black;
-    }
-
-    &.grey::before {
-      color: $grey;
-    }
-
-    &.silver::before {
-      color: $silver;
-    }
-
-    &.darkblue::before {
-      color: $dark-blue;
     }
   }
 

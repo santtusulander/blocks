@@ -10,8 +10,8 @@ const Legend = ({dataSets, values}) => {
           <div key={i} className="legend-item">
             <span className={classNames({
               'legend-label': true,
-              [`${dataset.color}`]: true,
-              'comparison': dataset.isComparison})}>
+              'comparison': dataset.comparisonData})}>
+              <span className="legend-line" style={{color: dataset.color}}>&mdash; </span>
               {dataset.label}
             </span>
             <span className='legend-value'>{values[i]}</span>

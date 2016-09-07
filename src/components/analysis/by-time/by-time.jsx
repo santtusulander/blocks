@@ -8,8 +8,6 @@ import Immutable from 'immutable'
 import Tooltip from '../../tooltip'
 import Legend from './legend'
 
-import COLORS from '../../../constants/colors'
-
 const closestDate = d3.bisector(d => d.timestamp).left
 
 const getExtent = (datasets, key) => {
@@ -238,15 +236,15 @@ class AnalysisByTime extends React.Component {
                 {dataset.line &&
                   <path d={trafficLine(dataset.data)}
                     className="line"
-                    style={{stroke: COLORS[dataset.color]}}/>}
+                    style={{stroke: dataset.color}}/>}
                 {dataset.area &&
                   <path d={trafficArea(dataset.data)}
                     className="area"
-                    fill={`url(#${dataset.color}-${i}-gradient)`} />}
+                    fill={`url(#${dataset.id}-${i}-gradient)`} />}
                 <defs>
-                  <linearGradient key={i} id={`${dataset.color}-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor={COLORS[dataset.color]} stopOpacity="0.5" />
-                    <stop offset="100%" stopColor={COLORS[dataset.color]} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
+                  <linearGradient key={i} id={`${dataset.id}-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
+                    <stop offset="100%" stopColor={dataset.color} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
                   </linearGradient>
                 </defs>
               </g>

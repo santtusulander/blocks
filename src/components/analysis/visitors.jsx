@@ -6,6 +6,7 @@ import moment from 'moment'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
+import { paleblue } from '../../constants/colors'
 
 import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
@@ -133,7 +134,7 @@ class AnalysisVisitors extends React.Component {
     if(this.props.byTime.size) {
       datasets.push({
         area: false,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: false,
         data: this.props.byTime.toJS(),
         id: '',
@@ -206,7 +207,7 @@ class AnalysisVisitors extends React.Component {
                 if(countryData.size) {
                   datasets.push({
                     area: false,
-                    color: 'paleblue',
+                    color: paleblue,
                     comparisonData: false,
                     data: countryData.toJS(),
                     id: '',
@@ -275,7 +276,7 @@ class AnalysisVisitors extends React.Component {
                 if(browserData.size) {
                   datasets.push({
                     area: false,
-                    color: 'paleblue',
+                    color: paleblue,
                     comparisonData: false,
                     data: browserData.toJS(),
                     id: '',
@@ -344,7 +345,7 @@ class AnalysisVisitors extends React.Component {
                 if(osData.size) {
                   datasets.push({
                     area: false,
-                    color: 'paleblue',
+                    color: paleblue,
                     comparisonData: false,
                     data: osData.toJS(),
                     id: '',

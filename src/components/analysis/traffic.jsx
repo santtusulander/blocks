@@ -8,6 +8,7 @@ import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
+import { paleblue, green } from '../../constants/colors'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -113,7 +114,7 @@ class AnalysisTraffic extends React.Component {
     if(this.props.serviceTypes.includes('http') && httpData.size) {
       datasets.push({
         area: true,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: false,
         data: httpData.toJS(),
         id: 'http',
@@ -126,7 +127,7 @@ class AnalysisTraffic extends React.Component {
     if(this.props.serviceTypes.includes('https') && httpsData.size){
       datasets.push({
         area: true,
-        color: 'green',
+        color: green,
         comparisonData: false,
         data: httpsData.toJS(),
         id: 'https',
@@ -140,7 +141,7 @@ class AnalysisTraffic extends React.Component {
       if(this.props.serviceTypes.includes('http') && comparisonHttpData.size) {
         datasets.push({
           area: true,
-          color: 'paleblue',
+          color: paleblue,
           comparisonData: true,
           data: comparisonHttpData.toJS(),
           id: 'httpComparison',
@@ -153,7 +154,7 @@ class AnalysisTraffic extends React.Component {
       if(this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
         datasets.push({
           area: true,
-          color: 'green',
+          color: green,
           comparisonData: true,
           data: comparisonHttpsData.toJS(),
           id: 'httpsComparison',
@@ -243,7 +244,7 @@ class AnalysisTraffic extends React.Component {
             if(primaryData.size) {
               datasets.push({
                 area: false,
-                color: 'paleblue',
+                color: paleblue,
                 comparisonData: false,
                 data: primaryData.toJS(),
                 id: '',

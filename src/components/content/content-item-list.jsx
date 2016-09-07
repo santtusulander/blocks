@@ -9,6 +9,7 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import TruncatedTitle from '../truncated-title'
+import { paleblue } from '../../constants/colors'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -42,7 +43,7 @@ class ContentItemList extends React.Component {
     if(this.props.primaryData.size) {
       datasets.push({
         area: true,
-        color: 'paleblue',
+        color: paleblue,
         comparisonData: false,
         data: this.props.primaryData.toJS().reverse(),
         id: '',
