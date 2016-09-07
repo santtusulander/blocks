@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import { withRouter } from 'react-router'
 
 import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
 
@@ -17,6 +18,8 @@ import ContentItems from '../components/content/content-items'
 
 import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
+import { ACCOUNT_TYPES } from '../constants/account-management-options'
+
 export class Groups extends React.Component {
   constructor(props) {
     super(props)
@@ -27,6 +30,13 @@ export class Groups extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
+    this.props.accountActions.fetchAccount(this.props.params.brand, this.props.params.account).then(() => {
+      const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
+      const isSP = accountType ? accountType.value === 2 : false
+      if(isSP) {
+        this.props.router.push(`/network/udn/${this.props.activeAccount.get('id')}`)
+      }
+    })
     /* FIXME: This is not the right way of deciding when to fetch - causes sometimes 'No Groups found' - error
      * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
      **/
@@ -134,6 +144,7 @@ export class Groups extends React.Component {
 
 Groups.displayName = 'Groups'
 Groups.propTypes = {
+  accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   clearFetchedHosts: React.PropTypes.func,
@@ -147,6 +158,7 @@ Groups.propTypes = {
   history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  router: React.PropTypes.object,
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleModal: React.PropTypes.func,
@@ -193,7 +205,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchData = () => {
-    accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
     metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
@@ -201,6 +212,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
   }
   return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch),
     toggleModal: uiActions.toggleAccountManagementModal,
     fetchData: fetchData,
     groupActions: groupActions,
@@ -211,4 +223,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Groups));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Groups)));
