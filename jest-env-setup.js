@@ -6,3 +6,8 @@ global.localStorage = {
 }
 
 global.VERSION = '11.22.33'
+
+// Mock out intl
+jest.mock('react-intl')
+const reactIntl = require('react-intl')
+reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
