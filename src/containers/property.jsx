@@ -311,151 +311,149 @@ export class Property extends React.Component {
       return `${formattedDate} ${formattedValue}`
     }
     return (
-      <PageContainer className="property-container">
-        <Content>
-          <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
-            <AccountSelector
-              as="propertySummary"
-              params={this.props.params}
-              topBarTexts={itemSelectorTexts}
-              topBarAction={this.itemSelectorTopBarAction}
-              onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-              <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret"></span>
-              </div>
-            </AccountSelector>
-            <ButtonToolbar>
-              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-              <Link className="btn btn-success btn-icon"
-                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
-                <IconChart/>
-              </Link>
-              <Link className="btn btn-success btn-icon"
-                    to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
-                <IconConfiguration/>
-              </Link>
-              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                <IconTrash/>
-              </Button>
-            </ButtonToolbar>
-          </PageHeader>
-          <div className="container-fluid">
+      <Content>
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
+          <AccountSelector
+            as="propertySummary"
+            params={this.props.params}
+            topBarTexts={itemSelectorTexts}
+            topBarAction={this.itemSelectorTopBarAction}
+            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+            <div className="btn btn-link dropdown-toggle header-toggle">
+              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
+              <span className="caret"></span>
+            </div>
+          </AccountSelector>
+          <ButtonToolbar>
+            <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            <Link className="btn btn-success btn-icon"
+                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+              <IconChart/>
+            </Link>
+            <Link className="btn btn-success btn-icon"
+                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
+              <IconConfiguration/>
+            </Link>
+            <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+              <IconTrash/>
+            </Button>
+          </ButtonToolbar>
+        </PageHeader>
 
-            <Row className="property-info-row no-end-gutters">
-              <Col xs={3} className="kpi">
-                Origin Hostname
-                <h3>
-                  {activeConfig.get('edge_configuration').get('origin_host_name')}
-                </h3>
-              </Col>
-              <Col xs={3} className="kpi">
-                Published Hostname
-                <h3>
-                  {activeConfig.get('edge_configuration').get('published_name')}
-                </h3>
-              </Col>
-              <Col xs={2} className="kpi">
-                Current Version
-                <h3>{activeConfig.get('config_name')}</h3>
-              </Col>
-              <Col xs={4} className="kpi">
-                Deployed
-                <h3>
-                  {moment(
-                    activeConfig.get('configuration_status').get('deployment_date'), 'X'
-                  ).format('M/D/YYYY, h:mma')}
-                </h3>
-              </Col>
-            </Row>
+        <PageContainer className="property-container">
+          <Row className="property-info-row no-end-gutters">
+            <Col xs={3} className="kpi">
+              Origin Hostname
+              <h3>
+                {activeConfig.get('edge_configuration').get('origin_host_name')}
+              </h3>
+            </Col>
+            <Col xs={3} className="kpi">
+              Published Hostname
+              <h3>
+                {activeConfig.get('edge_configuration').get('published_name')}
+              </h3>
+            </Col>
+            <Col xs={2} className="kpi">
+              Current Version
+              <h3>{activeConfig.get('config_name')}</h3>
+            </Col>
+            <Col xs={4} className="kpi">
+              Deployed
+              <h3>
+                {moment(
+                  activeConfig.get('configuration_status').get('deployment_date'), 'X'
+                ).format('M/D/YYYY, h:mma')}
+              </h3>
+            </Col>
+          </Row>
 
-            <div className="chart-header">
-              <div className="kpi">
-                Unique visitors / h (avg)
-                <h3>
-                  {this.props.fetching || this.props.visitorsFetching ?
-                    <span>Loading...</span> :
-                    numeral(uniq_vis).format('0,0')
-                  }
-                </h3>
-              </div>
-              <div className="kpi">
-                Time to First Byte (avg)
-                <h3>
-                  {avg_ttfb}
-                </h3>
-              </div>
-              <div className="kpi">
-                Cache Hit Rate (avg)
-                <h3>
-                  {avg_cache_hit_rate}%
-                </h3>
-              </div>
-              <div className="kpi">
-                Bandwidth (avg/s)
-                <h3>
-                  {formatBitsPerSecond(avg_transfer_rate, true)}
-                </h3>
-              </div>
-              <h3 className="has-btn">
-                Property Summary
-                <DateRangeSelect
-                  startDate={startDate}
-                  endDate={endDate}
-                  changeDateRange={this.changeDateRange}
-                  availableRanges={[
-                    DateRanges.LAST_28,
-                    DateRanges.CUSTOM_TIMERANGE
-                  ]}/>
+          <div className="chart-header">
+            <div className="kpi">
+              Unique visitors / h (avg)
+              <h3>
+                {this.props.fetching || this.props.visitorsFetching ?
+                  <span>Loading...</span> :
+                  numeral(uniq_vis).format('0,0')
+                }
               </h3>
             </div>
-
-            <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
-              <AnalysisByTime axes={true} padding={30}
-                primaryData={metrics_traffic}
-                secondaryData={historical_traffic}
-                primaryLabel="Selected Period"
-                comparisonLabel="Comparison Period"
-                showLegend={true}
-                showTooltip={false}
-                dataKey='bits_per_second'
-                width={this.state.byTimeWidth}
-                height={this.state.byTimeWidth / 3}
-                xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
-                  : this.state.byTimeWidth > 600 ? 2 : 3}
-                yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
-                sliceGranularity={sliceGranularity}
-                hoverSlice={this.hoverSlice}
-                selectSlice={this.selectSlice}
-                formatSecondaryTooltip={formatHistoryTooltip}/>
-              {this.state.activeSlice && <Tooltip
-                className="slice-tooltip"
-                x={this.state.activeSliceX}
-                y={-30}
-                hidden={false}>
-                <div className="tooltip-header">
-                  <b>{moment.utc(this.state.activeSlice.get('timestamp'),'X').format('MMM D, ddd')}</b>
-                </div>
-                <div>
-                  Peak
-                  <span className="pull-right">
-                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','peak']))}
-                  </span>
-                </div>
-                <div>
-                  Average <span className="pull-right">
-                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','average']))}
-                  </span>
-                </div>
-                <div>
-                  Low <span className="pull-right">
-                    {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','low']))}
-                  </span>
-                </div>
-              </Tooltip>}
+            <div className="kpi">
+              Time to First Byte (avg)
+              <h3>
+                {avg_ttfb}
+              </h3>
             </div>
+            <div className="kpi">
+              Cache Hit Rate (avg)
+              <h3>
+                {avg_cache_hit_rate}%
+              </h3>
+            </div>
+            <div className="kpi">
+              Bandwidth (avg/s)
+              <h3>
+                {formatBitsPerSecond(avg_transfer_rate, true)}
+              </h3>
+            </div>
+            <h3 className="has-btn">
+              Property Summary
+              <DateRangeSelect
+                startDate={startDate}
+                endDate={endDate}
+                changeDateRange={this.changeDateRange}
+                availableRanges={[
+                  DateRanges.LAST_28,
+                  DateRanges.CUSTOM_TIMERANGE
+                ]}/>
+            </h3>
           </div>
-        </Content>
+
+          <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
+            <AnalysisByTime axes={true} padding={30}
+              primaryData={metrics_traffic}
+              secondaryData={historical_traffic}
+              primaryLabel="Selected Period"
+              comparisonLabel="Comparison Period"
+              showLegend={true}
+              showTooltip={false}
+              dataKey='bits_per_second'
+              width={this.state.byTimeWidth}
+              height={this.state.byTimeWidth / 3}
+              xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+                : this.state.byTimeWidth > 600 ? 2 : 3}
+              yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
+              sliceGranularity={sliceGranularity}
+              hoverSlice={this.hoverSlice}
+              selectSlice={this.selectSlice}
+              formatSecondaryTooltip={formatHistoryTooltip}/>
+            {this.state.activeSlice && <Tooltip
+              className="slice-tooltip"
+              x={this.state.activeSliceX}
+              y={-30}
+              hidden={false}>
+              <div className="tooltip-header">
+                <b>{moment.utc(this.state.activeSlice.get('timestamp'),'X').format('MMM D, ddd')}</b>
+              </div>
+              <div>
+                Peak
+                <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','peak']))}
+                </span>
+              </div>
+              <div>
+                Average <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','average']))}
+                </span>
+              </div>
+              <div>
+                Low <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','low']))}
+                </span>
+              </div>
+            </Tooltip>}
+          </div>
+        </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
@@ -469,7 +467,7 @@ export class Property extends React.Component {
             deleteHost(brand, account, group, property)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>}
-      </PageContainer>
+      </Content>
     )
   }
 }
