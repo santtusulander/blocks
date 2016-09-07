@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
 
+import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
 import ActionLinks from './action-links'
 import TableSorter from '../table-sorter'
@@ -41,7 +42,7 @@ class DNSList extends Component {
         </tr>
       )
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         <h3 className="account-management-header">
           <span id="domain-stats">
             {`${records.length} Records`}
@@ -76,7 +77,7 @@ class DNSList extends Component {
           }
         })}
         {tables}
-      </div>
+      </PageContainer>
     )
   }
 }

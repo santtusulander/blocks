@@ -10,11 +10,12 @@ import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import PageContainer from '../../../components/layout/page-container'
 import IconAdd from '../../../components/icons/icon-add'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import UDNButton from '../../../components/button'
 
@@ -235,7 +236,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     return (
-      <div className="container-fluid content-container account-management-account-groups">
+      <PageContainer className="account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -315,7 +316,7 @@ class AccountManagementAccountGroups extends React.Component {
           this.state.search.length > 0 &&
           <div className="text-center">No groups found with the search term "{this.state.search}"</div>
         }
-      </div>
+      </PageContainer>
     )
   }
 }
