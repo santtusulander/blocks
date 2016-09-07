@@ -65,6 +65,10 @@ class AnalysisStackedByTime extends React.Component {
           height={this.props.height}
           ref='chart'>
           {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
+            const strokeWidth = Math.min(
+              (this.props.width - this.props.padding * 10) / dataset.length,
+              30
+            )
             return dataset.map((day, i) => {
               const newTotal = columnHeights[i] ? columnHeights[i] + day[dataKey] : day[dataKey]
               const line = (
@@ -72,7 +76,8 @@ class AnalysisStackedByTime extends React.Component {
                   x1={xScale(day.timestamp)}
                   x2={xScale(day.timestamp)}
                   y1={yScale(columnHeights[i] || 0)}
-                  y2={yScale(newTotal)}/>
+                  y2={yScale(newTotal)}
+                  style={{strokeWidth: strokeWidth}}/>
               )
               columnHeights[i] = newTotal
               return line
