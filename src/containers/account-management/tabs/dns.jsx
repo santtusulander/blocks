@@ -26,6 +26,9 @@ class AccountManagementSystemDNS extends Component {
       recordSearch: '',
       recordToDelete: null
     }
+
+    this.deleteDnsRecord = this.deleteDnsRecord.bind(this)
+    this.closeDeleteDnsRecordModal = this.closeDeleteDnsRecordModal.bind(this)
   }
 
   componentWillMount() {
@@ -38,6 +41,18 @@ class AccountManagementSystemDNS extends Component {
     this.props.activeDomain &&
     this.props.activeDomain !== nextProps.activeDomain &&
     this.props.fetchRecords(nextProps.activeDomain)
+  }
+
+  deleteDnsRecord(activeDomain) {
+    const { recordToDelete } = this.state
+    this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
+    this.setState({
+      recordToDelete: null
+    })
+  }
+
+  closeDeleteDnsRecordModal() {
+    this.setState({ recordToDelete: null })
   }
 
   render() {
@@ -102,14 +117,8 @@ class AccountManagementSystemDNS extends Component {
           />*/}
         {this.state.recordToDelete && <DeleteDnsRecordModal
           itemToDelete={this.state.recordToDelete.name}
-          cancel={() => { this.setState({ recordToDelete: null }) }}
-          submit={() => {
-            const { recordToDelete } = this.state
-            this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
-            this.setState({
-              recordToDelete: null
-            })
-          }}/>}
+          cancel={this.closeDeleteDnsRecordModal}
+          submit={() => { this.deleteDnsRecord(activeDomain) }}/>}
       </div>
     )
   }
