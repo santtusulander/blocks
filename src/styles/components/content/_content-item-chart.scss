@@ -262,37 +262,10 @@
     .btn-icon {
       width: 44px; // TODO: temporary until starburst scaling is removed
       height: 44px; // TODO: temporary until starburst scaling is removed
-      background-color: $black;
-      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
 
       .icon {
         width: 44px; // TODO: temporary until starburst scaling is removed
         height: 44px; // TODO: temporary until starburst scaling is removed
-      }
-
-      .dark-theme & {
-        &:hover {
-          background-image: linear-gradient(rgba($pale-blue, 0.4), rgba($pale-blue, 0.4));
-        }
-
-        &:active,
-        &.active,
-        &:active:hover,
-        &.active:focus {
-          background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
-          box-shadow: 0 0 0 2px $white;
-        }
-
-        &:hover,
-        &:focus,
-        &:active,
-        &.active,
-        &:active:hover,
-        &.active:focus {
-          .icon {
-            fill: $pale-blue;
-          }
-        }
       }
     }
 

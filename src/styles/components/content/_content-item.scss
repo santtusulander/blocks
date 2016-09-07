@@ -1,0 +1,35 @@
+// Styles for both the Content Item Chart and List View
+// ====================================================
+
+.content-item-chart,
+.content-item-list {
+  .btn-icon {
+    background-color: $black;
+    background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+
+    .dark-theme & {
+      &:hover {
+        background-image: linear-gradient(rgba($pale-blue, 0.4), rgba($pale-blue, 0.4));
+      }
+
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        box-shadow: 0 0 0 2px $white;
+      }
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        .icon {
+          fill: $pale-blue;
+        }
+      }
+    }
+  }
+}
