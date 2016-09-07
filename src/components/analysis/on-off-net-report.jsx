@@ -9,7 +9,7 @@ import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-import {formatMessage, injectIntl} from 'react-intl'
+import {injectIntl} from 'react-intl'
 
 class AnalysisOnOffNetReport extends React.Component {
   constructor(props) {
@@ -107,7 +107,7 @@ class AnalysisOnOffNetReport extends React.Component {
       chart = (
         <AnalysisStackedByTime padding={40}
           dataKey="bytes"
-          dataSets={ dataSets }
+          dataSets={dataSets}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
@@ -140,7 +140,7 @@ class AnalysisOnOffNetReport extends React.Component {
               <h4>Traffic today</h4>
               <p>{formatBytes(statsToday.get('total'))}</p>
               <Row className="extra-margin-top">
-              { this.props.onOffFilter.contains('on-net') &&
+              {this.props.onOffFilter.contains('on-net') &&
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
@@ -148,7 +148,7 @@ class AnalysisOnOffNetReport extends React.Component {
                   </p>
                 </Col>
               }
-              { this.props.onOffFilter.contains('off-net') &&
+              {this.props.onOffFilter.contains('off-net') &&
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
@@ -162,7 +162,7 @@ class AnalysisOnOffNetReport extends React.Component {
               <h4>Traffic Month to Date</h4>
               <p>{formatBytes(stats.get('total'))}</p>
               <Row className="extra-margin-top">
-              { this.props.onOffFilter.contains('on-net') &&
+              {this.props.onOffFilter.contains('on-net') &&
                 <Col xs={6}>
                   <h4>On-net</h4>
                   <p className="on-net">
@@ -170,7 +170,7 @@ class AnalysisOnOffNetReport extends React.Component {
                   </p>
                 </Col>
               }
-              { this.props.onOffFilter.contains('off-net') &&
+              {this.props.onOffFilter.contains('off-net') &&
                 <Col xs={6}>
                   <h4>Off-net</h4>
                   <p className="off-net">
@@ -233,8 +233,9 @@ class AnalysisOnOffNetReport extends React.Component {
 AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
 AnalysisOnOffNetReport.propTypes = {
   fetching: React.PropTypes.bool,
-  onOffNetChartType: React.PropTypes.string,
+  intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
+  onOffNetChartType: React.PropTypes.string,
   onOffStats: React.PropTypes.instanceOf(Immutable.Map),
   onOffStatsToday: React.PropTypes.instanceOf(Immutable.Map)
 }
