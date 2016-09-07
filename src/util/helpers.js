@@ -310,6 +310,30 @@ export function getSecurityUrlFromParams(params) {
   }
 }
 
+export function getDashboardUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('dashboardAccount', params)
+  } else if (brand) {
+    return getRoute('dashboardBrand', params)
+  } else {
+    return getRoute('dashboardBrand', { brand: 'udn' })
+  }
+}
+
+export function getNetworkUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('networkAccount', params)
+  } else if (brand) {
+    return getRoute('networkBrand', params)
+  } else {
+    return getRoute('networkBrand', { brand: 'udn' })
+  }
+}
+
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()

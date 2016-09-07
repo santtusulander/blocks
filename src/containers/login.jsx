@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
@@ -40,7 +41,18 @@ export class Login extends React.Component {
     this.toggleRemember = this.toggleRemember.bind(this)
   }
   goToAccountPage() {
-    this.props.router.push(getContentUrl('brand', 'udn', {}))
+    // Role 3 === SP Admin
+    if(this.props.currentUser.getIn(['roles', 0]) === 3) {
+      if(this.props.currentUser.get('account_id')) {
+        this.props.router.push(`/dashboard/udn/${this.props.currentUser.get('account_id')}`)
+      } else {
+        this.props.router.push(`/dashboard/udn`)
+      }
+    } else if(this.props.loginUrl) {
+      this.props.router.push(getContentUrl('brand', 'udn', {}))
+    } else {
+      this.props.router.push(getContentUrl('brand', 'udn', {}))
+    }
   }
   /**
    * Set data on the redux store after login. This method blocks redirecting the
@@ -185,6 +197,7 @@ export class Login extends React.Component {
 Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   loggedIn: React.PropTypes.bool,
   rolesActions: React.PropTypes.object,
@@ -193,8 +206,13 @@ Login.propTypes = {
   username: React.PropTypes.string
 }
 
+Login.defaultProps = {
+  currentUser: Immutable.Map()
+}
+
 function mapStateToProps(state) {
   return {
+    currentUser: state.user.get('currentUser'),
     fetching: state.user.get('fetching') || state.account.get('fetching'),
     loggedIn: state.user.get('loggedIn'),
     username: state.user.get('username')
