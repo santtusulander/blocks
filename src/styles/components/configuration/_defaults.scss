@@ -12,7 +12,7 @@
   }
 
   h3 {
-    padding: 20px 0;
+    padding-bottom: 20px 0;
 
     @include print {
       padding: 10px 0;
@@ -25,19 +25,5 @@
     @include print {
       margin: 10px 0;
     }
-  }
-
-  td:last-child {
-    text-align: right;
-
-    a {
-      margin-left: 20px;
-      text-transform: uppercase;
-    }
-  }
-
-  .add-rule {
-    display: inline-block;
-    margin-top: 45px;
   }
 }

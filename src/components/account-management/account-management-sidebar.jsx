@@ -29,6 +29,7 @@ export const AccountManagementSidebar = props => {
   )
 }
 
+AccountManagementSidebar.displayName='AccountManagementSidebar'
 AccountManagementSidebar.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activate: PropTypes.func,

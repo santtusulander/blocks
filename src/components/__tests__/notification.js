@@ -1,23 +1,17 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.dontMock('../notification.jsx')
 const Notification = require('../notification.jsx')
 
 describe('Notification', () => {
   it('should exist', () => {
-    let notification = TestUtils.renderIntoDocument(
-      <Notification />
-    );
-    expect(TestUtils.isCompositeComponent(notification)).toBeTruthy();
+    const notification = shallow(<Notification />)
+    expect(notification).toBeDefined()
   });
 
   it('can be passed a custom css class', () => {
-    let notification = TestUtils.renderIntoDocument(
-      <Notification className="foo" />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithTag(notification, 'div');
-    expect(ReactDOM.findDOMNode(container).className).toContain('foo');
+    const notification = shallow(<Notification className="foo" />)
+    expect(notification.find('div').get(0).props.className).toContain('foo')
   });
 })
