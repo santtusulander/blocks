@@ -39,7 +39,6 @@ export default function(WrappedModal) {
     invalid: PropTypes.bool,
     submit: PropTypes.func
   }
-  KeyStrokeSupport.displayName = "KeyStrokeSupport"
 
   return KeyStrokeSupport
 }

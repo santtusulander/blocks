@@ -34,7 +34,6 @@ const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delF
   )
 }
 
-DeleteModal.displayName = "DeleteModal"
 DeleteModal.propTypes = {
   cancel: PropTypes.func,
   description: PropTypes.string,
