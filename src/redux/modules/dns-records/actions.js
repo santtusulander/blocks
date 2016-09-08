@@ -39,7 +39,7 @@ import * as dnsRecordsReducers from './reducers'
 
 const InitialState = fromJS({
   activeRecord: null,
-  loading: false,
+  fetching: false,
   resources: []
 })
 
