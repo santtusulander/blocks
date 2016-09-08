@@ -22,7 +22,7 @@ import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
 
