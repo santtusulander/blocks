@@ -11,7 +11,7 @@ import { getRecordValueString } from '../../../util/dns-records-helpers'
 import { RECORD_EDIT } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
+import DomainToolbar from '../../../components/account-management/domain-toolbar'
 import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
