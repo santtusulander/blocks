@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
 
-import { showInfoDialog } from '../../../redux/modules/ui'
+import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 
@@ -56,7 +56,6 @@ const DnsDomainEditFormContainer = (props) => {
     },
     onDelete: (domainId) => {
       deleteDomain(domainId)
-      console.log('onDelete()', domainId)
     },
     ...formProps
   }
@@ -75,8 +74,10 @@ const DnsDomainEditFormContainer = (props) => {
 
 DnsDomainEditFormContainer.propTypes = {
   closeModal: PropTypes.func,
+  deleteDomain: PropTypes.func,
   edit: PropTypes.bool,
-  fields: PropTypes.object
+  fields: PropTypes.object,
+  saveDomain: PropTypes.func
 }
 
 function mapStateToProps({ dns }, { edit }) {
@@ -120,13 +121,13 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       dnsActions.deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
-            uiActions.showInfoDialog({
+            dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.button.error"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={uiActions.hideInfoDialog} bsStyle="primary">
+              buttons: <Button onClick={() => dispatch( hideInfoDialog)} bsStyle="primary">
                 <FormattedMessage id="portal.button.ok"/>
               </Button>
-            })
+            }))
           }
           closeModal();
         })
@@ -150,10 +151,9 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.button.error"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+              buttons: <Button onClick={() => dispatch( hideInfoDialog)} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
             }))
           }
-
           closeModal();
 
         })
