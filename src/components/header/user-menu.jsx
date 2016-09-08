@@ -4,7 +4,7 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import Select from '../select'
 
-import { FormattedMessage } from 'react-intl' 
+import { FormattedMessage } from 'react-intl'
 
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
   return (
@@ -17,27 +17,33 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
       <Dropdown.Menu className="dropdown-user-menu">
         <li className="dropdown-user-menu-container">
           <ul>
-            <MenuItem header={true} className="dropdown-main-header">
+            <MenuItem header={true}>
               {user.size &&
-                <div id="user-menu-username" className="user-menu-item menu-item-name">
+                <span id="user-menu-username" className="user-menu-item">
                   {user.get('first_name') && user.get('last_name') ?
                     user.get('first_name') + ' ' + user.get('last_name')
                   : user.get('email')}
-                </div>
+                </span>
               }
             </MenuItem>
             <li className="menu-item-theme">
-              <div className="menuitem">
-                <div className="user-menu-item">
-                  <div className="helper-header helper-ui-theme">UI Theme</div>
-                  <Select className="btn-block"
-                          onSelect={handleThemeChange}
-                          value={theme}
-                          options={[
-                            ['dark', <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>],
-                            ['light', <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>]]}/>
-                </div>
-              </div>
+              <Select
+                className="btn-block"
+                onSelect={handleThemeChange}
+                value={theme}
+                options={[
+                  ['dark',
+                  <div>
+                    <span className="helper-header helper-ui-theme text-sm">UI Theme</span>
+                    <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
+                  </div>],
+                  ['light',
+                  <div>
+                    <span className="helper-header helper-ui-theme text-sm">UI Theme</span>
+                    <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
+                  </div>]
+                ]}
+              />
             </li>
           </ul>
         </li>

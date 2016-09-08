@@ -1,0 +1,233 @@
+// User Menu Dropdown
+// ==================
+
+$user-menu-dd-font-size: 18px;
+$user-menu-dd-width: rem(320px);
+$user-menu-dd-vertical-padding: em(24px, $user-menu-dd-font-size);
+$user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
+
+.dropdown-menu,
+.navbar-nav .open .dropdown-menu {
+  &.dropdown-user-menu {
+    width: $user-menu-dd-width;
+    height: 100%;
+    min-height: calc(100vh - #{$header-total-height});
+    overflow: auto;
+    font-size: $user-menu-dd-font-size;
+
+    .helper-header {
+      position: relative;
+      display: block;
+
+      &.helper-ui-theme::after {
+        position: absolute;
+        top: 50%;
+        left: 70%;
+        width: 40px;
+        height: 8px;
+        background: linear-gradient(to right,
+          $pale-blue 20%, $green 21%, $green 40%, $purple 41%, $purple 60%,
+          $red 61%, $red 80%, $yellow 81%);
+        content: '';
+        transform: translateY(-50%);
+      }
+    }
+
+    .dropdown-header {
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+
+      .dark-theme & {
+        background-color: rgba($black, 0.2);
+      }
+
+      .light-theme & {
+        background-color: rgba($black, 0.04);
+      }
+
+      .user-menu-item {
+        padding: 0 $user-menu-dd-horizontal-padding;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .user-menu-item {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      transform: translateY(-50%);
+    }
+
+    .dropdown-select .dropdown-toggle {
+      padding: $user-menu-dd-vertical-padding calc(#{$user-menu-dd-horizontal-padding} * 2) $user-menu-dd-vertical-padding $user-menu-dd-horizontal-padding;  // Calculation prevents the text from flowing under the caret
+      font-size: $user-menu-dd-font-size;
+      box-shadow: none;
+    }
+
+    > li {
+      &.dropdown-user-menu-container {
+        height: 100%;
+        margin-bottom: -($bar-height + $btn-height);
+
+        @include md {
+          margin-bottom: -($md-bar-height + $md-btn-height);
+        }
+
+        &::after {
+          display: block;
+          height: $bar-height + $btn-height;
+          content: '';
+
+          @include md {
+            height: $md-bar-height + $md-btn-height;
+          }
+        }
+      }
+
+      > ul {
+        padding: 0;
+        list-style: none;
+
+        > li {
+          position: relative;
+          display: block;
+          height: auto;
+          min-height: $bar-height;
+
+          @include md {
+            min-height: $md-bar-height;
+          }
+        }
+      }
+    }
+
+    //   > ul > li,
+    //   &.bottom-item {
+    //
+    //     > a,
+    //     > .menuitem {
+    //       position: relative;
+    //       display: block;
+    //       min-height: $bar-height + $btn-height;
+    //       padding: 0;
+    //       margin: 0;
+    //
+    //       @include md {
+    //         min-height: $md-bar-height + $md-btn-height;
+    //         margin: 0;
+    //       }
+    //     }
+    //
+    //     > a {
+    //
+    //       &::before {
+    //         position: absolute;
+    //         top: 50%;
+    //         right: $btn-sm-height / 2;
+    //         width: $btn-height / 2;
+    //         height: $btn-height / 2;
+    //         margin-top: -($btn-height / 4);
+    //         border-radius: 50%;
+    //         content: '';
+    //
+    //         @include md {
+    //           right: $md-btn-sm-height / 2;
+    //           width: $btn-sm-height / 2;
+    //           height: $btn-sm-height / 2;
+    //           margin-top: -($btn-sm-height / 4);
+    //         }
+    //
+    //         .dark-theme &,
+    //         .light-theme & {
+    //           background-color: rgba($black, 0.2);
+    //         }
+    //       }
+    //
+    //       &::after {
+    //         position: absolute;
+    //         top: 50%;
+    //         right: $btn-sm-height / 2;
+    //         margin: -5px 12px 0 0;
+    //         vertical-align: middle;
+    //         border-top: $caret-width-base solid transparent;
+    //         border-bottom: $caret-width-base solid transparent;
+    //         border-left: $caret-width-base dashed;
+    //         content: '';
+    //
+    //         @include md {
+    //           right: $md-btn-sm-height / 2;
+    //           margin-right: 8px;
+    //         }
+    //
+    //         .dark-theme &,
+    //         .light-theme .header &,
+    //         .light-theme .sidebar-layout &,
+    //         .light-theme .configuration-sidebar & {
+    //           border-left-color: $dt-text-color;
+    //         }
+    //
+    //         .light-theme & {
+    //           border-left-color: $white;
+    //         }
+    //       }
+    //
+    //       &:hover::after {
+    //
+    //         .dark-theme &,
+    //         .light-theme .header &,
+    //         .light-theme .sidebar-layout &,
+    //         .light-theme .configuration-sidebar & {
+    //           border-left-color: $white;
+    //         }
+    //       }
+    //     }
+    //
+    //     &:not(.dropdown-header) + li a,
+    //     &:not(.dropdown-header) + li .menuitem,
+    //     &.bottom-item a {
+    //
+    //       .dark-theme &,
+    //       .light-theme & {
+    //         border-top: 1px solid rgba($pale-blue, 0.1);
+    //       }
+    //     }
+    //
+    //
+    //
+    //     .dropdown-select {
+    //       width: calc(100% + #{$dropdown-padding * 2});
+    //       margin: 0 (-$dropdown-padding * 2 / 2);
+    //
+    //       > .dropdown-toggle {
+    //         padding: 0 $dropdown-padding;
+    //         font-weight: inherit;
+    //         background: transparent;
+    //       }
+    //
+    //       .dropdown-menu {
+    //         color: $lt-text-color;
+    //
+    //         li > a {
+    //           padding: 15px $dropdown-padding;
+    //           color: $lt-text-color;
+    //
+    //           &:hover {
+    //             color: $black;
+    //           }
+    //         }
+    //       }
+    //
+    //       .icon {
+    //         margin-right: 10px;
+    //
+    //         @include md {
+    //           margin-right: 2px;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+  }
+}
