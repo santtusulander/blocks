@@ -8,7 +8,7 @@ let routeTrafficTime            = require('./routes/traffic/time');
 let routeTrafficCountry         = require('./routes/traffic/country');
 let routeTrafficTotal           = require('./routes/traffic/total');
 let routeTrafficServiceProvider = require('./routes/traffic/service-provider');
-let routeTrafficNetworkRouting  = require('./routes/traffic/network-routing');
+let routeTrafficOnOffNet        = require('./routes/traffic/on-off-net');
 let routeTrafficUrls            = require('./routes/traffic/urls');
 let routeVisitorsTime           = require('./routes/visitors/time');
 let routeVisitorsCountry        = require('./routes/visitors/country');
@@ -26,7 +26,7 @@ router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTim
 router.get(`/${configs.apiBaseFolder}/traffic/country`,          routeTrafficCountry);
 router.get(`/${configs.apiBaseFolder}/traffic/total`,            routeTrafficTotal);
 router.get(`/${configs.apiBaseFolder}/traffic/service-provider`, routeTrafficServiceProvider);
-router.get(`/${configs.apiBaseFolder}/traffic/network-routing`,  routeTrafficNetworkRouting);
+router.get(`/${configs.apiBaseFolder}/traffic/on-off-net`,       routeTrafficOnOffNet);
 router.get(`/${configs.apiBaseFolder}/traffic/urls`,             routeTrafficUrls);
 router.get(`/${configs.apiBaseFolder}/visitors/time`,            routeVisitorsTime);
 router.get(`/${configs.apiBaseFolder}/visitors/country`,         routeVisitorsCountry);
