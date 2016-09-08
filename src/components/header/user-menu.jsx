@@ -45,12 +45,23 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                 ]}
               />
             </li>
+            <li>
+              <a href="#">
+                <span className="helper-header text-sm">Company</span>
+                <FormattedMessage id="portal.header.menu.logout.text"/>
+              </a>
+            </li>
+            <li className="no-helper-header">
+              <a href="#">
+                <FormattedMessage id="portal.header.menu.logout.text"/>
+              </a>
+            </li>
+            <li className="bottom-item no-helper-header">
+              <a id="log-out" href="#" onClick={logout}>
+                <FormattedMessage id="portal.header.menu.logout.text"/>
+              </a>
+            </li>
           </ul>
-        </li>
-        <li className="bottom-item" >
-          <a id="log-out" href="#" onClick={logout}>
-            <div><FormattedMessage id="portal.header.menu.logout.text"/></div>
-          </a>
         </li>
       </Dropdown.Menu>
     </Dropdown>
