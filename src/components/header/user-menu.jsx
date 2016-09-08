@@ -15,7 +15,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                        noCaret={true} id="user-dropdown">
       </Dropdown.Toggle>
       <Dropdown.Menu className="dropdown-user-menu">
-        <li className="dropdown-user-menu-container">
+        <li>
           <ul>
             <MenuItem header={true}>
               {user.size &&
@@ -26,6 +26,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                 </span>
               }
             </MenuItem>
+
             <li>
               <Select
                 className="btn-block"
@@ -45,17 +46,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                 ]}
               />
             </li>
-            <li>
-              <a href="#">
-                <span className="helper-header text-sm">Company</span>
-                <FormattedMessage id="portal.header.menu.logout.text"/>
-              </a>
-            </li>
-            <li className="no-helper-header">
-              <a href="#">
-                <FormattedMessage id="portal.header.menu.logout.text"/>
-              </a>
-            </li>
+
             <li className="bottom-item no-helper-header">
               <a id="log-out" href="#" onClick={logout}>
                 <FormattedMessage id="portal.header.menu.logout.text"/>

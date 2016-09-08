@@ -1,21 +1,21 @@
 // User Menu Dropdown
 // ==================
 
-$user-menu-dd-font-size: 18px;
-$user-menu-dd-width: rem(320px);
-$user-menu-header-vertical-padding: em(15px, $user-menu-dd-font-size);
-$no-helper-header-vertical-padding: em(29px, $user-menu-dd-font-size);
-$user-menu-vertical-padding: em(20px, $user-menu-dd-font-size);
-$user-menu-horizontal-padding: em(30px, $user-menu-dd-font-size);
+$user-menu-font-size: 18px;
+$user-menu-width: rem(320px);
+$user-menu-header-vertical-padding: em(15px, $user-menu-font-size);
+$no-helper-header-vertical-padding: em(26px, $user-menu-font-size);
+$user-menu-vertical-padding: em(17px, $user-menu-font-size);
+$user-menu-horizontal-padding: em(30px, $user-menu-font-size);
 
 .dropdown-menu,
 .navbar-nav .open .dropdown-menu {
   &.dropdown-user-menu {
-    width: $user-menu-dd-width;
+    width: $user-menu-width;
     height: 100%;
     min-height: calc(100vh - #{$header-total-height});
     overflow: auto;
-    font-size: $user-menu-dd-font-size;
+    font-size: $user-menu-font-size;
 
     .helper-header {
       position: relative;
@@ -55,7 +55,7 @@ $user-menu-horizontal-padding: em(30px, $user-menu-dd-font-size);
     .dropdown-select {
       .dropdown-toggle {
         padding: $user-menu-vertical-padding $user-menu-horizontal-padding;
-        font-size: $user-menu-dd-font-size;
+        font-size: $user-menu-font-size;
         line-height: 1.45;
         background-color: transparent;
         box-shadow: none;
@@ -107,6 +107,11 @@ $user-menu-horizontal-padding: em(30px, $user-menu-dd-font-size);
           fill: $pale-blue;
         }
       }
+
+      .dropdown-menu > li > a {
+        padding: $user-menu-vertical-padding $user-menu-horizontal-padding;
+        font-size: $user-menu-font-size;
+      }
     }
 
     > li {
@@ -130,7 +135,7 @@ $user-menu-horizontal-padding: em(30px, $user-menu-dd-font-size);
           > a {
             display: block;
             padding: $user-menu-vertical-padding $user-menu-horizontal-padding;
-            font-size: $user-menu-dd-font-size;
+            font-size: $user-menu-font-size;
             box-shadow: none;
 
             &::after {
