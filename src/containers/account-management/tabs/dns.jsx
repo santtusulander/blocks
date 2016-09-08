@@ -137,6 +137,7 @@ AccountManagementSystemDNS.propTypes = {
   onEditDomain: PropTypes.func,
   params: PropTypes.object,
   records: PropTypes.array,
+  removeResource: PropTypes.func,
   setActiveRecord: PropTypes.func,
   toggleModal: PropTypes.func
 }
