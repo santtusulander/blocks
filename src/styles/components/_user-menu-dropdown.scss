@@ -111,6 +111,14 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
       .dropdown-menu > li > a {
         padding: $user-menu-vertical-padding $user-menu-horizontal-padding;
         font-size: $user-menu-font-size;
+
+        &:hover:not(:disabled) {
+          color: inherit;
+
+          .helper-header {
+            font-weight: 500;
+          }
+        }
       }
     }
 
