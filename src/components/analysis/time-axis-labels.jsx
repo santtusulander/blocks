@@ -5,9 +5,11 @@ import d3 from 'd3'
 const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}) => {
   const hourTicks = showHours ? xScale.ticks(9) : []
   let dayTicks = xScale.ticks(d3.time.day.utc, xAxisTickFrequency || 1)
-  if (dayTicks.length > 12) {
-    dayTicks = xScale.ticks(12)
+
+  if (dayTicks.length > 35) {
+    dayTicks = xScale.ticks(35)
   }
+
   let monthTicks = xScale.ticks(d3.time.month.utc, xAxisTickFrequency || 1)
   if (monthTicks.length > 3) {
     monthTicks = xScale.ticks(3)
