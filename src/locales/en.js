@@ -51,6 +51,9 @@ const TRANSLATED_MESSAGES = {
   'portal.user.edit.resetPassword.text': 'Reset Password',
   'portal.user.edit.role.text': 'Role',
 
+  'portal.dnsRecord.delete.title': 'Delete Record?',
+  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
+
   'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',

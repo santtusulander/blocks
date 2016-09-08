@@ -16,6 +16,7 @@ import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
+import DeleteDnsRecordModal from '../../../components/account-management/delete-dns-record-modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -24,8 +25,12 @@ class AccountManagementSystemDNS extends Component {
     this.editingDomain = true
     this.state = {
       domainSearch: '',
-      recordSearch: ''
+      recordSearch: '',
+      recordToDelete: null
     }
+
+    this.deleteDnsRecord = this.deleteDnsRecord.bind(this)
+    this.closeDeleteDnsRecordModal = this.closeDeleteDnsRecordModal.bind(this)
   }
 
   componentWillMount() {
@@ -38,6 +43,18 @@ class AccountManagementSystemDNS extends Component {
     this.props.activeDomain &&
     this.props.activeDomain !== nextProps.activeDomain &&
     this.props.fetchRecords(nextProps.activeDomain)
+  }
+
+  deleteDnsRecord(activeDomain) {
+    const { recordToDelete } = this.state
+    this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
+    this.setState({
+      recordToDelete: null
+    })
+  }
+
+  closeDeleteDnsRecordModal() {
+    this.setState({ recordToDelete: null })
   }
 
   render() {
@@ -77,7 +94,11 @@ class AccountManagementSystemDNS extends Component {
         this.editingRecord = false
         toggleModal(RECORD_EDIT)
       },
-      onDeleteEntry: () => {/*noop*/},
+      onDeleteEntry: (record) => {
+        this.setState({
+          recordToDelete: record
+        })
+      },
       onEditEntry: id => {
         this.props.setActiveRecord(id)
         this.editingRecord = true
@@ -105,7 +126,12 @@ class AccountManagementSystemDNS extends Component {
             onCancel={() => toggleModal(null)}
             activeDomain={activeDomain}
             onSave={soaEditOnSave}
-            { ...soaFormInitialValues }/>*/}
+            { ...soaFormInitialValues }
+          />*/}
+        {this.state.recordToDelete && <DeleteDnsRecordModal
+          itemToDelete={this.state.recordToDelete.name}
+          cancel={this.closeDeleteDnsRecordModal}
+          submit={() => { this.deleteDnsRecord(activeDomain) }}/>}
       </div>
     )
   }
@@ -124,6 +150,7 @@ AccountManagementSystemDNS.propTypes = {
   onEditDomain: PropTypes.func,
   params: PropTypes.object,
   records: PropTypes.array,
+  removeResource: PropTypes.func,
   setActiveRecord: PropTypes.func,
   toggleModal: PropTypes.func
 }
@@ -139,10 +166,9 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
-
 function mapDispatchToProps(dispatch, { params: { brand } }) {
   const { changeActiveDomain, fetchDomains, fetchDomain, startFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
-  const { fetchResourcesWithDetails, startFetching, setActiveRecord } = bindActionCreators(dnsRecordActionCreators, dispatch)
+  const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)
   return {
     fetchDomain,
     fetchRecords: domain => {
@@ -153,6 +179,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       startFetchingDomains()
       return fetchDomains(brand)
     },
+    removeResource,
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
