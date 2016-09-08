@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import ActionLinks from './action-links.jsx'
+import ActionButtons from './action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 import BrandEditForm from './brand-edit-form.jsx'
 
@@ -31,7 +31,7 @@ const BrandListRow = (props) => {
         <BrandlistUsedBy fieldVal={props.usedBy} />
       </td>
       <td>
-        <ActionLinks onEdit={ () => props.onEdit(props.id) } onDelete={ () => props.onDelete(props.id) }  />
+        <ActionButtons onEdit={ () => props.onEdit(props.id) } onDelete={ () => props.onDelete(props.id) }  />
       </td>
     </tr>
   )

@@ -3,7 +3,7 @@ import TestUtils from 'react-addons-test-utils'
 import { fromJS } from 'immutable'
 
 jest.dontMock('../roles-list.jsx')
-jest.dontMock('../action-links.jsx')
+jest.dontMock('../action-buttons.jsx')
 jest.dontMock('../../table-sorter.jsx')
 jest.dontMock('../account-management-header.jsx')
 jest.dontMock('../../array-td/array-td.jsx')

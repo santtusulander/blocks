@@ -3,7 +3,7 @@ import { Input } from 'react-bootstrap'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
-import ActionLinks from './action-links'
+import ActionButtons from './action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 
@@ -35,7 +35,7 @@ class DNSList extends Component {
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
           <td>
-          <ActionLinks
+          <ActionButtons
           onEdit={() => onEditEntry(record.id)}
           onDelete={() => onDeleteEntry(record)}/>
           </td>
@@ -115,7 +115,7 @@ class SortableTable extends Component {
             <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
             <th width="30%">ADDRESS</th>
             <th width="30%">TTL</th>
-            <th width="8%"></th>
+            <th width="8.3%"></th>
           </tr>
         </thead>
         <tbody>

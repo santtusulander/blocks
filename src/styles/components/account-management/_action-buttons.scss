@@ -1,0 +1,7 @@
+// Table Action Buttons
+
+.action-buttons {
+  .btn:not(:last-child) {
+    margin-right: 12px;
+  }
+}

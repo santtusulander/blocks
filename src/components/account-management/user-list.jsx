@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import ActionLinks from './action-links.jsx'
+import ActionButtons from './action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
 import { FormattedMessage } from 'react-intl'
@@ -17,7 +17,7 @@ const UserList = props => {
             <th width="30%"><FormattedMessage id="portal.user.list.name.column.title"/></th>
             <th width="30%"><FormattedMessage id="portal.user.list.role.column.title"/></th>
             <th width="30%"><FormattedMessage id="portal.user.list.email.column.title"/></th>
-            <th width="8%"></th>
+            <th width="8.3%"></th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@ const UserList = props => {
                 <td>{user.get('role')}</td>
                 <td>{user.get('email')}</td>
                 <td>
-                  <ActionLinks
+                  <ActionButtons
                     onEdit={() => editUser(id)}
                     onDelete={() => deleteUser(id)}/>
                 </td>

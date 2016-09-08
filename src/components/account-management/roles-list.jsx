@@ -1,17 +1,16 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, Row, Col, Input } from 'react-bootstrap'
+import { Row, Col, Input } from 'react-bootstrap'
 
-import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
-import ActionLinks from './action-links.jsx'
+import ActionButtons from './action-buttons.jsx'
 
 import TableSorter from '../table-sorter'
 import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -106,7 +105,7 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="1%"></th>
+              <th width="8.4%"></th>
             </tr>
           </thead>
 
@@ -142,7 +141,7 @@ class RolesList extends React.Component {
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
                   <td>
-                    <ActionLinks
+                    <ActionButtons
                     onEdit={() => this.props.onEdit(role.get('id'))}
                     onDelete={() => this.props.onDelete(role.get('id'))}/>
                   </td>
