@@ -83,7 +83,6 @@ class SupportTicketModal extends React.Component {
           <h1>
             #{ticket.get('id')}
             <UDNButton bsStyle="success"
-                       pageHeaderBtn={true}
                        icon={true}
                        className="ticket-modal__edit-ticket-button"
                        onClick={() => {
@@ -193,4 +192,3 @@ SupportTicketModal.defaultProps = {
 }
 
 export default SupportTicketModal
-

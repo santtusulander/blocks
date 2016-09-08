@@ -29,7 +29,7 @@ class Header extends React.Component {
     this.goToAccountManagement = this.goToAccountManagement.bind(this)
 
     this.state = {
-      animatingGradient: false,
+      animatingGradient: props.fetching || false,
       accountMenuOpen: false,
       userMenuOpen: false
     }
@@ -76,7 +76,8 @@ class Header extends React.Component {
   }
 
   addGroupLink(links, urlMethod) {
-    const activeGroup = this.props.activeGroup.size ? this.props.activeGroup.get('id').toString() : null,
+    const activeGroup = this.props.activeGroup && this.props.activeGroup.size ?
+      this.props.activeGroup.get('id').toString() : null,
       params = this.props.params;
 
     if (params.group === activeGroup) {
@@ -165,7 +166,8 @@ class Header extends React.Component {
 
   render() {
     const { activeAccount, router, user, params: { account, brand } } = this.props
-    const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
+    const activeAccountName = activeAccount && this.props.params.account ?
+      activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -230,13 +232,13 @@ class Header extends React.Component {
           </Nav>
           <Nav className="header__right" pullRight={true}>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon btn-round btn-alerts">
+              <Button className="btn-header btn-icon btn-round btn-alerts">
                 <IconAlerts />
                 <span className="btn-alerts-indicator" />
               </Button>
             </li>
             <li>
-              <Button className="btn-header btn-tertiary btn-icon btn-round btn-help"><IconQuestionMark /></Button>
+              <Button className="btn-header btn-icon btn-round btn-help"><IconQuestionMark /></Button>
             </li>
             <li>
               <Input className="header-search-input"

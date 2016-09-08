@@ -51,6 +51,9 @@ const TRANSLATED_MESSAGES = {
   'portal.user.edit.resetPassword.text': 'Reset Password',
   'portal.user.edit.role.text': 'Role',
 
+  'portal.dnsRecord.delete.title': 'Delete Record?',
+  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
+
   'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
@@ -415,6 +418,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.queryString.text': 'Query String',
   'portal.policy.edit.policies.policyRules.text': 'Policy Rules',
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
+  'portal.policy.edit.editRule.editPolicy.text': 'Edit Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
@@ -514,6 +518,33 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.accoutnUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
 
+  'portal.accountManagement.dns.form.new.text' : 'New Domain',
+  'portal.accountManagement.dns.form.edit.text' : 'New Domain',
+  'portal.accountManagement.dns.form.subHeader.text' : 'Lorem ipsum',
+  'portal.accountManagement.dns.form.domainName.text' : 'Domain Name',
+  'portal.accountManagement.dns.form.domainNamePlaceholder.text' : 'Enter Domain Name',
+  'portal.accountManagement.dns.form.email.text' : 'Enter Responsible Person Mailbox',
+  'portal.accountManagement.dns.form.emailPlaceholder.text' : 'Enter Responsible Person Mailbox',
+  'portal.accountManagement.dns.form.nameServer.text' : 'Primary Nameserver',
+  'portal.accountManagement.dns.form.nameServerPlaceholder.text' : 'Enter Primary Nameserver',
+  'portal.accountManagement.dns.form.refresh.text' : 'Refresh',
+  'portal.accountManagement.dns.form.refreshPlaceholder.text' : 'Enter Refresh',
+  'portal.accountManagement.dns.form.ttl.text' : 'TTL',
+  'portal.accountManagement.dns.form.ttlPlaceholder.text' : 'Enter TTL',
+  'portal.accountManagement.dns.form.negativeTtl.text' : 'Negative TTL',
+  'portal.accountManagement.dns.form.negativeTtlPlaceholder.text' : 'Enter Negative TTL',
+
+  'portal.accountManagement.dns.form.validation.name.text' : 'Domain Name is required',
+  'portal.accountManagement.dns.form.validation.email.text' : 'Responsible Person Mailbox is required',
+  'portal.accountManagement.dns.form.validation.nameServer.text' : 'Primary Nameserver is required',
+  'portal.accountManagement.dns.form.validation.refresh.text' : 'Refresh is required',
+  'portal.accountManagement.dns.form.validation.ttl.text' : 'TTL is required',
+  'portal.accountManagement.dns.form.validation.maxTtl.text' : 'Maximum TTL is {maxTtl}',
+  'portal.accountManagement.dns.form.validation.maxNegativeTtl.text' : 'Maximum Negative TTL is {maxTtl}',
+
+  'portal.accountManagement.dns.domain.deleteError' : 'Unable to delete domain',
+  'portal.accountManagement.dns.domain.saveError' : 'Unable to save domain',
+
   'portal.configuration.updateSuccessfull.text': 'Configurations succesfully saved',
   'portal.configuration.retireSuccessfull.text': 'Configurations succesfully retired',
   'portal.configuration.publishSuccessfull.text': 'Configurations succesfully published',
@@ -537,6 +568,14 @@ const TRANSLATED_MESSAGES = {
   'portal.configurationList.activeVersion.text': 'Active Version',
   'portal.configurationList.belongsTo.text': 'Belongs to',
 
+  'portal.constants.date-ranges.month_to_date': 'Month to Date',
+  'portal.constants.date-ranges.last_28': 'Last 28 Days',
+  'portal.constants.date-ranges.last_month': 'Last Month',
+  'portal.constants.date-ranges.this_week': 'This Week',
+  'portal.constants.date-ranges.today': 'Today',
+  'portal.constants.date-ranges.yesterday': 'Last Month',
+  'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
+  
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',

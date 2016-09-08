@@ -80,21 +80,28 @@ class AnalysisOnOffNetReport extends React.Component {
     const onNet = stats.get('detail').map(datapoint => {
 
       return {
-        bytes: datapoint.getIn(['net_on' , 'bytes']),
+        bytes: datapoint.getIn(['net_on' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')
       }
     })
 
     const offNet = stats.get('detail').map(datapoint => {
       return {
-        bytes: datapoint.getIn(['net_off' , 'bytes']),
+        bytes: datapoint.getIn(['net_off' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')
       }
     })
 
     let dataSets = [];
-    if ( this.props.onOffFilter.contains('on-net') ) dataSets.push( onNet.toJS() )
-    if ( this.props.onOffFilter.contains('off-net') ) dataSets.push( offNet.toJS() )
+    if ( this.props.onOffFilter.contains('on-net') ) {
+      dataSets.push( onNet.toJS() )
+    } else {
+      dataSets.push( [] )
+    }
+
+    if ( this.props.onOffFilter.contains('off-net') ) {
+      dataSets.push( offNet.toJS() )
+    }
 
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
