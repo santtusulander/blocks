@@ -13,9 +13,9 @@ describe('Button', () => {
   beforeEach(() => {
     subject = (activeDomain, domains, searchValue) => {
       props = {
-        activeDomain: activeDomain || 'aa',
-        domains: domains || [ 'aa', 'bb' ],
-        searchValue: searchValue || 'aa',
+        activeDomain: activeDomain,
+        domains: domains || [],
+        searchValue: searchValue || '',
         onAddDomain: jest.genMockFunction(),
         onEditDomain: jest.genMockFunction(),
         searchFunc: jest.genMockFunction(),
@@ -24,33 +24,26 @@ describe('Button', () => {
       return shallow(<DomainToolbar {...props}/>)
     }
   })
+
   it('should exist', () => {
     expect(subject().length).toBe(1)
   });
 
   it('should not show Edit button', () => {
-    const button = shallow(<DomainToolbar addNew={true}/>);
-    expect(button.find('IsAllowed').hasClass('btn-add-new')).toBe(true)
+    expect(subject().find('IsAllowed').length).toBe(1)
+  });
+
+  it('should show Edit button', () => {
+    expect(subject('aa').find('IsAllowed').length).toBe(1)
   });
 
   it('should show DomainSelector', () => {
-    const button = shallow(<UDNButton bsStyle={'primary'}/>);
-    expect(button.find('Button').prop('bsStyle')).toBeDefined()
+    expect(subject(null, [ 'aa', 'bb' ]).find('DomainSelector').length).toBe(1)
+    expect(subject(null, [], 'asd').find('DomainSelector').length).toBe(1)
   });
 
-/*
-
-
-  it('should not set invalid bsStyles', () => {
-    const button = renderIntoDocument(<UDNButton bsStyle={'aaa'}/>);
-    const button = scryRenderedDOMComponentsWithTag(button, 'li')
-    expect(ReactDOM.findDOMNode(button[0]).className).toBe('active')
+  it('should show empty domains-message', () => {
+    expect(subject(null, []).find('#empty-domains-text').length).toBe(1)
+    expect(subject(null, [ 'aa', 'bb' ], '').find('#empty-domains-text').length).toBe(1)
   });
-
-  it('should filter hidden-attribute', () => {
-    const button = renderIntoDocument(<UDNButton hidden={true}/>);
-    const button = scryRenderedDOMComponentsWithTag(button, 'li')
-    expect(ReactDOM.findDOMNode(button[0]).className).toBe('active')
-  });
-*/
 })
