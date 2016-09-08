@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
-import ActionButtons from './action-buttons.jsx'
+
+import ActionButtons from '../../components/action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 import BrandEditForm from './brand-edit-form.jsx'
 
@@ -132,5 +133,3 @@ module.exports = {
   AVAILABILITY_SHARED,
   AVAILABILITY_PRIVATE
 };
-
-

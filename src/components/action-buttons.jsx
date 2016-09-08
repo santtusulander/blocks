@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react'
 import {Button} from 'react-bootstrap'
 
-import IconEdit from '../icons/icon-edit.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
+import IconEdit from './icons/icon-edit.jsx'
+import IconTrash from './icons/icon-trash.jsx'
 
 const ActionButtons = props =>
     <div className='action-buttons'>

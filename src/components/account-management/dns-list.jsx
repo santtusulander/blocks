@@ -3,7 +3,7 @@ import { Input } from 'react-bootstrap'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
-import ActionButtons from './action-buttons'
+import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 

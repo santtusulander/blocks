@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { Row, Col, Input } from 'react-bootstrap'
 
 import RolesEditForm from './role-edit-form.jsx'
-import ActionButtons from './action-buttons.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 
 import TableSorter from '../table-sorter'
 import ArrayTd from '../array-td/array-td'

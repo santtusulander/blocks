@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
 
-import ActionButtons from '../account-management/action-buttons.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
