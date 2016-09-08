@@ -146,7 +146,7 @@ p {
 
 .text-sm {
   font-size: rem(12px);
-  font-weight: normal;
+  font-weight: 500;
   line-height: 1.5;
 
   @include print {

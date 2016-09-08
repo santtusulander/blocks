@@ -19,14 +19,14 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
           <ul>
             <MenuItem header={true}>
               {user.size &&
-                <span id="user-menu-username" className="user-menu-item">
+                <span id="user-menu-username">
                   {user.get('first_name') && user.get('last_name') ?
                     user.get('first_name') + ' ' + user.get('last_name')
                   : user.get('email')}
                 </span>
               }
             </MenuItem>
-            <li className="menu-item-theme">
+            <li>
               <Select
                 className="btn-block"
                 onSelect={handleThemeChange}
@@ -49,7 +49,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
         </li>
         <li className="bottom-item" >
           <a id="log-out" href="#" onClick={logout}>
-            <div className="user-menu-item"><FormattedMessage id="portal.header.menu.logout.text"/></div>
+            <div><FormattedMessage id="portal.header.menu.logout.text"/></div>
           </a>
         </li>
       </Dropdown.Menu>

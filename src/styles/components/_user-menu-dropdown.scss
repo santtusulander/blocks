@@ -3,8 +3,9 @@
 
 $user-menu-dd-font-size: 18px;
 $user-menu-dd-width: rem(320px);
-$user-menu-dd-vertical-padding: em(24px, $user-menu-dd-font-size);
-$user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
+$user-menu-header-vertical-padding: em(15px, $user-menu-dd-font-size);
+$user-menu-dd-vertical-padding: em(19px, $user-menu-dd-font-size);
+$user-menu-horizontal-padding: em(30px, $user-menu-dd-font-size);
 
 .dropdown-menu,
 .navbar-nav .open .dropdown-menu {
@@ -22,9 +23,9 @@ $user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
       &.helper-ui-theme::after {
         position: absolute;
         top: 50%;
-        left: 70%;
-        width: 40px;
-        height: 8px;
+        width: 50px;
+        height: 10px;
+        margin-left: 12px;
         background: linear-gradient(to right,
           $pale-blue 20%, $green 21%, $green 40%, $purple 41%, $purple 60%,
           $red 61%, $red 80%, $yellow 81%);
@@ -34,8 +35,9 @@ $user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
     }
 
     .dropdown-header {
-      padding: 0;
+      padding: $user-menu-header-vertical-padding $user-menu-horizontal-padding;
       font-size: inherit;
+      line-height: 1;
       color: inherit;
 
       .dark-theme & {
@@ -46,24 +48,20 @@ $user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
         background-color: rgba($black, 0.04);
       }
 
-      .user-menu-item {
-        padding: 0 $user-menu-dd-horizontal-padding;
+      > span {
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
 
-    .user-menu-item {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      transform: translateY(-50%);
-    }
-
     .dropdown-select .dropdown-toggle {
-      padding: $user-menu-dd-vertical-padding calc(#{$user-menu-dd-horizontal-padding} * 2) $user-menu-dd-vertical-padding $user-menu-dd-horizontal-padding;  // Calculation prevents the text from flowing under the caret
+      padding: $user-menu-dd-vertical-padding $user-menu-horizontal-padding;
       font-size: $user-menu-dd-font-size;
       box-shadow: none;
+
+      > .icon {
+        right: 18px;
+      }
     }
 
     > li {
@@ -94,11 +92,6 @@ $user-menu-dd-horizontal-padding: em(30px, $user-menu-dd-font-size);
           position: relative;
           display: block;
           height: auto;
-          min-height: $bar-height;
-
-          @include md {
-            min-height: $md-bar-height;
-          }
         }
       }
     }
