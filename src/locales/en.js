@@ -542,6 +542,9 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.dns.form.validation.maxTtl.text' : 'Maximum TTL is {maxTtl}',
   'portal.accountManagement.dns.form.validation.maxNegativeTtl.text' : 'Maximum Negative TTL is {maxTtl}',
 
+  'portal.accountManagement.dns.domain.deleteError' : 'Unable to delete domain',
+  'portal.accountManagement.dns.domain.saveError' : 'Unable to save domain',
+
   'portal.configuration.updateSuccessfull.text': 'Configurations succesfully saved',
   'portal.configuration.retireSuccessfull.text': 'Configurations succesfully retired',
   'portal.configuration.publishSuccessfull.text': 'Configurations succesfully published',

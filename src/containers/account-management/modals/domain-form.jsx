@@ -122,9 +122,9 @@ function mapDispatchToProps(dispatch, { closeModal }) {
         .then(res => {
           if (res.error) {
             dispatch( showInfoDialog({
-              title: <FormattedMessage id="portal.button.error"/>,
+              title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={() => dispatch( hideInfoDialog)} bsStyle="primary">
+              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
                 <FormattedMessage id="portal.button.ok"/>
               </Button>
             }))
@@ -149,13 +149,14 @@ function mapDispatchToProps(dispatch, { closeModal }) {
         .then(res => {
           if (res.error) {
             dispatch( showInfoDialog({
-              title: <FormattedMessage id="portal.button.error"/>,
+              title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={() => dispatch( hideInfoDialog)} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
+                <FormattedMessage id="portal.button.ok"/>
+              </Button>
             }))
           }
           closeModal();
-
         })
     }
   }
