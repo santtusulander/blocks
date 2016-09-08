@@ -1,16 +1,14 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 
-import { List } from 'immutable'
-import { getValues, reduxForm } from 'redux-form'
-import { Modal } from 'react-bootstrap'
+import { reduxForm } from 'redux-form'
+import { Modal, Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
 
-import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
+import { showInfoDialog } from '../../../redux/modules/ui'
 
-import UDNButton from '../../../components/button'
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 
 let errors = {}

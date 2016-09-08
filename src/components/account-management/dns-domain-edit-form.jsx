@@ -5,9 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import './dns-domain-edit-form.scss'
 
 const DnsDomainEditForm = (props) => {
-  const title = props.edit ? <FormattedMessage id="portal.accountManagement.dns.form.edit.text"/> : <FormattedMessage id="portal.accountManagement.dns.form.new.text"/>
   const actionButtonTitle = <FormattedMessage id="portal.button.save"/>
-  const subHeader = props.edit ? props.domain : <FormattedMessage id="portal.accountManagement.dns.form.subHeader.text"/>
 
   const {
     fields: {
@@ -109,8 +107,8 @@ DnsDomainEditForm.propTypes = {
   edit: React.PropTypes.bool,
   fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
-  onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func,
+  onSave: React.PropTypes.func,
   values: React.PropTypes.object
 }
 
