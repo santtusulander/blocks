@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { getTabName, getSecurityUrlFromParams } from '../util/helpers'
+import { getTabName, getSecurityUrlFromParams } from '../util/routes'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import { getContentUrl } from '../util/helpers'
+import { getContentUrl } from '../util/routes'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
