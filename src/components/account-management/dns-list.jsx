@@ -11,7 +11,7 @@ import recordTypes from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
 import { CREATE_RECORD } from '../../constants/permissions'
 
-class DNSList extends Component {
+export default class DNSList extends Component {
 
   shouldComponentUpdate(nextProps) {
     return !nextProps.modalOpen
@@ -35,21 +35,6 @@ class DNSList extends Component {
     })
 
     /**
-     * For every record type in sorted recordTypes-constant, if recordsByType has current record
-     * type as key, push a new sortable table to tables-array. Call getContent to populate table.
-     */
-    recordTypes.sort().forEach((type, index) => {
-      if (recordsByType.hasOwnProperty(type)) {
-        tables.push(
-          <div key={index} className='table-container'>
-            <h4>{type} Records</h4>
-            <SortableTable content={getContent(type)}/>
-          </div>
-        )
-      }
-    })
-
-    /**
      * Create rows of records by a given record type, sorted by a given sorting function.
      */
     const getContent = type => sortingFunc =>
@@ -65,10 +50,25 @@ class DNSList extends Component {
           </td>
         </tr>
       )
+
+    /**
+     * For every record type in sorted recordTypes-constant, if recordsByType has current record
+     * type as key, push a new sortable table to tables-array. Call getContent to populate table.
+     */
+    recordTypes.sort().forEach((type, index) => {
+      if (recordsByType.hasOwnProperty(type)) {
+        tables.push(
+          <div key={index} className='table-container'>
+            <h4 id={'table-label-' + index}>{type} Records</h4>
+            <SortableTable content={getContent(type)}/>
+          </div>
+        )
+      }
+    })
     return (
       <PageContainer>
         <h3 className="account-management-header">
-          <span id="domain-stats">
+          <span id="record-amount-label">
             {`${records.length} Records`}
           </span>
           <div className='dns-filter-wrapper'>
@@ -141,8 +141,6 @@ class SortableTable extends Component {
 }
 
 SortableTable.propTypes = { content: PropTypes.func }
-
-export default DNSList
 
 DNSList.propTypes = {
   onAddEntry: PropTypes.func,

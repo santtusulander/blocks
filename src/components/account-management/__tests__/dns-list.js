@@ -1,83 +1,55 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { EDIT_SOA, EDIT_DNS } from '../../../constants/account-management-modals.js'
+jest.unmock('../../../constants/dns-record-types')
+jest.unmock('../dns-list')
+import DNSList from '../dns-list'
 
-jest.dontMock('../dns-list.jsx')
-jest.dontMock('../../../redux/modules/dns.js')
-const DNSList = require('../dns-list.jsx').DNSList
-const fakeData = require('../../../redux/modules/dns.js').initialState
-
-const NO_ACTIVE_DOMAIN = 'No active Domain'
+const recs = [
+  {id: 'a', "class": "IN", "type": "MX", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'b', "class": "IN", "type": "A", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'c', "class": "IN", "type": "AAAA", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'd', "class": "IN", "type": "TXT", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600}
+]
 
 describe('DNSList', () => {
   let subject = null
   let props = {}
+  const onAddEntry = jest.fn()
+  const onDeleteEntry = jest.fn()
+  const onEditEntry = jest.fn()
   beforeEach(() => {
-    subject = () => {
+    subject = records => {
       props = {
-        onAddEntry: jest.fn(),
-        onDeleteEntry: jest.fn(),
-        onEditEntry: jest.fn(),
+        onAddEntry,
+        onDeleteEntry,
+        onEditEntry,
         searchFunc: jest.fn(),
-        records: [],
+        records: records || [],
         searchValue: ''
-
       }
+      return shallow(<DNSList {...props}/>)
     }
   })
+
   it('should exist', () => {
-    const list = shallow(<DNSList/>)
-    expect(list.length).toBe(1)
+    expect(subject().length).toBe(1)
   })
 
-  it('should show tables sorted by record type', () => {
-    const list = shallow(<DNSList/>)
-    expect(list.find('#empty-msg').length).toBe(1)
+  it('should show correct amount of records', () => {
+    expect(subject(recs).find('#record-amount-label').props().children).toBe('4 Records')
   })
 
-  it('should handle edit record button click', () => {
-    const list = shallow(<DNSList
-        activeDomain={fakeData.get('activeDomain')}
-        domains={fakeData.get('domains')}/>)
-    expect(list.find('#domain-stats').text()).not.toBe(NO_ACTIVE_DOMAIN)
+  it('should show correct type label per table, sorted correctly', () => {
+    expect(subject(recs).find('#table-label-0').props().children).toEqual([ 'A', ' Records' ])
+    expect(subject(recs).find('#table-label-1').props().children).toEqual([ 'AAAA', ' Records' ])
+    expect(subject(recs).find('#table-label-5').props().children).toEqual([ 'MX', ' Records' ])
+    expect(subject(recs).find('#table-label-11').props().children).toEqual([ 'TXT', ' Records' ])
   })
 
   it('should handle create record button click', () => {
-    const list = shallow(<DNSList
-      accountManagementModal={EDIT_SOA}
-      />)
-    expect(list.find('#soa-form').length).toBe(1)
+    subject().find('#add-dns-record').simulate('click')
+    expect(onAddEntry.mock.calls.length).toBe(1)
   })
 
-  it('should handle delete record button click', () => {
-    const list = shallow(<DNSList
-      accountManagementModal={EDIT_DNS}
-      />)
-    expect(list.find('#dns-form').length).toBe(1)
-  })
-
-  it('should handle click to add domain', () => {
-    const addDomain = jest.genMockFunction()
-    const list = shallow(<DNSList onAddDomain={addDomain}/>)
-    list.find('#add-domain').simulate('click')
-    expect(addDomain.mock.calls.length).toBe(1)
-  })
-
-  it('should handle click to edit SOA record', () => {
-    const toggleModal = jest.genMockFunction()
-    const list = shallow(<DNSList
-      activeDomain={fakeData.get('activeDomain')}
-      domains={fakeData.get('domains')}
-      toggleModal={() => toggleModal(EDIT_SOA)}/>)
-    list.find('#edit-soa').simulate('click')
-    expect(toggleModal.mock.calls[0][0]).toBe(EDIT_SOA)
-  })
-
-  it('should handle click to add DNS record', () => {
-    const toggleModal = jest.genMockFunction()
-    const list = shallow(<DNSList toggleModal={() => toggleModal(EDIT_DNS)}/>)
-    list.find('#add-dns-record').simulate('click')
-    expect(toggleModal.mock.calls[0][0]).toBe(EDIT_DNS)
-  })
 })
