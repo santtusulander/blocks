@@ -5,17 +5,24 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../add-host.jsx')
 const AddHost = require('../add-host.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('AddHost', () => {
   it('should exist', () => {
     let addHost = TestUtils.renderIntoDocument(
-      <AddHost group={Immutable.Map()}/>
+      <AddHost group={Immutable.Map()} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(addHost)).toBeTruthy();
   })
   it('should create host on submit', () => {
     let createHost = jest.genMockFunction()
     let addHost = TestUtils.renderIntoDocument(
-      <AddHost group={Immutable.Map()} createHost={createHost}/>
+      <AddHost group={Immutable.Map()} createHost={createHost}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(addHost, 'input')
     inputs[0].value = 'new'
