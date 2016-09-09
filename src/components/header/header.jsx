@@ -14,7 +14,7 @@ import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
-  getUrl } from '../../util/helpers.js'
+  getUrl } from '../../util/routes.js'
 
 import { FormattedMessage } from 'react-intl'
 

@@ -10,7 +10,7 @@ import {
   getServicesUrlFromParams,
   getSupportUrlFromParams,
   getSecurityUrlFromParams
-} from '../../util/helpers.js'
+} from '../../util/routes.js'
 import IsAllowed from '../is-allowed'
 
 

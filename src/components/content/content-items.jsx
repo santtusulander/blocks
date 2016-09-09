@@ -6,7 +6,7 @@ import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import sortOptions from '../../constants/content-item-sort-options'
-import { getContentUrl } from '../../util/helpers'
+import { getContentUrl } from '../../util/routes'
 
 import AddHost from './add-host'
 import UDNButton from '../button'

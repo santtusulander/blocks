@@ -11,7 +11,7 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { getContentUrl } from '../util/helpers'
+import { getContentUrl } from '../util/routes'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -33,7 +33,7 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
-import { getUrl } from '../util/helpers'
+import { getUrl } from '../util/routes'
 
 import { FormattedMessage } from 'react-intl'
 
