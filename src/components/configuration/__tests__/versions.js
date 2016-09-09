@@ -2,11 +2,6 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
-// Mock out intl
-jest.mock('react-intl')
-const reactIntl = require('react-intl')
-reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
-
 jest.dontMock('../versions.jsx')
 const ConfigurationVersions = require('../versions.jsx')
 

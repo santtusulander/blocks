@@ -5,8 +5,6 @@
   position: relative;
 
   @include print {
-    // scss-lint:disable ImportantRule SelectorDepth
-    // Need to override default styles
     &:not(.bg-transparent) {
       border: 1px solid $silver-40;
     }
@@ -34,22 +32,14 @@
     background-color: transparent;
   }
 
+  .dataset-comparison {
+    opacity: 0.4;
+  }
+
   .line {
+    stroke: $pale-blue;
     stroke-width: 2px;
-
-    .dark-theme &,
-    .light-theme & {
-      stroke: $pale-blue;
-      fill: transparent;
-    }
-
-    &.secondary {
-
-      .dark-theme &,
-      .light-theme & {
-        stroke: $green;
-      }
-    }
+    fill: transparent;
   }
 
   .axis-tick {
@@ -59,8 +49,6 @@
   text {
 
     @include print {
-      // scss-lint:disable ImportantRule
-      // Need to override default styles
       font-size: $font-size;
       fill: $black !important;
     }
@@ -90,7 +78,8 @@
   .crosshair {
     stroke-width: 1px;
 
-    .dark-theme & {
+    .dark-theme &,
+    .light-theme & {
       stroke: rgba($black, 0.2);
     }
   }
