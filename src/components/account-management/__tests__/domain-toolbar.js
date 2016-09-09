@@ -10,9 +10,9 @@ const fakeDomains = [ { id: 'asdsa' }, { id: 'asdsa' }, { id: 'asdsa' } ]
 describe('Domain Toolbar', () => {
   let props = {}
   let subject = null
-  const onAddDomain = jest.genMockFunction()
-  const onEditDomain = jest.genMockFunction()
-  const changeActiveDomain = jest.genMockFunction()
+  const onAddDomain = jest.fn()
+  const onEditDomain = jest.fn()
+  const changeActiveDomain = jest.fn()
 
   beforeEach(() => {
     subject = (activeDomain, domains, searchValue) => {
