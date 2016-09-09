@@ -14,7 +14,7 @@ import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
-  getUrl } from '../../util/helpers.js'
+  getUrl } from '../../util/routes.js'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -76,7 +76,8 @@ class Header extends React.Component {
   }
 
   addGroupLink(links, urlMethod) {
-    const activeGroup = this.props.activeGroup.size ? this.props.activeGroup.get('id').toString() : null,
+    const activeGroup = this.props.activeGroup && this.props.activeGroup.size ?
+      this.props.activeGroup.get('id').toString() : null,
       params = this.props.params;
 
     if (params.group === activeGroup) {
@@ -165,7 +166,8 @@ class Header extends React.Component {
 
   render() {
     const { activeAccount, router, user, params: { account, brand } } = this.props
-    const activeAccountName = this.props.params.account ? activeAccount.get('name') : 'UDN Admin'
+    const activeAccountName = activeAccount && this.props.params.account ?
+      activeAccount.get('name') : 'UDN Admin'
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className

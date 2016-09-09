@@ -37,6 +37,7 @@ export class Main extends React.Component {
       .then(action => {
         if(action.error) {
           if(!this.pageAllowsAnon()) {
+            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
             this.props.router.push('/login')
           }
           return false

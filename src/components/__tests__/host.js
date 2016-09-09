@@ -1,11 +1,6 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-// Mock out intl
-jest.mock('react-intl')
-const reactIntl = require('react-intl')
-reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
-
 jest.dontMock('../host.jsx')
 const Host = require('../host.jsx')
 
