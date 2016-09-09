@@ -4,22 +4,8 @@
 .content-item-chart,
 .content-item-list {
   .btn-icon {
-    .dark-theme & {
-      background-color: $black;
-      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
-
-      &:hover {
-        background-image: linear-gradient(rgba($pale-blue, 0.4), rgba($pale-blue, 0.4));
-      }
-
-      &:active,
-      &.active,
-      &:active:hover,
-      &.active:focus {
-        background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
-        box-shadow: 0 0 0 2px $white;
-      }
-
+    .dark-theme &,
+    .light-theme & {
       &:hover,
       &:focus,
       &:active,
@@ -32,9 +18,40 @@
       }
     }
 
+    .dark-theme & {
+      background-color: $black;
+      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+
+      &:hover,
+      &:focus {
+        background-image: linear-gradient(rgba($pale-blue, 0.4), rgba($pale-blue, 0.4));
+      }
+
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        box-shadow: 0 0 0 2px $white;
+      }
+    }
+
     .light-theme & {
       background-color: $pale-blue;
       background-image: linear-gradient(rgba($black, 0.2), rgba($black, 0.2));
+
+      &:hover,
+      &:focus {
+        background-image: linear-gradient(rgba($black, 0.3), rgba($black, 0.3));
+      }
+
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-image: linear-gradient(rgba($black, 0.4), rgba($black, 0.4));
+        box-shadow: 0 0 0 2px rgba($black, 0.4);
+      }
     }
   }
 }
