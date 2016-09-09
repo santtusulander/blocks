@@ -21,6 +21,12 @@ class DNSList extends Component {
     const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc } = this.props
     let tables = []
     let recordsByType = {}
+
+    /**
+     * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain
+     * key for current record type, create key-value pair of [record.type]: []. Push current record
+     * to array under the current record type key in recordsByType.
+     */
     records.forEach(record => {
       if(!recordsByType[record.type]) {
         recordsByType[record.type] = []
@@ -28,6 +34,24 @@ class DNSList extends Component {
       recordsByType[record.type].push(record)
     })
 
+    /**
+     * For every record type in sorted recordTypes-constant, if recordsByType has current record
+     * type as key, push a new sortable table to tables-array. Call getContent to populate table.
+     */
+    recordTypes.sort().forEach((type, index) => {
+      if (recordsByType.hasOwnProperty(type)) {
+        tables.push(
+          <div key={index} className='table-container'>
+            <h4>{type} Records</h4>
+            <SortableTable content={getContent(type)}/>
+          </div>
+        )
+      }
+    })
+
+    /**
+     * Create rows of records by a given record type, sorted by a given sorting function.
+     */
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
@@ -66,16 +90,6 @@ class DNSList extends Component {
           </div>
         </h3>
         <hr/>
-        {recordTypes.sort().forEach((type, index) => {
-          if (recordsByType.hasOwnProperty(type)) {
-            tables.push(
-              <div key={index} className='table-container'>
-                <h4>{type} Records</h4>
-                <SortableTable content={getContent(type)}/>
-              </div>
-            )
-          }
-        })}
         {tables}
       </PageContainer>
     )
