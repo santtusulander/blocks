@@ -11,8 +11,8 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
-import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
@@ -270,7 +270,7 @@ class AccountManagementAccountGroups extends React.Component {
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="8%"/>
+              <th width="8.3%"/>
             </tr>
           </thead>
           <tbody>
@@ -297,13 +297,9 @@ class AccountManagementAccountGroups extends React.Component {
                 <td>NEEDS_API</td>
                 */}
                 <td>
-                  <a href="#" onClick={() => this.props.editGroup(group)}>
-                    EDIT
-                  </a>
-                  <Button onClick={this.deleteGroup(group)}
-                    className="btn-link btn-icon">
-                    <IconTrash/>
-                  </Button>
+                  <ActionButtons
+                    onEdit={() => {this.props.editGroup(group)}}
+                    onDelete={() => {this.props.deleteGroup(group)}} />
                 </td>
               </tr>
             )

@@ -15,6 +15,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import PageContainer from '../../../components/layout/page-container'
 import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconEye from '../../../components/icons/icon-eye'
@@ -425,7 +426,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="8%"/>
+              <th width="7.4%"/>
             </tr>
           </thead>
           <tbody>
@@ -447,13 +448,9 @@ export class AccountManagementAccountUsers extends React.Component {
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td>
-                    <a href="#" onClick={() => {this.editUser(user)}}>
-                      EDIT
-                    </a>
-                    <Button onClick={() => this.deleteUser(user.get('email'))}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                    <ActionButtons
+                      onEdit={() => {this.editUser(user)}}
+                      onDelete={() => this.deleteUser(user.get('email'))} />
                   </td>
                 </tr>
               )
