@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
@@ -44,7 +43,7 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
+  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, ...formProps } = props
   const filteredValues = filterFields(values)
   const recordFormProps = {
     domain,
@@ -59,7 +58,7 @@ const RecordFormContainer = props => {
         filteredValues.prio = Number(prio)
       }
       edit ?
-        updateRecord(filteredValues, domain, records, activeRecord) :
+        updateRecord(filteredValues, domain, activeRecord) :
         addRecord(filteredValues, domain)
     },
     cancel: closeModal,
@@ -85,7 +84,6 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  records: PropTypes.instanceOf(List),
   updateRecord: PropTypes.func,
   values: PropTypes.object
 
@@ -120,7 +118,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       createResource(domain, values.name, values)
         .then(() => closeModal())
     },
-    updateRecord: (formValues, zone, records, activeRecord) => {
+    updateRecord: (formValues, zone, activeRecord) => {
       let values = recordValues(formValues)
       values.id = activeRecord.get('id')
       values.class = 'IN'
