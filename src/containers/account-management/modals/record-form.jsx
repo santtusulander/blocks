@@ -91,15 +91,13 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const getRecordById = recordActionCreators.getById
-  const records = dnsRecords.get('resources')
-  let activeRecord = getRecordById(records, dnsRecords.get('activeRecord'))
+  let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = undefined
   initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
-    loading: dnsRecords.get('fetching'),
-    records
+    loading: dnsRecords.get('fetching')
   }
   if (initialValues) {
     props.initialValues = initialValues
