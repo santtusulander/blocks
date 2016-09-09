@@ -4,10 +4,16 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../allow-block.jsx')
 const AllowBlock = require('../allow-block.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('AllowBlock', () => {
   it('should exist', () => {
     let allowBlock = TestUtils.renderIntoDocument(
-      <AllowBlock />
+      <AllowBlock intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(allowBlock)).toBeTruthy();
   })
@@ -15,7 +21,7 @@ describe('AllowBlock', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let allowBlock = TestUtils.renderIntoDocument(
-      <AllowBlock changeValue={changeValue}/>
+      <AllowBlock intl={intlMaker()} changeValue={changeValue}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(allowBlock, 'input')
     inputs[0].value = 'new'
@@ -27,7 +33,7 @@ describe('AllowBlock', () => {
   it('should handle select changes', () => {
     let changeValue = jest.genMockFunction()
     let allowBlock = TestUtils.renderIntoDocument(
-      <AllowBlock changeValue={changeValue}/>
+      <AllowBlock intl={intlMaker()} changeValue={changeValue}/>
     )
     expect(allowBlock.state.activeAccessControl).toBe('allow')
     allowBlock.handleSelectChange('activeAccessControl')('foo')

@@ -1,15 +1,40 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.unmock('../account-management.jsx')
+jest.unmock('../account-management/account-management.jsx')
 
-import {AccountManagement} from '../account-management.jsx'
+import {AccountManagement} from '../account-management/account-management.jsx'
 
 const fakeParams = {account: 1}
 
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
+  }
+}
+
+function permissionsActionsMaker() {
+  return {
+    fetchPermissions: jest.fn()
+  }
+}
+
+function rolesActionsMaker() {
+  return {
+    fetchRoles: jest.fn()
+  }
+}
+
+function userActionsMaker() {
+  return {
+    fetchUsers: jest.fn(),
+    fetchUsersForMultipleAccounts: jest.fn()
+  }
+}
+
+function fakeRouterMaker() {
+  return {
+    isActive: jest.fn()
   }
 }
 
@@ -18,9 +43,13 @@ describe('AccountManagement', () => {
     let accountManagement = shallow(
       <AccountManagement
         accountActions={accountActionsMaker()}
-        fetchAccountData={jest.genMockFunction()}
+        permissionsActions={permissionsActionsMaker()}
+        rolesActions={rolesActionsMaker()}
+        userActions={userActionsMaker()}
+        fetchAccountData={jest.fn()}
+        router={fakeRouterMaker()}
         params={fakeParams}
-        dnsActions={ { changeRecordType: jest.genMockFunction() } }
+        dnsActions={ { changeRecordType: jest.fn() } }
       />
     );
     expect(accountManagement.length).toBe(1)

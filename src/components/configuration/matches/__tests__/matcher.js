@@ -5,6 +5,12 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../matcher.jsx')
 const Matcher = require('../matcher.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
@@ -14,7 +20,7 @@ const fakePath = ['foo', 'bar']
 describe('Matcher', () => {
   it('should exist', () => {
     let matcher = TestUtils.renderIntoDocument(
-      <Matcher match={fakeConfig} path={fakePath}/>
+      <Matcher match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy();
   })
@@ -22,7 +28,8 @@ describe('Matcher', () => {
   it('should update the state as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let matcher = TestUtils.renderIntoDocument(
-      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(matcher, 'input')
     inputs[0].value = 'new'
@@ -33,7 +40,8 @@ describe('Matcher', () => {
   it('should update the parameters as select change happens', () => {
     let changeValue = jest.genMockFunction()
     let matcher = TestUtils.renderIntoDocument(
-      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     expect(matcher.state.activeFilter).toBe('exists')
     matcher.handleMatchesChange('foo')
@@ -45,7 +53,7 @@ describe('Matcher', () => {
     const close = jest.genMockFunction()
     let matcher = TestUtils.renderIntoDocument(
       <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
-        close={close}/>
+        close={close} intl={intlMaker()}/>
     )
     matcher.setState({
       val: 'aaa'
