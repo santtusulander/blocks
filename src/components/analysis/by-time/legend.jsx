@@ -1,37 +1,30 @@
 import React from 'react'
+import classNames from 'classnames'
 import './legend.scss'
 
-const Legend = ({primaryLabel, secondaryLabel, primaryValue, secondaryValue, comparisonLabel}) => {
+const Legend = ({dataSets, values}) => {
   return (
     <div className='chart-legend'>
-
-      {primaryLabel && <div className='legend-item primary'>
-        <span className='legend-label'>{primaryLabel}</span>
-        <span className='legend-value'>{primaryValue}</span>
-      </div>}
-
-      {secondaryLabel && <div className='legend-item secondary'>
-        <span className='legend-label'>{secondaryLabel}</span>
-        <span className='legend-value'>{secondaryValue}</span>
-      </div>}
-
-      {comparisonLabel && <div className='legend-item comparison'>
-        <svg className='legend-label' width="12" height="12">
-          <circle cx="6" cy="6" r="6" className="secondary-label"/>
-        </svg>
-        <span className='legend-label'>{comparisonLabel}</span>
-        <span className='legend-value'>{secondaryValue}</span>
-      </div>}
+      {dataSets.map((dataset, i) => {
+        return (
+          <div key={i} className="legend-item">
+            <span className={classNames({
+              'legend-label': true,
+              'comparison': dataset.comparisonData})}>
+              <span className="legend-line" style={{color: dataset.color}}>&mdash; </span>
+              {dataset.label}
+            </span>
+            <span className='legend-value'>{values[i]}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
 Legend.propTypes = {
-  comparisonLabel: React.PropTypes.string,
-  primaryLabel: React.PropTypes.string,
-  primaryValue: React.PropTypes.string,
-  secondaryLabel: React.PropTypes.string,
-  secondaryValue: React.PropTypes.string
+  dataSets: React.PropTypes.array,
+  values: React.PropTypes.array
 }
 
 export default Legend
