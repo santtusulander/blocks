@@ -89,7 +89,7 @@ class AccountManagementSystemDNS extends Component {
       searchFunc: e => setSearchValue(e, 'domainSearch')
     }
     const DNSListProps = {
-      modalOpen: activeModal !== null ? true : false,
+      modalOpen: activeModal !== null,
       onAddEntry: () => {
         this.editingRecord = false
         toggleModal(RECORD_EDIT)
