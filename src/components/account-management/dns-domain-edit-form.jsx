@@ -5,9 +5,10 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import './dns-domain-edit-form.scss'
 
 const DnsDomainEditForm = (props) => {
-  const actionButtonTitle = <FormattedMessage id="portal.button.save"/>
 
   const {
+    edit,
+    fetching,
     fields: {
       name,
       email_addr,
@@ -17,6 +18,8 @@ const DnsDomainEditForm = (props) => {
       negative_ttl
       }
     } = props
+
+  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> : edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
 
   return (
     <form>
@@ -94,7 +97,7 @@ const DnsDomainEditForm = (props) => {
         <Button className="btn-outline" onClick={props.onCancel}>
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button disabled={Object.keys(props.errors).length > 0} bsStyle="primary"
+        <Button disabled={Object.keys(props.errors).length > 0 || fetching} bsStyle="primary"
         onClick={() => props.onSave(props.fields)}>{actionButtonTitle}</Button>
       </ButtonToolbar>
     </form>
@@ -106,6 +109,7 @@ DnsDomainEditForm.displayName = 'DnsDomainEditForm'
 DnsDomainEditForm.propTypes = {
   edit: React.PropTypes.bool,
   fields: React.PropTypes.object.isRequired,
+  fetching: React.PropTypes.bool,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
