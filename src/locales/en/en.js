@@ -477,6 +477,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
   'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
   'portal.header.menu.logout.text': 'Logout',
+  'portal.header.menu.editProfile.text': 'Edit Profile',
 
   'portal.navigation.content.text': 'Content',
   'portal.navigation.analytics.text': 'Analytics',
