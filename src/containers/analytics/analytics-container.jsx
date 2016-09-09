@@ -117,15 +117,13 @@ class AnalyticsContainer extends React.Component {
 
     if (!params.account) {
       return (
-        <div className='analytics-tab-container'>
-          <p className='text-center'>Please select an account<br/>
+        <p className='text-center'>Please select an account<br/>
             from top left to see analytics</p>
-        </div>
       )
     }
 
     return (
-      <div className='container-fluid content-container'>
+      <PageContainer className='analytics-container'>
         {
           /* Render tab -content */
           children && React.cloneElement(children, {
@@ -134,7 +132,7 @@ class AnalyticsContainer extends React.Component {
             location: location
           } )
         }
-      </div>
+      </PageContainer>
     )
   }
 
@@ -152,27 +150,25 @@ class AnalyticsContainer extends React.Component {
       location: { pathname }
     } = this.props
     return (
-      <PageContainer className='analytics-container'>
-        <Content>
-          <AnalyticsViewControl
-            activeAccount={activeAccount}
-            activeGroup={activeGroup}
-            brands={brands}
-            accounts={accounts}
-            groups={groups}
-            properties={properties}
-            params={params}
-            location={this.props.location}
-            activeTab={getTabName(pathname)}
-          />
-          <AnalyticsTabControl
-            params={params}
-            location={this.props.location}
-          />
-          {this.renderFilters()}
-          {this.renderContent(children, filters)}
-        </Content>
-      </PageContainer>
+      <Content>
+        <AnalyticsViewControl
+          activeAccount={activeAccount}
+          activeGroup={activeGroup}
+          brands={brands}
+          accounts={accounts}
+          groups={groups}
+          properties={properties}
+          params={params}
+          location={this.props.location}
+          activeTab={getTabName(pathname)}
+        />
+        <AnalyticsTabControl
+          params={params}
+          location={this.props.location}
+        />
+        {this.renderFilters()}
+        {this.renderContent(children, filters)}
+      </Content>
     )
   }
 }

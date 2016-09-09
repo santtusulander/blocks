@@ -13,11 +13,13 @@ export const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fie
   <form>
     <SelectWrapper
       {...type}
+      disabled={edit}
       options={recordTypes.map(type => [type, type])}
       label="Select Record Type"/>
     {shouldShowField('name') &&
       <Input
         {...name}
+        disabled={edit}
         type="text"
         id='name-field'
         label="Host Name"
@@ -29,6 +31,7 @@ export const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fie
       <Input
         {...value}
         id='value-field'
+        disabled={edit}
         type="text"
         label="Address"
         placeholder="Enter Address"/>}
@@ -37,6 +40,7 @@ export const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fie
       <Input
         {...prio}
         id='prio-field'
+        disabled={edit}
         type="text"
         label="Priority"
         placeholder="Enter Priority"

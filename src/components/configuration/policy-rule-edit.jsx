@@ -142,6 +142,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.props.hideAction()
   }
   render() {
+    const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
@@ -160,7 +161,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           ['response_header', 'Response Header']
         ] */}
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.editRule.addPolicy.text"/></h1>
+          <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
         <Modal.Body>
 
@@ -241,8 +242,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addAction(flattenedPolicy.matches[0])}>
+              <Button bsStyle="primary"
+                      className="btn-icon btn-add-new"
+                      onClick={this.addAction(flattenedPolicy.matches[0])}
+                      disabled={!flattenedPolicy.matches[0].field}
+              >
                 <IconAdd />
               </Button>
             </Col>
@@ -286,7 +290,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               )
             })}
           </div>
-
           <ButtonToolbar className="text-right">
             <Button bsStyle="primary" onClick={this.cancelChanges}>
               <FormattedMessage id="portal.button.cancel"/>

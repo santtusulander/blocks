@@ -1,41 +1,27 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-
-jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
+import { shallow } from 'enzyme'
 
 jest.dontMock('../icon.jsx')
-const Icon = require('../icon.jsx')
+const Icon = require('../icon.jsx').default
 
 describe('Icon', () => {
   it('should exist', () => {
-    let icon = TestUtils.renderIntoDocument(
-      <Icon />
-    );
-    expect(TestUtils.isCompositeComponent(icon)).toBeTruthy();
+    const icon = shallow(<Icon />)
+    expect(icon).toBeDefined()
   });
 
   it('can be passed a custom css class', () => {
-    let icon = TestUtils.renderIntoDocument(
-      <Icon className="foo" />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithTag(icon, 'svg');
-    expect(ReactDOM.findDOMNode(container).className).toContain('foo');
+    const icon = shallow(<Icon className="foo" />)
+    expect(icon.find('svg').get(0).props.className).toContain('foo')
   });
 
   it('can be passed a width', () => {
-    let icon = TestUtils.renderIntoDocument(
-      <Icon width="100" />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithTag(icon, 'svg');
-    expect(ReactDOM.findDOMNode(container).getAttribute('width')).toMatch('100');
+    const icon = shallow(<Icon width={100} />)
+    expect(icon.find('svg').get(0).props.width).toBe(100)
   });
 
   it('can be passed a height', () => {
-    let icon = TestUtils.renderIntoDocument(
-      <Icon height="100" />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithTag(icon, 'svg');
-    expect(ReactDOM.findDOMNode(container).getAttribute('height')).toMatch('100');
-  });
+    const icon = shallow(<Icon height={100} />)
+    expect(icon.find('svg').get(0).props.height).toBe(100)
+  })
 })

@@ -10,6 +10,8 @@ export const getRecordValueString = (value) => {
 export const getRecordFormInitialValues = record => {
   switch(record.type) {
     case 'MX':
+    case 'NAPTR':
+    case 'SRV':
       return {
         value: record.value.value,
         prio: record.value.prio,

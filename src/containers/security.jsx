@@ -5,7 +5,8 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { getTabName, getSecurityUrlFromParams } from '../util/helpers'
+import { getSecurityUrlFromParams } from '../util/routes'
+import { getTabName } from '../util/helpers'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -122,26 +123,24 @@ export class Security extends React.Component {
     }
 
     return (
-      <PageContainer className="account-management">
-         <div className="account-management-system-users">
-          <SecurityPageHeader
-            params={this.props.params}
-            accounts={accounts}
-            activeAccount={activeAccount.get('name')}
-            fetchAccount={fetchAccount}/>
-           {/* ----- Not in 0.8.1* ----- */}
-           {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
+      <Content>
+        <SecurityPageHeader
+          params={this.props.params}
+          accounts={accounts}
+          activeAccount={activeAccount.get('name')}
+          fetchAccount={fetchAccount}/>
+         {/* ----- Not in 0.8.1* ----- */}
+         {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
 
-           {/* ----- REMOVE ME AFTER ----- */}
-           <Content className="tab-bodies">Coming soon!</Content>
-        </div>
+         {/* ----- REMOVE ME AFTER ----- */}
+         <p className='text-center'>Coming soon!</p>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
             itemToDelete='Certificate'
             cancel={() => toggleModal(null)}
             submit={() => onDelete(toDelete)}/>}
-      </PageContainer>
+      </Content>
     )
   }
 }

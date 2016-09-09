@@ -44,6 +44,21 @@ class AnalyticsDB {
         select: 'property',
         where: 'AND property = ?',
         field: 'property'
+      },
+      sp_account: {
+        select: 'sp_account_id AS `account`',
+        where: 'AND sp_account_id = ?',
+        field: 'sp_account_id'
+      },
+      sp_group: {
+        select: 'sp_group_id AS `group`',
+        where: 'AND sp_group_id = ?',
+        field: 'sp_group_id'
+      },
+      sp_asset: {
+        select: 'sp_asset AS `asset`',
+        where: 'AND sp_asset = ?',
+        field: 'sp_asset'
       }
     }
 
@@ -94,6 +109,7 @@ class AnalyticsDB {
       account_max  : null,
       group        : null,
       property     : null,
+      asset        : null,
       service_type : null,
       dimension    : 'global',
       granularity  : 'hour',
@@ -784,6 +800,52 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
 
+  }
+
+  /**
+   * Get traffic information for an account broken down by net type.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getOnOffNetTraffic(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.asset
+      && conditions.push(this.accountLevelFieldMap.sp_asset.where)
+      && queryOptions.push(optionsFinal.asset);
+
+    let queryParameterized = `
+      SELECT
+        ${this.accountLevelFieldMap.sp_account.select},
+        epoch_start as timestamp,
+        net_type,
+        sum(bytes) AS bytes
+      FROM sp_property_city_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        epoch_start,
+        net_type
+      ORDER BY epoch_start ASC;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
   }
 
   /**
