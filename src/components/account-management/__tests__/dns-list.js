@@ -11,54 +11,50 @@ const fakeData = require('../../../redux/modules/dns.js').initialState
 const NO_ACTIVE_DOMAIN = 'No active Domain'
 
 describe('DNSList', () => {
+  let subject = null
+  let props = {}
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        onAddEntry: jest.fn(),
+        onDeleteEntry: jest.fn(),
+        onEditEntry: jest.fn(),
+        searchFunc: jest.fn(),
+        records: [],
+        searchValue: ''
 
+      }
+    }
+  })
   it('should exist', () => {
     const list = shallow(<DNSList/>)
     expect(list.length).toBe(1)
   })
 
-  it('should show empty message for entries', () => {
+  it('should show tables sorted by record type', () => {
     const list = shallow(<DNSList/>)
     expect(list.find('#empty-msg').length).toBe(1)
   })
 
-  it('should show no active domain message', () => {
-    const list = shallow(<DNSList/>)
-    expect(list.find('#domain-stats').text()).toBe(NO_ACTIVE_DOMAIN)
-  })
-
-  it('should show message for active domain', () => {
+  it('should handle edit record button click', () => {
     const list = shallow(<DNSList
         activeDomain={fakeData.get('activeDomain')}
         domains={fakeData.get('domains')}/>)
     expect(list.find('#domain-stats').text()).not.toBe(NO_ACTIVE_DOMAIN)
   })
 
-  it('should show SOA edit modal', () => {
+  it('should handle create record button click', () => {
     const list = shallow(<DNSList
       accountManagementModal={EDIT_SOA}
       />)
     expect(list.find('#soa-form').length).toBe(1)
   })
 
-  it('should show DNS edit modal', () => {
+  it('should handle delete record button click', () => {
     const list = shallow(<DNSList
       accountManagementModal={EDIT_DNS}
       />)
     expect(list.find('#dns-form').length).toBe(1)
-  })
-
-  it('should not show modal', () => {
-    const list = shallow(<DNSList accountManagementModal={null}/>)
-    expect(list.find('#dns-form').length).toBe(0)
-    expect(list.find('#soa-form').length).toBe(0)
-  })
-
-  it('should list entries', () => {
-    const list = shallow(<DNSList
-      activeDomain={fakeData.get('activeDomain')}
-      domains={fakeData.get('domains')}/>)
-    expect(list.find('tbody tr').length).toBe(5)
   })
 
   it('should handle click to add domain', () => {
