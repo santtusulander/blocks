@@ -11,8 +11,8 @@ import { isShown } from '../../../util/dns-records-helpers'
 const REQUIRED = 'Required'
 
 describe('SoaEditForm', () => {
-  const cancel = jest.genMockFunction()
-  const submit = jest.genMockFunction()
+  const cancel = jest.fn()
+  const submit = jest.fn()
   let subject, error, props = null
   let touched = false
   beforeEach(() => {
