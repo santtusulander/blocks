@@ -1,8 +1,12 @@
 // GLOBAL ACCOUNT SELECTOR DROPDOWN
 // ================================
 
+$dd-font-size: 14px;
 $dropdown-selector-width: rem(320px);
 $dropdown-selector-max-height: rem(480px);
+$dd-horizontal-padding: em(18px, $dd-font-size);
+$dd-caret-width: em(8px, $dd-font-size);
+$dd-selector-item-width: ($dd-horizontal-padding * 2);
 
 .selector-component {
   display: block;
@@ -17,6 +21,7 @@ $dropdown-selector-max-height: rem(480px);
 
   .dropdown-toggle {
     display: flex;
+    min-width: 0;
     flex-wrap: nowrap;
     align-items: center;
 
@@ -30,8 +35,9 @@ $dropdown-selector-max-height: rem(480px);
   }
 
   .dropdown-menu {
+    top: calc(100% + 1px);
     width: $dropdown-selector-width;
-    max-height: $dropdown-selector-max-height;
+    max-height: none;
     overflow-y: auto !important;
 
     & > li,
@@ -42,7 +48,7 @@ $dropdown-selector-max-height: rem(480px);
       a {
         position: relative;
         display: flex;
-        width: 100%;
+        width: calc(100% - #{($dd-horizontal-padding * 2) + $dd-caret-width};
         align-items: center;
         flex-direction: row;
         flex-grow: 1;

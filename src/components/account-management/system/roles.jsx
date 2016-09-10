@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 
+import PageContainer from '../../../components/layout/page-container'
 import RolesList from '../roles-list.jsx'
 
 class AccountManagementSystemRoles extends React.Component {
@@ -40,7 +41,7 @@ class AccountManagementSystemRoles extends React.Component {
 
   render() {
     return (
-      <div className="account-management-system-roles">
+      <PageContainer>
         <RolesList
           editRole={this.state.editRole}
           roles={this.props.roles}
@@ -51,7 +52,7 @@ class AccountManagementSystemRoles extends React.Component {
           onAdd={this.showAddNewRoleDialog}
           onEdit={this.editRole}
           showAddNewDialog={this.state.showAddNewDialog} />
-      </div>
+      </PageContainer>
     )
   }
 }

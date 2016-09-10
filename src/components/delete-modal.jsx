@@ -4,7 +4,7 @@ import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delField }, invalid }) => {
   return (
@@ -52,4 +52,3 @@ export default reduxForm({
     }
   }
 })(keyStrokeSupport(DeleteModal))
-

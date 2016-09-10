@@ -3,18 +3,18 @@ import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-import { getContentUrl } from '../util/helpers'
+import { getContentUrl } from '../util/routes'
 
-import * as userActionCreators from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
+import * as uiActionCreators from '../redux/modules/ui'
+import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
-
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 
 export class Login extends React.Component {
@@ -40,7 +40,13 @@ export class Login extends React.Component {
     this.toggleRemember = this.toggleRemember.bind(this)
   }
   goToAccountPage() {
-    this.props.router.push(getContentUrl('brand', 'udn', {}))
+    if(this.props.loginUrl) {
+      this.props.router.push(this.props.loginUrl)
+      this.props.uiActions.setLoginUrl(null)
+    }
+    else {
+      this.props.router.push(getContentUrl('brand', 'udn', {}))
+    }
   }
   /**
    * Set data on the redux store after login. This method blocks redirecting the
@@ -186,9 +192,12 @@ Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
+  loginUrl: React.PropTypes.string,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
+  uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
@@ -197,6 +206,7 @@ function mapStateToProps(state) {
   return {
     fetching: state.user.get('fetching') || state.account.get('fetching'),
     loggedIn: state.user.get('loggedIn'),
+    loginUrl: state.ui.get('loginUrl'),
     username: state.user.get('username')
   };
 }
@@ -205,7 +215,8 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-    userActions: bindActionCreators(userActionCreators, dispatch)
+    userActions: bindActionCreators(userActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

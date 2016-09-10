@@ -13,7 +13,7 @@ describe('EditAccount', () => {
     expect(TestUtils.isCompositeComponent(editAccount)).toBeTruthy();
   })
   it('should save changes', () => {
-    let saveChanges = jest.genMockFunction()
+    let saveChanges = jest.fn()
     let editAccount = TestUtils.renderIntoDocument(
       <EditAccount account={Immutable.Map()} saveChanges={saveChanges}/>
     )
@@ -22,7 +22,7 @@ describe('EditAccount', () => {
     expect(saveChanges.mock.calls.length).toEqual(1)
   })
   it('should update the account as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let editAccount = TestUtils.renderIntoDocument(
       <EditAccount account={Immutable.Map()} changeValue={changeValue}/>
     )

@@ -1,7 +1,8 @@
 import React from 'react'
-import { Route, IndexRedirect, IndexRoute } from 'react-router'
+import { Route, IndexRedirect } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
+import routes from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
@@ -18,11 +19,12 @@ import AccountManagementGroups from './containers/account-management/tabs/groups
 import AccountManagementAccounts from './components/account-management/system/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
-import AccountManagementDNS from './components/account-management/system/dns'
+import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementRoles from './components/account-management/system/roles'
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
+import AnalyticsTabCacheHitRate from './containers/analytics/tabs/tab-cache-hit-rate.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
 import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
@@ -31,7 +33,6 @@ import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.js
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
-import Configurations from './containers/configurations'
 import ForgotPassword from './containers/forgot-password'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
@@ -51,76 +52,6 @@ import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
 
 import ContentTransition from './transitions/content'
-
-/* TODO: define routes here instead of 'fixed' paths */
-const routes = {
-  analytics: '/analysis',
-  analyticsBrand: '/analysis/:brand',
-  analyticsAccount: '/analysis/:brand/:account',
-  analyticsGroup: '/analysis/:brand/:account/:group',
-  analyticsProperty: '/analysis/:brand/:account/:group/:property',
-
-  analyticsTabTraffic: 'traffic',
-  analyticsTabVisitors: 'visitors',
-  analyticsTabOnOffNet: 'on-off-net',
-  analyticsTabServiceProviders: 'service-providers',
-  analyticsTabFileError: 'file-error',
-  analyticsTabUrlReport: 'url-report',
-  analyticsTabPlaybackDemo: 'playback-demo',
-
-  content: '/content',
-  contentBrand: '/content/:brand',
-  contentAccount: '/content/:brand/:account',
-  contentGroup: '/content/:brand/:account/:group',
-  contentProperty: '/content/:brand/:account/:group/:property',
-  contentPropertyAnalytics: '/content/:brand/:account/:group/:property/analytics',
-  contentPropertyConfiguration: '/content/:brand/:account/:group/:property/configuration',
-
-  accountManagement: '/account-management',
-  accountManagementBrand: '/account-management/:brand',
-  accountManagementAccount: '/account-management/:brand/:account',
-  accountManagementGroup: '/account-management/:brand/:account/:group',
-  accountManagementProperty: '/account-management/:brand/:account/:group/:property',
-
-  accountManagementTabAccountDetails: 'details',
-  accountManagementTabAccountGroups: 'groups',
-  accountManagementTabAccountUsers: 'users',
-
-  accountManagementTabSystemAccounts: 'accounts',
-  accountManagementTabSystemUsers: 'users',
-  accountManagementTabSystemBrands: 'brands',
-  accountManagementTabSystemDNS: 'dns',
-  accountManagementTabSystemRoles: 'roles',
-  accountManagementTabSystemServices: 'services',
-
-  services: '/services',
-  servicesBrand: '/services/:brand',
-  servicesAccount: '/services/:brand/:account',
-  servicesGroup: '/services/:brand/:account/:group',
-  servicesProperty: '/services/:brand/:account/:group/:property',
-
-  security: '/security',
-  securityBrand: '/security/:brand',
-  securityAccount: '/security/:brand/:account',
-  securityGroup: '/security/:brand/:account/:group',
-  securityProperty: '/security/:brand/:account/:group/:property',
-
-  securityTabSslCertificate: 'ssl-certificate',
-  securityTabContentTargeting: 'content-targeting',
-  securityTabTokenAuthentication: 'token-authentication',
-
-  support: '/support',
-  supportBrand: '/support/:brand',
-  supportAccount: '/support/:brand/:account',
-  supportGroup: '/support/:brand/:account/:group',
-  supportProperty: '/support/:brand/:account/:group/:property',
-
-  supportTabTickets: 'tickets',
-  supportTabTools: 'tools',
-  supportTabDocumentation: 'documentation',
-
-  configuration: '/services'
-}
 
 /**
  *
@@ -147,6 +78,7 @@ export function getRoute(name, params) {
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
   [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
+  [PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE, routes.analyticsTabCacheHitRate, AnalyticsTabCacheHitRate],
   [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
@@ -216,10 +148,6 @@ export const getRoutes = store => {
           {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
-      </Route>
-
-      <Route path="/configurations">
-        <Route path=":brand" component={Configurations}/>
       </Route>
 
       {/* Security - routes */}

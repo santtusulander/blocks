@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import { Col, Row } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import Select from './select'
 import DateRanges from '../constants/date-ranges'
@@ -14,6 +15,9 @@ const endOfYesterday = () => endOfThisDay().subtract(1, 'day')
 const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
+
+const startOfThisWeek = () => moment().utc().startOf('isoWeek')
+const endOfThisWeek = () => moment().utc().endOf('isoWeek')
 
 export class DateRangeSelect extends React.Component {
   constructor(props) {
@@ -44,13 +48,11 @@ export class DateRangeSelect extends React.Component {
   componentWillReceiveProps(nextProps) {
     const nextState = {}
     let dateChanged = false
-    if(nextProps.startDate &&
-      (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
+    if(nextProps.startDate && (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
       nextState.startDate = nextProps.startDate
       dateChanged = true
     }
-    if(nextProps.endDate &&
-      (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
+    if(nextProps.endDate && (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
       nextState.endDate = nextProps.endDate
       dateChanged = true
     }
@@ -73,6 +75,11 @@ export class DateRangeSelect extends React.Component {
     if(this.props.availableRanges.indexOf(DateRanges.YESTERDAY) !== -1 &&
       startOfYesterday().isSame(start, 'hour') && endOfYesterday().isSame(end, 'hour')) {
       return DateRanges.YESTERDAY
+    }
+
+    if(this.props.availableRanges.indexOf(DateRanges.THIS_WEEK) !== -1 &&
+      startOfThisWeek().isSame(start, 'hour') && endOfThisWeek().isSame(end, 'hour')) {
+      return DateRanges.THIS_WEEK
     }
     if(this.props.availableRanges.indexOf(DateRanges.LAST_MONTH) !== -1 &&
       startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
@@ -136,6 +143,10 @@ export class DateRangeSelect extends React.Component {
       startDate = startOfYesterday()
       endDate   = endOfYesterday()
     }
+    else if(value === DateRanges.THIS_WEEK) {
+      startDate = startOfThisWeek()
+      endDate   = endOfThisWeek()
+    }
     else if(value === DateRanges.LAST_MONTH) {
       startDate = startOfLastMonth()
       endDate   = endOfLastMonth()
@@ -147,7 +158,7 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate)
+      this.props.changeDateRange(startDate, endDate, value)
     })
   }
 
@@ -162,7 +173,7 @@ export class DateRangeSelect extends React.Component {
         {this.state.activeDateRange === DateRanges.CUSTOM_TIMERANGE ?
           <Row className="no-gutters">
             <Col xs={6}>
-              <p className="text-sm">FROM</p>
+              <h5><FormattedMessage id="portal.analysis.filters.dateRangeFrom.title"/></h5>
               <div ref="startDateHolder"
                    className={'datepicker-input-wrapper start-date' +
                 (this.state.datepickerOpen ?
@@ -178,7 +189,7 @@ export class DateRangeSelect extends React.Component {
               </div>
             </Col>
             <Col xs={6}>
-              <p className="text-sm">TO</p>
+              <h5><FormattedMessage id="portal.analysis.filters.dateRangeTo.title"/></h5>
               <div ref="endDateHolder"
                    className={'datepicker-input-wrapper end-date' +
                 (this.state.datepickerOpen ?

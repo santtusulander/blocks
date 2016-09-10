@@ -10,7 +10,7 @@ import {
   getServicesUrlFromParams,
   getSupportUrlFromParams,
   getSecurityUrlFromParams
-} from '../../util/helpers.js'
+} from '../../util/routes.js'
 import IsAllowed from '../is-allowed'
 
 
@@ -30,7 +30,7 @@ import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const Navigation = (props) => {
   const params = props.params,
@@ -46,7 +46,7 @@ const Navigation = (props) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION}>
           <li>
-            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={'main-nav-link' + contentActive}>
+            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
               <IconContent />
               <span><FormattedMessage id="portal.navigation.content.text"/></span>
             </Link>
@@ -56,7 +56,7 @@ const Navigation = (props) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={'main-nav-link' + analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
               <span><FormattedMessage id="portal.navigation.analytics.text"/></span>
             </Link>

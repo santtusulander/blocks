@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class RemoveVary extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class RemoveVary extends React.Component {
 RemoveVary.displayName = 'RemoveVary'
 RemoveVary.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

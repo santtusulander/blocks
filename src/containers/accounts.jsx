@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -14,7 +14,7 @@ import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 export class Accounts extends React.Component {
   constructor(props) {

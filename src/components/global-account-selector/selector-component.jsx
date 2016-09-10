@@ -27,18 +27,22 @@ const SelectorComponent = ({
           value={searchValue}
           onChange={onSearch}/>
       </li>
-      {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
-      {items.map((option, i) =>
-        <li key={i} role="presentation">
-          <a id="menu-item" role="menu-item" onClick={() => onItemClick(option[0])} tabIndex="-1">
-            <span id="name" className="name">{option[1]}</span>
-          </a>
-          {drillable &&
-            <a className="caret-container" onClick={() => onCaretClick(option[0])} tabIndex="-1">
-              <span className="caret"></span>
-            </a>}
-        </li>
-      )}
+      <li>
+        <ul className='scrollable-menu'>
+          {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
+          {items.map((option, i) =>
+            <li key={i} role="presentation">
+              <a id="menu-item" role="menu-item" onClick={() => onItemClick(option[0])} tabIndex="-1">
+                <span id="name" className="name">{option[1]}</span>
+              </a>
+              {drillable &&
+                <a className="caret-container" onClick={() => onCaretClick(option[0])} tabIndex="-1">
+                  <span className="caret"></span>
+                </a>}
+            </li>
+          )}
+        </ul>
+      </li>
     </Dropdown.Menu>
   </Dropdown>
 

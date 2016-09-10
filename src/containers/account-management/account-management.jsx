@@ -6,7 +6,7 @@ import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Nav, Button } from 'react-bootstrap'
 import { getRoute } from '../../routes'
-import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
+import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
@@ -354,7 +354,7 @@ export class AccountManagement extends Component {
     /*const dnsInitialValues = {
      initialValues: {
      recordType: 'MX',
-     recordName: 'mikkotest',
+     hostName: 'mikkotest',
      targetValue: '11.22.33.44',
      ttl: '3600'
      }
@@ -406,105 +406,91 @@ export class AccountManagement extends Component {
       users: this.props.users
     }
     return (
-      <PageContainer className="account-management">
-        <Content>
-          <div className="account-management-manage-account">
-            <PageHeader>
-              <p>ACCOUNT MANAGEMENT</p>
-              <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <AccountSelector
-                  as="accountManagement"
-                  params={{ brand, account }}
-                  topBarTexts={{ brand: 'UDN Admin' }}
-                  topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
-                  onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-                  restrictedTo="account">
-                  <div className="btn btn-link dropdown-toggle header-toggle">
-                    <h1><TruncatedTitle content={activeAccount.get('name') ||
-                    <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
-                                        tooltipPlacement="bottom" className="account-property-title"/></h1>
-                    <span className="caret"></span>
-                  </div>
-                </AccountSelector>
-              </IsAllowed>
-              <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <h1>{activeAccount.get('name') ||
-                <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-              </IsAllowed>
-            </PageHeader>
-            {account && <Nav bsStyle="tabs" className="system-nav">
-              <li className="navbar">
-                <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.account.text"/></Link>
-              </li>
-              <li className="navbar">
-                <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.groups.text"/></Link>
-              </li>
-              <li className="navbar">
-                <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.users.text"/></Link>
-              </li>
-            </Nav>}
-            {!account && <Nav bsStyle="tabs" className="system-nav">
-              <li className="navbar">
-                <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.accounts.text"/></Link>
-              </li>
-              <li className="navbar">
-                <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.users.text"/></Link>
-              </li>
-              {/*<li className="navbar">
-               <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-               </li>*/}
-              <IsAllowed to={PERMISSIONS.VIEW_DNS}>
-                <li className="navbar">
-                  <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage
-                    id="portal.accountManagement.dns.text"/></Link>
-                </li>
-              </IsAllowed>
-              <li className="navbar">
-                <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage
-                  id="portal.accountManagement.roles.text"/></Link>
-              </li>
-              {/*
-               <li className="navbar">
-               <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
-               </li>
-               */}
-            </Nav>}
-            <Content className="tab-bodies">
-              {this.props.children && React.cloneElement(this.props.children, childProps)}
-            </Content>
-          </div>
-          {accountManagementModal === ADD_ACCOUNT &&
-          <AccountForm
-            id="account-form"
-            onSave={this.editAccount}
-            account={this.accountToUpdate}
-            onCancel={() => toggleModal(null)}
-            show={true}/>}
-          {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
-          {accountManagementModal === DELETE_USER &&
-          <DeleteUserModal
-            itemToDelete={this.userToDelete}
-            cancel={() => toggleModal(null)}
-            submit={this.deleteUser}/>}
-          {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-          <GroupForm
-            id="group-form"
-            group={this.state.groupToUpdate}
-            hosts={this.state.groupHosts}
-            onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
-            account={activeAccount}
-            onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
-            onCancel={() => toggleModal(null)}
-            show={true}
-            users={this.props.users}
-          />}
-        </Content>
-      </PageContainer>
+      <Content>
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
+          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+            <AccountSelector
+              as="accountManagement"
+              params={{ brand, account }}
+              topBarTexts={{ brand: 'UDN Admin' }}
+              topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
+              onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
+              restrictedTo="account">
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
+                  tooltipPlacement="bottom" className="account-property-title"/></h1>
+                <span className="caret"></span>
+              </div>
+            </AccountSelector>
+          </IsAllowed>
+          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
+          </IsAllowed>
+        </PageHeader>
+        {account && <Nav bsStyle="tabs">
+          <li className="navbar">
+            <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
+          </li>
+        </Nav>}
+        {!account && <Nav bsStyle="tabs">
+          <li className="navbar">
+            <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
+          </li>
+          {/*<li className="navbar">
+            <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
+          </li>*/}
+          <IsAllowed to={PERMISSIONS.VIEW_DNS}>
+           <li className="navbar">
+             <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
+           </li>
+          </IsAllowed>
+          <li className="navbar">
+            <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
+          </li>
+          {/*
+           <li className="navbar">
+           <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
+           </li>
+           */}
+        </Nav>}
+
+        {this.props.children && React.cloneElement(this.props.children, childProps)}
+
+        {accountManagementModal === ADD_ACCOUNT &&
+        <AccountForm
+          id="account-form"
+          onSave={this.editAccount}
+          account={this.accountToUpdate}
+          onCancel={() => toggleModal(null)}
+          show={true}/>}
+        {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
+        {accountManagementModal === DELETE_USER &&
+        <DeleteUserModal
+          itemToDelete={this.userToDelete}
+          cancel={() => toggleModal(null)}
+          submit={this.deleteUser}/>}
+        {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
+        <GroupForm
+          id="group-form"
+          group={this.state.groupToUpdate}
+          hosts={this.state.groupHosts}
+          onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
+          account={activeAccount}
+          onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
+          onCancel={() => toggleModal(null)}
+          show={true}
+          users={this.props.users}
+        />}
+      </Content>
     )
   }
 }

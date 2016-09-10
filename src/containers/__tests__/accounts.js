@@ -10,43 +10,39 @@ global.window = document.defaultView
 
 jest.mock('../../util/helpers', () => {
   return {
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction(),
-    filterAccountsByUserName: jest.genMockFunction(),
-    filterMetricsByAccounts: jest.genMockFunction()
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn(),
+    filterAccountsByUserName: jest.fn(),
+    filterMetricsByAccounts: jest.fn()
   }
 })
 
-jest.autoMockOff()
 jest.dontMock('../accounts.jsx')
 const Accounts = require('../accounts.jsx').Accounts
-const ContentItems = require('../../components/content/content-items.jsx')
-const ContentItemChart = require('../../components/content/content-item-chart.jsx')
-const ContentItemList = require('../../components/content/content-item-list.jsx')
 
 function accountActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchAccounts: jest.genMockFunction(),
-    fetchAccount: jest.genMockFunction(),
-    changeActiveAccount: jest.genMockFunction(),
-    updateAccount: jest.genMockFunction(),
-    createAccount: jest.genMockFunction(),
-    deleteAccount: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchAccounts: jest.fn(),
+    fetchAccount: jest.fn(),
+    changeActiveAccount: jest.fn(),
+    updateAccount: jest.fn(),
+    createAccount: jest.fn(),
+    deleteAccount: jest.fn()
   }
 }
 
 function uiActionsMaker() {
   return {
-    toggleChartView: jest.genMockFunction()
+    toggleChartView: jest.fn()
   }
 }
 
 function metricsActionsMaker() {
   return {
-    startAccountFetching: jest.genMockFunction(),
-    fetchAccountMetrics: jest.genMockFunction()
+    startAccountFetching: jest.fn(),
+    fetchAccountMetrics: jest.fn()
   }
 }
 
@@ -91,7 +87,7 @@ const urlParams = {brand: 'udn'}
 
 describe('Accounts', () => {
   it('should exist', () => {
-    const fetchData=jest.genMockFunction()
+    const fetchData=jest.fn()
     let accounts = TestUtils.renderIntoDocument(
 
       <Accounts
@@ -109,7 +105,7 @@ describe('Accounts', () => {
 
   it('should request data on mount', () => {
     const accountActions = accountActionsMaker()
-    const fetchData=jest.genMockFunction()
+    const fetchData=jest.fn()
     TestUtils.renderIntoDocument(
       <Accounts
         accountActions={accountActions}
@@ -124,37 +120,19 @@ describe('Accounts', () => {
     expect(fetchData.mock.calls.length).toBe(1)
   });
 
-  it('should show a loading message', () => {
-    let accounts = mount(
-      <Accounts
-        accountActions={accountActionsMaker()}
-        uiActions={uiActionsMaker()}
-        metricsActions={metricsActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        fetching={true}
-        fetchingMetrics={true}
-        username="test"
-        params={urlParams}/>
-    )
-    //let div = TestUtils.scryRenderedDOMComponentsWithTag(accounts, 'div')
-    //expect(ReactDOM.findDOMNode(div[0]).textContent).toContain('Loading...')
-    expect(accounts.find('LoadingSpinner').length).toBe(1)
-  });
-
   it('should render contentItems component', () => {
-    let accounts = TestUtils.renderIntoDocument(
+    const accounts = shallow(
       <Accounts
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchData={jest.fn()}
         accounts={fakeAccounts}
         params={urlParams}
         metrics={fakeMetrics}
         username="test"/>
     )
-    let child = TestUtils.scryRenderedComponentsWithType(accounts, ContentItems)
-    expect(child.length).toBe(1)
+    expect(accounts.find('.groups-container').length).toBe(1)
   });
 
   it('should delete an account when clicked', () => {
@@ -164,7 +142,7 @@ describe('Accounts', () => {
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
-        fetchData={jest.genMockFunction()}
+        fetchData={jest.fn()}
         accounts={fakeAccounts}
         params={urlParams}
         username="test"

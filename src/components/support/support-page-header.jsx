@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../routes'
-import { getUrl, getSupportUrlFromParams } from '../../util/helpers'
+import { getUrl, getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
@@ -20,28 +21,25 @@ const SupportPageHeader = (props) => {
   const subPage = getTabName(router, params);
 
   return (
-    <PageHeader>
-      <h5>SUPPORT</h5>
-      <div className="content-layout__header">
-        <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-          <AccountSelector
-            as="support"
-            params={{ brand, account }}
-            topBarTexts={{ brand: 'UDN Admin' }}
-            topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
-            onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-            restrictedTo="account">
-            <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
-                tooltipPlacement="bottom" className="account-management-title"/></h1>
-              <span className="caret"></span>
-            </div>
-          </AccountSelector>
-        </IsAllowed>
-        <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-          <h1>{activeAccount.get('name') || 'No active account'}</h1>
-        </IsAllowed>
-      </div>
+    <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
+      <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+        <AccountSelector
+          as="support"
+          params={{ brand, account }}
+          topBarTexts={{ brand: 'UDN Admin' }}
+          topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
+          onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
+          restrictedTo="account">
+          <div className="btn btn-link dropdown-toggle header-toggle">
+            <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
+              tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <span className="caret"></span>
+          </div>
+        </AccountSelector>
+      </IsAllowed>
+      <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+        <h1>{activeAccount.get('name') || 'No active account'}</h1>
+      </IsAllowed>
     </PageHeader>
   )
 }

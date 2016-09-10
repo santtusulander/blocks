@@ -3,13 +3,12 @@ import { Nav } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
-import { getSupportUrlFromParams } from '../../util/helpers'
+import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import SupportPageHeader from '../../components/support/support-page-header'
-
-import './support.scss'
 
 class Support extends React.Component {
 
@@ -18,19 +17,17 @@ class Support extends React.Component {
 
     if (!params.account) {
       return (
-        <div className="support-tab-container">
+        <PageContainer>
           <p className="text-center">
-            Please select an account
-            <br/>
-            from top left to see support tickets
+            <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
           </p>
-        </div>
+        </PageContainer>
       )
     } else {
       return (
-        <div className="support-tab-container">
-          {children && React.cloneElement(children, {...this.props})}
-        </div>
+        <PageContainer>
+          {children && React.cloneElement(children, { ...this.props })}
+        </PageContainer>
       )
     }
   }
@@ -43,25 +40,29 @@ class Support extends React.Component {
     const baseUrl = getSupportUrlFromParams(params);
 
     return (
-      <PageContainer>
-        <div className="account-support">
-          <SupportPageHeader {...this.props} />
-          <Nav bsStyle="tabs" className="system-nav">
-            <li className="navbar">
-              <Link to={baseUrl + '/tickets'} activeClassName="active">TICKETS</Link>
-            </li>
-            <li className="navbar">
-              <Link to={baseUrl + '/tools'} activeClassName="active">TOOLS</Link>
-            </li>
-            <li className="navbar">
-              <Link to={baseUrl + '/documentation'} activeClassName="active">DOCUMENTATION</Link>
-            </li>
-          </Nav>
-        </div>
+      <div>
+        <SupportPageHeader {...this.props} />
+        <Nav bsStyle="tabs">
+          <li className="navbar">
+            <Link to={baseUrl + '/tickets'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
+            </Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/tools'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
+            </Link>
+          </li>
+          <li className="navbar">
+            <Link to={baseUrl + '/documentation'} activeClassName="active">
+              <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
+            </Link>
+          </li>
+        </Nav>
         <Content>
           {this.renderTabContent(children)}
         </Content>
-      </PageContainer>
+      </div>
     )
   }
 }

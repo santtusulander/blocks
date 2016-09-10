@@ -11,7 +11,7 @@ import './inline-add'
 //account management
 import './account-management/account-details'
 import './account-management/dns-soa-form'
-import './account-management/sidebar';
+import './account-management/sidebar'
 import './account-management/user-list'
 import './account-management/dns-edit-form'
 import './account-management/dns-soa-form'

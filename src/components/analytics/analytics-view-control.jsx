@@ -1,28 +1,18 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
-import { Link, withRouter } from 'react-router'
-import { Nav, ButtonToolbar } from 'react-bootstrap'
+import { withRouter } from 'react-router'
+import { ButtonToolbar } from 'react-bootstrap'
+import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../constants/permissions'
-import IsAllowed from '../is-allowed'
 
 //import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
+import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
-import { getTabLink, getTabName, getAnalyticsUrl, getContentUrl } from '../../util/helpers.js'
+import { getTabName } from '../../util/helpers.js'
+import { getAnalyticsUrl, getContentUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
-
-import './analytics-view-control.scss'
-
-const tabs = [
-  { key: 'traffic', label: 'Traffic Overview', permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW },
-  { key: 'visitors', label: 'Unique Visitors', permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS },
-  { key: 'on-off-net', label: 'Service Provider On/Off Net', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET},
-  { key: 'service-providers', label: 'Service Provider Contribution', hideHierarchy: true, permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION },
-  { key: 'file-error', label: 'File Error', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR },
-  { key: 'url-report', label: 'URL', propertyOnly: true, permission: PERMISSIONS.VIEW_ANALYTICS_URL },
-  { key: 'playback-demo', label: 'Playback demo', hideHierarchy: true }
-]
 
 /* Not USED atm - will be used when filter dropdown is implemented
  function createDropdownOptions ( opts ) {
@@ -50,6 +40,94 @@ const AnalyticsViewControl = (props) => {
     group,
     property
   } = props.params
+
+  const tabs = [
+    {
+      key: 'traffic',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.traffic.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.traffic.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.traffic.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.traffic.accountTitle'})
+      }
+    },
+    {
+      key: 'cache-hit-rate',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.cacheHitRate.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.cacheHitRate.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.cacheHitRate.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.cacheHitRate.accountTitle'})
+      }
+    },
+    {
+      key: 'visitors',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.visitors.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.visitors.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.visitors.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.visitors.accountTitle'})
+      }
+    },
+    {
+      key: 'on-off-net',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.onOffNet.label'}),
+      hideHierarchy: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.onOffNet.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.onOffNet.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.onOffNet.accountTitle'})
+      }
+    },
+    {
+      key: 'service-providers',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      hideHierarchy: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.accountTitle'})
+      }
+    },
+    {
+      key: 'file-error',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.label'}),
+      propertyOnly: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.accountTitle'})
+      }
+    },
+    {
+      key: 'url-report',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.urlReport.label'}),
+      propertyOnly: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_URL,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.urlReport.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.urlReport.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.urlReport.accountTitle'})
+      }
+    },
+    {
+      key: 'playback-demo',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.label'}),
+      hideHierarchy: true,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.accountTitle'})
+      }
+    }
+  ]
+
   /*
    const brandOptions = createOptions( props.brands )
    const groupDropdownOptions = createDropdownOptions( props.groups )
@@ -64,13 +142,13 @@ const AnalyticsViewControl = (props) => {
         title = active.label
       }
       else if(property) {
-        title = `Property ${active.label}`
+        title = active.titles.property
       }
       else if(group) {
-        title = `Group ${active.label}`
+        title = active.titles.group
       }
       else {
-        title = `Account ${active.label}`
+        title = active.titles.account
       }
     }
   }
@@ -112,66 +190,39 @@ const AnalyticsViewControl = (props) => {
   }
 
   return (
-    <div className="analytics-view-control">
-      <h5 className="analytics-view-control__title">{title}</h5>
-      <div className="analytics-view-control__header">
-        <AccountSelector
-          as="analytics"
-          params={props.params}
-          topBarTexts={topBarTexts}
-          topBarAction={topBarFunc}
-          onSelect={(...params) => {
-            let url = isContentAnalytics ?
-              `${getContentUrl(...params)}/analytics` :
-              getAnalyticsUrl(...params)
-            if(active && !isContentAnalytics) {
-              let tab = active.key
-              if(active.propertyOnly && params[0] !== 'property') {
-                tab = ''
-              }
-              url = `${url}/${tab}`
+    <PageHeader pageSubTitle={title}>
+      <AccountSelector
+        as="analytics"
+        params={props.params}
+        topBarTexts={topBarTexts}
+        topBarAction={topBarFunc}
+        onSelect={(...params) => {
+          let url = isContentAnalytics ?
+            `${getContentUrl(...params)}/analytics` :
+            getAnalyticsUrl(...params)
+          if(active && !isContentAnalytics) {
+            let tab = active.key
+            if(active.propertyOnly && params[0] !== 'property') {
+              tab = ''
             }
-            props.router.push(url)
-          }}>
-          <div className="btn btn-link dropdown-toggle header-toggle">
-            <h1><TruncatedTitle content={activeItem || "select account"} tooltipPlacement="bottom" className="account-management-title"/></h1>
-            <span className="caret"></span>
-          </div>
-        </AccountSelector>
-        {props.params.account &&
-          <ButtonToolbar>
-            <AnalyticsExport
-              activeTab={getTabName(props.location.pathname)}
-              params={props.params}
-              />
-          </ButtonToolbar>
-        }
-      </div>
-
-      {props.params.account &&
-      <Nav bsStyle="tabs">
-        {tabs.reduce((lis, tab) => {
-          if(!tab.propertyOnly || props.params.property) {
-            const tabContent = tab.permission ?
-              <IsAllowed key={tab.key} to={tab.permission}>
-                <li>
-                  <Link to={getTabLink(props.location, tab.key)}
-                  activeClassName='active'>{tab.label}</Link>
-                </li>
-              </IsAllowed>
-            :
-              <li key={tab.key}>
-                <Link to={getTabLink(props.location, tab.key)}
-                activeClassName='active'>{tab.label}</Link>
-              </li>
-
-            lis.push( tabContent )
+            url = `${url}/${tab}`
           }
-          return lis
-        }, [])}
-      </Nav>
+          props.router.push(url)
+        }}>
+        <div className="btn btn-link dropdown-toggle header-toggle">
+          <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
+          <span className="caret"></span>
+        </div>
+      </AccountSelector>
+      {props.params.account &&
+        <ButtonToolbar>
+          <AnalyticsExport
+            activeTab={getTabName(props.location.pathname)}
+            params={props.params}
+            />
+        </ButtonToolbar>
       }
-    </div>
+    </PageHeader>
   )
 }
 
@@ -183,6 +234,7 @@ AnalyticsViewControl.propTypes = {
   activeTab: PropTypes.string,
   brands: PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
+  intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(Immutable.List),
@@ -200,4 +252,4 @@ AnalyticsViewControl.defaultProps = {
   params: {}
 }
 
-export default withRouter(AnalyticsViewControl)
+export default withRouter(injectIntl(AnalyticsViewControl))

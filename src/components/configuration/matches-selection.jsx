@@ -1,7 +1,8 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
+import Immutable from 'immutable'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class MatchesSelection extends React.Component {
   constructor(props) {
@@ -84,7 +85,7 @@ class MatchesSelection extends React.Component {
 MatchesSelection.displayName = 'MatchesSelection'
 MatchesSelection.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = MatchesSelection

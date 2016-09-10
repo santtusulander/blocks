@@ -1,11 +1,13 @@
 import React from 'react'
 
+import PageContainer from '../../../components/layout/page-container'
+
 class AccountManagementSystemServices extends React.Component {
   render() {
     return (
-      <div className="account-management-system-services">
-        Placeholder for services list
-      </div>
+      <PageContainer>
+        <p className="text-center">Placeholder for services list</p>
+      </PageContainer>
     )
   }
 }

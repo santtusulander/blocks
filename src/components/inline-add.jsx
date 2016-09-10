@@ -5,7 +5,7 @@ import { reduxForm, getValues } from 'redux-form'
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 /**
  * When to display errorTooltip

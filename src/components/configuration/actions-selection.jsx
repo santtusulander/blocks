@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class ActionsSelection extends React.Component {
   constructor(props) {
@@ -103,7 +103,7 @@ ActionsSelection.propTypes = {
   activateSet: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = ActionsSelection

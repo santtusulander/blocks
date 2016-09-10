@@ -1,12 +1,14 @@
 // Navs
 // ====
+$nav-tab-vertical-padding: rem(10px);
+$nav-tab-horizontal-padding: rem(24px);
+$nav-tab-horizontal-margin: rem(12px);
+$nav-tab-line-height: (24/14);
+$nav-tab-border-width: 4px;
+$dt-tab-color: $dt-text-color;
+$lt-tab-color: $lt-text-color;
 
-// scss-lint:disable SelectorDepth NestingDepth
-// Need to override Bootstrap
-.navbar-nav,
-.navbar-header {
-
-  //add padding for sidenav
+.navbar-nav {
   padding-left: 45px;
 
   &,
@@ -31,165 +33,87 @@
   margin-right: -15px;
 }
 
-.main-nav,
 .nav-tabs {
-
-  > li {
-    float: left;
-    height: $bar-height;
-    min-width: 250px;
-
-    @include lg {
-      min-width: 180px;
-    }
-
-    @include md {
-      height: $md-bar-height;
-      min-width: 120px;
-    }
-
-    @include sm {
-      min-width: 0;
-    }
-
-    > a,
-    .main-nav-link,
-    .dropdown {
-      display: block;
-      width: 100%;
-      height: $bar-height;
-      padding: 0;
-      line-height: $bar-height;
-      text-align: center;
-      text-transform: uppercase;
-      border: 0;
-
-      @include md {
-        height: $md-bar-height;
-        line-height: $md-bar-height;
-      }
-
-      &.inactive {
-        opacity: 0.3;
-      }
-
-      .dark-theme &,
-      .light-theme & {
-        color: $dt-text-color;
-      }
-
-      &:not(.inactive):not(.active):hover,
-      &:not(.inactive):not(.active):focus {
-        text-decoration: none;
-        background-color: transparent;
-        outline: none;
-
-        .dark-theme &,
-        .light-theme & {
-          color: $white;
-        }
-      }
-    }
-
-    > a,
-    .main-nav-link {
-      padding: 0 20px;
-
-      @include sm {
-        padding: 0 10px;
-      }
-
-      &.active {
-
-        &,
-        &:hover,
-        &:focus {
-          color: $pale-blue;
-          text-decoration: none;
-          background-color: inherit;
-          border: 0;
-          border-bottom: 5px solid $pale-blue;
-        }
-      }
-    }
-
-    &.active {
-
-      > a:not(.inactive):not(.active),
-      .main-nav-link {
-
-        &,
-        &:hover,
-        &:focus {
-
-          .dark-theme &,
-          .light-theme & {
-            font-weight: 500;
-            color: $pale-blue;
-            text-decoration: none;
-            background-color: inherit;
-            border: 0;
-            border-bottom: 5px solid $pale-blue;
-          }
-        }
-      }
-    }
-  }
-}
-
-.nav-tabs {
-  border-bottom: 5px solid;
-
-  @include print {
-    display: none;
-  }
+  border-bottom: $nav-tab-border-width solid;
 
   .dark-theme & {
-    background-color: rgba($black, 0.1);
+    background-color: rgba($pale-blue, 0.2);
     border-color: rgba($black, 0.4);
   }
 
   .light-theme & {
-    background-color: $silver-20;
-    border-color: $silver-60;
+    background-color: $white;
+    border-color: rgba($black, 0.1);
   }
 
   > li {
-    height: calc(100% + 5px);
-    min-width: 200px;
-    margin-bottom: -5px;
-    color: $lt-text-color;
-
-    @include lg {
-      min-width: 120px;
-    }
-
-    @include md {
-      min-width: 0;
-    }
+    min-height: 0;
+    margin: 0 $nav-tab-horizontal-margin -#{$nav-tab-border-width};
+    border: 0;
 
     &:first-of-type {
-      margin-left: 20px;
+      margin-left: 30px;
     }
 
-    > a {
-
-      @include md {
-        padding: 0 10px;
+    &.active {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          font-weight: 700;
+          color: $pale-blue;
+          background-color: transparent;
+          border: 0;
+          border-bottom: 4px solid $pale-blue;
+          outline: 0;
+        }
       }
     }
 
-    &:not(.inactive):not(.active) {
+    > a {
+      padding: $nav-tab-vertical-padding $nav-tab-horizontal-padding;
+      margin: 0;
+      font-weight: 500;
+      line-height: $nav-tab-line-height;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 0;
 
-      > a {
+      &.inactive {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
+
+      .dark-theme & {
+        color: $dt-tab-color;
+      }
+
+      .light-theme & {
+        color: $lt-tab-color;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        outline: 0;
+
+        .dark-theme & {
+          color: $white;
+        }
 
         .light-theme & {
-          color: $lt-text-color;
+          color: $black;
+        }
+      }
 
-          &:hover,
-          &:focus {
-            color: $black;
-          }
+      &.active {
+        &,
+        &:hover,
+        &:focus {
+          font-weight: 700;
+          color: $pale-blue;
+          border-bottom: 4px solid $pale-blue;
         }
       }
     }

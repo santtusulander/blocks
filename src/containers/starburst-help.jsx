@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from 'react-bootstrap'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class StarburstHelp extends React.Component {
   render() {

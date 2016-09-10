@@ -13,6 +13,7 @@ import CheckboxArray from '../checkboxes.jsx'
 
 import {
   ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CLOUD_PROVIDER,
   SERVICE_TYPES,
   BRANDS,
   NAME_VALIDATION_REGEXP
@@ -22,9 +23,9 @@ import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
 
 const accountTypeOptions = FILTERED_ACCOUNT_TYPES.map(e => {
   return [e.value, e.label]

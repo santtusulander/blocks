@@ -6,23 +6,38 @@ import Toggle from '../../toggle'
 import Select from '../../select'
 
 import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { secondsToUnit, secondsFromUnit } from '../helpers'
 
 class Cache extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+
+    let maxAge = Number(props.set.get('max_age'))
+    let ttlType = 'seconds'
+    if (maxAge / 86400 >= 1) {
+      maxAge = secondsToUnit(maxAge, 'days')
+      ttlType = 'days'
+    } else if (maxAge / 3600 >= 1) {
+      maxAge = secondsToUnit(maxAge, 'hours')
+      ttlType = 'hours'
+    } else if (maxAge / 60 >= 1) {
+      maxAge = secondsToUnit(maxAge, 'minutes')
+      ttlType = 'minutes'
+    }
 
     this.state = {
       checkEtag: props.set.get('check_etag') || 'false',
       honorOrigin: props.set.get('honor_origin'),
-      maxAge: props.set.get('max_age'),
+      maxAge: maxAge,
       noStore: props.set.get('no_store'),
-      ttlType: 'seconds'
+      ttlType: ttlType
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
     this.handleTTLTypeChange = this.handleTTLTypeChange.bind(this)
     this.handleToggleChange = this.handleToggleChange.bind(this)
+    this.getMaxAge = this.getMaxAge.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   handleChange(key) {
@@ -45,12 +60,29 @@ class Cache extends React.Component {
       this.setState(stateObj)
     }
   }
+  getMaxAge() {
+    let maxAge = Number(this.state.maxAge)
+
+    switch (this.state.ttlType) {
+      case 'minutes':
+        maxAge = secondsFromUnit(maxAge, 'minutes')
+        break
+      case 'hours':
+        maxAge = secondsFromUnit(maxAge, 'hours')
+        break
+      case 'days':
+        maxAge = secondsFromUnit(maxAge, 'days')
+        break
+    }
+
+    return maxAge;
+  }
   saveChanges() {
     this.props.changeValue(
       this.props.path,
       this.props.set.merge({
         check_etag: this.state.checkEtag,
-        max_age: parseInt(this.state.maxAge),
+        max_age: this.getMaxAge(),
         no_store: this.state.noStore,
         honor_origin: this.state.honorOrigin
       })
@@ -114,7 +146,7 @@ class Cache extends React.Component {
                 <Input type="number"
                   id="actions_ttl-value-number"
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.placeholder'})}
-                  value={this.state.maxAge}
+                  value={this.state.maxAge || 0}
                   onChange={this.handleChange('maxAge')}/>
               </Col>
               <Col xs={6}>
@@ -149,7 +181,7 @@ Cache.displayName = 'Cache'
 Cache.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

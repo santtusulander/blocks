@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import ActionLinks from './action-links.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props

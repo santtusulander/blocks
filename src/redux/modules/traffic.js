@@ -7,8 +7,10 @@ import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../uti
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
+const TRAFFIC_FETCHED = 'TRAFFIC_FETCHED'
 const TOTALS_FETCHED = 'TOTALS_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
+const TRAFFIC_BY_TIME_COMPARISON_FETCHED = 'TRAFFIC_BY_TIME_COMPARISON_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
@@ -17,6 +19,7 @@ const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
+  traffic: Immutable.List(),
   totals: Immutable.Map(),
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
@@ -48,6 +51,23 @@ const emptyTraffic = Immutable.Map({
 })
 
 // REDUCERS
+export function trafficFetchSuccess(state, action){
+  return state.merge({
+    traffic: Immutable.fromJS(action.payload.data.map(entity => {
+      entity.detail = entity.detail.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      })
+      return entity
+    }))
+  })
+}
+
+export function trafficFetchFailure(state){
+  return state.merge({
+    traffic: Immutable.List()
+  })
+}
 
 export function totalsFetchSuccess(state, action){
   // API always returns an array, therefore we access the first child, [0]
@@ -75,6 +95,21 @@ export function trafficByTimeSuccess(state, action){
 export function trafficByTimeFailure(state){
   return state.merge({
     byTime: Immutable.List()
+  })
+}
+
+export function trafficByTimeComparisonSuccess(state, action){
+  return state.merge({
+    byTimeComparison: Immutable.fromJS(action.payload.data.map(datapoint => {
+      datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+      return datapoint
+    }))
+  })
+}
+
+export function trafficByTimeComparisonFailure(state){
+  return state.merge({
+    byTimeComparison: Immutable.List()
   })
 }
 
@@ -164,8 +199,10 @@ export function trafficFinishFetch(state){
 }
 
 export default handleActions({
+  TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
   TOTALS_FETCHED: mapReducers(totalsFetchSuccess, totalsFetchFailure),
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
+  TRAFFIC_BY_TIME_COMPARISON_FETCHED: mapReducers(trafficByTimeComparisonSuccess, trafficByTimeComparisonFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
   TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
   TRAFFIC_ON_OFF_NET_FETCHED: mapReducers(trafficOnOffNetSuccess, trafficOnOffNetFailure),
@@ -177,6 +214,10 @@ export default handleActions({
 }, emptyTraffic)
 
 // ACTIONS
+export const fetchTraffic = createAction(TRAFFIC_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
 
 export const fetchTotals = createAction(TOTALS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}&show_detail=false`)
@@ -184,6 +225,11 @@ export const fetchTotals = createAction(TOTALS_FETCHED, (opts) => {
 })
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
+
+export const fetchByTimeComparison = createAction(TRAFFIC_BY_TIME_COMPARISON_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
@@ -199,12 +245,12 @@ export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts
 })
 
 export const fetchOnOffNet = createAction(TRAFFIC_ON_OFF_NET_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
 export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/network-routing${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 

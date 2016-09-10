@@ -4,6 +4,7 @@ import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
+import PageContainer from '../../../components/layout/page-container'
 // import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
@@ -16,7 +17,7 @@ import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
 
 import './account.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
@@ -110,8 +111,8 @@ class AccountManagementAccountDetails extends React.Component {
     const { fields: { accountName, accountType, services } } = this.props
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
-      <div className="account-management-account-details">
-        <h2>Account</h2>
+      <PageContainer className="account-management-account-details">
+        <h2><FormattedMessage id="portal.account.manage.account.title"/></h2>
         <form className='form-horizontal'>
 
           <div className="form-group">
@@ -247,7 +248,7 @@ class AccountManagementAccountDetails extends React.Component {
             </UDNButton>
           </ButtonToolbar>
         </form>
-      </div>
+      </PageContainer>
     )
   }
 }
@@ -256,6 +257,7 @@ AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
+  intl: React.PropTypes.object,
   invalid: React.PropTypes.bool,
   onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,

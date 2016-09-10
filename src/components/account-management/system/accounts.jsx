@@ -5,6 +5,7 @@ import { List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
+import PageContainer from '../../../components/layout/page-container'
 import IconAdd from '../../icons/icon-add'
 import ActionLinks from '../action-links'
 import InlineAdd from '../../inline-add'
@@ -20,14 +21,15 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CLOUD_PROVIDER,
   NAME_VALIDATION_REGEXP
 } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
 
 class AccountList extends Component {
   constructor(props) {
@@ -65,15 +67,19 @@ class AccountList extends Component {
         },
         {
           condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: <div>{[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>, <div key={name}>
-                                                                                                            <div style={{marginTop: '0.5em'}}>
-                                                                                                              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                                                                                                              <ul>
-                                                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                                                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                                                                                                              </ul>
-                                                                                                            </div>
-                                                                                                          </div>]}</div>
+          errorText:
+          <div>
+          {[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>,
+            <div key={name}>
+              <div style={{marginTop: '0.5em'}}>
+                <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                <ul>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                </ul>
+              </div>
+            </div>]}
+          </div>
         }
       ]
     }
@@ -181,7 +187,7 @@ class AccountList extends Component {
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
-      <div>
+      <PageContainer>
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -196,7 +202,7 @@ class AccountList extends Component {
               placeholder="Search"
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
-            <Button bsStyle="success" className="btn-icon btn-add-new" onClick={this.toggleInlineAdd}>
+            <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
               <IconAdd/>
             </Button>
           </Col>
@@ -240,13 +246,13 @@ class AccountList extends Component {
             <tr id="empty-msg">
               <td colSpan="6">
                 {this.state.search.length > 0 ?
-                  <FormattedMessage id='portal.account.list.searchWithParams.empty.text' values={{searchTerm: this.state.search}}/> : 
+                  <FormattedMessage id='portal.account.list.searchWithParams.empty.text' values={{searchTerm: this.state.search}}/> :
                   <FormattedMessage id='portal.account.list.search.empty.text'/>}
               </td>
             </tr>}
           </tbody>
         </table>
-      </div>
+      </PageContainer>
     )
   }
 }
@@ -257,6 +263,7 @@ AccountList.propTypes = {
   addAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
+  intl: PropTypes.object,
   params: PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,

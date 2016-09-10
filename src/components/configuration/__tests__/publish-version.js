@@ -1,37 +1,42 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import { shallow, mount } from 'enzyme'
 
 jest.dontMock('../publish-version.jsx')
 const ConfigurationPublishVersion = require('../publish-version.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('ConfigurationPublishVersion', () => {
   it('should exist', () => {
-    let publish = TestUtils.renderIntoDocument(
-      <ConfigurationPublishVersion />
-    );
-    expect(TestUtils.isCompositeComponent(publish)).toBeTruthy();
-  });
+    const publish = shallow(<ConfigurationPublishVersion intl={intlMaker()} />)
+    expect(publish).toBeDefined()
+  })
 
   it('should not save changes if no publish target is defined', () => {
-    let saveChanges = jest.genMockFunction()
-    let publish = TestUtils.renderIntoDocument(
-      <ConfigurationPublishVersion
+    const saveChanges = jest.fn()
+    const publish = mount(
+      <ConfigurationPublishVersion intl={intlMaker()}
         saveChanges={saveChanges}/>
     )
-    let btns = TestUtils.scryRenderedDOMComponentsWithTag(publish, 'button')
-    TestUtils.Simulate.click(btns[1])
+    const btn = publish.find('.save-btn')
+    btn.simulate('click')
     expect(saveChanges.mock.calls.length).toEqual(0)
   })
 
   it('should save changes if publish target is defined', () => {
-    let saveChanges = jest.genMockFunction()
-    let publish = TestUtils.renderIntoDocument(
-      <ConfigurationPublishVersion
+    const saveChanges = jest.fn()
+    const publish = mount(
+      <ConfigurationPublishVersion intl={intlMaker()}
         saveChanges={saveChanges}/>
     )
-    publish.setPublishTarget('2')()
-    let btns = TestUtils.scryRenderedDOMComponentsWithTag(publish, 'button')
-    TestUtils.Simulate.click(btns[1])
+    publish.instance().setPublishTarget('2')()
+    const btn = publish.find('.save-btn')
+    btn.simulate('click')
     expect(saveChanges.mock.calls.length).toEqual(1)
   })
 })

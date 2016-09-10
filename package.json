@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.57.5",
+  "version": "0.57.10",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -29,6 +29,7 @@
     "jasmine-reporters": "^2.1.1",
     "jest-cli": "^12.0.2",
     "jsdom": "^9.2.1",
+    "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^3.4.2",
     "papaparse": "^4.1.2",
@@ -69,20 +70,21 @@
     "react-bootstrap": "^0.28.2",
     "react-datepicker": "^0.21.0",
     "react-dom": "^0.14.7",
+    "react-intl": "^2.1.3",
     "react-redux": "^4.4.0",
     "react-router": "^2.5.2",
     "react-telephone-input": "^3.5.0",
-    "react-intl": "^2.1.3",
     "redux": "^3.3.1",
     "redux-actions": "^0.9.1",
     "redux-auth-wrapper": "^0.6.0",
     "redux-form": "^5.2.5",
     "redux-promise": "^0.5.1",
-    "topojson": "^1.6.22"
+    "topojson": "^1.6.22",
+    "uniqid": "^4.0.0"
   },
   "scripts": {
     "start": "node dev-server.js",
-    "dist": "webpack -p --progress --config webpack/production.js --production-build",
+    "dist": "webpack -p --progress --config webpack/production.js --production-build --bail",
     "e2e": "./node_modules/.bin/nightwatch; exit 0;",
     "lint:js": "eslint src/ --ext .js,.jsx",
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
@@ -94,11 +96,11 @@
   "jest": {
     "collectCoverage": true,
     "testPathDirs": [
-      "src"
+      "src", "__mocks__"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {
-      "^.*\\.scss$": "<rootDir>/SCSSStub.js"
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
     },
     "setupEnvScriptFile": "<rootDir>/jest-env-setup.js",
     "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup.js",
@@ -117,8 +119,7 @@
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/react-redux",
-      "<rootDir>/node_modules/redux",
-      "<rootDir>/node_modules/redux-form"
+      "<rootDir>/node_modules/redux"
     ]
   },
   "repository": {

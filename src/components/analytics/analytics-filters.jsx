@@ -1,19 +1,20 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List, Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
+
+import PageHeader from '../layout/page-header'
 
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
-import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
-
-import './analytics-filters.scss'
+import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
 const serviceProviderOpts = [
   ['all', 'All'],
@@ -33,11 +34,6 @@ const serviceProviderOpts = [
   ['mobifone', 'Mobifone'],
   ['sk-bb', 'SK BB'],
   ['lg-u', 'LG U+]']
-]
-
-const popOpts = [
-  ['all', 'All'],
-  ['option', 'Option']
 ]
 
 function getToggledValues( currentValues, toggleVal) {
@@ -102,31 +98,43 @@ StatusCodes.propTypes = {
 
 const AnalyticsFilters = (props) => {
   return (
-    <div className='analytics-filters'>
-
+    <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-            Date Range
-          </div>
+        <div className='action'>
+          <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect
-            changeDateRange={(startDate, endDate) => {
-              props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
+            changeDateRange={(startDate, endDate, activeDateRange) => {
+              props.onFilterChange(
+                'dateRange', {startDate: startDate, endDate: endDate}
+              )
+              props.onFilterChange(
+                'dateRangeLabel', activeDateRange
+              )
             }}
             startDate={props.filters.getIn(['dateRange','startDate'])}
             endDate={props.filters.getIn(['dateRange','endDate'])}
             availableRanges={[
               DateRanges.MONTH_TO_DATE,
               DateRanges.LAST_MONTH,
+              DateRanges.THIS_WEEK,
               DateRanges.TODAY,
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
             ]}/>
+          {props.showFilters.includes('comparison') &&
+            <FilterIncludeComparison
+              includeComparison={props.filters.get('includeComparison')}
+              toggleComparison={val => {
+                props.onFilterChange(
+                  'includeComparison', val
+                )
+              }}/>
+          }
         </div>
       }
 
       {props.showFilters.includes('service-provider') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterServiceProvider
           changeServiceProvider={val => {
             props.onFilterChange('serviceProvider', val)
@@ -137,20 +145,8 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('pop') &&
-        <div className='filter'>
-          <FilterPop
-          changePop={val => {
-            props.onFilterChange('pop', val)
-          }}
-          options={popOpts}
-          value={props.filters.get('pop')}
-          />
-        </div>
-      }
-
       {props.showFilters.includes('on-off-net') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterOnOffNet
             onOffNetValues={props.filters.get('onOffNet')}
             toggleFilter={val => {
@@ -164,10 +160,8 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('service-type') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-            Service Types
-          </div>
+        <div className='action'>
+          <h5><FormattedMessage id="portal.analysis.filters.serviceTypes.title"/></h5>
 
           <FilterServiceType
             serviceTypes={props.filters.get('serviceTypes')}
@@ -182,7 +176,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('record-type') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterRecordType
             recordType={props.filters.get('recordType')}
             toggleRecordType={val => {
@@ -195,10 +189,8 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('error-code') &&
-        <div className='filter'>
-          <div className="sidebar-section-header">
-          Status Codes
-          </div>
+        <div className='action'>
+          <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
@@ -207,7 +199,7 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('video') &&
-        <div className='filter'>
+        <div className='action'>
           <FilterVideo
             value={props.filters.get('video')}
             changeVideo={val => {
@@ -216,7 +208,7 @@ const AnalyticsFilters = (props) => {
           />
         </div>
       }
-    </div>
+    </PageHeader>
   )
 }
 

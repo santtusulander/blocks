@@ -11,14 +11,13 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { getContentUrl } from '../util/helpers'
+import { getContentUrl } from '../util/routes'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
-import IconArrowLeft from '../components/icons/icon-arrow-left'
 import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
@@ -34,9 +33,9 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 
-import { getUrl } from '../util/helpers'
+import { getUrl } from '../util/routes'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 
@@ -219,121 +218,116 @@ export class Configuration extends React.Component {
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
 
     return (
-      <PageContainer className="configuration-container">
-        <Content>
-          {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
-          <div className="configuration-header">
-            <PageHeader>
-              <h5><FormattedMessage id="portal.configuration.header.text"/></h5>
-              <div className="content-layout__header">
-                <AccountSelector
-                  as="configuration"
-                  params={this.props.params}
-                  topBarTexts={{}}
-                  onSelect={(tier, value, params) => {
-                    const { brand, account, group } = params, { hostActions } = this.props
-                    hostActions.startFetching()
-                    hostActions.fetchHost(brand, account, group, value).then(() => {
-                      this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
-                    })
-                  }}
-                  drillable={true}>
-                  <div className="btn btn-link dropdown-toggle header-toggle">
-                    <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
-                    <span className="caret"></span>
-                  </div>
-                </AccountSelector>
-                <ButtonToolbar className="pull-right">
-                  <Button className="btn btn-secondary btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                    <IconTrash/>
-                  </Button>
-                  {activeEnvironment === 2 ||
-                    activeEnvironment === 1 ||
-                    !activeEnvironment ?
-                    <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                      <FormattedMessage id="portal.button.publish"/>
-                    </Button>
-                    : ''
-                  }
-                  <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-                    <FormattedMessage id="portal.button.copy"/>
-                  </Button>
-                  {activeEnvironment === 2 || activeEnvironment === 3 ?
-                    <Button bsStyle="primary"
-                      onClick={() => this.changeActiveVersionEnvironment(1)}>
-                      <FormattedMessage id="portal.button.retire"/>
-                    </Button>
-                    : ''
-                  }
-                  <Button bsStyle="primary" onClick={this.toggleVersionModal}
-                    className="versions-btn has-icon">
-                    <div className="icon-holder">
-                      <IconArrowLeft/>
-                    </div>
-                    <FormattedMessage id="portal.button.versions"/>
-                  </Button>
-                </ButtonToolbar>
-              </div>
-              <p className="text-sm content-layout__header__aside">
-                <span className="right-separator">
-                  {activeConfig.get('edge_configuration').get('origin_host_name')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('MMM, D YYYY')}
-                </span>
-                <span className="right-separator">
-                  {deployMoment.format('H:MMa')}
-                </span>
-                {activeConfig.get('configuration_status').get('last_edited_by')}
-              </p>
-            </PageHeader>
+      <Content>
+        {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
+        <PageHeader
+          pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
+          pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+            deployMoment.format('MMM, D YYYY'),
+            deployMoment.format('H:MMa'),
+            activeConfig.get('configuration_status').get('last_edited_by')]}>
+          <AccountSelector
+            as="configuration"
+            params={this.props.params}
+            topBarTexts={{}}
+            onSelect={(tier, value, params) => {
+              const { brand, account, group } = params, { hostActions } = this.props
+              hostActions.startFetching()
+              hostActions.fetchHost(brand, account, group, value).then(() => {
+                this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+              })
+            }}
+            drillable={true}>
+            <div className="btn btn-link dropdown-toggle header-toggle">
+              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+              <span className="caret"></span>
+            </div>
+          </AccountSelector>
+          <ButtonToolbar className="pull-right">
+            <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+              <IconTrash/>
+            </Button>
+            {activeEnvironment === 2 ||
+              activeEnvironment === 1 ||
+              !activeEnvironment ?
+              <Button bsStyle="primary" onClick={this.togglePublishModal}>
+                <FormattedMessage id="portal.button.publish"/>
+              </Button>
+              : null
+            }
+            <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
+              <FormattedMessage id="portal.button.copy"/>
+            </Button>
+            {activeEnvironment === 2 || activeEnvironment === 3 ?
+              <Button bsStyle="primary"
+                onClick={() => this.changeActiveVersionEnvironment(1)}>
+                <FormattedMessage id="portal.button.retire"/>
+              </Button>
+              : null
+            }
+            <Button bsStyle="primary" onClick={this.toggleVersionModal}>
+              <FormattedMessage id="portal.button.versions"/>
+            </Button>
+          </ButtonToolbar>
+        </PageHeader>
 
-            <Nav bsStyle="tabs" activeKey={this.state.activeTab}
-              onSelect={this.activateTab}>
-              <NavItem eventKey={'details'}>
-                <FormattedMessage id="portal.configuration.hostname.text"/>
-              </NavItem>
-              <NavItem eventKey={'defaults'}>
-                <FormattedMessage id="portal.configuration.defaults.text"/>
-              </NavItem>
-              <NavItem eventKey={'policies'}>
-                <FormattedMessage id="portal.configuration.policies.text"/>
-              </NavItem>
-              <NavItem eventKey={'performance'}>
-                <FormattedMessage id="portal.configuration.performance.text"/>
-              </NavItem>
-              <NavItem eventKey={'security'}>
-                <FormattedMessage id="portal.configuration.security.text"/>
-              </NavItem>
-              <NavItem eventKey={'certificates'}>
-                <FormattedMessage id="portal.configuration.certificates.text"/>
-              </NavItem>
-              <NavItem eventKey={'change-log'}>
-                <FormattedMessage id="portal.configuration.changeLog.text"/>
-              </NavItem>
-            </Nav>
-          </div>
-          <div className="container-fluid content-container">
-            {this.state.activeTab === 'details' ?
-              <ConfigurationDetails
-                edgeConfiguration={activeConfig.get('edge_configuration')}
-                changeValue={this.changeValue}/>
-              : null}
+        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+          onSelect={this.activateTab}>
+          <NavItem eventKey={'details'}>
+            <FormattedMessage id="portal.configuration.hostname.text"/>
+          </NavItem>
+          <NavItem eventKey={'defaults'}>
+            <FormattedMessage id="portal.configuration.defaults.text"/>
+          </NavItem>
+          <NavItem eventKey={'policies'}>
+            <FormattedMessage id="portal.configuration.policies.text"/>
+          </NavItem>
+          <NavItem eventKey={'performance'}>
+            <FormattedMessage id="portal.configuration.performance.text"/>
+          </NavItem>
+          <NavItem eventKey={'security'}>
+            <FormattedMessage id="portal.configuration.security.text"/>
+          </NavItem>
+          <NavItem eventKey={'certificates'}>
+            <FormattedMessage id="portal.configuration.certificates.text"/>
+          </NavItem>
+          <NavItem eventKey={'change-log'}>
+            <FormattedMessage id="portal.configuration.changeLog.text"/>
+          </NavItem>
+        </Nav>
 
-            {this.state.activeTab === 'defaults' ?
-              <ConfigurationDefaults
-                config={activeConfig}
-                changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}/>
-              : null}
+        <PageContainer>
+          {this.state.activeTab === 'details' ?
+            <ConfigurationDetails
+              edgeConfiguration={activeConfig.get('edge_configuration')}
+              changeValue={this.changeValue}/>
+            : null}
 
-            {this.state.activeTab === 'policies' ?
-              <ConfigurationPolicies
-                config={activeConfig}
-                changeValue={this.changeValue}
-                saveChanges={this.saveActiveHostChanges}
-                location={this.props.location}/>
-              : null}
+          {this.state.activeTab === 'defaults' ?
+            <ConfigurationDefaults
+              activateMatch={this.props.uiActions.changePolicyActiveMatch}
+              activateRule={this.props.uiActions.changePolicyActiveRule}
+              activateSet={this.props.uiActions.changePolicyActiveSet}
+              activeMatch={this.props.policyActiveMatch}
+              activeRule={this.props.policyActiveRule}
+              activeSet={this.props.policyActiveSet}
+              changeValue={this.changeValue}
+              config={activeConfig}
+              saveChanges={this.saveActiveHostChanges}/>
+            : null}
+
+          {this.state.activeTab === 'policies' ?
+            <ConfigurationPolicies
+              activateMatch={this.props.uiActions.changePolicyActiveMatch}
+              activateRule={this.props.uiActions.changePolicyActiveRule}
+              activateSet={this.props.uiActions.changePolicyActiveSet}
+              activeMatch={this.props.policyActiveMatch}
+              activeRule={this.props.policyActiveRule}
+              activeSet={this.props.policyActiveSet}
+              changeValue={this.changeValue}
+              config={activeConfig}
+              saveChanges={this.saveActiveHostChanges}/>
+            : null}
 
             {this.state.activeTab === 'performance' ?
               <ConfigurationPerformance/>
@@ -350,7 +344,7 @@ export class Configuration extends React.Component {
             {this.state.activeTab === 'change-log' ?
               <ConfigurationChangeLog/>
               : null}
-          </div>
+          </PageContainer>
 
           <ConfigurationDiffBar
             changeValue={this.changeValue}
@@ -362,8 +356,7 @@ export class Configuration extends React.Component {
             saving={this.props.fetching}
             />
 
-        </Content>
-        {this.state.deleteModal && <DeleteModal
+          {this.state.deleteModal && <DeleteModal
           itemToDelete="Property"
           cancel={toggleDelete}
           submit={() => {
@@ -371,6 +364,7 @@ export class Configuration extends React.Component {
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>
         }
+
         {this.state.showPublishModal &&
           <Modal show={true}
             dialogClassName="configuration-sidebar"
@@ -404,7 +398,7 @@ export class Configuration extends React.Component {
                   activeHost={this.props.activeHost}/>
               </Sidebar>
             </Modal>}
-      </PageContainer>
+      </Content>
     );
   }
 }
@@ -419,9 +413,11 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
+  policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
+  policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
+  policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
@@ -437,7 +433,10 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching'),
-    notification: state.ui.get('notification')
+    notification: state.ui.get('notification'),
+    policyActiveMatch: state.ui.get('policyActiveMatch'),
+    policyActiveRule: state.ui.get('policyActiveRule'),
+    policyActiveSet: state.ui.get('policyActiveSet')
   };
 }
 

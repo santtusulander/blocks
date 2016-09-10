@@ -157,7 +157,6 @@ class SupportTabTickets extends React.Component {
           <Col sm={4}>
             <div className="account-support-tickets__filters">
               <UDNButton bsStyle="success"
-                         pageHeaderBtn={true}
                          icon={true}
                          addNew={true}
                          className="pull-right"
