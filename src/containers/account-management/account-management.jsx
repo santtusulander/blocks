@@ -341,6 +341,7 @@ export class AccountManagement extends Component {
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
+        break
       case DELETE_HOST:
         deleteModalProps = {
           itemToDelete: 'Host',

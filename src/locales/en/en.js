@@ -519,6 +519,9 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.roles.text': 'ROLES',
   'portal.accountManagement.accoutnUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
+  'portal.accountManagement.groupPropertiesName.text': 'Name',
+  'portal.accountManagement.groupProperties.text': 'Properties',
+  'portal.accountManagement.noGroupProperties.text': 'No Properties',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
@@ -577,7 +580,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.today': 'Today',
   'portal.constants.date-ranges.yesterday': 'Last Month',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
-  
+
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
