@@ -29,6 +29,7 @@
     "jasmine-reporters": "^2.1.1",
     "jest-cli": "^12.0.2",
     "jsdom": "^9.2.1",
+    "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^3.4.2",
     "papaparse": "^4.1.2",
@@ -83,7 +84,7 @@
   },
   "scripts": {
     "start": "node dev-server.js",
-    "dist": "webpack -p --progress --config webpack/production.js --production-build",
+    "dist": "webpack -p --progress --config webpack/production.js --production-build --bail",
     "e2e": "./node_modules/.bin/nightwatch; exit 0;",
     "lint:js": "eslint src/ --ext .js,.jsx",
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
@@ -93,13 +94,13 @@
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "testPathDirs": [
-      "src"
+      "src", "__mocks__"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {
-      "^.*\\.scss$": "<rootDir>/SCSSStub.js"
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
     },
     "setupEnvScriptFile": "<rootDir>/jest-env-setup.js",
     "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup.js",
@@ -118,8 +119,7 @@
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/react-redux",
-      "<rootDir>/node_modules/redux",
-      "<rootDir>/node_modules/redux-form"
+      "<rootDir>/node_modules/redux"
     ]
   },
   "repository": {

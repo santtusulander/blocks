@@ -6,7 +6,7 @@ import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Nav, Button } from 'react-bootstrap'
 import { getRoute } from '../../routes'
-import { getUrl, getAccountManagementUrlFromParams } from '../../util/helpers'
+import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'

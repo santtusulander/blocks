@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import numeral from 'numeral'
-import topojson from 'topojson'
+import * as topojson from 'topojson'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'

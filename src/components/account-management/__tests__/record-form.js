@@ -1,5 +1,5 @@
 //jest.unmock('../../../containers/dns-edit-form-container');
-jest.unmock('../../../components/account-management/dns-edit-form');
+jest.unmock('../../../components/account-management/record-form');
 
 import React from 'react'
 import { mount, shallow, render } from 'enzyme'

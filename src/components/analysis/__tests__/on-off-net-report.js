@@ -11,8 +11,8 @@ const AnalysisOnOffNetReport = require('../on-off-net-report.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
+const momentFormatMock = jest.fn()
+const numeralFormatMock = jest.fn()
 
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
@@ -40,13 +40,20 @@ const fakeOnOffStatsToday = Immutable.fromJS({
  net_off: {bytes: 456, percent_total: 0.8}
 })
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('AnalysisOnOffNetReport', () => {
   it('should exist', () => {
     let analysisOnOffNetReport = TestUtils.renderIntoDocument(
       <AnalysisOnOffNetReport
         fetching={true}
         onOffStats={fakeOnOffStats}
-        onOffStatsToday={fakeOnOffStatsToday}/>
+        onOffStatsToday={fakeOnOffStatsToday}
+        intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(analysisOnOffNetReport)).toBeTruthy();
   });
@@ -56,7 +63,8 @@ describe('AnalysisOnOffNetReport', () => {
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
-        onOffStatsToday={fakeOnOffStatsToday}/>
+        onOffStatsToday={fakeOnOffStatsToday}
+        intl={intlMaker()}/>
     );
     let trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisOnOffNetReport, 'tr')
     expect(trs.length).toBe(3);
@@ -69,7 +77,8 @@ describe('AnalysisOnOffNetReport', () => {
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
-        onOffStatsToday={fakeOnOffStatsToday}/>
+        onOffStatsToday={fakeOnOffStatsToday}
+        intl={intlMaker()}/>
     );
     expect(numeral.mock.calls.length).toBe(8)
     expect(numeral.mock.calls[0]).toEqual([0.5])

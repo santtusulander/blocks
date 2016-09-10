@@ -11,10 +11,16 @@ const fakeConfig = Immutable.fromJS({
 
 const fakePath = ['foo', 'bar']
 
-describe('DirectoryPath', () => {
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
+describe('FileName', () => {
   it('should exist', () => {
     let fileName = TestUtils.renderIntoDocument(
-      <FileName match={fakeConfig} path={fakePath}/>
+      <FileName match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(fileName)).toBeTruthy();
   })
@@ -22,7 +28,8 @@ describe('DirectoryPath', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let fileName = TestUtils.renderIntoDocument(
-      <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileName, 'textarea')
     inputs[0].value = 'new'
@@ -34,7 +41,8 @@ describe('DirectoryPath', () => {
   it('should update the parameters as select change happens', () => {
     let changeValue = jest.genMockFunction()
     let fileName = TestUtils.renderIntoDocument(
-      <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     expect(fileName.state.activeFilter).toBe('matches')
     fileName.handleSelectChange('activeFilter')('foo')
