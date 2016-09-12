@@ -1,3 +1,20 @@
 {
-  "portal.account.xxx": "value xxx"
+  "portal.account.dnsList.button.addRecord": "Add record",
+  "portal.account.dnsList.header.records": "Records",
+  "portal.account.dnsList.header.hostname": "Hostname",
+  "portal.account.dnsList.header.address": "Adress",
+  "portal.account.dnsList.header.ttl": "Ttl",
+
+  "portal.account.recordForm.label.selectRecordType": "Select Record Type",
+  "portal.account.recordForm.label.hostName": "Host Name",
+  "portal.account.recordForm.placeholder.hostName": "Enter Host Name",
+  "portal.account.recordForm.label.address": "Address",
+  "portal.account.recordForm.placeholder.address": "Enter Address",
+  "portal.account.recordForm.label.prio": "Priority",
+  "portal.account.recordForm.placeholder.prio": "Enter Priority",
+  "portal.account.recordForm.label.ttl": "TTL Value",
+  "portal.account.recordForm.placeholder.prio": "Enter TTL Value",
+
+  "portal.account.domainForm.title.newDomain": "New Domain",
+  "portal.account.domainForm.title.editDomain": "Edit Domain"
 }
