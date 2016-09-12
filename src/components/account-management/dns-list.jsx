@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
 
 import PageContainer from '../../components/layout/page-container'
+import SectionHeader from '../../components/layout/section-header'
 import UDNButton from '../button'
 import ActionLinks from './action-links'
 import TableSorter from '../table-sorter'
@@ -43,34 +44,29 @@ class DNSList extends Component {
       )
     return (
       <PageContainer>
-        <h3 className="account-management-header">
-          <span id="domain-stats">
-            {`${records.length} Records`}
-          </span>
-          <div className='dns-filter-wrapper'>
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder="Search records"
-              value={searchValue}
-              onChange={searchFunc}/>
-            <IsAllowed to={CREATE_RECORD}>
-              <UDNButton
-                id="add-dns-record"
-                bsStyle="success"
-                onClick={onAddEntry}>
-                ADD RECORD
-              </UDNButton>
-            </IsAllowed>
-          </div>
-        </h3>
-        <hr/>
+        <SectionHeader sectionHeaderTitle={<span id="domain-stats">{`${records.length} Records`}</span>}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder="Search records"
+            value={searchValue}
+            onChange={searchFunc}/>
+          <IsAllowed to={CREATE_RECORD}>
+            <UDNButton
+              id="add-dns-record"
+              bsStyle="success"
+              onClick={onAddEntry}>
+              ADD RECORD
+            </UDNButton>
+          </IsAllowed>
+        </SectionHeader>
+
         {recordTypes.sort().forEach((type, index) => {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
-              <div key={index} className='table-container'>
-                <h4>{type} Records</h4>
+              <div key={index}>
+                <SectionHeader sectionSubHeaderTitle={`${type} Records`} />
                 <SortableTable content={getContent(type)}/>
               </div>
             )

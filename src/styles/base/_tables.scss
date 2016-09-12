@@ -4,6 +4,7 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
+  margin-bottom: 30px;
 
   @include print {
     page-break-inside: avoid;
