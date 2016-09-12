@@ -426,7 +426,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="7.4%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -447,7 +447,7 @@ export class AccountManagementAccountUsers extends React.Component {
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  <td>
+                  <td className="nowrap-column">
                     <ActionButtons
                       onEdit={() => {this.editUser(user)}}
                       onDelete={() => this.deleteUser(user.get('email'))} />

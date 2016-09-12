@@ -270,7 +270,7 @@ class AccountManagementAccountGroups extends React.Component {
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="8.3%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -296,7 +296,7 @@ class AccountManagementAccountGroups extends React.Component {
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
                 */}
-                <td>
+                <td className="nowrap-column">
                   <ActionButtons
                     onEdit={() => {this.props.editGroup(group)}}
                     onDelete={() => {this.props.deleteGroup(group)}} />

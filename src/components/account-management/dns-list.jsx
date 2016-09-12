@@ -34,10 +34,10 @@ class DNSList extends Component {
           <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
-          <td>
-          <ActionButtons
-          onEdit={() => onEditEntry(record.id)}
-          onDelete={() => onDeleteEntry(record)}/>
+          <td className="nowrap-column">
+            <ActionButtons
+              onEdit={() => onEditEntry(record.id)}
+              onDelete={() => onDeleteEntry(record)}/>
           </td>
         </tr>
       )
@@ -115,7 +115,7 @@ class SortableTable extends Component {
             <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
             <th width="30%">ADDRESS</th>
             <th width="30%">TTL</th>
-            <th width="8.3%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>

@@ -64,7 +64,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{policy.get('rule_name')}</td>
           <td>{matches.map(match => match.field).join(', ')}</td>
           <td>{sets.map(set => set.setkey).join(', ')}</td>
-          <td>
+          <td className="nowrap-column">
             <ActionButtons
               onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
               onDelete={this.showConfirmation(`${type}_policy`, i)} />
@@ -106,7 +106,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th><FormattedMessage id="portal.policy.edit.rules.policy.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
-              <th width="8.4%"></th>
+              <th width="1%"></th>
             </tr>
           </thead>
           <tbody>

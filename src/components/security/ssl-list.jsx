@@ -22,7 +22,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
-            <th width="8.3%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
                 </td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td>
+                <td className="nowrap-column">
                   <ActionButtons
                     onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
                     onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>

@@ -149,6 +149,11 @@
       margin-top: $sm-bar-height;
     }
   }
+
+
+  .nowrap-column {
+    white-space: nowrap;
+  }
 }
 
 .table-percentage-line {

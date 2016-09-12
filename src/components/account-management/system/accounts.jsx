@@ -214,7 +214,7 @@ class AccountList extends Component {
             <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
             <TableSorter {...sorterProps} column="services" width="23%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
-            <th width="8.3%"/>
+            <th width="1%"/>
           </tr>
           </thead>
           <tbody>
@@ -234,7 +234,7 @@ class AccountList extends Component {
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
-                <td>
+                <td className="nowrap-column">
                   <ActionButtons
                     onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>

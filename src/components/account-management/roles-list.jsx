@@ -105,7 +105,7 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="8.4%"></th>
+              <th width="1%"></th>
             </tr>
           </thead>
 
@@ -140,7 +140,7 @@ class RolesList extends React.Component {
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
-                  <td>
+                  <td className="nowrap-column">
                     <ActionButtons
                     onEdit={() => this.props.onEdit(role.get('id'))}
                     onDelete={() => this.props.onDelete(role.get('id'))}/>
