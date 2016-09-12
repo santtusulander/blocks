@@ -395,12 +395,6 @@ textarea {
     margin-left: 5px;
   }
 
-  @include md {
-    height: $md-btn-height;
-    margin-top: ($md-bar-height - $md-btn-height) / 2;
-    border-radius: $md-btn-height / 2;
-  }
-
   .dark-theme & {
     background-image: url('../assets/icons/dt-icon-search.svg');
   }

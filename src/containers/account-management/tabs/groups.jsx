@@ -11,6 +11,7 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../../components/icons/icon-add'
 import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
@@ -235,8 +236,27 @@ class AccountManagementAccountGroups extends React.Component {
       ],
       []
     ]
+    const groupSize = sortedGroups.size
+    const groupText = ` Group${sortedGroups.size === 1 ? '' : 's'}`
+    const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} hidden)` : ''
+    const finalGroupText = groupSize + groupText + hiddenGroupText
+
     return (
       <PageContainer className="account-management-account-groups">
+        <SectionHeader sectionHeaderTitle={finalGroupText}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder="Search"
+            value={this.state.search}
+            onChange={this.changeSearch} />
+          <Button bsStyle="success" className="btn-icon"
+            onClick={this.addGroup}>
+            <IconAdd />
+          </Button>
+        </SectionHeader>
+
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -251,7 +271,7 @@ class AccountManagementAccountGroups extends React.Component {
               placeholder="Search"
               value={this.state.search}
               onChange={this.changeSearch} />
-            <Button bsStyle="success" className="btn-icon btn-add-new"
+            <Button bsStyle="success" className="btn-icon"
               onClick={this.addGroup}>
               <IconAdd />
             </Button>
