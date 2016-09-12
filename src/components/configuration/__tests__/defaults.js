@@ -1,6 +1,6 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import {shallow, mount} from 'enzyme'
 
 jest.dontMock('../helpers.js')
 jest.dontMock('../defaults.jsx')

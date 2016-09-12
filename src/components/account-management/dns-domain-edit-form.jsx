@@ -33,17 +33,6 @@ const DnsDomainEditForm = (props) => {
       <hr/>
 
       <Input
-        {...email_addr}
-      type="email"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'})}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
-      />
-
-      {email_addr.touched && email_addr.error && <div className='error-msg'>{email_addr.error}</div>}
-
-      <hr/>
-
-      <Input
         {...name_server}
       type="text"
       label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'})}
@@ -51,6 +40,17 @@ const DnsDomainEditForm = (props) => {
       />
 
       {name_server.touched && name_server.error && <div className='error-msg'>{name_server.error}</div>}
+
+      <hr/>
+
+      <Input
+        {...email_addr}
+      type="email"
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'})}
+      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
+      />
+
+      {email_addr.touched && email_addr.error && <div className='error-msg'>{email_addr.error}</div>}
 
       <hr/>
 
