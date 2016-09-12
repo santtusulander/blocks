@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Input, Table, Button, Row, Col } from 'react-bootstrap'
+import { Input, Table, Button } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -236,6 +236,7 @@ class AccountManagementAccountGroups extends React.Component {
       ],
       []
     ]
+
     const groupSize = sortedGroups.size
     const groupText = ` Group${sortedGroups.size === 1 ? '' : 's'}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} hidden)` : ''
@@ -257,26 +258,6 @@ class AccountManagementAccountGroups extends React.Component {
           </Button>
         </SectionHeader>
 
-        <Row className="header-btn-row">
-          <Col sm={6}>
-            <h3>
-              {sortedGroups.size} Group{sortedGroups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
-            </h3>
-          </Col>
-          <Col sm={6} className="text-right">
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={this.changeSearch} />
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.addGroup}>
-              <IconAdd />
-            </Button>
-          </Col>
-        </Row>
         <Table striped={true}>
           <thead>
             <tr>

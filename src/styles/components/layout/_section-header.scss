@@ -1,5 +1,6 @@
 // Section Header Layout
 // ==================
+$section-header-input-width: rem(250px);
 
 .section-header-container {
   padding-bottom: 24px;
@@ -17,6 +18,7 @@
 
   .search-input-group {
     display: inline-block;
+    min-width: $section-header-input-width;
     padding-bottom: 0;
     margin-right: 12px;
     vertical-align: middle;
