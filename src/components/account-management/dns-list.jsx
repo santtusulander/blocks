@@ -96,7 +96,7 @@ export default class DNSList extends Component {
   }
 }
 
-class SortableTable extends Component {
+export class SortableTable extends Component {
   constructor(props) {
     super(props)
     this.state = {

@@ -1,15 +1,16 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 
 jest.unmock('../../../constants/dns-record-types')
 jest.unmock('../dns-list')
-import DNSList from '../dns-list'
+jest.unmock('../../table-sorter')
+import DNSList, { SortableTable } from '../dns-list'
 
 const recs = [
-  {id: 'a', "class": "IN", "type": "MX", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'b', "class": "IN", "type": "A", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'c', "class": "IN", "type": "AAAA", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'd', "class": "IN", "type": "TXT", "name": "cis-gluster-processing-node0.fra.cdx-dev.unifieddeliverynetwork.net", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600}
+  {id: 'a', "class": "IN", "type": "MX", "name": "a", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'b', "class": "IN", "type": "A", "name": "b", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'c', "class": "IN", "type": "AAAA", "name": "c", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 'd', "class": "IN", "type": "TXT", "name": "d", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600}
 ]
 
 describe('DNSList', () => {
@@ -51,5 +52,24 @@ describe('DNSList', () => {
     subject().find('#add-dns-record').simulate('click')
     expect(onAddEntry.mock.calls.length).toBe(1)
   })
+
+})
+
+describe('SortableTable', () => {
+  let subject = null
+  let props = {}
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        content: sortingFunc => sortingFunc(recs).map((item, index) => <tr key={index} id={index}/>)
+      }
+      return mount(<SortableTable {...props}/>)
+    }
+  })
+  it('should exist', () => {
+    expect(subject().length).toBe(1)
+  })
+
+
 
 })
