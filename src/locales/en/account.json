@@ -4,6 +4,7 @@
   "portal.account.dnsList.header.hostname": "Hostname",
   "portal.account.dnsList.header.address": "Adress",
   "portal.account.dnsList.header.ttl": "Ttl",
+  "portal.account.dnsList.placeholder.searchRecords": "Search Records",
 
   "portal.account.recordForm.label.selectRecordType": "Select Record Type",
   "portal.account.recordForm.label.hostName": "Host Name",

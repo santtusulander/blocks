@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
@@ -19,7 +19,7 @@ class DNSList extends Component {
   }
 
   render() {
-    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc } = this.props
+    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc, intl } = this.props
     let tables = []
     let recordsByType = {}
     records.forEach(record => {
@@ -53,7 +53,7 @@ class DNSList extends Component {
               type="text"
               className="search-input"
               groupClassName="search-input-group"
-              placeholder="Search records"
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.placeholder.searchRecords'})}
               value={searchValue}
               onChange={searchFunc}/>
             <IsAllowed to={CREATE_RECORD}>
@@ -129,8 +129,6 @@ class SortableTable extends Component {
 
 SortableTable.propTypes = { content: PropTypes.func }
 
-export default DNSList
-
 DNSList.propTypes = {
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
@@ -139,3 +137,5 @@ DNSList.propTypes = {
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string
 }
+
+export default injectIntl(DNSList)
