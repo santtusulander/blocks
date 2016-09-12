@@ -255,7 +255,7 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 })
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/service-provider${qsBuilder(opts)}`)
+  return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
 })
 
