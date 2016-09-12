@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
@@ -60,7 +61,7 @@ class DNSList extends Component {
                 id="add-dns-record"
                 bsStyle="success"
                 onClick={onAddEntry}>
-                ADD RECORD
+                <FormattedMessage id='portal.account.dnsList.button.addRecord' />
               </UDNButton>
             </IsAllowed>
           </div>
@@ -70,7 +71,7 @@ class DNSList extends Component {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
               <div key={index} className='table-container'>
-                <h4>{type} Records</h4>
+                <h4>{type} <FormattedMessage id='portal.account.dnsList.header.records' /></h4>
                 <SortableTable content={getContent(type)}/>
               </div>
             )
@@ -112,9 +113,9 @@ class SortableTable extends Component {
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
-            <th width="30%">ADDRESS</th>
-            <th width="30%">TTL</th>
+            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.header.hostname' /></TableSorter>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.header.address' /></th>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.header.ttl' /></th>
             <th width="8%"></th>
           </tr>
         </thead>
