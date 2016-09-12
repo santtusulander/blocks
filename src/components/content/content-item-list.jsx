@@ -33,10 +33,12 @@ class ContentItemList extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   measureContainers() {
-    this.setState({
-      byTimeWidth: this.refs.byTimeHolder.clientWidth,
-      byTimeHeight: this.refs.byTimeHolder.clientHeight
-    })
+    if(this.refs.byTimeHolder) {
+      this.setState({
+        byTimeWidth: this.refs.byTimeHolder.clientWidth,
+        byTimeHeight: this.refs.byTimeHolder.clientHeight
+      })
+    }
   }
   render() {
     const datasets = []

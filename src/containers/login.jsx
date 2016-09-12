@@ -3,6 +3,7 @@ import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import { getContentUrl } from '../util/routes'
 
@@ -14,8 +15,6 @@ import * as userActionCreators from '../redux/modules/user'
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 
 export class Login extends React.Component {

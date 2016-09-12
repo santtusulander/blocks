@@ -17,7 +17,7 @@ import {IntlProvider} from 'react-intl';
 
 import './styles/style.scss'
 
-import TRANSLATED_MESSAGES from './locales/en.js'
+import TRANSLATED_MESSAGES from './locales/en/'
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware

@@ -1,8 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, Row, Col, Input } from 'react-bootstrap'
+import { Row, Col, Input } from 'react-bootstrap'
 
-import { AccountManagementHeader } from './account-management-header.jsx'
 import RolesEditForm from './role-edit-form.jsx'
 import ActionLinks from './action-links.jsx'
 
@@ -11,7 +10,7 @@ import ArrayTd from '../array-td/array-td'
 
 import './roles-list.scss';
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -111,14 +110,14 @@ class RolesList extends React.Component {
           </thead>
 
         <tbody>
-            { !sortedRoles.isEmpty() ? sortedRoles.map((role, i) => {
+            {!sortedRoles.isEmpty() ? sortedRoles.map((role, i) => {
               const userCount = this.props.users
                 .filter(user => user.get('roles').contains(role.get('id')))
                 .size
 
               return (
                 <tr className='roles-list-row' key={i}>
-                  <td>
+                  <td className={`name-${i}`}>
                     {role.get('name')}
                   </td>
                   {this.props.permissions.size ?
@@ -136,7 +135,7 @@ class RolesList extends React.Component {
                       role.get('permissions').get('ui').filter(permission => permission),
                       this.props.permissions.get('ui')
                       ).toArray()
-                      ]} />
+                    ]} />
                     : <td>No permissions found</td>}
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
@@ -176,6 +175,7 @@ class RolesList extends React.Component {
 RolesList.displayName  = 'RolesList'
 RolesList.propTypes = {
   editRole: React.PropTypes.object,
+  intl: React.PropTypes.object,
   onAdd: React.PropTypes.func,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,

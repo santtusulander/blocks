@@ -1,7 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-jest.unmock('../record-form.jsx')
-jest.unmock('underscore')
+jest.unmock('../record-form')
 jest.unmock('../../../util/dns-records-helpers')
 jest.unmock('../../../constants/dns-record-types')
 import { RecordForm } from '../record-form.jsx'
