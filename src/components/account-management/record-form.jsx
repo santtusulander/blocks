@@ -14,15 +14,15 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
       {...type}
       disabled={edit}
       options={recordTypes.map(type => [type, type])}
-      label={intl.formatMessage({id: 'portal.account.recordForm.label.selectRecordType'})}
+      label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}
     />
     {shouldShowField('name') &&
       <Input
         {...name}
         disabled={edit}
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.label.hostName'})}
-        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.placeholder.hostName'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.hostName.label'})}
+        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
         addonAfter={`.${domain}`}
         className='input-narrow host-name-input'
       />
@@ -33,8 +33,8 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         {...value}
         disabled={edit}
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.label.address'})}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.placeholder.address'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.address.label'})}
+        placeholder={intl.formatMessage({id: 'portal.account.recordForm.address.placeholder'})}
       />
     }
     {value.touched && value.error && <div className='error-msg'>{value.error}</div>}
@@ -43,8 +43,8 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         {...prio}
         disabled={edit}
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.label.prio'})}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.placeholder.prio'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.prio.label'})}
+        placeholder={intl.formatMessage({id: 'portal.account.placeholder.prio.recordForm'})}
         className='input-narrow priority-input'/>}
       {prio.touched && prio.error && <div className='error-msg'>{prio.error}</div>}
     {shouldShowField('ttl') && <hr/>}
@@ -52,8 +52,8 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
       <Input
         {...ttl}
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.label.ttl'})}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.placeholder.ttl'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.ttl.label'})}
+        placeholder={intl.formatMessage({id: 'portal.account.recordForm.ttl.placeholder'})}
         className='input-narrow ttl-value-input'
         addonAfter='seconds'/>}
     {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}

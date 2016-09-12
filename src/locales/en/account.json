@@ -1,21 +1,21 @@
 {
-  "portal.account.dnsList.button.addRecord": "Add record",
-  "portal.account.dnsList.header.records": "Records",
-  "portal.account.dnsList.header.hostname": "Hostname",
-  "portal.account.dnsList.header.address": "Adress",
-  "portal.account.dnsList.header.ttl": "Ttl",
-  "portal.account.dnsList.placeholder.searchRecords": "Search Records",
+  "portal.account.dnsList.addRecord.button": "Add record",
+  "portal.account.dnsList.records.header": "Records",
+  "portal.account.dnsList.hostname.header": "Hostname",
+  "portal.account.dnsList.address.header": "Adress",
+  "portal.account.dnsList.ttl.header": "Ttl",
+  "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 
-  "portal.account.recordForm.label.selectRecordType": "Select Record Type",
-  "portal.account.recordForm.label.hostName": "Host Name",
-  "portal.account.recordForm.placeholder.hostName": "Enter Host Name",
-  "portal.account.recordForm.label.address": "Address",
-  "portal.account.recordForm.placeholder.address": "Enter Address",
-  "portal.account.recordForm.label.prio": "Priority",
-  "portal.account.recordForm.placeholder.prio": "Enter Priority",
-  "portal.account.recordForm.label.ttl": "TTL Value",
-  "portal.account.recordForm.placeholder.prio": "Enter TTL Value",
+  "portal.account.recordForm.selectRecordType.label": "Select Record Type",
+  "portal.account.recordForm.hostName.label": "Host Name",
+  "portal.account.recordForm.hostName.placeholder": "Enter Host Name",
+  "portal.account.recordForm.address.label": "Address",
+  "portal.account.recordForm.address.placeholder": "Enter Address",
+  "portal.account.recordForm.prio.label": "Priority",
+  "portal.account.recordForm.prio.placeholder": "Enter Priority",
+  "portal.account.recordForm.ttl.label": "TTL Value",
+  "portal.account.recordForm.prio.placeholder": "Enter TTL Value",
 
-  "portal.account.domainForm.title.newDomain": "New Domain",
-  "portal.account.domainForm.title.editDomain": "Edit Domain"
+  "portal.account.domainForm.newDomain.title": "New Domain",
+  "portal.account.domainForm.editDomain.title": "Edit Domain"
 }

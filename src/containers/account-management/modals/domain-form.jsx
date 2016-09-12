@@ -62,7 +62,7 @@ const DnsDomainEditFormContainer = (props) => {
   return (
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
-        <h1>{edit ? <FormattedMessage id='portal.account.domainForm.title.editDomain' /> : <FormattedMessage id='portal.account.domainForm.title.newDomain' />}</h1>
+        <h1>{edit ? <FormattedMessage id='portal.account.domainForm.editDomain.title' /> : <FormattedMessage id='portal.account.domainForm.newDomain.title' />}</h1>
         {edit && <p>{props.fields.name.value}</p>}
       </Modal.Header>
       <Modal.Body>

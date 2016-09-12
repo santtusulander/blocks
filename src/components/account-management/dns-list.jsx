@@ -53,7 +53,7 @@ class DNSList extends Component {
               type="text"
               className="search-input"
               groupClassName="search-input-group"
-              placeholder={intl.formatMessage({id: 'portal.account.dnsList.placeholder.searchRecords'})}
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
               value={searchValue}
               onChange={searchFunc}/>
             <IsAllowed to={CREATE_RECORD}>
@@ -61,7 +61,7 @@ class DNSList extends Component {
                 id="add-dns-record"
                 bsStyle="success"
                 onClick={onAddEntry}>
-                <FormattedMessage id='portal.account.dnsList.button.addRecord' />
+                <FormattedMessage id='portal.account.dnsList.addRecord.button' />
               </UDNButton>
             </IsAllowed>
           </div>
@@ -71,7 +71,7 @@ class DNSList extends Component {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
               <div key={index} className='table-container'>
-                <h4>{type} <FormattedMessage id='portal.account.dnsList.header.records' /></h4>
+                <h4>{type} <FormattedMessage id='portal.account.dnsList.records.header' /></h4>
                 <SortableTable content={getContent(type)}/>
               </div>
             )
@@ -113,9 +113,9 @@ class SortableTable extends Component {
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.header.hostname' /></TableSorter>
-            <th width="30%"><FormattedMessage id='portal.account.dnsList.header.address' /></th>
-            <th width="30%"><FormattedMessage id='portal.account.dnsList.header.ttl' /></th>
+            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
             <th width="8%"></th>
           </tr>
         </thead>
