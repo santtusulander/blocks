@@ -7,10 +7,10 @@ jest.unmock('../../table-sorter')
 import DNSList, { SortableTable } from '../dns-list'
 
 const recs = [
-  {id: 'a', "class": "IN", "type": "MX", "name": "a", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'b', "class": "IN", "type": "A", "name": "b", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'c', "class": "IN", "type": "AAAA", "name": "c", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
-  {id: 'd', "class": "IN", "type": "TXT", "name": "d", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600}
+  {id: 1, "class": "IN", "type": "MX", "name": "d", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 2, "class": "IN", "type": "A", "name": "a", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 3, "class": "IN", "type": "AAAA", "name": "b", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
+  {id: 4, "class": "IN", "type": "TXT", "name": "c", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600}
 ]
 
 describe('DNSList', () => {
@@ -61,15 +61,25 @@ describe('SortableTable', () => {
   beforeEach(() => {
     subject = () => {
       props = {
-        content: sortingFunc => sortingFunc(recs).map((item, index) => <tr key={index} id={index}/>)
+        content: sortingFunc => sortingFunc(recs).map((item, index) => <tr id={`${item.name}-${index}`}/>)
       }
       return mount(<SortableTable {...props}/>)
     }
   })
+
   it('should exist', () => {
     expect(subject().length).toBe(1)
   })
 
+  it('should change sortDirection on clicking sortable column header', () => {
+    const component = subject()
+    component.find('a').simulate('click')
+    expect(component.state('sortDirection')).toBe(-1)
+  })
+
+  it('should render records alphabetically, in ascending order', () => {
+    expect(subject().find('#a-0').length).toBe(1)
+  })
 
 
 })
