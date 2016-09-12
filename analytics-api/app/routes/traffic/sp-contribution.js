@@ -3,10 +3,10 @@
 require('express-jsend');
 let log       = require('../../logger');
 let validator = require('../../validator');
-let testData  = require('./service-provider-data');
+let testData  = require('./sp-contribution-data');
 
 function routeTrafficServiceProvider(req, res) {
-  log.info('Getting traffic/service-provider');
+  log.info('Getting traffic/sp-contribution');
   log.debug('query params:', req.query);
 
   let params = req.query;
