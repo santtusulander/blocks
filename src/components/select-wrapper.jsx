@@ -2,15 +2,26 @@ import React, { PropTypes } from 'react';
 
 import Select from './select.jsx'
 
-const SelectWrapper = ({ numericValues, className, onChange, disabled, options, value }) =>
-      <Select
-        numericValues={numericValues}
-        disabled={disabled || false}
-        className={className}
-        onSelect={e => onChange(e)}
-        options={options}
-        value={value}
-      />
+const SelectWrapper = ({ numericValues, className, onChange, disabled, options, value, label }) => {
+  const select = <Select
+    numericValues={numericValues}
+    disabled={disabled || false}
+    className={className}
+    onSelect={e => onChange(e)}
+    options={options}
+    value={value}
+  />
+
+  return (
+    label && label !== '' ?
+      <div className='form-group'>
+        <label className='control-label dropdown-label'>{label}</label>
+      {select}
+      </div>
+      :
+    {select}
+  )
+}
 
 SelectWrapper.displayName = 'SelectWrapper'
 SelectWrapper.propTypes = {
