@@ -21,7 +21,7 @@ describe('UserList', () => {
   it('should call delete function', () => {
     const deleteFn = jest.genMockFunction()
     const links = shallow(<ActionLinks onDelete={() => deleteFn(2)}/>)
-    links.find('#delete-button').simulate('click')
+    links.find('.btn-link').simulate('click')
     expect(deleteFn.mock.calls[0][0]).toBe(2)
   })
 
