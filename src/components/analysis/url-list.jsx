@@ -81,7 +81,7 @@ class AnalysisURLList extends React.Component {
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="status">
-                STATUS
+                <FormattedMessage id="portal.analytics.urlList.status.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="url">
                 <FormattedMessage id="portal.analytics.urlList.url.text"/>
