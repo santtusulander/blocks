@@ -213,7 +213,6 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-
     const inlineAddInputs = [
       [
         {
@@ -236,7 +235,6 @@ class AccountManagementAccountGroups extends React.Component {
       ],
       []
     ]
-
     const groupSize = sortedGroups.size
     const groupText = ` Group${sortedGroups.size === 1 ? '' : 's'}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} hidden)` : ''
@@ -252,8 +250,7 @@ class AccountManagementAccountGroups extends React.Component {
             placeholder="Search"
             value={this.state.search}
             onChange={this.changeSearch} />
-          <Button bsStyle="success" className="btn-icon"
-            onClick={this.addGroup}>
+          <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
             <IconAdd />
           </Button>
         </SectionHeader>
