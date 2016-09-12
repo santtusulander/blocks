@@ -4,6 +4,7 @@ import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
+import PageContainer from '../../../components/layout/page-container'
 // import SelectWrapper from '../../select-wrapper.jsx'
 import CheckboxArray from '../../checkboxes.jsx'
 import UDNButton from '../../button'
@@ -110,7 +111,7 @@ class AccountManagementAccountDetails extends React.Component {
     const { fields: { accountName, accountType, services } } = this.props
     const checkBoxes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
     return (
-      <div className="container-fluid content-container account-management-account-details">
+      <PageContainer className="account-management-account-details">
         <h2><FormattedMessage id="portal.account.manage.account.title"/></h2>
         <form className='form-horizontal'>
 
@@ -247,7 +248,7 @@ class AccountManagementAccountDetails extends React.Component {
             </UDNButton>
           </ButtonToolbar>
         </form>
-      </div>
+      </PageContainer>
     )
   }
 }

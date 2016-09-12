@@ -6,127 +6,59 @@ import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
+import { getActiveMatchSetForm } from './helpers'
 
-import MatchesSelection from './matches-selection'
-import ActionsSelection from './actions-selection'
-
-import ConfigurationMatchMimeType from './matches/mime-type'
-import ConfigurationMatchFileExtension from './matches/file-extension'
-import ConfigurationMatchFileName from './matches/file-name'
-import ConfigurationMatchIpAddress from './matches/ip-address'
-import ConfigurationMatcher from './matches/matcher'
-
-import ConfigurationActionCache from './actions/cache'
-import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
-import ConfigurationActionRedirection from './actions/redirection'
-import ConfigurationActionOriginHostname from './actions/origin-hostname'
-import ConfigurationActionCompression from './actions/compression'
-import ConfigurationActionPath from './actions/path'
-import ConfigurationActionQueryString from './actions/query-string'
-import ConfigurationActionHeader from './actions/header'
-import ConfigurationActionRemoveVary from './actions/remove-vary'
-import ConfigurationActionAllowBlock from './actions/allow-block'
-import ConfigurationActionPostSupport from './actions/post-support'
-import ConfigurationActionCors from './actions/cors'
-
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeMatchPath: null,
-      activeRulePath: null,
-      activeSetPath: null
+      isEditingRule: true
     }
 
     this.addRule = this.addRule.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
-    this.clearActiveRule = this.clearActiveRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleRightColClose = this.handleRightColClose.bind(this)
     this.handleSave = this.handleSave.bind(this)
+    this.handleHide = this.handleHide.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
-    this.activateMatch = this.activateMatch.bind(this)
-    this.activateRule = this.activateRule.bind(this)
-    this.activateSet = this.activateSet.bind(this)
-    this.clearActiveMatchSet = this.clearActiveMatchSet.bind(this)
   }
   addRule(e) {
     e.preventDefault()
+    this.setState({ isEditingRule: false })
     const reqPolicies = this.props.config.get('request_policy').get('policy_rules').push(Immutable.fromJS(
       {match: {field: null, cases: [['',[]]]}}
     ))
     this.props.changeValue(['request_policy', 'policy_rules'], reqPolicies)
-    this.setState({
-      activeMatchPath: ['request_policy', 'policy_rules', reqPolicies.size - 1, 'match'],
-      activeRulePath: ['request_policy', 'policy_rules', reqPolicies.size - 1],
-      activeSetPath: null
-    })
+    this.props.activateRule(['request_policy', 'policy_rules', reqPolicies.size - 1])
+    this.props.activateMatch(['request_policy', 'policy_rules', reqPolicies.size - 1, 'match'])
   }
   deleteRule(policyType, index) {
     const newPolicies = this.props.config.get(policyType).get('policy_rules').splice(index, 1)
     this.props.changeValue([policyType, 'policy_rules'], newPolicies)
   }
-  clearActiveRule() {
-    this.setState({
-      activeMatchPath: null,
-      activeRulePath: null,
-      activeSetPath: null
-    })
-  }
   handleChange(path) {
     return value => this.props.changeValue(path, value)
-  }
-  handleRightColClose() {
-    this.setState({
-      activeMatchPath: null,
-      activeSetPath: null
-    })
   }
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges()
   }
   changeActiveRuleType(type) {
-    let rulePath = this.state.activeRulePath;
+    let rulePath = this.props.activeRule
     if(type === 'request') {
-      rulePath[0] = 'request_policy'
+      rulePath = rulePath.set(0, 'request_policy')
     }
     else if(type === 'response') {
-      rulePath[0] = 'response_policy'
+      rulePath = rulePath.set(0, 'response_policy')
     }
-    this.setState({
-      activeMatchPath: null,
-      activeRulePath: rulePath,
-      activeSetPath: null
-    })
+    this.props.activateRule(rulePath)
   }
-  activateRule(path) {
-    this.setState({
-      activeMatchPath: null,
-      activeRulePath: path,
-      activeSetPath: null
-    })
-  }
-  activateMatch(path) {
-    this.setState({
-      activeMatchPath: path,
-      activeSetPath: null
-    })
-  }
-  activateSet(path) {
-    this.setState({
-      activeMatchPath: null,
-      activeSetPath: path
-    })
-  }
-  clearActiveMatchSet() {
-    this.setState({
-      activeMatchPath: null,
-      activeSetPath: null
-    })
+  handleHide(){
+    this.setState({ isEditingRule: true })
+    this.props.activateRule(null)
   }
   render() {
     let config = this.props.config;
@@ -135,116 +67,17 @@ class ConfigurationPolicies extends React.Component {
         <div className="container">Loading...</div>
       )
     }
-    let activeEditForm = null
-    if(this.state.activeMatchPath) {
-      const activeMatch = this.props.config.getIn(this.state.activeMatchPath)
-      const matcherProps = {
-        changeValue: this.props.changeValue,
-        close: this.clearActiveMatchSet,
-        match: activeMatch,
-        path: this.state.activeMatchPath
-      }
-      switch(activeMatch.get('field')) {
-        case 'request_header':
-          activeEditForm = (
-            <ConfigurationMatcher
-              contains={true}
-              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
-              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.name.text'})}
-              {...matcherProps}/>
-          )
-          break
-        case 'request_path':
-          activeEditForm = (
-            <ConfigurationMatcher
-              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
-              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
-              {...matcherProps}/>
-          )
-          break
-        case 'request_host':
-          activeEditForm = (
-            <ConfigurationMatcher
-              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
-              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
-              {...matcherProps}/>
-          )
-          break
-        case 'request_cookie':
-          activeEditForm = (
-            <ConfigurationMatcher
-              contains={true}
-              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
-              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
-              {...matcherProps}/>
-          )
-          break
-        case 'request_query':
-          activeEditForm = (
-            <ConfigurationMatcher
-              contains={true}
-              description={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
-              name={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
-              {...matcherProps}/>
-          )
-          break
-        default:
-          activeEditForm = (
-            <MatchesSelection
-              path={this.state.activeMatchPath}
-              changeValue={this.props.changeValue}/>
-          )
-          break
-        // <ConfigurationMatchMimeType {...matcherProps}/>
-        // <ConfigurationMatchFileExtension {...matcherProps}/>
-        // <ConfigurationMatchFileName {...matcherProps}/>
-        // <ConfigurationMatchIpAddress {...matcherProps}/>
-      }
+    const activeEditFormActions = {
+      changeValue: this.props.changeValue,
+      formatMessage: this.props.intl.formatMessage,
+      activateSet: this.props.activateSet
     }
-    if(this.state.activeSetPath) {
-      const activeSet = this.props.config.getIn(this.state.activeSetPath)
-      const setterProps = {
-        changeValue: this.props.changeValue,
-        close: this.clearActiveMatchSet,
-        path: this.state.activeSetPath,
-        set: activeSet
-      }
-      switch(this.state.activeSetPath.slice(-1)[0]) {
-        case 'cache_name':
-          activeEditForm = (
-            <ConfigurationActionCacheKeyQueryString {...setterProps}/>
-          )
-          break
-        case 'cache_control':
-          activeEditForm = (
-            <ConfigurationActionCache {...setterProps}/>
-          )
-          break
-        case 'header':
-          activeEditForm = (
-            <ConfigurationActionHeader {...setterProps}/>
-          )
-          break
-        default:
-          activeEditForm = (
-            <ActionsSelection
-              activateSet={this.activateSet}
-              config={this.props.config}
-              path={this.state.activeSetPath}
-              changeValue={this.props.changeValue}/>
-          )
-          break
-        // <ConfigurationActionRedirection {...setterProps}/>
-        // <ConfigurationActionOriginHostname {...setterProps}/>
-        // <ConfigurationActionCompression {...setterProps}/>
-        // <ConfigurationActionPath {...setterProps}/>
-        // <ConfigurationActionQueryString {...setterProps}/>
-        // <ConfigurationActionRemoveVary {...setterProps}/>
-        // <ConfigurationActionAllowBlock {...setterProps}/>
-        // <ConfigurationActionPostSupport {...setterProps}/>
-        // <ConfigurationActionCors {...setterProps}/>
-      }
-    }
+    const activeEditForm = getActiveMatchSetForm(
+      this.props.activeMatch,
+      this.props.activeSet,
+      config,
+      activeEditFormActions
+    )
     return (
       <div className="configuration-policies">
 
@@ -262,26 +95,27 @@ class ConfigurationPolicies extends React.Component {
         <ConfigurationPolicyRules
           requestPolicies={config.getIn(['request_policy','policy_rules'])}
           responsePolicies={config.getIn(['response_policy','policy_rules'])}
-          activateRule={this.activateRule}
+          activateRule={this.props.activateRule}
           deleteRule={this.deleteRule}/>
-        {this.state.activeRulePath ?
+        {this.props.activeRule ?
           <ConfigurationSidebar
             rightColVisible={!!activeEditForm}
-            handleRightColClose={this.handleRightColClose}
-            onHide={this.clearActiveRule}
+            handleRightColClose={()=>this.props.activateMatch(null)}
+            onHide={()=>this.props.activateRule(null)}
             rightColContent={activeEditForm}>
             <ConfigurationPolicyRuleEdit
-              activateMatch={this.activateMatch}
-              activateSet={this.activateSet}
-              activeMatchPath={this.state.activeMatchPath}
-              activeSetPath={this.state.activeSetPath}
+              activateMatch={this.props.activateMatch}
+              activateSet={this.props.activateSet}
+              activeMatchPath={this.props.activeMatch}
+              activeSetPath={this.props.activeSet}
               changeValue={this.props.changeValue}
-              config={this.props.config}
-              rule={config.getIn(this.state.activeRulePath)}
-              rulePath={this.state.activeRulePath}
+              config={config}
+              rule={config.getIn(this.props.activeRule)}
+              rulePath={this.props.activeRule}
               changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={this.clearActiveRule}
-              location={this.props.location}/>
+              hideAction={this.handleHide}
+              isEditingRule={this.state.isEditingRule}
+            />
           </ConfigurationSidebar>
         : ''}
 
@@ -292,9 +126,15 @@ class ConfigurationPolicies extends React.Component {
 
 ConfigurationPolicies.displayName = 'ConfigurationPolicies'
 ConfigurationPolicies.propTypes = {
+  activateMatch: React.PropTypes.func,
+  activateRule: React.PropTypes.func,
+  activateSet: React.PropTypes.func,
+  activeMatch: React.PropTypes.instanceOf(Immutable.List),
+  activeRule: React.PropTypes.instanceOf(Immutable.List),
+  activeSet: React.PropTypes.instanceOf(Immutable.List),
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  location: React.PropTypes.object,
+  intl: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }
 

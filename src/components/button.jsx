@@ -14,13 +14,11 @@ ButtonWrapper.propTypes = {
   hidden: PropTypes.bool,
   icon: PropTypes.bool,
   outLine: PropTypes.bool,
-  pageHeaderBtn: PropTypes.bool,
   toggleView: PropTypes.bool
 }
 
 function createButtonClassName(props){
   return classNames({
-    'page-header-button': props.pageHeaderBtn,
     'btn-outline': props.outLine,
     'btn-icon': props.icon,
     'btn-add-new': props.addNew,
@@ -31,4 +29,3 @@ function createButtonClassName(props){
 }
 
 export default ButtonWrapper
-

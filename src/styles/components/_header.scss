@@ -1,11 +1,30 @@
 // Header
 // ======
+$dt-header-bg-color: #203149;
+$lt-header-bg-color: $white;
+$navbar-right-size: rem(30px);
+$navbar-right-vertical-margin: rem(9px);
+$navbar-right-horizontal-margin: rem(6px);
+$navbar-right-margin: rem(12px);
+$header-seach-vertical-padding: rem(6px);
+$header-seach-right-padding: rem(12px);
+$header-seach-left-padding: rem(30px);
 
 .header {
   height: $header-total-height;
   min-width: 1024px;
   font-size: 14px;
   border: 0;
+
+  .dark-theme & {
+    background-color: $dt-header-bg-color;
+    border-bottom: 1px solid $black;
+  }
+
+  .light-theme & {
+    background-color: $lt-header-bg-color;
+    border-bottom: 1px solid $silver-80;
+  }
 
   &__content {
     display: flex;
@@ -36,7 +55,7 @@
 
     .active-account-name {
       padding: 0 20px 0 30px;
-      margin: 14.5px 20px 14.5px 0;
+      margin: 11.5px 20px 11.5px 0;
       font-weight: bold;
       border-right: 1px solid $silver-80;
     }
@@ -49,10 +68,6 @@
     padding-left: 0 !important;
     margin-left: 0 !important;
     flex: 1;
-
-    @include md {
-      height: $md-header-total-height - $header-gradient-height;
-    }
   }
 
   &__right {
@@ -73,16 +88,16 @@
 
       .dropdown-toggle {
         font-weight: bold;
+
+        &:hover {
+          color: rgba($pale-blue, 0.8);
+        }
       }
     }
   }
 
   &__breadcrumb {
     overflow: hidden;
-  }
-
-  @include md {
-    height: $md-header-total-height;
   }
 
   @include print {
@@ -104,39 +119,153 @@
     }
   }
 
-  .dark-theme & {
-    background-color: $dt-header-background-color;
-    border-bottom: 1px solid $black;
-  }
+  .navbar-right {
+    .btn-header,
+    .btn-user-menu {
+      width: $navbar-right-size;
+      height: $navbar-right-size;
+      margin: $navbar-right-vertical-margin $navbar-right-horizontal-margin;
 
-  .light-theme & {
-    background-color: $silver-20;
-    border-bottom: 1px solid $silver-80;
-  }
+      &:hover,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        transition: all 0.3s;
 
-  .form-control {
-    height: $header-btn-height;
-    padding: 10px 0 10px 30px;
-    margin-top: ($header-height - $header-btn-height) / 2;
-    margin-right: 8px;
-    margin-bottom: ($header-height - $header-btn-height) / 2;
-    margin-left: 8px;
-    font-size: 12px;
-    border-radius: $header-btn-height / 2;
+        .icon {
+          transition: all 0.3s;
+        }
+      }
 
-    @include md {
-      height: $md-header-btn-height;
-      margin-top: ($md-header-height - $md-header-btn-height) / 2;
-      margin-bottom: ($md-header-height - $md-header-btn-height) / 2;
-      border-radius: $md-header-btn-height / 2;
+      &:focus {
+        box-shadow: 0 0 0 2px $pale-blue;
+      }
     }
 
-    &.header-search-input {
+    .btn-header {
+      background-color: rgba($black, 0.2);
+
+      .dark-theme & {
+        &:hover {
+          background-color: rgba($black, 0.4);
+
+          .icon {
+            fill: $pale-blue;
+          }
+        }
+
+        &:active,
+        &.active,
+        &:active:hover,
+        &.active:focus {
+          background-color: $black;
+
+          .icon {
+            fill: $pale-blue;
+          }
+        }
+      }
+
+      .light-theme & {
+        &:hover {
+          background-color: rgba($black, 0.4);
+        }
+
+        &:active,
+        &.active,
+        &:active:hover,
+        &.active:focus {
+          background-color: $lt-text-color;
+        }
+      }
+
+      &.btn-alerts {
+        position: relative;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+
+
+        .btn-alerts-indicator {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+
+          .dark-theme &,
+          .light-theme & {
+            color: $dt-text-color;
+            background: $red;
+          }
+        }
+      }
+
+      &.btn-help {
+        svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+
+    .btn-user-menu {
+      margin-right: $navbar-right-margin;
+      overflow: hidden;
+      background: url('../assets/img/img-user.jpg') center center no-repeat;
+      background-size: cover;
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .btn-user-menu,
+    .open .btn-user-menu {
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        box-shadow: 0 0 0 2px $pale-blue;
+      }
+    }
+
+    .open .btn-user-menu {
+      box-shadow: 0 0 0 2px $pale-blue;
+    }
+
+    .header-search-input {
       width: 156px;
+      height: $navbar-right-size;
+      padding: $header-seach-vertical-padding $header-seach-right-padding $header-seach-vertical-padding $header-seach-left-padding;
+      margin: $navbar-right-vertical-margin $navbar-right-horizontal-margin;
+      font-size: 12px;
+      border-radius: $navbar-right-size / 2;
+
+      .dark-theme &,
+      .light-theme & {
+        background-position: 12px center;
+        background-repeat: no-repeat;
+        background-size: 14px;
+
+        &:focus,
+        &:active {
+          box-shadow: inset 0 0 0 2px $pale-blue;
+        }
+      }
 
       .dark-theme & {
         color: $dt-text-color;
         background-color: rgba($black, 0.2);
+        background-image: url('../assets/icons/dt-icon-search.svg');
 
         &::placeholder {
           color: rgba($dt-text-color, 0.3);
@@ -146,27 +275,16 @@
       .light-theme & {
         color: $lt-text-color;
         background-color: transparent;
+        background-image: url('../assets/icons/lt-icon-search.svg');
         box-shadow: inset 0 0 0 1px $silver-80;
-
-        &:focus,
-        &:active {
-          box-shadow: inset 0 0 0 1px $white;
-        }
 
         &::placeholder {
           color: $lt-text-color;
         }
       }
     }
-
-    .dark-theme &,
-    .light-theme & {
-      background-image: url('../assets/icons/dt-icon-search.svg');
-      background-position: 10px center;
-      background-repeat: no-repeat;
-      background-size: 15px 15px;
-    }
   }
+
 
   &__gradient {
     height: $header-gradient-height;

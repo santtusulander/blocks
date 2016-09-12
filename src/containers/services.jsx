@@ -19,18 +19,16 @@ export class Services extends React.Component {
     const { accounts, fetchAccount, activeAccount } = this.props;
 
     return (
-      <PageContainer className="account-management">
-        <div className="account-management-system-users">
-          <ServicesPageHeader
-            params={this.props.params}
-            accounts={accounts}
-            activeAccount={activeAccount.get ('name')}
-            fetchAccount={fetchAccount}/>
-          {/*Not in 0.8.1*/}
-          {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
-          <Content className="tab-bodies">Coming soon!</Content>
-        </div>
-      </PageContainer>
+      <Content>
+        <ServicesPageHeader
+          params={this.props.params}
+          accounts={accounts}
+          activeAccount={activeAccount.get ('name')}
+          fetchAccount={fetchAccount}/>
+        {/*Not in 0.8.1*/}
+        {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
+        <p className='text-center'>Coming soon!</p>
+      </Content>
     )
   }
 }

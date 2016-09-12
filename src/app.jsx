@@ -10,14 +10,14 @@ import { Button } from 'react-bootstrap'
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
-import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
+import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
 
 import {IntlProvider} from 'react-intl';
 
 import './styles/style.scss'
 
-import TRANSLATED_MESSAGES from './locales/en.js'
+import TRANSLATED_MESSAGES from './locales/en/'
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware
@@ -42,7 +42,8 @@ axios.interceptors.response.use(function (response) {
       if(!location.href.includes('/login')
         && !location.href.includes('/set-password')
         && !location.href.includes('/forgot-password')) {
-        location.href='/login'
+        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
+        browserHistory.push('/login')
       }
     }
     else if (status === 403) {

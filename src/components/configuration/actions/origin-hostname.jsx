@@ -99,7 +99,7 @@ class OriginHostname extends React.Component {
 OriginHostname.displayName = 'OriginHostname'
 OriginHostname.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.array,
+  path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 

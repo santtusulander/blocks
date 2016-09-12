@@ -15,6 +15,7 @@ import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
+import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
 const serviceProviderOpts = [
   ['all', 'All'],
@@ -108,18 +109,33 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect
-            changeDateRange={(startDate, endDate) => {
-              props.onFilterChange('dateRange', {startDate: startDate, endDate: endDate})
+            changeDateRange={(startDate, endDate, activeDateRange) => {
+              props.onFilterChange(
+                'dateRange', {startDate: startDate, endDate: endDate}
+              )
+              props.onFilterChange(
+                'dateRangeLabel', activeDateRange
+              )
             }}
             startDate={props.filters.getIn(['dateRange','startDate'])}
             endDate={props.filters.getIn(['dateRange','endDate'])}
             availableRanges={[
               DateRanges.MONTH_TO_DATE,
               DateRanges.LAST_MONTH,
+              DateRanges.THIS_WEEK,
               DateRanges.TODAY,
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
             ]}/>
+          {props.showFilters.includes('comparison') &&
+            <FilterIncludeComparison
+              includeComparison={props.filters.get('includeComparison')}
+              toggleComparison={val => {
+                props.onFilterChange(
+                  'includeComparison', val
+                )
+              }}/>
+          }
         </div>
       }
 

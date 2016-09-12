@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/helpers.js'
+import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
@@ -15,7 +15,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 export class Groups extends React.Component {
   constructor(props) {

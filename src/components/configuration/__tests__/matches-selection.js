@@ -1,14 +1,13 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.dontMock('../matches-selection.jsx')
 const MatchesSelection = require('../matches-selection.jsx')
 
 describe('ConditionSelection', () => {
   it('should exist', () => {
-    let matchesSelection = TestUtils.renderIntoDocument(
-      <MatchesSelection />
-    );
-    expect(TestUtils.isCompositeComponent(matchesSelection)).toBeTruthy();
+    const matchesSelection = shallow(<MatchesSelection />)
+    expect(matchesSelection).toBeDefined()
   });
 });

@@ -13,7 +13,7 @@ describe('EditGroup', () => {
     expect(TestUtils.isCompositeComponent(editGroup)).toBeTruthy();
   })
   it('should save changes', () => {
-    let saveChanges = jest.genMockFunction()
+    let saveChanges = jest.fn()
     let editGroup = TestUtils.renderIntoDocument(
       <EditGroup group={Immutable.Map()} saveChanges={saveChanges}/>
     )
@@ -22,7 +22,7 @@ describe('EditGroup', () => {
     expect(saveChanges.mock.calls.length).toEqual(1)
   })
   it('should update the group as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let editGroup = TestUtils.renderIntoDocument(
       <EditGroup group={Immutable.Map()} changeValue={changeValue}/>
     )

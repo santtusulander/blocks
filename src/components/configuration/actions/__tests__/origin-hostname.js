@@ -4,10 +4,16 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../origin-hostname.jsx')
 const OriginHostname = require('../origin-hostname.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('OriginHostname', () => {
   it('should exist', () => {
     let originHostname = TestUtils.renderIntoDocument(
-      <OriginHostname />
+      <OriginHostname intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(originHostname)).toBeTruthy();
   })
@@ -15,7 +21,7 @@ describe('OriginHostname', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let originHostname = TestUtils.renderIntoDocument(
-      <OriginHostname changeValue={changeValue}/>
+      <OriginHostname changeValue={changeValue} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(originHostname, 'input')
     inputs[0].value = 'new'

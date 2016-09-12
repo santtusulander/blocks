@@ -1,22 +1,10 @@
 // Page Container Layout
 // =====================
 
-.page-container-layout {
+$page-container-vertical-padding: rem(42px);
+$page-container-horizontal-padding: rem(30px);
+
+.page-container {
   position: relative;
-
-  &.has-sidebar {
-    padding-left: $sidebar-width;
-
-    @include md {
-      padding-left: $md-sidebar-width;
-    }
-
-    @include sm {
-      padding-left: $sm-sidebar-width;
-    }
-
-    @include print {
-      padding-left: 0;
-    }
-  }
+  padding: $page-container-vertical-padding $page-container-horizontal-padding;
 }
