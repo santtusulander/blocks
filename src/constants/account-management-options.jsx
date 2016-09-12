@@ -21,7 +21,9 @@ export const BRANDS = [
 export const ROLES_MAPPING = [
   { id: 1, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
   { id: 2, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
-  { id: 3, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
+  { id: 3, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { id: 4, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
+  { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
 ]
 
 export const NAME_VALIDATION_REGEXP = '^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$'
