@@ -25,7 +25,8 @@ jest.mock('../../routes', () => {
 function uiActionsMaker() {
   return {
     changeTheme: jest.fn(),
-    changeNotification: jest.fn()
+    changeNotification: jest.fn(),
+    setLoginUrl: jest.fn()
   }
 }
 
@@ -116,26 +117,29 @@ describe('Main', () => {
   let rolesActions = null
   let accountActions = null
   let groupActions = null
+  let uiActions = null
 
   beforeEach(() => {
-    subject = (error, loggedIn) => {
+    subject = (error, loggedIn, currentUser) => {
       router = fakeRouterMaker()
       rolesActions = rolesActionsMaker()
       accountActions = accountActionsMaker()
       groupActions = groupActionsMaker()
+      uiActions = uiActionsMaker()
       userActions = userActionsMaker(
         () => {},
         { error, payload: { username: 'aa' } }
       )
       props = {
         location: fakeLocation,
-        uiActions: uiActionsMaker(),
+        uiActions,
         accounts: fromJS(['asda']),
         accountActions,
         groupActions,
         userActions,
         rolesActions,
         router,
+        currentUser: fromJS(currentUser) || fromJS({}),
         user: fromJS({ loggedIn }),
         properties: fakeProperties,
         activeAccount: fakeActiveAccount,
@@ -162,6 +166,28 @@ describe('Main', () => {
     subject()
     expect(rolesActions.fetchRoles.mock.calls.length).toBe(1);
     expect(userActions.fetchUser.mock.calls.length).toBe(1);
+  });
+
+  it('should set login url and redirect to login if token check not ok', () => {
+    subject(true)
+    expect(uiActions.setLoginUrl.mock.calls.length).toBe(1);
+    expect(router.push.mock.calls.length).toBe(1);
+  });
+
+  it('should show footer if logged in and not fetching', () => {
+    expect(subject(null, true, { a: 'b' }).find('Footer').length).toBe(1);
+  });
+
+  it('should show header if logged in', () => {
+    expect(subject(null, true, { a: 'b' }).find('Header').length).toBe(1);
+  });
+
+  it('should show navigation if logged in', () => {
+    expect(subject(null, true, { a: 'b' }).find('Navigation').length).toBe(1);
+  });
+
+  it('should show loading spinner if logged in and no current user or roles', () => {
+    expect(subject(null, true).find('LoadingSpinner').length).toBe(1);
   });
   // it('should have .chart-view class when viewing charts', () => {
   //   let main = TestUtils.renderIntoDocument(
