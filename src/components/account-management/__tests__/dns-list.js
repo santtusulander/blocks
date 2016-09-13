@@ -6,6 +6,12 @@ jest.unmock('../dns-list')
 jest.unmock('../../table-sorter')
 import DNSList, { SortableTable } from '../dns-list'
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const recs = [
   {id: 1, "class": "IN", "type": "MX", "name": "d", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
   {id: 2, "class": "IN", "type": "A", "name": "a", "value": {"prio": 123, "value": "169.50.9.60"}, "ttl": 3600},
@@ -22,6 +28,7 @@ describe('DNSList', () => {
   beforeEach(() => {
     subject = records => {
       props = {
+        intl:intlMaker(),
         onAddEntry,
         onDeleteEntry,
         onEditEntry,
@@ -42,10 +49,10 @@ describe('DNSList', () => {
   })
 
   it('should show correct type label per table, sorted correctly', () => {
-    expect(subject(recs).find('#table-label-0').props().children).toEqual([ 'A', ' Records' ])
-    expect(subject(recs).find('#table-label-1').props().children).toEqual([ 'AAAA', ' Records' ])
-    expect(subject(recs).find('#table-label-5').props().children).toEqual([ 'MX', ' Records' ])
-    expect(subject(recs).find('#table-label-11').props().children).toEqual([ 'TXT', ' Records' ])
+    expect(subject(recs).find('#table-label-0').props().children[0]).toEqual('A')
+    expect(subject(recs).find('#table-label-1').props().children[0]).toEqual('AAAA')
+    expect(subject(recs).find('#table-label-5').props().children[0]).toEqual('MX')
+    expect(subject(recs).find('#table-label-11').props().children[0]).toEqual('TXT')
   })
 
   it('should handle create record button click', () => {
