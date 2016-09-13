@@ -752,7 +752,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.loading.text': 'Loading...',
 
-  'portal.button.submitting': 'Submitting...',
+  'portal.button.add': 'Add',
+  'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',

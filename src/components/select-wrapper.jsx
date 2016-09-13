@@ -11,22 +11,22 @@ const SelectWrapper = ({ numericValues, className, onChange, disabled, options, 
     options={options}
     value={value}
   />
-
-  return (
-    label && label !== '' ?
-      <div className='form-group'>
-        <label className='control-label dropdown-label'>{label}</label>
-      {select}
-      </div>
-      :
-    {select}
+  
+  if (label && label != '') return (
+    <div className='form-group'>
+      <label className='control-label dropdown-label'>{label}</label>
+        {select}
+    </div>
   )
+
+  return select
 }
 
 SelectWrapper.displayName = 'SelectWrapper'
 SelectWrapper.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  label: PropTypes.string,
   numericValues: PropTypes.bool,
   onChange: PropTypes.func,
   options: PropTypes.array,

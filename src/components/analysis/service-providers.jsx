@@ -64,10 +64,10 @@ class AnalysisServiceProviders extends React.Component {
         group: provider.get('name'),
         groupIndex: i,
         data: [
-          provider.getIn(['http','net_on']),
-          provider.getIn(['https','net_on']),
-          provider.getIn(['http','net_off']),
-          provider.getIn(['https','net_off'])
+          provider.getIn(['http','net_on_bytes'], 0),
+          provider.getIn(['https','net_on_bytes'], 0),
+          provider.getIn(['http','net_off_bytes'], 0),
+          provider.getIn(['https','net_off_bytes'], 0)
         ]
       })
     })
