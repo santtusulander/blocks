@@ -21,63 +21,69 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         {...name}
         disabled={edit}
         type="text"
+        id='name-field'
         label={intl.formatMessage({id: 'portal.account.recordForm.hostName.label'})}
         placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
         addonAfter={`.${domain}`}
-        className='input-narrow host-name-input'
-      />
-    }
-    {name.touched && name.error && <div className='error-msg'>{name.error}</div>}
+        className='input-narrow host-name-input'/>}
+    {name.touched && name.error && <div className='error-msg' id='name-err'>{name.error}</div>}
     {shouldShowField('value') &&
       <Input
         {...value}
+        id='value-field'
         disabled={edit}
         type="text"
         label={intl.formatMessage({id: 'portal.account.recordForm.address.label'})}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.address.placeholder'})}
-      />
-    }
-    {value.touched && value.error && <div className='error-msg'>{value.error}</div>}
+        placeholder={intl.formatMessage({id: 'portal.account.recordForm.address.placeholder'})}/>}
+    {value.touched && value.error && <div className='error-msg' id='value-err'>{value.error}</div>}
     {shouldShowField('prio') &&
       <Input
         {...prio}
+        id='prio-field'
         disabled={edit}
         type="text"
         label={intl.formatMessage({id: 'portal.account.recordForm.prio.label'})}
         placeholder={intl.formatMessage({id: 'portal.account.placeholder.prio.recordForm'})}
         className='input-narrow priority-input'/>}
-      {prio.touched && prio.error && <div className='error-msg'>{prio.error}</div>}
+      {prio.touched && prio.error && <div className='error-msg' id='prio-err'>{prio.error}</div>}
     {shouldShowField('ttl') && <hr/>}
     {shouldShowField('ttl') &&
       <Input
         {...ttl}
+        id='ttl-field'
         type="text"
         label={intl.formatMessage({id: 'portal.account.recordForm.ttl.label'})}
         placeholder={intl.formatMessage({id: 'portal.account.recordForm.ttl.placeholder'})}
         className='input-narrow ttl-value-input'
         addonAfter='seconds'/>}
-    {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
+    {ttl.touched && ttl.error && <div className='error-msg' id='ttl-err'>{ttl.error}</div>}
     <ButtonToolbar className="text-right extra-margin-top">
-      <Button className="btn-outline" onClick={onCancel}><FormattedMessage id='portal.common.button.cancel' /></Button>
       <Button
+        id='cancel-button'
+        className="btn-outline"
+        onClick={cancel}>
+        <FormattedMessage id='portal.common.button.cancel' />
+      </Button>
+      <Button
+        id='submit-button'
         disabled={invalid || loading}
         bsStyle="primary"
-        onClick={() => onSave(values)}>{loading ? <FormattedMessage id='portal.common.button.saving' /> : edit ? <FormattedMessage id='portal.common.button.save' /> : <FormattedMessage id='portal.common.button.add' />}</Button>
+        onClick={submit}>{loading ? <FormattedMessage id='portal.common.button.saving' />  : edit ? <FormattedMessage id='portal.common.button.save' /> : <FormattedMessage id='portal.common.button.add' />}</Button>
     </ButtonToolbar>
   </form>
 
 RecordForm.displayName = 'RecordForm'
 
 RecordForm.propTypes = {
+  cancel: PropTypes.func,
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
-  onCancel: PropTypes.func,
-  onSave: PropTypes.func,
   shouldShowField: PropTypes.func,
+  submit: PropTypes.func,
   values: PropTypes.object
 }
 
-export default injectIntl(RecordForm)
+export default keyStrokeSupport(injectIntl)RecordForm))
