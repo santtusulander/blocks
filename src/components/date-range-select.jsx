@@ -48,13 +48,11 @@ export class DateRangeSelect extends React.Component {
   componentWillReceiveProps(nextProps) {
     const nextState = {}
     let dateChanged = false
-    if(nextProps.startDate &&
-      (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
+    if(nextProps.startDate && (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
       nextState.startDate = nextProps.startDate
       dateChanged = true
     }
-    if(nextProps.endDate &&
-      (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
+    if(nextProps.endDate && (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
       nextState.endDate = nextProps.endDate
       dateChanged = true
     }
@@ -160,7 +158,7 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate)
+      this.props.changeDateRange(startDate, endDate, value)
     })
   }
 

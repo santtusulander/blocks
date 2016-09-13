@@ -34,6 +34,11 @@ module.exports = {
         loader: 'react-hot!babel-loader?cacheDirectory'
       },
       {
+        test: /\.json$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'json'
+      },
+      {
         test: /\.scss$/,
         loader:
           isProductionBuild() ?

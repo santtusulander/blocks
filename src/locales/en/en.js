@@ -122,8 +122,10 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
-  'portal.analytics.trafficOverview.primaryLabel.text': 'HTTP',
-  'portal.analytics.trafficOverview.secondaryLabel.text': 'HTTPS',
+  'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
+  'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
+  'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
+  'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
   'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
@@ -136,6 +138,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.urlList.searchForUrl.text': 'Search for URL',
   'portal.analytics.urlList.url.text': 'URL',
+  'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
   'portal.analytics.urlList.top15.text': '15 Top URLs',
@@ -198,6 +201,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.dateRange.title': 'Date Range',
   'portal.analysis.filters.dateRangeFrom.title': 'From',
   'portal.analysis.filters.dateRangeTo.title': 'To',
+  'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',
   'portal.analysis.filters.onOffNet.title': 'On-Net/Off-Net',
   'portal.analysis.filters.pop.title': 'POPs',
   'portal.analysis.filters.property.title': 'Properties',
@@ -743,7 +747,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.loading.text': 'Loading...',
 
-  'portal.button.submitting': 'Submitting...',
+  'portal.button.add': 'Add',
+  'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',

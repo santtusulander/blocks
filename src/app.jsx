@@ -17,13 +17,17 @@ import {IntlProvider} from 'react-intl';
 
 import './styles/style.scss'
 
-import TRANSLATED_MESSAGES from './locales/en.js'
+import TRANSLATED_MESSAGES from './locales/en/'
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware
 )(createStore)
 const stateReducer = combineReducers(reducers)
-const store = createStoreWithMiddleware(stateReducer)
+const store =
+  process.env.NODE_ENV === 'development' ?
+    // enable redux-devtools-extension in development environment
+    createStoreWithMiddleware(stateReducer, window.devToolsExtension && window.devToolsExtension()) :
+    createStoreWithMiddleware(stateReducer)
 
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'

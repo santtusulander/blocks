@@ -5,17 +5,23 @@ import { Map } from 'immutable'
 jest.dontMock('../header.jsx')
 const Header = require('../header.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('Header', () => {
   it('should exist', () => {
     let header = TestUtils.renderIntoDocument(
-      <Header set={Map()} />
+      <Header set={Map()} intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(header)).toBeTruthy();
   })
 
   it('should update the parameters as changes happen', () => {
     let header = TestUtils.renderIntoDocument(
-      <Header set={Map()} />
+      <Header set={Map()} intl={intlMaker()} />
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(header, 'input')
     inputs[0].value = 'new'
@@ -25,7 +31,7 @@ describe('Header', () => {
 
   it('should handle select changes', () => {
     let header = TestUtils.renderIntoDocument(
-      <Header set={Map()} />
+      <Header set={Map()} intl={intlMaker()} />
     )
     expect(header.state.activeActivity).toBe('set')
     header.handleSelectChange('activeActivity')('foo')

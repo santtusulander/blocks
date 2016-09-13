@@ -5,7 +5,7 @@ import * as PERMISSIONS from './permissions'
 export default Immutable.fromJS([
   {
     key: 'traffic',
-    filters: ['date-range', 'service-type', 'record-type'],
+    filters: ['date-range', 'comparison', 'service-type', 'record-type'],
     permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW
   },
   {

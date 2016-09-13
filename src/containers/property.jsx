@@ -27,12 +27,14 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond, getContentUrl} from '../util/helpers'
+import {formatBitsPerSecond} from '../util/helpers'
+import {getContentUrl} from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
+import { paleblue } from '../constants/colors'
 
 const endOfThisDay = () => moment().utc().endOf('hour')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -289,7 +291,7 @@ export class Property extends React.Component {
           timestamp: moment(hour.get('timestamp'), 'X').add(28, 'days').toDate(),
           bits_per_second: hour.getIn(['transfer_rates','average'])
         }
-      }).toJS()
+      })
     const metrics_traffic = !totals ?
       !historical_traffic.length ? [] : this.getEmptyHourlyTraffic(startDate, endDate) :
       this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
@@ -297,7 +299,7 @@ export class Property extends React.Component {
           timestamp: moment(hour.get('timestamp'), 'X').toDate(),
           bits_per_second: hour.getIn(['transfer_rates','average'])
         }
-      }).toJS()
+      })
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
@@ -309,6 +311,38 @@ export class Property extends React.Component {
         .format('MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
+    }
+    const dateShift = endDate - startDate
+    const timespanAdjust = direction => time => time.set(
+      'timestamp',
+      new Date(time.get('timestamp').getTime() + dateShift * direction))
+    const datasets = []
+    if(metrics_traffic.size) {
+      datasets.push({
+        area: false,
+        color: paleblue,
+        comparisonData: false,
+        data: metrics_traffic.toJS(),
+        id: '',
+        label: 'Selected Period',
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
+    if(historical_traffic.size) {
+      datasets.push({
+        area: true,
+        color: paleblue,
+        comparisonData: true,
+        data: historical_traffic.toJS(),
+        noGradient: true,
+        id: '',
+        label: 'Comparison Period',
+        line: false,
+        stackedAgainst: false,
+        xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
+      })
     }
     return (
       <Content>
@@ -410,11 +444,10 @@ export class Property extends React.Component {
           </div>
 
           <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
-            <AnalysisByTime axes={true} padding={30}
-              primaryData={metrics_traffic}
-              secondaryData={historical_traffic}
-              primaryLabel="Selected Period"
-              comparisonLabel="Comparison Period"
+            <AnalysisByTime
+              axes={true}
+              padding={30}
+              dataSets={datasets}
               showLegend={true}
               showTooltip={false}
               dataKey='bits_per_second'

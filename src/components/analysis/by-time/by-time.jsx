@@ -3,12 +3,23 @@ import { findDOMNode } from 'react-dom'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
+import Immutable from 'immutable'
 
 import Tooltip from '../../tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
 
 const closestDate = d3.bisector(d => d.timestamp).left
+
+const getExtent = (datasets, key) => {
+  const extents = datasets.map(
+    dataset => d3.extent(dataset.data.map(
+      data => data[key])))
+  return [
+    d3.min(extents.map(extent => extent[0])),
+    d3.max(extents.map(extent => extent[1]))
+  ]
+}
 
 const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
@@ -30,17 +41,12 @@ class AnalysisByTime extends React.Component {
     super(props)
 
     this.state = {
-      primaryTooltipText: null,
-      primaryTooltipX: 0,
-      primaryTooltipY: 0,
-      primaryTooltipOffsetTop: false,
-      primaryLabelWidth: 0,
+      tooltipText: [],
+      tooltipX: [],
+      tooltipY: [],
+      tooltipOffsetTop: [],
 
-      secondaryTooltipText: null,
-      secondaryTooltipX: 0,
-      secondaryTooltipY: 0,
-      secondaryTooltipOffsetTop: false,
-      secondaryLabelWidth: 0
+      labelWidth: []
     }
 
     this.moveMouse = this.moveMouse.bind(this)
@@ -59,7 +65,7 @@ class AnalysisByTime extends React.Component {
     })
   }
 
-  moveMouse(xScale, yScale, primaryData, secondaryData) {
+  moveMouse(xScale, yScale, datasets) {
     const configTooltip = (time, positionData, actualData, formatter) => configureTooltip(
       time,
       positionData,
@@ -71,7 +77,12 @@ class AnalysisByTime extends React.Component {
       formatter
     )
     return e => {
-      const sourceData = primaryData && primaryData.length ? primaryData : secondaryData
+      const sourceData = datasets.reduce((longest, dataset) => {
+        if(dataset.data.length > longest.length) {
+          return dataset.data
+        }
+        return longest
+      }, [])
       const bounds = this.refs.chart.getBoundingClientRect()
       const xDate = xScale.invert(e.pageX - bounds.left)
       let i = closestDate(sourceData, xDate, 1)
@@ -79,55 +90,45 @@ class AnalysisByTime extends React.Component {
       const d1 = sourceData[i]
       if(d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
         i = i -1
+      } else if (!d1) {
+        i = i -1
       }
-      if(primaryData && primaryData.length && primaryData[i]) {
-        const tooltipConfig = configTooltip(
-          primaryData[i].timestamp,
-          primaryData[i][this.props.dataKey],
-          null,
-          this.props.formatPrimaryTooltip
-        )
-        this.setState({
-          primaryTooltipText: tooltipConfig.text,
-          primaryTooltipX: tooltipConfig.x,
-          primaryTooltipY: tooltipConfig.y,
-          primaryTooltipOffsetTop: tooltipConfig.top
-        })
-      }
-      else {
-        this.setState({primaryTooltipText: null})
-      }
-      if(secondaryData && secondaryData.length && secondaryData[i]) {
-        let realValue = secondaryData[i][this.props.dataKey]
-        // If this is a stacked chart, take out the added data
-        if(this.props.stacked && primaryData && primaryData.length && primaryData[i]) {
-          realValue = realValue - primaryData[i][this.props.dataKey]
+      const tooltipData = datasets.map(dataset => {
+        let realValue = dataset.data[i][this.props.dataKey]
+        if(dataset.stackedAgainst) {
+          const against = datasets
+            .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
+          if(against) {
+            realValue = realValue - against.data[i][this.props.dataKey]
+          }
         }
-        const tooltipConfig = configTooltip(
-          secondaryData[i].timestamp,
-          secondaryData[i][this.props.dataKey],
+        const formatter = dataset.xAxisFormatter ?
+          (date, val) => {
+            const dateMap = Immutable.fromJS({timestamp: date})
+            const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+            const formattedValue = this.formatY(val)
+            return `${formattedDate} ${formattedValue}`
+          }
+        : null
+        return configTooltip(
+          dataset.data[i].timestamp,
+          dataset.data[i][this.props.dataKey],
           realValue,
-          this.props.formatSecondaryTooltip
+          formatter
         )
-        this.setState({
-          secondaryTooltipText: tooltipConfig.text,
-          secondaryTooltipX: tooltipConfig.x,
-          secondaryTooltipY: tooltipConfig.y,
-          secondaryTooltipOffsetTop: tooltipConfig.top
-        })
-      }
-      else {
-        this.setState({secondaryTooltipText: null})
-      }
+      })
+      this.setState({
+        tooltipText: tooltipData.map(tooltip => tooltip.text),
+        tooltipX: tooltipData.map(tooltip => tooltip.x),
+        tooltipY: tooltipData.map(tooltip => tooltip.y),
+        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top)
+      })
     }
   }
 
   deactivateTooltip() {
     if (this.props.showTooltip) {
-      this.setState({
-        primaryTooltipText: null,
-        secondaryTooltipText: null
-      })
+      this.setState({tooltipText: []})
     }
   }
 
@@ -140,47 +141,40 @@ class AnalysisByTime extends React.Component {
   }
 
   render() {
-    if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
+    if(!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
     }
-    const primaryData = this.props.primaryData || []
-    let secondaryData = this.props.secondaryData || []
-    if(!primaryData.length && !secondaryData.length) {
+    if(!this.props.dataSets || !this.props.dataSets.length ||
+      !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
       return <div className="no-data-list-section section-sm text-sm"><p>No data found.</p></div>
     }
-    if(this.props.stacked && primaryData && primaryData.length &&
-      secondaryData && secondaryData.length) {
-      secondaryData = secondaryData.map((data, i) => {
-        const newData = Object.assign({}, data)
-        newData.bits_per_second += primaryData[i].bits_per_second
-        newData.bytes += primaryData[i].bytes
-        newData.requests += primaryData[i].requests
-        return newData
-      })
-    }
+    const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
+      if(dataset.get('stackedAgainst')) {
+        const against = this.props.dataSets
+          .find(otherDataset => otherDataset.id === dataset.get('stackedAgainst'))
+        if(against && against.data.length) {
+          dataset = dataset.set('data', dataset.get('data').map((data, i) => {
+            return data.merge({
+              bits_per_second: data.get('bits_per_second') + against.data[i].bits_per_second,
+              bytes: data.get('bytes') + against.data[i].bytes,
+              requests: data.get('requests') + against.data[i].requests
+            })
+          }))
+        }
+      }
+      return dataset
+    }).toJS()
 
-    const yPrimaryExtent = primaryData && primaryData.length ?
-      d3.extent(primaryData, d => d[this.props.dataKey])
-      : [0,0]
-    const xPrimaryExtent =  primaryData && primaryData.length ?
-      d3.extent(primaryData, d => d.timestamp)
-      : d3.extent(secondaryData, d => d.timestamp)
-    const ySecondayExtent = secondaryData && secondaryData.length ?
-      d3.extent(secondaryData, d => d[this.props.dataKey])
-      : yPrimaryExtent
-    const xSecondayExtent = secondaryData && secondaryData.length ?
-      d3.extent(secondaryData, d => d.timestamp)
-      : d3.extent(primaryData, d => d.timestamp)
+    const [startDate, endDate] = getExtent(stackedDatasets, 'timestamp')
+    const yMax = getExtent(stackedDatasets, this.props.dataKey)[1]
 
     const yScale = d3.scale.linear()
-      .domain([0, Math.max(yPrimaryExtent[1] || 0, ySecondayExtent[1] || 0)])
+      .domain([0, yMax])
       .range([
         this.props.height - this.props.padding * (this.props.axes ? 2 : 1),
-        this.props.padding * (this.props.primaryLabel || this.props.secondaryLabel ? 2 : 1)
+        this.props.padding * (this.props.dataSets.some(dataset => dataset.label) ? 2 : 1)
       ]);
 
-    const startDate = new Date(Math.min(xPrimaryExtent[0], xSecondayExtent[0]))
-    const endDate = new Date(Math.max(xPrimaryExtent[1], xSecondayExtent[1]))
     const xScale = d3.time.scale.utc()
       .domain([startDate, endDate])
       .range([
@@ -213,53 +207,46 @@ class AnalysisByTime extends React.Component {
     }
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, primaryData, secondaryData)}
+      onMouseMove={this.moveMouse(xScale, yScale, stackedDatasets)}
       onMouseOut={this.deactivateTooltip}>
         <svg
           viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
           width={this.props.width}
           height={this.props.height}
           ref='chart'>
-          {primaryData && primaryData.length ? <g>
-            <path d={trafficLine(primaryData)}
-              className="line primary"/>
-            {typeof this.props.area !== 'undefined' && !this.props.area ? null :
-              <path d={trafficArea(primaryData)}
-                className="area primary"
-                fill="url(#dt-primary-gradient)" />
-            }
-          </g> : null}
-          {secondaryData && secondaryData.length ? <g>
-            <path d={trafficLine(secondaryData)}
-              className="line secondary"/>
-            {typeof this.props.area !== 'undefined' && !this.props.area ? null :
-              <path d={trafficArea(secondaryData)}
-                className="area secondary"
-                fill="url(#dt-secondary-gradient)" />
-            }
-          </g> : null}
-
-          {this.state.primaryTooltipText ?
-            <g>
-              <circle r="5"
-                cx={this.state.primaryTooltipX}
-                cy={this.state.primaryTooltipY}/>
-              <line className="crosshair"
-                x1={this.state.primaryTooltipX} x2={this.state.primaryTooltipX}
-                y1={0} y2={this.props.height}/>
-            </g>
-            : null}
-          {this.state.secondaryTooltipText ?
-            <g>
-              <circle r="5"
-                cx={this.state.secondaryTooltipX}
-                cy={this.state.secondaryTooltipY}/>
-              <line className="crosshair"
-                x1={this.state.secondaryTooltipX}
-                x2={this.state.secondaryTooltipX}
-                y1={0} y2={this.props.height}/>
-            </g>
-            : null}
+          {stackedDatasets.map((dataset, i) => {
+            return (
+              <g key={i}
+                className={dataset.comparisonData ? 'dataset-comparison' : null}>
+                {dataset.line &&
+                  <path d={trafficLine(dataset.data)}
+                    className="line"
+                    style={{stroke: dataset.color}}/>}
+                {dataset.area &&
+                  <path d={trafficArea(dataset.data)}
+                    className="area"
+                    fill={`url(#${dataset.id}-${i}-gradient)`} />}
+                <defs>
+                  <linearGradient key={i} id={`${dataset.id}-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
+                    <stop offset="100%" stopColor={dataset.color} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
+                  </linearGradient>
+                </defs>
+              </g>
+            )
+          })}
+          {this.state.tooltipText.map((text, i) => {
+            return(
+              <g key={i}>
+                <circle r="5"
+                  cx={this.state.tooltipX[i]}
+                  cy={this.state.tooltipY[i]}/>
+                <line className="crosshair"
+                  x1={this.state.tooltipX[i]} x2={this.state.tooltipX[i]}
+                  y1={0} y2={this.props.height}/>
+              </g>
+            )
+          })}
           {this.props.axes && <TimeAxisLabels
             xScale={xScale}
             padding={this.props.padding}
@@ -309,44 +296,26 @@ class AnalysisByTime extends React.Component {
                 ].join(' ')}/>
             )
           })}
-          <defs>
-            <linearGradient id="dt-primary-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#00a9d4" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#00a9d4" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="dt-secondary-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#89ba17" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#89ba17" stopOpacity="0" />
-            </linearGradient>
-          </defs>
         </svg>
 
       {this.props.showTooltip && <div className='tooltips'>
-          <Tooltip
-            x={this.state.primaryTooltipX}
-            y={this.state.primaryTooltipY}
-            hidden={!this.state.primaryTooltipText}
-            offsetTop={this.state.primaryTooltipOffsetTop}
-          >
-              {this.state.primaryTooltipText}
-          </Tooltip>
-
-          <Tooltip
-            x={this.state.secondaryTooltipX}
-            y={this.state.secondaryTooltipY}
-            hidden={!this.state.secondaryTooltipText}
-            offsetTop={this.state.secondaryTooltipOffsetTop}
-          >
-            {this.state.secondaryTooltipText}
-          </Tooltip>
+        {this.props.dataSets.map((dataset, i) => {
+          return (
+            <Tooltip key={i}
+              x={this.state.tooltipX[i]}
+              y={this.state.tooltipY[i]}
+              hidden={!this.state.tooltipText[i]}
+              offsetTop={this.state.tooltipOffsetTop[i]}
+            >
+                {this.state.tooltipText[i]}
+            </Tooltip>
+          )
+        })}
       </div>}
 
       {this.props.showLegend && <Legend
-          primaryLabel={this.props.primaryLabel}
-          primaryValue={this.state.primaryTooltipText}
-          secondaryLabel={this.props.secondaryLabel}
-          secondaryValue={this.state.secondaryTooltipText}
-          comparisonLabel={this.props.comparisonLabel}
+        dataSets={this.props.dataSets}
+        values={this.props.dataSets.map((dataset, i) => this.state.tooltipText[i])}
       />}
       </div>
     )
@@ -355,25 +324,19 @@ class AnalysisByTime extends React.Component {
 
 AnalysisByTime.displayName = 'AnalysisByTime'
 AnalysisByTime.propTypes = {
-  area: React.PropTypes.bool,
   axes: React.PropTypes.bool,
   className: React.PropTypes.string,
-  comparisonLabel: React.PropTypes.string,
   dataKey: React.PropTypes.string,
+  dataSets: React.PropTypes.array,
   formatPrimaryTooltip: React.PropTypes.func,
   formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
   padding: React.PropTypes.number,
-  primaryData: React.PropTypes.array,
-  primaryLabel: React.PropTypes.string,
-  secondaryData: React.PropTypes.array,
-  secondaryLabel: React.PropTypes.string,
   selectSlice: React.PropTypes.func,
   showLegend: React.PropTypes.bool,
   showTooltip: React.PropTypes.bool,
   sliceGranularity: React.PropTypes.string,
-  stacked: React.PropTypes.bool,
   width: React.PropTypes.number,
   xAxisTickFrequency: React.PropTypes.number,
   yAxisCustomFormat: React.PropTypes.func,

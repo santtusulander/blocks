@@ -8,6 +8,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
+import { paleblue } from '../../constants/colors'
 
 import {injectIntl} from 'react-intl'
 
@@ -103,6 +104,34 @@ class AnalysisOnOffNetReport extends React.Component {
       dataSets.push( offNet.toJS() )
     }
 
+    const datasets = []
+    if(this.props.onOffFilter.contains('on-net') && onNet) {
+      datasets.push({
+        area: false,
+        color: paleblue,
+        comparisonData: false,
+        data: onNet.toJS(),
+        id: '',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.primaryLabel.text'}),
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
+    if(this.props.onOffFilter.contains('off-net') && offNet) {
+      datasets.push({
+        area: false,
+        color: 'yellow',
+        comparisonData: false,
+        data: offNet.toJS(),
+        id: '',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.secondaryLabel.text'}),
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
+
     if(this.props.onOffNetChartType === 'bar') {
       chart = (
         <AnalysisStackedByTime padding={40}
@@ -116,10 +145,7 @@ class AnalysisOnOffNetReport extends React.Component {
       chart = (
         <AnalysisByTime axes={true} padding={40}
           dataKey="bytes"
-          primaryData={dataSets && dataSets[0]}
-          secondaryData={dataSets[1] && dataSets[1]}
-          primaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.primaryLabel.text'})}
-          secondaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.secondaryLabel.text'})}
+          dataSets={datasets}
           yAxisCustomFormat={(val, setMax) => formatBytes(val, false, setMax)}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           showLegend={true}

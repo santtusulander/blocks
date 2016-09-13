@@ -96,7 +96,7 @@ Select.propTypes = {
   numericValues: PropTypes.bool,
   onSelect: PropTypes.func,
   options: PropTypes.array,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
 Select.defaultProps = {

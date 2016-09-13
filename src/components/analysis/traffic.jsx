@@ -8,8 +8,9 @@ import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
+import { paleblue, green } from '../../constants/colors'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class AnalysisTraffic extends React.Component {
   constructor(props) {
@@ -74,6 +75,24 @@ class AnalysisTraffic extends React.Component {
     const httpsData   = this.props.serviceTypes.includes('https') ?
       this.props.byTime.filter(time => time.get('service_type') === 'https')
       : Immutable.List()
+    const dates = this.props.byTime.map(dataset => moment(dataset.get('timestamp'))).toJS()
+    const minDate = moment.min(dates)
+    const comparisonDates = this.props.byTimeComparison.map(dataset => moment(dataset.get('timestamp'))).toJS()
+    const comparisonMinDate = moment.min(comparisonDates)
+    const dateShift = minDate - comparisonMinDate
+    const timespanAdjust = direction => time => time.set(
+      'timestamp',
+      new Date(time.get('timestamp').getTime() + dateShift * direction))
+    const comparisonHttpData  = this.props.serviceTypes.includes('http') ?
+      this.props.byTimeComparison
+        .filter(time => time.get('service_type') === 'http')
+        .map(timespanAdjust(1))
+      : Immutable.List()
+    const comparisonHttpsData = this.props.serviceTypes.includes('https') ?
+      this.props.byTimeComparison
+        .filter(time => time.get('service_type') === 'https')
+        .map(timespanAdjust(1))
+      : Immutable.List()
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -91,6 +110,62 @@ class AnalysisTraffic extends React.Component {
       val => numeral(val).format('0,0')
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
 
+    const datasets = []
+    if(this.props.serviceTypes.includes('http') && httpData.size) {
+      datasets.push({
+        area: true,
+        color: paleblue,
+        comparisonData: false,
+        data: httpData.toJS(),
+        id: 'http',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpDatasetLabel.text'}),
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
+    if(this.props.serviceTypes.includes('https') && httpsData.size){
+      datasets.push({
+        area: true,
+        color: green,
+        comparisonData: false,
+        data: httpsData.toJS(),
+        id: 'https',
+        label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsDatasetLabel.text'}),
+        line: true,
+        stackedAgainst: 'http',
+        xAxisFormatter: false
+      })
+    }
+    if(this.props.byTimeComparison.size) {
+      if(this.props.serviceTypes.includes('http') && comparisonHttpData.size) {
+        datasets.push({
+          area: true,
+          color: paleblue,
+          comparisonData: true,
+          data: comparisonHttpData.toJS(),
+          id: 'httpComparison',
+          label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text'}),
+          line: true,
+          stackedAgainst: false,
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
+        })
+      }
+      if(this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
+        datasets.push({
+          area: true,
+          color: green,
+          comparisonData: true,
+          data: comparisonHttpsData.toJS(),
+          id: 'httpsComparison',
+          label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text'}),
+          line: true,
+          stackedAgainst: 'httpComparison',
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
+        })
+      }
+    }
+
     return (
       <div className="analysis-traffic">
         {/*<div className="analysis-data-box">
@@ -99,7 +174,6 @@ class AnalysisTraffic extends React.Component {
          </div>*/}
         <h3>
           {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/> : <FormattedMessage id="portal.analytics.trafficOverview.requests.text"/>}
-          {this.props.dateRange.toUpperCase()}
         </h3>
         <div className="analysis-data-box wide">
           <Row>
@@ -125,11 +199,7 @@ class AnalysisTraffic extends React.Component {
               axes={true}
               padding={40}
               dataKey={byTimeDataKey}
-              primaryData={httpData.toJS()}
-              secondaryData={httpsData.toJS()}
-              rimaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.primaryLabel.text'})}
-              secondaryLabel={this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.secondaryLabel.text'})}
-              stacked={true}
+              dataSets={datasets}
               showLegend={true}
               showTooltip={false}
               yAxisCustomFormat={byTimeYAxisFormat}
@@ -169,7 +239,21 @@ class AnalysisTraffic extends React.Component {
                 'timestamp',
                 moment(datapoint.get('timestamp'), 'X').toDate()
               )
-            }).toJS()
+            })
+            const datasets = []
+            if(primaryData.size) {
+              datasets.push({
+                area: false,
+                color: paleblue,
+                comparisonData: false,
+                data: primaryData.toJS(),
+                id: '',
+                label: '',
+                line: true,
+                stackedAgainst: false,
+                xAxisFormatter: false
+              })
+            }
             return (
               <tr key={i}>
                 <td>{country.get('name')}</td>
@@ -178,9 +262,8 @@ class AnalysisTraffic extends React.Component {
                   <AnalysisByTime
                     axes={false}
                     padding={0}
-                    area={false}
-                    primaryData={primaryData}
                     dataKey={byTimeDataKey}
+                    dataSets={datasets}
                     showTooltip={true}
                     yAxisCustomFormat={byTimeYAxisFormat}
                     width={this.state.byTimeWidth / 2}
@@ -203,8 +286,10 @@ AnalysisTraffic.propTypes   = {
   avgTraffic: React.PropTypes.string,
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
+  byTimeComparison: React.PropTypes.instanceOf(Immutable.List),
   dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
@@ -215,6 +300,7 @@ AnalysisTraffic.propTypes   = {
 AnalysisTraffic.defaultProps = {
   byCountry: Immutable.List(),
   byTime: Immutable.List(),
+  byTimeComparison: Immutable.List(),
   serviceTypes: Immutable.List()
 }
 

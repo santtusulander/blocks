@@ -2,6 +2,12 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 jest.dontMock('../mime-type.jsx')
 const MimeType = require('../mime-type.jsx')
 
@@ -14,15 +20,16 @@ const fakePath = ['foo', 'bar']
 describe('MimeType', () => {
   it('should exist', () => {
     let mimeType = TestUtils.renderIntoDocument(
-      <MimeType match={fakeConfig} path={fakePath}/>
+      <MimeType match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(mimeType)).toBeTruthy();
   })
 
   it('should update the parameters as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let mimeType = TestUtils.renderIntoDocument(
-      <MimeType changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <MimeType changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(mimeType, 'textarea')
     inputs[0].value = 'new'
@@ -32,9 +39,10 @@ describe('MimeType', () => {
   })
 
   it('should update the parameters as select change happens', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let mimeType = TestUtils.renderIntoDocument(
-      <MimeType changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <MimeType changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     expect(mimeType.state.activeFilter).toBe('matches')
     mimeType.handleSelectChange('activeFilter')('foo')
