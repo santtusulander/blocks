@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 
+import SectionHeader from '../layout/section-header'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
@@ -172,9 +173,10 @@ class AnalysisTraffic extends React.Component {
          <h4>Total Egress Yesterday</h4>
          <p>{formatBytes(this.props.totalEgress)}</p>
          </div>*/}
-        <h3>
-          {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/> : <FormattedMessage id="portal.analytics.trafficOverview.requests.text"/>}
-        </h3>
+        <SectionHeader
+          sectionHeaderTitle={this.props.recordType === 'transfer_rates'
+            ? <FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/>
+            : <FormattedMessage id="portal.analytics.trafficOverview.requests.text"/>} />
         <div className="analysis-data-box wide">
           <Row>
             <Col xs={4} className="right-separator">
@@ -191,7 +193,8 @@ class AnalysisTraffic extends React.Component {
             </Col>
           </Row>
         </div>
-        <h3><FormattedMessage id="portal.analytics.trafficOverview.transferByTime.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.transferByTime.text"/>} />
         <div ref="byTimeHolder" className="transfer-by-time">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
@@ -206,7 +209,8 @@ class AnalysisTraffic extends React.Component {
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
           }
         </div>
-        <h3><FormattedMessage id="portal.analytics.trafficOverview.byGeography.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.byGeography.text"/>} />
         <div ref="byLocationHolder">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
@@ -219,7 +223,8 @@ class AnalysisTraffic extends React.Component {
               countryData={this.props.byCountry}/>
           }
         </div>
-        <h3><FormattedMessage id="portal.analytics.trafficOverview.byCountry.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.byCountry.text"/>} />
         <table className="table table-striped table-analysis by-country-table">
           <thead>
           <tr>
