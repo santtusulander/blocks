@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react'
 import {Col, Row} from 'react-bootstrap'
 import {List, Map} from 'immutable'
+import {injectIntl} from 'react-intl'
 
 import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
-
-import {formatMessage, injectIntl} from 'react-intl'
 
 /* find any key in array */
 function hasKeys( val, keyList ) {
@@ -33,7 +32,7 @@ function sortByCode(error1, error2) {
 }
 
 const AnalysisFileError = props => {
-  const { serviceTypes, statusCodes, summary, urls } = props
+  const { serviceTypes, statusCodes, summary, urls, intl } = props
 
   // Summary filtering
   //filter by serviceType
@@ -74,13 +73,13 @@ const AnalysisFileError = props => {
         <Col xs={12}>
           <AnalysisFileErrorDataBox
             id="client-errors"
-            label={this.props.intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
+            label={intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
             code="4XX"
             errs={clientErrs}
           />
           <AnalysisFileErrorDataBox
             id="server-errors"
-            label={this.props.intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
+            label={intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
             code="5XX"
             errs={serverErrs}
           />
@@ -97,6 +96,7 @@ const AnalysisFileError = props => {
 AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
   fetching: PropTypes.bool,
+  intl: PropTypes.object,
   serviceTypes: PropTypes.instanceOf(List),
   statusCodes: PropTypes.instanceOf(List),
   summary: PropTypes.instanceOf(Map),
