@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
-import ActionLinks from './action-links'
+import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 
@@ -35,10 +35,10 @@ class DNSList extends Component {
           <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
-          <td>
-          <ActionLinks
-          onEdit={() => onEditEntry(record.id)}
-          onDelete={() => onDeleteEntry(record)}/>
+          <td className="nowrap-column">
+            <ActionButtons
+              onEdit={() => onEditEntry(record.id)}
+              onDelete={() => onDeleteEntry(record)}/>
           </td>
         </tr>
       )
