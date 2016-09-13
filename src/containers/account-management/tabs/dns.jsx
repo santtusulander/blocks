@@ -11,7 +11,7 @@ import { getRecordValueString } from '../../../util/dns-records-helpers'
 import { DNS_DOMAIN_EDIT, RECORD_EDIT } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-import DomainToolbar from '../../../components/account-management/system/domain-toolbar'
+import DomainToolbar from '../../../components/account-management/domain-toolbar'
 import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
@@ -89,7 +89,7 @@ class AccountManagementSystemDNS extends Component {
       searchFunc: e => setSearchValue(e, 'domainSearch')
     }
     const DNSListProps = {
-      modalOpen: activeModal !== null ? true : false,
+      modalOpen: activeModal !== null,
       onAddEntry: () => {
         this.editingRecord = false
         toggleModal(RECORD_EDIT)
