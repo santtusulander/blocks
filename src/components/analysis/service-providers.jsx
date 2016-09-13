@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
+import SectionHeader from '../layout/section-header'
 import AnalysisStackedByGroup from './stacked-by-group'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
@@ -89,7 +90,8 @@ class AnalysisServiceProviders extends React.Component {
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
     return (
       <div className="analysis-service-providers">
-        <h3><FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>} />
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> :
