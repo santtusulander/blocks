@@ -86,4 +86,4 @@ RecordForm.propTypes = {
   values: PropTypes.object
 }
 
-export default keyStrokeSupport(injectIntl)RecordForm))
+export default keyStrokeSupport((injectIntl)(RecordForm))
