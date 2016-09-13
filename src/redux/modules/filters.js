@@ -58,9 +58,14 @@ export function resetDefaults() {
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
+  const data = action.payload.data
+  const sortedData = data.sort((lhs, rhs) => {
+    return lhs.name.localeCompare(rhs.name)
+  })
+
   return state.merge({
     filterOptions: state.get('filterOptions').merge({
-      serviceProviders: action.payload.data
+      serviceProviders: sortedData
     }),
     fetching: false
   })
