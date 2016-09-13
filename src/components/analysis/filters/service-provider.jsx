@@ -1,19 +1,24 @@
 import React from 'react'
-import { List } from 'immutable'
+import Immutable, { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import Select from '../../../components/select'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 export class FilterServiceProvider extends React.Component {
   render() {
+    // debugger;
+    //
+    const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
+    const options = Immutable.fromJS(this.props.options.map(arrayMapping))
+
     return (
       <div>
         <h5><FormattedMessage id="portal.analysis.filters.serviceProvider.title"/></h5>
         <div className="sidebar-content">
-          <Select className="btn-block"
-            onSelect={this.props.changeServiceProvider}
+          <FilterChecklistDropdown className="btn-block"
+            onChange={this.props.changeServiceProvider}
             value={this.props.value}
-            options={this.props.options}/>
+            options={options}/>
         </div>
       </div>
     );

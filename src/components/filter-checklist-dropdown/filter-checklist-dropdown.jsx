@@ -82,7 +82,12 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleClear() {
     this.setState({filterValue: ''})
-    this.props.handleCheck(List())
+
+    if (this.props.handleCheck) {
+      this.props.handleCheck(List())
+    } else {
+      this.props.onChange(List())
+    }
   }
 
   getLabel() {
@@ -157,7 +162,7 @@ export class FilterChecklistDropdown extends React.Component {
     return (
       <div className="form-group">
         <Dropdown id=""
-                  open={dropdownOpen}
+                  defaultOpen={dropdownOpen}
                   className={className}>
           <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>

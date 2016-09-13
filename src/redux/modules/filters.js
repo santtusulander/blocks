@@ -15,7 +15,7 @@ const initialState = Immutable.fromJS({
     dateRangeLabel: 'Month to date',
     recordType: 'transfer_rates',
     serviceTypes: ['http', 'https'],
-    serviceProviders: ['All'],
+    serviceProviders: [],
     onOffNet: ['on-net', 'off-net'],
     statusCodes: ['400', '401', '402', '403', '404', '405', '411', '412', '413', '500', '501', '502', '503'],
     video: '/elephant/169ar/elephant_master.m3u8'
@@ -23,7 +23,7 @@ const initialState = Immutable.fromJS({
   filterOptions: {
     recordType: [{label: 'Bandwidth', value: 'transfer_rates'}, {label: 'Requests', value: 'requests'}],
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
-    serviceProviders: [{label: 'All', value: 'all'} ],
+    serviceProviders: [],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
     statusCodes: [
       {label: '400', value: '400'},
@@ -58,22 +58,19 @@ export function resetDefaults() {
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
-  const allFilter = initialState.get('filterOptions').get('serviceProviders').get(0)
-  const serviceProviders = [allFilter].concat(action.payload)
-
   return state.merge({
-    filterOptions: {
-      serviceProviders: serviceProviders
-    },
+    filterOptions: state.get('filterOptions').merge({
+      serviceProviders: action.payload.data
+    }),
     fetching: false
   })
 }
 
 export function fetchServiceProvidersFailure(state) {
   return state.merge({
-    filterOptions: {
-      serviceProviders: null
-    },
+    filterOptions: state.get('filterOptions').merge({
+      serviceProviders: []
+    }),
     fetching: false
   })
 }
