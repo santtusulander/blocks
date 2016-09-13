@@ -5,6 +5,12 @@ import { fromJS } from 'immutable'
 jest.unmock('../security-page-header.jsx')
 import SecurityPageHeader from '../security-page-header.jsx'
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('SecurityPageHeader', () => {
   let props = {}
   let subject = null
@@ -12,7 +18,7 @@ describe('SecurityPageHeader', () => {
     props = {
       accounts: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }])
     }
-    subject = () => shallow(<SecurityPageHeader {...props}/>)
+    subject = () => shallow(<SecurityPageHeader {...props} intl={intlMaker()}/>)
   })
   it('should exist', () => {
     expect(subject().length).toBe(1)

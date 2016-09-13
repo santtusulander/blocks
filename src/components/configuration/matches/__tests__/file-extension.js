@@ -2,6 +2,12 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 jest.dontMock('../file-extension.jsx')
 const FileExtension = require('../file-extension.jsx')
 
@@ -11,10 +17,10 @@ const fakeConfig = Immutable.fromJS({
 
 const fakePath = ['foo', 'bar']
 
-describe('DirectoryPath', () => {
+describe('FileExtension', () => {
   it('should exist', () => {
     let fileExtension = TestUtils.renderIntoDocument(
-      <FileExtension match={fakeConfig} path={fakePath}/>
+      <FileExtension match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(fileExtension)).toBeTruthy();
   })
@@ -22,7 +28,8 @@ describe('DirectoryPath', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let fileExtension = TestUtils.renderIntoDocument(
-      <FileExtension changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <FileExtension changeValue={changeValue} match={fakeConfig}
+        path={fakePath} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileExtension, 'textarea')
     inputs[0].value = 'new'
@@ -34,7 +41,8 @@ describe('DirectoryPath', () => {
   it('should update the parameters as select change happens', () => {
     let changeValue = jest.genMockFunction()
     let fileExtension = TestUtils.renderIntoDocument(
-      <FileExtension changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <FileExtension changeValue={changeValue} match={fakeConfig}
+        path={fakePath} intl={intlMaker()}/>
     )
     expect(fileExtension.state.activeFilter).toBe('matches')
     fileExtension.handleSelectChange('activeFilter')('foo')

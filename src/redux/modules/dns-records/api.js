@@ -26,7 +26,7 @@ export const update = (zone, resource, data) => {
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(({ data }) => ({ data, zone, resource }))
+  })
 }
 
 export const remove = (zone, resource, data) => {

@@ -3,11 +3,6 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-// Mock out intl
-jest.mock('react-intl')
-const reactIntl = require('react-intl')
-reactIntl.injectIntl = jest.fn(wrappedClass => wrappedClass)
-
 jest.autoMockOff()
 const ConfigurationPolicyRuleEdit = require('../policy-rule-edit.jsx')
 

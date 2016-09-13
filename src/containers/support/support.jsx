@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import { getSupportUrlFromParams } from '../../util/helpers'
+import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import SupportPageHeader from '../../components/support/support-page-header'

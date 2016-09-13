@@ -5,6 +5,12 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../ip-address.jsx')
 const IpAddress = require('../ip-address.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
@@ -14,7 +20,7 @@ const fakePath = ['foo', 'bar']
 describe('IpAddress', () => {
   it('should exist', () => {
     let ipAddress = TestUtils.renderIntoDocument(
-      <IpAddress match={fakeConfig} path={fakePath}/>
+      <IpAddress match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(ipAddress)).toBeTruthy();
   })
@@ -22,7 +28,8 @@ describe('IpAddress', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let ipAddress = TestUtils.renderIntoDocument(
-      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(ipAddress, 'input')
     inputs[0].value = 'new'
@@ -34,7 +41,8 @@ describe('IpAddress', () => {
   it('should update the parameters as select change happens', () => {
     let changeValue = jest.genMockFunction()
     let ipAddress = TestUtils.renderIntoDocument(
-      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}/>
+      <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     expect(ipAddress.state.activeFilter).toBe('matches')
     ipAddress.handleSelectChange('activeFilter')('foo')
