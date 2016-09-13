@@ -12,8 +12,10 @@ class Footer extends React.Component {
       <footer className={className}>
         <div className="footer-content">
           <p className="text-center">
-            <FormattedMessage id="portal.footer.poweredBy.text"/> <a href="http://www.ericsson.com"
-            target="_blank">Ericsson</a> (v {VERSION}). <a href="#"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
+            <FormattedMessage id="portal.footer.poweredBy.text"/>
+            <a href="http://www.ericsson.com" target="_blank"> Ericsson </a>
+            (v {VERSION}).
+            <a href="https://www.ericsson.com/legal"> <FormattedMessage id="portal.footer.termsOfUse.text"/></a>
           </p>
         </div>
       </footer>

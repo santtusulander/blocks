@@ -12,7 +12,7 @@ import recordTypes from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
 import { CREATE_RECORD } from '../../constants/permissions'
 
-export default class DNSList extends Component {
+class DNSList extends Component {
 
   shouldComponentUpdate(nextProps) {
     return !nextProps.modalOpen
@@ -60,7 +60,7 @@ export default class DNSList extends Component {
       if (recordsByType.hasOwnProperty(type)) {
         tables.push(
           <div key={index} className='table-container'>
-            <h4 id={'table-label-' + index}>{type} Records</h4>
+            <h4 id={'table-label-' + index}>{type} <FormattedMessage id='portal.account.dnsList.records.header' /></h4>
             <SortableTable content={getContent(type)}/>
           </div>
         )
