@@ -5,10 +5,12 @@ jest.unmock('../account-form.jsx')
 
 import NewAccountForm from '../account-form.jsx'
 
+const fields = {}
+
 describe('AccountForm', () => {
   it('should exist', () => {
     const accountForm = shallow(
-      <NewAccountForm />
+      <NewAccountForm fields={fields} />
     )
     expect(accountForm.length).toBe(1)
   })
