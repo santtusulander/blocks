@@ -4,10 +4,16 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../path.jsx')
 const Path = require('../path.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('Path', () => {
   it('should exist', () => {
     let path = TestUtils.renderIntoDocument(
-      <Path />
+      <Path intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(path)).toBeTruthy();
   })
@@ -15,7 +21,7 @@ describe('Path', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let path = TestUtils.renderIntoDocument(
-      <Path changeValue={changeValue}/>
+      <Path changeValue={changeValue} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(path, 'input')
     inputs[0].value = 'new'
@@ -27,7 +33,7 @@ describe('Path', () => {
   it('should handle select changes', () => {
     let changeValue = jest.genMockFunction()
     let path = TestUtils.renderIntoDocument(
-      <Path changeValue={changeValue}/>
+      <Path changeValue={changeValue} intl={intlMaker()}/>
     )
     expect(path.state.activeActivity).toBe('add')
     path.handleSelectChange('activeActivity')('foo')

@@ -141,6 +141,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.urlList.searchForUrl.text': 'Search for URL',
   'portal.analytics.urlList.url.text': 'URL',
+  'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
   'portal.analytics.urlList.top15.text': '15 Top URLs',
@@ -750,7 +751,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.loading.text': 'Loading...',
 
-  'portal.button.submitting': 'Submitting...',
+  'portal.button.add': 'Add',
+  'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',

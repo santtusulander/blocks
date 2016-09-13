@@ -94,7 +94,7 @@ class DnsDomainEditFormContainer  extends Component {
       <div className="dns-edit-container">
         <Modal show={true} dialogClassName="dns-edit-form-sidebar">
           <Modal.Header>
-            <h1>{edit ? 'Edit Domain' : 'New Domain'}</h1>
+            <h1>{edit ? <FormattedMessage id='portal.account.domainForm.editDomain.title' /> : <FormattedMessage id='portal.account.domainForm.newDomain.title' />}</h1>
             {edit && <p>{this.props.fields.name.value}</p>}
           </Modal.Header>
           <Modal.Body>
@@ -119,7 +119,7 @@ DnsDomainEditFormContainer.propTypes = {
 
 function mapStateToProps({ dns }, { edit }) {
   let props = {
-    loading: dns.get('loading')
+    fetching: dns.get('fetching')
   }
 
   if (edit) {
@@ -155,6 +155,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
   return {
     dnsActions: dnsActions,
     deleteDomain: (domainId) => {
+      dnsActions.startFetchingDomains()
       dnsActions.deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
@@ -166,6 +167,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     },
@@ -182,6 +184,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       const domain = data.name
       delete data.name
 
+      dnsActions.startFetchingDomains()
       dnsActions[method]('udn', domain, data)
         .then(res => {
           if (res.error) {
@@ -193,6 +196,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     }

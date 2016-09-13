@@ -1,14 +1,12 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
 jest.dontMock('../on-off-net.jsx')
-const OnOffNet = require('../on-off-net.jsx')
+const OnOffNet = require('../on-off-net.jsx').default
 
 describe('FilterOnOffNet', () => {
   it('should exist', () => {
-    const renderer = TestUtils.createRenderer()
-    renderer.render(<OnOffNet/>);
-    const filter = renderer.getRenderOutput()
-    expect(filter.type).toEqual('div');
+    const filter = shallow(<OnOffNet/>)
+    expect(filter.length).toBe(1)
   })
 })

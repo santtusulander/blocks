@@ -1,10 +1,10 @@
 import React from 'react'
-import { Button, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Confirmation from '../confirmation.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 import {parsePolicy} from '../../util/policy-config'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
@@ -64,17 +64,10 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{policy.get('rule_name')}</td>
           <td>{matches.map(match => match.field).join(', ')}</td>
           <td>{sets.map(set => set.setkey).join(', ')}</td>
-          <td className="right-btns has-confirmation">
-            <Button bsStyle="primary"
-              className={`btn-link activate-${type}-rule-${i}`}
-              onClick={this.activateRule([`${type}_policy`, 'policy_rules', i])}>
-              <FormattedMessage id="portal.button.EDIT"/>
-            </Button>
-            <Button bsStyle="primary"
-              className="btn-link btn-icon"
-              onClick={this.showConfirmation(`${type}_policy`, i)}>
-              <IconTrash/>
-            </Button>
+          <td className="nowrap-column">
+            <ActionButtons
+              onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
+              onDelete={this.showConfirmation(`${type}_policy`, i)} />
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"
@@ -113,7 +106,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th><FormattedMessage id="portal.policy.edit.rules.policy.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
-              <th></th>
+              <th width="1%"></th>
             </tr>
           </thead>
           <tbody>

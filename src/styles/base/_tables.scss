@@ -63,16 +63,6 @@
           height: $md-bar-height;
         }
 
-        &.right-btns {
-          padding-right: 10px;
-          text-align: right;
-          white-space: nowrap;
-        }
-
-        &.has-confirmation {
-          position: relative;
-        }
-
         &:not(:last-child):not(.no-border) {
 
           .dark-theme & {
@@ -158,6 +148,11 @@
     @include sm {
       margin-top: $sm-bar-height;
     }
+  }
+
+
+  .nowrap-column {
+    white-space: nowrap;
   }
 }
 

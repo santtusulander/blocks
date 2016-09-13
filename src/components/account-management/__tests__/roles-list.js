@@ -1,9 +1,10 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import { fromJS } from 'immutable'
+import {shallow} from 'enzyme'
 
 jest.dontMock('../roles-list.jsx')
-jest.dontMock('../action-links.jsx')
+jest.dontMock('../action-buttons.jsx')
 jest.dontMock('../../table-sorter.jsx')
 jest.dontMock('../account-management-header.jsx')
 jest.dontMock('../../array-td/array-td.jsx')
@@ -111,36 +112,41 @@ const fakePermissions = fromJS({
 
 })
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('RolesList', () => {
   it('should exist', () => {
-    let rolesList = TestUtils.renderIntoDocument(
-      <RolesList/>
-    );
-    expect(TestUtils.isCompositeComponent(rolesList)).toBeTruthy();
+    const rolesList = shallow(<RolesList intl={intlMaker()}/>)
+    expect(rolesList.length).toBe(1);
   });
 
   it('should list roles', () => {
-    let rolesList = TestUtils.renderIntoDocument(
-      <RolesList roles={fakeRoles} permissions={fakePermissions}/>
-    );
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'tr').length).toBe(4)
+    const rolesList = shallow(
+      <RolesList roles={fakeRoles} permissions={fakePermissions}
+        intl={intlMaker()}/>
+    )
+    expect(rolesList.find('tr').length).toBe(4)
   });
 
-  it('should list roles', () => {
-    let rolesList = TestUtils.renderIntoDocument(
-      <RolesList/>
-    );
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'div')[0].textContent).toContain('No roles found')
+  it('should show empty message', () => {
+    const rolesList = shallow(<RolesList intl={intlMaker()}/>)
+    expect(rolesList.find('#empty-msg').length).toBe(1)
   });
 
   it('can sort roles', () => {
-    let rolesList = TestUtils.renderIntoDocument(
-      <RolesList roles={fakeRoles} permissions={fakePermissions}/>
-    );
-    let tds = TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'td');
-    expect(tds[0].textContent).toContain('UDN Admin');
-    rolesList.changeSort('name', 1)
-    tds = TestUtils.scryRenderedDOMComponentsWithTag(rolesList, 'td');
-    expect(tds[0].textContent).toContain('Content Provider');
+    const rolesList = shallow(
+      <RolesList roles={fakeRoles} permissions={fakePermissions}
+        intl={intlMaker()}/>
+    )
+    let names = rolesList.find('.name-0')
+    expect(names.text()).toContain('UDN Admin')
+    rolesList.instance().changeSort('name', 1)
+    rolesList.update()
+    names = rolesList.find('.name-0')
+    expect(names.text()).toContain('Content Provider')
   });
 })
