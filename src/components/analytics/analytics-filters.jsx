@@ -17,26 +17,6 @@ import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checkli
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
-const serviceProviderOpts = [
-  ['all', 'All'],
-  ['vodafone-group', 'Vodafone Group'],
-  ['telstra', 'Telstra'],
-  ['bharti', 'Bharti'],
-  ['singtel', 'Singtel'],
-  ['china-telecom', 'China Telecom'],
-  ['hgc', 'HGC'],
-  ['ais', 'AIS'],
-  ['tot', 'TOT'],
-  ['cht', 'CHT'],
-  ['fet', 'FET'],
-  ['xl-axiata', 'XL Axiata'],
-  ['telkom-indonesia', 'Telkom Indonesia'],
-  ['globe', 'Globe'],
-  ['mobifone', 'Mobifone'],
-  ['sk-bb', 'SK BB'],
-  ['lg-u', 'LG U+]']
-]
-
 const popOpts = [
   ['all', 'All'],
   ['option', 'Option']
@@ -145,7 +125,7 @@ const AnalyticsFilters = (props) => {
           changeServiceProvider={val => {
             props.onFilterChange('serviceProvider', val)
           }}
-          options={serviceProviderOpts}
+          options={props.filterOptions.get('serviceProviders')}
           value={props.filters.get('serviceProvider')}
           />
         </div>
