@@ -1,14 +1,14 @@
 import React from 'react'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import Immutable from 'immutable'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
 import { getActiveMatchSetForm } from './helpers'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -79,19 +79,14 @@ class ConfigurationPolicies extends React.Component {
       activeEditFormActions
     )
     return (
-      <div className="configuration-policies">
-
-        <Row className="header-btn-row">
-          <Col sm={8}>
-            <h3><FormattedMessage id="portal.policy.edit.policies.policyRules.text"/></h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.addRule}>
-              <IconAdd />
-            </Button>
-          </Col>
-        </Row>
+      <div id="configuration-policies">
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.policies.policyRules.text"/>}>
+          <Button bsStyle="success" className="btn-icon"
+            onClick={this.addRule}>
+            <IconAdd />
+          </Button>
+        </SectionHeader>
         <ConfigurationPolicyRules
           requestPolicies={config.getIn(['request_policy','policy_rules'])}
           responsePolicies={config.getIn(['response_policy','policy_rules'])}
