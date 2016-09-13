@@ -19,7 +19,10 @@ $section-header-input-width: em(228px, $section-header-font-size);
 
   .form-group {
     padding-bottom: 0;
-    margin-right: 12px;
+
+    &:not(:last-child) {
+      margin-right: 12px;      
+    }
   }
 
   .search-input-group {
