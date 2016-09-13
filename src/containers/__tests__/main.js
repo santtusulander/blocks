@@ -1,59 +1,68 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-import Immutable from 'immutable'
+import { shallow } from 'enzyme'
+import { fromJS } from 'immutable'
+
+jest.unmock('../main.jsx')
+import { Main } from '../main.jsx'
 
 jest.mock('../../util/helpers', () => {
   return {
-    filterAccountsByUserName: jest.genMockFunction()
+    filterAccountsByUserName: jest.fn()
       .mockImplementation(accounts => accounts),
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction()
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn()
   }
 })
 
 jest.mock('../../routes', () => {
   return {
-    getRoute: jest.genMockFunction()
+    getRoute: jest.fn()
   }
 })
 
-jest.autoMockOff()
-
-jest.dontMock('../main.jsx')
-const Main = require('../main.jsx').Main
 
 function uiActionsMaker() {
   return {
-    changeTheme: jest.genMockFunction(),
-    changeNotification: jest.genMockFunction()
+    changeTheme: jest.fn(),
+    changeNotification: jest.fn()
+  }
+}
+
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.fn(),
+    fetchAccounts: jest.fn()
+  }
+}
+
+function groupActionsMaker() {
+  return {
+    fetchGroup: jest.fn(),
+    fetchGroups: jest.fn()
+  }
+}
+
+function rolesActionsMaker() {
+  return {
+    fetchRoles: jest.fn()
   }
 }
 
 function hostActionsMaker() {
   return {
-    fetchHost: jest.genMockFunction().mockReturnValue({
+    fetchHost: jest.fn().mockReturnValue({
       then: (cb => cb({payload: {}}))
     })
   }
 }
 
-function purgeActionsMaker() {
+function userActionsMaker(cbResponse, actionObject) {
   return {
-    createPurge: jest.genMockFunction().mockReturnValue({
-      then: (cb => cb({payload: {}}))
-    }),
-    resetActivePurge: jest.genMockFunction(),
-    updateActivePurge: jest.genMockFunction()
-  }
-}
-
-function userActionsMaker(cbResponse) {
-  return {
-    startFetching: jest.genMockFunction(),
-    checkToken: jest.genMockFunction(),
-    logOut: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchUser: jest.fn(),
+    checkToken: jest.fn().mockImplementation(() => ({ then: cb => cb(actionObject) })),
+    logOut: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     })
   }
@@ -61,11 +70,11 @@ function userActionsMaker(cbResponse) {
 
 function fakeRouterMaker() {
   return {
-    push: jest.genMockFunction()
+    push: jest.fn()
   }
 }
 
-const fakeProperties = Immutable.fromJS([
+const fakeProperties = fromJS([
   {
     "account_id": 1, "group_id": 1,
     "property": "www.foobar.com",
@@ -75,22 +84,15 @@ const fakeProperties = Immutable.fromJS([
   }
 ])
 
-const fakePurge = Immutable.fromJS({
-  action: 'purge',
-  objects: [],
-  note: '',
-  feedback: null
-})
-
-const fakeActiveAccount = Immutable.fromJS(
+const fakeActiveAccount = fromJS(
   {"id": 1}
 )
 
-const fakeActiveGroup = Immutable.fromJS(
+const fakeActiveGroup = fromJS(
   {"id": 1}
 )
 
-const fakeHost = Immutable.fromJS({
+const fakeHost = fromJS({
   "services": [{
     "configurations": [{
       "edge_configuration": {
@@ -104,85 +106,88 @@ const fakeLocation = {pathname: ''}
 
 const fakeParams = {brand: 'aaa', account: 'bbb', group: 'ccc', property: 'ddd'}
 
-const fakeFetchAccountData = jest.genMockFunction()
+const fakeFetchAccountData = jest.fn()
 
 describe('Main', () => {
+  let subject = null
+  let props = {}
+  let userActions = null
+  let router = null
+  let rolesActions = null
+  let accountActions = null
+  let groupActions = null
+
+  beforeEach(() => {
+    subject = (error, loggedIn) => {
+      router = fakeRouterMaker()
+      rolesActions = rolesActionsMaker()
+      accountActions = accountActionsMaker()
+      groupActions = groupActionsMaker()
+      userActions = userActionsMaker(
+        () => {},
+        { error, payload: { username: 'aa' } }
+      )
+      props = {
+        location: fakeLocation,
+        uiActions: uiActionsMaker(),
+        accounts: fromJS(['asda']),
+        accountActions,
+        groupActions,
+        userActions,
+        rolesActions,
+        router,
+        user: fromJS({ loggedIn }),
+        properties: fakeProperties,
+        activeAccount: fakeActiveAccount,
+        activeGroup: fakeActiveGroup,
+        activeHost: fakeHost,
+        hostActions: hostActionsMaker(),
+        params: fakeParams,
+        fetchAccountData: fakeFetchAccountData
+      }
+      return shallow(<Main {...props}/>)
+    }
+  })
+
   it('should exist', () => {
-    let main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation} uiActions={uiActionsMaker()}
-        userActions={userActionsMaker()} theme="dark"
-        params={fakeParams}
-        fetchAccountData={fakeFetchAccountData} />
-    );
-    expect(TestUtils.isCompositeComponent(main)).toBeTruthy();
+    expect(subject().length).toBe(1);
   });
 
-  it('should activate a property to purge', () => {
-    let main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation}
-        uiActions={uiActionsMaker()}
-        userActions={userActionsMaker()}
-        purgeActions = {purgeActionsMaker()}
-        activePurge={fakePurge}
-        theme="dark"
-        params={fakeParams}
-        fetchAccountData={fakeFetchAccountData} />
-    );
-    expect(main.state.activePurge).toBe(null);
-    main.activatePurge(1)()
-    expect(main.state.activePurge).toBe(1);
+  it('should check access token', () => {
+    subject()
+    expect(userActions.checkToken.mock.calls.length).toBe(1);
   });
 
-  it('should create a new purge', () => {
-    const purgeActions = purgeActionsMaker()
-    let main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation}
-        uiActions={uiActionsMaker()}
-        userActions={userActionsMaker()}
-        properties={fakeProperties}
-        activePurge={fakePurge}
-        activeAccount={fakeActiveAccount}
-        activeGroup={fakeActiveGroup}
-        activeHost={fakeHost}
-        purgeActions={purgeActions}
-        hostActions={hostActionsMaker()}
-        params={fakeParams}
-        fetchAccountData={fakeFetchAccountData}/>
-    );
-    main.activatePurge(fakeProperties.get(0))()
-    main.saveActivePurge()
-    expect(purgeActions.createPurge.mock.calls[0][0]).toBe('udn')
-    expect(purgeActions.createPurge.mock.calls[0][1]).toBe(1)
-    expect(purgeActions.createPurge.mock.calls[0][2]).toBe(1)
-    expect(purgeActions.createPurge.mock.calls[0][3]).toBe('')
-    expect(purgeActions.createPurge.mock.calls[0][4]).toEqual(fakePurge.toJS())
+  it('should fetch user and roles if token check ok', () => {
+    subject()
+    expect(rolesActions.fetchRoles.mock.calls.length).toBe(1);
+    expect(userActions.fetchUser.mock.calls.length).toBe(1);
   });
+  // it('should have .chart-view class when viewing charts', () => {
+  //   let main = TestUtils.renderIntoDocument(
+  //     <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
+  //       userActions={userActionsMaker()}
+  //       viewingChart={true}
+  //       params={fakeParams}
+  //       fetchAccountData={fakeFetchAccountData} />
+  //   );
+  //   let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
+  //   expect(ReactDOM.findDOMNode(container).className).toContain('chart-view');
+  // });
 
-  it('should have .chart-view class when viewing charts', () => {
-    let main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
-        userActions={userActionsMaker()}
-        viewingChart={true}
-        params={fakeParams}
-        fetchAccountData={fakeFetchAccountData} />
-    );
-    let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
-    expect(ReactDOM.findDOMNode(container).className).toContain('chart-view');
-  });
-
-  it('handles a successful log out attempt', () => {
-    const userActions = userActionsMaker({})
-    const fakeRouter = fakeRouterMaker()
-    const main = TestUtils.renderIntoDocument(
-      <Main location={fakeLocation}
-        uiActions={uiActionsMaker()}
-        theme="dark"
-        userActions={userActions}
-        router={fakeRouter}
-        params={fakeParams}
-        fetchAccountData={fakeFetchAccountData} />
-    )
-    main.logOut()
-    expect(fakeRouter.push.mock.calls[0]).toContain('/login')
-  });
+  // it('handles a successful log out attempt', () => {
+  //   const userActions = userActionsMaker({})
+  //   const fakeRouter = fakeRouterMaker()
+  //   const main = TestUtils.renderIntoDocument(
+  //     <Main location={fakeLocation}
+  //       uiActions={uiActionsMaker()}
+  //       theme="dark"
+  //       userActions={userActions}
+  //       router={fakeRouter}
+  //       params={fakeParams}
+  //       fetchAccountData={fakeFetchAccountData} />
+  //   )
+  //   main.logOut()
+  //   expect(fakeRouter.push.mock.calls[0]).toContain('/login')
+  // });
 })
