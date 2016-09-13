@@ -12,13 +12,14 @@ import * as permissionsActionCreators from '../../../redux/modules/permissions'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import PageContainer from '../../../components/layout/page-container'
 import SelectWrapper from '../../../components/select-wrapper'
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
-import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
@@ -376,7 +377,7 @@ export class AccountManagementAccountUsers extends React.Component {
     ]).insert(0, ['all', 'All Groups']).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
     return (
-      <div className="container-fluid content-container account-management-account-users">
+      <PageContainer>
         <Row className="header-btn-row">
           <Col lg={2}>
             <h3>
@@ -424,7 +425,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="8%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -445,14 +446,10 @@ export class AccountManagementAccountUsers extends React.Component {
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  <td>
-                    <a href="#" onClick={() => {this.editUser(user)}}>
-                      EDIT
-                    </a>
-                    <Button onClick={() => this.deleteUser(user.get('email'))}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                  <td className="nowrap-column">
+                    <ActionButtons
+                      onEdit={() => {this.editUser(user)}}
+                      onDelete={() => this.deleteUser(user.get('email'))} />
                   </td>
                 </tr>
               )
@@ -514,7 +511,7 @@ export class AccountManagementAccountUsers extends React.Component {
               ))}
           </ActionModal>
         }
-      </div>
+      </PageContainer>
     )
   }
 }

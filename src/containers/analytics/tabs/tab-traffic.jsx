@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import numeral from 'numeral'
+import moment from 'moment'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
@@ -10,6 +11,7 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
+import DateRanges from '../../../constants/date-ranges'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -92,6 +94,22 @@ class AnalyticsTabTraffic extends React.Component {
         service_type: fetchOpts.service_type
       })
     }
+
+    if (filters.getIn(['includeComparison'])) {
+      const dateRangeLabel = filters.get('dateRangeLabel')
+      const dateSpan = fetchOpts.endDate - fetchOpts.startDate + 1
+      let startDate = fetchOpts.startDate - dateSpan
+      let endDate = fetchOpts.endDate - dateSpan
+      if(dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
+        startDate = Number(moment(fetchOpts.startDate * 1000).subtract(1, 'months').format('X'))
+        endDate = startDate + dateSpan
+      }
+      const comparisonByTimeOpts = Object.assign({}, byTimeOpts, {
+        startDate: startDate,
+        endDate: endDate
+      })
+      this.props.trafficActions.fetchByTimeComparison(comparisonByTimeOpts)
+    }
   }
 
   formatTotals(value) {
@@ -117,6 +135,7 @@ class AnalyticsTabTraffic extends React.Component {
         avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
+        byTimeComparison={filters.getIn(['includeComparison']) ? this.props.trafficByTimeComparison : Immutable.List()}
         dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
         lowTraffic={this.formatTotals(lowTraffic)}
@@ -140,7 +159,8 @@ AnalyticsTabTraffic.propTypes = {
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
-  trafficByTime: React.PropTypes.instanceOf(Immutable.List)
+  trafficByTime: React.PropTypes.instanceOf(Immutable.List),
+  trafficByTimeComparison: React.PropTypes.instanceOf(Immutable.List)
 }
 
 AnalyticsTabTraffic.defaultProps = {
@@ -148,7 +168,8 @@ AnalyticsTabTraffic.defaultProps = {
   metrics: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCountry: Immutable.List(),
-  trafficByTime: Immutable.List()
+  trafficByTime: Immutable.List(),
+  trafficByTimeComparison: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -157,6 +178,7 @@ function mapStateToProps(state) {
     metrics: state.metrics,
     totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
+    trafficByTimeComparison: state.traffic.get('byTimeComparison'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress')
   }

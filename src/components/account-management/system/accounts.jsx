@@ -5,8 +5,9 @@ import { List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
+import PageContainer from '../../../components/layout/page-container'
 import IconAdd from '../../icons/icon-add'
-import ActionLinks from '../action-links'
+import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
@@ -185,7 +186,7 @@ class AccountList extends Component {
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -208,12 +209,12 @@ class AccountList extends Component {
         <table className="table table-striped cell-text-left">
           <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.list.accountName.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="name" width="27%"><FormattedMessage id='portal.account.list.accountName.title'/></TableSorter>
             <TableSorter {...sorterProps} column="provider_type_label" width="15%"><FormattedMessage id='portal.account.list.type.title'/></TableSorter>
             <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
-            <TableSorter {...sorterProps} column="services" width="30%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
-            <th width="8%"/>
+            <TableSorter {...sorterProps} column="services" width="23%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
+            <th width="1%"/>
           </tr>
           </thead>
           <tbody>
@@ -233,8 +234,8 @@ class AccountList extends Component {
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
-                <td>
-                  <ActionLinks
+                <td className="nowrap-column">
+                  <ActionButtons
                     onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
@@ -250,7 +251,7 @@ class AccountList extends Component {
             </tr>}
           </tbody>
         </table>
-      </div>
+      </PageContainer>
     )
   }
 }

@@ -1,11 +1,12 @@
 import React from 'react'
-
 import { FormattedMessage } from 'react-intl';
+
+import PageContainer from '../../../components/layout/page-container'
 
 class AccountManagementSystemUsers extends React.Component {
   render() {
     return (
-      <div className="container-fluid content-container">
+      <PageContainer>
         {/* Not in 0.8
           <UserList
           users={fakeUsers}
@@ -15,7 +16,7 @@ class AccountManagementSystemUsers extends React.Component {
         <p className="text-center">
           <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
         </p>
-      </div>
+      </PageContainer>
 
     )
   }

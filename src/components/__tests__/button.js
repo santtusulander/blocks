@@ -1,9 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../button.js')
+jest.unmock('../button.jsx')
 jest.unmock('classnames')
-import UDNButton from '../button.js'
+import UDNButton from '../button.jsx'
 
 describe('Button', () => {
   it('should exist', () => {

@@ -92,11 +92,11 @@ Select.displayName = 'Select'
 Select.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  emptyLabel: PropTypes.string,
   numericValues: PropTypes.bool,
   onSelect: PropTypes.func,
   options: PropTypes.array,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  emptyLabel: PropTypes.string
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
 Select.defaultProps = {

@@ -4,10 +4,16 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../redirection.jsx')
 const Redirection = require('../redirection.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('Redirection', () => {
   it('should exist', () => {
     let redirection = TestUtils.renderIntoDocument(
-      <Redirection />
+      <Redirection intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(redirection)).toBeTruthy();
   })
@@ -15,7 +21,7 @@ describe('Redirection', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let redirection = TestUtils.renderIntoDocument(
-      <Redirection changeValue={changeValue}/>
+      <Redirection changeValue={changeValue} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(redirection, 'input')
     inputs[0].value = 'new'
@@ -27,7 +33,7 @@ describe('Redirection', () => {
   it('should handle select changes', () => {
     let changeValue = jest.genMockFunction()
     let redirection = TestUtils.renderIntoDocument(
-      <Redirection changeValue={changeValue}/>
+      <Redirection changeValue={changeValue} intl={intlMaker()}/>
     )
     expect(redirection.state.activeProtocol).toBe('http')
     redirection.handleSelectChange('activeProtocol')('foo')

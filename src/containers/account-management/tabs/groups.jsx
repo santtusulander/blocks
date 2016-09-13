@@ -10,11 +10,12 @@ import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import PageContainer from '../../../components/layout/page-container'
+import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
-import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import UDNButton from '../../../components/button'
 
@@ -235,7 +236,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     return (
-      <div className="container-fluid content-container account-management-account-groups">
+      <PageContainer className="account-management-account-groups">
         <Row className="header-btn-row">
           <Col sm={6}>
             <h3>
@@ -269,7 +270,7 @@ class AccountManagementAccountGroups extends React.Component {
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="8%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -295,14 +296,10 @@ class AccountManagementAccountGroups extends React.Component {
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
                 */}
-                <td>
-                  <a href="#" onClick={() => this.props.editGroup(group)}>
-                    EDIT
-                  </a>
-                  <Button onClick={this.deleteGroup(group)}
-                    className="btn-link btn-icon">
-                    <IconTrash/>
-                  </Button>
+                <td className="nowrap-column">
+                  <ActionButtons
+                    onEdit={() => {this.props.editGroup(group)}}
+                    onDelete={() => {this.props.deleteGroup(group)}} />
                 </td>
               </tr>
             )
@@ -315,7 +312,7 @@ class AccountManagementAccountGroups extends React.Component {
           this.state.search.length > 0 &&
           <div className="text-center">No groups found with the search term "{this.state.search}"</div>
         }
-      </div>
+      </PageContainer>
     )
   }
 }

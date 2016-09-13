@@ -21,7 +21,7 @@ export const AccountManagementSidebar = props => {
         <SidebarLinks
           activeItem={activeAccount}
           activate={activate}
-          emptyMsg={this.props.intl.formatMessage({id: 'portal.account.manage.noAccounts.text'})}
+          emptyMsg={props.intl.formatMessage({id: 'portal.account.manage.noAccounts.text'})}
           items={accounts}/>
       </div>
 
@@ -29,6 +29,7 @@ export const AccountManagementSidebar = props => {
   )
 }
 
+AccountManagementSidebar.displayName='AccountManagementSidebar'
 AccountManagementSidebar.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activate: PropTypes.func,
