@@ -3,7 +3,7 @@ import { Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SelectWrapper from '../select-wrapper'
-
+import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
