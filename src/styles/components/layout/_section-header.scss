@@ -2,9 +2,10 @@
 // ==================
 $section-header-font-size: 14px;
 $section-header-input-width: em(228px, $section-header-font-size);
+$section-container-bottom-margin: rem(24px);
 
 .section-header-container {
-  margin-bottom: 24px;
+  margin-bottom: $section-container-bottom-margin;
 
   .section-header-layout {
     display: flex;
@@ -21,7 +22,7 @@ $section-header-input-width: em(228px, $section-header-font-size);
     padding-bottom: 0;
 
     &:not(:last-child) {
-      margin-right: 12px;      
+      margin-right: #{$section-container-bottom-margin / 2};
     }
   }
 
