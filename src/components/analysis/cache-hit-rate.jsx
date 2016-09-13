@@ -1,17 +1,15 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
+import SectionHeader from '../layout/section-header'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
-import {formatBytes} from '../../util/helpers'
+// import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
 import Select from '../select'
-
-import './cache-hit-rate.scss'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
@@ -122,21 +120,16 @@ class AnalysisCacheHitRate extends React.Component {
     }
     const sortedStats = this.sortedData(detail, this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-cache-hit-rate">
-        <Row>
-          <Col sm={8}>
-            <h3>Cache Hit Rate By Day</h3>
-          </Col>
-
-          <Col sm={4}>
-            <Select
-              className='pull-right'
-              options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
-              value={this.state.chartType}
-              onSelect= {this.changeChartType}
-            />
-          </Col>
-        </Row>
+      <div>
+        <SectionHeader
+          sectionHeaderTitle="Cache Hit Rate By Day">
+          <Select
+            className='pull-right'
+            options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
+            value={this.state.chartType}
+            onSelect= {this.changeChartType}
+          />
+        </SectionHeader>
 
         <div ref="stacksHolder">
           {this.props.fetching ?
