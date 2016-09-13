@@ -12,7 +12,7 @@ import recordTypes from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
 import { CREATE_RECORD } from '../../constants/permissions'
 
-export default class DNSList extends Component {
+class DNSList extends Component {
 
   shouldComponentUpdate(nextProps) {
     return !nextProps.modalOpen
