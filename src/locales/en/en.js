@@ -54,6 +54,9 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.title': 'Delete Record?',
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
+  'portal.dnsDomain.delete.title': 'Delete Domain?',
+  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain will also delete all the records related to it.',
+
   'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
