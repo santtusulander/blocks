@@ -24,7 +24,7 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   componentWillMount() {
-    const { accountActions, router, route } = this.props
+    const { accountActions } = this.props
 
     accountActions.fetchAccounts( this.props.params.brand )
   }
@@ -45,7 +45,6 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   saveRole(){
-    console.log('SaveRole()');
     this.hideAddNewRoleDialog();
   }
 
@@ -69,6 +68,8 @@ class AccountManagementSystemRoles extends React.Component {
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
+  accountActions: React.propTypes.object,
+  params: React.propTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
   users: React.PropTypes.instanceOf(Immutable.List)
@@ -79,7 +80,7 @@ AccountManagementSystemRoles.defaultProps = {
   users: Immutable.List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return { }
 }
 
@@ -90,4 +91,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountManagementSystemRoles)
-
