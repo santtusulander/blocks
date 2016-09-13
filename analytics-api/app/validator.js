@@ -61,6 +61,10 @@ class Validator {
       list: {
         validator : /^(?:[^ ,]+,)*?(?:[^ ,]+)$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid comma separated list of values with no spaces (e.g. 'hello', 'hello,there', 'well,hello,there'). Value received: ${value}`
+      },
+      net_type: {
+        validator : /^(?:on|off)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid net type ('on' or 'off'). Value received: ${value}`
       }
     };
   }
