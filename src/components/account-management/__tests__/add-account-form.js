@@ -1,17 +1,39 @@
 import React from 'react'
-
-import {shallow} from 'enzyme'
-jest.unmock('../account-form.jsx')
+import { fromJS } from 'immutable'
+import { mount, shallow } from 'enzyme'
+import { reducer as form } from 'redux-form'
+import { createStore, combineReducers } from 'redux'
+import jsdom from 'jsdom'
 
 import NewAccountForm from '../account-form.jsx'
 
-const fields = {}
+jest.unmock('../account-form.jsx')
+
 
 describe('AccountForm', () => {
+
+  const onSave = jest.genMockFunction()
+  const onCancel = jest.genMockFunction()
+  let subject, error, props = null
+  let touched = false
+
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        onSave,
+        onCancel,
+        fields: {
+          accountName: { touched, error, value: '' },
+          accountBrand: { touched, error, value: '' },
+          accountType: { touched, error, value: '' },
+          services: { touched, error, value: '' },
+        }
+      }
+      return shallow(<NewAccountForm {...props} />)
+    }
+  })
+
   it('should exist', () => {
-    const accountForm = shallow(
-      <NewAccountForm fields={fields} />
-    )
-    expect(accountForm.length).toBe(1)
+    expect(subject().length).toBe(1)
   })
 })
