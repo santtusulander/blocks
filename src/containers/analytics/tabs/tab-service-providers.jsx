@@ -54,6 +54,7 @@ class AnalyticsTabServiceProviders extends React.Component {
       <AnalysisServiceProviders
         fetching={this.props.fetching}
         stats={this.props.serviceProviders}
+        serviceProviders={this.props.allServiceProviders}
       />
     )
   }
@@ -61,7 +62,9 @@ class AnalyticsTabServiceProviders extends React.Component {
 
 AnalyticsTabServiceProviders.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
+  allServiceProviders: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -79,6 +82,7 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
+    allServiceProviders: state.filters.get('filterOptions').get('serviceProviders'),
     filters: state.filters.get('filters')
   }
 }

@@ -55,12 +55,50 @@ class AnalysisServiceProviders extends React.Component {
       return 0
     })
   }
+
+  /**
+   * Converts an `Immutable.List` of service provider objects into a lookup table
+   * of service provider objects keyed against their `id`.
+   *
+   * Example input (Immutable.List):
+   *  [
+   *    {'id': 123, 'name': 'service provider 123', ... },
+   *    {'id': 137, 'name': 'service provider 137', ...},
+   *    ...
+   *  ]
+   *
+   * Example output (Immutable.Map):
+   *  {
+   *    '123': {'id': 123, 'name': 'service provider 123', ...},
+   *    '137': {'id': 137, 'name': 'service provider 137', ...},
+   *    ...
+   *  }
+   *
+   * @param {Immutable.List} serviceProviders - a list of service provider objects
+   * @return {Immutable.Map} a map of the service providers keyed against their `id`
+   */
+  lookUpTableForServiceProviderNames(serviceProviders) {
+    return serviceProviders.toMap().mapEntries((entry) => {
+      let serviceProvider = entry[1]
+      let id = serviceProvider.get('id')
+
+      return [ id, serviceProvider ]
+    })
+  }
+
+  nameForServiceProvider(provider, lookUpTable) {
+    const id = provider.get('sp_account')
+    const serviceProvider = lookUpTable.get(id)
+    return serviceProvider ? serviceProvider.get(id) : `ID: ${id}`
+  }
+
   render() {
     const month = moment().format('MMMM YYYY')
+    const lookUpTable = this.lookUpTableForServiceProviderNames(this.props.serviceProviders)
 
     const providers = this.props.stats.map((provider, i) => {
       return Immutable.fromJS({
-        group: provider.get('name'),
+        group: this.nameForServiceProvider(provider, lookUpTable),
         groupIndex: i,
         data: [
           provider.getIn(['http','net_on_bytes'], 0),
@@ -73,7 +111,7 @@ class AnalysisServiceProviders extends React.Component {
     const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
       byCountry = byCountry.push(...provider.get('countries').map(country => {
         return Immutable.Map({
-          provider: provider.get('name'),
+          provider: this.nameForServiceProvider(provider, lookUpTable),
           country: country.get('name'),
           bytes: country.get('bytes'),
           percent_total: country.get('percent_total')
@@ -143,9 +181,11 @@ class AnalysisServiceProviders extends React.Component {
 AnalysisServiceProviders.displayName = 'AnalysisServiceProviders'
 AnalysisServiceProviders.propTypes = {
   fetching: React.PropTypes.bool,
+  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisServiceProviders.defaultProps = {
+  serviceProviders: Immutable.List(),
   stats: Immutable.List()
 }
 
