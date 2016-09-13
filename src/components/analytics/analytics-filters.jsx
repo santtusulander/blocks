@@ -117,10 +117,10 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <FilterServiceProvider
           changeServiceProvider={val => {
-            props.onFilterChange('serviceProvider', val)
+            props.onFilterChange('serviceProviders', val)
           }}
           options={props.filterOptions.get('serviceProviders')}
-          value={props.filters.get('serviceProvider')}
+          value={props.filters.get('serviceProviders')}
           />
         </div>
       }
