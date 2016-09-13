@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { List } from 'immutable'
-import { Row, Col } from 'react-bootstrap'
 
 import * as supportActionCreators from '../../../redux/modules/support'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
@@ -54,7 +54,7 @@ class SupportTabTickets extends React.Component {
     this.setState({
       showModal: true,
       activeTicket: ticket,
-      showEditModal: false,
+      showEditModal: false
     })
   }
 
@@ -148,29 +148,27 @@ class SupportTabTickets extends React.Component {
     const openTickets = allTickets.filter(ticket => this.openStatuses.includes(ticket.get('status')))
     const closedTickets = allTickets.filter(ticket => this.closedStatuses.includes(ticket.get('status')))
 
+    const openTicketsSize = openTickets.size
+    const openTicketsText = ` Open Ticket${openTickets.size === 1 ? '' : 's'}`
+    const finalOpenTicketsText = openTicketsSize + openTicketsText
+
+    const closedTicketsSize = closedTickets.size
+    const closedTicketsText = ` Closed Ticket${closedTickets.size === 1 ? '' : 's'}`
+    const finalClosedTicketsText = closedTicketsSize + closedTicketsText
+
     return (
       <div className="account-support-tickets">
-        <Row>
-          <Col sm={8}>
-            <h2>{openTickets.size} Open Ticket{openTickets.size === 1 ? '' : 's'}</h2>
-          </Col>
-          <Col sm={4}>
-            <div className="account-support-tickets__filters">
-              <UDNButton bsStyle="success"
-                         icon={true}
-                         addNew={true}
-                         className="pull-right"
-                         onClick={() => {
-                           this.showFormModal()
-                         }}>
-                <IconAdd/>
-              </UDNButton>
-            </div>
-          </Col>
-        </Row>
+        <SectionHeader sectionHeaderTitle={finalOpenTicketsText}>
+          <UDNButton
+            bsStyle="success"
+            icon={true}
+            onClick={() => {this.showFormModal()}}>
+            <IconAdd/>
+          </UDNButton>
+        </SectionHeader>
         {this.renderTicketList(openTickets)}
 
-        <h2>{closedTickets.size} Closed Ticket{closedTickets.size === 1 ? '' : 's'}</h2>
+        <SectionHeader sectionHeaderTitle={finalClosedTicketsText} />
         {this.renderTicketList(closedTickets)}
 
         {this.state.showEditModal &&
@@ -196,7 +194,9 @@ class SupportTabTickets extends React.Component {
 
 SupportTabTickets.displayName = 'SupportTabTickets'
 SupportTabTickets.propTypes = {
-  supportActions: PropTypes.object
+  allTickets: PropTypes.Array,
+  supportActions: PropTypes.object,
+  uiActions: PropTypes.object
 }
 
 SupportTabTickets.defaultProps = {
