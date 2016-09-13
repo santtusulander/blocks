@@ -1,4 +1,3 @@
-import React from 'react'
 
 export const ACCOUNT_TYPES = [
   { value: 1, label: 'Content Provider' },

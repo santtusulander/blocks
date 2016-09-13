@@ -6,7 +6,7 @@ const initialState = Immutable.fromJS({
     dateRange: {
       startDate: null,
       endDate: null
-    }, //startDate: , endDate: },
+    },
     includeComparison: false,
     dateRangeLabel: 'Month to date',
     recordType: 'transfer_rates',
@@ -48,7 +48,7 @@ export function setValue(state, action) {
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
-export function resetDefaults(state){
+export function resetDefaults() {
   return initialState
 }
 
