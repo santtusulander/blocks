@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../routes'
-import { getUrl, getSupportUrlFromParams } from '../../util/helpers'
+import { getUrl, getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'

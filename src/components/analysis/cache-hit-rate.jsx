@@ -8,6 +8,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
+import { paleblue } from '../../constants/colors'
 import Select from '../select'
 
 import './cache-hit-rate.scss'
@@ -71,7 +72,6 @@ class AnalysisCacheHitRate extends React.Component {
     const detail = stats.get('detail') || Immutable.List()
 
     const details = detail.map(datapoint => {
-
       return {
         chit_ratio: datapoint.get('chit_ratio'),
         timestamp: datapoint.get('timestamp')
@@ -90,17 +90,29 @@ class AnalysisCacheHitRate extends React.Component {
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     } else {
-
+      const datasets = []
+      if(dataSets) {
+        datasets.push({
+          area: false,
+          color: paleblue,
+          comparisonData: false,
+          data: dataSets[0],
+          id: 'http',
+          label: 'Cache Hit Ratio',
+          line: true,
+          stackedAgainst: false,
+          xAxisFormatter: false
+        })
+      }
       chart = (
-
-        <AnalysisByTime axes={true} padding={40}
+        <AnalysisByTime
+          axes={true}
           dataKey="chit_ratio"
-          primaryData={dataSets && dataSets[0]}
-          primaryLabel='Cache Hit Ratio'
-          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
+          dataSets={datasets}
+          padding={40}
           showLegend={true}
           showTooltip={false}
-        />
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     }
     const sorterProps = {
@@ -143,14 +155,14 @@ class AnalysisCacheHitRate extends React.Component {
             </tr>
           </thead>
           <tbody>
-                {sortedStats.map((day, i) => {
-                  return (
-                    <tr key={i}>
-                      <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                      <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
-                    </tr>
-                  )
-                })}
+            {sortedStats.map((day, i) => {
+              return (
+                <tr key={i}>
+                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                  <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

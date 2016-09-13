@@ -44,6 +44,26 @@ class AnalyticsDB {
         select: 'property',
         where: 'AND property = ?',
         field: 'property'
+      },
+      sp_account: {
+        select: 'sp_account_id AS `account`',
+        where: 'AND sp_account_id = ?',
+        field: 'sp_account_id'
+      },
+      sp_group: {
+        select: 'sp_group_id AS `group`',
+        where: 'AND sp_group_id = ?',
+        field: 'sp_group_id'
+      },
+      sp_asset: {
+        select: 'sp_asset AS `asset`',
+        where: 'AND sp_asset = ?',
+        field: 'sp_asset'
+      },
+      sp_account_ids: {
+        select: 'sp_account_id AS `sp_account`',
+        where: 'AND sp_account_id IN ( ? )',
+        field: 'sp_account_id'
       }
     }
 
@@ -94,6 +114,7 @@ class AnalyticsDB {
       account_max  : null,
       group        : null,
       property     : null,
+      asset        : null,
       service_type : null,
       dimension    : 'global',
       granularity  : 'hour',
@@ -780,6 +801,244 @@ class AnalyticsDB {
         url_path
       ORDER BY ${optionsFinal.sort_by || 'bytes'} ${optionsFinal.sort_dir.toUpperCase()}
       LIMIT ${optionsFinal.limit || 1000};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+
+  }
+
+  /**
+   * Get traffic information for an account broken down by net type.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getOnOffNetTraffic(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.asset
+      && conditions.push(this.accountLevelFieldMap.sp_asset.where)
+      && queryOptions.push(optionsFinal.asset);
+
+    let queryParameterized = `
+      SELECT
+        ${this.accountLevelFieldMap.sp_account.select},
+        epoch_start as timestamp,
+        net_type,
+        sum(bytes) AS bytes
+      FROM sp_property_city_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        epoch_start,
+        net_type
+      ORDER BY epoch_start ASC;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  /**
+   * Get total and detailed traffic information.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPContributionData(options) {
+    let queries = [];
+
+    queries.push(this.getSPContributionTraffic(options));
+    queries.push(this.getSPContributionCountryTraffic(options));
+    queries.push(this.getSPContributionTrafficTotal(options));
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+
+        // Set the total bytes to be a number instead of an array containing a single object
+        queryData[2] = _.get(queryData[2], [0, 'bytes'], null);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get traffic information for a CP account broken down by service provider, service type, and net type.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPContributionTraffic(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.sp_account_ids
+      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
+      && queryOptions.push(optionsFinal.sp_account_ids);
+
+    optionsFinal.net_type
+      && conditions.push('AND net_type = ?')
+      && queryOptions.push(optionsFinal.net_type);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    let queryParameterized = `
+      SELECT
+        ${this.accountLevelFieldMap.sp_account_ids.select},
+        net_type,
+        service_type,
+        sum(bytes) AS bytes
+      FROM sp_property_city_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        sp_account_id,
+        net_type,
+        service_type;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  /**
+   * Get traffic information for a CP account broken down by service provider and country.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPContributionCountryTraffic(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.sp_account_ids
+      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
+      && queryOptions.push(optionsFinal.sp_account_ids);
+
+    optionsFinal.net_type
+      && conditions.push('AND net_type = ?')
+      && queryOptions.push(optionsFinal.net_type);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    let queryParameterized = `
+      SELECT
+        ${this.accountLevelFieldMap.sp_account_ids.select},
+        country,
+        sum(bytes) AS bytes
+      FROM sp_property_city_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')}
+      GROUP BY
+        sp_account_id,
+        country;
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+
+  }
+
+  /**
+   * Get the total number of bytes limited by account, group, property,
+   * sp account(s), net type, and/or service type.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPContributionTrafficTotal(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.sp_account_ids
+      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
+      && queryOptions.push(optionsFinal.sp_account_ids);
+
+    optionsFinal.net_type
+      && conditions.push('AND net_type = ?')
+      && queryOptions.push(optionsFinal.net_type);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    let queryParameterized = `
+      SELECT
+        sum(bytes) AS bytes
+      FROM sp_property_city_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${conditions.join('\n        ')};
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);

@@ -39,7 +39,7 @@ import * as dnsRecordsReducers from './reducers'
 
 const InitialState = fromJS({
   activeRecord: null,
-  loading: false,
+  fetching: false,
   resources: []
 })
 
@@ -68,6 +68,16 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
   data.name = data.name.concat('.' + zone)
   return dnsRecordsApi.remove(zone, resource.concat('.' + zone), data)
+})
+
+export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
+  data.name = data.name.concat('.' + zone)
+  const { id, ...apiData } = data
+  return dnsRecordsApi.update(zone, resource.concat('.' + zone), apiData)
+    .then(({ data }) => {
+      data.name = domainlessRecordName(zone, data.name)
+      return { data, id }
+    })
 })
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
