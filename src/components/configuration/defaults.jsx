@@ -1,7 +1,9 @@
 import React from 'react'
 import {Row, Col, Input, Button} from 'react-bootstrap'
 import Immutable from 'immutable'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import ConfigurationSidebar from './sidebar'
@@ -10,8 +12,6 @@ import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers
 import Toggle from '../toggle'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 const policyPath = Immutable.List(['default_policy', 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
@@ -122,8 +122,8 @@ class ConfigurationDefaults extends React.Component {
       <div className="configuration-defaults">
 
         {/* Origin Cache Control */}
-
-        <h2><FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/></h2>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
 
         {/* Ignore case from origin */}
         <Row className="form-group">
@@ -191,9 +191,8 @@ class ConfigurationDefaults extends React.Component {
           </Col>
         </Row>
 
-        <hr/>
-
-        <h3><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/>} />
 
         <CacheKeyQueryStringForm
           horizontal={true}
@@ -201,22 +200,14 @@ class ConfigurationDefaults extends React.Component {
           set={config.getIn(policyPaths.cache_name)}
           updateSet={this.updateCacheKeyQueryString}/>
 
-        <hr/>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>}>
+          <Button bsStyle="success" className="btn-icon"
+            onClick={this.addRule}>
+            <IconAdd />
+          </Button>
+        </SectionHeader>
 
-        <Row className="header-btn-row">
-          <Col sm={8}>
-            <h3>
-              <FormattedMessage
-                id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>
-            </h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.addRule}>
-              <IconAdd />
-            </Button>
-          </Col>
-        </Row>
         <ConfigurationPolicyRules
           defaultPolicies={config.getIn(['default_policy','policy_rules'])}
           activateRule={this.props.activateRule}
