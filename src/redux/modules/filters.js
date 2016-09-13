@@ -1,5 +1,9 @@
 import { createAction, handleActions } from 'redux-actions'
+import axios from 'axios'
 import Immutable from 'immutable'
+
+import { urlBase, mapReducers, parseResponseData } from '../util'
+import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 
 const initialState = Immutable.fromJS({
   filters: {
@@ -36,7 +40,8 @@ const initialState = Immutable.fromJS({
       {label: '502', value: '502'},
       {label: '503', value: '503'}
     ]
-  }
+  },
+  fetching: false
 })
 
 // REDUCERS
@@ -52,15 +57,43 @@ export function resetDefaults() {
   return initialState
 }
 
+export function fetchServiceProvidersSuccess(state, action) {
+  const allFilter = initialState.filterOptions.serviceProviders[0];
+  const serviceProviders = [allFilter].concat(action.payload)
+
+  return state.merge({
+    filterOptions: {
+      serviceProviders: serviceProviders
+    },
+    fetching: false
+  })
+}
+
+export function fetchServiceProvidersFailure(state) {
+  return state.merge({
+    filterOptions: {
+      serviceProviders: null
+    },
+    fetching: false
+  })
+}
+
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
 const RESET_FILTERS = 'RESET_FILTERS'
+const SERVICE_PROVIDERS_FETCHED = 'SERVICE_PROVIDERS_FETCHED'
 
 export default handleActions({
   SET_FILTER_VALUE: setValue,
-  RESET_FILTERS: resetDefaults
+  RESET_FILTERS: resetDefaults,
+  SERVICE_PROVIDERS_FETCHED: mapReducers(fetchServiceProvidersSuccess, fetchServiceProvidersFailure)
 }, initialState)
 
 // ACTIONS
 
 export const setFilterValue = createAction(SET_FILTER_VALUE)
 export const resetFilters = createAction(RESET_FILTERS)
+
+export const fetchServiceProviders = createAction(SERVICE_PROVIDERS_FETCHED, (brand) => {
+  return axios.get(`${urlBase}/v2/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_SERVICE_PROVIDER}`)
+  .then(parseResponseData);
+})
