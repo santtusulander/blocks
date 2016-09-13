@@ -98,6 +98,7 @@ const TRANSLATED_MESSAGES = {
   'portal.role.list.search.noResults.text': 'No roles found',
   'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
 
+  'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
   'portal.analytics.fileErrors.serverErrors.label': 'Server errors',
 
@@ -179,7 +180,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.visitors.propertyTitle': 'Property Unique Visitors',
   'portal.analytics.tabs.visitors.groupTitle': 'Group Unique Visitors',
   'portal.analytics.tabs.visitors.accountTitle': 'Account Unique Visitors',
-  'portal.analytics.tabs.onOffNet.label': 'SP On/Off Net',
   'portal.analytics.tabs.onOffNet.label': 'SP On/Off Net',
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
@@ -776,7 +776,6 @@ const TRANSLATED_MESSAGES = {
   'portal.button.publish': 'Publish',
   'portal.button.PUBLISHING': 'PUBLISHING...',
   'portal.button.saveAction': 'Save Action',
-  'portal.button.add': 'Add',
   'portal.button.yes': 'Yes',
   'portal.button.close': 'Close',
   'portal.button.reload': 'Reload',

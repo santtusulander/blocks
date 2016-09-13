@@ -1,12 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
+import {Input} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
-import {Input} from 'react-bootstrap'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
