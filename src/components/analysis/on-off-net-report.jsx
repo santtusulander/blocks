@@ -3,6 +3,7 @@ import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
+import {FormattedMessage} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
 import AnalysisStackedByTime from './stacked-by-time'
@@ -113,7 +114,7 @@ class AnalysisOnOffNetReport extends React.Component {
         comparisonData: false,
         data: onNet.toJS(),
         id: '',
-        label: this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.primaryLabel.text'}),
+        label: this.props.intl.formatMessage({id: 'portal.analytics.onOffNet.primaryLabel.text'}),
         line: true,
         stackedAgainst: false,
         xAxisFormatter: false
@@ -126,7 +127,7 @@ class AnalysisOnOffNetReport extends React.Component {
         comparisonData: false,
         data: offNet.toJS(),
         id: '',
-        label: this.props.intl.formatMessage({id: 'portal.analytics.onOfNet.secondaryLabel.text'}),
+        label: this.props.intl.formatMessage({id: 'portal.analytics.onOffNet.secondaryLabel.text'}),
         line: true,
         stackedAgainst: false,
         xAxisFormatter: false
@@ -209,7 +210,8 @@ class AnalysisOnOffNetReport extends React.Component {
             </div>
           </Col>
         </Row>
-        <h3>ON/OFF NET</h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.onOffNet.text"/>} />
         <div ref="stacksHolder">
           {this.props.fetching ?
             <div>Loading...</div> : chart}
