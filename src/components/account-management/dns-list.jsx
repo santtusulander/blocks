@@ -45,7 +45,7 @@ class DNSList extends Component {
       )
     return (
       <PageContainer>
-        <SectionHeader sectionHeaderTitle={<span id="domain-stats">{`${records.length} Records`}</span>}>
+        <SectionHeader sectionHeaderTitle={<span id="domain-stats">{`${records.length} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}</span>}>
           <Input
             type="text"
             className="search-input"
@@ -67,7 +67,7 @@ class DNSList extends Component {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
               <div key={index}>
-                <SectionHeader sectionSubHeaderTitle={`${type} ` + <FormattedMessage id='portal.account.dnsList.records.header' />} />
+                <SectionHeader sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})} />
                 <SortableTable content={getContent(type)}/>
               </div>
             )
@@ -126,6 +126,7 @@ class SortableTable extends Component {
 SortableTable.propTypes = { content: PropTypes.func }
 
 DNSList.propTypes = {
+  intl: PropTypes.object,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
   onEditEntry: PropTypes.func,

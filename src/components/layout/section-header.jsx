@@ -27,8 +27,14 @@ SectionHeader.displayName = 'SectionHeader'
 SectionHeader.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,
-  sectionHeaderTitle: React.PropTypes.string,
-  sectionSubHeaderTitle: React.PropTypes.string
+  sectionHeaderTitle:  React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.node
+  ]),
+  sectionSubHeaderTitle:  React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.node
+  ])
 };
 
 module.exports = SectionHeader
