@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import Select from '../../../components/select'
@@ -22,8 +23,8 @@ export class FilterServiceProvider extends React.Component {
 FilterServiceProvider.displayName = 'FilterServiceProvider'
 FilterServiceProvider.propTypes = {
   changeServiceProvider: React.PropTypes.func,
-  options: React.PropTypes.array,
-  value: React.PropTypes.string
+  options: React.PropTypes.instanceOf(List),
+  value: React.PropTypes.instanceOf(List)
 }
 
 module.exports = FilterServiceProvider

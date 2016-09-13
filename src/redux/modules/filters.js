@@ -58,7 +58,7 @@ export function resetDefaults() {
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
-  const allFilter = initialState.filterOptions.serviceProviders[0];
+  const allFilter = initialState.get('filterOptions').get('serviceProviders').get(0)
   const serviceProviders = [allFilter].concat(action.payload)
 
   return state.merge({
