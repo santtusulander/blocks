@@ -1,9 +1,10 @@
 // Section Header Layout
 // ==================
-$section-header-input-width: rem(250px);
+$section-header-font-size: 14px;
+$section-header-input-width: em(228px, $section-header-font-size);
 
 .section-header-container {
-  padding-bottom: 24px;
+  margin-bottom: 24px;
 
   .section-header-layout {
     display: flex;
@@ -16,11 +17,14 @@ $section-header-input-width: rem(250px);
     text-transform: uppercase;
   }
 
+  .form-group {
+    padding-bottom: 0;
+    margin-right: 12px;
+  }
+
   .search-input-group {
     display: inline-block;
     min-width: $section-header-input-width;
-    padding-bottom: 0;
-    margin-right: 12px;
     vertical-align: middle;
 
     .search-input {
