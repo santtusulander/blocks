@@ -36,7 +36,7 @@ import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
 import { paleblue } from '../constants/colors'
 
-const endOfThisDay = () => moment().utc().endOf('hour')
+const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
 
 // default dates to last 28 days
