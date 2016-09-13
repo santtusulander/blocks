@@ -2,11 +2,6 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-// This component has a child that connects to redux, so mock that
-const reactRedux = require('react-redux')
-reactRedux.connect = jest.genMockFunction()
-reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
-
 jest.autoMockOff()
 jest.dontMock('../visitors.jsx')
 
@@ -118,11 +113,18 @@ const fakeByTimeData = Immutable.fromJS([
   }
 ])
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('AnalysisVisitors', () => {
   it('should exist', () => {
     let visitors = TestUtils.renderIntoDocument(
       <AnalysisVisitors fetching={true}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(visitors)).toBeTruthy();
   });
@@ -130,7 +132,8 @@ describe('AnalysisVisitors', () => {
   it('should show loading message if there is no data', () => {
     let visitors = TestUtils.renderIntoDocument(
       <AnalysisVisitors fetching={true}
-        serviceTypes={Immutable.List()}/>
+        serviceTypes={Immutable.List()}
+        intl={intlMaker()}/>
     );
     let div = TestUtils.scryRenderedDOMComponentsWithTag(visitors, 'div')
     expect(div[0].textContent).toContain('Loading...');
@@ -144,7 +147,8 @@ describe('AnalysisVisitors', () => {
         byBrowser={fakeBrowserData}
         byCountry={fakeCountryData}
         byOS={fakeOSData}
-        byTime={fakeByTimeData}/>
+        byTime={fakeByTimeData}
+        intl={intlMaker()}/>
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(visitors, 'td')
     expect(tds.length).toBe(24);

@@ -1,9 +1,10 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
-import ActionLinks from './action-links'
+import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 
@@ -18,7 +19,7 @@ class DNSList extends Component {
   }
 
   render() {
-    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc } = this.props
+    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc, intl } = this.props
     let tables = []
     let recordsByType = {}
     records.forEach(record => {
@@ -34,10 +35,10 @@ class DNSList extends Component {
           <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
-          <td>
-          <ActionLinks
-          onEdit={() => onEditEntry(record.id)}
-          onDelete={() => onDeleteEntry(record.id)}/>
+          <td className="nowrap-column">
+            <ActionButtons
+              onEdit={() => onEditEntry(record.id)}
+              onDelete={() => onDeleteEntry(record)}/>
           </td>
         </tr>
       )
@@ -52,7 +53,7 @@ class DNSList extends Component {
               type="text"
               className="search-input"
               groupClassName="search-input-group"
-              placeholder="Search records"
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
               value={searchValue}
               onChange={searchFunc}/>
             <IsAllowed to={CREATE_RECORD}>
@@ -60,7 +61,7 @@ class DNSList extends Component {
                 id="add-dns-record"
                 bsStyle="success"
                 onClick={onAddEntry}>
-                ADD RECORD
+                <FormattedMessage id='portal.account.dnsList.addRecord.button' />
               </UDNButton>
             </IsAllowed>
           </div>
@@ -70,7 +71,7 @@ class DNSList extends Component {
           if (recordsByType.hasOwnProperty(type)) {
             tables.push(
               <div key={index} className='table-container'>
-                <h4>{type} Records</h4>
+                <h4>{type} <FormattedMessage id='portal.account.dnsList.records.header' /></h4>
                 <SortableTable content={getContent(type)}/>
               </div>
             )
@@ -112,9 +113,9 @@ class SortableTable extends Component {
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
-            <th width="30%">ADDRESS</th>
-            <th width="30%">TTL</th>
+            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
             <th width="8%"></th>
           </tr>
         </thead>
@@ -128,8 +129,6 @@ class SortableTable extends Component {
 
 SortableTable.propTypes = { content: PropTypes.func }
 
-export default DNSList
-
 DNSList.propTypes = {
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
@@ -138,3 +137,5 @@ DNSList.propTypes = {
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string
 }
+
+export default injectIntl(DNSList)

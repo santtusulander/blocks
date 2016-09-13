@@ -6,7 +6,7 @@ import { shallow, mount } from 'enzyme'
 jest.dontMock('../../../constants/content-item-sort-options.js')
 jest.dontMock('../content-items.jsx')
 
-const ContentItems = require('../content-items.jsx')
+const ContentItems = require('../content-items.jsx').default
 
 const fakeMetrics = Immutable.fromJS([
   {
@@ -65,25 +65,25 @@ describe('ContentItems', () => {
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
+        analyticsURLBuilder={jest.fn()}
         brand={'brand'}
         breadcrumbs={fakeLinks}
         className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
+        configURLBuilder={jest.fn()}
         contentItems={fakeItems}
         fetching={true}
         fetchingMetrics={true}
         headerText={fakeHeader}
         metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
+        nextPageURLBuilder={jest.fn()}
         showAnalyticsLink={true}
         sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
         type='property'
         viewingChart={true}/>
     );
-    expect(contentItems.is('PageContainer')).toBeTruthy();
+    expect(contentItems.is('Content')).toBeTruthy();
   })
 
   it('should show analytics link', () => {
@@ -92,20 +92,20 @@ describe('ContentItems', () => {
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
+        analyticsURLBuilder={jest.fn()}
         breadcrumbs={fakeLinks}
         className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
+        configURLBuilder={jest.fn()}
         contentItems={fakeItems}
         fetching={true}
         fetchingMetrics={true}
         headerText={fakeHeader}
         metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
+        nextPageURLBuilder={jest.fn()}
         showAnalyticsLink={true}
         sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
         type='property'
         viewingChart={true}/>
     );
@@ -118,19 +118,19 @@ describe('ContentItems', () => {
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
+        analyticsURLBuilder={jest.fn()}
         breadcrumbs={fakeLinks}
         className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
+        configURLBuilder={jest.fn()}
         contentItems={fakeItems}
         fetching={true}
         fetchingMetrics={true}
         headerText={fakeHeader}
         metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
+        nextPageURLBuilder={jest.fn()}
         sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
         type='property'
         viewingChart={true}/>
     );
@@ -143,18 +143,18 @@ describe('ContentItems', () => {
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
+        analyticsURLBuilder={jest.fn()}
         breadcrumbs={fakeLinks}
         className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
+        configURLBuilder={jest.fn()}
         contentItems={Immutable.List()}
         headerText={fakeHeader}
         ifNoContent={'test'}
         metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
+        nextPageURLBuilder={jest.fn()}
         sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
         type='property'
         viewingChart={true}/>
     );
@@ -167,17 +167,18 @@ describe('ContentItems', () => {
         account={'account'}
         activeAccount={Immutable.Map()}
         activeGroup={Immutable.Map()}
-        analyticsURLBuilder={jest.genMockFunction()}
+        analyticsURLBuilder={jest.fn()}
         className="hosts-container"
-        configURLBuilder={jest.genMockFunction()}
+        configURLBuilder={jest.fn()}
         contentItems={fakeItems}
         headerText={fakeHeader}
         metrics={fakeMetrics}
-        nextPageURLBuilder={jest.genMockFunction()}
+        nextPageURLBuilder={jest.fn()}
+        params={{brand:'aaa'}}
         showAnalyticsLink={false}
         sortDirection={1}
-        sortItems={jest.genMockFunction()}
-        toggleChartView={jest.genMockFunction()}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
         type='property'
         viewingChart={true}/>
     );
