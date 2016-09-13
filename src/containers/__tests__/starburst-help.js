@@ -1,8 +1,9 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import { shallow, mount } from 'enzyme';
 
 jest.dontMock('../starburst-help.jsx')
-const StarburstHelp = require('../starburst-help.jsx')
+import StarburstHelp from '../starburst-help'
 
 const fakeHistory = {
   goBack: jest.genMockFunction()
@@ -10,9 +11,9 @@ const fakeHistory = {
 
 describe('StarburstHelp', () => {
   it('should exist', () => {
-    const starburstHelp = TestUtils.renderIntoDocument(
+    const wrapper = shallow(
       <StarburstHelp history={fakeHistory} />
     )
-    expect(TestUtils.isCompositeComponent(starburstHelp)).toBeTruthy()
+    expect(TestUtils.isCompositeComponent(wrapper)).toBeTruthy()
   })
 })
