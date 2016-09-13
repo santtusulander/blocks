@@ -116,6 +116,8 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
+  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
   'portal.analytics.serviceProviderContribution.ofNetHttp.label': 'Of-Net HTTP',
@@ -176,6 +178,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.visitors.propertyTitle': 'Property Unique Visitors',
   'portal.analytics.tabs.visitors.groupTitle': 'Group Unique Visitors',
   'portal.analytics.tabs.visitors.accountTitle': 'Account Unique Visitors',
+  'portal.analytics.tabs.onOffNet.label': 'SP On/Off Net',
   'portal.analytics.tabs.onOffNet.label': 'SP On/Off Net',
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
@@ -579,7 +582,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.today': 'Today',
   'portal.constants.date-ranges.yesterday': 'Last Month',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
-  
+
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',

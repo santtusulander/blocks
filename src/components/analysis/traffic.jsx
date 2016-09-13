@@ -3,6 +3,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
 import AnalysisByTime from './by-time'
@@ -10,8 +11,6 @@ import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
 import { paleblue, green } from '../../constants/colors'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 class AnalysisTraffic extends React.Component {
   constructor(props) {

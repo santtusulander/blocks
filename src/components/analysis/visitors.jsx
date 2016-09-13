@@ -2,13 +2,14 @@ import React from 'react'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import moment from 'moment'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
 import { paleblue } from '../../constants/colors'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class AnalysisVisitors extends React.Component {
   constructor(props) {
@@ -146,7 +147,8 @@ class AnalysisVisitors extends React.Component {
     }
     return (
       <div className="analysis-traffic">
-        <h3><FormattedMessage id="portal.analytics.visitors.visiorsByTime.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.visiorsByTime.text"/>} />
         <div ref="byTimeHolder" className="visitors-by-time">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
@@ -160,7 +162,8 @@ class AnalysisVisitors extends React.Component {
               width={this.state.byTimeWidth} height={this.state.byTimeWidth / 3}/>
             }
         </div>
-        <h3><FormattedMessage id="portal.analytics.visitors.byGeography.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byGeography.text"/>} />
         <div ref="byLocationHolder">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :
@@ -172,7 +175,8 @@ class AnalysisVisitors extends React.Component {
               countryData={this.props.byCountry}/>
           }
         </div>
-        <h3><FormattedMessage id="portal.analytics.visitors.byCountry.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byCountry.text"/>} />
         <table className="table table-striped table-analysis by-country-table">
           <thead>
             <tr>
@@ -241,7 +245,8 @@ class AnalysisVisitors extends React.Component {
             }
           </tbody>
         </table>
-        <h3><FormattedMessage id="portal.analytics.visitors.byBrowser.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byBrowser.text"/>} />
         <table className="table table-striped table-analysis by-browser-table">
           <thead>
             <tr>
@@ -310,7 +315,8 @@ class AnalysisVisitors extends React.Component {
             }
           </tbody>
         </table>
-        <h3><FormattedMessage id="portal.analytics.visitors.byOS.text"/></h3>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byOS.text"/>} />
         <table className="table table-striped table-analysis by-os-table">
           <thead>
             <tr>

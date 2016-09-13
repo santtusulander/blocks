@@ -4,6 +4,7 @@ import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
 
+import SectionHeader from '../layout/section-header'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
