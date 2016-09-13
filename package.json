@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.57.10",
+  "version": "0.57.11",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -29,6 +29,7 @@
     "jasmine-reporters": "^2.1.1",
     "jest-cli": "^12.0.2",
     "jsdom": "^9.2.1",
+    "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^3.4.2",
     "papaparse": "^4.1.2",
@@ -93,9 +94,10 @@
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "testPathDirs": [
-      "src", "__mocks__"
+      "src",
+      "__mocks__"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {

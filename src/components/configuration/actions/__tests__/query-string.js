@@ -4,10 +4,16 @@ import TestUtils from 'react-addons-test-utils'
 jest.dontMock('../query-string.jsx')
 const QueryString = require('../query-string.jsx')
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('QueryString', () => {
   it('should exist', () => {
     let queryString = TestUtils.renderIntoDocument(
-      <QueryString />
+      <QueryString intl={intlMaker()} />
     );
     expect(TestUtils.isCompositeComponent(queryString)).toBeTruthy();
   })
@@ -15,7 +21,7 @@ describe('QueryString', () => {
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let queryString = TestUtils.renderIntoDocument(
-      <QueryString changeValue={changeValue}/>
+      <QueryString changeValue={changeValue} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(queryString, 'input')
     inputs[0].value = 'new'
@@ -27,7 +33,7 @@ describe('QueryString', () => {
   it('should handle select changes', () => {
     let changeValue = jest.genMockFunction()
     let queryString = TestUtils.renderIntoDocument(
-      <QueryString changeValue={changeValue}/>
+      <QueryString changeValue={changeValue} intl={intlMaker()}/>
     )
     expect(queryString.state.activeActivity).toBe('add')
     queryString.handleSelectChange('activeActivity')('foo')

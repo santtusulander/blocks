@@ -37,7 +37,7 @@ export const createSuccess = (state, { payload: { data } }) => {
 }
 
 export const createFailed = (state) => {
-  return state
+  return state.set('fetching', false)
 }
 
 //LIST WITH DETAILS
@@ -46,7 +46,7 @@ export const receiveWithDetails = (state, action) => {
 }
 
 export const receiveWithDetailsFailed = (state) => {
-  return state
+  return state.set('fetching', false)
 }
 
 export const resourceDetailsFailed = ( state ) => {
@@ -69,7 +69,7 @@ export const deleteSuccess = (state, { payload }) => {
   return state.merge({ resources: state.get('resources').delete( index ), fetching: false })
 }
 export const deleteFailed = (state) => {
-  return state
+  return state.set('fetching', false)
 }
 
 //START / STOP FETCH

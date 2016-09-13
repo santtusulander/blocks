@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
@@ -44,22 +43,25 @@ const validate = fields => {
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
+  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, ...formProps } = props
+  const filteredValues = filterFields(values)
   const recordFormProps = {
     domain,
     edit,
-    values: filterFields(values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: fields => {
-      if (fields.ttl) {
-        fields.ttl = Number(fields.ttl)
+    submit: () => {
+      let { ttl, prio } = filteredValues
+      if (ttl) {
+        filteredValues.ttl = Number(ttl)
       }
-      if (fields.prio) {
-        fields.prio = Number(fields.prio)
+      if (prio) {
+        filteredValues.prio = Number(prio)
       }
-      edit ? updateRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
+      edit ?
+        updateRecord(filteredValues, domain, activeRecord) :
+        addRecord(filteredValues, domain)
     },
-    onCancel: closeModal,
+    cancel: closeModal,
     ...formProps
   }
   return (
@@ -82,7 +84,6 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  records: PropTypes.instanceOf(List),
   updateRecord: PropTypes.func,
   values: PropTypes.object
 
@@ -90,15 +91,13 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const getRecordById = recordActionCreators.getById
-  const records = dnsRecords.get('resources')
-  let activeRecord = getRecordById(records, dnsRecords.get('activeRecord'))
+  let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = undefined
   initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
-    loading: dnsRecords.get('fetching'),
-    records
+    loading: dnsRecords.get('fetching')
   }
   if (initialValues) {
     props.initialValues = initialValues
@@ -117,7 +116,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       createResource(domain, values.name, values)
         .then(() => closeModal())
     },
-    updateRecord: (formValues, zone, records, activeRecord) => {
+    updateRecord: (formValues, zone, activeRecord) => {
       let values = recordValues(formValues)
       values.id = activeRecord.get('id')
       values.class = 'IN'

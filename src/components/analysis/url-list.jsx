@@ -80,6 +80,9 @@ class AnalysisURLList extends React.Component {
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
+              <TableSorter {...sorterProps} column="status">
+                <FormattedMessage id="portal.analytics.urlList.status.text"/>
+              </TableSorter>
               <TableSorter {...sorterProps} column="url">
                 <FormattedMessage id="portal.analytics.urlList.url.text"/>
               </TableSorter>
@@ -97,7 +100,8 @@ class AnalysisURLList extends React.Component {
               const reqsOfMax = (url.get('requests') / maxReqs) * 100
               return (
                 <tr key={i}>
-                  <td>{labelFormat(url)}</td>
+                  <td>{url.get('status_code')}</td>
+                  <td>{url.get('url')}</td>
                   <td>
                     {formatBytes(url.get('bytes'))}
                     <div className="table-percentage-line">
