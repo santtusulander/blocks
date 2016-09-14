@@ -4,7 +4,6 @@ import Immutable from 'immutable'
 
 jest.dontMock('../groups.jsx')
 const Groups = require('../groups.jsx')
-const EditGroup = require('../edit-group.jsx')
 
 const fakeGroups = Immutable.fromJS([
   {id: 1, name: 'aaa', created: new Date().getTime()},
@@ -41,14 +40,6 @@ describe('AccountManagementAccountGroups', () => {
     groups.changeSort('created', -1)
     expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
   })
-  it('should show a row for adding a group', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
-    )
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(0)
-    groups.addGroup({stopPropagation: jest.genMockFunction()})
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(1)
-  })
   it('should save an added group', () => {
     const addGroup = jest.genMockFunction().mockReturnValue({
         then: (cb => cb())
@@ -58,17 +49,6 @@ describe('AccountManagementAccountGroups', () => {
     )
     groups.saveNewGroup('zzz')
     expect(addGroup.mock.calls[0][0]).toBe('zzz')
-  })
-  it('should show a row for editing a group', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
-    )
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(0)
-    groups.editGroup(1)({
-      stopPropagation: jest.genMockFunction(),
-      preventDefault: jest.genMockFunction()
-    })
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(1)
   })
   it('should save an edited group', () => {
     const editGroup = jest.genMockFunction().mockReturnValue({
