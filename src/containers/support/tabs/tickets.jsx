@@ -8,6 +8,7 @@ import * as supportActionCreators from '../../../redux/modules/support'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import SectionHeader from '../../../components/layout/section-header'
+import SectionContainer from '../../../components/layout/section-container'
 import IconAdd from '../../../components/icons/icon-add'
 import UDNButton from '../../../components/button'
 import SupportTicketPanel from '../../../components/support/support-ticket-panel'
@@ -110,7 +111,7 @@ class SupportTabTickets extends React.Component {
    */
   renderTicketList(tickets) {
     return (
-      <div className="support-tickets-list">
+      <SectionContainer className="support-tickets-list">
         {tickets.map(ticket => {
           const {
             description,
@@ -138,8 +139,7 @@ class SupportTabTickets extends React.Component {
             />
           )
         })}
-
-      </div>
+      </SectionContainer>
     )
   }
 
