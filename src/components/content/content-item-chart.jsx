@@ -15,6 +15,9 @@ import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
+import IsAllowed from '../../components/is-allowed'
+import { MODIFY_GROUP } from '../../constants/permissions'
+
 const dayHours = 24
 const rayHours = 3
 
@@ -303,12 +306,14 @@ class ContentItemChart extends React.Component {
                   <IconConfiguration/>
                 </Link>
               }
-              {this.props.onConfiguration &&
-                <a onClick={this.props.onConfiguration}
-                  className="btn btn-icon btn-round invisible">
-                  <IconConfiguration/>
-                </a>
-              }
+              <IsAllowed to={MODIFY_GROUP}>
+                {this.props.onConfiguration &&
+                  <a onClick={this.props.onConfiguration}
+                    className="btn btn-icon btn-round invisible">
+                    <IconConfiguration/>
+                  </a>
+                }
+              </IsAllowed>
               <Link to="/starburst-help"
                 className="btn btn-icon btn-round invisible">
                 <IconQuestionMark/>

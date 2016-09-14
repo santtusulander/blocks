@@ -30,6 +30,9 @@ import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 
+import IsAllowed from '../../../components/is-allowed'
+import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
     super(props);
@@ -410,10 +413,11 @@ export class AccountManagementAccountUsers extends React.Component {
                 }}
                 options={groupOptions}/>
             </div>
-            <Button bsStyle="success" className="btn-icon btn-add-new"
-              onClick={this.toggleInlineAdd}>
-              <IconAdd />
-            </Button>
+            <IsAllowed to={CREATE_USER}>
+              <Button bsStyle="success" className="btn-icon btn-add-new" onClick={this.toggleInlineAdd}>
+                <IconAdd />
+              </Button>
+            </IsAllowed>
           </Col>
         </Row>
         <Table striped={true}>
@@ -447,9 +451,11 @@ export class AccountManagementAccountUsers extends React.Component {
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td className="nowrap-column">
-                    <ActionButtons
-                      onEdit={() => {this.editUser(user)}}
-                      onDelete={() => this.deleteUser(user.get('email'))} />
+                    <IsAllowed to={MODIFY_USER}>
+                      <ActionButtons
+                        onEdit={() => {this.editUser(user)}}
+                        onDelete={() => this.deleteUser(user.get('email'))} />
+                    </IsAllowed>
                   </td>
                 </tr>
               )
