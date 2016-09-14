@@ -65,5 +65,9 @@ module.exports = {
   supportTabTools: 'tools',
   supportTabDocumentation: 'documentation',
 
-  configuration: '/services'
+  configuration: '/services',
+
+  user: '/user',
+  userBrand: '/user/:brand',
+  userAccount: '/user/:brand/:account'
 }

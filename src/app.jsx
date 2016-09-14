@@ -29,6 +29,14 @@ const store =
     createStoreWithMiddleware(stateReducer, window.devToolsExtension && window.devToolsExtension()) :
     createStoreWithMiddleware(stateReducer)
 
+// Enable Webpack hot module replacement for reducers
+if (module.hot) {
+  module.hot.accept('./redux/modules', () => {
+    const nextRootReducer = require('./redux/modules');
+    store.replaceReducer(combineReducers(nextRootReducer));
+  });
+}
+
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
