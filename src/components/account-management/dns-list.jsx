@@ -144,6 +144,7 @@ export class SortableTable extends Component {
 SortableTable.propTypes = { content: PropTypes.func }
 
 DNSList.propTypes = {
+  intl: PropTypes.object,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
   onEditEntry: PropTypes.func,

@@ -9,10 +9,11 @@ var helpers               = require('./helpers');
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
 );
+const useSourceMap = () => (process.argv.indexOf('--source-map') !== -1)
 
 var development = Object.assign({}, {
   // debug: true,
-  devtool: 'source-map',
+  devtool: useSourceMap() ? 'eval-source-map' : 'eval',
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',

@@ -11,9 +11,7 @@ class StarburstHelp extends React.Component {
         <div className="starburst-help-container">
           <Button bsStyle="primary" className="has-icon"
             onClick={this.props.history.goBack}>
-            <div className="icon-holder">
-              <IconArrowLeft/>
-            </div>
+            <IconArrowLeft/>
             <FormattedMessage id="portal.button.back"/>
           </Button>
         </div>
