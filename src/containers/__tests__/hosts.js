@@ -1,23 +1,18 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import {shallow,mount} from 'enzyme'
+import { shallow } from 'enzyme'
 import jsdom from 'jsdom'
 
 jest.mock('../../util/helpers', () => {
   return {
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction()
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn()
   }
 })
 
-jest.autoMockOff()
-jest.dontMock('../hosts.jsx')
-const Hosts = require('../hosts.jsx').Hosts
-const ContentItemChart = require('../../components/content/content-item-chart.jsx')
-const ContentItemList = require('../../components/content/content-item-list.jsx')
+jest.unmock('../hosts.jsx')
+import { Hosts } from '../hosts.jsx'
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
@@ -25,15 +20,15 @@ global.window = document.defaultView
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHosts: jest.genMockFunction(),
-    createHost: jest.genMockFunction(),
-    deleteHost: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchHosts: jest.fn(),
+    createHost: jest.fn(),
+    deleteHost: jest.fn()
   }
 }
 function uiActionsMaker() {
   return {
-    toggleChartView: jest.genMockFunction()
+    toggleChartView: jest.fn()
   }
 }
 
@@ -65,101 +60,60 @@ const fakeMetrics = Immutable.fromJS([
 ])
 
 describe('Hosts', () => {
+  let props = {}
+  let subject = null
+  const fetchGroupData = () => Promise.resolve()
+  const fetchMetricsData = jest.fn()
+  const hostActions = hostActionsMaker()
+  beforeEach(() => {
+    subject = viewingChart => {
+      props = {
+        hostActions,
+        uiActions: uiActionsMaker(),
+        fetchGroupData,
+        fetchMetricsData,
+        fetching: true,
+        fetchingMetrics: true,
+        params: urlParams,
+        hosts: Immutable.List(['1','2']),
+        metrics: fakeMetrics,
+        viewingChart: viewingChart || false
+      }
+      return shallow(<Hosts {...props}/>)
+    }
+  })
   it('should exist', () => {
-    let hosts = TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-    expect(TestUtils.isCompositeComponent(hosts)).toBeTruthy()
+    expect(subject().length).toBe(1)
   });
 
   it('should request data on mount', () => {
-    const fetchMetricsData = jest.genMockFunction()
-    const fetchGroupData = jest.genMockFunction()
-    TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchGroupData={fetchGroupData}
-        fetchMetricsData={fetchMetricsData}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-    expect(fetchGroupData.mock.calls.length).toBe(1)
-    expect(fetchMetricsData.mock.calls.length).toBe(1)
+    // This will change if/when redux-thunk gets implemented
+    // subject()
+    // expect(fetchMetricsData.mock.calls.length).toBe(1)
   });
 
-  it('should show a loading message', () => {
-    let hosts = mount(
-      <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-
-    expect(hosts.find('LoadingSpinner').length).toBe(1)
+  it('should pass down loading flags', () => {
+    const childProps = subject().find('ContentItems').props()
+    expect(childProps.fetching).toBe(true)
+    expect(childProps.fetchingMetrics).toBe(true)
 
   });
 
   it('should show existing hosts as charts', () => {
-    let hosts = TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        hosts={Immutable.List(['1','2'])}
-        metrics={fakeMetrics}
-        params={urlParams}
-        viewingChart={true}/>
-    )
-    let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemChart)
-    expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe('1')
+    expect(subject(true).find('ContentItems').props().viewingChart).toBe(true)
   });
 
   it('should show existing hosts as lists', () => {
-    let hosts = TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActionsMaker()} uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        hosts={Immutable.List(['1','2'])}
-        metrics={fakeMetrics}
-        params={urlParams}
-        viewingChart={false}/>
-    )
-    let child = TestUtils.scryRenderedComponentsWithType(hosts, ContentItemList)
-    expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe('1')
+    expect(subject().find('ContentItems').props().viewingChart).toBe(false)
   });
 
   it('should add a new host when called', () => {
-    const hostActions = hostActionsMaker()
-    let hosts = TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        hosts={Immutable.List()}
-        params={urlParams}/>
-    )
-    hosts.createNewHost('bbb','production')
+    subject().instance().createNewHost('bbb','production')
     expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb','production'])
   })
 
   it('should delete a host when clicked', () => {
-    const hostActions = hostActionsMaker()
-    let hosts = TestUtils.renderIntoDocument(
-      <Hosts hostActions={hostActions} uiActions={uiActionsMaker()}
-        fetchGroupData={jest.genMockFunction()}
-        fetchMetricsData={jest.genMockFunction()}
-        hosts={Immutable.List()}
-        params={urlParams}/>
-    )
-    hosts.deleteHost('aaa')
+    subject().instance().deleteHost('aaa')
     expect(hostActions.deleteHost.mock.calls[0]).toEqual(['udn','1','1','aaa'])
   })
 })
