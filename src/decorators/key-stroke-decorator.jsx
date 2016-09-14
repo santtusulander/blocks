@@ -20,7 +20,7 @@ export default function(WrappedModal) {
       switch(e.keyCode) {
         case 13:
           e.preventDefault()
-          !this.props.invalid && !this.submitCalled && this.submit()
+          !this.props.invalid && !this.submitCalled && this.props.submit()
           break
         case 27:
           this.props.cancel()
