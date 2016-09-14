@@ -12,8 +12,8 @@ class SectionHeader extends React.Component {
     return (
       <div className={finalClassName}>
         <div className="section-header-layout">
-          {this.props.sectionHeaderTitle && <h3>{this.props.sectionHeaderTitle}</h3>}
-          {this.props.sectionSubHeaderTitle && <h4>{this.props.sectionSubHeaderTitle}</h4>}
+          {this.props.sectionHeaderTitle && <h3 id={this.props.headerId}>{this.props.sectionHeaderTitle}</h3>}
+          {this.props.sectionSubHeaderTitle && <h4 id={this.props.subHeaderId}>{this.props.sectionSubHeaderTitle}</h4>}
           <div className="section-header-actions">
             {this.props.children}
           </div>
@@ -27,6 +27,7 @@ SectionHeader.displayName = 'SectionHeader'
 SectionHeader.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,
+  headerId: React.PropTypes.string,
   sectionHeaderTitle:  React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
@@ -34,7 +35,8 @@ SectionHeader.propTypes = {
   sectionSubHeaderTitle:  React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
-  ])
+  ]),
+  subHeaderId: React.PropTypes.string
 };
 
 module.exports = SectionHeader

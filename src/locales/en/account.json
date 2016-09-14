@@ -2,7 +2,7 @@
   "portal.account.dnsList.addRecord.button": "Add record",
   "portal.account.dnsList.records.header": "Records",
   "portal.account.dnsList.hostname.header": "Hostname",
-  "portal.account.dnsList.address.header": "Adress",
+  "portal.account.dnsList.address.header": "Address",
   "portal.account.dnsList.ttl.header": "Ttl",
   "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 

@@ -23,6 +23,12 @@ class DNSList extends Component {
     const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc, intl } = this.props
     let tables = []
     let recordsByType = {}
+
+    /**
+     * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain
+     * key for current record type, create key-value pair of [record.type]: []. Push current record
+     * to array under the current record type key in recordsByType.
+     */
     records.forEach(record => {
       if(!recordsByType[record.type]) {
         recordsByType[record.type] = []
@@ -30,6 +36,9 @@ class DNSList extends Component {
       recordsByType[record.type].push(record)
     })
 
+    /**
+     * Create rows of records by a given record type, sorted by a given sorting function.
+     */
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
@@ -43,14 +52,32 @@ class DNSList extends Component {
           </td>
         </tr>
       )
+
+    /**
+     * For every record type in sorted recordTypes-constant, if recordsByType has current record
+     * type as key, push a new sortable table to tables-array. Call getContent to populate table.
+     */
+    recordTypes.sort().forEach((type, index) => {
+      if (recordsByType.hasOwnProperty(type)) {
+        tables.push(
+          <div key={index} className='table-container'>
+            <SectionHeader
+              sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}
+              subHeaderId={'table-label-' + index} />
+            <SortableTable content={getContent(type)}/>
+          </div>
+        )
+      }
+    })
+
     return (
       <PageContainer>
-        <SectionHeader sectionHeaderTitle={<span id="domain-stats">{`${records.length} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}</span>}>
+        <SectionHeader sectionHeaderTitle={<span id="record-amount-label">{`${records.length} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}</span>}>
           <Input
             type="text"
             className="search-input"
             groupClassName="search-input-group"
-            placeholder="Search records"
+            placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
             value={searchValue}
             onChange={searchFunc}/>
           <IsAllowed to={CREATE_RECORD}>
@@ -58,28 +85,17 @@ class DNSList extends Component {
               id="add-dns-record"
               bsStyle="success"
               onClick={onAddEntry}>
-              ADD RECORD
+              <FormattedMessage id='portal.account.dnsList.addRecord.button' />
             </UDNButton>
           </IsAllowed>
         </SectionHeader>
-
-        {recordTypes.sort().forEach((type, index) => {
-          if (recordsByType.hasOwnProperty(type)) {
-            tables.push(
-              <div key={index}>
-                <SectionHeader sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})} />
-                <SortableTable content={getContent(type)}/>
-              </div>
-            )
-          }
-        })}
         {tables}
       </PageContainer>
     )
   }
 }
 
-class SortableTable extends Component {
+export class SortableTable extends Component {
   constructor(props) {
     super(props)
     this.state = {

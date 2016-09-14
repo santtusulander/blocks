@@ -9,8 +9,7 @@ import {
   createSuccess,
   updateSuccess,
   deleteSuccess,
-  setActive,
-
+  setActive
   } from '../dns-records/reducers.js'
 
 import Immutable from 'immutable'
@@ -35,7 +34,7 @@ describe('DnsRecords Module', () => {
    })
    const newState = receiveResourcesList(oldState, { payload: {data: ['one','two']} })
    const expectedState = Immutable.fromJS({
-   loading: false,
+   fetching: false,
    resources: [{name: 'one'},{name: 'two'}]
    })
 
@@ -49,7 +48,7 @@ describe('DnsRecords Module', () => {
    const newState = resourcesListFailed(oldState)
    const expectedState = Immutable.fromJS({
    resources: [],
-   loading: false
+   fetching: false
    })
    expect( Immutable.is(newState, expectedState)).toBeTruthy()
    })
@@ -61,7 +60,7 @@ describe('DnsRecords Module', () => {
 
    const newState = receiveResourceDetails(oldState, {payload: resourceObj})
    const expectedState = Immutable.fromJS({
-   loading: false,
+   fetching: false,
    resources: [
    {
    name: 'name one',
@@ -90,7 +89,7 @@ describe('DnsRecords Module', () => {
    const newState = resourceDetailsFailed(oldState, {payload: []})
 
    const expectedState = Immutable.fromJS({
-   loading: false,
+   fetching: false,
    resources: []
    })
 
@@ -103,6 +102,7 @@ describe('DnsRecords Module', () => {
     })
 
     let newRecord = Immutable.fromJS({
+      id: 'aaa',
       name: 'bbb',
       class: 'A',
       value: 'testvalue',
@@ -114,10 +114,9 @@ describe('DnsRecords Module', () => {
     const id = newState.getIn(['resources', 0, 'id'])
 
     const expectedState = Immutable.fromJS({
-      loading: false,
+      fetching: false,
       resources: [newRecord.set('id', id)]
     })
-
     expect(Immutable.is(newState, expectedState)).toBeTruthy()
   })
 
@@ -147,7 +146,7 @@ describe('DnsRecords Module', () => {
     const newState = updateSuccess(oldState, {payload: {data: updatedRecord}})
 
     const expectedState = Immutable.fromJS({
-      loading: false,
+      fetching: false,
       resources: [updatedRecord]
     })
 
@@ -172,10 +171,9 @@ describe('DnsRecords Module', () => {
     const newState = deleteSuccess(oldState, {payload: {data: {id: 'aaa'}}})
 
     const expectedState = Immutable.fromJS({
-      loading: false,
+      fetching: false,
       resources: []
     })
-
     expect(Immutable.is(newState, expectedState)).toBeTruthy()
   })
 
@@ -189,7 +187,7 @@ describe('DnsRecords Module', () => {
       activeRecord: 'aaa'
     })
 
-    const newState = setActive(oldState, {payload: {data: {id: 'aaa'}}})
+    const newState = setActive(oldState, { payload: 'aaa' })
     expect(Immutable.is(newState, expectedState)).toBeTruthy()
   })
 
