@@ -41,6 +41,7 @@ export function updateSuccess(state, action) {
 
   return state.merge({
     allUsers: updatedUsers,
+    currentUser: updatedUser,
     fetching: false
   })
 }
