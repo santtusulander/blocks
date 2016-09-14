@@ -6,7 +6,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 
 import SelectWrapper from '../select-wrapper.jsx'
-import ActionLinks from '../account-management/action-links.jsx'
+import ActionButtons from '../action-buttons.jsx'
 import InlineAdd from '../inline-add.jsx'
 
 const stateReducer = combineReducers({ form })
@@ -88,7 +88,7 @@ storiesOf('Inline Add', module)
                   <td>bbb</td>
                   <td>ccc</td>
                   <td>
-                    <ActionLinks
+                    <ActionButtons
                       onEdit={() => {}}
                       onDelete={() => {}}/>
                   </td>

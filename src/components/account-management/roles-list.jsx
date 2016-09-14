@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { Row, Col, Input } from 'react-bootstrap'
 
 import RolesEditForm from './role-edit-form.jsx'
-import ActionLinks from './action-links.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 
 import TableSorter from '../table-sorter'
 import ArrayTd from '../array-td/array-td'
@@ -140,8 +140,8 @@ class RolesList extends React.Component {
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
-                  <td>
-                    <ActionLinks
+                  <td className="nowrap-column">
+                    <ActionButtons
                     onEdit={() => this.props.onEdit(role.get('id'))}
                     onDelete={() => this.props.onDelete(role.get('id'))}/>
                   </td>
