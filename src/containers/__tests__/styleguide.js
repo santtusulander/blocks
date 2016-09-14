@@ -1,6 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../styleguide.jsx')
 const Styleguide = require('../styleguide.jsx')
 
