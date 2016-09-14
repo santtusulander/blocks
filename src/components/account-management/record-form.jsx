@@ -8,7 +8,7 @@ import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: { type, name, value, ttl, prio }, values, shouldShowField, intl }) =>
+const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField, intl }) =>
   <form>
     <SelectWrapper
       {...type}
@@ -43,7 +43,7 @@ const RecordForm = ({ domain, loading, edit, onSave, onCancel, invalid, fields: 
         disabled={edit}
         type="text"
         label={intl.formatMessage({id: 'portal.account.recordForm.prio.label'})}
-        placeholder={intl.formatMessage({id: 'portal.account.placeholder.prio.recordForm'})}
+        placeholder={intl.formatMessage({id: 'portal.account.recordForm.prio.placeholder'})}
         className='input-narrow priority-input'/>}
       {prio.touched && prio.error && <div className='error-msg' id='prio-err'>{prio.error}</div>}
     {shouldShowField('ttl') && <hr/>}
@@ -79,6 +79,7 @@ RecordForm.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
+  intl: PropTypes.object,
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
   shouldShowField: PropTypes.func,
@@ -86,4 +87,4 @@ RecordForm.propTypes = {
   values: PropTypes.object
 }
 
-export default keyStrokeSupport((injectIntl)(RecordForm))
+export default injectIntl(keyStrokeSupport(RecordForm))

@@ -293,24 +293,24 @@ class ContentItemChart extends React.Component {
             <ButtonToolbar>
               {this.props.analyticsLink &&
                 <Link to={this.props.analyticsLink}
-                  className="btn btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconChart/>
                 </Link>
               }
               {this.props.configurationLink &&
                 <Link to={this.props.configurationLink}
-                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
               }
               {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
-                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </a>
               }
               <Link to="/starburst-help"
-                className="btn show-help btn-primary btn-icon btn-round invisible">
+                className="btn btn-icon btn-round invisible">
                 <IconQuestionMark/>
               </Link>
             </ButtonToolbar>
@@ -330,7 +330,6 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
-  onConfiguration: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
@@ -341,6 +340,7 @@ ContentItemChart.propTypes = {
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,

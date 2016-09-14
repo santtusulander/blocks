@@ -20,13 +20,14 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
+    /* NOT NEEDED?
     preLoaders: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'source-map'
       }
-    ],
+    ],*/
     loaders: [
       {
         test: /\.jsx?$/,

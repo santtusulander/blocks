@@ -1,16 +1,15 @@
 import React, { PropTypes } from 'react'
-import { ButtonToolbar } from 'react-bootstrap'
+import { ButtonToolbar, Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl';
 
-import { CREATE_ZONE, MODIFY_ZONE } from '../../../constants/permissions'
+import { CREATE_ZONE, MODIFY_ZONE } from '../../constants/permissions'
 
-import PageHeader from '../../layout/page-header'
-import TruncatedTitle from '../../truncated-title'
-import IsAllowed from '../../is-allowed'
-import UDNButton from '../../button'
-import DomainSelector from '../../global-account-selector/selector-component'
-import IconAdd from '../../icons/icon-add'
-import IconEdit from '../../icons/icon-edit'
+import PageHeader from '../layout/page-header'
+import TruncatedTitle from '../truncated-title'
+import IsAllowed from '../is-allowed'
+import DomainSelector from '../global-account-selector/selector-component'
+import IconAdd from '../icons/icon-add'
+import IconEdit from '../icons/icon-edit'
 
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
@@ -23,6 +22,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
     <PageHeader secondaryPageHeader={true} distributedColumns={true}>
       {domains.length > 0 || searchValue !== '' ?
         <DomainSelector
+          id="domain-selector"
           items={sortedDomains.map(domain => [domain.id, domain.id])}
           onItemClick={changeActiveDomain}
           searchValue={searchValue}
@@ -31,32 +31,33 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
               <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
             </div>
         </DomainSelector> :
-        <h4 className="selector-component"><FormattedMessage id={emptyDomainsTxt}/></h4>}
+        <h4 id='empty-domains-text' className="selector-component"><FormattedMessage id={emptyDomainsTxt}/></h4>}
       <ButtonToolbar>
         <IsAllowed to={CREATE_ZONE}>
-          <UDNButton
+          <Button
             id="add-domain"
             bsStyle="success"
-            icon={true}
+            className="btn-icon"
             onClick={onAddDomain}>
             <IconAdd/>
-          </UDNButton>
+          </Button>
         </IsAllowed>
         {activeDomain &&
           <IsAllowed to={MODIFY_ZONE}>
-            <UDNButton
+            <Button
             id="edit-domain"
             bsStyle="primary"
-            icon={true}
+            className="btn-icon"
             onClick={() => onEditDomain(activeDomain)}>
             <IconEdit/>
-          </UDNButton>
+          </Button>
         </IsAllowed>}
       </ButtonToolbar>
     </PageHeader>
   )
 }
 
+DomainToolbar.displayName = 'DomainToolbar'
 DomainToolbar.propTypes = {
   activeDomain: PropTypes.string,
   changeActiveDomain: PropTypes.func,

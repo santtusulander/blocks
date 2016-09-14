@@ -54,6 +54,9 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.title': 'Delete Record?',
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
+  'portal.dnsDomain.delete.title': 'Delete Domain?',
+  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain will also delete all the records related to it.',
+
   'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
@@ -466,6 +469,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.configuration.text': 'Configuration',
   'portal.header.content.text': 'Content',
 
+  'portal.header.menu.theme.title': 'UI Theme',
   'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
   'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
   'portal.header.menu.logout.text': 'Logout',
@@ -577,7 +581,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.last_month': 'Last Month',
   'portal.constants.date-ranges.this_week': 'This Week',
   'portal.constants.date-ranges.today': 'Today',
-  'portal.constants.date-ranges.yesterday': 'Last Month',
+  'portal.constants.date-ranges.yesterday': 'Yesterday',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
 
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
@@ -588,7 +592,9 @@ const TRANSLATED_MESSAGES = {
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.login.login.text': 'Log In',
+  'portal.login.title': 'Login',
+  'portal.login.subtitle': 'Ericsson UDN Service',
+  'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
 
