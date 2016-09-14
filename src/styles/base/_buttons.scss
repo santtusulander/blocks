@@ -482,18 +482,6 @@ $lt-caret-color: $silver-60;
 
 // TODO: remove this / move to other files
 .dark-theme {
-
-  .dropdown-user-menu .dropdown-select:not(.open) .dropdown-toggle {
-
-    &:hover:not(:disabled),
-    &:hover:not(:disabled) .icon {
-      color: $white;
-      fill: $white;
-      stroke: $white;
-    }
-  }
-
-
   .btn-save {
 
     &,
