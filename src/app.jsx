@@ -54,8 +54,21 @@ axios.interceptors.response.use(function (response) {
       if(!location.href.includes('/login')
         && !location.href.includes('/set-password')
         && !location.href.includes('/forgot-password')) {
-        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
-        browserHistory.push('/login')
+
+        const loggedIn = store.getState().user.get('loggedIn') === true
+        const method = error.config.method.toLowerCase()
+        const tokenDidExpire = loggedIn && method === 'get'
+
+        if (tokenDidExpire) {
+          store.dispatch(showInfoDialog({
+            title: 'Session Expired',
+            content: 'Due to inactivity you have been logged out. To continue your session please resubmit your username and password.',
+            buttons: <a href="/login"><Button bsStyle="primary">Return to Login</Button></a>
+          }));
+        } else {
+          store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
+          browserHistory.push('/login')
+        }
       }
     }
     else if (status === 403) {
