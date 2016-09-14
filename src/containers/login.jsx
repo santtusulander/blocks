@@ -16,7 +16,6 @@ import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
-
 export class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -126,10 +125,12 @@ export class Login extends React.Component {
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
-          <h1><FormattedMessage id="portal.login.login.text"/></h1>
-          <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
+          <h1>
+            <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
+            <FormattedMessage id="portal.login.title"/>
+          </h1>
+          <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
@@ -166,9 +167,11 @@ export class Login extends React.Component {
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
-                <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
-                  onChange={this.toggleRemember}
-                  checked={this.state.rememberUsername} />
+                <div className="remember-checkbox">
+                  <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
+                    onChange={this.toggleRemember}
+                    checked={this.state.rememberUsername} />
+                </div>
               </Col>
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
