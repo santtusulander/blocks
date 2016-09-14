@@ -1,78 +1,85 @@
 // Login
 // =====
 
-.login-modal {
+$login-modal-width: rem(654px);
+$modal-bg-color: $medium-blue;
+$login-modal-header-top-padding: rem(60px);
+$login-modal-header-bottom-padding: rem(36px);
+$login-modal-body-bottom-padding: rem(78px);
+$login-modal-vertical-padding: rem(60px);
+$login-modal-input-bottom-padding: rem(24px);
+$login-modal-logo-width: rem(28px);
+$login-modal-logo-right-padding: rem(18px);
+$login-modal-logo-bottom-padding: rem(18px);
+$login-modal-logo-left-padding: rem(12px);
 
+.login-modal {
   .modal-dialog {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: $configuration-sidebar-width;
+    width: $login-modal-width;
     transform: translate(-50%, -50%);
-
-    @include md {
-      width: $md-configuration-sidebar-width;
-    }
   }
 
+  // TODO: this needs to be updated to be used on all modals
+  // Using important to override background properties on modals
+  // !important will be removed once the base modal colors are updated
   .modal-content {
-    min-height: 710px;
+    background-color: $modal-bg-color !important;
+    background-image: none !important;
+  }
 
-    @include md {
-      min-height: 520px;
-    }
+  .modal-header {
+    position: relative;
+    padding: $login-modal-header-top-padding $login-modal-vertical-padding $login-modal-header-bottom-padding;
+    color: $white;
+    border: 0;
   }
 
   .modal-body {
-    padding: 110px 120px 90px;
+    padding: 0 $login-modal-vertical-padding $login-modal-body-bottom-padding;
 
-    @include md {
-      padding: 90px 100px 70px;
+    .form-group {
+      padding-bottom: $login-modal-input-bottom-padding;
+    }
+
+    .input-group-addon:last-child {
+      padding: 0;
+    }
+
+    .remember-checkbox {
+      padding: 6px 0;
+
+      .form-group {
+        padding-bottom: 0;
+      }
     }
   }
 }
 
 .login-header {
-  position: relative;
-  padding: $btn-height 135px;
-  color: $white;
-  border: 0;
-
-  @include md {
-    padding: $md-btn-height 110px;
-  }
-
   .login-header-gradient {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    height: $header-gradient-height;
+    height: 6px;
     background: $gradient-full;
   }
 
   .logo-ericsson {
     float: left;
-    width: 45px;
-    height: 60px;
-    margin: 20px ($bar-height / 2) 10px 0;
+    width: $login-modal-logo-width;
+    margin: 0 $login-modal-logo-right-padding $login-modal-logo-bottom-padding $login-modal-logo-left-padding;
     text-indent: -9999em;
     background: url('../assets/img/logo-ericsson.svg') center center no-repeat;
     background-size: 100%;
-
-    @include md {
-      width: 36px;
-      height: 48px;
-      margin: 12px ($md-bar-height / 2) 10px 0;
-    }
-
-    @include sm {
-      margin-top: 8px;
-    }
   }
 
-  h1 {
-    margin-bottom: 5px;
+  .login-subtitle {
+    margin: 0;
+    color: $dt-text-color;
   }
 }
 
@@ -83,7 +90,7 @@
     position: absolute;
     top: 50%;
     left: $bar-height;
-    margin-left: 30px;
+    margin-left: 24px;
     transform: translate(0, -50%);
     transition: left 250ms, margin 250ms, transform 250ms;
   }
@@ -95,19 +102,19 @@
   }
 
   &.login-label-username::after {
-    content: 'EMAIL';
+    content: 'Email';
   }
 
   &.login-label-password::after {
-    content: 'PASSWORD';
+    content: 'Password';
   }
 
   &.login-label-confirm::after {
-    content: 'CONFIRM';
+    content: 'Confirm';
   }
 
   &.login-label-email::after {
-    content: 'EMAIL';
+    content: 'Email';
   }
 
   &.login-label-password.valid::after,
@@ -122,4 +129,16 @@
 .login-info {
   margin-top: -20px;
   margin-bottom: 20px;
+}
+
+// This is hacky code that should be removed when we no longer allow a light
+// themed login page. See: https://vidscale.atlassian.net/browse/UDNP-1328
+.light-theme .icon.two-tone {
+  .base {
+    fill: $white;
+  }
+
+  .primary {
+    fill: $medium-blue;
+  }
 }

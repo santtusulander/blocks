@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import {shallow,mount} from 'enzyme'
+import { shallow } from 'enzyme'
 import jsdom from 'jsdom'
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
@@ -10,43 +10,40 @@ global.window = document.defaultView
 
 jest.mock('../../util/helpers', () => {
   return {
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction()
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn()
   }
 })
 
-jest.autoMockOff()
-jest.dontMock('../groups.jsx')
-const Groups = require('../groups.jsx').Groups
-const ContentItemChart = require('../../components/content/content-item-chart.jsx')
-const ContentItemList = require('../../components/content/content-item-list.jsx')
+jest.unmock('../groups.jsx')
+import { Groups } from '../groups.jsx'
 
 function groupActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchGroups: jest.genMockFunction(),
-    fetchGroup: jest.genMockFunction(),
-    changeActiveGroup: jest.genMockFunction(),
-    updateGroup: jest.genMockFunction(),
-    createGroup: jest.genMockFunction(),
-    deleteGroup: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchGroups: jest.fn(),
+    fetchGroup: jest.fn(),
+    changeActiveGroup: jest.fn(),
+    updateGroup: jest.fn(),
+    createGroup: jest.fn(() => Promise.resolve()),
+    deleteGroup: jest.fn()
   }
 }
 function uiActionsMaker() {
   return {
-    toggleChartView: jest.genMockFunction()
+    toggleChartView: jest.fn()
   }
 }
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
   }
 }
 function metricsActionsMaker() {
   return {
-    fetchGroupMetrics: jest.genMockFunction(),
-    startGroupFetching: jest.genMockFunction()
+    fetchGroupMetrics: jest.fn(),
+    startGroupFetching: jest.fn()
   }
 }
 
@@ -85,145 +82,56 @@ const fakeMetrics = Immutable.fromJS([
 const urlParams = {brand: 'udn', account: '1'}
 
 describe('Groups', () => {
+  let props = {}
+  let subject = null
+  const fetchUsers = () => Promise.resolve()
+  const fetchData = () => Promise.resolve()
+  const fetchMetricsData = jest.fn()
+  const groupActions = groupActionsMaker()
+  beforeEach(() => {
+    subject = viewingChart => {
+      props = {
+        groupActions,
+        uiActions: uiActionsMaker(),
+        fetchUsers,
+        fetchData,
+        fetchMetricsData,
+        fetching: true,
+        fetchingMetrics: true,
+        params: urlParams,
+        groups: Immutable.List(['1','2']),
+        metrics: fakeMetrics,
+        viewingChart: viewingChart || false
+      }
+      return shallow(<Groups {...props}/>)
+    }
+  })
+
   it('should exist', () => {
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-    expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
+    expect(subject().length).toBe(1)
+  })
+
+  it('should pass down loading flags', () => {
+    const childProps = subject().find('ContentItems').props()
+    expect(childProps.fetching).toBe(true)
+    expect(childProps.fetchingMetrics).toBe(true)
   });
 
-  it('should request data on mount', () => {
-    const fetchData = jest.genMockFunction()
-    TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchData={fetchData}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-    expect(fetchData.mock.calls.length).toBe(1)
+  it('should show existing hosts as charts', () => {
+    expect(subject(true).find('ContentItems').props().viewingChart).toBe(true)
   });
 
-  it('should show a loading message', () => {
-    let groups = mount(
-      <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        fetching={true}
-        fetchingMetrics={true}
-        params={urlParams}/>
-    )
-
-    expect(groups.find('LoadingSpinner').length).toBe(1)
+  it('should show existing hosts as lists', () => {
+    expect(subject().find('ContentItems').props().viewingChart).toBe(false)
   });
 
-  it('should show existing groups as charts', () => {
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        groups={fakeGroups}
-        metrics={fakeMetrics}
-        params={urlParams}
-        viewingChart={true}/>
-    )
-    let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemChart)
-    expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe('1')
-  });
-
-  it('should show existing groups as lists', () => {
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActionsMaker()}
-        uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        groups={fakeGroups}
-        metrics={fakeMetrics}
-        params={urlParams}
-        viewingChart={false}/>
-    )
-    let child = TestUtils.scryRenderedComponentsWithType(groups, ContentItemList)
-    expect(child.length).toBe(2)
-    expect(child[0].props.id).toBe('1')
-  });
-  // Not in 0.5
-  // it('should activate a group for edit when clicked', () => {
-  //   const groupActions = groupActionsMaker()
-  //   let groups = TestUtils.renderIntoDocument(
-  //     <Groups groupActions={groupActions}
-  //       uiActions={uiActionsMaker()}
-  //       fetchData={jest.genMockFunction()}
-  //       groups={fakeGroups}
-  //       params={urlParams}/>
-  //   )
-  //   groups.toggleActiveGroup(1)()
-  //   expect(groupActions.fetchGroup.mock.calls[0]).toEqual(['udn',1,1])
-  // });
-  //
-  // it('should deactivate a group when clicked if already active', () => {
-  //   const groupActions = groupActionsMaker()
-  //   let groups = TestUtils.renderIntoDocument(
-  //     <Groups groupActions={groupActions}
-  //       uiActions={uiActionsMaker()}
-  //       fetchData={jest.genMockFunction()}
-  //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({id:1})}
-  //       params={urlParams}/>
-  //   )
-  //   groups.toggleActiveGroup(1)()
-  //   expect(groupActions.changeActiveGroup.mock.calls[0][0]).toBe(null)
-  // });
-  //
-  // it('should be able to change the active group', () => {
-  //   const groupActions = groupActionsMaker()
-  //   let groups = TestUtils.renderIntoDocument(
-  //     <Groups groupActions={groupActions}
-  //       uiActions={uiActionsMaker()}
-  //       fetchData={jest.genMockFunction()}
-  //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
-  //       params={urlParams}/>
-  //   )
-  //   groups.changeActiveGroupValue(['name'], 'bbb')
-  //   expect(groupActions.changeActiveGroup.mock.calls[0][0].toJS()).toEqual({
-  //     id: 1,
-  //     name: 'bbb'
-  //   })
-  // })
-  //
-  // it('should be able save updates to the active group', () => {
-  //   const groupActions = groupActionsMaker()
-  //   let groups = TestUtils.renderIntoDocument(
-  //     <Groups groupActions={groupActions}
-  //       uiActions={uiActionsMaker()}
-  //       fetchData={jest.genMockFunction()}
-  //       groups={fakeGroups}
-  //       activeGroup={Immutable.Map({id: 1, name: 'aaa'})}
-  //       params={urlParams}/>
-  //   )
-  //   groups.saveActiveGroupChanges()
-  //   expect(groupActions.updateGroup.mock.calls[0][3]).toEqual({
-  //     name: 'aaa'
-  //   })
-  // })
+  it('should add a new group when called', () => {
+    subject().instance().createGroup({name: 'bbb'})
+    expect(groupActions.createGroup.mock.calls[0].toString()).toEqual('udn,1,bbb')
+  })
 
   it('should delete a group when clicked', () => {
-    const groupActions = groupActionsMaker()
-    let groups = TestUtils.renderIntoDocument(
-      <Groups groupActions={groupActions}
-        uiActions={uiActionsMaker()}
-        fetchData={jest.genMockFunction()}
-        groups={fakeGroups}
-        metrics={fakeMetrics}
-        params={urlParams}/>
-    )
-    groups.deleteGroup('1')
-    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','1'])
+    subject().instance().deleteGroup('aaa')
+    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','aaa'])
   })
 })

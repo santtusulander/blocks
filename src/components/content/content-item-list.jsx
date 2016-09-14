@@ -72,18 +72,18 @@ class ContentItemList extends React.Component {
           <ButtonToolbar className="pull-right">
             {this.props.configurationLink ?
               <Link to={this.props.configurationLink}
-                className="btn edit-content-item btn-primary btn-icon btn-round">
+                className="btn btn-icon btn-round">
                 <IconConfiguration/>
               </Link> : ''
             }
             {this.props.onConfiguration &&
-            <a onClick={this.props.onConfiguration}
-               className="btn edit-content-item btn-primary btn-icon btn-round">
-              <IconConfiguration/>
-            </a>
+              <a onClick={this.props.onConfiguration}
+                 className="btn btn-icon btn-round">
+                <IconConfiguration/>
+              </a>
             }
             <Link to={this.props.analyticsLink}
-              className="btn btn-primary btn-icon btn-round">
+              className="btn btn-icon btn-round">
               <IconChart/>
             </Link>
           </ButtonToolbar>
