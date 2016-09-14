@@ -125,7 +125,12 @@ class UserEditForm extends React.Component {
       savingUser
     } = this.props
 
-    const showSaveBar = first_name.dirty || middle_name.dirty || last_name.dirty || phone_number.dirty
+    // ReactTelephoneInput decorates the phone number at render and thus triggers
+    // the phone_number.dirty flag. Need to add extra check to see if any actual
+    // digits have been changed before showing the Save bar
+    const trimmedPhoneNumber = phone_number.value.replace(/\D/g,'');
+    const showSaveBar = first_name.dirty || middle_name.dirty || last_name.dirty ||
+      (phone_number.dirty && phone_number.initialValue !== trimmedPhoneNumber)
 
     return (
       <form className="form-horizontal">
