@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
-jest.dontMock('../starburst-help.jsx')
+jest.unmock('../starburst-help.jsx')
 import StarburstHelp from '../starburst-help'
 
 const fakeHistory = {
@@ -11,9 +11,7 @@ const fakeHistory = {
 
 describe('StarburstHelp', () => {
   it('should exist', () => {
-    const wrapper = shallow(
-      <StarburstHelp history={fakeHistory} />
-    )
+    const wrapper = shallow(<StarburstHelp history={fakeHistory} />)
     expect(TestUtils.isCompositeComponent(wrapper)).toBeTruthy()
   })
 })
