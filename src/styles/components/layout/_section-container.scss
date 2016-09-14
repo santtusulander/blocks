@@ -5,4 +5,8 @@ $section-container-bottom-margin: rem(48px);
 
 .section-container:not(:last-child) {
   margin-bottom: $section-container-bottom-margin;
+
+  .form-group:last-child {
+    padding-bottom: 0;
+  }
 }

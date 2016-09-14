@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
@@ -87,33 +88,34 @@ class ConfigurationPolicies extends React.Component {
             <IconAdd />
           </Button>
         </SectionHeader>
-        <ConfigurationPolicyRules
-          requestPolicies={config.getIn(['request_policy','policy_rules'])}
-          responsePolicies={config.getIn(['response_policy','policy_rules'])}
-          activateRule={this.props.activateRule}
-          deleteRule={this.deleteRule}/>
-        {this.props.activeRule ?
-          <ConfigurationSidebar
-            rightColVisible={!!activeEditForm}
-            handleRightColClose={()=>this.props.activateMatch(null)}
-            onHide={()=>this.props.activateRule(null)}
-            rightColContent={activeEditForm}>
-            <ConfigurationPolicyRuleEdit
-              activateMatch={this.props.activateMatch}
-              activateSet={this.props.activateSet}
-              activeMatchPath={this.props.activeMatch}
-              activeSetPath={this.props.activeSet}
-              changeValue={this.props.changeValue}
-              config={config}
-              rule={config.getIn(this.props.activeRule)}
-              rulePath={this.props.activeRule}
-              changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={this.handleHide}
-              isEditingRule={this.state.isEditingRule}
-            />
-          </ConfigurationSidebar>
-        : ''}
-
+        <SectionContainer>
+          <ConfigurationPolicyRules
+            requestPolicies={config.getIn(['request_policy','policy_rules'])}
+            responsePolicies={config.getIn(['response_policy','policy_rules'])}
+            activateRule={this.props.activateRule}
+            deleteRule={this.deleteRule}/>
+          {this.props.activeRule ?
+            <ConfigurationSidebar
+              rightColVisible={!!activeEditForm}
+              handleRightColClose={()=>this.props.activateMatch(null)}
+              onHide={()=>this.props.activateRule(null)}
+              rightColContent={activeEditForm}>
+              <ConfigurationPolicyRuleEdit
+                activateMatch={this.props.activateMatch}
+                activateSet={this.props.activateSet}
+                activeMatchPath={this.props.activeMatch}
+                activeSetPath={this.props.activeSet}
+                changeValue={this.props.changeValue}
+                config={config}
+                rule={config.getIn(this.props.activeRule)}
+                rulePath={this.props.activeRule}
+                changeActiveRuleType={this.changeActiveRuleType}
+                hideAction={this.handleHide}
+                isEditingRule={this.state.isEditingRule}
+              />
+            </ConfigurationSidebar>
+          : ''}
+        </SectionContainer>
       </div>
     )
   }

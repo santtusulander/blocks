@@ -4,6 +4,7 @@ import {Input} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
@@ -71,20 +72,22 @@ class AnalysisURLReport extends React.Component {
 
     return (
       <div>
-        <div className="chart-holder" ref="chartHolder">
-          <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text"/>}>
-            <Input type="radio" label="Bytes" value="bytes" groupClassName="inline" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
-            <Input type="radio" label="Requests" value="requests" groupClassName="inline" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
-          </SectionHeader>
-          <AnalysisHorizontalBar
-            data={filteredUrls.toJS()}
-            dataKey={dataKey}
-            height={chartHeight}
-            labelKey="url"
-            width={this.state.chartWidth}
-            padding={20}
-            xAxisCustomFormat={xAxisCustomFormat}/>
-        </div>
+        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text"/>}>
+          <Input type="radio" label="Bytes" value="bytes" groupClassName="inline" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
+          <Input type="radio" label="Requests" value="requests" groupClassName="inline" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+        </SectionHeader>
+        <SectionContainer>
+          <div ref="chartHolder">
+            <AnalysisHorizontalBar
+              data={filteredUrls.toJS()}
+              dataKey={dataKey}
+              height={chartHeight}
+              labelKey="url"
+              width={this.state.chartWidth}
+              padding={20}
+              xAxisCustomFormat={xAxisCustomFormat}/>
+          </div>
+        </SectionContainer>
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.allUrls.text"/>}>
           <Input
             type="text"
@@ -94,10 +97,12 @@ class AnalysisURLReport extends React.Component {
             value={this.state.search}
             onChange={this.changeSearch}/>
         </SectionHeader>
-        <AnalysisURLList
-          urls={filteredUrls}
-          labelFormat={url => url.get('url')}
-          searchState={this.state.search} />
+        <SectionContainer>
+          <AnalysisURLList
+            urls={filteredUrls}
+            labelFormat={url => url.get('url')}
+            searchState={this.state.search} />
+        </SectionContainer>
       </div>
     )
   }
