@@ -591,7 +591,9 @@ const TRANSLATED_MESSAGES = {
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.login.login.text': 'Log In',
+  'portal.login.title': 'Login',
+  'portal.login.subtitle': 'Ericsson UDN Service',
+  'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
 
