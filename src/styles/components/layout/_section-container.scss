@@ -3,6 +3,6 @@
 
 $section-container-bottom-margin: rem(48px);
 
-.section-container {
+.section-container:not(:last-child) {
   margin-bottom: $section-container-bottom-margin;
 }

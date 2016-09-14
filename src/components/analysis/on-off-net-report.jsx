@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
@@ -162,99 +163,107 @@ class AnalysisOnOffNetReport extends React.Component {
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-on-off-net-report">
-        <Row>
-          <Col xs={12}>
-            <div className="analysis-data-box">
-              <h4>Traffic today</h4>
-              <p>{formatBytes(statsToday.get('total'))}</p>
-              <Row className="extra-margin-top">
-              {this.props.onOffFilter.contains('on-net') &&
-                <Col xs={6}>
-                  <h4>On-net</h4>
-                  <p className="on-net">
-                    {numeral(statsToday.getIn(['net_on', 'percent_total'])).format('0,0%')}
-                  </p>
-                </Col>
-              }
-              {this.props.onOffFilter.contains('off-net') &&
-                <Col xs={6}>
-                  <h4>Off-net</h4>
-                  <p className="off-net">
-                    {numeral(statsToday.getIn(['net_off', 'percent_total'])).format('0,0%')}
-                  </p>
-                </Col>
-              }
-              </Row>
-            </div>
-            <div className="analysis-data-box">
-              <h4>Traffic Month to Date</h4>
-              <p>{formatBytes(stats.get('total'))}</p>
-              <Row className="extra-margin-top">
-              {this.props.onOffFilter.contains('on-net') &&
-                <Col xs={6}>
-                  <h4>On-net</h4>
-                  <p className="on-net">
-                      {numeral(stats.getIn(['net_on', 'percent_total'])).format('0,0%')}
-                  </p>
-                </Col>
-              }
-              {this.props.onOffFilter.contains('off-net') &&
-                <Col xs={6}>
-                  <h4>Off-net</h4>
-                  <p className="off-net">
-                      {numeral(stats.getIn(['net_off', 'percent_total'])).format('0,0%')}
-                  </p>
-                </Col>
-              }
-              </Row>
-            </div>
-          </Col>
-        </Row>
+      <div>
+        <SectionContainer>
+          <Row>
+            <Col xs={12}>
+              <div className="analysis-data-box">
+                <h4>Traffic today</h4>
+                <p>{formatBytes(statsToday.get('total'))}</p>
+                <Row className="extra-margin-top">
+                {this.props.onOffFilter.contains('on-net') &&
+                  <Col xs={6}>
+                    <h4>On-net</h4>
+                    <p className="on-net">
+                      {numeral(statsToday.getIn(['net_on', 'percent_total'])).format('0,0%')}
+                    </p>
+                  </Col>
+                }
+                {this.props.onOffFilter.contains('off-net') &&
+                  <Col xs={6}>
+                    <h4>Off-net</h4>
+                    <p className="off-net">
+                      {numeral(statsToday.getIn(['net_off', 'percent_total'])).format('0,0%')}
+                    </p>
+                  </Col>
+                }
+                </Row>
+              </div>
+              <div className="analysis-data-box">
+                <h4>Traffic Month to Date</h4>
+                <p>{formatBytes(stats.get('total'))}</p>
+                <Row className="extra-margin-top">
+                {this.props.onOffFilter.contains('on-net') &&
+                  <Col xs={6}>
+                    <h4>On-net</h4>
+                    <p className="on-net">
+                        {numeral(stats.getIn(['net_on', 'percent_total'])).format('0,0%')}
+                    </p>
+                  </Col>
+                }
+                {this.props.onOffFilter.contains('off-net') &&
+                  <Col xs={6}>
+                    <h4>Off-net</h4>
+                    <p className="off-net">
+                        {numeral(stats.getIn(['net_off', 'percent_total'])).format('0,0%')}
+                    </p>
+                  </Col>
+                }
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        </SectionContainer>
+
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.onOffNet.text"/>} />
-        <div ref="stacksHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> : chart}
-        </div>
-        <table className="table table-striped table-analysis extra-margin-top">
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="timestamp">
-                Date
-              </TableSorter>
-              <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
-                On Net (Bytes)
-              </TableSorter>
-              <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
-                On Net (%)
-              </TableSorter>
-              <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
-                Off Net (Bytes)
-              </TableSorter>
-              <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
-                Off Net (%)
-              </TableSorter>
-              <TableSorter {...sorterProps} column="total">
-                Total (Bytes)
-              </TableSorter>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStats.map((day, i) => {
-              return (
-                <tr key={i}>
-                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
-                  <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
-                  <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>
-                  <td>{numeral(day.getIn(['net_off', 'percent_total'])).format('0%')}</td>
-                  <td>{formatBytes(day.get('total'))}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <SectionContainer>
+          <div ref="stacksHolder">
+            {this.props.fetching ?
+              <div>Loading...</div> : chart}
+          </div>
+        </SectionContainer>
+
+        <SectionContainer>
+          <table className="table table-striped table-analysis">
+            <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="timestamp">
+                  Date
+                </TableSorter>
+                <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
+                  On Net (Bytes)
+                </TableSorter>
+                <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
+                  On Net (%)
+                </TableSorter>
+                <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
+                  Off Net (Bytes)
+                </TableSorter>
+                <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
+                  Off Net (%)
+                </TableSorter>
+                <TableSorter {...sorterProps} column="total">
+                  Total (Bytes)
+                </TableSorter>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedStats.map((day, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                    <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
+                    <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
+                    <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>
+                    <td>{numeral(day.getIn(['net_off', 'percent_total'])).format('0%')}</td>
+                    <td>{formatBytes(day.get('total'))}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </SectionContainer>
       </div>
     )
   }
