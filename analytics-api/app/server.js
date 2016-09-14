@@ -4,11 +4,8 @@ let compression  = require('compression');
 let express      = require('express');
 let morgan       = require('morgan');
 var responseTime = require('response-time')
-let auth         = require('./auth');
 let router       = require('./router');
 let log          = require('./logger');
-let configs      = require('./configs');
-let routeVersion = require('./routes/version');
 let app          = express();
 
 // NOTE: This file exports a function that must be executed when the module is
@@ -39,12 +36,6 @@ module.exports = function runServer() {
     stream: log.infoStream,
     skip: (req, res) => { return res.statusCode > 399; }
   }));
-
-  // It should go before the auth in order to bypass token check
-  app.use(`/${configs.apiBaseFolder}/version`, routeVersion);
-
-  // Ensure the request is coming from an authenticated user (via token in X-Auth-Token header)
-  app.use(auth);
 
   // Attach the router
   app.use('/', router);
