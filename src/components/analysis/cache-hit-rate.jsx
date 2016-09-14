@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
@@ -132,33 +133,37 @@ class AnalysisCacheHitRate extends React.Component {
           />
         </SectionHeader>
 
-        <div ref="stacksHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> : chart}
-        </div>
+        <SectionContainer>
+          <div ref="stacksHolder">
+            {this.props.fetching ?
+              <div>Loading...</div> : chart}
+          </div>
+        </SectionContainer>
 
-        <table className="table table-striped table-analysis extra-margin-top">
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="timestamp">
-              Date
-              </TableSorter>
-              <TableSorter {...sorterProps} column="chit_ratio">
-              Cache Hit Rate (%)
-              </TableSorter>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStats.map((day, i) => {
-              return (
-                <tr key={i}>
-                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <SectionContainer>
+          <table className="table table-striped table-analysis">
+            <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="timestamp">
+                Date
+                </TableSorter>
+                <TableSorter {...sorterProps} column="chit_ratio">
+                Cache Hit Rate (%)
+                </TableSorter>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedStats.map((day, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                    <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </SectionContainer>
       </div>
     )
   }
