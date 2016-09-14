@@ -52,15 +52,16 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
               />
             </li>
 
+            <li className="no-helper-header" >
+              <Link to={'/user'} onClick={onToggle}>
+                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
+              </Link>
+            </li>
+
             <li className="bottom-item no-helper-header">
               <a id="log-out" href="#" onClick={logout}>
                 <FormattedMessage id="portal.header.menu.logout.text"/>
               </a>
-            </li>
-            <li className="no-helper-header" >
-              <Link to={'/user'}>
-                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
-              </Link>
             </li>
           </ul>
         </li>
