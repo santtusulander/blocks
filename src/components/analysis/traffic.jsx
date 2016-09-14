@@ -6,6 +6,7 @@ import numeral from 'numeral'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
 import TableSorter from '../table-sorter'
@@ -176,7 +177,7 @@ class AnalysisTraffic extends React.Component {
           sectionHeaderTitle={this.props.recordType === 'transfer_rates'
             ? <FormattedMessage id="portal.analytics.trafficOverview.bandwith.text"/>
             : <FormattedMessage id="portal.analytics.trafficOverview.requests.text"/>} />
-        <div className="analysis-data-box wide">
+        <SectionContainer className="analysis-data-box wide">
           <Row>
             <Col xs={4} className="right-separator">
               <h4><FormattedMessage id="portal.analytics.peak.text"/></h4>
@@ -191,95 +192,101 @@ class AnalysisTraffic extends React.Component {
               <p>{this.props.lowTraffic && this.props.lowTraffic}</p>
             </Col>
           </Row>
-        </div>
+        </SectionContainer>
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.transferByTime.text"/>} />
-        <div ref="byTimeHolder" className="transfer-by-time">
-          {this.props.fetching ?
-            <div><FormattedMessage id="portal.loading.text"/></div> :
-            <AnalysisByTime
-              axes={true}
-              padding={40}
-              dataKey={byTimeDataKey}
-              dataSets={datasets}
-              showLegend={true}
-              showTooltip={false}
-              yAxisCustomFormat={byTimeYAxisFormat}
-              width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
-          }
-        </div>
+        <SectionContainer>
+          <div ref="byTimeHolder">
+            {this.props.fetching ?
+              <div><FormattedMessage id="portal.loading.text"/></div> :
+              <AnalysisByTime
+                axes={true}
+                padding={40}
+                dataKey={byTimeDataKey}
+                dataSets={datasets}
+                showLegend={true}
+                showTooltip={false}
+                yAxisCustomFormat={byTimeYAxisFormat}
+                width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
+            }
+          </div>
+        </SectionContainer>
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.byGeography.text"/>} />
-        <div ref="byLocationHolder">
-          {this.props.fetching ?
-            <div><FormattedMessage id="portal.loading.text"/></div> :
-            <AnalysisByLocation
-              dataKey={byCountryDataKey}
-              tooltipCustomFormat={byCountryDataFormat}
-              timelineKey="detail"
-              width={this.state.byLocationWidth}
-              height={this.state.byLocationWidth / 1.6}
-              countryData={this.props.byCountry}/>
-          }
-        </div>
+        <SectionContainer>
+          <div ref="byLocationHolder">
+            {this.props.fetching ?
+              <div><FormattedMessage id="portal.loading.text"/></div> :
+              <AnalysisByLocation
+                dataKey={byCountryDataKey}
+                tooltipCustomFormat={byCountryDataFormat}
+                timelineKey="detail"
+                width={this.state.byLocationWidth}
+                height={this.state.byLocationWidth / 1.6}
+                countryData={this.props.byCountry}/>
+            }
+          </div>
+        </SectionContainer>
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.byCountry.text"/>} />
-        <table className="table table-striped table-analysis by-country-table">
-          <thead>
-          <tr>
-            <TableSorter {...sorterProps} column="name">
-              <FormattedMessage id="portal.analytics.trafficOverview.byCountry.country.header"/>
-            </TableSorter>
-            <TableSorter {...sorterProps} column={byCountryDataKey}>
-              {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwith.header"/> : <FormattedMessage id="portal.analytics.trafficOverview.byCountry.request.header"/>}
-            </TableSorter>
-            <th className="text-center"><FormattedMessage id="portal.analytics.trafficOverview.byCountry.periodTrend.header"/></th>
-          </tr>
-          </thead>
-          <tbody>
-          {!this.props.fetching ? sortedCountries.map((country, i) => {
-            const primaryData = country.get('detail').map(datapoint => {
-              return datapoint.set(
-                'timestamp',
-                moment(datapoint.get('timestamp'), 'X').toDate()
-              )
-            })
-            const datasets = []
-            if(primaryData.size) {
-              datasets.push({
-                area: false,
-                color: paleblue,
-                comparisonData: false,
-                data: primaryData.toJS(),
-                id: '',
-                label: '',
-                line: true,
-                stackedAgainst: false,
-                xAxisFormatter: false
+        <SectionContainer>
+          <table className="table table-striped table-analysis">
+            <thead>
+            <tr>
+              <TableSorter {...sorterProps} column="name">
+                <FormattedMessage id="portal.analytics.trafficOverview.byCountry.country.header"/>
+              </TableSorter>
+              <TableSorter {...sorterProps} column={byCountryDataKey}>
+                {this.props.recordType === 'transfer_rates' ? <FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwith.header"/> : <FormattedMessage id="portal.analytics.trafficOverview.byCountry.request.header"/>}
+              </TableSorter>
+              <th className="text-center"><FormattedMessage id="portal.analytics.trafficOverview.byCountry.periodTrend.header"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            {!this.props.fetching ? sortedCountries.map((country, i) => {
+              const primaryData = country.get('detail').map(datapoint => {
+                return datapoint.set(
+                  'timestamp',
+                  moment(datapoint.get('timestamp'), 'X').toDate()
+                )
               })
-            }
-            return (
-              <tr key={i}>
-                <td>{country.get('name')}</td>
-                <td>{byCountryDataFormat(country.get(byCountryDataKey))}</td>
-                <td width={this.state.byTimeWidth / 2}>
-                  <AnalysisByTime
-                    axes={false}
-                    padding={0}
-                    dataKey={byTimeDataKey}
-                    dataSets={datasets}
-                    showTooltip={true}
-                    yAxisCustomFormat={byTimeYAxisFormat}
-                    width={this.state.byTimeWidth / 2}
-                    height={50}/>
-                </td>
-              </tr>
-            )
-          }) : <tr>
-            <td colSpan="3"><FormattedMessage id="portal.loading.text"/></td>
-          </tr>}
-          </tbody>
-        </table>
+              const datasets = []
+              if(primaryData.size) {
+                datasets.push({
+                  area: false,
+                  color: paleblue,
+                  comparisonData: false,
+                  data: primaryData.toJS(),
+                  id: '',
+                  label: '',
+                  line: true,
+                  stackedAgainst: false,
+                  xAxisFormatter: false
+                })
+              }
+              return (
+                <tr key={i}>
+                  <td>{country.get('name')}</td>
+                  <td>{byCountryDataFormat(country.get(byCountryDataKey))}</td>
+                  <td width={this.state.byTimeWidth / 2}>
+                    <AnalysisByTime
+                      axes={false}
+                      padding={0}
+                      dataKey={byTimeDataKey}
+                      dataSets={datasets}
+                      showTooltip={true}
+                      yAxisCustomFormat={byTimeYAxisFormat}
+                      width={this.state.byTimeWidth / 2}
+                      height={50}/>
+                  </td>
+                </tr>
+              )
+            }) : <tr>
+              <td colSpan="3"><FormattedMessage id="portal.loading.text"/></td>
+            </tr>}
+            </tbody>
+          </table>
+        </SectionContainer>
       </div>
     )
   }
