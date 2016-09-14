@@ -127,10 +127,10 @@ export class Login extends React.Component {
         <Modal.Header className="login-header">
           <div className="login-header-gradient"></div>
           <h1>
-            <div className="logo-ericsson">Ericsson</div>
-            <FormattedMessage id="portal.login.login.text"/>
+            <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
+            <FormattedMessage id="portal.login.title"/>
           </h1>
-          <p className="login-subtitle">Ericsson UDN Service</p>
+          <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
