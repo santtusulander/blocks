@@ -301,6 +301,7 @@ textarea {
   label {
     padding-left: 0;
     font-size: rem(14px);
+    font-weight: 500;
   }
 
   input {
@@ -311,7 +312,7 @@ textarea {
       width: calc(#{$bar-height} / 2);
       height: calc(#{$bar-height} / 2);
       margin: 0 calc(#{$bar-height} / 4) 0 0;
-      vertical-align: middle;
+      vertical-align: top;
       cursor: pointer;
       content: '';
 
