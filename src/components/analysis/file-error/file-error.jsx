@@ -74,13 +74,13 @@ const AnalysisFileError = props => {
         <Col xs={12}>
           <AnalysisFileErrorDataBox
             id="client-errors"
-            label={this.props.intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
+            label={props.intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
             code="4XX"
             errs={clientErrs}
           />
           <AnalysisFileErrorDataBox
             id="server-errors"
-            label={this.props.intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
+            label={props.intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
             code="5XX"
             errs={serverErrs}
           />
