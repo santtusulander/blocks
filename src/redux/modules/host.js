@@ -31,7 +31,7 @@ export function createSuccess(state, { payload }) {
     activeHostConfiguredName: getConfiguredName(payload),
     activeHost: payload,
     allHosts: state.get('allHosts').push(payload.get('id')),
-    configuredHostNames: state.get('configuredHostNames').push(payload.get('id'))
+    configuredHostNames: state.get('configuredHostNames').push(getConfiguredName(payload))
   })
 }
 
