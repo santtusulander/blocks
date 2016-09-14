@@ -59,6 +59,12 @@ const fakeCountryData = Immutable.fromJS([
   }
 ])
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('AnalysisTraffic', () => {
   it('should exist', () => {
     let traffic = TestUtils.renderIntoDocument(
@@ -67,7 +73,8 @@ describe('AnalysisTraffic', () => {
         byTime={Immutable.List()}
         byCountry={Immutable.List()}
         serviceTypes={Immutable.List()}
-        dateRange='foo'/>
+        dateRange='foo'
+        intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
   });
@@ -79,7 +86,8 @@ describe('AnalysisTraffic', () => {
         byTime={Immutable.List()}
         byCountry={fakeCountryData}
         serviceTypes={Immutable.List()}
-        dateRange='foo'/>
+        dateRange='foo'
+        intl={intlMaker()}/>
     );
     let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
     expect(tds.length).toBe(6);

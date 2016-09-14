@@ -1,5 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
+import { Input } from 'react-bootstrap'
 
 jest.mock('../../util/helpers', () => {
   return {
@@ -10,6 +12,12 @@ jest.mock('../../util/helpers', () => {
 
 jest.dontMock('../login.jsx')
 const Login = require('../login.jsx').Login
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 function userActionsMaker(cbResponse) {
   return {
@@ -41,26 +49,20 @@ function rolesActionsMaker() {
 
 describe('Login', () => {
   it('should exist', () => {
-    const login = TestUtils.renderIntoDocument(
-      <Login userActions={userActionsMaker({})}/>
-    )
-    expect(TestUtils.isCompositeComponent(login)).toBeTruthy();
+    const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
+    expect(login.length).toBe(1)
   })
 
   it('can show / hide password', () => {
-    const login = TestUtils.renderIntoDocument(
-      <Login userActions={userActionsMaker({})}/>
-    )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
-    expect(inputs[1].type).toBe('password')
-    let toggler = TestUtils.findRenderedDOMComponentWithClass(login, 'input-addon-link')
-    TestUtils.Simulate.click(toggler)
-    expect(inputs[1].type).toBe('text')
+    const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
+    expect(login.find(Input).get(1).props.type).toBe('password')
+    login.instance().togglePasswordVisibility()
+    expect(login.find(Input).get(1).props.type).toBe('text')
   })
 
   it('maintains form state', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login userActions={userActionsMaker({})}/>
+      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
     inputs[0].value = 'aaa'
@@ -73,7 +75,7 @@ describe('Login', () => {
 
   it('toggles active class when focused and blurred', () => {
     const login = TestUtils.renderIntoDocument(
-      <Login userActions={userActionsMaker({})}/>
+      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
     )
     const inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
 
@@ -96,7 +98,7 @@ describe('Login', () => {
     const failedAction = {error: true, payload: {message: 'Test fail'}}
     const userActions = userActionsMaker(failedAction)
     const login = TestUtils.renderIntoDocument(
-      <Login userActions={userActions}/>
+      <Login userActions={userActions} intl={intlMaker()}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
@@ -124,7 +126,8 @@ describe('Login', () => {
       <Login userActions={userActions}
         accountActions={accountActions}
         rolesActions={rolesActions}
-        router={fakeRouter}/>
+        router={fakeRouter}
+        intl={intlMaker()}/>
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')

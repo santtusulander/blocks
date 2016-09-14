@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap'
 import IconAdd from '../icons/icon-add.jsx'
 import { SidebarLinks } from '../sidebar-links'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 export class ConfigurationVersions extends React.Component {
 
@@ -83,6 +83,7 @@ ConfigurationVersions.propTypes = {
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   propertyName: React.PropTypes.string,
   status: React.PropTypes.number
 }

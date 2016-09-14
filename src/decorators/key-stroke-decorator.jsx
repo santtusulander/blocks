@@ -1,12 +1,10 @@
 import React, { PropTypes, Component } from 'react'
-import { once } from 'underscore'
 
 export default function(WrappedModal) {
   class KeyStrokeSupport extends Component {
     constructor(props) {
       super(props)
-      this.submitOnce = once(props.submit || props.cancel)
-      this.cancelOnce = once(props.cancel)
+      this.submitCalled = false
       this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
@@ -22,9 +20,13 @@ export default function(WrappedModal) {
       switch(e.keyCode) {
         case 13:
           e.preventDefault()
-          !this.props.invalid && this.submitOnce()
+          if (!this.props.invalid && !this.submitCalled) {
+            this.props.submit()
+            this.submitCalled = true
+          }
           break
-        case 27: this.cancelOnce()
+        case 27:
+          this.props.cancel()
           break
       }
     }

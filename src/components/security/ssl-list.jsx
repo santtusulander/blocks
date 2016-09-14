@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
 
-import ActionLinks from '../account-management/action-links.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
   return (
@@ -22,7 +22,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
-            <th width="8%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>
@@ -41,8 +41,8 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
                 </td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td>
-                  <ActionLinks
+                <td className="nowrap-column">
+                  <ActionButtons
                     onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
                     onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
                 </td>

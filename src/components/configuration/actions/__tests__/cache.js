@@ -11,10 +11,16 @@ const fakeConfig = Immutable.fromJS({
 
 const fakePath = ['foo', 'bar']
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('Cache', () => {
   it('should exist', () => {
     let cache = TestUtils.renderIntoDocument(
-      <Cache set={fakeConfig} path={fakePath}/>
+      <Cache set={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
     expect(TestUtils.isCompositeComponent(cache)).toBeTruthy();
   })
@@ -22,7 +28,8 @@ describe('Cache', () => {
   it('should update the state as changes happen', () => {
     let changeValue = jest.genMockFunction()
     let cache = TestUtils.renderIntoDocument(
-      <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}/>
+      <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
+        intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cache, 'input')
     inputs[0].value = 'new'
@@ -42,7 +49,7 @@ describe('Cache', () => {
     })
     let cache = TestUtils.renderIntoDocument(
       <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
-        close={close}/>
+        close={close} intl={intlMaker()}/>
     )
     cache.setState({
       checkEtag: 'aaa',

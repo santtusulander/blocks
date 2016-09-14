@@ -8,7 +8,7 @@ import Toggle from '../toggle'
 
 import './role-edit-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 let errors = {}
 
@@ -66,8 +66,8 @@ const RolesEditForm = (props) => {
         <Input
           {...roleName}
           type='text'
-          placeholder={this.props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
-          label={this.props.intl.formatMessage({id: 'portal.role.edit.name.text'})}
+          placeholder={props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
+          label={props.intl.formatMessage({id: 'portal.role.edit.name.text'})}
           value={props.editRole.get('name')}
           readOnly={true}
         />
@@ -137,6 +137,7 @@ const RolesEditForm = (props) => {
 RolesEditForm.propTypes = {
   editRole: React.PropTypes.object,
   fields: React.PropTypes.object,
+  intl: React.PropTypes.object,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
