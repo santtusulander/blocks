@@ -120,7 +120,7 @@ describe('Main', () => {
   let uiActions = null
 
   beforeEach(() => {
-    subject = (error, loggedIn, currentUser) => {
+    subject = (error, loggedIn, currentUser, roles) => {
       router = fakeRouterMaker()
       rolesActions = rolesActionsMaker()
       accountActions = accountActionsMaker()
@@ -139,6 +139,7 @@ describe('Main', () => {
         userActions,
         rolesActions,
         router,
+        viewingChart: true,
         currentUser: fromJS(currentUser) || fromJS({}),
         user: fromJS({ loggedIn }),
         properties: fakeProperties,
@@ -147,6 +148,7 @@ describe('Main', () => {
         activeHost: fakeHost,
         hostActions: hostActionsMaker(),
         params: fakeParams,
+        roles: fromJS(roles),
         fetchAccountData: fakeFetchAccountData
       }
       return shallow(<Main {...props}/>)
@@ -175,45 +177,27 @@ describe('Main', () => {
   });
 
   it('should show footer if logged in and not fetching', () => {
-    expect(subject(null, true, { a: 'b' }).find('Footer').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, ['a']).find('Footer').length).toBe(1);
   });
 
   it('should show header if logged in', () => {
-    expect(subject(null, true, { a: 'b' }).find('Header').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, ['a']).find('Header').length).toBe(1);
   });
 
   it('should show navigation if logged in', () => {
-    expect(subject(null, true, { a: 'b' }).find('Navigation').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, ['a']).find('Navigation').length).toBe(1);
   });
 
   it('should show loading spinner if logged in and no current user or roles', () => {
     expect(subject(null, true).find('LoadingSpinner').length).toBe(1);
   });
-  // it('should have .chart-view class when viewing charts', () => {
-  //   let main = TestUtils.renderIntoDocument(
-  //     <Main location={fakeLocation} uiActions={uiActionsMaker()} theme="dark"
-  //       userActions={userActionsMaker()}
-  //       viewingChart={true}
-  //       params={fakeParams}
-  //       fetchAccountData={fakeFetchAccountData} />
-  //   );
-  //   let container = TestUtils.findRenderedDOMComponentWithClass(main, 'main-container');
-  //   expect(ReactDOM.findDOMNode(container).className).toContain('chart-view');
-  // });
 
-  // it('handles a successful log out attempt', () => {
-  //   const userActions = userActionsMaker({})
-  //   const fakeRouter = fakeRouterMaker()
-  //   const main = TestUtils.renderIntoDocument(
-  //     <Main location={fakeLocation}
-  //       uiActions={uiActionsMaker()}
-  //       theme="dark"
-  //       userActions={userActions}
-  //       router={fakeRouter}
-  //       params={fakeParams}
-  //       fetchAccountData={fakeFetchAccountData} />
-  //   )
-  //   main.logOut()
-  //   expect(fakeRouter.push.mock.calls[0]).toContain('/login')
-  // });
+  it('should have .chart-view class when viewing charts', () => {
+    expect(subject(null, true, { a: 'b' }, ['a']).find('.chart-view').length).toBe(1);
+  });
+
+  it('handles a successful log out attempt', () => {
+    subject().instance().logOut()
+    expect(router.push.mock.calls[0]).toContain('/login')
+  });
 })
