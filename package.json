@@ -94,7 +94,7 @@
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
     "testPathDirs": [
       "src",
       "__mocks__"
