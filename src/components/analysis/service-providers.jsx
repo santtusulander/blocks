@@ -4,6 +4,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 
 import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisStackedByGroup from './stacked-by-group'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
@@ -89,54 +90,59 @@ class AnalysisServiceProviders extends React.Component {
     }
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-service-providers">
+      <div>
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>} />
-        <div ref="stacksHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> :
-            <AnalysisStackedByGroup padding={40}
-              chartLabel={`${month}, Month to Date`}
-              datasets={providers}
-              datasetLabels={[
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttp.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttps.label"/>
-              ]}
-              width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
-          }
-        </div>
-        {<table className="table table-striped table-analysis extra-margin-top">
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="provider">
-                Service Provider
-              </TableSorter>
-              <TableSorter {...sorterProps} column="country">
-                Country
-              </TableSorter>
-              <TableSorter {...sorterProps} column="bytes">
-                Traffic
-              </TableSorter>
-              <TableSorter {...sorterProps} column="percent_total">
-                % of Traffic
-              </TableSorter>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStats.map((country, i) => {
-              return (
-                <tr key={i}>
-                  <td>{country.get('provider')}</td>
-                  <td>{country.get('country')}</td>
-                  <td>{formatBytes(country.get('bytes'))}</td>
-                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>}
+        <SectionContainer className="analysis-service-providers">
+          <div ref="stacksHolder">
+            {this.props.fetching ?
+              <div>Loading...</div> :
+              <AnalysisStackedByGroup padding={40}
+                chartLabel={`${month}, Month to Date`}
+                datasets={providers}
+                datasetLabels={[
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttp.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttps.label"/>
+                ]}
+                width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+            }
+          </div>
+        </SectionContainer>
+
+        <SectionContainer>
+          {<table className="table table-striped table-analysis">
+            <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="provider">
+                  Service Provider
+                </TableSorter>
+                <TableSorter {...sorterProps} column="country">
+                  Country
+                </TableSorter>
+                <TableSorter {...sorterProps} column="bytes">
+                  Traffic
+                </TableSorter>
+                <TableSorter {...sorterProps} column="percent_total">
+                  % of Traffic
+                </TableSorter>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedStats.map((country, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{country.get('provider')}</td>
+                    <td>{country.get('country')}</td>
+                    <td>{formatBytes(country.get('bytes'))}</td>
+                    <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>}
+        </SectionContainer>
       </div>
     )
   }

@@ -4,6 +4,7 @@ import {List, Map} from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SectionHeader from '../../layout/section-header'
+import SectionContainer from '../../layout/section-container'
 import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
 
@@ -85,23 +86,26 @@ class AnalysisFileError extends React.Component {
     })
 
     return (
-      <div className="analysis-file-error">
-        <Row>
-          <Col xs={12}>
-            <AnalysisFileErrorDataBox
-              id="client-errors"
-              label={intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
-              code="4XX"
-              errs={clientErrs}
-            />
-            <AnalysisFileErrorDataBox
-              id="server-errors"
-              label={intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
-              code="5XX"
-              errs={serverErrs}
-            />
-          </Col>
-        </Row>
+      <div>
+        <SectionContainer className="analysis-file-error">
+          <Row>
+            <Col xs={12}>
+              <AnalysisFileErrorDataBox
+                id="client-errors"
+                label={intl.formatMessage({id: 'portal.analytics.fileErrors.clientErrors.label'})}
+                code="4XX"
+                errs={clientErrs}
+              />
+              <AnalysisFileErrorDataBox
+                id="server-errors"
+                label={intl.formatMessage({id: 'portal.analytics.fileErrors.serverErrors.label'})}
+                code="5XX"
+                errs={serverErrs}
+              />
+            </Col>
+          </Row>
+        </SectionContainer>
+
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.fileErrors.label"/>}>
           <Input
             type="text"
@@ -111,10 +115,12 @@ class AnalysisFileError extends React.Component {
             value={this.state.search}
             onChange={this.changeSearch}/>
         </SectionHeader>
-        <AnalysisURLList
-          urls={filteredUrls}
-          labelFormat={url => `${url.get('status_code')} ${url.get('url')}`}
-          searchState={this.state.search} />
+        <SectionContainer>
+          <AnalysisURLList
+            urls={filteredUrls}
+            labelFormat={url => `${url.get('status_code')} ${url.get('url')}`}
+            searchState={this.state.search} />
+        </SectionContainer>
       </div>
     )
   }
