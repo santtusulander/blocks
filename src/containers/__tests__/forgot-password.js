@@ -1,6 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../forgot-password.jsx')
 const ForgotPassword = require('../forgot-password.jsx').ForgotPassword
 

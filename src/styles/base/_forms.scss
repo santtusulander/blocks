@@ -148,16 +148,11 @@ label {
 }
 
 .form-control-static {
-  height: $bar-height;
+  height: auto;
   max-width: 900px;
-  padding: ($btn-sm-height / 3) 0;
-  line-height: $bar-height - (($btn-sm-height / 3) * 2);
-
-  @include md {
-    height: $md-bar-height;
-    padding: ($md-btn-sm-height / 3) 0;
-    line-height: $md-bar-height - (($md-btn-sm-height / 3) * 2);
-  }
+  padding: $form-vertical-padding $form-horizontal-padding;
+  font-size: rem($form-font-size);
+  line-height: $form-line-height;
 }
 
 .form-groups {
@@ -191,6 +186,12 @@ label {
 }
 
 .form-horizontal {
+
+  .form-group {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
   .control-label {
     text-align: inherit;
   }

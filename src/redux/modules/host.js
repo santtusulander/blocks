@@ -30,7 +30,8 @@ export function createSuccess(state, { payload }) {
   return state.merge({
     activeHostConfiguredName: getConfiguredName(payload),
     activeHost: payload,
-    allHosts: state.get('allHosts').push(payload.get('id'))
+    allHosts: state.get('allHosts').push(payload.get('id')),
+    configuredHostNames: state.get('configuredHostNames').push(getConfiguredName(payload))
   })
 }
 

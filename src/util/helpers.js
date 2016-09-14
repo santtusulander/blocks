@@ -242,3 +242,19 @@ export function getConfiguredName(host) {
   }
   return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
 }
+
+export function getRolesForUser(user, roles) {
+  let userRoles = []
+  const mappedRoles = roles.size ?
+    user.get('roles').map(roleId => (
+      {
+        id: roleId,
+        name: roles.find(role => role.get('id') === roleId).get('name')
+      }
+    )).toJS()
+    : []
+  mappedRoles.forEach(role => {
+    userRoles.push([role.id, role.name])
+  })
+  return userRoles
+}
