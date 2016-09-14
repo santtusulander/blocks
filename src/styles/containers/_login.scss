@@ -44,6 +44,10 @@ $login-modal-logo-left-padding: rem(12px);
       padding-bottom: $login-modal-input-bottom-padding;
     }
 
+    .input-group-addon:last-child {
+      padding: 0;
+    }
+
     .remember-checkbox {
       padding: 6px 0;
 
@@ -125,4 +129,16 @@ $login-modal-logo-left-padding: rem(12px);
 .login-info {
   margin-top: -20px;
   margin-bottom: 20px;
+}
+
+// This is hacky code that should be removed when we no longer allow a light
+// themed login page. See: https://vidscale.atlassian.net/browse/UDNP-1328
+.light-theme .icon.two-tone {
+  .base {
+    fill: $white;
+  }
+
+  .primary {
+    fill: $medium-blue;
+  }
 }
