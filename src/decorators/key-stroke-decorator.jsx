@@ -20,10 +20,7 @@ export default function(WrappedModal) {
       switch(e.keyCode) {
         case 13:
           e.preventDefault()
-          if (!this.props.invalid && !this.submitCalled) {
-            this.props.submit()
-            this.submitCalled = true
-          }
+          !this.props.invalid && !this.submitCalled && this.submit()
           break
         case 27:
           this.props.cancel()
@@ -32,7 +29,14 @@ export default function(WrappedModal) {
     }
 
     render() {
-      return (<WrappedModal {...this.props}/>)
+      const { submit, ...props } = this.props
+      const submitFunc = () => {
+        if (!this.submitCalled) {
+          submit()
+          this.submitCalled = true
+        }
+      }
+      return (<WrappedModal submit={submitFunc} {...props}/>)
     }
   }
 
