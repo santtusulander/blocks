@@ -1,17 +1,17 @@
 'use strict';
 
 module.exports = [{
-  "name": "Vodafone",
+  "sp_account": "1",
   "http": {
-    "net_on": 25000,
+    "net_on_bytes": 25000,
     "net_on_bps": 25000,
-    "net_off": 50000,
+    "net_off_bytes": 50000,
     "net_off_bps": 50000
   },
   "https": {
-    "net_on": 25000,
+    "net_on_bytes": 25000,
     "net_on_bps": 25000,
-    "net_off": 50000,
+    "net_off_bytes": 50000,
     "net_off_bps": 50000
   },
   "countries": [{
@@ -28,17 +28,17 @@ module.exports = [{
     "percent_total": 0.20
   }]
 }, {
-  "name": "Telstra",
+  "sp_account": "2",
   "http": {
-    "net_on": 50000,
+    "net_on_bytes": 50000,
     "net_on_bps": 50000,
-    "net_off": 25000,
+    "net_off_bytes": 25000,
     "net_off_bps": 25000
   },
   "https": {
-    "net_on": 25000,
+    "net_on_bytes": 25000,
     "net_on_bps": 25000,
-    "net_off": 50000,
+    "net_off_bytes": 50000,
     "net_off_bps": 50000
   },
   "countries": [{

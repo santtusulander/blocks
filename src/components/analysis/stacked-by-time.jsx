@@ -3,21 +3,17 @@ import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 
-import Tooltip from '../tooltip'
-
-const closestDate = d3.bisector(d => d.timestamp).left
+import TimeAxisLabels from './time-axis-labels'
 
 class AnalysisStackedByTime extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      tooltipText: null,
-      tooltipX: 0,
-      tooltipY: 0
+  formatY(data) {
+    if(this.props.yAxisCustomFormat) {
+      return this.props.yAxisCustomFormat(data)
+    }
+    else {
+      return numeral(data).format('0 a')
     }
   }
-
   render() {
     const dataKey = this.props.dataKey
 
@@ -69,6 +65,10 @@ class AnalysisStackedByTime extends React.Component {
           height={this.props.height}
           ref='chart'>
           {this.props.dataSets ? this.props.dataSets.map((dataset, dataSetIndex) => {
+            const strokeWidth = Math.min(
+              (this.props.width - this.props.padding * 10) / dataset.length,
+              30
+            )
             return dataset.map((day, i) => {
               const newTotal = columnHeights[i] ? columnHeights[i] + day[dataKey] : day[dataKey]
               const line = (
@@ -76,37 +76,26 @@ class AnalysisStackedByTime extends React.Component {
                   x1={xScale(day.timestamp)}
                   x2={xScale(day.timestamp)}
                   y1={yScale(columnHeights[i] || 0)}
-                  y2={yScale(newTotal)}/>
+                  y2={yScale(newTotal)}
+                  style={{strokeWidth: strokeWidth}}/>
               )
               columnHeights[i] = newTotal
               return line
             })
           }) : null}
-          {this.state.tooltipText ?
-            <g>
-              <circle r="5"
-                cx={this.state.tooltipX}
-                cy={this.state.tooltipY}/>
-              <line className="crosshair"
-                x1={this.state.tooltipX} x2={this.state.tooltipX}
-                y1={0} y2={this.props.height}/>
-            </g>
-            : null}
-          {xScale.ticks(d3.time.day, 1).map((tick, i) => {
-            return (
-              <g key={i}>
-                <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                  {moment(tick).format('D')}
-                </text>
-              </g>
-            )
-          })}
+          {<TimeAxisLabels
+            xScale={xScale}
+            padding={this.props.padding}
+            height={this.props.height}
+            showHours={xExtent[1] - xExtent[0] <= 24*60*60*1000}
+            />}
           {yScale.ticks(4).reduce((axes, tick, i) => {
             if(i) {
               axes.push(
                 <g key={i}>
-                  <text x={this.props.padding} y={yScale(tick)}>
-                    {numeral(tick).format('0 a')}
+                  <text x={this.props.padding*1.5} y={yScale(tick)}
+                    className="y-axis">
+                    {this.formatY(tick)}
                   </text>
                 </g>
               );
@@ -114,10 +103,6 @@ class AnalysisStackedByTime extends React.Component {
             return axes
           }, [])}
         </svg>
-        <Tooltip x={this.state.tooltipX} y={this.state.tooltipY}
-          hidden={!this.state.tooltipText}>
-          {this.state.tooltipText}
-        </Tooltip>
       </div>
     )
   }
@@ -134,7 +119,8 @@ AnalysisStackedByTime.propTypes = {
   dataSets: React.PropTypes.array,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
-  width: React.PropTypes.number
+  width: React.PropTypes.number,
+  yAxisCustomFormat: React.PropTypes.func
 }
 
 module.exports = AnalysisStackedByTime

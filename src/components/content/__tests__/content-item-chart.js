@@ -29,24 +29,22 @@ const fakeDifferenceData = Immutable.List([0, 0, 0, 1, 1, 1])
 
 describe('ContentItemChart', () => {
   it('should exist', () => {
-    let contentItem = TestUtils.renderIntoDocument(
-      <ContentItemChart />
-    );
-    expect(TestUtils.isCompositeComponent(contentItem)).toBeTruthy();
+    const contentItem = shallow(<ContentItemChart />)
+    expect(contentItem.length).toBe(1)
   })
 
   it('should show a loading message', () => {
-    let contentItem = shallow(<ContentItemChart fetchingMetrics={true}/>)
+    const contentItem = shallow(<ContentItemChart fetchingMetrics={true}/>)
     expect(contentItem.find('LoadingSpinner').length).toBe(1)
-  });
+  })
 
   it('should not show a loading message', () => {
-    let contentItem = shallow(<ContentItemChart/>)
+    const contentItem = shallow(<ContentItemChart/>)
     expect(contentItem.find('#fetchingMetrics').length).toBe(0)
-  });
+  })
 
   it('should show primary chart', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+    const contentItem = shallow(
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
@@ -59,12 +57,12 @@ describe('ContentItemChart', () => {
         chartWidth='100'
         barMaxHeight='10' />
     )
-    let primary = TestUtils.findRenderedDOMComponentWithClass(contentItem, 'primary-data')
-    expect(primary).toBeTruthy();
-  });
+    const primary = contentItem.find('.primary-data')
+    expect(primary.length).toBe(1)
+  })
 
-  it('should show primary chart', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+  it('should show secondary chart', () => {
+    const contentItem = shallow(
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
@@ -77,12 +75,12 @@ describe('ContentItemChart', () => {
         chartWidth='100'
         barMaxHeight='10' />
     )
-    let secondary = TestUtils.findRenderedDOMComponentWithClass(contentItem, 'secondary-data')
-    expect(secondary).toBeTruthy();
-  });
+    const secondary = contentItem.find('.secondary-data')
+    expect(secondary.length).toBe(1)
+  })
 
   it('should show difference arc', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+    const contentItem = shallow(
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
@@ -95,9 +93,9 @@ describe('ContentItemChart', () => {
         chartWidth='100'
         barMaxHeight='10' />
     )
-    let arc = TestUtils.findRenderedDOMComponentWithClass(contentItem, 'difference-arc')
-    expect(arc).toBeTruthy();
-  });
+    const arc = contentItem.find('.difference-arc')
+    expect(arc.length).toBe(1)
+  })
 
   it('should show difference arc legend on hover', () => {
     let contentItem = TestUtils.renderIntoDocument(

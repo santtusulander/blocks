@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import { reduxForm } from 'redux-form'
@@ -10,6 +10,7 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
+import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
 
 let errors = {}
 
@@ -44,32 +45,68 @@ const validate = (values) => {
   return errors;
 }
 
-const DnsDomainEditFormContainer = (props) => {
-  const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = props
-  const domainFormProps = {
-    edit,
-    onSave: (fields) => {
-      saveDomain( edit, fields)
-    },
-    onCancel: () => {
-      closeModal()
-    },
-    onDelete: (domainId) => {
-      deleteDomain(domainId)
-    },
-    ...formProps
+class DnsDomainEditFormContainer  extends Component {
+  constructor() {
+    super()
+
+    this.state = {
+      domainToDelete: null
+    }
+
+    this.deleteDomain = this.deleteDomain.bind(this)
+    this.showDeleteModal = this.showDeleteModal.bind(this)
+    this.hideDeleteModal = this.hideDeleteModal.bind(this)
   }
-  return (
-    <Modal show={true} dialogClassName="dns-edit-form-sidebar">
-      <Modal.Header>
-        <h1>{edit ? 'Edit Domain' : 'New Domain'}</h1>
-        {edit && <p>{props.fields.name.value}</p>}
-      </Modal.Header>
-      <Modal.Body>
-        <DnsDomainEditForm {...domainFormProps}/>
-      </Modal.Body>
-    </Modal>
-  )
+
+  deleteDomain() {
+    this.props.deleteDomain(this.state.domainToDelete)
+    this.hideDeleteModal()
+  }
+
+  showDeleteModal(domainId) {
+    this.setState({
+      domainToDelete: domainId
+    })
+  }
+
+  hideDeleteModal() {
+    this.setState({
+      domainToDelete: null
+    })
+  }
+
+  render() {
+    const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = this.props
+    const domainFormProps = {
+      edit,
+      onSave: (fields) => {
+        saveDomain( edit, fields)
+      },
+      onCancel: () => {
+        closeModal()
+      },
+      onDelete: (domainId) => {
+        this.showDeleteModal(domainId)
+      },
+      ...formProps
+    }
+    return (
+      <div className="dns-edit-container">
+        <Modal show={true} dialogClassName="dns-edit-form-sidebar">
+          <Modal.Header>
+            <h1>{edit ? <FormattedMessage id='portal.account.domainForm.editDomain.title' /> : <FormattedMessage id='portal.account.domainForm.newDomain.title' />}</h1>
+            {edit && <p>{this.props.fields.name.value}</p>}
+          </Modal.Header>
+          <Modal.Body>
+            <DnsDomainEditForm {...domainFormProps}/>
+          </Modal.Body>
+        </Modal>
+        {this.state.domainToDelete && <DeleteDomainModal
+          cancel={this.hideDeleteModal}
+          submit={() => { this.deleteDomain() }}/>}
+      </div>
+    )
+  }
 }
 
 DnsDomainEditFormContainer.propTypes = {
@@ -82,7 +119,7 @@ DnsDomainEditFormContainer.propTypes = {
 
 function mapStateToProps({ dns }, { edit }) {
   let props = {
-    loading: dns.get('loading')
+    fetching: dns.get('fetching')
   }
 
   if (edit) {
@@ -118,6 +155,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
   return {
     dnsActions: dnsActions,
     deleteDomain: (domainId) => {
+      dnsActions.startFetchingDomains()
       dnsActions.deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
@@ -129,6 +167,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     },
@@ -145,6 +184,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       const domain = data.name
       delete data.name
 
+      dnsActions.startFetchingDomains()
       dnsActions[method]('udn', domain, data)
         .then(res => {
           if (res.error) {
@@ -156,6 +196,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     }

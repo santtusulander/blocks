@@ -1,9 +1,10 @@
 import React, { PropTypes, Component } from 'react'
 import { Input } from 'react-bootstrap'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import UDNButton from '../button'
-import ActionLinks from './action-links'
+import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 
@@ -18,9 +19,15 @@ class DNSList extends Component {
   }
 
   render() {
-    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc } = this.props
+    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc, intl } = this.props
     let tables = []
     let recordsByType = {}
+
+    /**
+     * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain
+     * key for current record type, create key-value pair of [record.type]: []. Push current record
+     * to array under the current record type key in recordsByType.
+     */
     records.forEach(record => {
       if(!recordsByType[record.type]) {
         recordsByType[record.type] = []
@@ -28,23 +35,41 @@ class DNSList extends Component {
       recordsByType[record.type].push(record)
     })
 
+    /**
+     * Create rows of records by a given record type, sorted by a given sorting function.
+     */
     const getContent = type => sortingFunc =>
       sortingFunc(recordsByType[type]).map((record, i) =>
         <tr key={i}>
           <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
-          <td>
-          <ActionLinks
-          onEdit={() => onEditEntry(record.id)}
-          onDelete={() => onDeleteEntry(record)}/>
+          <td className="nowrap-column">
+            <ActionButtons
+              onEdit={() => onEditEntry(record.id)}
+              onDelete={() => onDeleteEntry(record)}/>
           </td>
         </tr>
       )
+
+    /**
+     * For every record type in sorted recordTypes-constant, if recordsByType has current record
+     * type as key, push a new sortable table to tables-array. Call getContent to populate table.
+     */
+    recordTypes.sort().forEach((type, index) => {
+      if (recordsByType.hasOwnProperty(type)) {
+        tables.push(
+          <div key={index} className='table-container'>
+            <h4 id={'table-label-' + index}>{type} <FormattedMessage id='portal.account.dnsList.records.header' /></h4>
+            <SortableTable content={getContent(type)}/>
+          </div>
+        )
+      }
+    })
     return (
       <PageContainer>
         <h3 className="account-management-header">
-          <span id="domain-stats">
+          <span id="record-amount-label">
             {`${records.length} Records`}
           </span>
           <div className='dns-filter-wrapper'>
@@ -52,7 +77,7 @@ class DNSList extends Component {
               type="text"
               className="search-input"
               groupClassName="search-input-group"
-              placeholder="Search records"
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
               value={searchValue}
               onChange={searchFunc}/>
             <IsAllowed to={CREATE_RECORD}>
@@ -60,29 +85,19 @@ class DNSList extends Component {
                 id="add-dns-record"
                 bsStyle="success"
                 onClick={onAddEntry}>
-                ADD RECORD
+                <FormattedMessage id='portal.account.dnsList.addRecord.button' />
               </UDNButton>
             </IsAllowed>
           </div>
         </h3>
         <hr/>
-        {recordTypes.sort().forEach((type, index) => {
-          if (recordsByType.hasOwnProperty(type)) {
-            tables.push(
-              <div key={index} className='table-container'>
-                <h4>{type} Records</h4>
-                <SortableTable content={getContent(type)}/>
-              </div>
-            )
-          }
-        })}
         {tables}
       </PageContainer>
     )
   }
 }
 
-class SortableTable extends Component {
+export class SortableTable extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -112,9 +127,9 @@ class SortableTable extends Component {
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%">HOSTNAME</TableSorter>
-            <th width="30%">ADDRESS</th>
-            <th width="30%">TTL</th>
+            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
+            <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
             <th width="8%"></th>
           </tr>
         </thead>
@@ -128,8 +143,6 @@ class SortableTable extends Component {
 
 SortableTable.propTypes = { content: PropTypes.func }
 
-export default DNSList
-
 DNSList.propTypes = {
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
@@ -138,3 +151,5 @@ DNSList.propTypes = {
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string
 }
+
+export default injectIntl(DNSList)
