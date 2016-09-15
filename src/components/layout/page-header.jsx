@@ -20,13 +20,11 @@ const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSu
       </div>
       {pageHeaderDetails &&
         <p className="text-sm">
-          {pageHeaderDetails.map(function(detail){
-            return (
-              <span className="right-separator">
+          {pageHeaderDetails.map((detail, index) =>
+              <span key={index} id={'detail-' + index} className="right-separator">
                 {detail}
               </span>
-            )
-          })}
+          )}
         </p>
       }
     </div>
