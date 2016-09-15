@@ -40,15 +40,5 @@
     .light-theme & {
       background-color: #fff;
     }
-
-    .delete-modal-submit {
-      & {
-        background-color: #7b0663;
-      }
-      &.delete-user-submit {
-        background-color: rgb(227,32,25);
-      }
-      text-transform: uppercase;
-    }
   }
 }

@@ -21,10 +21,12 @@ const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delF
       </Modal.Body>
       <Modal.Footer className="delete-modal-footer">
         <ButtonToolbar className="pull-right">
-          <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button onClick={cancel}
+            className="btn-secondary">
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
           <Button onClick={submit}
-            bsStyle="secondary"
-            className="delete-modal-submit"
+            bsStyle="danger"
             disabled={invalid}>
             <FormattedMessage id="portal.button.delete"/>
           </Button>

@@ -1,6 +1,9 @@
 // Modals
 // ======
 
+$dt-modal-bg-color: $medium-blue;
+$lt-modal-bg-color: $white;
+
 .modal-dialog {
 
   .login-modal > & {
@@ -13,21 +16,26 @@
     box-shadow: none;
 
     .dark-theme & {
-      background-color: $black;
-      background-image: linear-gradient(rgba($pale-blue, 0.9),
-        rgba($ericsson-dark-blue, 0.9));
-      background-size: 100%;
+      background-color: $dt-modal-bg-color;
     }
 
     .light-theme & {
-      color: $white;
-      background-color: $pale-blue;
+      background-color: $lt-modal-bg-color;
+    }
+  }
+
+  .modal-footer {
+    .dark-theme & {
+      background: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background: rgba($black, 0.04);
     }
   }
 }
 
 .modal-backdrop {
-
   .dark-theme & {
     background-color: $black;
 
@@ -37,10 +45,10 @@
   }
 
   .light-theme & {
-    background-color: $white;
+    background-color: $black;
 
     &.in {
-      opacity: 0.4;
+      opacity: 0.1;
     }
   }
 }

@@ -19,10 +19,13 @@ const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
     </Modal.Body>
     <Modal.Footer className="delete-modal-footer">
       <ButtonToolbar className="pull-right">
-        <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
+        <Button onClick={cancel}
+          className="btn-secondary">
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
         <Button onClick={submit}
                 type="submit"
-                bsStyle="secondary"
+                bsStyle="danger"
                 className="delete-modal-submit delete-user-submit">
           <FormattedMessage id="portal.button.delete"/>
         </Button>
