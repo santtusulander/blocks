@@ -226,9 +226,10 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
   const nowOpts = Object.assign({}, {
     granularity: 'hour'
   }, opts)
+  const dateRange = moment.duration(opts.endDate - opts.startDate, 'seconds').add(1, 's').asDays()
   const historyOpts = Object.assign({}, nowOpts, {
-    startDate: moment(opts.startDate, 'X').subtract(28, 'days').format('X'),
-    endDate: moment(opts.endDate, 'X').subtract(28, 'days').format('X')
+    startDate: moment(opts.startDate, 'X').subtract(dateRange, 'days').format('X'),
+    endDate: moment(opts.endDate, 'X').subtract(dateRange, 'days').format('X')
   })
   return Promise.all([
     axios.get(`${analyticsBase()}/traffic${qsBuilder(nowOpts)}`),
