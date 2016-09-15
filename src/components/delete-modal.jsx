@@ -8,18 +8,19 @@ import { FormattedMessage } from 'react-intl'
 
 const DeleteModal = ({ itemToDelete, description, submit, cancel, fields: { delField }, invalid }) => {
   return (
-    <Modal show={true} className="delete-modal">
-      <Modal.Header  className="delete-modal-header">
-        <h1><FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: itemToDelete}}/></h1>
-        <hr/>
+    <Modal show={true}>
+      <Modal.Header>
+        <h1>
+          <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: itemToDelete}}/>
+        </h1>
       </Modal.Header>
-      <Modal.Body className="delete-modal-body">
+      <Modal.Body>
         <p>
           {description || <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : itemToDelete}}/>}
         </p>
         <Input type="text" label="Type 'delete'" placeholder="delete" {...delField}/>
       </Modal.Body>
-      <Modal.Footer className="delete-modal-footer">
+      <Modal.Footer>
         <ButtonToolbar className="pull-right">
           <Button onClick={cancel}
             className="btn-secondary">

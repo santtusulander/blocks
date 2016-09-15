@@ -5,7 +5,7 @@ import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 import { FormattedMessage } from 'react-intl'
 
 const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
-  <Modal show={true} className="delete-modal">
+  <Modal show={true}>
     <Modal.Header>
       <h1>Delete User?</h1>
     </Modal.Header>
@@ -25,8 +25,7 @@ const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
         </Button>
         <Button onClick={submit}
                 type="submit"
-                bsStyle="danger"
-                className="delete-modal-submit delete-user-submit">
+                bsStyle="danger">
           <FormattedMessage id="portal.button.delete"/>
         </Button>
       </ButtonToolbar>
