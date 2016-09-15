@@ -16,29 +16,4 @@
   .form-group {
     padding-top: 20px;
   }
-
-  .delete-modal-header {
-    border: none;
-    padding-top: 45px;
-    padding-bottom: 0px;
-    padding-left: 41px;
-    padding-right: 41px;
-  }
-
-  .delete-modal-body {
-    padding-left: 41px;
-    padding-right: 41px;
-    padding-top: 10px;
-  }
-
-  .delete-modal-footer {
-    padding-left: 41px;
-    padding-right: 41px;
-    .dark-theme & {
-      background-color: #19476c;
-    }
-    .light-theme & {
-      background-color: #fff;
-    }
-  }
 }

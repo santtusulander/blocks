@@ -1,10 +1,17 @@
 // Modals
 // ======
 
+$modal-width: rem(654px);
+$modal-vertical-padding: rem(48px);
+$modal-horizontal-padding: rem(48px);
+$modal-body-top-margin: rem(42px);
+$modal-body-bottom-margin: rem(54px);
+$modal-body-max-height: rem(390px);
 $dt-modal-bg-color: $medium-blue;
 $lt-modal-bg-color: $white;
 
 .modal-dialog {
+  width: $modal-width;
 
   .login-modal > & {
     margin-top: 0;
@@ -22,6 +29,18 @@ $lt-modal-bg-color: $white;
     .light-theme & {
       background-color: $lt-modal-bg-color;
     }
+  }
+
+  .modal-header {
+    padding: $modal-vertical-padding $modal-horizontal-padding 0;
+    border: 0;
+  }
+
+  .modal-body {
+    max-height: $modal-body-max-height;
+    padding: 0 $modal-horizontal-padding;
+    margin: $modal-body-top-margin 0 $modal-body-bottom-margin;
+    overflow: auto;
   }
 
   .modal-footer {

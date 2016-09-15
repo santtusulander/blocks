@@ -6,10 +6,10 @@ import { FormattedMessage } from 'react-intl'
 
 const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
   <Modal show={true} className="delete-modal">
-    <Modal.Header  className="delete-modal-header">
+    <Modal.Header>
       <h1>Delete User?</h1>
     </Modal.Header>
-    <Modal.Body className="delete-modal-body">
+    <Modal.Body>
       <h3>
         {itemToDelete}<br/>
       </h3>

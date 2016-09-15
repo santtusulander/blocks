@@ -13,8 +13,11 @@ class ActionModal extends React.Component {
 
     return (
       <Modal show={show} dialogClassName="action-modal">
+        <Modal.Header>
+          <h1>{title}</h1>
+        </Modal.Header>
+
         <Modal.Body>
-          <h2>{title}</h2>
           {children}
         </Modal.Body>
 
