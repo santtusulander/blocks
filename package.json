@@ -111,6 +111,7 @@
       "json"
     ],
     "unmockedModulePathPatterns": [
+      "<rootDir>/src/constants",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/d3",
