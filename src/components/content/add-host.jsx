@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, ButtonToolbar, Input } from 'react-bootstrap'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class AddHost extends React.Component {
   constructor(props) {
@@ -45,7 +45,14 @@ class AddHost extends React.Component {
           checked={this.state.deploymentMode === 'production'}/>
         <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.cancelChanges}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button type="submit" bsStyle="primary"><FormattedMessage id="portal.button.save"/></Button>
+          <Button
+            disabled={this.props.saving}
+            type="submit"
+            bsStyle="primary">
+            {this.props.saving ?
+              <FormattedMessage id="portal.button.saving"/>
+            : <FormattedMessage id="portal.button.save"/>}
+            </Button>
         </ButtonToolbar>
       </form>
     )
@@ -55,7 +62,9 @@ class AddHost extends React.Component {
 AddHost.displayName = 'AddHost'
 AddHost.propTypes = {
   cancelChanges: React.PropTypes.func,
-  createHost: React.PropTypes.func
+  createHost: React.PropTypes.func,
+  intl: React.PropTypes.object,
+  saving: React.PropTypes.bool
 }
 
 module.exports = injectIntl(AddHost)
