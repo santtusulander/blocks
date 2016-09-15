@@ -116,7 +116,8 @@ class AnalysisStackedByGroup extends React.Component {
           {yScale.ticks(4).map((tick, i) => {
             return (
               <g key={i}>
-                <text x={this.props.padding} y={yScale(tick)}>
+                <text x={this.props.padding*1.5} y={yScale(tick)}
+                  className="y-axis">
                   {formatBytes(tick)}
                 </text>
               </g>

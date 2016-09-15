@@ -1,10 +1,11 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
+import { Link } from 'react-router'
 
 import Select from '../select'
 
-import { FormattedMessage } from 'react-intl' 
+import { FormattedMessage } from 'react-intl'
 
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
   return (
@@ -15,36 +16,54 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                        noCaret={true} id="user-dropdown">
       </Dropdown.Toggle>
       <Dropdown.Menu className="dropdown-user-menu">
-        <li className="dropdown-user-menu-container">
+        <li>
           <ul>
-            <MenuItem header={true} className="dropdown-main-header">
+            <MenuItem header={true}>
               {user.size &&
-                <div id="user-menu-username" className="user-menu-item menu-item-name">
+                <span id="user-menu-username">
                   {user.get('first_name') && user.get('last_name') ?
                     user.get('first_name') + ' ' + user.get('last_name')
                   : user.get('email')}
-                </div>
+                </span>
               }
             </MenuItem>
-            <li className="menu-item-theme">
-              <div className="menuitem">
-                <div className="user-menu-item">
-                  <div className="helper-header helper-ui-theme">UI Theme</div>
-                  <Select className="btn-block"
-                          onSelect={handleThemeChange}
-                          value={theme}
-                          options={[
-                            ['dark', <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>],
-                            ['light', <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>]]}/>
-                </div>
-              </div>
+
+            <li>
+              <Select
+                className="btn-block"
+                onSelect={handleThemeChange}
+                value={theme}
+                options={[
+                  ['dark',
+                  <div>
+                    <span className="helper-header helper-ui-theme text-sm">
+                      <FormattedMessage id="portal.header.menu.theme.title"/>
+                    </span>
+                    <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
+                  </div>],
+                  ['light',
+                  <div>
+                    <span className="helper-header helper-ui-theme text-sm">
+                      <FormattedMessage id="portal.header.menu.theme.title"/>
+                    </span>
+                    <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
+                  </div>]
+                ]}
+              />
+            </li>
+
+            <li className="no-helper-header" >
+              <Link to={'/user'} onClick={onToggle}>
+                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
+              </Link>
+            </li>
+
+            <li className="bottom-item no-helper-header">
+              <a id="log-out" href="#" onClick={logout}>
+                <FormattedMessage id="portal.header.menu.logout.text"/>
+              </a>
             </li>
           </ul>
-        </li>
-        <li className="bottom-item" >
-          <a id="log-out" href="#" onClick={logout}>
-            <div className="user-menu-item"><FormattedMessage id="portal.header.menu.logout.text"/></div>
-          </a>
         </li>
       </Dropdown.Menu>
     </Dropdown>

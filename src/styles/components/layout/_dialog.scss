@@ -9,10 +9,6 @@
   z-index: 1110;
   height: $configuration-dialog-height;
 
-  @include md {
-    height: $md-configuration-dialog-height;
-  }
-
   .has-sidebar & {
     left: $sidebar-width;
 
@@ -38,11 +34,7 @@
   }
 
   .btn-toolbar {
-    margin: ($btn-height / 2) ($bar-height / 2) 0 0;
-
-    @include md {
-      margin: ($md-btn-height / 2) ($md-bar-height / 2) 0 0;
-    }
+    margin: ($btn-height / 2) ($bar-height / 2) 0;
   }
 }
 
@@ -55,23 +47,6 @@
   height: $configuration-dialog-height;
   padding: ($btn-height / 3) ($bar-height / 2);
   overflow: auto;
-
-  @include md {
-    height: $md-configuration-dialog-height;
-    padding: ($md-btn-height / 3) ($md-bar-height / 2);
-  }
-
-  p:not(.configuration-dialog-title) {
-    font-size: $font-size-sm;
-
-    @include sm {
-      font-size: $sm-font-size-sm;
-    }
-
-    @include md {
-      font-size: $md-font-size-sm;
-    }
-  }
 
   .configuration-dialog-title {
     margin-bottom: 0;

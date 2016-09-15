@@ -1,6 +1,7 @@
 'use strict';
 
 let router                      = require('express').Router();
+let auth                        = require('./auth');
 let configs                     = require('./configs');
 let log                         = require('./logger');
 let routeTraffic                = require('./routes/traffic');
@@ -20,6 +21,12 @@ let routeVersion                = require('./routes/version');
 
 router.errorHandler = errorHandler;
 
+// Routes that don't require auth come first
+router.get(`/${configs.apiBaseFolder}/version`, routeVersion);
+
+// Ensure the request is coming from an authenticated user (via token in X-Auth-Token header)
+router.use(auth);
+
 // API routes
 router.get(`/${configs.apiBaseFolder}/traffic`,                  routeTraffic);
 router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTime);
@@ -34,7 +41,6 @@ router.get(`/${configs.apiBaseFolder}/visitors/os`,              routeVisitorsOS
 router.get(`/${configs.apiBaseFolder}/visitors/browser`,         routeVisitorsBrowser);
 router.get(`/${configs.apiBaseFolder}/metrics`,                  routeMetrics);
 router.get(`/${configs.apiBaseFolder}/file-errors`,              routeFileErrors);
-router.get(`/${configs.apiBaseFolder}/version`,                  routeVersion);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests

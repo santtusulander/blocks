@@ -63,10 +63,12 @@ export class ForgotPassword extends React.Component {
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
-          <h1><FormattedMessage id="portal.forgotPassword.forgotPassword.text"/></h1>
-          <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
+          <h1>
+            <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
+            <FormattedMessage id="portal.forgotPassword.forgotPassword.text"/>
+          </h1>
+          <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
