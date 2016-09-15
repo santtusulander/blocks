@@ -21,12 +21,9 @@ class ErrorModal extends React.Component {
 
   render() {
     return (
-      <Modal show={this.props.showErrorDialog} className="error-modal" onHide={ this.closeModal }>
+      <Modal show={this.props.showErrorDialog} onHide={ this.closeModal }>
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
           <h1><FormattedMessage id="portal.errorModal.errorOccured.text"/></h1>
-          <p>Ericsson UDN Service</p>
-          <div className="login-header-gradient"></div>
         </Modal.Header>
 
         <Modal.Body>
@@ -35,8 +32,8 @@ class ErrorModal extends React.Component {
 
         <Modal.Footer>
           <ButtonToolbar className="pull-right">
-            <Button onClick={ this.closeModal } bsStyle="primary" ><FormattedMessage id="portal.button.close"/></Button>
-            <Button onClick={ this.reloadPage } bsStyle="primary" ><FormattedMessage id="portal.button.reload"/></Button>
+            <Button onClick={ this.closeModal } className="btn-secondary"><FormattedMessage id="portal.button.close"/></Button>
+            <Button onClick={ this.reloadPage } bsStyle="primary"><FormattedMessage id="portal.button.reload"/></Button>
           </ButtonToolbar>
         </Modal.Footer>
       </Modal>

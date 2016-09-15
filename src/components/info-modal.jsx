@@ -10,11 +10,9 @@ class InfoModal extends React.Component {
     const { title, content, buttons } = this.props
 
     return (
-      <Modal show={this.props.showErrorDialog} className="error-modal">
-        <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
+      <Modal show={this.props.showErrorDialog}>
+        <Modal.Header>
           <h1>{title}</h1>
-          <div className="login-header-gradient"></div>
         </Modal.Header>
 
         <Modal.Body>
