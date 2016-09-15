@@ -4,15 +4,8 @@ import {shallow} from 'enzyme'
 jest.unmock('../dns.jsx');
 import DNS from '../dns.jsx'
 
-const fetchDomainsMock = () => {
-  return new Promise((resolve, reject) => {
-    process.nextTick(
-      () => resolve(
-        []
-      )
-    )
-  })
-}
+jest.unmock('../../../__mocks__/gen-async');
+import { genAsyncMock } from '../../../__mocks__/gen-async'
 
 const fakeDomains = [];
 const fakeRecords = [];
@@ -20,7 +13,7 @@ const fakeRecords = [];
 describe('AccountManagementSystemDNS', () => {
   it('should exist jee', () => {
     const dns = shallow(
-      <DNS params={{}} fetchDomains={ fetchDomainsMock } domains={ fakeDomains } records={ fakeRecords }/>
+      <DNS params={{}} fetchDomains={ genAsyncMock } domains={ fakeDomains } records={ fakeRecords }/>
     )
     expect(dns.length).toBe(1)
   })
