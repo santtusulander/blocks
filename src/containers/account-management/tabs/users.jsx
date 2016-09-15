@@ -334,6 +334,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   render() {
+
     const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
@@ -366,10 +367,15 @@ export class AccountManagementAccountUsers extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
-    let roleOptions = ROLES_MAPPING.map(mapped_role => [
-      mapped_role.id,
-      this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-    ])
+    let roleOptions = ROLES_MAPPING.map(mapped_role => {
+      const foundRole = this.props.roles.find(role => role.get('id') === mapped_role.id)
+      const roleName = foundRole ? foundRole.get('name') : 'Unknown Role'
+
+      return ([
+        mapped_role.id,
+        roleName
+      ])
+    })
     roleOptions.unshift(['all', 'All Roles'])
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
