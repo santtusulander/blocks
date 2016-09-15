@@ -36,7 +36,7 @@ import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
 import { paleblue } from '../constants/colors'
 
-const endOfThisDay = () => moment().utc().endOf('hour')
+const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
 
 // default dates to last 28 days
@@ -280,6 +280,7 @@ export class Property extends React.Component {
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
+    const dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
@@ -288,7 +289,7 @@ export class Property extends React.Component {
       [] :
       this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
         return {
-          timestamp: moment(hour.get('timestamp'), 'X').add(28, 'days').toDate(),
+          timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
           bits_per_second: hour.getIn(['transfer_rates','average'])
         }
       })
@@ -307,15 +308,14 @@ export class Property extends React.Component {
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
       const formattedDate = moment.utc(date)
-        .subtract(28, 'days')
+        .subtract(dateRange.asDays(), 'days')
         .format('MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
     }
-    const dateShift = endDate - startDate
     const timespanAdjust = direction => time => time.set(
       'timestamp',
-      new Date(time.get('timestamp').getTime() + dateShift * direction))
+      new Date(time.get('timestamp').getTime() + dateRange.asMilliseconds() * direction))
     const datasets = []
     if(metrics_traffic.size) {
       datasets.push({

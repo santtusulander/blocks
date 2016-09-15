@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 jest.dontMock('../groups.jsx')
 const Groups = require('../groups.jsx')
-const EditGroup = require('../edit-group.jsx')
+const EditGroup = require('../../../../components/edit-group.jsx')
 
 const fakeGroups = Immutable.fromJS([
   {id: 1, name: 'aaa', created: new Date().getTime()},
