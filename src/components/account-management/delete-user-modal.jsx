@@ -17,7 +17,7 @@ const DeleteUserModal = ({ itemToDelete, submit, cancel }) =>
        <FormattedMessage id="portal.user.delete.disclaimer.text"/>
       </p>
     </Modal.Body>
-    <Modal.Footer className="delete-modal-footer">
+    <Modal.Footer>
       <ButtonToolbar className="pull-right">
         <Button onClick={cancel}
           className="btn-secondary">

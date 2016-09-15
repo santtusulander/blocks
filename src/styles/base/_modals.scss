@@ -7,6 +7,7 @@ $modal-horizontal-padding: rem(48px);
 $modal-body-top-margin: rem(42px);
 $modal-body-bottom-margin: rem(54px);
 $modal-body-max-height: rem(390px);
+$modal-footer-vertical-padding: rem(24px);
 $dt-modal-bg-color: $medium-blue;
 $lt-modal-bg-color: $white;
 
@@ -44,6 +45,9 @@ $lt-modal-bg-color: $white;
   }
 
   .modal-footer {
+    padding: $modal-footer-vertical-padding $modal-horizontal-padding;
+    border: 0;
+
     .dark-theme & {
       background: rgba($black, 0.2);
     }
