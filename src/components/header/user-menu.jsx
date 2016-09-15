@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
+import { Link } from 'react-router'
 
 import Select from '../select'
 
@@ -49,6 +50,12 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                   </div>]
                 ]}
               />
+            </li>
+
+            <li className="no-helper-header" >
+              <Link to={'/user'} onClick={onToggle}>
+                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
+              </Link>
             </li>
 
             <li className="bottom-item no-helper-header">
