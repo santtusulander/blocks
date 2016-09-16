@@ -1,9 +1,7 @@
 import React, { PropTypes } from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
-
-import { FormattedMessage } from 'react-intl'
 
 const SecurityPageHeader = ({ activeAccount, intl }) => {
   return (
