@@ -3,10 +3,10 @@ import Immutable from 'immutable'
 import numeral from 'numeral'
 import { Input } from 'react-bootstrap'
 
-import {formatBytes} from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
 import TableSorter from '../table-sorter'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class AnalysisURLList extends React.Component {
   constructor(props) {
