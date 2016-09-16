@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../stacked-by-time.jsx')
 const AnalysisStackedByTime = require('../stacked-by-time.jsx')
 

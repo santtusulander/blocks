@@ -137,7 +137,8 @@ class AnalysisOnOffNetReport extends React.Component {
         <AnalysisStackedByTime padding={40}
           dataKey="bytes"
           dataSets={dataSets}
-          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
+          yAxisCustomFormat={formatBytes}/>
       )
     }
     else {

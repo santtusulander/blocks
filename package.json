@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.57.11",
+  "version": "0.57.13",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -94,7 +94,7 @@
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
     "testPathDirs": [
       "src",
       "__mocks__"

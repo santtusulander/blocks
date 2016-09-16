@@ -9,6 +9,7 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
+jest.autoMockOff()
 jest.dontMock('../set-password.jsx')
 const SetPassword = require('../set-password.jsx').SetPassword
 
