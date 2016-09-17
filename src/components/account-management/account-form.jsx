@@ -102,8 +102,6 @@ class AccountForm extends React.Component {
     const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
     const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
 
-    // accountBrand.initialValue = BRAND_OPTIONS.length > 1 ? '' : BRAND_OPTIONS[0][0]
-
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
