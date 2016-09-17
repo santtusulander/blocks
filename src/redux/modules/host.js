@@ -31,7 +31,10 @@ export function createSuccess(state, { payload }) {
     activeHostConfiguredName: getConfiguredName(payload),
     activeHost: payload,
     allHosts: state.get('allHosts').push(payload.get('id')),
-    configuredHostNames: state.get('configuredHostNames').push(getConfiguredName(payload))
+    configuredHostNames: state.get('configuredHostNames').push(Immutable.fromJS({
+      id: getConfiguredName(payload),
+      name: payload.published_host_id
+    }))
   })
 }
 
@@ -221,7 +224,12 @@ export const fetchConfiguredHostNames = createAction(HOST_NAMES_FETCHED_ALL, (br
     .then(action => Promise.all(action.data.map(
       property => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}`)
     )))
-    .then(resp => resp.map(property => getConfiguredName(Immutable.fromJS(property.data))));
+    .then(resp => resp.map(property => {
+      return {
+        id: getConfiguredName(Immutable.fromJS(property.data)),
+        name: property.data.published_host_id
+      }
+    }));
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {
