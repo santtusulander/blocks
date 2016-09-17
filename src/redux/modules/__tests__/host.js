@@ -1,8 +1,10 @@
-const Immutable = require('immutable');
+jest.unmock('../host.js')
+jest.unmock('immutable')
+jest.unmock('../../../util/helpers.js')
 
-jest.dontMock('../host.js')
+import { fromJS, is } from 'immutable'
 
-const {
+import {
   createSuccess,
   deleteSuccess,
   deleteFailure,
@@ -14,29 +16,42 @@ const {
   updateSuccess,
   updateFailure,
   changeActive
-} = require('../host.js');
+} from '../host.js'
 
 describe('Host Module', () => {
   it('should handle create host success', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
+      configuredHostNames: [],
       allHosts: []
     });
-    const payload = Immutable.fromJS(
-      {
-        id: 1
-      }
-    );
-    const newState = createSuccess(state, {payload});
-    const expectedState = Immutable.fromJS({
-      allHosts: [1],
-      activeHost: {id: 1},
-      activeHostConfiguredName: null
+    const payload = fromJS({
+      id: 1,
+      services: [
+        {
+          deployment_mode: 'trial',
+          configurations: [{
+            config_id: 1,
+            edge_configuration: { trial_name: 'aa' },
+            default_policy: {policy_rules:[]},
+            request_policy: {policy_rules:[]},
+            response_policy: {policy_rules:[]}
+          }],
+          active_configurations: [{ config_id: 1 }]
+        }
+      ]
     })
-    expect(Immutable.is(newState, expectedState)).toBeTruthy();
+    const newState = createSuccess(state, {payload});
+    const expectedState = fromJS({
+      allHosts: [1],
+      activeHost: payload,
+      activeHostConfiguredName: 'aa',
+      configuredHostNames: ['aa']
+    })
+    expect(is(newState, expectedState)).toBeTruthy();
   });
 
   it('should handle delete host success', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       allHosts: [1]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
@@ -45,7 +60,7 @@ describe('Host Module', () => {
   });
 
   it('should handle delete host failure', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       allHosts: [1]
     });
     const newState = deleteFailure(state, {payload: {id: 1}});
@@ -54,12 +69,12 @@ describe('Host Module', () => {
   });
 
   it('should handle fetch host success', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       activeHost: null
     });
     const payload = { payload: { services: [{ configurations: [{ config_id: 1 }], active_configurations: [{ config_id: 1 }] }] } }
     const newState = fetchSuccess(state, payload);
-    const expectedState = Immutable.fromJS({
+    const expectedState = fromJS({
       activeHost: {
         services: [
           {
@@ -76,11 +91,11 @@ describe('Host Module', () => {
       fetching: false,
       activeHostConfiguredName: null
     })
-    expect(Immutable.is(expectedState, newState)).toBeTruthy();
+    expect(is(expectedState, newState)).toBeTruthy();
   });
 
   it('should handle fetch host failure', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       activeHost: {id: 1}
     });
     const newState = fetchFailure(state, {payload: {id: 2}});
@@ -89,7 +104,7 @@ describe('Host Module', () => {
   });
 
   it('should handle fetch all success', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       allHosts: [1]
     });
     const newState = fetchAllSuccess(state, {payload: [2]});
@@ -98,7 +113,7 @@ describe('Host Module', () => {
   });
 
   it('should handle fetch all failure', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       allHosts: [1]
     });
     const newState = fetchAllFailure(state);
@@ -107,7 +122,7 @@ describe('Host Module', () => {
   });
 
   it('should handle starting to fetch', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       fetching: false
     });
     const newState = startFetch(state);
@@ -115,7 +130,7 @@ describe('Host Module', () => {
   });
 
   it('should handle update success', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       activeHost: {id: 1}
     });
     const newState = updateSuccess(state, {payload: {id: 2}});
@@ -124,7 +139,7 @@ describe('Host Module', () => {
   });
 
   it('should handle update failure', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       activeHost: 'something'
     });
     const newState = updateFailure(state);
@@ -133,7 +148,7 @@ describe('Host Module', () => {
   });
 
   it('should handle changing active host', () => {
-    const state = Immutable.fromJS({
+    const state = fromJS({
       activeHost: 'something'
     });
     const newState = changeActive(state, {payload: 'something else'});
