@@ -23,7 +23,7 @@ import IconInfo from '../../../components/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
-import ActionModal from '../../../components/action-modal'
+import UDNModal from '../../../components/modal'
 import UDNButton from '../../../components/button'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
@@ -483,14 +483,14 @@ export class AccountManagementAccountUsers extends React.Component {
           />
         }
         {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
-          <ActionModal
+          <UDNModal
             show={this.state.showPermissionsModal}
             title="View Permissions"
             showClose={true}
             closeModal={this.togglePermissionModal}
             buttons={
               <Button
-                className="btn-save"
+                className="btn-primary"
                 onClick={this.togglePermissionModal}>CLOSE</Button>
             }>
               {this.props.roles.map((role, i) => (
@@ -509,7 +509,7 @@ export class AccountManagementAccountUsers extends React.Component {
                   </Panel>
                 </PanelGroup>
               ))}
-          </ActionModal>
+          </UDNModal>
         }
       </PageContainer>
     )

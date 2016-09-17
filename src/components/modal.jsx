@@ -3,7 +3,7 @@ import { ButtonToolbar, Modal } from 'react-bootstrap'
 
 import IconClose from './icons/icon-close.jsx'
 
-class ActionModal extends React.Component {
+class UDNModal extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -26,16 +26,18 @@ class ActionModal extends React.Component {
             {buttons}
           </ButtonToolbar>
         </Modal.Footer>
-        {showClose ?
-          <a onClick={closeModal} className="close-modal"><IconClose /></a>
+        {showClose
+        ? <a onClick={closeModal} className="close-modal">
+            <IconClose />
+          </a>
         : null}
       </Modal>
     );
   }
 }
 
-ActionModal.displayName = 'ActionModal'
-ActionModal.propTypes = {
+UDNModal.displayName = 'UDNModal'
+UDNModal.propTypes = {
   buttons: React.PropTypes.object,
   children: PropTypes.node,
   closeModal: PropTypes.func,
@@ -44,4 +46,4 @@ ActionModal.propTypes = {
   title: PropTypes.string
 }
 
-export default ActionModal
+export default UDNModal
