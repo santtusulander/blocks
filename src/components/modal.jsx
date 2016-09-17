@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
-import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Input, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import { reduxForm } from 'redux-form'
 
+import keyStrokeSupport from '../decorators/key-stroke-decorator'
 import IconClose from './icons/icon-close.jsx'
 
 class UDNModal extends React.Component {
@@ -10,7 +12,7 @@ class UDNModal extends React.Component {
   }
 
   render() {
-    const { children, cancelButton, closeButton, closeModal, deleteButton, show, title } = this.props
+    const { children, cancelButton, closeButton, closeModal, deleteButton, fields: { modalField }, invalid, show, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="action-modal">
@@ -20,6 +22,8 @@ class UDNModal extends React.Component {
 
         <Modal.Body>
           {children}
+          {verifyDelete &&
+          <Input type="text" label="Type 'delete'" placeholder="delete" {...modalField}/>}
         </Modal.Body>
 
         <Modal.Footer>
@@ -31,6 +35,13 @@ class UDNModal extends React.Component {
               <FormattedMessage id="portal.button.close"/>
             </Button>}
 
+            {submitButton &&
+            <Button
+              className="btn-primary"
+              onClick={submitButton}>
+              <FormattedMessage id="portal.button.submt"/>
+            </Button>}
+
             {cancelButton &&
             <Button
               className="btn-secondary"
@@ -38,10 +49,11 @@ class UDNModal extends React.Component {
               <FormattedMessage id="portal.button.cancel"/>
             </Button>}
 
-            {deleteButton&&
+            {deleteButton &&
             <Button
               bsStyle="danger"
-              onClick={deleteButton}>
+              onClick={deleteButton}
+              disabled={invalid}>
               <FormattedMessage id="portal.button.delete"/>
             </Button>}
           </ButtonToolbar>
@@ -66,9 +78,23 @@ UDNModal.propTypes = {
   closeButton: PropTypes.func,
   closeModal: PropTypes.func,
   deleteButton: PropTypes.func,
+  fields: PropTypes.object,
+  invalid: PropTypes.bool,
   show: PropTypes.bool,
-  showClose: PropTypes.bool,
-  title: PropTypes.string
+  submitButton: PropTypes.func,
+  title: PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.node
+  ]),
+  verifyDelete: PropTypes.bool
 }
 
-export default UDNModal
+export default reduxForm({
+  fields: ['modalField'],
+  form: 'UDNModal',
+  validate: ({ modalField }) => {
+    if (!modalField || modalField.toLowerCase() !== 'delete') {
+      return { modalField: true }
+    }
+  }
+})(keyStrokeSupport(UDNModal))
