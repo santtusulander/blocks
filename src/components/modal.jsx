@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import IconClose from './icons/icon-close.jsx'
 
@@ -9,7 +10,7 @@ class UDNModal extends React.Component {
   }
 
   render() {
-    const { buttons, children, closeModal, show, showClose, title } = this.props
+    const { children, cancelButton, closeButton, closeModal, deleteButton, show, title } = this.props
 
     return (
       <Modal show={show} dialogClassName="action-modal">
@@ -23,14 +24,35 @@ class UDNModal extends React.Component {
 
         <Modal.Footer>
           <ButtonToolbar className="pull-right">
-            {buttons}
+            {closeButton &&
+            <Button
+              className="btn-primary"
+              onClick={closeButton}>
+              <FormattedMessage id="portal.button.close"/>
+            </Button>}
+
+            {cancelButton &&
+            <Button
+              className="btn-secondary"
+              onClick={cancelButton}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>}
+
+            {deleteButton&&
+            <Button
+              bsStyle="danger"
+              onClick={deleteButton}>
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>}
           </ButtonToolbar>
         </Modal.Footer>
-        {showClose
-        ? <a onClick={closeModal} className="close-modal">
-            <IconClose />
-          </a>
-        : null}
+
+        {closeModal &&
+        <a
+          className="close-modal"
+          onClick={closeModal}>
+          <IconClose />
+        </a>}
       </Modal>
     );
   }
@@ -39,8 +61,11 @@ class UDNModal extends React.Component {
 UDNModal.displayName = 'UDNModal'
 UDNModal.propTypes = {
   buttons: React.PropTypes.object,
+  cancelButton: PropTypes.func,
   children: PropTypes.node,
+  closeButton: PropTypes.func,
   closeModal: PropTypes.func,
+  deleteButton: PropTypes.func,
   show: PropTypes.bool,
   showClose: PropTypes.bool,
   title: PropTypes.string

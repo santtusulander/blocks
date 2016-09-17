@@ -486,13 +486,8 @@ export class AccountManagementAccountUsers extends React.Component {
           <UDNModal
             show={this.state.showPermissionsModal}
             title="View Permissions"
-            showClose={true}
             closeModal={this.togglePermissionModal}
-            buttons={
-              <Button
-                className="btn-primary"
-                onClick={this.togglePermissionModal}>CLOSE</Button>
-            }>
+            closeButton={this.togglePermissionModal}>
               {this.props.roles.map((role, i) => (
                 <PanelGroup accordion={true} key={i} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
