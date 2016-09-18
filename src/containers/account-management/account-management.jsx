@@ -21,7 +21,6 @@ import * as uiActionCreators from '../../redux/modules/ui'
 // import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
-import DeleteModal from '../../components/delete-modal'
 import UDNModal from '../../components/modal'
 import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
@@ -281,21 +280,28 @@ export class AccountManagement extends Component {
       //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
+    /* TODO: add modal descriptions */
     let deleteModalProps = null
     switch(accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
-          itemToDelete: 'Account',
-          cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, account || this.accountToDelete, router)
+          show: true,
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
+          invalid: true,
+          verifyDelete: true,
+          cancelButton: () => toggleModal(null),
+          deleteButton: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
-          itemToDelete: this.state.groupToDelete.get('name'),
-          description: <FormattedMessage id="portal.accountManagement.deleetConfirmation.text"/>,
-          cancel: () => toggleModal(null),
-          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          show: true,
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
+          // description: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          invalid: true,
+          verifyDelete: true,
+          cancelButton: () => toggleModal(null),
+          deleteButton: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
     }
 
@@ -421,7 +427,7 @@ export class AccountManagement extends Component {
           account={this.accountToUpdate}
           onCancel={() => toggleModal(null)}
           show={true}/>}
-        {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
+        {deleteModalProps && <UDNModal {...deleteModalProps}/>}
         {accountManagementModal === DELETE_USER &&
         <UDNModal
           show={true}

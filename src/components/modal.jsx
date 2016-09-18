@@ -53,7 +53,7 @@ class UDNModal extends React.Component {
             <Button
               bsStyle="danger"
               onClick={deleteButton}
-              disabled={invalid}>
+              disabled={verifyDelete ? invalid : false}>
               <FormattedMessage id="portal.button.delete"/>
             </Button>}
           </ButtonToolbar>
