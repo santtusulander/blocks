@@ -47,12 +47,13 @@ export function createFailure(state) {
 }
 
 export function deleteSuccess(state, action) {
-  let newAllHosts = state.get('allHosts')
-    .filterNot(group => {
-      return group === action.payload.id
-    })
+  const allHosts = state.get('allHosts')
+    .filterNot(property => property === action.payload.id)
+  const configuredHostNames = state.get('configuredHostNames')
+    .filterNot(property => property === action.payload.name)
   return state.merge({
-    allHosts: newAllHosts,
+    allHosts,
+    configuredHostNames,
     fetching: false
   })
 }
@@ -202,10 +203,10 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
   })
 })
 
-export const deleteHost = createAction(HOST_DELETED, (brand, account, group, id) => {
+export const deleteHost = createAction(HOST_DELETED, (brand, account, group, id, name) => {
   return axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
   .then(() => {
-    return {id: id}
+    return { id, name }
   });
 })
 
