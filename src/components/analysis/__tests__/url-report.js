@@ -46,4 +46,14 @@ describe('AnalysisURLReport', () => {
   it('should pass on proper chart height prop', () => {
     expect(subject().find('AnalysisHorizontalBar').props().height).toBe(80)
   })
+
+  it('should select data type properly', () => {
+    const component = subject()
+    const bytesBtn = component.find('[value="bytes"]')
+    const requestsBtn = component.find('[value="requests"]')
+    requestsBtn.simulate('change')
+    expect(component.state().dataKey).toBe('requests')
+    bytesBtn.simulate('change')
+    expect(component.state().dataKey).toBe('bytes')
+  })
 })
