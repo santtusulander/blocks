@@ -1,8 +1,10 @@
 import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../matcher.jsx')
+jest.unmock('../matcher.jsx')
+jest.unmock('../../../../util/policy-config.js')
 const Matcher = require('../matcher.jsx')
 
 function intlMaker() {
@@ -15,20 +17,26 @@ const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
 
-const fakePath = ['foo', 'bar']
+const fakePath = Immutable.List(['foo', 'bar'])
 
 describe('Matcher', () => {
   it('should exist', () => {
-    let matcher = TestUtils.renderIntoDocument(
-      <Matcher match={fakeConfig} path={fakePath} intl={intlMaker()}/>
-    );
-    expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy();
+    let matcher = shallow(
+      <Matcher
+        match={fakeConfig}
+        path={fakePath}
+        intl={intlMaker()}/>
+    )
+    expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy()
   })
 
   it('should update the state as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let matcher = TestUtils.renderIntoDocument(
-      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
         intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(matcher, 'input')
@@ -38,29 +46,38 @@ describe('Matcher', () => {
   })
 
   it('should update the parameters as select change happens', () => {
-    let changeValue = jest.genMockFunction()
-    let matcher = TestUtils.renderIntoDocument(
-      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
+    let changeValue = jest.fn()
+    let matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
         intl={intlMaker()}/>
     )
-    expect(matcher.state.activeFilter).toBe('exists')
-    matcher.handleMatchesChange('foo')
-    expect(matcher.state.activeFilter).toBe('foo')
+    expect(matcher.state('activeFilter')).toBe('exists')
+    matcher.instance().handleMatchesChange('foo')
+    expect(matcher.state('activeFilter')).toBe('foo')
   })
 
   it('should save changes', () => {
-    const changeValue = jest.genMockFunction()
-    const close = jest.genMockFunction()
-    let matcher = TestUtils.renderIntoDocument(
-      <Matcher changeValue={changeValue} match={fakeConfig} path={fakePath}
-        close={close} intl={intlMaker()}/>
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    let matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        intl={intlMaker()}/>
     )
     matcher.setState({
       val: 'aaa'
     })
-    matcher.saveChanges()
-    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
-    expect(changeValue.mock.calls[0][1]).toEqual('aaa')
+    matcher.instance().saveChanges()
     expect(close.mock.calls.length).toBe(1)
+    expect(changeValue.mock.calls[0][0]).toEqual(Immutable.List(['foo', 'bar']))
+    expect(changeValue.mock.calls[0][1]).toEqual(Immutable.fromJS({
+      "cases": [["aaa", undefined]]
+    }))
   })
 })
