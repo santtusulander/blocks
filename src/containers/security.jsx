@@ -142,9 +142,10 @@ export class Security extends React.Component {
           invalid={true}
           verifyDelete={true}>
           <p>
-            {<FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>}
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>
           </p>
-        </UDNModal>}
+        </UDNModal>
+        }
       </Content>
     )
   }

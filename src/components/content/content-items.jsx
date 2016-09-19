@@ -57,6 +57,7 @@ class ContentItems extends React.Component {
     super(props);
 
     this.state = {
+      saving: false,
       showModal: false,
       itemToEdit: undefined
     }
@@ -88,6 +89,7 @@ class ContentItems extends React.Component {
     this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
   }
   onItemAdd() {
+    this.setState({ saving: true })
     this.props.createNewItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if (error) {
@@ -102,6 +104,7 @@ class ContentItems extends React.Component {
         } else {
           this.hideModal()
         }
+        this.setState({ saving: false })
       })
   }
   onItemSave() {
@@ -184,7 +187,6 @@ class ContentItems extends React.Component {
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+)\.cdx-.+?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
@@ -192,13 +194,6 @@ class ContentItems extends React.Component {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
 
-      // Remove the trial url from trial property names
-      if (trialNameRegEx.test(item.get('id'))) {
-        item = item.merge({
-          id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1')
-        })
-      }
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
@@ -359,8 +354,10 @@ class ContentItems extends React.Component {
                 </p>
               </Modal.Header>
               <Modal.Body>
-                <AddHost createHost={this.onItemAdd}
-                  cancelChanges={this.hideModal}/>
+                <AddHost
+                  createHost={this.onItemAdd}
+                  cancelChanges={this.hideModal}
+                  saving={this.state.saving}/>
               </Modal.Body>
             </Modal>
           }

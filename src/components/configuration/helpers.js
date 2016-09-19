@@ -139,7 +139,7 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
 }
 
 export function secondsToUnit(value, unit) {
-  value = parseInt(value || 0)
+  value = Number(value || 0)
   switch(unit) {
     case 'minutes':
       value = value / 60
@@ -155,7 +155,7 @@ export function secondsToUnit(value, unit) {
 }
 
 export function secondsFromUnit(value, unit) {
-  value = parseInt(value || 0)
+  value = Number(value || 0)
   switch(unit) {
     case 'minutes':
       value = value * 60

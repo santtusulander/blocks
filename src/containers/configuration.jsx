@@ -362,9 +362,8 @@ export class Configuration extends React.Component {
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
           cancelButton={toggleDelete}
           deleteButton={() => {
-            deleteHost(brand, account, group, property)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}
+            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
           verifyDelete={true}>
           <p>
@@ -417,6 +416,7 @@ Configuration.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
@@ -439,6 +439,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),
