@@ -113,7 +113,7 @@ class AccountManagementSystemDNS extends Component {
       visibleRecordCount:
         <FormattedMessage
           id='portal.account.dnsList.records.visibleRecords'
-          values={{ visibleRecords: String(visibleRecords.length) }}/>,
+          values={{ visibleRecordCount: String(visibleRecords.length) }}/>,
       hiddenRecordCount:
         hiddenRecordCount > 0 ?
           <FormattedMessage

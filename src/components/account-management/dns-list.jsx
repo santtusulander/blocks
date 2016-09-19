@@ -153,7 +153,7 @@ export class SortableTable extends Component {
 SortableTable.propTypes = { content: PropTypes.func }
 
 DNSList.propTypes = {
-  hiddenRecordCount: PropTypes.object,
+  hiddenRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   intl: PropTypes.object,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,

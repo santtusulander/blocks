@@ -1,6 +1,6 @@
 {
   "portal.account.dnsList.addRecord.button": "Add record",
-  "portal.account.dnsList.records.visibleRecords": "{visibleRecords} Records ",
+  "portal.account.dnsList.records.visibleRecords": "{visibleRecordCount} Records ",
   "portal.account.dnsList.records.hiddenRecords": "({hiddenRecordCount}) hidden",
   "portal.account.dnsList.records.header": "Records",
   "portal.account.dnsList.hostname.header": "Hostname",
