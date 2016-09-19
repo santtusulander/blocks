@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 import { bindActionCreators } from 'redux'
 
 import * as domainActionCreators from '../../../redux/modules/dns'
@@ -71,6 +72,8 @@ class AccountManagementSystemDNS extends Component {
 
     const {domainSearch, recordSearch} = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
+    const visibleRecords = records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
+    const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,
       changeActiveDomain: value => changeActiveDomain(value),
@@ -106,7 +109,16 @@ class AccountManagementSystemDNS extends Component {
       },
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
-      records: records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
+      records: visibleRecords,
+      visibleRecordCount:
+        <FormattedMessage
+          id='portal.account.dnsList.records.visibleRecords'
+          values={{ visibleRecordCount: String(visibleRecords.length) }}/>,
+      hiddenRecordCount:
+        hiddenRecordCount > 0 ?
+          <FormattedMessage
+            id='portal.account.dnsList.records.hiddenRecords'
+            values={{ hiddenRecordCount }} /> : ''
     }
     return (
       <div>
@@ -120,14 +132,6 @@ class AccountManagementSystemDNS extends Component {
           <DomainForm
             edit={this.editingDomain}
             closeModal={() => toggleModal(null)}/>}
-        {/*activeModal === EDIT_SOA &&
-          <SoaEditForm
-            id="soa-form"
-            onCancel={() => toggleModal(null)}
-            activeDomain={activeDomain}
-            onSave={soaEditOnSave}
-            { ...soaFormInitialValues }
-          />*/}
         {this.state.recordToDelete && <DeleteDnsRecordModal
           itemToDelete={this.state.recordToDelete.name}
           cancel={this.closeDeleteDnsRecordModal}
@@ -142,6 +146,7 @@ AccountManagementSystemDNS.propTypes = {
   activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
+  fetchDomain: PropTypes.func,
   fetchDomains: PropTypes.func,
   fetchRecords: PropTypes.func,
   loadingDomains: PropTypes.bool,
