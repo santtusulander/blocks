@@ -49,25 +49,25 @@ describe('URLList', () => {
   it('should sort the table by url (asc and desc)', () => {
     const component = subject()
     component.instance().changeSort('url', 1)
-    expect(component.find('td').get(1).props.children).toBe('www.abc.com')
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
     component.instance().changeSort('url', -1)
-    expect(component.find('td').get(1).props.children).toBe('www.ghi.com')
+    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
   })
 
   it('should sort the table by bytes (asc and desc)', () => {
     const component = subject()
     component.instance().changeSort('bytes', 1)
-    expect(component.find('td').get(1).props.children).toBe('www.def.com')
+    expect(component.find('td').at(1).props().children).toContain('www.def.com')
     component.instance().changeSort('bytes', -1)
-    expect(component.find('td').get(1).props.children).toBe('www.abc.com')
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
   })
 
   it('should sort the table by requests (asc and desc)', () => {
     const component = subject()
     component.instance().changeSort('requests', 1)
-    expect(component.find('td').get(1).props.children).toBe('www.ghi.com')
+    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
     component.instance().changeSort('requests', -1)
-    expect(component.find('td').get(1).props.children).toBe('www.abc.com')
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
   })
 
   it('should filter out urls according to search value', () => {
