@@ -10,7 +10,7 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
-import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
+import UDNModal from '../../../components/modal'
 
 let errors = {}
 
@@ -76,7 +76,7 @@ class DnsDomainEditFormContainer  extends Component {
   }
 
   render() {
-    const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = this.props
+    const { edit, saveDomain, closeModal, ...formProps } = this.props
     const domainFormProps = {
       edit,
       onSave: (fields) => {
@@ -101,9 +101,19 @@ class DnsDomainEditFormContainer  extends Component {
             <DnsDomainEditForm {...domainFormProps}/>
           </Modal.Body>
         </Modal>
-        {this.state.domainToDelete && <DeleteDomainModal
-          cancel={this.hideDeleteModal}
-          submit={() => { this.deleteDomain() }}/>}
+        {this.state.domainToDelete &&
+        <UDNModal
+          show={true}
+          title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
+          cancelButton={this.hideDeleteModal}
+          deleteButton={() => {this.deleteDomain()}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.dnsDomain.delete.disclaimer.text"/>
+          </p>
+        </UDNModal>
+        }
       </div>
     )
   }

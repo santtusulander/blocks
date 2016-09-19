@@ -367,7 +367,7 @@ export class Configuration extends React.Component {
           invalid={true}
           verifyDelete={true}>
           <p>
-            {<FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>}
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
           </p>
         </UDNModal>
         }
