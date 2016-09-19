@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -16,7 +17,7 @@ import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
-import DeleteDnsRecordModal from '../../../components/account-management/delete-dns-record-modal'
+import UDNModal from '../../../components/modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -128,10 +129,17 @@ class AccountManagementSystemDNS extends Component {
             onSave={soaEditOnSave}
             { ...soaFormInitialValues }
           />*/}
-        {this.state.recordToDelete && <DeleteDnsRecordModal
-          itemToDelete={this.state.recordToDelete.name}
-          cancel={this.closeDeleteDnsRecordModal}
-          submit={() => { this.deleteDnsRecord(activeDomain) }}/>}
+        {this.state.recordToDelete &&
+        <UDNModal
+          show={true}
+          title={<FormattedMessage id="portal.dnsRecord.delete.title"/>}
+          cancelButton={this.closeDeleteDnsRecordModal}
+          deleteButton={() => { this.deleteDnsRecord(activeDomain) }}>
+          <p>
+            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
+          </p>
+        </UDNModal>
+        }
       </div>
     )
   }
