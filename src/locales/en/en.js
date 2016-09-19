@@ -499,6 +499,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.services.header.text': 'SERVICES',
 
+  'portal.deleteModal.validation.label': 'To confirm, write "DELETE" below',
+  'portal.deleteModal.validation.placeholder': 'DELETE',
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
   'portal.deleteModal.header.text': 'Delete {itemToDelete}',
 

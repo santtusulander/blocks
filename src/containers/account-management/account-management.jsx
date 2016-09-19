@@ -21,7 +21,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 // import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
-import UDNModal from '../../components/modal'
+import ModalWindow from '../../components/modal'
 import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
@@ -287,6 +287,7 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
+          children: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: () => toggleModal(null),
@@ -297,7 +298,7 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
-          // description: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          children: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: () => toggleModal(null),
@@ -427,9 +428,9 @@ export class AccountManagement extends Component {
           account={this.accountToUpdate}
           onCancel={() => toggleModal(null)}
           show={true}/>}
-        {deleteModalProps && <UDNModal {...deleteModalProps}/>}
+        {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
         {accountManagementModal === DELETE_USER &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title="Delete User?"
           cancelButton={() => toggleModal(null)}
@@ -440,7 +441,7 @@ export class AccountManagement extends Component {
           <p>
            <FormattedMessage id="portal.user.delete.disclaimer.text"/>
           </p>
-        </UDNModal>}
+        </ModalWindow>}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"

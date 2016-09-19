@@ -10,7 +10,7 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
-import UDNModal from '../../../components/modal'
+import ModalWindow from '../../../components/modal'
 
 let errors = {}
 
@@ -102,7 +102,7 @@ class DnsDomainEditFormContainer  extends Component {
           </Modal.Body>
         </Modal>
         {this.state.domainToDelete &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
           cancelButton={this.hideDeleteModal}
@@ -112,7 +112,7 @@ class DnsDomainEditFormContainer  extends Component {
           <p>
             <FormattedMessage id="portal.dnsDomain.delete.disclaimer.text"/>
           </p>
-        </UDNModal>
+        </ModalWindow>
         }
       </div>
     )

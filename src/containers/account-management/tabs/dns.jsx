@@ -17,7 +17,7 @@ import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
-import UDNModal from '../../../components/modal'
+import ModalWindow from '../../../components/modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -130,7 +130,7 @@ class AccountManagementSystemDNS extends Component {
             { ...soaFormInitialValues }
           />*/}
         {this.state.recordToDelete &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title={<FormattedMessage id="portal.dnsRecord.delete.title"/>}
           cancelButton={this.closeDeleteDnsRecordModal}
@@ -138,7 +138,7 @@ class AccountManagementSystemDNS extends Component {
           <p>
             <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
           </p>
-        </UDNModal>
+        </ModalWindow>
         }
       </div>
     )

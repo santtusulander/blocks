@@ -37,7 +37,6 @@
 @import 'base/icons';
 @import 'base/input-groups';
 @import 'base/labels';
-@import 'base/modals';
 @import 'base/navs';
 @import 'base/panels';
 @import 'base/tables';
@@ -63,7 +62,6 @@
 // ==========
 
 @import 'components/account-sidebar';
-@import 'components/action-modal';
 @import 'components/confirmation';
 @import 'components/datepicker';
 @import 'components/footer';
@@ -72,6 +70,7 @@
 @import 'components/user-menu-dropdown';
 @import 'components/inline-add';
 @import 'components/input-connector';
+@import 'components/modal-window';
 @import 'components/modal-form-panel';
 @import 'components/notification';
 @import 'components/permission-selection';

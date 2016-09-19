@@ -1,21 +1,21 @@
 import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Input, Modal } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 import IconClose from './icons/icon-close.jsx'
 
-class UDNModal extends React.Component {
+class ModalWindow extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { children, cancelButton, closeButton, closeModal, deleteButton, fields: { modalField }, invalid, show, submitButton, title, verifyDelete } = this.props
+    const { children, cancelButton, closeButton, closeModal, deleteButton, fields: { modalField }, intl, invalid, show, submitButton, title, verifyDelete } = this.props
 
     return (
-      <Modal show={show} dialogClassName="udn-modal">
+      <Modal show={show} dialogClassName="modal-window">
         <Modal.Header>
           <h1>{title}</h1>
         </Modal.Header>
@@ -23,7 +23,12 @@ class UDNModal extends React.Component {
         <Modal.Body>
           {children}
           {verifyDelete &&
-          <Input type="text" label="Type 'delete'" placeholder="delete" {...modalField}/>}
+          <Input
+            type="text"
+            label={intl.formatMessage({id: 'portal.deleteModal.validation.label'})}
+            placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
+            {...modalField} />
+          }
         </Modal.Body>
 
         <Modal.Footer>
@@ -70,8 +75,8 @@ class UDNModal extends React.Component {
   }
 }
 
-UDNModal.displayName = 'UDNModal'
-UDNModal.propTypes = {
+ModalWindow.displayName = 'ModalWindow'
+ModalWindow.propTypes = {
   buttons: React.PropTypes.object,
   cancelButton: PropTypes.func,
   children: PropTypes.node,
@@ -79,6 +84,7 @@ UDNModal.propTypes = {
   closeModal: PropTypes.func,
   deleteButton: PropTypes.func,
   fields: PropTypes.object,
+  intl: React.PropTypes.object,
   invalid: PropTypes.bool,
   show: PropTypes.bool,
   submitButton: PropTypes.func,
@@ -91,10 +97,10 @@ UDNModal.propTypes = {
 
 export default reduxForm({
   fields: ['modalField'],
-  form: 'UDNModal',
+  form: 'ModalWindow',
   validate: ({ modalField }) => {
     if (!modalField || modalField.toLowerCase() !== 'delete') {
       return { modalField: true }
     }
   }
-})(keyStrokeSupport(UDNModal))
+})(keyStrokeSupport(injectIntl(ModalWindow)))

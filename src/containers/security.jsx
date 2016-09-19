@@ -13,7 +13,7 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import UDNModal from '../components/modal'
+import ModalWindow from '../components/modal'
 import CertificateForm from '../components/security/certificate-form-container'
 import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
@@ -134,7 +134,7 @@ export class Security extends React.Component {
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
           cancelButton={() => toggleModal(null)}
@@ -144,7 +144,7 @@ export class Security extends React.Component {
           <p>
             <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>
           </p>
-        </UDNModal>
+        </ModalWindow>
         }
       </Content>
     )

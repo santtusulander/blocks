@@ -20,7 +20,7 @@ import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
-import UDNModal from '../components/modal'
+import ModalWindow from '../components/modal'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -357,7 +357,7 @@ export class Configuration extends React.Component {
             />
 
         {this.state.deleteModal &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
           cancelButton={toggleDelete}
@@ -369,7 +369,7 @@ export class Configuration extends React.Component {
           <p>
             <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
           </p>
-        </UDNModal>
+        </ModalWindow>
         }
 
         {this.state.showPublishModal &&

@@ -33,7 +33,7 @@ import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
-import UDNModal from '../components/modal'
+import ModalWindow from '../components/modal'
 import { paleblue } from '../constants/colors'
 
 const endOfThisDay = () => moment().utc().endOf('day')
@@ -494,7 +494,7 @@ export class Property extends React.Component {
           savePurge={this.savePurge}
           showNotification={this.showNotification}/>}
         {this.state.deleteModal &&
-        <UDNModal
+        <ModalWindow
           show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
           cancelButton={toggleDelete}
@@ -506,7 +506,7 @@ export class Property extends React.Component {
           <p>
             <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
           </p>
-        </UDNModal>
+        </ModalWindow>
         }
       </Content>
     )

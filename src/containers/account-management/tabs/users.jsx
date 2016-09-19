@@ -23,7 +23,7 @@ import IconInfo from '../../../components/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
-import UDNModal from '../../../components/modal'
+import ModalWindow from '../../../components/modal'
 import UDNButton from '../../../components/button'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
@@ -486,7 +486,7 @@ export class AccountManagementAccountUsers extends React.Component {
           />
         }
         {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
-          <UDNModal
+          <ModalWindow
             show={this.state.showPermissionsModal}
             title="View Permissions"
             closeModal={this.togglePermissionModal}
@@ -507,7 +507,7 @@ export class AccountManagementAccountUsers extends React.Component {
                   </Panel>
                 </PanelGroup>
               ))}
-          </UDNModal>
+          </ModalWindow>
         }
       </PageContainer>
     )
