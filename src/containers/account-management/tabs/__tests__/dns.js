@@ -11,7 +11,7 @@ const fakeDomains = [];
 const fakeRecords = [];
 
 describe('AccountManagementSystemDNS', () => {
-  it('should exist jee', () => {
+  it('should exist', () => {
     const dns = shallow(
       <DNS params={{}} fetchDomains={ genAsyncMock } domains={ fakeDomains } records={ fakeRecords }/>
     )
