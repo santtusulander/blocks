@@ -182,14 +182,13 @@ class AccountManagementAccountGroups extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the Group(s), are you sure you want to exit without saving?',
-        buttons:  [
-          <UDNButton key="button-1" onClick={() => {
-            this.isLeaving = true
-            this.props.router.push(pathname)
-            this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary">Continue</UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
-        ]
+        stayButton: this.props.uiActions.hideInfoDialog,
+        continueButton: () => {
+          //this.leavePage()
+          this.isLeaving = true
+          this.props.router.push(pathname)
+          this.props.uiActions.hideInfoDialog()
+        }
       })
       return false;
     }

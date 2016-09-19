@@ -146,14 +146,13 @@ class AccountList extends Component {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.title'/>,
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
-        buttons:  [
-          <UDNButton key="button-1" onClick={() => {
-            this.isLeaving = true
-            this.props.router.push(pathname)
-            this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary">Continue</UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
-        ]
+        stayButton: this.props.uiActions.hideInfoDialog,
+        continueButton: () => {
+          //this.leavePage()
+          this.isLeaving = true
+          this.props.router.push(pathname)
+          this.props.uiActions.hideInfoDialog()
+        }
       })
       return false;
     }

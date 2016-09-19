@@ -12,7 +12,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { children, cancelButton, closeButton, closeModal, deleteButton, fields: { modalField }, intl, invalid, show, submitButton, title, verifyDelete } = this.props
+    const { cancelButton, children, closeButton, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, show, stayButton, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="modal-window">
@@ -22,6 +22,8 @@ class ModalWindow extends React.Component {
 
         <Modal.Body>
           {children}
+          {content &&
+          <p>{content}</p>}
           {verifyDelete &&
           <Input
             type="text"
@@ -45,6 +47,20 @@ class ModalWindow extends React.Component {
               className="btn-primary"
               onClick={submitButton}>
               <FormattedMessage id="portal.button.submt"/>
+            </Button>}
+
+            {stayButton &&
+            <Button
+              className="btn-secondary"
+              onClick={stayButton}>
+              <FormattedMessage id="portal.button.stay"/>
+            </Button>}
+
+            {continueButton &&
+            <Button
+              className="btn-primary"
+              onClick={continueButton}>
+              <FormattedMessage id="portal.button.continue"/>
             </Button>}
 
             {cancelButton &&
@@ -77,16 +93,21 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
-  buttons: React.PropTypes.object,
   cancelButton: PropTypes.func,
   children: PropTypes.node,
   closeButton: PropTypes.func,
   closeModal: PropTypes.func,
+  content: PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object
+  ]),
+  continueButton: PropTypes.func,
   deleteButton: PropTypes.func,
   fields: PropTypes.object,
   intl: React.PropTypes.object,
   invalid: PropTypes.bool,
   show: PropTypes.bool,
+  stayButton: PropTypes.func,
   submitButton: PropTypes.func,
   title: PropTypes.oneOfType([
     React.PropTypes.string,

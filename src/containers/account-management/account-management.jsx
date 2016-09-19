@@ -287,7 +287,7 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
-          children: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: () => toggleModal(null),
@@ -298,7 +298,7 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
-          children: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: () => toggleModal(null),

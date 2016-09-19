@@ -17,7 +17,7 @@ import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
 
 import ErrorModal from '../components/error-modal'
-import InfoModal from '../components/info-modal'
+import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import * as PERMISSIONS from '../constants/permissions.js'
@@ -158,10 +158,10 @@ export class Main extends React.Component {
         <ErrorModal
           showErrorDialog={this.props.showErrorDialog}
           uiActions={this.props.uiActions}/>
-        <InfoModal
-          showErrorDialog={this.props.showInfoDialog}
-          uiActions={this.props.uiActions}
+        <ModalWindow
+          show={this.props.showInfoDialog}
           {...infoDialogOptions}/>
+
 
         <ReactCSSTransitionGroup
           component="div"
