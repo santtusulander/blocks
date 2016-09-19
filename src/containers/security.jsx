@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
 import { Nav } from 'react-bootstrap'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -12,10 +13,9 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import DeleteModal from '../components/delete-modal'
-import SecurityPageHeader from '../components/security/security-page-header'
+import UDNModal from '../components/modal'
 import CertificateForm from '../components/security/certificate-form-container'
-import PageContainer from '../components/layout/page-container'
+import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
 
@@ -24,8 +24,6 @@ import {
   EDIT_CERTIFICATE,
   DELETE_CERTIFICATE
 } from '../constants/account-management-modals.js'
-
-import { FormattedMessage } from 'react-intl'
 
 export class Security extends React.Component {
   constructor(props) {
@@ -100,7 +98,8 @@ export class Security extends React.Component {
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       toDelete,
-      toggleModal
+      toggleModal,
+      intl
     } = this.props
 
     const certificateFormProps = {
@@ -124,11 +123,9 @@ export class Security extends React.Component {
 
     return (
       <Content>
-        <SecurityPageHeader
-          params={this.props.params}
-          accounts={accounts}
-          activeAccount={activeAccount.get('name')}
-          fetchAccount={fetchAccount}/>
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
+          <h1>{activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}</h1>
+        </PageHeader>
          {/* ----- Not in 0.8.1* ----- */}
          {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
 
@@ -136,10 +133,18 @@ export class Security extends React.Component {
          <p className='text-center'>Coming soon!</p>
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
-        {activeModal === DELETE_CERTIFICATE && <DeleteModal
-            itemToDelete='Certificate'
-            cancel={() => toggleModal(null)}
-            submit={() => onDelete(toDelete)}/>}
+        {activeModal === DELETE_CERTIFICATE &&
+        <UDNModal
+          show={true}
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
+          cancelButton={() => toggleModal(null)}
+          deleteButton={() => onDelete(toDelete)}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            {<FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>}
+          </p>
+        </UDNModal>}
       </Content>
     )
   }
@@ -152,6 +157,7 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
+  intl: PropTypes.object,
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
@@ -195,4 +201,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Security)
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Security))
