@@ -49,7 +49,7 @@ class AnalysisURLList extends React.Component {
   }
 
   render() {
-    const {labelFormat, urls} = this.props
+    const { urls } = this.props
     const maxBytes = Math.max(...urls.toJS().map(url => url.bytes))
     const maxReqs = Math.max(...urls.toJS().map(url => url.requests))
     const sorterProps = {
@@ -126,7 +126,7 @@ class AnalysisURLList extends React.Component {
 
 AnalysisURLList.displayName = 'AnalysisURLList'
 AnalysisURLList.propTypes = {
-  labelFormat: React.PropTypes.func,
+  intl: React.PropTypes.object,
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLList.defaultProps = {
