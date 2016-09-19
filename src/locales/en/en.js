@@ -502,7 +502,7 @@ const TRANSLATED_MESSAGES = {
   'portal.deleteModal.validation.label': 'To confirm, write "DELETE" below',
   'portal.deleteModal.validation.placeholder': 'DELETE',
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
-  'portal.deleteModal.header.text': 'Delete {itemToDelete}',
+  'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
   'portal.errorModal.errorOccured.text': 'An error occured',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
