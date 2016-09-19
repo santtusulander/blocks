@@ -15,7 +15,7 @@ class UDNModal extends React.Component {
     const { children, cancelButton, closeButton, closeModal, deleteButton, fields: { modalField }, invalid, show, submitButton, title, verifyDelete } = this.props
 
     return (
-      <Modal show={show} dialogClassName="action-modal">
+      <Modal show={show} dialogClassName="udn-modal">
         <Modal.Header>
           <h1>{title}</h1>
         </Modal.Header>

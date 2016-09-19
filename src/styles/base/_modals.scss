@@ -14,10 +14,6 @@ $lt-modal-bg-color: $white;
 .modal-dialog {
   width: $modal-width;
 
-  .login-modal > & {
-    margin-top: 0;
-  }
-
   .modal-content {
     border: 0;
     border-radius: 0;
@@ -33,8 +29,13 @@ $lt-modal-bg-color: $white;
   }
 
   .modal-header {
-    padding: $modal-vertical-padding $modal-horizontal-padding 0;
     border: 0;
+  }
+}
+
+.udn-modal {
+  .modal-header {
+    padding: $modal-vertical-padding $modal-horizontal-padding 0;
   }
 
   .modal-body {
