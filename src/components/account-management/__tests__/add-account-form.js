@@ -1,11 +1,14 @@
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import { shallow, mount, render } from 'enzyme'
 import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import jsdom from 'jsdom'
 
+jest.unmock('../../select-wrapper.jsx')
+jest.unmock('../../checkboxes.jsx')
 jest.unmock('../../account-management/account-form.jsx')
 jest.genMockFromModule('react-bootstrap')
+
 import AccountForm from '../../account-management/account-form.jsx'
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
@@ -102,24 +105,10 @@ describe('Connected AccountForm', () => {
       subject = mount(<AccountForm {...props}/>)
     })
 
-    it('shows error message when account name is blank', () => {
-      const input = subject.find('input').at(0)
-      input.simulate('blur')
-      // expect(subject.find('.error-msg', input).text()).toBe('')
-    })
+    // it('shows error message when account name is blank', () => {
+    //   const input = subject.find('#account-name')
+    //   input.simulate('blur')
+    //   expect(subject.find('.error-msg').text()).toBe('')
+    // })
   })
-
-  // describe('Validation errors', () => {
-  //
-  //   beforeEach(() => {
-  //     subject = mount(<AccountForm {...props}/>)
-  //   })
-  //
-  //   it('Shows error message when account name is not valid', () => {
-  //     const input = subject.find('input').at(0)
-  //     input.simulate('blur')
-  //     // expect(subject.find('.error-msg', input).text()).toBe('')
-  //   })
-  // })
-
 })

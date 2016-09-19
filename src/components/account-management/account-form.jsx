@@ -117,6 +117,7 @@ class AccountForm extends React.Component {
 
             <Input
               {...accountName}
+              id="account-name"
               type="text"
               label="Account name"
               placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
