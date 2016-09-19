@@ -32,7 +32,7 @@ describe('AccountManagementAccountUsers', () => {
           fetchRoles: genAsyncMock,
         }}
         route={ {} }
-        router={ { setRouteLeaveHook: jest.fn() } }
+        router={ routerMock }
         uiActions= {{}}
         userActions={ {
           fetchUsers: genAsyncMock,
