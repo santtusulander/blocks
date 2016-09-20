@@ -48,7 +48,6 @@ const validateIpAddress = (fields, intl) => {
 
 const validate = (fields, props) => {
   let filteredFields = filterFields(fields)
-  delete filteredFields.name
   const { type = '', ...rest } = filteredFields
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
@@ -59,6 +58,10 @@ const validate = (fields, props) => {
     ttl: {
       condition: !new RegExp('^[0-9]+$').test(filteredFields.ttl),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
+    },
+    name: {
+      condition: !filteredFields.name,
+      errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
     },
     value: {
       condition: !ipAddressConfig.valid,
