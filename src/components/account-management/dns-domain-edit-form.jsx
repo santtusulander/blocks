@@ -26,7 +26,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...name}
       type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainName.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainName.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}
       disabled={props.edit}
       />
@@ -38,7 +38,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...name_server}
       type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}
       />
 
@@ -49,7 +49,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...email_addr}
       type="email"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
       />
 

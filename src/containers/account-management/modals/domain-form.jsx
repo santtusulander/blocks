@@ -12,23 +12,9 @@ import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
 
-let errors = {}
+import { checkForErrors } from '../../../util/helpers'
 
-const validate = (values) => {
-  errors = {}
-
-  const maxTtl = 2147483647;
-  const { name, email_addr, name_server, refresh, ttl, negative_ttl } = values
-
-  if (!name || name.length === 0) errors.name = <FormattedMessage id="portal.accountManagement.dns.form.validation.name.text"/>
-  if (!email_addr || email_addr.length === 0) errors.email_addr = <FormattedMessage id="portal.accountManagement.dns.form.validation.email.text"/>
-  if (!name_server || name_server.length === 0) errors.name_server = <FormattedMessage id="portal.accountManagement.dns.form.validation.nameServer.text"/>
-  if (!refresh || refresh.length === 0) errors.refresh = <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
-  if (!ttl || ttl.length === 0) errors.ttl = <FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
-
-  if (parseInt(ttl) > maxTtl) errors.ttl = <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
-  if (parseInt(negative_ttl) > maxTtl) errors.negative_ttl = <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
-
+const validate = fields => {
   // TODO: name_server validation
   // From API-docs:
   // Any name server that will respond authoritatively for the domain.
@@ -41,8 +27,31 @@ const validate = (values) => {
   // Domain Name (FQDN - ends with a dot). If the record points to
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
-
-  return errors;
+  const { ttl, negative_ttl, email_addr } = fields
+  const maxTtl = 2147483647;
+  const customConditions = {
+    name: {
+      condition: !(new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/).test(name)),
+      errorTxt: 'asdsasd'
+    },
+    email_addr: {
+      condition: new RegExp(/^((?!@).)*[.]$/).test(email_addr),
+      errorTxt: 'asdsasd'
+    },
+    ttl: {
+      condition: parseInt(ttl) > maxTtl, errorTxt: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+    },
+    negative_ttl: {
+      condition: parseInt(negative_ttl) > maxTtl, errorTxt: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+    }
+  }
+  const requiredTexts = {
+    name: <FormattedMessage id="portal.accountManagement.dns.form.validation.name.text"/>,
+    email_addr: <FormattedMessage id="portal.accountManagement.dns.form.validation.email.text"/>,
+    name_server: <FormattedMessage id="portal.accountManagement.dns.form.validation.nameServer.text"/>,
+    refresh: <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
+  }
+  return checkForErrors(fields, customConditions, requiredTexts)
 }
 
 class DnsDomainEditFormContainer  extends Component {
@@ -76,7 +85,7 @@ class DnsDomainEditFormContainer  extends Component {
   }
 
   render() {
-    const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = this.props
+    const { edit, saveDomain, closeModal, ...formProps } = this.props
     const domainFormProps = {
       edit,
       onSave: (fields) => {
