@@ -13,6 +13,7 @@
   "portal.account.recordForm.selectRecordType.label": "Select Record Type",
   "portal.account.recordForm.hostName.label": "Host Name",
   "portal.account.recordForm.hostName.placeholder": "Enter Host Name",
+  "portal.account.recordForm.hostName.validationError": "Host Name is required",
   "portal.account.recordForm.address.label": "Address",
   "portal.account.recordForm.address.placeholder": "Enter Address",
   "portal.account.recordForm.address.validationError.IPv4": "Address value must be a valid IPv4 address.",
