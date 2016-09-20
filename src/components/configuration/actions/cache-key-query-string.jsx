@@ -25,7 +25,7 @@ class CacheKeyQueryString extends React.Component {
     this.props.close()
   }
   updateSet(set) {
-    this.setState({updatedSet: set})
+    this.setState({ updatedSet: set })
   }
   render() {
     return (
@@ -41,10 +41,10 @@ class CacheKeyQueryString extends React.Component {
             updateSet={this.updateSet}/>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button bsStyle="default" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges}>
+            <Button bsStyle="primary" id="save-button" onClick={this.saveChanges}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>
@@ -64,4 +64,4 @@ CacheKeyQueryString.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = injectIntl(CacheKeyQueryString)
+export default injectIntl(CacheKeyQueryString)
