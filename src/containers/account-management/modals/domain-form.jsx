@@ -12,7 +12,7 @@ import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, isValidIPv4Address } from '../../../util/helpers'
 
 const validate = fields => {
   // TODO: name_server validation
@@ -29,14 +29,13 @@ const validate = fields => {
   // and end with a '.' (dot), for example, ns1.example.net.
   const { ttl, negative_ttl, email_addr, name, name_server } = fields
   const maxTtl = 2147483647;
-  const notAnIpAddress = !(new RegExp(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/).test(name_server))
   const notValidNameserver = !(new RegExp(/^([a-zA-Z0-9*]([a-zA-Z0-9-*]*[a-zA-Z0-9*]+)?\.)+$/).test(name_server))
   const notValidDomainName = !(new RegExp(/^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?\.)?([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]+)\.([a-zA-Z]{2,}(\.[a-zA-Z]{2,6})?)$/).test(name))
   // Note that this is not an usual email address
   const notValidMailbox = !new RegExp(/^(([-a-z0-9~!$%^&*_=+}{.\'?]*)\.)$/).test(email_addr)
   const customConditions = {
     name_server: {
-      condition: notAnIpAddress ? notValidNameserver : false,
+      condition: !isValidIPv4Address(name_server) ? notValidNameserver : false,
       errorText: <FormattedMessage id='portal.account.domainForm.validation.nameServer'/>
     },
     name: {
