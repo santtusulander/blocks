@@ -57,7 +57,7 @@ const validate = (fields, props) => {
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
+      condition: !new RegExp('^[0-9]+$').test(filteredFields.ttl),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
     },
     value: {
