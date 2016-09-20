@@ -48,7 +48,7 @@ const DnsDomainEditForm = (props) => {
 
       <Input
         {...email_addr}
-      type="email"
+      type="text"
       label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
       />
