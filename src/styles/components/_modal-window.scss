@@ -71,7 +71,7 @@ $lt-modal-bg-color: $white;
 
     .form-control {
       .light-theme & {
-        box-shadow: inset 0 0 0 2px rgba($black, 0.2);
+        box-shadow: inset 0 0 0 1px rgba($black, 0.2);
 
         &:focus,
         &:active {
