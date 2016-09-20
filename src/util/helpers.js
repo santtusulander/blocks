@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
+import { Address4, Address6 } from 'ip-address'
 
 const BYTE_BASE = 1000
 
@@ -260,5 +261,15 @@ export function getRolesForUser(user, roles) {
 }
 
 export function isValidIPv4Address(address) {
-  return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)
+  if (!address) {
+    return false
+  }
+  return new Address4(address).isValid()
+}
+
+export function isValidIPv6Address(address) {
+  if (!address) {
+    return false
+  }
+  return new Address6(address).isValid()
 }
