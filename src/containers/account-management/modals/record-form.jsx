@@ -33,7 +33,6 @@ const validateIpAddress = (fields, intl) => {
       errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv4'})
     }
   } else if (fields.type === 'AAAA') {
-    console.warn(isValidIPv6Address(fields.value))
     return {
       valid: isValidIPv6Address(fields.value),
       errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv6'})
