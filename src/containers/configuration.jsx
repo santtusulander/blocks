@@ -255,6 +255,7 @@ export class Configuration extends React.Component {
               </Button>
               : null
             }
+            {/* Hide in 1.0 – UDNP-1406
             <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
               <FormattedMessage id="portal.button.copy"/>
             </Button>
@@ -268,6 +269,7 @@ export class Configuration extends React.Component {
             <Button bsStyle="primary" onClick={this.toggleVersionModal}>
               <FormattedMessage id="portal.button.versions"/>
             </Button>
+            */}
           </ButtonToolbar>
         </PageHeader>
 
