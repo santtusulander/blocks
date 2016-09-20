@@ -60,8 +60,8 @@ export class FilterChecklistDropdown extends React.Component {
 
   }
 
-  handleFilter() {
-    let inputVal = this.refs.filterInput.value
+  handleFilter(e) {
+    let inputVal = e.target.value
 
     this.setState({
       filterValue: inputVal
