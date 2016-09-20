@@ -12,7 +12,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancelButton, children, closeButton, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loginButton, okButton, show, stayButton, submitButton, title, verifyDelete } = this.props
+    const { cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loginButton, okButton, reloadButton, show, stayButton, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="modal-window">
@@ -91,6 +91,20 @@ class ModalWindow extends React.Component {
                 <FormattedMessage id='portal.common.error.tokenExpire.button'/>
               </Button>
             </a>}
+
+            {closeButtonSecondary &&
+            <Button
+              className="btn-secondary"
+              onClick={closeButtonSecondary}>
+              <FormattedMessage id="portal.button.close"/>
+            </Button>}
+
+            {reloadButton &&
+            <Button
+              bsStyle="primary"
+              onClick={reloadButton}>
+              <FormattedMessage id="portal.button.reload"/>
+            </Button>}
           </ButtonToolbar>
         </Modal.Footer>
 
@@ -110,6 +124,7 @@ ModalWindow.propTypes = {
   cancelButton: PropTypes.func,
   children: PropTypes.node,
   closeButton: PropTypes.func,
+  closeButtonSecondary: PropTypes.func,
   closeModal: PropTypes.func,
   content: PropTypes.oneOfType([
     React.PropTypes.string,
@@ -122,6 +137,7 @@ ModalWindow.propTypes = {
   invalid: PropTypes.bool,
   loginButton: PropTypes.bool,
   okButton: PropTypes.func,
+  reloadButton: PropTypes.func,
   show: PropTypes.bool,
   stayButton: PropTypes.func,
   submitButton: PropTypes.func,
