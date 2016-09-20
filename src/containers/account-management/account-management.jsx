@@ -151,7 +151,7 @@ export class AccountManagement extends Component {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
-          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+          okButton: this.props.uiActions.hideInfoDialog
         })
     })
   }
@@ -533,7 +533,7 @@ function mapDispatchToProps(dispatch) {
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            buttons: <Button onClick={uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+            okButton: uiActions.hideInfoDialog
           })
         }
       })

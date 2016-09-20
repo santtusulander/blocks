@@ -3,7 +3,6 @@ import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl } from 'react-intl';
-import { Button } from 'react-bootstrap'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
@@ -46,7 +45,7 @@ export class User extends React.Component {
           this.props.uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+            okButton: this.props.uiActions.hideInfoDialog
           })
         }
         this.setState({

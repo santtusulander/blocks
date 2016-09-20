@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import { reduxForm } from 'redux-form'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
@@ -172,9 +172,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
-                <FormattedMessage id="portal.button.ok"/>
-              </Button>
+              okButton: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()
@@ -201,9 +199,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
-                <FormattedMessage id="portal.button.ok"/>
-              </Button>
+              okButton: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()

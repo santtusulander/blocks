@@ -12,7 +12,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancelButton, children, closeButton, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, show, stayButton, submitButton, title, verifyDelete } = this.props
+    const { cancelButton, children, closeButton, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loginButton, okButton, show, stayButton, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="modal-window">
@@ -37,14 +37,14 @@ class ModalWindow extends React.Component {
           <ButtonToolbar className="pull-right">
             {closeButton &&
             <Button
-              className="btn-primary"
+              bsStyle="primary"
               onClick={closeButton}>
               <FormattedMessage id="portal.button.close"/>
             </Button>}
 
             {submitButton &&
             <Button
-              className="btn-primary"
+              bsStyle="primary"
               onClick={submitButton}>
               <FormattedMessage id="portal.button.submt"/>
             </Button>}
@@ -58,7 +58,7 @@ class ModalWindow extends React.Component {
 
             {continueButton &&
             <Button
-              className="btn-primary"
+              bsStyle="primary"
               onClick={continueButton}>
               <FormattedMessage id="portal.button.continue"/>
             </Button>}
@@ -77,6 +77,20 @@ class ModalWindow extends React.Component {
               disabled={verifyDelete ? invalid : false}>
               <FormattedMessage id="portal.button.delete"/>
             </Button>}
+
+            {okButton &&
+            <Button
+              bsStyle="primary"
+              onClick={okButton}>
+              <FormattedMessage id="portal.button.ok"/>
+            </Button>}
+
+            {loginButton &&
+            <a href="/login">
+              <Button bsStyle="primary">
+                <FormattedMessage id='portal.common.error.tokenExpire.button'/>
+              </Button>
+            </a>}
           </ButtonToolbar>
         </Modal.Footer>
 
@@ -106,6 +120,8 @@ ModalWindow.propTypes = {
   fields: PropTypes.object,
   intl: React.PropTypes.object,
   invalid: PropTypes.bool,
+  loginButton: PropTypes.bool,
+  okButton: PropTypes.func,
   show: PropTypes.bool,
   stayButton: PropTypes.func,
   submitButton: PropTypes.func,

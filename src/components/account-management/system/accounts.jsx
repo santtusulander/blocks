@@ -13,7 +13,6 @@ import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
 import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import UDNButton from '../../../components/button'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'

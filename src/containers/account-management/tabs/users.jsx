@@ -289,9 +289,7 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
-        buttons:  [
-          <UDNButton key="button-1" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</UDNButton>
-        ]
+        okButton: this.props.uiActions.hideInfoDialog
       })
     }
     else {

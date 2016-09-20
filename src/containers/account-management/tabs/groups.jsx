@@ -17,7 +17,6 @@ import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
-import UDNButton from '../../../components/button'
 
 import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
