@@ -7,7 +7,7 @@ import * as recordActionCreators from '../../../redux/modules/dns-records/action
 
 import RecordForm from '../../../components/account-management/record-form'
 
-import { checkForErrors, isValidIPv4Address } from '../../../util/helpers'
+import { checkForErrors, isValidIPv4Address, isValidIPv6Address } from '../../../util/helpers'
 
 import { getRecordFormInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
 
@@ -25,10 +25,30 @@ const filterFields = fields => {
   return filteredFields
 }
 
+const validateIpAddress = (fields) => {
+  if (fields.type === 'A') {
+    return {
+      valid: isValidIPv4Address(fields.value),
+      errorText: 'Address value must be a valid IPv4 address.'
+    }
+  } else if (fields.type === 'AAAA') {
+    return {
+      valid: isValidIPv6Address(fields.value),
+      errorText: 'Address value must be a valid IPv6 address.'
+    }
+  }
+
+  return {
+    valid: true,
+    errorText: ''
+  }
+}
+
 const validate = fields => {
   let filteredFields = filterFields(fields)
   delete filteredFields.name
   const { type = '', ...rest } = filteredFields
+  const ipAddressConfig = validateIpAddress(filteredFields)
   const conditions = {
     prio: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.prio),
@@ -39,8 +59,8 @@ const validate = fields => {
       errorText: 'TTL value must be a number.'
     },
     value: {
-      condition: !isValidIPv4Address(filteredFields.value),
-      errorText: 'Address value must be a valid IP address.'
+      condition: !ipAddressConfig.valid,
+      errorText: ipAddressConfig.errorText
     }
   }
   return checkForErrors({ type, ...rest }, conditions)
