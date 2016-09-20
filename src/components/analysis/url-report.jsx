@@ -60,7 +60,7 @@ class AnalysisURLReport extends React.Component {
         return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
       })
 
-    const chartHeight = filteredUrls.size * 40 + 40
+    const chartHeight = filteredUrls.size * 36 + 72
 
     return (
       <div className="analysis-url-report">
