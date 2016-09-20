@@ -211,8 +211,12 @@ export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if ((isEmptyArray || field === '') && requiredTexts[fieldName]) {
-      errors[fieldName] = requiredTexts[fieldName]
+    if ((isEmptyArray || field === '')) {
+      if(requiredTexts[fieldName]) {
+        errors[fieldName] = requiredTexts[fieldName]
+      } else {
+        errors[fieldName] = 'Required'
+      }
     }
     else if (customConditions) {
       if(Array.isArray(customConditions[fieldName])) {
