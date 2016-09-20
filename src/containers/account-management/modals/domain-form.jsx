@@ -27,21 +27,25 @@ const validate = fields => {
   // Domain Name (FQDN - ends with a dot). If the record points to
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
-  const { ttl, negative_ttl, email_addr, name_server } = fields
+  const { ttl, negative_ttl, email_addr, name, name_server } = fields
   const maxTtl = 2147483647;
-  const notAnIpAddress = !(new RegExp(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/).test(name_server))
+  const notAnIpAddress = !(new RegExp(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/).test(name_server))
+  const notValidNameserver = !(new RegExp(/^([a-zA-Z0-9*]([a-zA-Z0-9-*]*[a-zA-Z0-9*]+)?\.)+$/).test(name_server))
+  const notValidDomainName = !(new RegExp(/^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?\.)?([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]+)\.([a-zA-Z]{2,}(\.[a-zA-Z]{2,6})?)$/).test(name))
+  // Note that this is not an usual email address
+  const notValidMailbox = !new RegExp(/^(([-a-z0-9~!$%^&*_=+}{.\'?]*)\.)$/).test(email_addr)
   const customConditions = {
     name_server: {
-      condition: notAnIpAddress ? !(new RegExp(/[.]$/).test(name_server)) : false,
-      errorText: 'asdasdsaddas'
+      condition: notAnIpAddress ? notValidNameserver : false,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.nameServer'/>
     },
     name: {
-      condition: !(new RegExp(/^[a-zA-Z]+\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/).test(name)),
-      errorText: 'aswqewqqwsasd'
+      condition: notValidDomainName,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.domainName'/>
     },
     email_addr: {
-      condition: new RegExp(/^((?!@).)*[.]$/).test(email_addr),
-      errorText: 'asdsasd'
+      condition: notValidMailbox,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.mailbox'/>
     },
     ttl: {
       condition: parseInt(ttl) > maxTtl,
