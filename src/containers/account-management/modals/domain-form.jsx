@@ -27,22 +27,29 @@ const validate = fields => {
   // Domain Name (FQDN - ends with a dot). If the record points to
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
-  const { ttl, negative_ttl, email_addr } = fields
+  const { ttl, negative_ttl, email_addr, name_server } = fields
   const maxTtl = 2147483647;
+  const notAnIpAddress = !(new RegExp(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/).test(name_server))
   const customConditions = {
+    name_server: {
+      condition: notAnIpAddress ? !(new RegExp(/[.]$/).test(name_server)) : false,
+      errorText: 'asdasdsaddas'
+    },
     name: {
-      condition: !(new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/).test(name)),
-      errorTxt: 'asdsasd'
+      condition: !(new RegExp(/^[a-zA-Z]+\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/).test(name)),
+      errorText: 'aswqewqqwsasd'
     },
     email_addr: {
       condition: new RegExp(/^((?!@).)*[.]$/).test(email_addr),
-      errorTxt: 'asdsasd'
+      errorText: 'asdsasd'
     },
     ttl: {
-      condition: parseInt(ttl) > maxTtl, errorTxt: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+      condition: parseInt(ttl) > maxTtl,
+      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
     },
     negative_ttl: {
-      condition: parseInt(negative_ttl) > maxTtl, errorTxt: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+      condition: parseInt(negative_ttl) > maxTtl,
+      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
     }
   }
   const requiredTexts = {
