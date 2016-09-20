@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "0.57.11",
+  "version": "1.0.0-rc2",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -61,6 +61,7 @@
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
+    "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
@@ -94,7 +95,7 @@
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
     "testPathDirs": [
       "src",
       "__mocks__"
@@ -111,6 +112,7 @@
       "json"
     ],
     "unmockedModulePathPatterns": [
+      "<rootDir>/src/constants",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/d3",

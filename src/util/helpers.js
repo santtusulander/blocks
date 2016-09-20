@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
+import { Address4, Address6 } from 'ip-address'
 
 const BYTE_BASE = 1000
 
@@ -243,4 +244,34 @@ export function getConfiguredName(host) {
     return host.getIn(['services',0,'configurations',0,'edge_configuration','trial_name'])
   }
   return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
+}
+
+export function getRolesForUser(user, roles) {
+  let userRoles = []
+  const mappedRoles = roles.size ?
+    user.get('roles').map(roleId => (
+      {
+        id: roleId,
+        name: roles.find(role => role.get('id') === roleId).get('name')
+      }
+    )).toJS()
+    : []
+  mappedRoles.forEach(role => {
+    userRoles.push([role.id, role.name])
+  })
+  return userRoles
+}
+
+export function isValidIPv4Address(address) {
+  if (!address) {
+    return false
+  }
+  return new Address4(address).isValid()
+}
+
+export function isValidIPv6Address(address) {
+  if (!address) {
+    return false
+  }
+  return new Address6(address).isValid()
 }

@@ -24,6 +24,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
     min-width: 0;
     flex-wrap: nowrap;
     align-items: center;
+    cursor: pointer;
 
     > :first-child {
       float: left;

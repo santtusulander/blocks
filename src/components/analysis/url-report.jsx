@@ -90,10 +90,12 @@ class AnalysisURLReport extends React.Component {
 
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLReport.defaultProps = {
   urls: Immutable.List()
 }
 
-module.exports = AnalysisURLReport
+export default AnalysisURLReport
