@@ -87,9 +87,9 @@ class AnalysisServiceProviders extends React.Component {
   }
 
   nameForServiceProvider(provider, lookUpTable) {
-    const id = provider.get('sp_account')
+    const id = Number(provider.get('sp_account'))
     const serviceProvider = lookUpTable.get(id)
-    return serviceProvider ? serviceProvider.get(id) : `ID: ${id}`
+    return serviceProvider ? serviceProvider.get('name') : `ID: ${id}`
   }
 
   render() {
