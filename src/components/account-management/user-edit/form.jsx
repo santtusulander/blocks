@@ -8,12 +8,11 @@ import {
   Col
 } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
-import CheckboxArray from '../../checkboxes.jsx'
 import SelectWrapper from '../../select-wrapper.jsx'
 
 import IconEye from '../../icons/icon-eye.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 
 let errors = {}
 const validate = (values) => {
@@ -99,10 +98,8 @@ class UserEditForm extends React.Component {
         password,
         confirm,
         phone_number,
-        groups,
         role
       },
-      groupOptions,
       roleOptions,
       onCancel
     } = this.props
@@ -236,6 +233,7 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   groupOptions: PropTypes.array,
+  intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   roleOptions: PropTypes.array
