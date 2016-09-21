@@ -183,10 +183,10 @@ export class Login extends React.Component {
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
                 </a>
 
-              {/* Maybe needed in future?
-                <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                  <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </Link>
+                {/* Maybe needed in future?
+                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                    <FormattedMessage id="portal.login.forgotPassword.text"/>
+                  </Link>
                 */}
               </Col>
             </Row>
