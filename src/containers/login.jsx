@@ -178,9 +178,16 @@ export class Login extends React.Component {
                   disabled={this.props.fetching}>
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
-                <Link to={`/forgot-password`} className="btn btn-link pull-right">
+
+                <a href='mailto:support@ericssonudn.com?subject=Password reset request&body=Please, reset my password.' className="btn btn-link pull-right">
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </Link>
+                </a>
+
+                {/* Maybe needed in future?
+                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                    <FormattedMessage id="portal.login.forgotPassword.text"/>
+                  </Link>
+                */}
               </Col>
             </Row>
           </form>
