@@ -137,8 +137,8 @@ class AnalysisServiceProviders extends React.Component {
               datasetLabels={[
                 <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
                 <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttp.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.ofNetHttps.label"/>
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttp.label"/>,
+                <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttps.label"/>
               ]}
               width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
           }

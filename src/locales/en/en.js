@@ -130,8 +130,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.ofNetHttp.label': 'Of-Net HTTP',
-  'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
+  'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
+  'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
