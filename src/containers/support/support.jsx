@@ -48,11 +48,11 @@ class Support extends React.Component {
               <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
             </Link>
           </li>
-          <li className="navbar">
+          {/*<li className="navbar">
             <Link to={baseUrl + '/tools'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
             </Link>
-          </li>
+          </li>*/}
           <li className="navbar">
             <Link to={baseUrl + '/documentation'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
