@@ -206,13 +206,13 @@ export function filterAccountsByUserName (accounts) {
  * @param {Object} customConditions
  * returns {Object} errors
  */
-export function checkForErrors(fields, customConditions) {
+export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   let errors = {}
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if(isEmptyArray || field === '') {
-      errors[fieldName] = 'Required'
+    if ((isEmptyArray || field === '')) {
+      errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
       if(Array.isArray(customConditions[fieldName])) {

@@ -32,6 +32,8 @@ const emptyUser = Map({
 // REDUCERS
 export function updateSuccess(state, action) {
   const updatedUser = fromJS(action.payload)
+  const currentUser = state.get('currentUser')
+  const editingSelf = currentUser.get('email') === action.payload.email
   const currIndex = state.get('allUsers').findIndex(
     user => user.get('email') === updatedUser.get('email')
   )
@@ -41,7 +43,7 @@ export function updateSuccess(state, action) {
 
   return state.merge({
     allUsers: updatedUsers,
-    currentUser: updatedUser,
+    currentUser: editingSelf ? updatedUser : currentUser,
     fetching: false
   })
 }
