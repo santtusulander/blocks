@@ -13,7 +13,7 @@ import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
 
-import {IntlProvider} from 'react-intl';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 
 import './styles/style.scss'
 
@@ -54,15 +54,38 @@ axios.interceptors.response.use(function (response) {
       if(!location.href.includes('/login')
         && !location.href.includes('/set-password')
         && !location.href.includes('/forgot-password')) {
-        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
-        browserHistory.push('/login')
+
+        const loggedIn = store.getState().user.get('loggedIn') === true
+        const method = error.config.method.toLowerCase()
+        const tokenDidExpire = loggedIn && method === 'get'
+
+        if (tokenDidExpire) {
+          store.dispatch(showInfoDialog({
+            title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
+            content: <FormattedMessage id='portal.common.error.tokenExpire.content'/>,
+            buttons: (
+              <a href="/login">
+                <Button bsStyle="primary">
+                  <FormattedMessage id='portal.common.error.tokenExpire.button'/>
+                </Button>
+              </a>
+            )
+          }));
+        } else {
+          store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
+          browserHistory.push('/login')
+        }
       }
     }
     else if (status === 403) {
       store.dispatch(showInfoDialog({
-        title: 'Unauthorized',
-        content: 'You do not have permission to access information on this page.',
-        buttons: <Button onClick={() => store.dispatch(hideInfoDialog())} bsStyle="primary">OK</Button>
+        title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
+        content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
+        buttons: (
+          <Button onClick={() => store.dispatch(hideInfoDialog())} bsStyle="primary">
+            <FormattedMessage id='portal.common.button.ok'/>
+          </Button>
+        )
       }));
     }
     else if (status === 500 || status === 404) {

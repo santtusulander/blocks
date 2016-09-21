@@ -52,12 +52,21 @@ class AnalysisOnOffNetReport extends React.Component {
     if(this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
       sortFunc = data.sort((a, b) => {
         sortBy = sortBy.toString().split(',')
-        if(a.get(sortBy[0]).get(sortBy[1]) < b.get(sortBy[0]).get(sortBy[1])) {
-          return -1 * sortDir
+
+        const lhs = a.get(sortBy[0])
+        const rhs = b.get(sortBy[0])
+
+        // the following conditionals handle cases where a & b contain null data
+        if (!lhs && rhs) { return -1 * sortDir }
+        if (lhs && !rhs) { return 1 * sortDir }
+        if (lhs && rhs) {
+          if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {
+            return -1 * sortDir
+          } else if(lhs.get(sortBy[1]) > rhs.get(sortBy[1])) {
+            return 1 * sortDir
+          }
         }
-        else if(a.get(sortBy[0]).get(sortBy[1]) > b.get(sortBy[0]).get(sortBy[1])) {
-          return 1 * sortDir
-        }
+
         return 0
       })
     } else {

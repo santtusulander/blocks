@@ -497,7 +497,7 @@ export class Property extends React.Component {
           itemToDelete="Property"
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property)
+            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>}
       </Content>

@@ -28,6 +28,8 @@ describe('DNSList', () => {
   beforeEach(() => {
     subject = records => {
       props = {
+        hiddenRecordCount: 'aaa',
+        visibleRecordCount: 'bbb',
         intl:intlMaker(),
         onAddEntry,
         onDeleteEntry,
@@ -45,7 +47,8 @@ describe('DNSList', () => {
   })
 
   it('should show correct amount of records', () => {
-    expect(subject(recs).find('#record-amount-label').props().children).toBe('4 Records')
+    expect(subject(recs).find('#record-amount-label').children().nodes).toContain('aaa')
+    expect(subject(recs).find('#record-amount-label').children().nodes).toContain('bbb')
   })
 
   it('should show correct type label per table, sorted correctly', () => {
