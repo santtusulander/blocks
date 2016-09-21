@@ -446,7 +446,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.rules.noRulesAdded.text': 'No policies rules have been added yet.',
   'portal.policy.edit.publishVersion.versionName.text': 'Version Name',
   'portal.policy.edit.publishVersion.publishTo.text': 'Publish to',
-  'portal.policy.edit.publishVersion.stagingPlatform.text': 'Staging Platform',
+  'portal.policy.edit.publishVersion.sandboxPlatform.text': 'Sandbox Platform',
   'portal.policy.edit.publishVersion.productionPlatform.text': 'Production Platform',
   'portal.policy.edit.security.text': 'Security',
   'portal.policy.edit.versions.text': 'Versions',
