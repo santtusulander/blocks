@@ -1,6 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow }  from 'enzyme'
 
 jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
 
@@ -240,7 +241,7 @@ const fakeHost = Immutable.fromJS({
 
 describe('Configuration', () => {
   it('should exist', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -252,7 +253,7 @@ describe('Configuration', () => {
 
   it('should request data on mount', () => {
     const hostActions = hostActionsMaker()
-    TestUtils.renderIntoDocument(
+    shallow(
       <Configuration hostActions={hostActions} fetching={true}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -265,20 +266,20 @@ describe('Configuration', () => {
   });
 
   it('should initially render details subcomponent', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(1);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(0);
@@ -289,24 +290,24 @@ describe('Configuration', () => {
   })
 
   it('should render defaults subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[1]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(1).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(1);
 		expect(policies.length).toEqual(0);
@@ -317,24 +318,24 @@ describe('Configuration', () => {
   })
 
   it('should render policies subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[2]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(2).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(1);
@@ -345,24 +346,24 @@ describe('Configuration', () => {
   })
 
   it('should render performance subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[3]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(3).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(0);
@@ -373,24 +374,24 @@ describe('Configuration', () => {
   })
 
   it('should render security subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[4]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(4).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(0);
@@ -401,24 +402,24 @@ describe('Configuration', () => {
   })
 
   it('should render certificates subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[5]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(5).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(0);
@@ -429,24 +430,24 @@ describe('Configuration', () => {
   })
 
   it('should render performance change log when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[6]);
+    let nav = config.find('nav');
+    let links = nav.find('a');
+    links.at(6).simulate('click');
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
+    let details = config.find(ConfigurationDetails);
+    let defaults = config.find(ConfigurationDefaults);
+    let policies = config.find(ConfigurationPolicies);
+    let performance = config.find(ConfigurationPerformance);
+    let security = config.find(ConfigurationSecurity);
+    let certs = config.find(ConfigurationCertificates);
+    let changelog = config.find(ConfigurationChangeLog);
 		expect(details.length).toEqual(0);
 		expect(defaults.length).toEqual(0);
 		expect(policies.length).toEqual(0);
@@ -458,14 +459,14 @@ describe('Configuration', () => {
 
   it('should make changes to the host', () => {
     const hostActions = hostActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    config.changeValue(['edge_configuration', 'origin_host_name'], 'new value')
+    config.instance().changeValue(['edge_configuration', 'origin_host_name'], 'new value')
     expect(hostActions.changeActiveHost.mock.calls[0][0].toJS()).toEqual(
       fakeHost.setIn(
         ['services', 0, 'configurations', 0, 'edge_configuration', 'origin_host_name'],
@@ -476,7 +477,7 @@ describe('Configuration', () => {
   it('should save changes to the host', () => {
     const hostActions = hostActionsMaker()
     const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -484,7 +485,7 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.saveActiveHostChanges()
+    config.instance().saveActiveHostChanges()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
@@ -494,14 +495,14 @@ describe('Configuration', () => {
 
   it('should add a version', () => {
     const hostActions = hostActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    config.cloneActiveVersion()
+    config.instance().cloneActiveVersion()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
@@ -512,7 +513,7 @@ describe('Configuration', () => {
   it("should change a version's deployment_status", () => {
     const hostActions = hostActionsMaker()
     const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -520,21 +521,21 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.togglePublishModal = jest.genMockFunction()
-    config.changeActiveVersionEnvironment(2)
+    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().changeActiveVersionEnvironment(2)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(2)
-    expect(config.togglePublishModal.mock.calls.length).toBe(1)
+    expect(config.instance().togglePublishModal.mock.calls.length).toBe(1)
   })
 
   it("should not show publish modal if version is retired", () => {
     const hostActions = hostActionsMaker()
     const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -542,14 +543,14 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.togglePublishModal = jest.genMockFunction()
-    config.changeActiveVersionEnvironment(1)
+    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(1)
-    expect(config.togglePublishModal.mock.calls.length).toBe(0)
+    expect(config.instance().togglePublishModal.mock.calls.length).toBe(0)
   })
 })
