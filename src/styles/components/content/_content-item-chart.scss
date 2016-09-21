@@ -22,7 +22,6 @@
 // scss-lint:disable SelectorDepth
 .content-item-chart {
   position: relative;
-  cursor: pointer;
   border-radius: 50%;
 
   @include md {
@@ -65,6 +64,10 @@
       &::after {
         content: '' !important;
       }
+    }
+
+    &.disabled {
+      cursor: default;
     }
   }
 

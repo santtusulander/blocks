@@ -43,6 +43,10 @@
         float: none !important;
       }
     }
+
+    &.disabled {
+      cursor: default;
+    }
   }
 
   .content-item-list-section {
