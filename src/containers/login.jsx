@@ -192,7 +192,7 @@ export class Login extends React.Component {
             </Row>
           </form>
           <p className="text-sm login-copyright">
-            <FormattedMessage id="portal.login.copyright.text" values={{copyrightLogo : '&copy;'}}/><br/>
+            <FormattedMessage id="portal.login.copyright.text" /><br/>
             <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
           </p>
         </Modal.Body>
