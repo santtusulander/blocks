@@ -61,6 +61,7 @@
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
+    "intl": "^1.2.5",
     "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",

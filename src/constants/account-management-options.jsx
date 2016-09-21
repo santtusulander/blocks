@@ -1,10 +1,14 @@
-import React from 'react'
-
 export const ACCOUNT_TYPES = [
   { value: 1, label: 'Content Provider' },
   { value: 2, label: 'Service Provider' },
   { value: 3, label: 'Cloud Provider' }
 ]
+
+export const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+
+export const ACCOUNT_TYPE_OPTIONS = FILTERED_ACCOUNT_TYPES.map(e => {
+  return [e.value, e.label]
+});
 
 export const SERVICE_TYPES = [
   { value: 101, label: 'UDN Network Partner - On-Net', accountTypes: [2] },
@@ -15,6 +19,10 @@ export const SERVICE_TYPES = [
 export const BRANDS = [
   { id: 'udn', brandName: 'UDN' }
 ]
+
+export const BRAND_OPTIONS = BRANDS.map(e => {
+  return [e.id, e.brandName]
+});
 
 export const ROLES_MAPPING = [
   { id: 1, accountTypes: [3] },

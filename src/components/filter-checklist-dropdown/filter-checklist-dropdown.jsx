@@ -1,7 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { List } from 'immutable'
-import { Dropdown, Button, Input, MenuItem } from 'react-bootstrap'
+import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import './filter-checklist-dropdown.scss'
@@ -61,7 +61,7 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.value
+    let inputVal = this.refs.filterInput.getValue()
 
     this.setState({
       filterValue: inputVal

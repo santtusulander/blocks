@@ -124,7 +124,9 @@ export class Security extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
-          <h1>{activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}</h1>
+          <h1 id="active-account">
+            {activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
+          </h1>
         </PageHeader>
          {/* ----- Not in 0.8.1* ----- */}
          {/*{this.renderContent(certificateFormProps, sslListProps)}*/}

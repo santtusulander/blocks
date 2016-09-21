@@ -44,7 +44,7 @@ describe('AnalysisURLReport', () => {
   })
 
   it('should pass on proper chart height prop', () => {
-    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(80)
+    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(108)
   })
 
   it('should select data type properly', () => {

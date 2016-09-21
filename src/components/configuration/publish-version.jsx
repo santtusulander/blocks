@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Input, ButtonToolbar, FormControls} from 'react-bootstrap'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 class ConfigurationPublishVersion extends React.Component {
   constructor(props) {
@@ -33,8 +33,10 @@ class ConfigurationPublishVersion extends React.Component {
 
         {/* Publish To */}
         <label><FormattedMessage id="portal.policy.edit.publishVersion.publishTo.text"/></label>
+        {/* Sandbox publishing is disabled for 1.0 */}
         <Input type="radio"
-          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.stagingPlatform.text'})}
+          disabled={true}
+          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.sandboxPlatform.text'})}
           onChange={this.setPublishTarget(2)}
           checked={this.state.publishTarget === 2}/>
         <Input type="radio"
