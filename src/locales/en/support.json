@@ -1,3 +1,4 @@
 {
-  "portal.support.xxx": "value xxx"
+  "portal.support.tickets.body.text": "Stayed tuned for an incredible support experience. In the meantime, please click the support link to our external support tool to log any support tickets and follow up on your outstanding tickets. Thank you!",
+  "portal.support.tickets.body.link": "http://support.ericssonudn.com"
 }
