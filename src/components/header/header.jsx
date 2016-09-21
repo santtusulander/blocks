@@ -2,13 +2,13 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
-import { Button, Input, Nav, Navbar } from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap' // Button, Input
 
 import UserMenu from './user-menu'
 import TruncatedTitle from '../truncated-title'
-import IconAlerts from '../icons/icon-alerts.jsx'
+// import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
-import IconQuestionMark from '../icons/icon-question-mark.jsx'
+// import IconQuestionMark from '../icons/icon-question-mark.jsx'
 import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
@@ -231,6 +231,7 @@ class Header extends React.Component {
             {this.renderBreadcrumb()}
           </Nav>
           <Nav className="header__right" pullRight={true}>
+            {/* Hide in 1.0 UDNP-1409
             <li>
               <Button className="btn-header btn-icon btn-round btn-alerts">
                 <IconAlerts />
@@ -244,6 +245,7 @@ class Header extends React.Component {
               <Input className="header-search-input"
                 type="text" placeholder="Search" />
             </li>
+            */}
             <li>
               <UserMenu
                 open={this.state.userMenuOpen}
