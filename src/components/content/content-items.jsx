@@ -296,6 +296,7 @@ class ContentItems extends React.Component {
                   const itemProps = {
                     id: id,
                     linkTo: this.props.nextPageURLBuilder(id),
+                    disableLinkTo: activeAccount.getIn(['provider_type']) === 2,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
                       this.editItem(id)

@@ -334,6 +334,7 @@ ContentItemChart.propTypes = {
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   differenceData: React.PropTypes.instanceOf(Immutable.List),
+  disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,

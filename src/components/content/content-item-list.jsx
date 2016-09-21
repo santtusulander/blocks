@@ -151,6 +151,7 @@ ContentItemList.propTypes = {
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
