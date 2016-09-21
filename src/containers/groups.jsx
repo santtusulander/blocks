@@ -113,7 +113,7 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        headerText={{ summary: <FormattedMessage id="portal.groups.accountContentSummary.text"/>, label: breadcrumbs[0].label }}
+        headerText={{ summary: <FormattedMessage id="portal.groups.accountSummary.text"/>, label: breadcrumbs[0].label }}
         ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
