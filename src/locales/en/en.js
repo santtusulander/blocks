@@ -609,6 +609,8 @@ const TRANSLATED_MESSAGES = {
   'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
+  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
+  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
