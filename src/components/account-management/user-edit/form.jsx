@@ -60,7 +60,8 @@ class UserEditForm extends React.Component {
         last_name,
         password,
         phone_number,
-        groups
+        groups,
+        role
       }
     } = this.props
 
@@ -68,7 +69,8 @@ class UserEditForm extends React.Component {
       first_name: first_name.value,
       last_name: last_name.value,
       phone_number: phone_number.value,
-      group_id: groups.value
+      group_id: groups.value,
+      roles: [ role.value ]
     }
 
     if(password && password.value.length !== 0) {
@@ -202,6 +204,7 @@ class UserEditForm extends React.Component {
           <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
           <SelectWrapper
             {...role}
+            numericValues={true}
             className="input-select"
             value={role.value}
             options={roleOptions}
