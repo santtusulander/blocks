@@ -255,6 +255,7 @@ export class Configuration extends React.Component {
               </Button>
               : null
             }
+            {/* Hide in 1.0 – UDNP-1406
             <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
               <FormattedMessage id="portal.button.copy"/>
             </Button>
@@ -268,6 +269,7 @@ export class Configuration extends React.Component {
             <Button bsStyle="primary" onClick={this.toggleVersionModal}>
               <FormattedMessage id="portal.button.versions"/>
             </Button>
+            */}
           </ButtonToolbar>
         </PageHeader>
 
@@ -282,6 +284,7 @@ export class Configuration extends React.Component {
           <NavItem eventKey={'policies'}>
             <FormattedMessage id="portal.configuration.policies.text"/>
           </NavItem>
+          {/* Hide in 1.0 – UDNP-1406
           <NavItem eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
           </NavItem>
@@ -294,6 +297,7 @@ export class Configuration extends React.Component {
           <NavItem eventKey={'change-log'}>
             <FormattedMessage id="portal.configuration.changeLog.text"/>
           </NavItem>
+          */}
         </Nav>
 
         <PageContainer>
@@ -360,7 +364,7 @@ export class Configuration extends React.Component {
           itemToDelete="Property"
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property)
+            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}/>
         }
@@ -409,6 +413,7 @@ Configuration.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
@@ -431,6 +436,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activeHost: state.host.get('activeHost'),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),

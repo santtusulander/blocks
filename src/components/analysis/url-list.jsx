@@ -1,9 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import {FormattedMessage} from 'react-intl'
-
-import {formatBytes} from '../../util/helpers'
+import { FormattedMessage } from 'react-intl'
+import { formatBytes } from '../../util/helpers'
 import TableSorter from '../table-sorter'
 
 class AnalysisURLList extends React.Component {
@@ -45,6 +44,7 @@ class AnalysisURLList extends React.Component {
   }
 
   render() {
+
     const {urls, searchState} = this.props
     const maxBytes = Math.max(...urls.toJS().map(url => url.bytes))
     const maxReqs = Math.max(...urls.toJS().map(url => url.requests))

@@ -315,6 +315,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
+  isEditingRule: React.PropTypes.bool,
   rule: React.PropTypes.instanceOf(Immutable.Map),
   rulePath: React.PropTypes.instanceOf(Immutable.List),
   saveChanges: React.PropTypes.func

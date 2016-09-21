@@ -197,16 +197,20 @@ class AccountManagementAccountGroups extends React.Component {
     return true
   }
 
+  filteredData( groupName ) {
+    return this.props.groups.filter((group) => {
+      return group.get('name').toLowerCase().includes(groupName)
+    })
+  }
+
   render() {
-    const groups = this.props.groups;
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredGroups = groups.filter((group) => {
-      return group.get('name').toLowerCase().includes(this.state.search.toLowerCase())
-    })
+    const filteredGroups = this.filteredData(this.state.search.toLowerCase())
+
     const sortedGroups = this.sortedData(
       filteredGroups,
       this.state.sortBy,

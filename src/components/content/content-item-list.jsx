@@ -61,24 +61,26 @@ class ContentItemList extends React.Component {
           <Link className="content-item-list-link" to={this.props.linkTo}>
             <div className="content-item-details">
               <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
-              <div className="content-item-list-details text-sm">
-                <p><FormattedMessage id="portal.contentItemList.lastEdited.text"/></p>
-                <p>Yesterday 12:30 pm</p>
-                <p>By John McKinley</p>
-              </div>
+              {/*
+                <div className="content-item-list-details text-sm">
+                  <p><FormattedMessage id="portal.contentItemList.lastEdited.text"/></p>
+                  <p>Yesterday 12:30 pm</p>
+                  <p>By John McKinley</p>
+                </div>
+              */}
             </div>
           </Link>
 
-          <ButtonToolbar className="pull-right">
+          <ButtonToolbar>
             {this.props.configurationLink ?
               <Link to={this.props.configurationLink}
-                className="btn btn-icon btn-round">
+                className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
               </Link> : ''
             }
             {this.props.onConfiguration &&
               <a onClick={this.props.onConfiguration}
-                 className="btn btn-icon btn-round">
+                 className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
               </a>
             }

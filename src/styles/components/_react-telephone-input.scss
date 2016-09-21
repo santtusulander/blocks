@@ -10,24 +10,20 @@
     position: relative;
     z-index: 0;
     width: 100%;
-    height: $bar-height;
+    height: auto;
     max-width: 900px;
-    padding: ($btn-sm-height / 3) ($btn-height / 2);
-    padding-left: 60px !important;
+    padding: $form-vertical-padding $form-horizontal-padding;
+    padding-left: 36px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     margin-left: 0;
-    font-size: inherit;
+    font-size: rem($form-font-size);
+    line-height: $form-line-height;
     color: inherit;
     border: 0;
     border-radius: 2px;
     box-shadow: none;
     transition: box-shadow 0s;
-
-    @include md {
-      height: $md-bar-height;
-      padding: ($md-btn-sm-height / 3) ($md-btn-height / 2);
-    }
 
     // Hide IE clear and reveal buttons for design purposes
     &::-ms-clear,
@@ -126,17 +122,12 @@
 
     .selected-flag {
       position: absolute;
-      top: -$bar-height;
+      top: -36px;
       bottom: auto;
       display: flex;
-      width: 60px;
-      height: $bar-height;
+      width: 36px;
+      height: 36px;
       background: none;
-
-      @include md {
-        top: -$md-bar-height;
-        height: $md-bar-height;
-      }
     }
 
     &.open-dropdown {

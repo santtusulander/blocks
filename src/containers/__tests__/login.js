@@ -10,6 +10,7 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
+jest.autoMockOff()
 jest.dontMock('../login.jsx')
 const Login = require('../login.jsx').Login
 

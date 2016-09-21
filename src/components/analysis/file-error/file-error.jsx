@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import {Col, Row, Input} from 'react-bootstrap'
 import {List, Map} from 'immutable'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
@@ -25,17 +25,16 @@ class AnalysisFileError extends React.Component {
     })
   }
 
-  hasKeys( val, keyList ) {
-    if ( keyList.includes('all') ) return true;
+  hasKeys(val, keyList) {
+    if (keyList.includes('all')) return true;
 
     let found = false;
-    keyList.some( (key) => {
+    keyList.some((key) => {
       if (val.has(key)) {
         found=true;
         return
       }
     })
-
     return found;
   }
 
@@ -129,7 +128,7 @@ class AnalysisFileError extends React.Component {
 AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
   fetching: PropTypes.bool,
-  intl: PropTypes.object,
+  intl: intlShape.isRequired,
   serviceTypes: PropTypes.instanceOf(List),
   statusCodes: PropTypes.instanceOf(List),
   summary: PropTypes.instanceOf(Map),

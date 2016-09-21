@@ -5,9 +5,9 @@ import { List } from 'immutable'
 import ActionButtons from '../../components/action-buttons.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl, intlShape} from 'react-intl'
 
-const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
+const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
   return (
     <div>
       <AccountManagementHeader title={`${certificates.size} Certificates`} onAdd={uploadCertificate}/>
@@ -16,7 +16,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
           <tr>
             <th width="30%">
               <Input type="checkbox"
-                label={this.props.intl.formatMessage({id: 'portal.security.ssl.title.text'})}
+                label={intl.formatMessage({id: 'portal.security.ssl.title.text'})}
                 onChange={() => onCheck('all')}
                 checked={false}/>
             </th>
@@ -61,6 +61,7 @@ SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
+  intl: intlShape.isRequired,
   onCheck: PropTypes.func,
   uploadCertificate: PropTypes.func
 }
