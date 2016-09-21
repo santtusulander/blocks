@@ -792,7 +792,6 @@ const TRANSLATED_MESSAGES = {
   'portal.button.publish': 'Publish',
   'portal.button.PUBLISHING': 'PUBLISHING...',
   'portal.button.saveAction': 'Save Action',
-  'portal.button.add': 'Add',
   'portal.button.yes': 'Yes',
   'portal.button.close': 'Close',
   'portal.button.reload': 'Reload',
