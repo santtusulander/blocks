@@ -26,7 +26,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...name}
       type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainName.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainName.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}
       disabled={props.edit}
       />
@@ -38,7 +38,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...name_server}
       type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}
       />
 
@@ -48,8 +48,8 @@ const DnsDomainEditForm = (props) => {
 
       <Input
         {...email_addr}
-      type="email"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'})}
+      type="text"
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
       />
 
@@ -62,6 +62,7 @@ const DnsDomainEditForm = (props) => {
       type="number"
       label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'})}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refreshPlaceholder.text'})}
+      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
 
       {refresh.touched && refresh.error && <div className='error-msg'>{refresh.error}</div>}
@@ -73,6 +74,7 @@ const DnsDomainEditForm = (props) => {
       type="number"
       label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttl.text'})}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
+      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
 
       {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
@@ -84,6 +86,7 @@ const DnsDomainEditForm = (props) => {
       type="number"
       label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtl.text'})}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
+      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
 
       {negative_ttl.touched && negative_ttl.error && <div className='error-msg'>{negative_ttl.error}</div>}
@@ -108,8 +111,8 @@ DnsDomainEditForm.displayName = 'DnsDomainEditForm'
 
 DnsDomainEditForm.propTypes = {
   edit: React.PropTypes.bool,
-  fields: React.PropTypes.object.isRequired,
   fetching: React.PropTypes.bool,
+  fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
