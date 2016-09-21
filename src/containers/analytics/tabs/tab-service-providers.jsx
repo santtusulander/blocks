@@ -55,6 +55,7 @@ class AnalyticsTabServiceProviders extends React.Component {
         fetching={this.props.fetching}
         stats={this.props.serviceProviders}
         serviceProviders={this.props.allServiceProviders}
+        serviceProviderFilter={this.props.filters.get('serviceProviders')}
       />
     )
   }

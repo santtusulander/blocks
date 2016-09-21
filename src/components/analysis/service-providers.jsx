@@ -23,6 +23,7 @@ class AnalysisServiceProviders extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
+    this.isProviderInFilter = this.isProviderInFilter.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -92,12 +93,22 @@ class AnalysisServiceProviders extends React.Component {
     return serviceProvider ? serviceProvider.get('name') : `ID: ${id}`
   }
 
+  /**
+   * Return true if the provider has been selected in the filter dropdown,
+   * or nothing has been selected in the filter dropdown.
+   */
+  isProviderInFilter(provider) {
+    const providerId = Number(provider.get('sp_account'))
+    const isProviderInFilter = this.props.serviceProviderFilter.includes(providerId)
+    return isProviderInFilter || !this.props.serviceProviderFilter.size
+  }
+
   render() {
     const month = moment().format('MMMM YYYY')
     const lookUpTable = this.lookUpTableForServiceProviderNames(this.props.serviceProviders)
 
-    const providers = this.props.stats.map((provider, i) => {
-      return Immutable.fromJS({
+    const providers = this.props.stats.reduce((list, provider, i) => {
+      const providerRecord = Immutable.fromJS({
         group: this.nameForServiceProvider(provider, lookUpTable),
         groupIndex: i,
         data: [
@@ -107,18 +118,33 @@ class AnalysisServiceProviders extends React.Component {
           provider.getIn(['https','net_off_bytes'], 0)
         ]
       })
-    })
+
+      if (this.isProviderInFilter(provider)) {
+        return list.push(providerRecord);
+      } else {
+        return list;
+      }
+
+    }, Immutable.List())
+
+
     const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
-      byCountry = byCountry.push(...provider.get('countries').map(country => {
+      const countryRecord = provider.get('countries').map(country => {
         return Immutable.Map({
           provider: this.nameForServiceProvider(provider, lookUpTable),
           country: country.get('name'),
           bytes: country.get('bytes'),
           percent_total: country.get('percent_total')
         })
-      }))
-      return byCountry
+      })
+
+      if (this.isProviderInFilter(provider)) {
+        return byCountry.push(...countryRecord);
+      } else {
+        return byCountry;
+      }
     }, Immutable.List())
+
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -181,10 +207,12 @@ class AnalysisServiceProviders extends React.Component {
 AnalysisServiceProviders.displayName = 'AnalysisServiceProviders'
 AnalysisServiceProviders.propTypes = {
   fetching: React.PropTypes.bool,
+  serviceProviderFilter: React.PropTypes.instanceOf(Immutable.List),
   serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisServiceProviders.defaultProps = {
+  serviceProviderFilter: Immutable.List(),
   serviceProviders: Immutable.List(),
   stats: Immutable.List()
 }
