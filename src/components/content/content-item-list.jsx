@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import classNames from 'classnames'
 
 import { Link } from 'react-router'
 import AnalysisByTime from '../analysis/by-time'
@@ -55,10 +56,15 @@ class ContentItemList extends React.Component {
         xAxisFormatter: false
       })
     }
+    const link = this.props.disableLinkTo ? '' : this.props.linkTo
+    const onClick = this.props.disableLinkTo ? e => e.preventDefault() : () => null
     return (
       <div className="content-item-list">
         <div className="content-item-list-section section-lg">
-          <Link className="content-item-list-link" to={this.props.linkTo}>
+          <Link
+            className={classNames('content-item-list-link', {'disabled': this.props.disableLinkTo})}
+            to={link}
+            onClick={onClick}>
             <div className="content-item-details">
               <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
               {/*
@@ -91,7 +97,10 @@ class ContentItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <Link className="content-item-list-link" to={this.props.linkTo}>
+        <Link
+          className={classNames('content-item-list-link', {'disabled': this.props.disableLinkTo})}
+          to={link}
+          onClick={onClick}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
               <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{this.props.maxTransfer}</b></p>

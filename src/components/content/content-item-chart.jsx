@@ -4,6 +4,7 @@ import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
+import classNames from 'classnames'
 
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
@@ -149,6 +150,7 @@ class ContentItemChart extends React.Component {
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
+    const onClick = this.props.disableLinkTo ? e => e.preventDefault() : () => null
     const activeSlice = this.state.activeSlice
     if(activeSlice) {
       avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
@@ -178,7 +180,9 @@ class ContentItemChart extends React.Component {
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <Link className="content-item-chart-link" to={link}>
+          <Link className={classNames('content-item-chart-link', {'disabled': this.props.disableLinkTo})}
+            to={this.props.disableLinkTo ? '' : link}
+            onClick={onClick}>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
