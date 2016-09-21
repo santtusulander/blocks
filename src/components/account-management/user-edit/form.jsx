@@ -8,12 +8,11 @@ import {
   Col
 } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
-import CheckboxArray from '../../checkboxes.jsx'
 import SelectWrapper from '../../select-wrapper.jsx'
 
 import IconEye from '../../icons/icon-eye.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 
 let errors = {}
 const validate = (values) => {
@@ -61,7 +60,8 @@ class UserEditForm extends React.Component {
         last_name,
         password,
         phone_number,
-        groups
+        groups,
+        role
       }
     } = this.props
 
@@ -69,7 +69,8 @@ class UserEditForm extends React.Component {
       first_name: first_name.value,
       last_name: last_name.value,
       phone_number: phone_number.value,
-      group_id: groups.value
+      group_id: groups.value,
+      roles: [ role.value ]
     }
 
     if(password && password.value.length !== 0) {
@@ -99,10 +100,8 @@ class UserEditForm extends React.Component {
         password,
         confirm,
         phone_number,
-        groups,
         role
       },
-      groupOptions,
       roleOptions,
       onCancel
     } = this.props
@@ -205,6 +204,7 @@ class UserEditForm extends React.Component {
           <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
           <SelectWrapper
             {...role}
+            numericValues={true}
             className="input-select"
             value={role.value}
             options={roleOptions}
@@ -236,6 +236,7 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   groupOptions: PropTypes.array,
+  intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   roleOptions: PropTypes.array
