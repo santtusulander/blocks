@@ -47,8 +47,8 @@ describe('UI Module', () => {
   });
 
   it('should handle notification change', () => {
-    const newState = notificationChanged(state, { payload: 'foobar' });
-    expect(newState.get('notification')).toBe('foobar');
+    const newState = notificationChanged(state, { payload: 'test' });
+    expect(newState.get('notification')).toBe('test');
   });
 
   it('should handle on/off net chart type change in analysis', () => {
