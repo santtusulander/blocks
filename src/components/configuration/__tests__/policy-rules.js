@@ -4,8 +4,8 @@ import { shallow, mount } from 'enzyme'
 
 jest.unmock('../../confirmation')
 jest.unmock('../policy-rules')
-jest.unmock('../../../components/action-buttons')
 jest.unmock('../../../util/policy-config')
+jest.unmock('../../../components/action-buttons')
 jest.unmock('../../../components/icon')
 jest.unmock('../../../components/icons/icon-edit')
 jest.unmock('../../../components/icons/icon-trash')
@@ -153,23 +153,4 @@ describe('ConfigurationPolicyRules', () => {
     expect(policyRules.state().request_policy).toBe(null);
   })
 
-  it('should activate a policy rule', () => {
-
-    const activateRule = e => jest.fn()
-
-    const policyRules = subject({
-      requestPolicies,
-      responsePolicies,
-      activateRule
-    })
-
-    const btn = policyRules.find('tbody #edit-button').at(0)
-    console.log(btn.text());
-    btn.simulate('click')
-    console.log(activateRule());
-    // expect(activateRule.mock.calls.length).toBe(1)
-    // expect(activateRule.mock.calls[0][0][0]).toBe('request_policy')
-    // expect(activateRule.mock.calls[0][0][1]).toBe('policy_rules')
-    // expect(activateRule.mock.calls[0][0][2]).toBe(0)
-  })
 })
