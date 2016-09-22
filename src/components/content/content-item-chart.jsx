@@ -321,6 +321,8 @@ class ContentItemChart extends React.Component {
   }
 }
 
+// NOTE: this is temporary for the 1.0 release to disable
+// drilling down into the property level for SP accounts
 const LinkWrapper = props => {
   if(props.disableLinkTo) {
     return <div>{props.children}</div>

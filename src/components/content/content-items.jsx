@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
+import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import { getContentUrl } from '../../util/routes'
 
@@ -296,7 +297,7 @@ class ContentItems extends React.Component {
                   const itemProps = {
                     id: id,
                     linkTo: this.props.nextPageURLBuilder(id),
-                    disableLinkTo: activeAccount.getIn(['provider_type']) === 2,
+                    disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
                       this.editItem(id)
