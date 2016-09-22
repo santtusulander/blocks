@@ -19,6 +19,8 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
 
+import { getUrl } from '../util/routes.js'
+
 import {
   UPLOAD_CERTIFICATE,
   EDIT_CERTIFICATE,
@@ -96,6 +98,7 @@ export class Security extends React.Component {
       activeCertificates,
       activeModal,
       fetchAccount,
+      params,
       onDelete,
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
@@ -122,12 +125,20 @@ export class Security extends React.Component {
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
 
+    const activeGroup = groups.find(obj => obj.get('id') === Number(params.group))
+
+    const itemSelectorFunc = (...params) => {
+      this.props.router.push(getUrl('/security', ...params))
+    }
+
     return (
       <Content>
         <SecurityPageHeader
           params={this.props.params}
           accounts={accounts}
           activeAccount={activeAccount.get('name')}
+          activeGroup={activeGroup ? activeGroup.get('name') : null}
+          itemSelectorFunc={itemSelectorFunc}
           fetchAccount={fetchAccount}/>
          {/* ----- Not in 0.8.1* ----- */}
          {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
@@ -152,9 +163,11 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
+  router: React.PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
   toDelete: PropTypes.instanceOf(Map),
@@ -195,4 +208,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Security)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Security))
