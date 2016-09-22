@@ -20,8 +20,11 @@ class AnalyticsTabServiceProviders extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+      this.props.filters.get('onOffNet') !== nextProps.filters.get('onOffNet') ||
+      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')
+    ) {
       this.fetchData(
         nextProps.params,
         nextProps.filters,
@@ -56,6 +59,8 @@ class AnalyticsTabServiceProviders extends React.Component {
         stats={this.props.serviceProviders}
         serviceProviders={this.props.allServiceProviders}
         serviceProviderFilter={this.props.filters.get('serviceProviders')}
+        onOffFilter={this.props.filters.get('onOffNet')}
+        serviceTypes={this.props.filters.get('serviceTypes')}
       />
     )
   }

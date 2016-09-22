@@ -106,20 +106,29 @@ class AnalysisServiceProviders extends React.Component {
   render() {
     const month = moment().format('MMMM YYYY')
     const lookUpTable = this.lookUpTableForServiceProviderNames(this.props.serviceProviders)
+    const isHttp = this.props.serviceTypes.includes('http')
+    const isHttps = this.props.serviceTypes.includes('https')
+    const isOnNet = this.props.onOffFilter.includes('on-net')
+    const isOffNet = this.props.onOffFilter.includes('off-net')
 
     const providers = this.props.stats.reduce((list, provider, i) => {
+      let data = [];
+
+      isHttp && isOnNet && data.push(provider.getIn(['http','net_on_bytes'], 0))
+      isHttps && isOnNet && data.push(provider.getIn(['https','net_on_bytes'], 0))
+      isHttp && isOffNet && data.push(provider.getIn(['http','net_off_bytes'], 0))
+      isHttps && isOffNet && data.push(provider.getIn(['https','net_off_bytes'], 0))
+
       const providerRecord = Immutable.fromJS({
         group: this.nameForServiceProvider(provider, lookUpTable),
         groupIndex: i,
-        data: [
-          provider.getIn(['http','net_on_bytes'], 0),
-          provider.getIn(['https','net_on_bytes'], 0),
-          provider.getIn(['http','net_off_bytes'], 0),
-          provider.getIn(['https','net_off_bytes'], 0)
-        ]
+        data: data
       })
 
-      if (this.isProviderInFilter(provider)) {
+      // Only show the data for this provider if it is selected in the filter
+      // and there is data for the provider after taking the on/off net and
+      // service type filters into account.
+      if (this.isProviderInFilter(provider) && data.length && data.some(val => val > 0)) {
         return list.push(providerRecord);
       } else {
         return list;
@@ -207,13 +216,17 @@ class AnalysisServiceProviders extends React.Component {
 AnalysisServiceProviders.displayName = 'AnalysisServiceProviders'
 AnalysisServiceProviders.propTypes = {
   fetching: React.PropTypes.bool,
+  onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   serviceProviderFilter: React.PropTypes.instanceOf(Immutable.List),
   serviceProviders: React.PropTypes.instanceOf(Immutable.List),
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisServiceProviders.defaultProps = {
+  onOffFilter: Immutable.List(),
   serviceProviderFilter: Immutable.List(),
   serviceProviders: Immutable.List(),
+  serviceTypes: Immutable.List(),
   stats: Immutable.List()
 }
 
