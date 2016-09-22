@@ -37,5 +37,6 @@ export const accountSelectors = multireducer({
   configuration: accountSelector,
   propertySummary: accountSelector,
   content: accountSelector,
+  security: accountSelector,
   analytics: accountSelector
 })
