@@ -72,10 +72,10 @@ class AnalysisURLList extends React.Component {
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="status">
+              <TableSorter {...sorterProps} column="status_code" width="1%">
                 <FormattedMessage id="portal.analytics.urlList.status.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="url">
+              <TableSorter {...sorterProps} column="url" textAlign="left" width="59%">
                 <FormattedMessage id="portal.analytics.urlList.url.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="bytes" width="20%">
@@ -93,7 +93,7 @@ class AnalysisURLList extends React.Component {
               return (
                 <tr key={i}>
                   <td>{url.get('status_code')}</td>
-                  <td>{url.get('url')}</td>
+                  <td className="text-left">{url.get('url')}</td>
                   <td>
                     {formatBytes(url.get('bytes'))}
                     <div className="table-percentage-line">

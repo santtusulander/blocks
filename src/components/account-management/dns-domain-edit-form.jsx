@@ -60,7 +60,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...refresh}
       type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refreshPlaceholder.text'})}
       addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
@@ -72,7 +72,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...ttl}
       type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttl.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttl.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
       addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
@@ -84,7 +84,7 @@ const DnsDomainEditForm = (props) => {
       <Input
         {...negative_ttl}
       type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtl.text'})}
+      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtl.text'}) + ' *'}
       placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
       addonAfter={<FormattedMessage id="portal.units.seconds"/>}
       />
@@ -93,7 +93,8 @@ const DnsDomainEditForm = (props) => {
 
       <ButtonToolbar className="text-right extra-margin-top">
         {props.edit &&
-        <Button bsStyle="danger" className="pull-left" onClick={() => props.onDelete(props.fields.name.value)}>
+        <Button disabled={fetching} bsStyle="danger" className="pull-left"
+          onClick={() => props.onDelete(props.fields.name.value)}>
           <FormattedMessage id="portal.button.delete"/>
         </Button>
           }
