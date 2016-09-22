@@ -92,7 +92,6 @@ class AccountManagementAccountDetails extends React.Component {
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
         stayButton: this.props.uiActions.hideInfoDialog,
         continueButton: () => {
-          //this.leavePage()
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()
