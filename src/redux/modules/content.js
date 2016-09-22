@@ -22,7 +22,7 @@ export const emptyContent = Immutable.Map({
   ]),
   properties: Immutable.fromJS([
     {
-      "account_id": 1, "group_id": 1, "property": "www.foobar.com",
+      "account_id": 1, "group_id": 1, "property": "www.test.com",
       "last_edited": 1451606200, "last_editor": "Jenny Steele",
       "status": "production", "active_version": "Version Name"
     },
