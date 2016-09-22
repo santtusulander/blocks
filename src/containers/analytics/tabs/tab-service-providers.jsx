@@ -42,14 +42,10 @@ class AnalyticsTabServiceProviders extends React.Component {
     }
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
-    const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
+    const queryOpts = Object.assign({}, fetchOpts)
+    queryOpts.granularity = 'day'
 
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-
-    this.props.trafficActions.fetchServiceProviders(onOffOpts)
+    this.props.trafficActions.fetchServiceProviders(queryOpts)
   }
 
   render(){
