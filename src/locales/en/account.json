@@ -30,5 +30,6 @@
 
   "portal.account.domainForm.validation.mailbox": "Mailbox should be entered as admin.example.com.",
   "portal.account.domainForm.validation.domainName": "Domain Name is invalid",
-  "portal.account.domainForm.validation.nameServer": "Nameserver is invalid"
+  "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
+  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required"
 }

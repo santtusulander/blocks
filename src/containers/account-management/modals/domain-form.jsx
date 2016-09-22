@@ -27,7 +27,7 @@ const validate = fields => {
   // Domain Name (FQDN - ends with a dot). If the record points to
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
-  const { ttl, negative_ttl, email_addr, name, name_server } = fields
+  const { ttl, negative_ttl, email_addr, name, name_server, refresh } = fields
   const maxTtl = 2147483647;
   const notValidNameserver = !(new RegExp(/^([a-zA-Z0-9*]([a-zA-Z0-9-*]*[a-zA-Z0-9*]+)?\.)+$/).test(name_server))
   const notValidDomainName = !(new RegExp(/^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?\.)?([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]+)\.([a-zA-Z]{2,}(\.[a-zA-Z]{2,6})?)$/).test(name))
@@ -46,14 +46,30 @@ const validate = fields => {
       condition: notValidMailbox,
       errorText: <FormattedMessage id='portal.account.domainForm.validation.mailbox'/>
     },
-    ttl: {
-      condition: parseInt(ttl) > maxTtl,
-      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+    refresh: {
+      condition: isNaN(refresh),
+      errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
     },
-    negative_ttl: {
-      condition: parseInt(negative_ttl) > maxTtl,
-      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
-    }
+    ttl: [
+      {
+        condition: isNaN(ttl),
+        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
+      },
+      {
+        condition: parseInt(ttl) > maxTtl,
+        errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+      }
+    ],
+    negative_ttl: [
+      {
+        condition: isNaN(negative_ttl),
+        errorText:<FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
+      },
+      {
+        condition: parseInt(negative_ttl) > maxTtl,
+        errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+      }
+    ]
   }
   const requiredTexts = {
     name: <FormattedMessage id="portal.accountManagement.dns.form.validation.name.text"/>,
