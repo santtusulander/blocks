@@ -4,6 +4,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 
 import AnalysisStackedByGroup from './stacked-by-group'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
@@ -114,10 +115,14 @@ class AnalysisServiceProviders extends React.Component {
     const providers = this.props.stats.reduce((list, provider, i) => {
       let data = [];
 
-      isHttp && isOnNet && data.push(provider.getIn(['http','net_on_bytes'], 0))
-      isHttps && isOnNet && data.push(provider.getIn(['https','net_on_bytes'], 0))
-      isHttp && isOffNet && data.push(provider.getIn(['http','net_off_bytes'], 0))
-      isHttps && isOffNet && data.push(provider.getIn(['https','net_off_bytes'], 0))
+      if (isHttp && isOnNet)
+        data[0] = (provider.getIn(['http','net_on_bytes'], 0))
+      if (isHttps && isOnNet)
+        data[1] = (provider.getIn(['https','net_on_bytes'], 0))
+      if (isHttp && isOffNet)
+        data[2] = (provider.getIn(['http','net_off_bytes'], 0))
+      if (isHttps && isOffNet)
+        data[3] = (provider.getIn(['https','net_off_bytes'], 0))
 
       const providerRecord = Immutable.fromJS({
         group: this.nameForServiceProvider(provider, lookUpTable),
@@ -163,51 +168,54 @@ class AnalysisServiceProviders extends React.Component {
     return (
       <div className="analysis-service-providers">
         <h3><FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/></h3>
-        <div ref="stacksHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> :
-            <AnalysisStackedByGroup padding={40}
-              chartLabel={`${month}, Month to Date`}
-              datasets={providers}
-              datasetLabels={[
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttp.label"/>,
-                <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttps.label"/>
-              ]}
-              width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
-          }
+        {this.props.fetching ?
+        <LoadingSpinner /> :
+        <div>
+          <div ref="stacksHolder">
+              <AnalysisStackedByGroup padding={40}
+                chartLabel={`${month}, Month to Date`}
+                datasets={providers}
+                datasetLabels={[
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttp.label"/>,
+                  <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttps.label"/>
+                ]}
+                width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+
+          </div>
+          <table className="table table-striped table-analysis extra-margin-top">
+            <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="provider">
+                  Service Provider
+                </TableSorter>
+                <TableSorter {...sorterProps} column="country">
+                  Country
+                </TableSorter>
+                <TableSorter {...sorterProps} column="bytes">
+                  Traffic
+                </TableSorter>
+                <TableSorter {...sorterProps} column="percent_total">
+                  % of Traffic
+                </TableSorter>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedStats.map((country, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{country.get('provider')}</td>
+                    <td>{country.get('country')}</td>
+                    <td>{formatBytes(country.get('bytes'))}</td>
+                    <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
-        {<table className="table table-striped table-analysis extra-margin-top">
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="provider">
-                Service Provider
-              </TableSorter>
-              <TableSorter {...sorterProps} column="country">
-                Country
-              </TableSorter>
-              <TableSorter {...sorterProps} column="bytes">
-                Traffic
-              </TableSorter>
-              <TableSorter {...sorterProps} column="percent_total">
-                % of Traffic
-              </TableSorter>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStats.map((country, i) => {
-              return (
-                <tr key={i}>
-                  <td>{country.get('provider')}</td>
-                  <td>{country.get('country')}</td>
-                  <td>{formatBytes(country.get('bytes'))}</td>
-                  <td>{numeral(country.get('percent_total')).format('0%')}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>}
+        }
       </div>
     )
   }

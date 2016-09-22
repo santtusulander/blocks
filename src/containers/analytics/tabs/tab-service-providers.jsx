@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisServiceProviders from '../../../components/analysis/service-providers.jsx'
 
@@ -45,7 +44,9 @@ class AnalyticsTabServiceProviders extends React.Component {
     const queryOpts = Object.assign({}, fetchOpts)
     queryOpts.granularity = 'day'
 
+    this.props.trafficActions.startFetching()
     this.props.trafficActions.fetchServiceProviders(queryOpts)
+      .then(this.props.trafficActions.finishFetching, this.props.trafficActions.finishFetching)
   }
 
   render(){
