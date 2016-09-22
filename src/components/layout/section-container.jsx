@@ -21,4 +21,4 @@ SectionContainer.propTypes = {
   className: React.PropTypes.string
 };
 
-module.exports = SectionContainer
+export default SectionContainer
