@@ -284,6 +284,9 @@ export class Configuration extends React.Component {
           <NavItem eventKey={'policies'}>
             <FormattedMessage id="portal.configuration.policies.text"/>
           </NavItem>
+          <NavItem eventKey={'security'}>
+            <FormattedMessage id="portal.configuration.security.text"/>
+          </NavItem>
           {/* Hide in 1.0 – UDNP-1406
           <NavItem eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
