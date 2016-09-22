@@ -130,8 +130,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.ofNetHttp.label': 'Of-Net HTTP',
-  'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
+  'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
+  'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
@@ -215,7 +215,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.dateRangeTo.title': 'To',
   'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',
   'portal.analysis.filters.onOffNet.title': 'On-Net/Off-Net',
-  'portal.analysis.filters.pop.title': 'POPs',
   'portal.analysis.filters.property.title': 'Properties',
   'portal.analysis.filters.recordType.title': 'Show as',
   'portal.analysis.filters.responseCode.title': 'Response Code',
@@ -600,7 +599,8 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
-  'portal.groups.accountContentSummary.text': 'ACCOUNT CONTENT SUMMARY',
+  'portal.groups.accountSummary.text': 'Account Summary',
+  'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
@@ -609,6 +609,8 @@ const TRANSLATED_MESSAGES = {
   'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
+  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
+  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 

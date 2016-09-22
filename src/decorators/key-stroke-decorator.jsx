@@ -6,6 +6,8 @@ export default function(WrappedModal) {
       super(props)
       this.submitCalled = false
       this.handleKeyDown = this.handleKeyDown.bind(this)
+      this.submit = this.submit.bind(this)
+
     }
 
     componentWillMount() {
@@ -16,14 +18,22 @@ export default function(WrappedModal) {
       document.removeEventListener('keydown', this.handleKeyDown)
     }
 
+    submit() {
+      const { submit, cancel, invalid } = this.props
+      if (!submit) {
+        return cancel()
+      }
+      if (!this.submitCalled && !invalid) {
+        submit()
+        this.submitCalled = true
+      }
+    }
+
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 13:
           e.preventDefault()
-          if (!this.props.invalid && !this.submitCalled) {
-            this.props.submit()
-            this.submitCalled = true
-          }
+          this.submit()
           break
         case 27:
           this.props.cancel()
@@ -32,7 +42,9 @@ export default function(WrappedModal) {
     }
 
     render() {
-      return (<WrappedModal {...this.props}/>)
+      let props = Object.assign({}, this.props)
+      delete props.submit
+      return (<WrappedModal submit={this.submit} {...props}/>)
     }
   }
 
