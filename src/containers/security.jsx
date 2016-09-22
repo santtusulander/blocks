@@ -125,7 +125,6 @@ export class Security extends React.Component {
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? <FormattedMessage id="portal.security.editCertificate.text"/> : <FormattedMessage id="portal.security.uploadCertificate.text"/>,
       activeAccount,
-      accounts,
       fetchAccount,
       toggleModal
     }
