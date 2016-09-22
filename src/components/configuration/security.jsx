@@ -62,30 +62,29 @@ class ConfigurationSecurity extends React.Component {
     return (
       <div className="configuration-security">
         <h3><FormattedMessage id="portal.policy.edit.security.text"/></h3>
+        <Row className="form-group">
+          <Col xs={3} className="toggle-label">
+            <FormattedMessage id="portal.configuration.security.enable.text"/>
+          </Col>
+          <Col xs={9}>
+            <Toggle
+              value={sslEnabled}
+              changeValue={this.toggleHTTPS()}
+            />
+          </Col>
+        </Row>
+        {sslEnabled === true &&
           <Row className="form-group">
-            <Col lg={4} xs={6} className="toggle-label">
-              <FormattedMessage id="portal.configuration.security.enable.text"/>
+            <Col xs={3} className="toggle-label">
+              <FormattedMessage id="portal.configuration.security.sslCertificate.text"/>
             </Col>
-            <Col lg={8} xs={6}>
-              <Toggle
-                value={sslEnabled}
-                changeValue={this.toggleHTTPS()}
-              />
+            <Col xs={4}>
+              <Select className="input-select"
+                onSelect={this.setSSLCertificate()}
+                value={sslCertificateId}
+                options={sslCertificateOptions}/>
             </Col>
-          </Row>
-          {sslEnabled === true ?
-            <Row className="form-group">
-              <Col lg={4} xs={6} className="toggle-label">
-                <FormattedMessage id="portal.configuration.security.sslCertificate.text"/>
-              </Col>
-              <Col lg={8} xs={6}>
-                <Select className="input-select"
-                  onSelect={this.setSSLCertificate()}
-                  value={sslCertificateId}
-                  options={sslCertificateOptions}/>
-              </Col>
-            </Row>
-          : null}
+          </Row>}
       </div>
     )
   }
