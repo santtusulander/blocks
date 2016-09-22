@@ -18,7 +18,6 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-// import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import ModalWindow from '../../components/modal'
@@ -280,7 +279,6 @@ export class AccountManagement extends Component {
       //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
-    /* TODO: add modal descriptions */
     let deleteModalProps = null
     switch(accountManagementModal) {
       case DELETE_ACCOUNT:
