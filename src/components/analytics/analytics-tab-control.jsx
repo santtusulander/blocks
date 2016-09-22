@@ -52,6 +52,7 @@ const AnalyticsTabControl = (props) => {
     {
       key: 'playback-demo',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO,
       hideHierarchy: true
     }
   ]

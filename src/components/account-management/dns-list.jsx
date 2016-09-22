@@ -19,7 +19,16 @@ class DNSList extends Component {
   }
 
   render() {
-    const { onDeleteEntry, onEditEntry, onAddEntry, records, searchValue, searchFunc, intl } = this.props
+    const {
+      onDeleteEntry,
+      onEditEntry,
+      onAddEntry,
+      records,
+      searchValue,
+      searchFunc,
+      intl,
+      hiddenRecordCount,
+      visibleRecordCount } = this.props
     let tables = []
     let recordsByType = {}
 
@@ -70,7 +79,7 @@ class DNSList extends Component {
       <PageContainer>
         <h3 className="account-management-header">
           <span id="record-amount-label">
-            {`${records.length} Records`}
+            {visibleRecordCount}{hiddenRecordCount}
           </span>
           <div className='dns-filter-wrapper'>
             <Input
@@ -130,7 +139,7 @@ export class SortableTable extends Component {
             <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
-            <th width="8%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>
@@ -144,13 +153,15 @@ export class SortableTable extends Component {
 SortableTable.propTypes = { content: PropTypes.func }
 
 DNSList.propTypes = {
+  hiddenRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   intl: PropTypes.object,
   onAddEntry: PropTypes.func,
   onDeleteEntry: PropTypes.func,
   onEditEntry: PropTypes.func,
   records: PropTypes.array,
   searchFunc: PropTypes.func,
-  searchValue: PropTypes.string
+  searchValue: PropTypes.string,
+  visibleRecordCount: PropTypes.object
 }
 
 export default injectIntl(DNSList)

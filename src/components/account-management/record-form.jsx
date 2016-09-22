@@ -22,7 +22,7 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
         disabled={edit}
         type="text"
         id='name-field'
-        label={intl.formatMessage({id: 'portal.account.recordForm.hostName.label'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.hostName.label'}) + ' *'}
         placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
         addonAfter={`.${domain}`}
         className='input-narrow host-name-input'/>}
@@ -33,7 +33,7 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
         id='value-field'
         disabled={edit}
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.address.label'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.address.label'}) + ' *'}
         placeholder={intl.formatMessage({id: 'portal.account.recordForm.address.placeholder'})}/>}
     {value.touched && value.error && <div className='error-msg' id='value-err'>{value.error}</div>}
     {shouldShowField('prio') &&
@@ -52,7 +52,7 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
         {...ttl}
         id='ttl-field'
         type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.ttl.label'})}
+        label={intl.formatMessage({id: 'portal.account.recordForm.ttl.label'}) + ' *'}
         placeholder={intl.formatMessage({id: 'portal.account.recordForm.ttl.placeholder'})}
         className='input-narrow ttl-value-input'
         addonAfter='seconds'/>}

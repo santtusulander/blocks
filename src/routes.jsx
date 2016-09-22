@@ -50,6 +50,7 @@ import SupportTabTools from './containers/support/tabs/tools'
 import SupportTabDocumentation from './containers/support/tabs/documentation'
 import StarburstHelp from './containers/starburst-help'
 import Styleguide from './containers/styleguide'
+import User from './containers/user'
 
 import ContentTransition from './transitions/content'
 
@@ -83,7 +84,7 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
-  [null, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
+  [PERMISSIONS.VIEW_PLAYBACK_DEMO, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
 ]
 
 /* helper for creating Analytics Tab-Routes */
@@ -230,6 +231,13 @@ export const getRoutes = store => {
           <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
           <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
         </Route>
+      </Route>
+
+      {/* User preferences - routes */}
+      <Route path={routes.user}>
+        <IndexRedirect to={getRoute('userBrand', {brand: 'udn'})} />
+        <Route path={routes.userBrand} component={User}/>
+        <Route path={routes.userAccount} component={User}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />

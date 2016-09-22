@@ -1,40 +1,45 @@
+jest.unmock('../cache-key-query-string.jsx')
+
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
-import { Map } from 'immutable'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../cache-key-query-string.jsx')
-const CacheKeyQueryString = require('../cache-key-query-string.jsx')
-
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
+import CacheKeyQueryString from '../cache-key-query-string.jsx'
 
 describe('CacheKeyQueryString', () => {
+  let subject = null
+  let props = {}
+  let changeValue = null
+  let close = null
+  beforeEach(() => {
+    changeValue = jest.fn()
+    close = jest.fn()
+    subject = () => {
+      props = {
+        changeValue,
+        close
+      }
+      return shallow(<CacheKeyQueryString {...props}/>)
+    }
+  })
   it('should exist', () => {
-    let cacheKeyQueryString = TestUtils.renderIntoDocument(
-      <CacheKeyQueryString set={Map()} intl={intlMaker()} />
-    );
-    expect(TestUtils.isCompositeComponent(cacheKeyQueryString)).toBeTruthy();
+    expect(subject().length).toBe(1)
   })
 
-  it('should update the parameters as changes happen', () => {
-    let cacheKeyQueryString = TestUtils.renderIntoDocument(
-      <CacheKeyQueryString set={Map()} intl={intlMaker()}/>
-    )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cacheKeyQueryString, 'input')
-    inputs[0].value = 'new'
-    TestUtils.Simulate.change(inputs[0])
-    expect(cacheKeyQueryString.state.queryArgs.get(0)).toEqual('new')
+  it('should handle save-button click', () => {
+    subject().find('#save-button').simulate('click')
+    expect(changeValue.mock.calls.length).toBe(1)
+    expect(close.mock.calls.length).toBe(1)
   })
 
-  it('should handle select changes', () => {
-    let cacheKeyQueryString = TestUtils.renderIntoDocument(
-      <CacheKeyQueryString set={Map()} intl={intlMaker()} />
-    )
-    expect(cacheKeyQueryString.state.activeFilter).toBe('ignore_all_query_parameters')
-    cacheKeyQueryString.handleSelectChange('foo')
-    expect(cacheKeyQueryString.state.activeFilter).toBe('foo')
+  it('should handle close-button click', () => {
+    subject().find('#close-button').simulate('click')
+    expect(close.mock.calls.length).toBe(1)
+  })
+
+  it('should set correct state', () => {
+    const component = subject()
+    component.instance().updateSet('aaa')
+    expect(component.state().updatedSet).toBe('aaa')
+
   })
 })

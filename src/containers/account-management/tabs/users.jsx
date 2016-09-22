@@ -167,6 +167,15 @@ export class AccountManagementAccountUsers extends React.Component {
     })
   }
 
+  getRoleOptions(roleMapping, props) {
+    return roleMapping
+      .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
+      .map(mapped_role => [
+        mapped_role.id,
+        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+      ])
+  }
+
   getInlineAddFields() {
     /**
      * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
@@ -175,12 +184,7 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
-    const roleOptions = ROLES_MAPPING
-      .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
@@ -369,11 +373,10 @@ export class AccountManagementAccountUsers extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
-    let roleOptions = ROLES_MAPPING.map(mapped_role => [
-      mapped_role.id,
-      this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-    ])
+
+    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
+
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
@@ -482,6 +485,7 @@ export class AccountManagementAccountUsers extends React.Component {
           <UserEditModal
             show={this.state.showEditModal}
             user={this.state.userToEdit}
+            accountType={this.props.account.get('provider_type')}
             groups={this.props.groups}
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}

@@ -1,10 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
+import { Link } from 'react-router'
 
 import Select from '../select'
 
-import { FormattedMessage } from 'react-intl'
+import IconUser from '../icons/icon-user.jsx'
 
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
   return (
@@ -13,6 +15,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
               onToggle={onToggle}>
       <Dropdown.Toggle className="btn-icon btn-round btn-user-menu"
                        noCaret={true} id="user-dropdown">
+        <IconUser/>
       </Dropdown.Toggle>
       <Dropdown.Menu className="dropdown-user-menu">
         <li>
@@ -49,6 +52,12 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
                   </div>]
                 ]}
               />
+            </li>
+
+            <li className="no-helper-header" >
+              <Link to={'/user'} onClick={onToggle}>
+                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
+              </Link>
             </li>
 
             <li className="bottom-item no-helper-header">

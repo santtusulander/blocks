@@ -33,6 +33,8 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_url'])
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_daily_cache_hit_rate'])
+permissionMapping[PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO] =
+  (role) => role.getIn(['permissions', 'ui', 'playback_demo'])
 
 // Misc Functionality
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =

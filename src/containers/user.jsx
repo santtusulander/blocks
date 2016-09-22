@@ -1,0 +1,123 @@
+import React, { PropTypes } from 'react'
+import { List, Map } from 'immutable'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { injectIntl } from 'react-intl';
+import { Button } from 'react-bootstrap'
+
+import * as uiActionCreators from '../redux/modules/ui'
+import * as userActionCreators from '../redux/modules/user'
+
+import { getRolesForUser } from '../util/helpers'
+
+import PageContainer from '../components/layout/page-container'
+import PageHeader from '../components/layout/page-header'
+import Content from '../components/layout/content'
+import UserEditForm from '../components/user/edit-form'
+
+
+export class User extends React.Component {
+  constructor(props) {
+    super (props);
+
+    this.state = {
+      savingPassword: false,
+      savingUser: false
+    }
+
+    this.notificationTimeout = null
+    this.saveUser = this.saveUser.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+  }
+
+  saveUser(user) {
+    this.setState({
+      savingPassword: user.password && true,
+      savingUser: !user.password && true
+    })
+    const message = user.password ?
+      this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})
+    : this.props.intl.formatMessage({id: 'portal.accountManagement.userUpdated.text'})
+    this.props.userActions.updateUser(this.props.currentUser.get('email'), user)
+      .then((response) => {
+        if (!response.error) {
+          this.showNotification(message)
+        } else {
+          this.props.uiActions.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+          })
+        }
+        this.setState({
+          savingPassword: false,
+          savingUser: false
+        })
+      }
+    )
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
+  }
+
+  render() {
+    const { currentUser, roles } = this.props;
+    const initialValues = currentUser ? {
+      email: currentUser.get('email'),
+      first_name: currentUser.get('first_name'),
+      last_name: currentUser.get('last_name'),
+      middle_name: currentUser.get('middle_name'),
+      phone_number: currentUser.get('phone_number'),
+      timezone: currentUser.get('timezone')
+    } : {}
+
+    return (
+      <Content>
+        <PageHeader pageSubTitle={getRolesForUser(currentUser, roles)[0][1]}>
+          <h1>{currentUser.get('first_name')} {currentUser.get('last_name')}</h1>
+        </PageHeader>
+        <PageContainer>
+          <UserEditForm
+            initialValues={initialValues}
+            onSave={this.saveUser}
+            savingPassword={this.state.savingPassword}
+            savingUser={this.state.savingUser}/>
+        </PageContainer>
+      </Content>
+    )
+  }
+}
+
+User.displayName = 'User'
+User.propTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  intl: PropTypes.object,
+  roles: PropTypes.instanceOf(List),
+  uiActions: PropTypes.object,
+  userActions: PropTypes.object
+}
+
+User.defaultProps = {
+  currentUser: Map(),
+  roles: List()
+}
+
+function mapStateToProps(state) {
+  return {
+    roles: state.roles.get('roles'),
+    currentUser: state.user.get('currentUser')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User));
