@@ -36,7 +36,7 @@ z+F8nHsPyCf5FDK0sI8ubSRGX0vi5vz0BlLDu2PcYK3ciRu7ivkfzYYj6oyv2bvE
 XSyrN2+B070c3cB91n15ww37wb/A3AseNQJb6+3OM/rH0yUkcV8e
 -----END RSA PRIVATE KEY-----`
 
-// self-signed certificate for widget.com
+// self-signed certificate for widgets3.com
 const certificate =
 `-----BEGIN CERTIFICATE-----
 MIIDbDCCAlQCCQDAUDSzQ9HDEDANBgkqhkiG9w0BAQUFADB4MQswCQYDVQQGEwJV
