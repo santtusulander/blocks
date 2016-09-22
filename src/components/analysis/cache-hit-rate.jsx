@@ -9,7 +9,6 @@ import SectionContainer from '../layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
-// import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
 import Select from '../select'
 
