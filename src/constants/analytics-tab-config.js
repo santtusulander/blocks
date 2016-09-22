@@ -15,12 +15,12 @@ export default Immutable.fromJS([
   },
   {
     key: 'on-off-net',
-    filters: ['date-range', 'on-off-net', 'service-provider'],
+    filters: ['date-range', 'on-off-net'],
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET
   },
   {
     key: 'service-providers',
-    filters: ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+    filters: ['date-range', 'service-provider', 'service-type', 'on-off-net'],
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
   },
   {

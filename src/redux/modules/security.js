@@ -153,10 +153,22 @@ export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, 
 
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
-  const groupRequestUrl = `${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`
-  return group ? axios.get(groupRequestUrl).then(response =>
-    response && response.data.map(cn => { return { group, cn, account } })) :
-    Promise.resolve([])
+  if (!account || !group) {
+    return Promise.resolve([])
+  }
+
+  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`)
+    .then(action => Promise.all(action.data.map(
+      cn => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
+    )))
+    .then(resp => resp.map(certificate => {
+      return {
+        group,
+        cn: certificate.data.cn,
+        title: certificate.data.title,
+        account
+      }
+    }))
 })
 
 export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
@@ -173,4 +185,3 @@ export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATE
 })
 
 export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)
-

@@ -4,7 +4,7 @@ import { fromJS } from 'immutable'
 import {shallow} from 'enzyme'
 
 jest.dontMock('../roles-list.jsx')
-jest.dontMock('../action-links.jsx')
+jest.dontMock('../../../components/action-buttons.jsx')
 jest.dontMock('../../table-sorter.jsx')
 jest.dontMock('../account-management-header.jsx')
 jest.dontMock('../../array-td/array-td.jsx')

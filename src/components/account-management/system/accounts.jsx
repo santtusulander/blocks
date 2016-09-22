@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 
 import PageContainer from '../../../components/layout/page-container'
 import IconAdd from '../../icons/icon-add'
-import ActionLinks from '../action-links'
+import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
@@ -21,6 +21,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CLOUD_PROVIDER,
   NAME_VALIDATION_REGEXP
 } from '../../../constants/account-management-options'
 
@@ -28,7 +29,7 @@ import { checkForErrors } from '../../../util/helpers'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
 
 class AccountList extends Component {
   constructor(props) {
@@ -209,12 +210,12 @@ class AccountList extends Component {
         <table className="table table-striped cell-text-left">
           <thead >
           <tr>
-            <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.list.accountName.title'/></TableSorter>
+            <TableSorter {...sorterProps} column="name" width="27%"><FormattedMessage id='portal.account.list.accountName.title'/></TableSorter>
             <TableSorter {...sorterProps} column="provider_type_label" width="15%"><FormattedMessage id='portal.account.list.type.title'/></TableSorter>
             <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
-            <TableSorter {...sorterProps} column="services" width="30%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
-            <th width="8%"/>
+            <TableSorter {...sorterProps} column="services" width="23%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
+            <th width="1%"/>
           </tr>
           </thead>
           <tbody>
@@ -234,8 +235,8 @@ class AccountList extends Component {
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
-                <td>
-                  <ActionLinks
+                <td className="nowrap-column">
+                  <ActionButtons
                     onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>

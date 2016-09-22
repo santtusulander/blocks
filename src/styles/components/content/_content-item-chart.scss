@@ -22,7 +22,6 @@
 // scss-lint:disable SelectorDepth
 .content-item-chart {
   position: relative;
-  cursor: pointer;
   border-radius: 50%;
 
   @include md {
@@ -259,47 +258,18 @@
     width: 45%;
     transform: translate(-50%, -100%);
 
-    .btn.btn-icon {
-      color: $silver-30;
-      background: linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
-      fill: $silver-30;
-      stroke: $silver-30;
+    .btn-icon {
+      width: 44px; // TODO: temporary until starburst scaling is removed
+      height: 44px; // TODO: temporary until starburst scaling is removed
 
-      .dark-theme & {
-        background: linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
-
-        &:hover,
-        &:focus,
-        &:active,
-        &.active {
-          color: $pale-blue;
-          fill: $pale-blue;
-          stroke: $pale-blue;
-        }
-      }
-
-      .light-theme & {
-        background: rgba($black, 0.25);
-
-        &:hover,
-        &:focus,
-        &:active,
-        &.active {
-          background: rgba($black, 0.15);
-        }
+      .icon {
+        width: 44px; // TODO: temporary until starburst scaling is removed
+        height: 44px; // TODO: temporary until starburst scaling is removed
       }
     }
 
     .btn-toolbar > .btn + .btn {
       margin-left: 12px;
-    }
-  }
-
-  .show-help {
-    margin-left: 15px;
-
-    @include md {
-      margin-left: 10px;
     }
   }
 }

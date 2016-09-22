@@ -39,20 +39,32 @@ const TRANSLATED_MESSAGES = {
   'portal.user.list.email.column.title': 'EMAIL',
   'portal.user.list.noUsers.text': 'No users',
 
+  'portal.user.edit.contact.text': 'Contact',
   'portal.user.edit.passwordDoNotMatch.text': 'Passwords do not match',
   'portal.user.edit.roleRequired.text': 'Role is required',
   'portal.user.edit.emailRequired.text': 'Email is required',
   'portal.user.edit.email.text': 'Email',
   'portal.user.edit.firstName.text': 'First Name',
+  'portal.user.edit.middleName.text': 'Middle Name',
   'portal.user.edit.lastName.text': 'Last Name',
+  'portal.user.edit.name.text': 'Name',
+  'portal.user.edit.password.text': 'Password',
   'portal.user.edit.phoneNumber.text': 'Phone Number',
+  'portal.user.edit.photo.text': 'Photo',
   'portal.user.edit.newPassword.text': 'New Password',
   'portal.user.edit.confirmNewPassword.text': 'Confirm New Password',
   'portal.user.edit.resetPassword.text': 'Reset Password',
   'portal.user.edit.role.text': 'Role',
+  'portal.user.edit.currentDate.text': 'Current Date',
+  'portal.user.edit.timezone.text': 'Timezone',
+  'portal.user.edit.addMiddleName.text': 'Add Middle Name',
+  'portal.user.edit.unsavedChanges.text': 'Profile has unsaved changes.',
 
   'portal.dnsRecord.delete.title': 'Delete Record?',
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
+
+  'portal.dnsDomain.delete.title': 'Delete Domain?',
+  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain will also delete all the records related to it.',
 
   'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
@@ -118,8 +130,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.ofNetHttp.label': 'Of-Net HTTP',
-  'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
+  'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
+  'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
@@ -203,7 +215,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.dateRangeTo.title': 'To',
   'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',
   'portal.analysis.filters.onOffNet.title': 'On-Net/Off-Net',
-  'portal.analysis.filters.pop.title': 'POPs',
   'portal.analysis.filters.property.title': 'Properties',
   'portal.analysis.filters.recordType.title': 'Show as',
   'portal.analysis.filters.responseCode.title': 'Response Code',
@@ -422,7 +433,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.queryString.text': 'Query String',
   'portal.policy.edit.policies.policyRules.text': 'Policy Rules',
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
-  'portal.policy.edit.editRule.editPolicy.text': 'Edit Policy',
+  'portal.policy.edit.editRule.editPolicy.text': 'Update Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
@@ -434,7 +445,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.rules.noRulesAdded.text': 'No policies rules have been added yet.',
   'portal.policy.edit.publishVersion.versionName.text': 'Version Name',
   'portal.policy.edit.publishVersion.publishTo.text': 'Publish to',
-  'portal.policy.edit.publishVersion.stagingPlatform.text': 'Staging Platform',
+  'portal.policy.edit.publishVersion.sandboxPlatform.text': 'Sandbox Platform',
   'portal.policy.edit.publishVersion.productionPlatform.text': 'Production Platform',
   'portal.policy.edit.security.text': 'Security',
   'portal.policy.edit.versions.text': 'Versions',
@@ -466,9 +477,11 @@ const TRANSLATED_MESSAGES = {
   'portal.header.configuration.text': 'Configuration',
   'portal.header.content.text': 'Content',
 
+  'portal.header.menu.theme.title': 'UI Theme',
   'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
   'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
   'portal.header.menu.logout.text': 'Logout',
+  'portal.header.menu.editProfile.text': 'Edit Profile',
 
   'portal.navigation.content.text': 'Content',
   'portal.navigation.analytics.text': 'Analytics',
@@ -521,6 +534,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.roles.text': 'ROLES',
   'portal.accountManagement.accoutnUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
+  'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
+  'portal.accountManagement.passwordUpdated.text': 'User password updated.',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
@@ -577,20 +592,25 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.last_month': 'Last Month',
   'portal.constants.date-ranges.this_week': 'This Week',
   'portal.constants.date-ranges.today': 'Today',
-  'portal.constants.date-ranges.yesterday': 'Last Month',
+  'portal.constants.date-ranges.yesterday': 'Yesterday',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
-  
+
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
-  'portal.groups.accountContentSummary.text': 'ACCOUNT CONTENT SUMMARY',
+  'portal.groups.accountSummary.text': 'Account Summary',
+  'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.login.login.text': 'Log In',
+  'portal.login.title': 'Login',
+  'portal.login.subtitle': 'Ericsson UDN Service',
+  'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
+  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
+  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
@@ -748,7 +768,8 @@ const TRANSLATED_MESSAGES = {
 
   'portal.loading.text': 'Loading...',
 
-  'portal.button.submitting': 'Submitting...',
+  'portal.button.add': 'Add',
+  'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',
@@ -762,6 +783,8 @@ const TRANSLATED_MESSAGES = {
   'portal.button.EDIT': 'EDIT',
   'portal.button.cancel': 'Cancel',
   'portal.button.CANCEL': 'CANCEL',
+  'portal.button.CHANGE': 'CHANGE',
+  'portal.button.CHANGING': 'CHANGING...',
   'portal.button.save': 'Save',
   'portal.button.send': 'Send',
   'portal.button.configure': 'Configure',
@@ -771,7 +794,6 @@ const TRANSLATED_MESSAGES = {
   'portal.button.publish': 'Publish',
   'portal.button.PUBLISHING': 'PUBLISHING...',
   'portal.button.saveAction': 'Save Action',
-  'portal.button.add': 'Add',
   'portal.button.yes': 'Yes',
   'portal.button.close': 'Close',
   'portal.button.reload': 'Reload',

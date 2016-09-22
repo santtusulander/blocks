@@ -9,10 +9,11 @@ var helpers               = require('./helpers');
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
 );
+const useSourceMap = () => (process.argv.indexOf('--source-map') !== -1)
 
 var development = Object.assign({}, {
   // debug: true,
-  devtool: 'source-map',
+  devtool: useSourceMap() ? 'eval-source-map' : 'eval',
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
@@ -45,6 +46,9 @@ var development = Object.assign({}, {
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/pdf/CP_User_Guide.pdf', to: 'assets/pdf'},
+      {from: 'src/assets/pdf/SP_User_Guide.pdf', to: 'assets/pdf'},
+      {from: 'src/assets/pdf/UDN_Admin_Guide.pdf', to: 'assets/pdf'},
       {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
     ]),
     new WebpackNotifierPlugin({

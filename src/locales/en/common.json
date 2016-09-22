@@ -1,3 +1,12 @@
 {
-  "portal.common.xxx": "value xxx"
+  "portal.common.button.cancel": "Cancel",
+  "portal.common.button.save": "Save",
+  "portal.common.button.saving": "Saving...",
+  "portal.common.button.add": "Add",
+  "portal.common.button.ok": "OK",
+  "portal.common.error.tokenExpire.title": "Session Expired",
+  "portal.common.error.tokenExpire.content": "Due to inactivity you have been logged out. To continue your session please resubmit your username and password.",
+  "portal.common.error.tokenExpire.button": "Return to Login",
+  "portal.common.error.unauthorized.title": "Unauthorized",
+  "portal.common.error.unauthorized.content": "You do not have permission to access information on this page."
 }

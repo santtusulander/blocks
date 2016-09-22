@@ -26,12 +26,12 @@ describe('DNS Module', () => {
 
   it('should handle startedFetching', () => {
     const newState = startedFetching(state)
-    expect(is(newState, state.set('loading', true))).toBeTruthy()
+    expect(is(newState, state.set('fetching', true))).toBeTruthy()
   })
 
   it('should handle stoppedFetching', () => {
     const newState = stoppedFetching(state)
-    expect(is(newState, state.set('loading', false))).toBeTruthy()
+    expect(is(newState, state.set('fetching', false))).toBeTruthy()
   })
 
   it('should handle createDomainSuccess', () => {
@@ -84,7 +84,8 @@ describe('DNS Module', () => {
     const newState = fetchedAllDomainsSuccess(state, { payload: [ 'qq', 'ww', 'ee' ] })
     const expectedState = state.merge({
       domains: fromJS(newDomains.map(domain => ({ id: domain }))),
-      activeDomain: 'qq'
+      activeDomain: 'qq',
+      fetching: false
     })
     expect(is(newState, expectedState)).toBeTruthy()
   })

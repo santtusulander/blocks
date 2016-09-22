@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
-import { List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { Modal } from 'react-bootstrap'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
 
 import RecordForm from '../../../components/account-management/record-form'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, isValidIPv4Address, isValidIPv6Address } from '../../../util/helpers'
 
 import { getRecordFormInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
 
@@ -26,46 +26,76 @@ const filterFields = fields => {
   return filteredFields
 }
 
-const validate = fields => {
+const validateIpAddress = (fields, intl) => {
+  if (fields.type === 'A') {
+    return {
+      valid: isValidIPv4Address(fields.value),
+      errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv4'})
+    }
+  } else if (fields.type === 'AAAA') {
+    return {
+      valid: isValidIPv6Address(fields.value),
+      errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv6'})
+    }
+  }
+
+  return {
+    valid: true,
+    errorText: ''
+  }
+}
+
+const validate = (fields, props) => {
   let filteredFields = filterFields(fields)
-  delete filteredFields.name
   const { type = '', ...rest } = filteredFields
+  const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
       condition: !new RegExp('^[0-9]*$').test(filteredFields.prio),
-      errorText: 'priority must be a number.'
+      errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
-      errorText: 'TTL value must be a number.'
+      condition: !new RegExp('^[0-9]+$').test(filteredFields.ttl),
+      errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
+    },
+    name: {
+      condition: !filteredFields.name,
+      errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
+    },
+    value: {
+      condition: !ipAddressConfig.valid,
+      errorText: ipAddressConfig.errorText
     }
   }
   return checkForErrors({ type, ...rest }, conditions)
 }
 
 const RecordFormContainer = props => {
-  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, records, ...formProps } = props
+  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, ...formProps } = props
+  const filteredValues = filterFields(values)
   const recordFormProps = {
     domain,
     edit,
-    values: filterFields(values),
     shouldShowField: isShown(props.fields.type.value),
-    onSave: fields => {
-      if (fields.ttl) {
-        fields.ttl = Number(fields.ttl)
+    submit: () => {
+      let { ttl, prio } = filteredValues
+      if (ttl) {
+        filteredValues.ttl = Number(ttl)
       }
-      if (fields.prio) {
-        fields.prio = Number(fields.prio)
+      if (prio) {
+        filteredValues.prio = Number(prio)
       }
-      edit ? updateRecord(fields, domain, records, activeRecord) : addRecord(fields, domain)
+      edit ?
+        updateRecord(filteredValues, domain, activeRecord) :
+        addRecord(filteredValues, domain)
     },
-    onCancel: closeModal,
+    cancel: closeModal,
     ...formProps
   }
   return (
     <Modal show={true} dialogClassName="dns-edit-form-sidebar">
       <Modal.Header>
-        <h1>{edit ? 'Edit DNS Record' : 'New DNS Record'}</h1>
+        <h1>{edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />}</h1>
         {edit && <p>{props.fields.name.value}</p>}
       </Modal.Header>
       <Modal.Body>
@@ -82,7 +112,6 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  records: PropTypes.instanceOf(List),
   updateRecord: PropTypes.func,
   values: PropTypes.object
 
@@ -90,15 +119,13 @@ RecordFormContainer.propTypes = {
 
 function mapStateToProps({ dnsRecords, dns }, { edit }) {
   const getRecordById = recordActionCreators.getById
-  const records = dnsRecords.get('resources')
-  let activeRecord = getRecordById(records, dnsRecords.get('activeRecord'))
+  let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = undefined
   initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
   let props = {
     activeRecord,
     domain: dns.get('activeDomain'),
-    loading: dnsRecords.get('fetching'),
-    records
+    loading: dnsRecords.get('fetching')
   }
   if (initialValues) {
     props.initialValues = initialValues
@@ -117,7 +144,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       createResource(domain, values.name, values)
         .then(() => closeModal())
     },
-    updateRecord: (formValues, zone, records, activeRecord) => {
+    updateRecord: (formValues, zone, activeRecord) => {
       let values = recordValues(formValues)
       values.id = activeRecord.get('id')
       values.class = 'IN'
@@ -128,8 +155,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
   }
 }
 
-export default reduxForm({
+export default injectIntl(reduxForm({
   form: 'dns-edit',
   fields: ['type', 'name', 'value', 'ttl', 'prio'],
   validate
-}, mapStateToProps, mapDispatchToProps)(RecordFormContainer)
+}, mapStateToProps, mapDispatchToProps)(RecordFormContainer))

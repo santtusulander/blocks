@@ -42,7 +42,12 @@ Download at https://nodejs.org/en/download/
    $ npm start
    ```
 
-3. Navigate to http://localhost:3000/webpack-dev-server/
+  or with source-maps (slower build)
+  ```shell
+  $ npm start -- --source-map
+  ```
+
+3. Navigate to http://localhost:3000
 
 ### Building for deployment
 

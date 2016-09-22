@@ -16,7 +16,6 @@ import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
-
 export class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -126,10 +125,12 @@ export class Login extends React.Component {
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
-          <h1><FormattedMessage id="portal.login.login.text"/></h1>
-          <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
+          <h1>
+            <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
+            <FormattedMessage id="portal.login.title"/>
+          </h1>
+          <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
@@ -166,21 +167,34 @@ export class Login extends React.Component {
               onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
-                <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
-                  onChange={this.toggleRemember}
-                  checked={this.state.rememberUsername} />
+                <div className="remember-checkbox">
+                  <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
+                    onChange={this.toggleRemember}
+                    checked={this.state.rememberUsername} />
+                </div>
               </Col>
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
                   disabled={this.props.fetching}>
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
-                <Link to={`/forgot-password`} className="btn btn-link pull-right">
+
+                <a href='mailto:support@ericssonudn.com?subject=Forgot Password&body=Please email us at support@ericssonudn.com to request a password change using the email address associated with your UDN account. Our support team will verify your account information before sending resetting your password. Thank you.' className="btn btn-link pull-right">
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </Link>
+                </a>
+
+                {/* Maybe needed in future?
+                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                    <FormattedMessage id="portal.login.forgotPassword.text"/>
+                  </Link>
+                */}
               </Col>
             </Row>
           </form>
+          <p className="text-sm login-copyright">
+            <FormattedMessage id="portal.login.copyright.text" /><br/>
+            <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
+          </p>
         </Modal.Body>
       </Modal.Dialog>
 

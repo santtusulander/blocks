@@ -178,7 +178,7 @@ class ContentItemChart extends React.Component {
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <Link className="content-item-chart-link" to={link}>
+          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
@@ -288,29 +288,29 @@ class ContentItemChart extends React.Component {
                 </div>
               </div>
             </div>
-          </Link>
+          </LinkWrapper>
           <div className="content-item-toolbar">
             <ButtonToolbar>
               {this.props.analyticsLink &&
                 <Link to={this.props.analyticsLink}
-                  className="btn btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconChart/>
                 </Link>
               }
               {this.props.configurationLink &&
                 <Link to={this.props.configurationLink}
-                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
               }
               {this.props.onConfiguration &&
                 <a onClick={this.props.onConfiguration}
-                  className="btn edit-content-item btn-primary btn-icon btn-round invisible">
+                  className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </a>
               }
               <Link to="/starburst-help"
-                className="btn show-help btn-primary btn-icon btn-round invisible">
+                className="btn btn-icon btn-round invisible">
                 <IconQuestionMark/>
               </Link>
             </ButtonToolbar>
@@ -319,6 +319,24 @@ class ContentItemChart extends React.Component {
       </OverlayTrigger>
     )
   }
+}
+
+// NOTE: this is temporary for the 1.0 release to disable
+// drilling down into the property level for SP accounts
+const LinkWrapper = props => {
+  if(props.disableLinkTo) {
+    return <div>{props.children}</div>
+  }
+  return (
+    <Link className="content-item-chart-link" to={props.linkTo}>
+      {props.children}
+    </Link>
+  )
+}
+LinkWrapper.propTypes = {
+  children: React.PropTypes.node,
+  disableLinkTo: React.PropTypes.bool,
+  linkTo: React.PropTypes.string
 }
 
 ContentItemChart.displayName = 'ContentItemChart'
@@ -330,17 +348,18 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
-  onConfiguration: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
   differenceData: React.PropTypes.instanceOf(Immutable.List),
+  disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
+  onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,

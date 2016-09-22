@@ -13,23 +13,33 @@ import SupportPageHeader from '../../components/support/support-page-header'
 class Support extends React.Component {
 
   renderTabContent(children) {
-    const { params } = this.props;
 
-    if (!params.account) {
-      return (
-        <PageContainer>
-          <p className="text-center">
-            <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
-          </p>
-        </PageContainer>
-      )
-    } else {
-      return (
-        <PageContainer>
-          {children && React.cloneElement(children, { ...this.props })}
-        </PageContainer>
-      )
-    }
+    // Disabled for the 1.0 release - you should not have to select an account
+    // just to see a link to ZenDesk or the documentation PDFs
+    //
+    // const { params } = this.props;
+    //
+    // if (!params.account) {
+    //   return (
+    //     <PageContainer>
+    //       <p className="text-center">
+    //         <FormattedMessage id="portal.user.list.accountNotSelected.text" values={{br: <br/>}}/>
+    //       </p>
+    //     </PageContainer>
+    //   )
+    // } else {
+    //   return (
+    //     <PageContainer>
+    //       {children && React.cloneElement(children, { ...this.props })}
+    //     </PageContainer>
+    //   )
+    // }
+
+    return (
+      <PageContainer>
+        {children && React.cloneElement(children, { ...this.props })}
+      </PageContainer>
+    )
   }
 
   render() {
@@ -48,11 +58,12 @@ class Support extends React.Component {
               <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
             </Link>
           </li>
+          {/*Hide for 1.0 release
           <li className="navbar">
             <Link to={baseUrl + '/tools'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
             </Link>
-          </li>
+          </li>*/}
           <li className="navbar">
             <Link to={baseUrl + '/documentation'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>

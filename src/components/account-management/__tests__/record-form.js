@@ -1,58 +1,81 @@
-//jest.unmock('../../../containers/dns-edit-form-container');
-jest.unmock('../../../components/account-management/record-form');
-
 import React from 'react'
-import { mount, shallow, render } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 
-//import DnsEditFormContainer from '../../../containers/dns-edit-form-container'
-import DnsEditForm from '../../../components/account-management/record-form'
+jest.unmock('../record-form')
+jest.unmock('../../../util/dns-records-helpers')
+jest.unmock('../../../constants/dns-record-types')
+jest.unmock('../../../decorators/key-stroke-decorator')
+jest.unmock('../../../util/dns-records-helpers')
+jest.unmock('../../select-wrapper.jsx')
 
-import { createStore, combineReducers } from 'redux'
-import { reducer as formReducer } from 'redux-form'
+import RecordForm from '../record-form.jsx'
+import { isShown } from '../../../util/dns-records-helpers'
 
-import jsdom from 'jsdom'
+const REQUIRED = 'Required'
 
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
-
-
-
-describe("DnsEditFormContainer", () => {
-
-  let store = null
-  let subject = null
-
+describe('RecordForm', () => {
+  const cancel = jest.fn()
+  const submit = jest.fn()
+  let subject, error, props = null
+  let touched = false
   beforeEach(() => {
-    store = createStore(combineReducers({form: formReducer}))
-    const props = {
-      store,
+    subject = (typeValue, invalid ) => {
+      props = {
+        submit,
+        cancel,
+        intl: intlMaker(),
+        invalid: invalid || false,
+        shouldShowField: isShown(typeValue || ''),
+        fields: {
+          type: { touched, error, value: typeValue || ''},
+          name: { touched, error, value: '' },
+          value: { touched, error, value: '' },
+          ttl: { touched, error, value: '' },
+          prio: { touched, error, value: '' },
+          certificate: { touched, error, value: '' }
+        }
+      }
+      return mount(<RecordForm {...props}/>)
     }
-
-    subject = mount(<DnsEditForm {...props} />)
+  })
+  it('should exist', () => {
+    expect(subject().length).toBe(1)
   })
 
-
-  /* Commented out because Modals cannot be tested ATM
-  it("should have 'form", () => {
-
-    const form = subject.find('form')
-    expect( form.length ).toBe(1);
+  it('should handle onSave click', () => {
+    subject()
+      .find('#submit-button')
+      .simulate('click')
+    expect(submit.mock.calls.length).toBe(1)
   })
 
-  it("should have 3 inputs", () => {
-
-    const inputs = subject.find('input')
-    expect( inputs.length ).toBe(3)
+  it('should show prio field for MX record', () => {
+    expect(
+      subject('MX')
+        .find('#prio-field')
+        .length
+    ).toBe(isShown('MX')('prio') ? 1 : 0)
   })
 
-  it("shows error if hostName set to blank", () => {
-    const input = subject.find(".hostNameInput")
-
-    input.simulate('change', { target: { value: '' } })
-    input.simulate('click')
-    const errMsg = subject.find('.errorRecordName')
-    expect(errMsg).to.exist()
+  it('should disable submit button', () => {
+    subject(null, true).find('#submit-button .disabled')
+    expect(submit.mock.calls.length).toBe(1)
   })
-  */
-});
+
+  it('should handle onCancel click', () => {
+    subject().find('#cancel-button').simulate('click')
+    expect(cancel.mock.calls.length).toBe(1)
+  })
+
+  it('should render an error message', () => {
+    touched = true
+    error = REQUIRED
+    expect(subject('MX').find('#name-err').length).toBe(isShown('MX')('name') ? 1 : 0)
+  })
+})

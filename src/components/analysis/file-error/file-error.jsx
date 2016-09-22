@@ -5,7 +5,7 @@ import {List, Map} from 'immutable'
 import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
 
-import {formatMessage, injectIntl} from 'react-intl'
+import { injectIntl, intlShape } from 'react-intl'
 
 /* find any key in array */
 function hasKeys( val, keyList ) {
@@ -97,6 +97,7 @@ const AnalysisFileError = props => {
 AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
   fetching: PropTypes.bool,
+  intl: intlShape.isRequired,
   serviceTypes: PropTypes.instanceOf(List),
   statusCodes: PropTypes.instanceOf(List),
   summary: PropTypes.instanceOf(Map),
