@@ -6,12 +6,8 @@ export default function(WrappedModal) {
       super(props)
       this.submitCalled = false
       this.handleKeyDown = this.handleKeyDown.bind(this)
-      this.submit = () => {
-        if (!this.submitCalled && !props.invalid) {
-          props.submit()
-          this.submitCalled = true
-        }
-      }
+      this.submit = this.submit.bind(this)
+
     }
 
     componentWillMount() {
@@ -20,6 +16,17 @@ export default function(WrappedModal) {
 
     componentWillUnmount() {
       document.removeEventListener('keydown', this.handleKeyDown)
+    }
+
+    submit() {
+      const { submit, cancel, invalid } = this.props
+      if (!submit) {
+        return cancel()
+      }
+      if (!this.submitCalled && !invalid) {
+        submit()
+        this.submitCalled = true
+      }
     }
 
     handleKeyDown(e) {
