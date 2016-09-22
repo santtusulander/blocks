@@ -12,7 +12,7 @@ import { clearFetchedHosts } from '../redux/modules/host'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
-
+import PROVIDER_TYPES from '../constants/provider-types'
 import ContentItems from '../components/content/content-items'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -87,6 +87,7 @@ export class Groups extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
+
     const { brand, account } = this.props.params
     const { activeAccount, activeGroup } = this.props
 
@@ -96,7 +97,10 @@ export class Groups extends React.Component {
     const analyticsURLBuilder = (...groupID) => {
       return getAnalyticsUrl('group', groupID, this.props.params)
     }
+
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
+    const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
+
     return (
       <ContentItems
         activeAccount={activeAccount}
@@ -113,7 +117,7 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        headerText={{ summary: <FormattedMessage id="portal.groups.accountSummary.text"/>, label: breadcrumbs[0].label }}
+        headerText={ { summary: headerText, label: breadcrumbs[0].label }}
         ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}

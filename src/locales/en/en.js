@@ -601,6 +601,7 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
   'portal.groups.accountSummary.text': 'Account Summary',
+  'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
