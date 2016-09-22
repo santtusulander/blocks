@@ -1,0 +1,4 @@
+{
+  "portal.configuration.security.enable.text": "Enable HTTPS",
+  "portal.configuration.security.sslCertificate.text": "SSL Certificate"
+}

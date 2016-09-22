@@ -102,6 +102,10 @@
   td:not(:first-child) {
     text-align: right;
 
+    &.text-left{
+      text-align: left;
+    }
+
     .active {
       padding-right: $btn-height / 2;
       text-indent: -$btn-height / 2;
