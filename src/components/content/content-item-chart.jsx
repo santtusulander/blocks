@@ -4,7 +4,6 @@ import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
-import classNames from 'classnames'
 
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
@@ -150,7 +149,6 @@ class ContentItemChart extends React.Component {
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
-    const onClick = this.props.disableLinkTo ? e => e.preventDefault() : () => null
     const activeSlice = this.state.activeSlice
     if(activeSlice) {
       avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
@@ -180,9 +178,7 @@ class ContentItemChart extends React.Component {
         <div className="content-item-chart grid-item"
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <Link className={classNames('content-item-chart-link', {'disabled': this.props.disableLinkTo})}
-            to={this.props.disableLinkTo ? '' : link}
-            onClick={onClick}>
+          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
@@ -292,7 +288,7 @@ class ContentItemChart extends React.Component {
                 </div>
               </div>
             </div>
-          </Link>
+          </LinkWrapper>
           <div className="content-item-toolbar">
             <ButtonToolbar>
               {this.props.analyticsLink &&
@@ -323,6 +319,22 @@ class ContentItemChart extends React.Component {
       </OverlayTrigger>
     )
   }
+}
+
+const LinkWrapper = props => {
+  if(props.disableLinkTo) {
+    return <div>{props.children}</div>
+  }
+  return (
+    <Link className="content-item-chart-link" to={props.linkTo}>
+      {props.children}
+    </Link>
+  )
+}
+LinkWrapper.propTypes = {
+  children: React.PropTypes.node,
+  disableLinkTo: React.PropTypes.bool,
+  linkTo: React.PropTypes.string
 }
 
 ContentItemChart.displayName = 'ContentItemChart'
