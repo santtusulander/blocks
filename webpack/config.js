@@ -75,11 +75,6 @@ module.exports = {
         loader: 'file?name=assets/img/[name].[ext]'
       },
       {
-        test: /\.pdf$/,
-        exclude: /node_modules/,
-        loader: 'file?name=assets/pdf/[name].[ext]'
-      },
-      {
         test: require.resolve("react"),
         loader: "expose?React"
       }
