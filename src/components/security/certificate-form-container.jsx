@@ -11,10 +11,8 @@ import CertificateForm from './certificate-form'
 let errors = {}
 const validate = values => {
   errors = {}
-  const { title, privateKey, certificate, account, group } = values
-  if (!account) {
-    errors.account = 'Required'
-  }
+  const { title, privateKey, certificate, group } = values
+
   if (!group || group === '') {
     errors.group = 'Required'
   }
@@ -35,13 +33,6 @@ class CertificateFormContainer extends Component {
     this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
 
-  componentWillReceiveProps(nextProps) {
-    const nextAccountValue = nextProps.fields.account.value
-    const thisAccountValue = this.props.fields.account.value
-    if(nextAccountValue && nextAccountValue !== thisAccountValue) {
-      this.props.fetchGroups('udn', nextAccountValue)()
-    }
-  }
   render() {
     const { title, formValues, upload, toEdit, edit, cancel, toggleModal, ...formProps } = this.props
     const buttonFunctions = {
@@ -84,20 +75,21 @@ CertificateFormContainer.propTypes = {
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
-  title: PropTypes.string,
+  title: PropTypes.object,
   toEdit: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func,
   upload: PropTypes.func
 }
 
 export default reduxForm({
-  fields: ['account', 'group', 'title', 'interMediateCert', 'privateKey', 'certificate'],
+  fields: ['account', 'group', 'title', 'privateKey', 'certificate'],
   form: 'certificateForm',
   validate
 }, function mapStateToProps(state) {
   const toEdit = state.security.get('certificateToEdit')
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
   const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
+
   return {
     toEdit,
     initialValues: {
