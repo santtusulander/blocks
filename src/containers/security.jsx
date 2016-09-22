@@ -1,14 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
-<<<<<<< HEAD
-import { Nav } from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Link } from 'react-router'
-=======
 // import { Nav } from 'react-bootstrap'
 // import { Link, withRouter } from 'react-router'
 import { withRouter } from 'react-router'
->>>>>>> develop
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -191,11 +185,7 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
-<<<<<<< HEAD
-  intl: PropTypes.object,
-=======
   groups: PropTypes.instanceOf(List),
->>>>>>> develop
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
@@ -240,8 +230,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-<<<<<<< HEAD
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Security))
-=======
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Security))
->>>>>>> develop
