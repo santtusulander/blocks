@@ -1,6 +1,6 @@
 import React from 'react'
-import Immutable from 'immutable'
-import { shallow, mount } from 'enzyme'
+import { fromJS } from 'immutable'
+import { shallow } from 'enzyme'
 
 jest.unmock('../../confirmation')
 jest.unmock('../policy-rules')
@@ -11,7 +11,7 @@ jest.unmock('../../../components/icons/icon-edit')
 jest.unmock('../../../components/icons/icon-trash')
 const ConfigurationPolicyRules = require('../policy-rules')
 
-const requestPolicies = Immutable.fromJS(
+const requestPolicies = fromJS(
   [{
     "match": {
       "default": [
@@ -71,7 +71,7 @@ const requestPolicies = Immutable.fromJS(
   }]
 )
 
-const responsePolicies = Immutable.fromJS(
+const responsePolicies = fromJS(
   [{
     "match": {
       "field": "response_code",
