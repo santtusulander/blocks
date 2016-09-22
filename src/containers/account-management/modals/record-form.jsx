@@ -33,7 +33,6 @@ const validateIpAddress = (fields, intl) => {
       errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv4'})
     }
   } else if (fields.type === 'AAAA') {
-    console.warn(isValidIPv6Address(fields.value))
     return {
       valid: isValidIPv6Address(fields.value),
       errorText: intl.formatMessage({id: 'portal.account.recordForm.address.validationError.IPv6'})
@@ -48,7 +47,6 @@ const validateIpAddress = (fields, intl) => {
 
 const validate = (fields, props) => {
   let filteredFields = filterFields(fields)
-  delete filteredFields.name
   const { type = '', ...rest } = filteredFields
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
@@ -57,8 +55,12 @@ const validate = (fields, props) => {
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !new RegExp('^[0-9]*$').test(filteredFields.ttl),
+      condition: !new RegExp('^[0-9]+$').test(filteredFields.ttl),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
+    },
+    name: {
+      condition: !filteredFields.name,
+      errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
     },
     value: {
       condition: !ipAddressConfig.valid,

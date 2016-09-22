@@ -302,25 +302,50 @@ textarea {
     padding-left: 0;
     font-size: rem(14px);
     font-weight: 500;
+    cursor: default;
   }
 
   input {
     display: none;
 
-    + span::before {
-      display: inline-block;
-      width: calc(#{$bar-height} / 2);
-      height: calc(#{$bar-height} / 2);
-      margin: 0 calc(#{$bar-height} / 4) 0 0;
-      vertical-align: top;
+    + span {
       cursor: pointer;
-      content: '';
 
-      .dark-theme &,
-      .light-theme &,
-      .light-theme .sidebar-layout &,
-      .light-theme .configuration-sidebar & {
-        background: rgba($black, 0.2);
+      &::before {
+        display: inline-block;
+        width: calc(#{$bar-height} / 2);
+        height: calc(#{$bar-height} / 2);
+        margin: 0 calc(#{$bar-height} / 4) 0 0;
+        vertical-align: top;
+        cursor: pointer;
+        content: '';
+
+        .dark-theme &,
+        .light-theme &,
+        .light-theme .sidebar-layout &,
+        .light-theme .configuration-sidebar & {
+          background: rgba($black, 0.2);
+        }
+      }
+    }
+
+    &.disabled,
+    &[disabled] {
+
+      + span {
+        cursor: not-allowed;
+        opacity: 0.2;
+
+        &::before {
+          cursor: not-allowed;
+
+          .dark-theme &,
+          .light-theme &,
+          .light-theme .sidebar-layout &,
+          .light-theme .configuration-sidebar & {
+            background: rgba($black, 0.3);
+          }
+        }
       }
     }
   }
@@ -358,13 +383,12 @@ textarea {
 
     &:checked + span::after {
       position: absolute;
-      top: 50%;
+      top: 3px;
       left: 3px;
       width: 12px;
       height: 12px;
       border-radius: 50%;
       content: '';
-      transform: translateY(-50%);
     }
 
     .dark-theme &:checked + span,

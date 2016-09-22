@@ -96,12 +96,29 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-ReactDOM.render(
-  <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
-    <Provider store={store}>
-      <Router onUpdate={LogPageView} history={browserHistory}>
+const runApp = () => {
+  ReactDOM.render(
+    <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
+      <Provider store={store}>
+        <Router onUpdate={LogPageView} history={browserHistory}>
         {getRoutes(store)}
-      </Router>
-    </Provider>
-  </IntlProvider>, document.getElementById('content')
-);
+        </Router>
+      </Provider>
+    </IntlProvider>, document.getElementById('content')
+  );
+}
+
+// Check if Intl -polyfill required
+if (!window.Intl) {
+  require.ensure([
+    'intl',
+    'intl/locale-data/jsonp/en.js'
+  ], (require) => {
+    require('intl');
+    require('intl/locale-data/jsonp/en.js');
+
+    runApp();
+  });
+} else {
+  runApp();
+}

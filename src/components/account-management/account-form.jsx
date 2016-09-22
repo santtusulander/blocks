@@ -14,25 +14,16 @@ import CheckboxArray from '../checkboxes.jsx'
 import {
   ACCOUNT_TYPES,
   SERVICE_TYPES,
-  BRANDS,
-  NAME_VALIDATION_REGEXP
+  NAME_VALIDATION_REGEXP,
+  BRAND_OPTIONS,
+  ACCOUNT_TYPE_OPTIONS
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
 
 import './account-form.scss'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
-
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
-
-const accountTypeOptions = FILTERED_ACCOUNT_TYPES.map(e => {
-  return [e.value, e.label]
-});
-
-const brandOptions = BRANDS.map(e => {
-  return [e.id, e.brandName]
-});
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const validate = ({ accountName, accountBrand, accountType, services }) => {
   const conditions = {
@@ -111,8 +102,6 @@ class AccountForm extends React.Component {
     const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
     const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
 
-    accountBrand.initialValue = brandOptions.length > 1 ? '' : brandOptions[0][0]
-
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
@@ -128,6 +117,7 @@ class AccountForm extends React.Component {
 
             <Input
               {...accountName}
+              id="account-name"
               type="text"
               label="Account name"
               placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
@@ -143,7 +133,7 @@ class AccountForm extends React.Component {
                 {... accountBrand}
                 className="input-select"
                 value={accountBrand.value}
-                options={brandOptions}
+                options={BRAND_OPTIONS}
               />
             </div>
             {accountBrand.touched && accountBrand.error &&
@@ -161,7 +151,7 @@ class AccountForm extends React.Component {
                   numericValues={true}
                   value={accountType.value}
                   className="input-select"
-                  options={accountTypeOptions}
+                  options={ACCOUNT_TYPE_OPTIONS}
                 />
               }
             </div>
@@ -171,8 +161,8 @@ class AccountForm extends React.Component {
             <label><FormattedMessage id="portal.account.manage.services.title" /></label>
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
-              <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
-              <Button disabled={this.props.invalid} bsStyle="primary"
+              <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
+              <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
                       onClick={this.save}>{this.props.account ? <FormattedMessage id="portal.button.save" /> : <FormattedMessage id="portal.button.add" />}</Button>
             </ButtonToolbar>
           </form>
@@ -196,7 +186,7 @@ export default reduxForm({
   form: 'account',
   validate,
   initialValues: {
-    accountBrand: brandOptions.length ? brandOptions[0][0] : '',
+    accountBrand: BRAND_OPTIONS.length ? BRAND_OPTIONS[0][0] : '',
     accountType: '',
     services: []
   }

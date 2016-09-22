@@ -139,7 +139,7 @@ export class SortableTable extends Component {
             <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
-            <th width="8%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>

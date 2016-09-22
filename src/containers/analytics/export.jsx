@@ -53,7 +53,7 @@ class AnalyticsExport extends React.Component {
       <Button
         bsStyle="primary"
         className="has-icon"
-        disabled={this.props.activeTab === 'playback-demo'}
+        disabled={this.props.activeTab === 'playback-demo' || this.props.activeTab === 'service-providers' || this.props.activeTab === 'cache-hit-rate'}
         onClick={this.exportCSV}>
         <IconExport />
         <FormattedMessage id="portal.button.export"/>

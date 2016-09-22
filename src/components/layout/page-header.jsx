@@ -1,51 +1,47 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 
-class PageHeader extends React.Component {
-  render() {
-    let customClassName = this.props.className ? this.props.className : '';
-    let finalClassName = classNames(
-      'page-header-container',
-      {
-        'secondary-page-header': this.props.secondaryPageHeader,
-        'distributed-columns': this.props.distributedColumns
-      },
-      customClassName
-    );
+const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSubTitle, pageHeaderDetails, children }) => {
+  let customClassName = className || ''
+  let finalClassName = classNames(
+    'page-header-container',
+    {
+      'secondary-page-header': secondaryPageHeader,
+      'distributed-columns': distributedColumns
+    },
+    customClassName
+  );
 
-    return (
-      <div className={finalClassName}>
-        {this.props.pageSubTitle && <h5>{this.props.pageSubTitle}</h5>}
-        <div className="page-header-layout">
-          {this.props.children}
-        </div>
-        {this.props.pageHeaderDetails &&
-          <p className="text-sm">
-            {this.props.pageHeaderDetails.map(function(detail){
-              return (
-                <span className="right-separator">
-                  {detail}
-                </span>
-              )
-            })}
-          </p>
-        }
+  return (
+    <div className={finalClassName}>
+      {pageSubTitle && <h5>{pageSubTitle}</h5>}
+      <div className="page-header-layout">
+        {children}
       </div>
-    );
-  }
+      {pageHeaderDetails &&
+        <p className="text-sm">
+          {pageHeaderDetails.map((detail, index) =>
+              <span key={index} id={'detail-' + index} className="right-separator">
+                {detail}
+              </span>
+          )}
+        </p>
+      }
+    </div>
+  );
 }
 
 PageHeader.displayName = 'PageHeader'
 PageHeader.propTypes = {
-  children: React.PropTypes.node,
-  className: React.PropTypes.string,
-  distributedColumns: React.PropTypes.bool,
-  pageHeaderDetails: React.PropTypes.array,
-  pageSubTitle: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
+  children: PropTypes.node,
+  className: PropTypes.string,
+  distributedColumns: PropTypes.bool,
+  pageHeaderDetails: PropTypes.array,
+  pageSubTitle: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
   ]),
-  secondaryPageHeader: React.PropTypes.bool
+  secondaryPageHeader: PropTypes.bool
 };
 
-module.exports = PageHeader
+export default PageHeader
