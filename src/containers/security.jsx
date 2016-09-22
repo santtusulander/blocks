@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
 // import { Nav } from 'react-bootstrap'
 // import { Link, withRouter } from 'react-router'
@@ -14,8 +15,9 @@ import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import ModalWindow from '../components/modal'
+import PageContainer from '../components/layout/page-container'
+import SecurityPageHeader from '../components/security/security-page-header'
 import CertificateForm from '../components/security/certificate-form-container'
-import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
 
@@ -116,8 +118,7 @@ export class Security extends React.Component {
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       toDelete,
-      toggleModal,
-      intl
+      toggleModal
     } = this.props
 
     const certificateFormProps = {
