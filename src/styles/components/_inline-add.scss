@@ -90,14 +90,15 @@
 
       .light-theme & {
         color: rgba($black, 0.5);
-        fill: rgba($black, 0.5);
-        stroke: rgba($black, 0.5);
+
+        .icon {
+          fill: rgba($black, 0.5);
+        }
       }
 
       .dark-theme & {
         color: $white;
         fill: $white;
-        stroke: $white;
       }
 
       &.active,
@@ -105,14 +106,36 @@
       &:hover:not(:disabled) {
         .light-theme & {
           color: $white;
-          fill: $white;
-          stroke: $white;
+
+          .icon {
+            fill: $white;
+
+            &.two-tone {
+
+              .base {
+                fill: $white;
+              }
+
+              .primary {
+                fill: $pale-blue;
+              }
+            }
+          }
         }
 
         .dark-theme & {
           color: rgba($black, 0.5);
-          fill: rgba($black, 0.5);
-          stroke: rgba($black, 0.5);
+
+          .icon {
+            fill: rgba($black, 0.5);
+
+            &.two-tone {
+
+              .base {
+                fill: rgba($black, 0.5);
+              }
+            }
+          }
         }
       }
     }
