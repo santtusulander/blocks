@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 // import { connect } from 'react-redux'
 // import { withRouter } from 'react-router'
 // import { bindActionCreators } from 'redux'
@@ -213,7 +213,6 @@ class SupportTabTickets extends React.Component {
 
 SupportTabTickets.displayName = 'SupportTabTickets'
 SupportTabTickets.propTypes = {
-  intl: PropTypes.object
 //   supportActions: PropTypes.object
 }
 //
@@ -238,4 +237,4 @@ SupportTabTickets.propTypes = {
 // }
 //
 // export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SupportTabTickets))
-export default injectIntl(SupportTabTickets)
+export default SupportTabTickets
