@@ -63,7 +63,7 @@ const validate = fields => {
     negative_ttl: [
       {
         condition: isNaN(negative_ttl),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.negativeTtl.text"/>
+        errorText:<FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
       },
       {
         condition: parseInt(negative_ttl) > maxTtl,
