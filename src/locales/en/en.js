@@ -599,7 +599,8 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
-  'portal.groups.accountContentSummary.text': 'ACCOUNT CONTENT SUMMARY',
+  'portal.groups.accountSummary.text': 'Account Summary',
+  'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
@@ -608,6 +609,8 @@ const TRANSLATED_MESSAGES = {
   'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
+  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
+  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
