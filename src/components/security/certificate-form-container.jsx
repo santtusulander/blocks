@@ -84,7 +84,7 @@ CertificateFormContainer.propTypes = {
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
-  title: PropTypes.string,
+  title: PropTypes.object,
   toEdit: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func,
   upload: PropTypes.func

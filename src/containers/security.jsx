@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
-import { Nav } from 'react-bootstrap'
-import { Link } from 'react-router'
+// import { Nav } from 'react-bootstrap'
+// import { Link, withRouter } from 'react-router'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { getTabName } from '../util/helpers'
-import { getSecurityUrlFromParams } from '../util/routes'
+// import { getSecurityUrlFromParams } from '../util/routes'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -59,7 +60,9 @@ export class Security extends React.Component {
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
     const subPage = getTabName(this.props.location.pathname)
-    const securityBaseUrl = getSecurityUrlFromParams(params);
+    // for token auth & content targeting post-1.0
+    // const securityBaseUrl = getSecurityUrlFromParams(params);
+
     if (!params.account) {
       return (
         <Content className="tab-bodies">
@@ -68,19 +71,32 @@ export class Security extends React.Component {
         </Content>
       )
     }
+
+    if (!params.group) {
+      return (
+        <Content className="tab-bodies">
+          <p className='text-center'>Please select a group<br/>
+            from top left to see security</p>
+        </Content>
+      )
+    }
+
+    // for token auth & content targeting post-1.0
+    // return (
+      // <Nav bsStyle="tabs">
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
+      //   </li>
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
+      //   </li>
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
+      //   </li>
+      // </Nav>
+
     return (
       <div>
-        <Nav bsStyle="tabs">
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
-          </li>
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
-          </li>
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-          </li>
-        </Nav>
         <Content className="tab-bodies">
           {subPage === 'ssl-certificate' && <SSLList {...sslListProps}/>}
           {subPage === 'token-authentication' && <h3>token-authentication</h3>}
@@ -140,11 +156,11 @@ export class Security extends React.Component {
           activeGroup={activeGroup ? activeGroup.get('name') : null}
           itemSelectorFunc={itemSelectorFunc}
           fetchAccount={fetchAccount}/>
-         {/* ----- Not in 0.8.1* ----- */}
-         {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
 
-         {/* ----- REMOVE ME AFTER ----- */}
-         <p className='text-center'>Coming soon!</p>
+          <PageContainer>
+            {this.renderContent(certificateFormProps, sslListProps)}
+          </PageContainer>
+
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE && <DeleteModal
