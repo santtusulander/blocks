@@ -146,7 +146,7 @@ class AccountManagementAccountDetails extends React.Component {
                     <OverlayTrigger placement="top" overlay={
                       <Tooltip id="tooltip_brand">
                         <div className="tooltip-header">Brand</div>
-                        <div className="text-sm">Lorem ipsum ...</div>
+                        <div className="text-sm"> ...</div>
                       </Tooltip>
                       }>
 
@@ -182,7 +182,7 @@ class AccountManagementAccountDetails extends React.Component {
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_brand">
                       <div className="tooltip-header">Account Name</div>
-                      <div className="text-sm">Lorem ipsum ...</div>
+                      <div className="text-sm"> ...</div>
                     </Tooltip>
                     }>
 
@@ -220,7 +220,7 @@ class AccountManagementAccountDetails extends React.Component {
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_account_type">
                       <div className="tooltip-header">Account Type</div>
-                      <div className="text-sm">Lorem ipsum ...</div>
+                      <div className="text-sm"> ...</div>
                     </Tooltip>
                     }>
 

@@ -99,7 +99,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.role.edit.roleNameRequired.text': 'Role name is required',
   'portal.role.edit.title': 'Edit Role',
-  'portal.role.edit.discalimer.text': 'Lorem Ipsum',
+  'portal.role.edit.discalimer.text': 'Edit Role',
   'portal.role.edit.enterRoleName.text': 'Enter Role Name',
   'portal.role.edit.name.text': 'Name',
 
@@ -426,7 +426,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.name.text': 'Name',
   'portal.policy.edit.policies.matchDirectory.text': 'Match a directory path like /wp-admin/',
   'portal.policy.edit.policies.directoryPath.text': 'Directory Path',
-  'portal.policy.edit.policies.matchHostname.text': 'Match a hostname like www.foobar.com',
+  'portal.policy.edit.policies.matchHostname.text': 'Match a hostname like www.test.com',
   'portal.policy.edit.policies.hostname.text': 'Hostname',
   'portal.policy.edit.policies.matchCookie.text': 'Match a cookie like tracking',
   'portal.policy.edit.policies.cookie.text': 'Cookie',
@@ -540,7 +540,6 @@ const TRANSLATED_MESSAGES = {
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
-  'portal.accountManagement.dns.form.subHeader.text' : 'Lorem ipsum',
   'portal.accountManagement.dns.form.domainName.text' : 'Domain Name',
   'portal.accountManagement.dns.form.domainNamePlaceholder.text' : 'Enter Domain Name',
   'portal.accountManagement.dns.form.email.text' : 'Enter Responsible Person Mailbox',
