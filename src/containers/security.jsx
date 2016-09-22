@@ -1,13 +1,19 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
+<<<<<<< HEAD
 import { Nav } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Link } from 'react-router'
+=======
+// import { Nav } from 'react-bootstrap'
+// import { Link, withRouter } from 'react-router'
+import { withRouter } from 'react-router'
+>>>>>>> develop
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { getTabName } from '../util/helpers'
-import { getSecurityUrlFromParams } from '../util/routes'
+// import { getSecurityUrlFromParams } from '../util/routes'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -18,6 +24,8 @@ import CertificateForm from '../components/security/certificate-form-container'
 import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
+
+import { getUrl } from '../util/routes.js'
 
 import {
   UPLOAD_CERTIFICATE,
@@ -55,7 +63,9 @@ export class Security extends React.Component {
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
     const subPage = getTabName(this.props.location.pathname)
-    const securityBaseUrl = getSecurityUrlFromParams(params);
+    // for token auth & content targeting post-1.0
+    // const securityBaseUrl = getSecurityUrlFromParams(params);
+
     if (!params.account) {
       return (
         <Content className="tab-bodies">
@@ -64,19 +74,32 @@ export class Security extends React.Component {
         </Content>
       )
     }
+
+    if (!params.group) {
+      return (
+        <Content className="tab-bodies">
+          <p className='text-center'>Please select a group<br/>
+            from top left to see security</p>
+        </Content>
+      )
+    }
+
+    // for token auth & content targeting post-1.0
+    // return (
+      // <Nav bsStyle="tabs">
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
+      //   </li>
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
+      //   </li>
+      //   <li className="navbar">
+      //     <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
+      //   </li>
+      // </Nav>
+
     return (
       <div>
-        <Nav bsStyle="tabs">
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
-          </li>
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
-          </li>
-          <li className="navbar">
-            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-          </li>
-        </Nav>
         <Content className="tab-bodies">
           {subPage === 'ssl-certificate' && <SSLList {...sslListProps}/>}
           {subPage === 'token-authentication' && <h3>token-authentication</h3>}
@@ -94,6 +117,7 @@ export class Security extends React.Component {
       activeCertificates,
       activeModal,
       fetchAccount,
+      params,
       onDelete,
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
@@ -105,7 +129,6 @@ export class Security extends React.Component {
     const certificateFormProps = {
       title: activeModal === EDIT_CERTIFICATE ? <FormattedMessage id="portal.security.editCertificate.text"/> : <FormattedMessage id="portal.security.uploadCertificate.text"/>,
       activeAccount,
-      accounts,
       fetchAccount,
       toggleModal
     }
@@ -121,18 +144,26 @@ export class Security extends React.Component {
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
 
+    const activeGroup = groups.find(obj => obj.get('id') === Number(params.group))
+
+    const itemSelectorFunc = (...params) => {
+      this.props.router.push(getUrl('/security', ...params))
+    }
+
     return (
       <Content>
-        <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
-          <h1 id="active-account">
-            {activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
-          </h1>
-        </PageHeader>
-         {/* ----- Not in 0.8.1* ----- */}
-         {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
+        <SecurityPageHeader
+          params={this.props.params}
+          accounts={accounts}
+          activeAccount={activeAccount.get('name')}
+          activeGroup={activeGroup ? activeGroup.get('name') : null}
+          itemSelectorFunc={itemSelectorFunc}
+          fetchAccount={fetchAccount}/>
 
-         {/* ----- REMOVE ME AFTER ----- */}
-         <p className='text-center'>Coming soon!</p>
+          <PageContainer>
+            {this.renderContent(certificateFormProps, sslListProps)}
+          </PageContainer>
+
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE &&
@@ -160,10 +191,15 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
+<<<<<<< HEAD
   intl: PropTypes.object,
+=======
+  groups: PropTypes.instanceOf(List),
+>>>>>>> develop
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
+  router: React.PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
   toDelete: PropTypes.instanceOf(Map),
@@ -204,4 +240,8 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+<<<<<<< HEAD
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Security))
+=======
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Security))
+>>>>>>> develop

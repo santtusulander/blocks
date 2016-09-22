@@ -137,7 +137,7 @@ class AnalysisStackedByGroup extends React.Component {
         {this.props.datasetLabels && this.props.datasetLabels.length ?
           <div className="dataset-labels">
             {this.props.datasetLabels.map((label, i) => (
-              <span key={i}>
+              <span key={i} className="chart-label-container">
                 <svg width={20} height={20}>
                   <circle r={10} cx={10} cy={10} className={`line-${i}`}></circle>
                 </svg> <span className="chart-label">{label}</span>

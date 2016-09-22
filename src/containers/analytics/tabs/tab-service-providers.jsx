@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import AnalysisServiceProviders from '../../../components/analysis/service-providers.jsx'
 
@@ -20,8 +19,11 @@ class AnalyticsTabServiceProviders extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+      this.props.filters.get('onOffNet') !== nextProps.filters.get('onOffNet') ||
+      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')
+    ) {
       this.fetchData(
         nextProps.params,
         nextProps.filters,
@@ -39,14 +41,12 @@ class AnalyticsTabServiceProviders extends React.Component {
     }
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
-    const onOffOpts = Object.assign({}, fetchOpts)
-    onOffOpts.granularity = 'day'
+    const queryOpts = Object.assign({}, fetchOpts)
+    queryOpts.granularity = 'day'
 
-    const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
-
-    this.props.trafficActions.fetchServiceProviders(onOffOpts)
+    this.props.trafficActions.startFetching()
+    this.props.trafficActions.fetchServiceProviders(queryOpts)
+      .then(this.props.trafficActions.finishFetching, this.props.trafficActions.finishFetching)
   }
 
   render(){
@@ -54,6 +54,10 @@ class AnalyticsTabServiceProviders extends React.Component {
       <AnalysisServiceProviders
         fetching={this.props.fetching}
         stats={this.props.serviceProviders}
+        serviceProviders={this.props.allServiceProviders}
+        serviceProviderFilter={this.props.filters.get('serviceProviders')}
+        onOffFilter={this.props.filters.get('onOffNet')}
+        serviceTypes={this.props.filters.get('serviceTypes')}
       />
     )
   }
@@ -61,7 +65,9 @@ class AnalyticsTabServiceProviders extends React.Component {
 
 AnalyticsTabServiceProviders.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
+  allServiceProviders: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -79,6 +85,7 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),
+    allServiceProviders: state.filters.get('filterOptions').get('serviceProviders'),
     filters: state.filters.get('filters')
   }
 }
