@@ -2,9 +2,11 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
 import {
-  ROLES_MAPPING
+  ROLES_MAPPING,
+  ACCOUNT_TYPE_CONTENT_PROVIDER,
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CLOUD_PROVIDER
 } from '../../../constants/account-management-options'
 
 class SupportTabDocumentation extends React.Component {
@@ -15,24 +17,25 @@ class SupportTabDocumentation extends React.Component {
 
     let documentPath = ""
 
-    // TODO: replace magic numbers with enums once they're merged
     switch (accountType) {
-      case 1:
+      case ACCOUNT_TYPE_CONTENT_PROVIDER:
         documentPath = "/assets/pdf/CP_User_Guide.pdf"
         break
-      case 2:
+      case ACCOUNT_TYPE_SERVICE_PROVIDER:
         documentPath = "/assets/pdf/SP_User_Guide.pdf"
         break
-      case 3:
+      case ACCOUNT_TYPE_CLOUD_PROVIDER:
         documentPath = "/assets/pdf/UDN_Admin_Guide.pdf"
         break
     }
 
     return (
-      <div className="account-support-documentation">
-        <p><FormattedMessage id="portal.support.documentation.body.text" /></p>
+      <div className="account-support-documentation text-center">
+        <p className="lead"><FormattedMessage id="portal.support.documentation.body.text" values={{br: <br/>}} /></p>
         <p>
-          <a href={documentPath} target="_blank">
+          <a href={documentPath}
+            target="_blank"
+            className="btn btn-primary">
             <FormattedMessage id="portal.support.documentation.body.link" />
           </a>
         </p>

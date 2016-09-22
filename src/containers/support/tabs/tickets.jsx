@@ -147,10 +147,12 @@ class SupportTabTickets extends React.Component {
 
   render() {
     return (
-      <div className="account-support-tickets">
-        <p><FormattedMessage id="portal.support.tickets.body.text" /></p>
+      <div className="account-support-tickets text-center">
+        <p className="lead"><FormattedMessage id="portal.support.tickets.body.text" values={{br: <br/>}}/></p>
         <p>
-          <a href={this.props.intl.formatMessage({id: 'portal.support.tickets.body.link'})} target="_blank">
+          <a href="http://support.ericssonudn.com/"
+            target="_blank"
+            className="btn btn-primary">
             <FormattedMessage id="portal.support.tickets.body.link" />
           </a>
         </p>
