@@ -1,41 +1,46 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+jest.unmock('../page-header.jsx')
+jest.unmock('classnames')
 
-jest.dontMock('../page-header.jsx')
-const PageHeader = require('../page-header.jsx')
+import React from 'react'
+import { shallow } from 'enzyme'
+import PageHeader from '../page-header.jsx'
+
 
 describe('Page Header layout', () => {
+  let subject = null
+  beforeEach(() => {
+    subject = (distCols, secPageHeader, pageSubTitle) => {
+      let props = {
+        children: [<div id='child'/>],
+        className: 'aa',
+        distributedColumns: distCols || false,
+        pageHeaderDetails: ['a', 'b', 'c'],
+        pageSubTitle,
+        secondaryPageHeader: secPageHeader || false
+      }
+      return shallow(<PageHeader {...props}/>)
+    }
+  })
   it('should exist', () => {
-    let layout = TestUtils.renderIntoDocument(
-      <PageHeader />
-    );
-    expect(TestUtils.isCompositeComponent(layout)).toBeTruthy();
+    expect(subject().length).toBe(1)
   });
 
   it('can be passed a custom css class', () => {
-    let layout = TestUtils.renderIntoDocument(
-      <PageHeader className="aaa" />
-    );
+    expect(subject().find('.aa').length).toBe(1)
+  });
 
-    // Verify that it has the passed class
-    let container = TestUtils.findRenderedDOMComponentWithTag(
-      layout, 'div');
-    expect(ReactDOM.findDOMNode(container).className)
-      .toContain('aaa');
+  it('can be passed a custom additional classes', () => {
+    expect(subject(true, true).find('.secondary-page-header .distributed-columns').length).toBe(1)
+  });
+
+  it('renders page header details', () => {
+    const component = subject()
+    expect(component.find('#detail-0').length).toBe(1)
+    expect(component.find('#detail-1').length).toBe(1)
+    expect(component.find('#detail-2').length).toBe(1)
   });
 
   it('renders a child', () => {
-    let layout = TestUtils.renderIntoDocument(
-      <PageHeader>
-        <span className="test">Test</span>
-      </PageHeader>
-    );
-
-    // Verify that it has the child element
-    let child = TestUtils.findRenderedDOMComponentWithClass(
-      layout, 'test');
-    expect(ReactDOM.findDOMNode(child).textContent)
-      .toEqual('Test');
+    expect(subject().find('#child').length).toBe(1)
   });
 })

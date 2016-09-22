@@ -22,6 +22,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
+  ACCOUNT_TYPE_CLOUD_PROVIDER,
   NAME_VALIDATION_REGEXP
 } from '../../../constants/account-management-options'
 
@@ -29,7 +30,7 @@ import { checkForErrors } from '../../../util/helpers'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
 
 class AccountList extends Component {
   constructor(props) {
