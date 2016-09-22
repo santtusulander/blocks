@@ -1,14 +1,17 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../../../util/policy-config.js')
-jest.dontMock('../policy-rules.jsx')
-const ConfigurationPolicyRules = require('../policy-rules.jsx')
+jest.unmock('../../confirmation')
+jest.unmock('../policy-rules')
+jest.unmock('../../../util/policy-config')
+jest.unmock('../../../components/action-buttons')
+jest.unmock('../../../components/icon')
+jest.unmock('../../../components/icons/icon-edit')
+jest.unmock('../../../components/icons/icon-trash')
+const ConfigurationPolicyRules = require('../policy-rules')
 
-const fakeRequestPolicyRules = Immutable.fromJS(
+const requestPolicies = fromJS(
   [{
     "match": {
       "default": [
@@ -68,7 +71,7 @@ const fakeRequestPolicyRules = Immutable.fromJS(
   }]
 )
 
-const fakeResponsePolicyRules = Immutable.fromJS(
+const responsePolicies = fromJS(
   [{
     "match": {
       "field": "response_code",
@@ -115,51 +118,39 @@ const fakeResponsePolicyRules = Immutable.fromJS(
 )
 
 describe('ConfigurationPolicyRules', () => {
+
+  let subject = null
+
+  const intlMaker = () => {
+    return {
+      formatMessage: jest.fn()
+    }
+  }
+
+  beforeEach(() => {
+    subject = (props) => {
+      let defaultProps = Object.assign({}, {
+        intl: intlMaker()
+      }, props)
+      return shallow(<ConfigurationPolicyRules {...defaultProps}/>)
+    }
+  })
+
+
   it('should exist', () => {
-    const policyRules = shallow(<ConfigurationPolicyRules />)
-    expect(policyRules).toBeDefined()
+    expect(subject()).toBeDefined()
   });
 
   it('should set and reset policy types', () => {
-    let policyRules = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRules />
-    );
-    expect(policyRules.state.request_policy).toBe(null);
-    policyRules.showConfirmation('request_policy', 'foo')();
-    expect(policyRules.state.request_policy).toBe('foo');
-    policyRules.closeConfirmation('request_policy')();
-    expect(policyRules.state.request_policy).toBe(null);
-  });
+    let policyRules = subject()
 
-  it('should activate a request policy rule', () => {
-    const activateRule = jest.fn()
-    const policyRules = shallow(
-      <ConfigurationPolicyRules
-        requestPolicies={fakeRequestPolicyRules}
-        responsePolicies={fakeResponsePolicyRules}
-        activateRule={activateRule} />
-    )
-    const btn = policyRules.find('.activate-request-rule-0')
-    btn.simulate('click', {preventDefault: jest.fn()})
-    expect(activateRule.mock.calls.length).toBe(1)
-    expect(activateRule.mock.calls[0][0][0]).toBe('request_policy')
-    expect(activateRule.mock.calls[0][0][1]).toBe('policy_rules')
-    expect(activateRule.mock.calls[0][0][2]).toBe(0)
-  });
+    expect(policyRules.state().request_policy).toBe(null);
 
-  it('should activate a response policy rule', () => {
-    const activateRule = jest.fn()
-    let policyRules = shallow(
-      <ConfigurationPolicyRules
-        requestPolicies={fakeRequestPolicyRules}
-        responsePolicies={fakeResponsePolicyRules}
-        activateRule={activateRule} />
-    )
-    const btn = policyRules.find('.activate-response-rule-0')
-    btn.simulate('click', {preventDefault: jest.fn()})
-    expect(activateRule.mock.calls.length).toBe(1)
-    expect(activateRule.mock.calls[0][0][0]).toBe('response_policy')
-    expect(activateRule.mock.calls[0][0][1]).toBe('policy_rules')
-    expect(activateRule.mock.calls[0][0][2]).toBe(0)
-  });
+    policyRules.instance().showConfirmation('request_policy', 'foo')();
+    expect(policyRules.state().request_policy).toBe('foo');
+
+    policyRules.instance().closeConfirmation('request_policy')();
+    expect(policyRules.state().request_policy).toBe(null);
+  })
+
 })
