@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
 import SectionHeader from '../../components/layout/section-header'
+import SectionContainer from '../../components/layout/section-container'
 import UDNButton from '../button'
 import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
@@ -69,12 +70,13 @@ class DNSList extends Component {
     recordTypes.sort().forEach((type, index) => {
       if (recordsByType.hasOwnProperty(type)) {
         tables.push(
-          <div key={index} className='table-container'>
+          <SectionContainer key={index}>
             <SectionHeader
               sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}
               subHeaderId={'table-label-' + index} />
+
             <SortableTable content={getContent(type)}/>
-          </div>
+          </SectionContainer>
         )
       }
     })
