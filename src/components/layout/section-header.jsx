@@ -1,26 +1,24 @@
 import React from 'react'
 import classNames from 'classnames'
 
-class SectionHeader extends React.Component {
-  render() {
-    let customClassName = this.props.className ? this.props.className : '';
-    let finalClassName = classNames(
-      'section-header-container',
-      customClassName
-    );
+const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, sectionSubHeaderTitle, children }) => {
+  let customClassName = className || '';
+  let finalClassName = classNames(
+    'section-header-container',
+    customClassName
+  );
 
-    return (
-      <div className={finalClassName}>
-        <div className="section-header-layout">
-          {this.props.sectionHeaderTitle && <h3 id={this.props.headerId}>{this.props.sectionHeaderTitle}</h3>}
-          {this.props.sectionSubHeaderTitle && <h4 id={this.props.subHeaderId}>{this.props.sectionSubHeaderTitle}</h4>}
-          <div className="section-header-actions">
-            {this.props.children}
-          </div>
+  return (
+    <div className={finalClassName}>
+      <div className="section-header-layout">
+        {sectionHeaderTitle && <h3 id={headerId}>{sectionHeaderTitle}</h3>}
+        {sectionSubHeaderTitle && <h4 id={subHeaderId}>{sectionSubHeaderTitle}</h4>}
+        <div className="section-header-actions">
+          {children}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 SectionHeader.displayName = 'SectionHeader'
@@ -39,4 +37,4 @@ SectionHeader.propTypes = {
   subHeaderId: React.PropTypes.string
 };
 
-module.exports = SectionHeader
+export default SectionHeader
