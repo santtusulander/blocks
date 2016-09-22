@@ -1,18 +1,18 @@
 import React from 'react'
+import classNames from 'classnames'
 
-class SectionContainer extends React.Component {
-  render() {
-    let className = 'section-container';
-    if(this.props.className) {
-      className = className + ' ' + this.props.className
-    }
+const SectionContainer = ({ className, children }) => {
+  let customClassName = className || '';
+  let finalClassName = classNames(
+    'section-container',
+    customClassName
+  );
 
-    return (
-      <div className={className}>
-        {this.props.children}
-      </div>
-    )
-  }
+  return (
+    <div className={finalClassName}>
+      {children}
+    </div>
+  )
 }
 
 SectionContainer.displayName = 'SectionContainer'
