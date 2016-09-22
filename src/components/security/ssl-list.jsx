@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
 
-import ActionLinks from '../account-management/action-links.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl, intlShape} from 'react-intl'
 
-const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate }) => {
+const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
   return (
     <div>
       <AccountManagementHeader title={`${certificates.size} Certificates`} onAdd={uploadCertificate}/>
@@ -16,13 +16,13 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
           <tr>
             <th width="30%">
               <Input type="checkbox"
-                label={this.props.intl.formatMessage({id: 'portal.security.ssl.title.text'})}
+                label={intl.formatMessage({id: 'portal.security.ssl.title.text'})}
                 onChange={() => onCheck('all')}
                 checked={false}/>
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
-            <th width="8%"></th>
+            <th width="1%"></th>
           </tr>
         </thead>
         <tbody>
@@ -41,8 +41,8 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
                 </td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td>
-                  <ActionLinks
+                <td className="nowrap-column">
+                  <ActionButtons
                     onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
                     onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
                 </td>
@@ -61,6 +61,7 @@ SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
+  intl: intlShape.isRequired,
   onCheck: PropTypes.func,
   uploadCertificate: PropTypes.func
 }

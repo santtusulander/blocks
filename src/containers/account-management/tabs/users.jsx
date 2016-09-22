@@ -15,11 +15,11 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import PageContainer from '../../../components/layout/page-container'
 import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
-import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
@@ -164,6 +164,15 @@ export class AccountManagementAccountUsers extends React.Component {
     })
   }
 
+  getRoleOptions(roleMapping, props) {
+    return roleMapping
+      .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
+      .map(mapped_role => [
+        mapped_role.id,
+        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+      ])
+  }
+
   getInlineAddFields() {
     /**
      * Each sub-array contains elements per <td>. If no elements are needed for a <td>, insert empty array [].
@@ -172,12 +181,7 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
-    const roleOptions = ROLES_MAPPING
-      .filter(role => role.accountTypes.includes(this.props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
       [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
       [
@@ -366,11 +370,10 @@ export class AccountManagementAccountUsers extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
-    let roleOptions = ROLES_MAPPING.map(mapped_role => [
-      mapped_role.id,
-      this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-    ])
+
+    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
+
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
@@ -425,7 +428,7 @@ export class AccountManagementAccountUsers extends React.Component {
               <th width="20%">Password</th>
               <th width="20%">Role</th>
               <th width="20%">Groups</th>
-              <th width="8%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -446,14 +449,10 @@ export class AccountManagementAccountUsers extends React.Component {
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  <td>
-                    <a href="#" onClick={() => {this.editUser(user)}}>
-                      EDIT
-                    </a>
-                    <Button onClick={() => this.deleteUser(user.get('email'))}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                  <td className="nowrap-column">
+                    <ActionButtons
+                      onEdit={() => {this.editUser(user)}}
+                      onDelete={() => this.deleteUser(user.get('email'))} />
                   </td>
                 </tr>
               )
@@ -480,6 +479,7 @@ export class AccountManagementAccountUsers extends React.Component {
           <UserEditModal
             show={this.state.showEditModal}
             user={this.state.userToEdit}
+            accountType={this.props.account.get('provider_type')}
             groups={this.props.groups}
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}

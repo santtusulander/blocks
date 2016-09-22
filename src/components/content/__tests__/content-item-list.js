@@ -1,39 +1,50 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
-jest.dontMock('../content-item-list.jsx')
-const ContentItemList = require('../content-item-list.jsx')
+jest.unmock('../content-item-list.jsx')
+import ContentItemList from '../content-item-list'
 
 describe('ContentItemList', () => {
   it('should exist', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+    const contentItem = shallow(
       <ContentItemList
         account={Immutable.Map()}
         linkTo={'/'}
         analyticsLink={'/'}/>
-    );
-    expect(TestUtils.isCompositeComponent(contentItem)).toBeTruthy();
-  });
+    )
+    expect(contentItem.length).toBe(1)
+  })
 
   it('does not show an config button when it is not supposed to', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+    const contentItem = shallow(
       <ContentItemList
         linkTo={'/'}
         analyticsLink={'/'}/>
-    );
-    let editBtn = TestUtils.scryRenderedDOMComponentsWithClass(contentItem, 'edit-content-item');
+    )
+    const editBtn = contentItem.find('.edit-content-item')
     expect(editBtn.length).toBe(0)
-  });
+  })
 
-  it('shows an config button when it is supposed to', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+  it('shows a config button when configuration link is set', () => {
+    const contentItem = shallow(
       <ContentItemList
         configurationLink={'foo'}
         linkTo={'/'}
-        analyticsLink={'/'} />
-    );
-    let editBtn = TestUtils.scryRenderedDOMComponentsWithClass(contentItem, 'edit-content-item');
+        analyticsLink={'/'}/>
+    )
+    const editBtn = contentItem.find('.edit-content-item')
     expect(editBtn.length).toBe(1)
-  });
+  })
+
+  it('shows a config button when onConfiguration callback function is set', () => {
+    const contentItem = shallow(
+      <ContentItemList
+    onConfiguration={() => {}}
+    linkTo={'/'}
+    analyticsLink={'/'}/>
+    )
+    const editBtn = contentItem.find('.edit-content-item')
+    expect(editBtn.length).toBe(1)
+  })
 })

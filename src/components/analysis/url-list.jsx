@@ -3,10 +3,10 @@ import Immutable from 'immutable'
 import numeral from 'numeral'
 import { Input } from 'react-bootstrap'
 
-import {formatBytes} from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
 import TableSorter from '../table-sorter'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class AnalysisURLList extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class AnalysisURLList extends React.Component {
   }
 
   render() {
-    const {labelFormat, urls} = this.props
+    const { urls } = this.props
     const maxBytes = Math.max(...urls.toJS().map(url => url.bytes))
     const maxReqs = Math.max(...urls.toJS().map(url => url.requests))
     const sorterProps = {
@@ -80,6 +80,9 @@ class AnalysisURLList extends React.Component {
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
+              <TableSorter {...sorterProps} column="status">
+                <FormattedMessage id="portal.analytics.urlList.status.text"/>
+              </TableSorter>
               <TableSorter {...sorterProps} column="url">
                 <FormattedMessage id="portal.analytics.urlList.url.text"/>
               </TableSorter>
@@ -97,7 +100,8 @@ class AnalysisURLList extends React.Component {
               const reqsOfMax = (url.get('requests') / maxReqs) * 100
               return (
                 <tr key={i}>
-                  <td>{labelFormat(url)}</td>
+                  <td>{url.get('status_code')}</td>
+                  <td>{url.get('url')}</td>
                   <td>
                     {formatBytes(url.get('bytes'))}
                     <div className="table-percentage-line">
@@ -122,7 +126,7 @@ class AnalysisURLList extends React.Component {
 
 AnalysisURLList.displayName = 'AnalysisURLList'
 AnalysisURLList.propTypes = {
-  labelFormat: React.PropTypes.func,
+  intl: React.PropTypes.object,
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLList.defaultProps = {

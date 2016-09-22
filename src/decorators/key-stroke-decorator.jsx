@@ -1,13 +1,13 @@
 import React, { PropTypes, Component } from 'react'
-import { once } from 'underscore'
 
 export default function(WrappedModal) {
   class KeyStrokeSupport extends Component {
     constructor(props) {
       super(props)
-      this.submitOnce = once(props.submit || props.cancel)
-      this.cancelOnce = once(props.cancel)
+      this.submitCalled = false
       this.handleKeyDown = this.handleKeyDown.bind(this)
+      this.submit = this.submit.bind(this)
+
     }
 
     componentWillMount() {
@@ -18,19 +18,33 @@ export default function(WrappedModal) {
       document.removeEventListener('keydown', this.handleKeyDown)
     }
 
+    submit() {
+      const { submit, cancel, invalid } = this.props
+      if (!submit) {
+        return cancel()
+      }
+      if (!this.submitCalled && !invalid) {
+        submit()
+        this.submitCalled = true
+      }
+    }
+
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 13:
           e.preventDefault()
-          !this.props.invalid && this.submitOnce()
+          this.submit()
           break
-        case 27: this.cancelOnce()
+        case 27:
+          this.props.cancel()
           break
       }
     }
 
     render() {
-      return (<WrappedModal {...this.props}/>)
+      let props = Object.assign({}, this.props)
+      delete props.submit
+      return (<WrappedModal submit={this.submit} {...props}/>)
     }
   }
 

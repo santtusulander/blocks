@@ -11,8 +11,8 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
-import IconTrash from '../../../components/icons/icon-trash'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
@@ -196,16 +196,20 @@ class AccountManagementAccountGroups extends React.Component {
     return true
   }
 
+  filteredData( groupName ) {
+    return this.props.groups.filter((group) => {
+      return group.get('name').toLowerCase().includes(groupName)
+    })
+  }
+
   render() {
-    const groups = this.props.groups;
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredGroups = groups.filter((group) => {
-      return group.get('name').toLowerCase().includes(this.state.search.toLowerCase())
-    })
+    const filteredGroups = this.filteredData(this.state.search.toLowerCase())
+
     const sortedGroups = this.sortedData(
       filteredGroups,
       this.state.sortBy,
@@ -270,7 +274,7 @@ class AccountManagementAccountGroups extends React.Component {
               {/* Not on 0.7
               <th>Properties</th>
               */}
-              <th width="8%"/>
+              <th width="1%"/>
             </tr>
           </thead>
           <tbody>
@@ -296,14 +300,10 @@ class AccountManagementAccountGroups extends React.Component {
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
                 */}
-                <td>
-                  <a href="#" onClick={() => this.props.editGroup(group)}>
-                    EDIT
-                  </a>
-                  <Button onClick={this.deleteGroup(group)}
-                    className="btn-link btn-icon">
-                    <IconTrash/>
-                  </Button>
+                <td className="nowrap-column">
+                  <ActionButtons
+                    onEdit={() => {this.props.editGroup(group)}}
+                    onDelete={() => {this.props.deleteGroup(group)}} />
                 </td>
               </tr>
             )

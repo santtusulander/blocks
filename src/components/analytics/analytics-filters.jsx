@@ -16,26 +16,6 @@ import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checkli
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
-const serviceProviderOpts = [
-  ['all', 'All'],
-  ['vodafone-group', 'Vodafone Group'],
-  ['telstra', 'Telstra'],
-  ['bharti', 'Bharti'],
-  ['singtel', 'Singtel'],
-  ['china-telecom', 'China Telecom'],
-  ['hgc', 'HGC'],
-  ['ais', 'AIS'],
-  ['tot', 'TOT'],
-  ['cht', 'CHT'],
-  ['fet', 'FET'],
-  ['xl-axiata', 'XL Axiata'],
-  ['telkom-indonesia', 'Telkom Indonesia'],
-  ['globe', 'Globe'],
-  ['mobifone', 'Mobifone'],
-  ['sk-bb', 'SK BB'],
-  ['lg-u', 'LG U+]']
-]
-
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
     return currentValues.filter( (val ) => {
@@ -137,10 +117,10 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <FilterServiceProvider
           changeServiceProvider={val => {
-            props.onFilterChange('serviceProvider', val)
+            props.onFilterChange('serviceProviders', val)
           }}
-          options={serviceProviderOpts}
-          value={props.filters.get('serviceProvider')}
+          options={props.filterOptions.get('serviceProviders')}
+          value={props.filters.get('serviceProviders')}
           />
         </div>
       }

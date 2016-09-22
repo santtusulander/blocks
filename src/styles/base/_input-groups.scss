@@ -2,13 +2,15 @@
 // ============
 
 .input-group {
-  max-width: 980px;
+  width: 100%;
+  max-width: 900px;
 }
 
 .input-group-addon {
   height: 100%;
   min-width: $bar-height;
   color: inherit;
+  text-align: left;
   background-color: transparent;
   border: 0;
 
@@ -23,7 +25,6 @@
 
   .dark-theme & {
     background-color: rgba($black, 0.2);
-    border-right: 1px solid rgba($black, 0.2);
   }
 }
 
@@ -53,26 +54,18 @@
   min-width: $bar-height;
   cursor: pointer;
 
-  @include md {
-    height: $md-bar-height;
-    min-width: $md-bar-height;
-  }
-
   .dark-theme & {
     color: $dt-text-color;
     fill: $dt-text-color;
-    stroke: $dt-text-color;
   }
 
   .light-theme & {
     color: $lt-text-color;
     fill: $lt-text-color;
-    stroke: $lt-text-color;
   }
 
   .icon {
     fill: inherit;
-    stroke: inherit;
   }
 
   &:hover,
@@ -82,8 +75,11 @@
     .dark-theme &,
     .light-theme & {
       color: $pale-blue;
-      fill: $pale-blue;
-      stroke: $pale-blue;
+
+      & .icon,
+      & .icon .base {
+        fill: $pale-blue;
+      }
     }
   }
 }

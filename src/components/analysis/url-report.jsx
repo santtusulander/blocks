@@ -60,7 +60,7 @@ class AnalysisURLReport extends React.Component {
         return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
       })
 
-    const chartHeight = filteredUrls.size * 40 + 40
+    const chartHeight = filteredUrls.size * 36 + 72
 
     return (
       <div className="analysis-url-report">
@@ -90,10 +90,12 @@ class AnalysisURLReport extends React.Component {
 
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLReport.defaultProps = {
   urls: Immutable.List()
 }
 
-module.exports = AnalysisURLReport
+export default AnalysisURLReport

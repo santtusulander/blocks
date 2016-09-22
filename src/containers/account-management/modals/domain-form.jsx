@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import { reduxForm } from 'redux-form'
@@ -10,24 +10,11 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
+import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
 
-let errors = {}
+import { checkForErrors, isValidIPv4Address } from '../../../util/helpers'
 
-const validate = (values) => {
-  errors = {}
-
-  const maxTtl = 2147483647;
-  const { name, email_addr, name_server, refresh, ttl, negative_ttl } = values
-
-  if (!name || name.length === 0) errors.name = <FormattedMessage id="portal.accountManagement.dns.form.validation.name.text"/>
-  if (!email_addr || email_addr.length === 0) errors.email_addr = <FormattedMessage id="portal.accountManagement.dns.form.validation.email.text"/>
-  if (!name_server || name_server.length === 0) errors.name_server = <FormattedMessage id="portal.accountManagement.dns.form.validation.nameServer.text"/>
-  if (!refresh || refresh.length === 0) errors.refresh = <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
-  if (!ttl || ttl.length === 0) errors.ttl = <FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
-
-  if (parseInt(ttl) > maxTtl) errors.ttl = <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
-  if (parseInt(negative_ttl) > maxTtl) errors.negative_ttl = <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
-
+const validate = fields => {
   // TODO: name_server validation
   // From API-docs:
   // Any name server that will respond authoritatively for the domain.
@@ -40,36 +27,105 @@ const validate = (values) => {
   // Domain Name (FQDN - ends with a dot). If the record points to
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
-
-  return errors;
+  const { ttl, negative_ttl, email_addr, name, name_server } = fields
+  const maxTtl = 2147483647;
+  const notValidNameserver = !(new RegExp(/^([a-zA-Z0-9*]([a-zA-Z0-9-*]*[a-zA-Z0-9*]+)?\.)+$/).test(name_server))
+  const notValidDomainName = !(new RegExp(/^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?\.)?([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]+)\.([a-zA-Z]{2,}(\.[a-zA-Z]{2,6})?)$/).test(name))
+  // Note that this is not an usual email address
+  const notValidMailbox = !new RegExp(/^(([-a-z0-9~!$%^&*_=+}{.\'?]*)\.)$/).test(email_addr)
+  const customConditions = {
+    name_server: {
+      condition: !isValidIPv4Address(name_server) ? notValidNameserver : false,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.nameServer'/>
+    },
+    name: {
+      condition: notValidDomainName,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.domainName'/>
+    },
+    email_addr: {
+      condition: notValidMailbox,
+      errorText: <FormattedMessage id='portal.account.domainForm.validation.mailbox'/>
+    },
+    ttl: {
+      condition: parseInt(ttl) > maxTtl,
+      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+    },
+    negative_ttl: {
+      condition: parseInt(negative_ttl) > maxTtl,
+      errorText: <FormattedMessage id='portal.accountManagement.dns.form.validation.maxTtl.text' values={{maxTtl}}/>
+    }
+  }
+  const requiredTexts = {
+    name: <FormattedMessage id="portal.accountManagement.dns.form.validation.name.text"/>,
+    email_addr: <FormattedMessage id="portal.accountManagement.dns.form.validation.email.text"/>,
+    name_server: <FormattedMessage id="portal.accountManagement.dns.form.validation.nameServer.text"/>,
+    refresh: <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
+  }
+  return checkForErrors(fields, customConditions, requiredTexts)
 }
 
-const DnsDomainEditFormContainer = (props) => {
-  const { edit, saveDomain, deleteDomain, closeModal, ...formProps } = props
-  const domainFormProps = {
-    edit,
-    onSave: (fields) => {
-      saveDomain( edit, fields)
-    },
-    onCancel: () => {
-      closeModal()
-    },
-    onDelete: (domainId) => {
-      deleteDomain(domainId)
-    },
-    ...formProps
+class DnsDomainEditFormContainer  extends Component {
+  constructor() {
+    super()
+
+    this.state = {
+      domainToDelete: null
+    }
+
+    this.deleteDomain = this.deleteDomain.bind(this)
+    this.showDeleteModal = this.showDeleteModal.bind(this)
+    this.hideDeleteModal = this.hideDeleteModal.bind(this)
   }
-  return (
-    <Modal show={true} dialogClassName="dns-edit-form-sidebar">
-      <Modal.Header>
-        <h1>{edit ? 'Edit Domain' : 'New Domain'}</h1>
-        {edit && <p>{props.fields.name.value}</p>}
-      </Modal.Header>
-      <Modal.Body>
-        <DnsDomainEditForm {...domainFormProps}/>
-      </Modal.Body>
-    </Modal>
-  )
+
+  deleteDomain() {
+    this.props.deleteDomain(this.state.domainToDelete)
+    this.hideDeleteModal()
+  }
+
+  showDeleteModal(domainId) {
+    this.setState({
+      domainToDelete: domainId
+    })
+  }
+
+  hideDeleteModal() {
+    this.setState({
+      domainToDelete: null
+    })
+  }
+
+  render() {
+    const { edit, saveDomain, closeModal, ...formProps } = this.props
+    const domainFormProps = {
+      edit,
+      onSave: (fields) => {
+        saveDomain( edit, fields)
+      },
+      onCancel: () => {
+        closeModal()
+      },
+      onDelete: (domainId) => {
+        this.showDeleteModal(domainId)
+      },
+      ...formProps
+    }
+    return (
+      <div className="dns-edit-container">
+        <Modal show={true} dialogClassName="dns-edit-form-sidebar">
+          <Modal.Header>
+            <h1>{edit ? <FormattedMessage id='portal.account.domainForm.editDomain.title' /> : <FormattedMessage id='portal.account.domainForm.newDomain.title' />}</h1>
+            {edit && <p>{this.props.fields.name.value}</p>}
+          </Modal.Header>
+          <Modal.Body>
+            <DnsDomainEditForm {...domainFormProps}/>
+          </Modal.Body>
+        </Modal>
+        {this.state.domainToDelete && <DeleteDomainModal
+          cancel={this.hideDeleteModal}
+          submit={() => { this.deleteDomain() }}/>}
+      </div>
+    )
+  }
 }
 
 DnsDomainEditFormContainer.propTypes = {
@@ -82,7 +138,7 @@ DnsDomainEditFormContainer.propTypes = {
 
 function mapStateToProps({ dns }, { edit }) {
   let props = {
-    loading: dns.get('loading')
+    fetching: dns.get('fetching')
   }
 
   if (edit) {
@@ -118,6 +174,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
   return {
     dnsActions: dnsActions,
     deleteDomain: (domainId) => {
+      dnsActions.startFetchingDomains()
       dnsActions.deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
@@ -129,6 +186,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     },
@@ -145,6 +203,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       const domain = data.name
       delete data.name
 
+      dnsActions.startFetchingDomains()
       dnsActions[method]('udn', domain, data)
         .then(res => {
           if (res.error) {
@@ -156,6 +215,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
               </Button>
             }))
           }
+          dnsActions.stopFetchingDomains()
           closeModal();
         })
     }
