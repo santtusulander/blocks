@@ -240,12 +240,9 @@ class AccountManagementAccountDetails extends React.Component {
           </div>
 
           <ButtonToolbar className="text-right extra-margin-top">
-            <UDNButton
-              disabled={this.props.invalid}
-              bsStyle="primary"
-              onClick={this.save}>
-              Save
-            </UDNButton>
+            <IsAllowed to={MODIFY_ACCOUNTS}>
+              <UDNButton disabled={this.props.invalid} bsStyle="primary" onClick={this.save}>Save</UDNButton> 
+            </IsAllowed>
           </ButtonToolbar>
         </form>
       </PageContainer>

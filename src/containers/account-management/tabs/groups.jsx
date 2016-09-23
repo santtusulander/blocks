@@ -24,6 +24,9 @@ import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
 
 import { FormattedMessage } from 'react-intl'
+import IsAllowed from '../../../components/is-allowed'
+import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
+
 
 
 class AccountManagementAccountGroups extends React.Component {
@@ -246,7 +249,7 @@ class AccountManagementAccountGroups extends React.Component {
 
     return (
       <PageContainer className="account-management-account-groups">
-        <SectionHeader sectionHeaderTitle={finalGroupText}>
+       <SectionHeader sectionHeaderTitle={finalGroupText}>
           <Input
             type="text"
             className="search-input"
@@ -254,9 +257,11 @@ class AccountManagementAccountGroups extends React.Component {
             placeholder="Search"
             value={this.state.search}
             onChange={this.changeSearch} />
-          <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
-            <IconAdd />
-          </Button>
+          <IsAllowed to={CREATE_GROUP}>
+            <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
+              <IconAdd />
+            </Button>
+          </IsAllowed>
         </SectionHeader>
 
         <Table striped={true}>
@@ -299,9 +304,9 @@ class AccountManagementAccountGroups extends React.Component {
                 <td>NEEDS_API</td>
                 */}
                 <td className="nowrap-column">
-                  <ActionButtons
-                    onEdit={() => {this.props.editGroup(group)}}
-                    onDelete={() => {this.props.deleteGroup(group)}} />
+                  <IsAllowed to={MODIFY_GROUP}>
+                     <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                  </IsAllowed>
                 </td>
               </tr>
             )

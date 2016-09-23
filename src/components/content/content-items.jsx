@@ -26,6 +26,8 @@ import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import { Button } from 'react-bootstrap'
+import IsAllowed from '../is-allowed'
+import * as PERMISSIONS from '../../constants/permissions.js'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -246,11 +248,9 @@ class ContentItems extends React.Component {
           </AccountSelector>
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-            <UDNButton bsStyle="success"
-                       icon={true}
-                       onClick={this.addItem}>
-              <IconAdd/>
-            </UDNButton>
+            <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
+              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+            </IsAllowed>
             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
@@ -318,7 +318,8 @@ class ContentItems extends React.Component {
                     fetchingMetrics: this.props.fetchingMetrics,
                     chartWidth: scaledWidth.toString(),
                     barMaxHeight: (scaledWidth / 7).toString(),
-                    showSlices: this.props.showSlices
+                    showSlices: this.props.showSlices,
+                    isAllowedToConfigure: this.props.isAllowedToConfigure
                   }
 
                   return (
@@ -420,6 +421,7 @@ ContentItems.propTypes = {
   hideInfoDialog: React.PropTypes.func,
   history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
+  isAllowedToConfigure: React.PropTypes.bool,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
