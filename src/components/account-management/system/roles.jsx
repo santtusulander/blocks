@@ -53,8 +53,7 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     return (
       <PageContainer>
-
-        {this.props.fetchingAccounts
+        {this.props.fetchingAccounts || this.props.fetchingUsers
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
@@ -89,7 +88,8 @@ AccountManagementSystemRoles.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    fetchingAccounts: state.account.get('fetching')
+    fetchingAccounts: state.account.get('fetching'),
+    fetchingUsers: state.user.get('fetching')
   }
 }
 
