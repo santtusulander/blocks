@@ -226,7 +226,11 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
   const nowOpts = Object.assign({}, {
     granularity: 'hour'
   }, opts)
-  const dateRange = moment.duration(opts.endDate - opts.startDate, 'seconds').add(1, 's').asDays()
+
+  let dateRange = moment.duration(opts.endDate - opts.startDate, 'seconds').add(1, 's').asDays()
+  // use minimun of 28days
+  if (dateRange < 28)  dateRange = 28
+
   const historyOpts = Object.assign({}, nowOpts, {
     startDate: moment(opts.startDate, 'X').subtract(dateRange, 'days').format('X'),
     endDate: moment(opts.endDate, 'X').subtract(dateRange, 'days').format('X')
