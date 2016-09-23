@@ -40,7 +40,7 @@ if (module.hot) {
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.timeout = 60000
+axios.defaults.timeout = 300000
 
 // Handle 401s with a redirect to login page
 // Handle 403s with a InfoDialod & display message

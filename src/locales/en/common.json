@@ -2,6 +2,7 @@
   "portal.common.button.cancel": "Cancel",
   "portal.common.button.save": "Save",
   "portal.common.button.saving": "Saving...",
+  "portal.common.button.deleting": "Deleting...",
   "portal.common.button.add": "Add",
   "portal.common.button.ok": "OK",
   "portal.common.error.tokenExpire.title": "Session Expired",
