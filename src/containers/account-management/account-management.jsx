@@ -51,7 +51,6 @@ export class AccountManagement extends Component {
     this.state = {
       groupToDelete: null,
       groupToUpdate: null,
-      groupHosts: null,
       hostToDelete: null
     }
 
@@ -196,8 +195,8 @@ export class AccountManagement extends Component {
   showEditGroupModal(group) {
     const { activeAccount, hostActions } = this.props
     hostActions.fetchHosts('udn', activeAccount.get('id'), group.get('id'))
-      .then(res => {
-        this.setState({ groupToUpdate: group, groupHosts: fromJS(res.payload) })
+      .then(() => {
+        this.setState({ groupToUpdate: group })
         this.props.toggleModal(EDIT_GROUP)
       })
   }
@@ -482,7 +481,7 @@ export class AccountManagement extends Component {
         <GroupForm
           id="group-form"
           group={this.state.groupToUpdate}
-          hosts={this.state.groupHosts}
+          hosts={this.props.hosts}
           onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
           account={activeAccount}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
@@ -509,6 +508,7 @@ AccountManagement.propTypes = {
   groupActions: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   history: PropTypes.object,
+  hosts: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
@@ -527,6 +527,7 @@ AccountManagement.defaultProps = {
   activeAccount: Map(),
   dnsData: Map(),
   groups: List(),
+  hosts: List(),
   roles: List(),
   users: List()
 }
@@ -539,6 +540,7 @@ function mapStateToProps(state) {
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
+    hosts: state.host.get('allHosts'),
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
