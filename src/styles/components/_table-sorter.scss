@@ -6,6 +6,7 @@
 .table-sorter > a {
   position: relative;
   display: block;
+  padding-right: 1em;
   text-decoration: none;
 
   .dark-theme & {
@@ -30,6 +31,10 @@
     position: absolute;
     top: 50%;
     right: 0;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scaleY(-1);
+
+    &.up {
+      transform: translateY(-50%);
+    }
   }
 }

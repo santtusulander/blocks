@@ -4,10 +4,7 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table {
-
-  @include print {
-    page-break-inside: avoid;
-  }
+  margin: 0;
 
   .dark-theme & {
     background-color: rgba($black, 0.1);
@@ -137,19 +134,6 @@
       }
     }
   }
-
-  &.extra-margin-top {
-    margin-top: $bar-height;
-
-    @include md {
-      margin-top: $md-bar-height;
-    }
-
-    @include sm {
-      margin-top: $sm-bar-height;
-    }
-  }
-
 
   .nowrap-column {
     white-space: nowrap;

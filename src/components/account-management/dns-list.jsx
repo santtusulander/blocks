@@ -3,6 +3,8 @@ import { Input } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../../components/layout/page-container'
+import SectionHeader from '../../components/layout/section-header'
+import SectionContainer from '../../components/layout/section-container'
 import UDNButton from '../button'
 import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
@@ -68,38 +70,36 @@ class DNSList extends Component {
     recordTypes.sort().forEach((type, index) => {
       if (recordsByType.hasOwnProperty(type)) {
         tables.push(
-          <div key={index} className='table-container'>
-            <h4 id={'table-label-' + index}>{type} <FormattedMessage id='portal.account.dnsList.records.header' /></h4>
+          <SectionContainer key={index}>
+            <SectionHeader
+              sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}
+              subHeaderId={'table-label-' + index} />
+
             <SortableTable content={getContent(type)}/>
-          </div>
+          </SectionContainer>
         )
       }
     })
+
     return (
       <PageContainer>
-        <h3 className="account-management-header">
-          <span id="record-amount-label">
-            {visibleRecordCount}{hiddenRecordCount}
-          </span>
-          <div className='dns-filter-wrapper'>
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
-              value={searchValue}
-              onChange={searchFunc}/>
-            <IsAllowed to={CREATE_RECORD}>
-              <UDNButton
-                id="add-dns-record"
-                bsStyle="success"
-                onClick={onAddEntry}>
-                <FormattedMessage id='portal.account.dnsList.addRecord.button' />
-              </UDNButton>
-            </IsAllowed>
-          </div>
-        </h3>
-        <hr/>
+        <SectionHeader sectionHeaderTitle={<span id="record-amount-label">{visibleRecordCount}{hiddenRecordCount}</span>}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
+            value={searchValue}
+            onChange={searchFunc}/>
+          <IsAllowed to={CREATE_RECORD}>
+            <UDNButton
+              id="add-dns-record"
+              bsStyle="success"
+              onClick={onAddEntry}>
+              <FormattedMessage id='portal.account.dnsList.addRecord.button' />
+            </UDNButton>
+          </IsAllowed>
+        </SectionHeader>
         {tables}
       </PageContainer>
     )
