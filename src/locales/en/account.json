@@ -6,6 +6,7 @@
   "portal.account.dnsList.hostname.header": "Hostname",
   "portal.account.dnsList.address.header": "Address",
   "portal.account.dnsList.ttl.header": "Ttl",
+  "portal.account.dnsList.prio.header": "Priority",
   "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 
   "portal.account.recordForm.newRecord.title": "New DNS Record",
