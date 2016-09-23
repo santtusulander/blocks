@@ -4,7 +4,7 @@
   @extend .modal-form-panel;
 
   .btn-icon {
-    border: none !important;
+    border: 0 !important;
   }
 
   .add-members {
@@ -50,8 +50,8 @@
             height: 24px;
 
             .icon {
-              stroke: $pale-blue;
               vertical-align: initial;
+              stroke: $pale-blue;
 
               .light-theme & {
                 stroke: $silver-60;

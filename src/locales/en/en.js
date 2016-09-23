@@ -538,9 +538,6 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.roles.text': 'ROLES',
   'portal.accountManagement.accoutnUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
-  'portal.accountManagement.groupPropertiesName.text': 'Name',
-  'portal.accountManagement.groupProperties.text': 'Properties',
-  'portal.accountManagement.noGroupProperties.text': 'No Properties',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
 
