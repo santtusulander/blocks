@@ -37,6 +37,9 @@ class AnalysisServiceProviders extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
   }
   measureContainers() {
+    if (!this.refs.stacksHolder) {
+      return;
+    }
     this.setState({
       stacksWidth: this.refs.stacksHolder.clientWidth
     })
@@ -115,7 +118,7 @@ class AnalysisServiceProviders extends React.Component {
     const isOffNet = this.props.onOffFilter.includes('off-net')
 
     const providers = this.props.stats.reduce((list, provider, i) => {
-      let data = [];
+      let data = [0, 0, 0, 0];
 
       if (isHttp && isOnNet)
         data[0] = (provider.getIn(['http','net_on_bytes'], 0))
