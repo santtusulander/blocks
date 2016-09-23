@@ -146,7 +146,7 @@ class AnalysisByTime extends React.Component {
     }
     if(!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
-      return <div className="no-data-list-section section-sm text-sm"><p>No data found.</p></div>
+      return <h4>No data found.</h4>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
       if(dataset.get('stackedAgainst')) {

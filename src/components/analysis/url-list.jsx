@@ -1,24 +1,19 @@
 import React from 'react'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import { Input } from 'react-bootstrap'
-
+import { FormattedMessage } from 'react-intl'
 import { formatBytes } from '../../util/helpers'
 import TableSorter from '../table-sorter'
-
-import { FormattedMessage, injectIntl } from 'react-intl'
 
 class AnalysisURLList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      search: '',
       sortBy: 'bytes',
       sortDir: -1
     }
 
-    this.changeSearch = this.changeSearch.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
   }
@@ -49,7 +44,8 @@ class AnalysisURLList extends React.Component {
   }
 
   render() {
-    const { urls } = this.props
+
+    const {urls, searchState} = this.props
     const maxBytes = Math.max(...urls.toJS().map(url => url.bytes))
     const maxReqs = Math.max(...urls.toJS().map(url => url.requests))
     const sorterProps = {
@@ -62,7 +58,7 @@ class AnalysisURLList extends React.Component {
         return false;
       }
 
-      return url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
+      return url.get('url').toLowerCase().includes(searchState.toLowerCase())
     })
     const sortedURLs = this.sortedData(
       filteredURLs,
@@ -73,10 +69,6 @@ class AnalysisURLList extends React.Component {
 
     return (
       <div>
-        <Input className="search-input" type="text"
-          placeholder={this.props.intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
-          value={this.state.search}
-          onChange={this.changeSearch}/>
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
@@ -126,11 +118,11 @@ class AnalysisURLList extends React.Component {
 
 AnalysisURLList.displayName = 'AnalysisURLList'
 AnalysisURLList.propTypes = {
-  intl: React.PropTypes.object,
+  searchState: React.PropTypes.string,
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLList.defaultProps = {
   urls: Immutable.List()
 }
 
-export default injectIntl(AnalysisURLList)
+export default AnalysisURLList
