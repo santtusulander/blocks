@@ -194,7 +194,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Input id='confirmPw' placeholder=" Confirm password"
             type={this.state.passwordVisible ? 'text' : 'password'}
             wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link btn-primary' +
+            addonAfter={<a className={'input-addon-link btn-primary btn-icon' +
                 (this.state.passwordVisible ? ' active' : '')}
                 onClick={this.togglePasswordVisibility}>
                   <IconEye/>
