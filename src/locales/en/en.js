@@ -110,15 +110,17 @@ const TRANSLATED_MESSAGES = {
   'portal.role.list.search.noResults.text': 'No roles found',
   'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
 
+  'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
   'portal.analytics.fileErrors.serverErrors.label': 'Server errors',
 
   'portal.analytics.dataRangeFilter.pleaseSelect.label': 'Server errors',
 
-  'portal.analytics.onOfNet.noOptionsSelected.text': 'There must be at least one option selected.',
-  'portal.analytics.onOfNet.noOptionsSelected.title': 'Error',
-  'portal.analytics.onOfNet.primaryLabel.text': 'On Net',
-  'portal.analytics.onOfNet.secondaryLabel.text': 'Off Net',
+  'portal.analytics.onOffNet.text': 'ON/OFF NET',
+  'portal.analytics.onOffNet.noOptionsSelected.text': 'There must be at least one option selected.',
+  'portal.analytics.onOffNet.noOptionsSelected.title': 'Error',
+  'portal.analytics.onOffNet.primaryLabel.text': 'On Net',
+  'portal.analytics.onOffNet.secondaryLabel.text': 'Off Net',
 
   'portal.analytics.demoPlayback.safariNotSupported.text': 'This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox',
   'portal.analytics.demoPlayback.ttfp.text': 'Time to First Play',
@@ -127,6 +129,8 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.droppedFrames.text': 'Dropped Frames',
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
+
+  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',

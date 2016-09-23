@@ -1,12 +1,13 @@
 import React from 'react'
 import Immutable from 'immutable'
+import {Input} from 'react-bootstrap'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
 import {formatBytes} from '../../util/helpers'
-import {Input} from 'react-bootstrap'
-
-import { FormattedMessage } from 'react-intl'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
@@ -15,9 +16,11 @@ class AnalysisURLReport extends React.Component {
     this.state = {
       chartWidth: 100,
       dataKey: "bytes",
+      search: '',
       xAxisCustomFormat: formatBytes
     }
 
+    this.changeSearch = this.changeSearch.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.selectDataType = this.selectDataType.bind(this)
   }
@@ -32,6 +35,11 @@ class AnalysisURLReport extends React.Component {
   measureContainers() {
     this.setState({
       chartWidth: this.refs.chartHolder.clientWidth
+    })
+  }
+  changeSearch(event) {
+    this.setState({
+      search: event.target.value
     })
   }
   selectDataType(event) {
@@ -63,26 +71,38 @@ class AnalysisURLReport extends React.Component {
     const chartHeight = filteredUrls.size * 36 + 72
 
     return (
-      <div className="analysis-url-report">
-        <div className="chart-holder" ref="chartHolder">
-          <header>
-            <h3><FormattedMessage id="portal.analytics.urlList.top15.text"/></h3>
-            <Input type="radio" label="Bytes" value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
-            <Input type="radio" label="Requests" value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
-          </header>
-          <AnalysisHorizontalBar
-            data={filteredUrls.toJS()}
-            dataKey={dataKey}
-            height={chartHeight}
-            labelKey="url"
-            width={this.state.chartWidth}
-            padding={20}
-            xAxisCustomFormat={xAxisCustomFormat}/>
-        </div>
-        <h3><FormattedMessage id="portal.analytics.urlList.allUrls.text"/></h3>
-        <AnalysisURLList
-          urls={filteredUrls}
-          labelFormat={url => url.get('url')}/>
+      <div>
+        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text"/>}>
+          <Input type="radio" label="Bytes" value="bytes" groupClassName="inline" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
+          <Input type="radio" label="Requests" value="requests" groupClassName="inline" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+        </SectionHeader>
+        <SectionContainer>
+          <div ref="chartHolder">
+            <AnalysisHorizontalBar
+              data={filteredUrls.toJS()}
+              dataKey={dataKey}
+              height={chartHeight}
+              labelKey="url"
+              width={this.state.chartWidth}
+              padding={20}
+              xAxisCustomFormat={xAxisCustomFormat}/>
+          </div>
+        </SectionContainer>
+        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.allUrls.text"/>}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder={this.props.intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
+            value={this.state.search}
+            onChange={this.changeSearch}/>
+        </SectionHeader>
+        <SectionContainer>
+          <AnalysisURLList
+            urls={filteredUrls}
+            labelFormat={url => url.get('url')}
+            searchState={this.state.search} />
+        </SectionContainer>
       </div>
     )
   }
@@ -90,6 +110,7 @@ class AnalysisURLReport extends React.Component {
 
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
+  intl: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   statusCodes: React.PropTypes.instanceOf(Immutable.List),
   urls: React.PropTypes.instanceOf(Immutable.List)
@@ -98,4 +119,4 @@ AnalysisURLReport.defaultProps = {
   urls: Immutable.List()
 }
 
-export default AnalysisURLReport
+module.exports = injectIntl(AnalysisURLReport)
