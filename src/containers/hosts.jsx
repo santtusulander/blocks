@@ -14,6 +14,9 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ContentItems from '../components/content/content-items'
 
+import * as PERMISSIONS from '../constants/permissions'
+import checkPermissions from '../util/permissions'
+
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 export class Hosts extends React.Component {
@@ -101,6 +104,9 @@ export class Hosts extends React.Component {
         group={group}
         headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
         ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
+        // TODO: We need to use published_hosts permissions from the north API
+        // instead of groups permissions, but they don't exist yet.
+        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         showAnalyticsLink={true}
@@ -133,6 +139,7 @@ Hosts.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   propertyNames: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
@@ -146,6 +153,7 @@ Hosts.defaultProps = {
   hosts: Immutable.List(),
   metrics: Immutable.List(),
   propertyNames: Immutable.List(),
+  roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   user: Immutable.Map()
 }
@@ -160,6 +168,7 @@ function mapStateToProps(state) {
     hosts: state.host.get('allHosts'),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
+    roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

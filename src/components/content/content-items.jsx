@@ -249,7 +249,7 @@ class ContentItems extends React.Component {
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>    
+              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
             </IsAllowed>
             <Select
               onSelect={this.handleSortChange}
@@ -318,7 +318,8 @@ class ContentItems extends React.Component {
                     fetchingMetrics: this.props.fetchingMetrics,
                     chartWidth: scaledWidth.toString(),
                     barMaxHeight: (scaledWidth / 7).toString(),
-                    showSlices: this.props.showSlices
+                    showSlices: this.props.showSlices,
+                    isAllowedToConfigure: this.props.isAllowedToConfigure
                   }
 
                   return (
@@ -420,6 +421,7 @@ ContentItems.propTypes = {
   hideInfoDialog: React.PropTypes.func,
   history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
+  isAllowedToConfigure: React.PropTypes.bool,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,

@@ -15,9 +15,6 @@ import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
-import IsAllowed from '../../components/is-allowed'
-import { MODIFY_GROUP } from '../../constants/permissions'
-
 const dayHours = 24
 const rayHours = 3
 
@@ -300,20 +297,18 @@ class ContentItemChart extends React.Component {
                   <IconChart/>
                 </Link>
               }
-              {this.props.configurationLink &&
+              {this.props.configurationLink && this.props.isAllowedToConfigure &&
                 <Link to={this.props.configurationLink}
                   className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
               }
-              <IsAllowed to={MODIFY_GROUP}>
-                {this.props.onConfiguration &&
-                  <a onClick={this.props.onConfiguration}
-                    className="btn btn-icon btn-round invisible">
-                    <IconConfiguration/>
-                  </a>
-                }
-              </IsAllowed>
+              {this.props.onConfiguration && this.props.isAllowedToConfigure &&
+                <a onClick={this.props.onConfiguration}
+                  className="btn btn-icon btn-round invisible">
+                  <IconConfiguration/>
+                </a>
+              }
               <Link to="/starburst-help"
                 className="btn btn-icon btn-round invisible">
                 <IconQuestionMark/>
@@ -360,6 +355,7 @@ ContentItemChart.propTypes = {
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
+  isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,

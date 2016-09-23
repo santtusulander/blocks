@@ -14,6 +14,9 @@ import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
+import * as PERMISSIONS from '../constants/permissions'
+import checkPermissions from '../util/permissions'
+
 import { FormattedMessage } from 'react-intl';
 
 export class Accounts extends React.Component {
@@ -76,6 +79,7 @@ export class Accounts extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: <FormattedMessage id='portal.brand.allAccounts.message'/> }}
+        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
@@ -104,6 +108,7 @@ Accounts.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
@@ -115,6 +120,7 @@ Accounts.defaultProps = {
   activeAccount: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
+  roles: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -126,6 +132,7 @@ function mapStateToProps(state) {
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
+    roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),
