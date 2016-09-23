@@ -83,6 +83,8 @@ export class Property extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
     this.hoverSlice = this.hoverSlice.bind(this)
     this.selectSlice = this.selectSlice.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -94,7 +96,7 @@ export class Property extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {
@@ -127,6 +129,7 @@ export class Property extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   getEmptyHourlyTraffic(startDate, endDate) {
     let hourlyTraffic = [];

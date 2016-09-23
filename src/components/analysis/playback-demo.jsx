@@ -26,11 +26,13 @@ export class PlaybackDemo extends React.Component {
     this.playVideo = this.playVideo.bind(this)
     this.destroyVideo = this.destroyVideo.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.playVideo()
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUpdate(nextProps) {
@@ -54,6 +56,7 @@ export class PlaybackDemo extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
     this.destroyVideo()
   }
   measureContainers() {

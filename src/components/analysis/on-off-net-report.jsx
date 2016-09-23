@@ -29,14 +29,17 @@ class AnalysisOnOffNetReport extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     this.setState({
