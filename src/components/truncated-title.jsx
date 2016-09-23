@@ -1,5 +1,6 @@
 import React from 'react';
 import { Overlay, Tooltip } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 class TruncatedTitle extends React.Component {
   constructor(props) {
@@ -56,9 +57,24 @@ class TruncatedTitle extends React.Component {
 }
 
 TruncatedTitle.displayName = 'TruncatedTitle'
+
+const contentPropTypeValidator = (props, propName, componentName) => {
+  componentName = componentName || TruncatedTitle.displayName
+
+  if (props[propName]) {
+    const value = props[propName]
+
+    if (typeof value !== 'string' && value.type !== FormattedMessage) {
+      return new Error(propName + ' in ' + componentName + ' is not a string or a FormattedMessage')
+    }
+  }
+
+  return null
+}
+
 TruncatedTitle.propTypes = {
   className: React.PropTypes.string,
-  content: React.PropTypes.string,
+  content: contentPropTypeValidator,
   tooltipPlacement: React.PropTypes.string
 };
 
