@@ -834,6 +834,9 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.sp_asset.where)
       && queryOptions.push(optionsFinal.asset);
 
+    conditions.push('AND net_type IN ("on", "off")');
+    conditions.push('AND service_type IN ("http", "https")');
+
     let queryParameterized = `
       SELECT
         ${this.accountLevelFieldMap.sp_account.select},
@@ -912,9 +915,15 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
@@ -970,9 +979,15 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
@@ -1028,9 +1043,15 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
