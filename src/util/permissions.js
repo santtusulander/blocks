@@ -33,6 +33,8 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_URL] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_url'])
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE] =
   (role) => role.getIn(['permissions', 'ui', 'analytics_daily_cache_hit_rate'])
+permissionMapping[PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO] =
+  (role) => role.getIn(['permissions', 'ui', 'playback_demo'])
 
 // Misc Functionality
 permissionMapping[PERMISSIONS.VIEW_PROPERTY_CONFIG] =
@@ -53,6 +55,18 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
 // Account Permissions
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+
+// Group Permissions
+permissionMapping[PERMISSIONS.CREATE_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'modify', 'allowed'])
+
+// Users Permissions
+permissionMapping[PERMISSIONS.CREATE_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'modify', 'allowed'])
 
 
 // DNS permissions

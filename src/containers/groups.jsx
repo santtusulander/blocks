@@ -12,8 +12,11 @@ import { clearFetchedHosts } from '../redux/modules/host'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
-
+import PROVIDER_TYPES from '../constants/provider-types'
 import ContentItems from '../components/content/content-items'
+
+import * as PERMISSIONS from '../constants/permissions'
+import checkPermissions from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -31,7 +34,9 @@ export class Groups extends React.Component {
      * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
      **/
     //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
-    this.props.fetchUsers()
+    if (checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.CREATE_GROUP)) {
+      this.props.fetchUsers()
+    }
     this.props.fetchData()
     //}
   }
@@ -87,6 +92,7 @@ export class Groups extends React.Component {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
   render() {
+
     const { brand, account } = this.props.params
     const { activeAccount, activeGroup } = this.props
 
@@ -96,7 +102,10 @@ export class Groups extends React.Component {
     const analyticsURLBuilder = (...groupID) => {
       return getAnalyticsUrl('group', groupID, this.props.params)
     }
+
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
+    const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
+
     return (
       <ContentItems
         activeAccount={activeAccount}
@@ -113,8 +122,9 @@ export class Groups extends React.Component {
         deleteItem={this.deleteGroup}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        headerText={{ summary: <FormattedMessage id="portal.groups.accountContentSummary.text"/>, label: breadcrumbs[0].label }}
+        headerText={{ summary: headerText, label: breadcrumbs[0].label }}
         ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
+        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionStartTier="group"
@@ -147,6 +157,7 @@ Groups.propTypes = {
   history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   toggleModal: React.PropTypes.func,
@@ -161,6 +172,7 @@ Groups.defaultProps = {
   dailyTraffic: Immutable.List(),
   groups: Immutable.List(),
   metrics: Immutable.List(),
+  roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   user: Immutable.Map()
 }
@@ -174,6 +186,7 @@ function mapStateToProps(state) {
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: state.group.get('allGroups'),
     metrics: state.metrics.get('groupMetrics'),
+    roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

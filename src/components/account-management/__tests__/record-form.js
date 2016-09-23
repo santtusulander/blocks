@@ -1,26 +1,37 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
+
 jest.unmock('../record-form')
 jest.unmock('../../../util/dns-records-helpers')
 jest.unmock('../../../constants/dns-record-types')
-import { RecordForm } from '../record-form.jsx'
+jest.unmock('../../../decorators/key-stroke-decorator')
+jest.unmock('../../../util/dns-records-helpers')
+jest.unmock('../../select-wrapper.jsx')
 
+import RecordForm from '../record-form.jsx'
 import { isShown } from '../../../util/dns-records-helpers'
 
 const REQUIRED = 'Required'
 
-describe('SoaEditForm', () => {
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
+describe('RecordForm', () => {
   const cancel = jest.fn()
   const submit = jest.fn()
   let subject, error, props = null
   let touched = false
   beforeEach(() => {
-    subject = (typeValue, invalid, ) => {
+    subject = (typeValue, invalid ) => {
       props = {
-        invalid: invalid || false,
-        shouldShowField: isShown(typeValue || ''),
         submit,
         cancel,
+        intl: intlMaker(),
+        invalid: invalid || false,
+        shouldShowField: isShown(typeValue || ''),
         fields: {
           type: { touched, error, value: typeValue || ''},
           name: { touched, error, value: '' },
@@ -30,7 +41,7 @@ describe('SoaEditForm', () => {
           certificate: { touched, error, value: '' }
         }
       }
-      return shallow(<RecordForm {...props}/>)
+      return mount(<RecordForm {...props}/>)
     }
   })
   it('should exist', () => {
@@ -38,12 +49,18 @@ describe('SoaEditForm', () => {
   })
 
   it('should handle onSave click', () => {
-    subject().find('#submit-button').simulate('click')
+    subject()
+      .find('#submit-button')
+      .simulate('click')
     expect(submit.mock.calls.length).toBe(1)
   })
 
   it('should show prio field for MX record', () => {
-    expect(subject('MX').find('#prio-field').length).toBe(isShown('MX')('prio') ? 1 : 0)
+    expect(
+      subject('MX')
+        .find('#prio-field')
+        .length
+    ).toBe(isShown('MX')('prio') ? 1 : 0)
   })
 
   it('should disable submit button', () => {

@@ -29,7 +29,6 @@
   .content-item-list-link {
     display: block;
     width: 100%;
-    height: 100%;
     color: inherit;
     text-decoration: inherit;
 
@@ -55,20 +54,6 @@
     @include md {
       height: $md-content-item-list-height;
       padding: 15px;
-    }
-
-    > .content-item-list-link {
-      width: calc(100% + 60px);
-      height: calc(100% + 60px);
-      padding: 30px;
-      margin: -30px;
-
-      @include md {
-        width: calc(100% + 30px);
-        height: calc(100% + 30px);
-        padding: 15px;
-        margin: -15px;
-      }
     }
 
     .dark-theme & {
@@ -128,16 +113,6 @@
     }
   }
 
-  .no-data-list-section {
-    height: $content-item-list-height;
-    padding: 89px 30px 30px;
-
-    @include md {
-      height: $md-content-item-list-height;
-      padding: 60px 15px 15px;
-    }
-  }
-
   .content-item-list-name {
     overflow: hidden;
     font-size: 30px;
@@ -176,17 +151,7 @@
 
   .btn-toolbar {
     position: absolute;
-    right: 30px;
-    bottom: 30px;
-
-    @include md {
-      right: 15px;
-      bottom: 15px;
-    }
-
-    @include print {
-      display: none;
-    }
+    bottom: 15px;
   }
 
   .content-item-list-chart {

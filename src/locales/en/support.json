@@ -1,3 +1,6 @@
 {
-  "portal.support.xxx": "value xxx"
+  "portal.support.tickets.body.text": "Stayed tuned for an incredible support experience.{br}{br}In the meantime, please click the support link to our external support tool{br}to log any support tickets and follow up on your outstanding tickets. Thank you!",
+  "portal.support.tickets.body.link": "support.ericssonudn.com",
+  "portal.support.documentation.body.text": "Stayed tuned for an incredible support experience.{br}{br}In the meantime, please click the provided link to download{br}our current set of documentation. Thank you!",
+  "portal.support.documentation.body.link": "Documentation (PDF)"
 }

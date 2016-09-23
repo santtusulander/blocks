@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
+import { Address4, Address6 } from 'ip-address'
 
 const BYTE_BASE = 1000
 
@@ -133,7 +134,9 @@ export function generateNestedLink(base, linkParts) {
 
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
+  const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
+  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
 
   return {
     account: params.account,
@@ -142,7 +145,9 @@ export function buildAnalyticsOpts(params, filters){
     property: params.property,
     startDate: startDate.format('X'),
     endDate: endDate.format('X'),
-    service_type: serviceType
+    sp_account_ids: serviceProviders,
+    service_type: serviceType,
+    net_type: netType
   }
 }
 
@@ -205,13 +210,13 @@ export function filterAccountsByUserName (accounts) {
  * @param {Object} customConditions
  * returns {Object} errors
  */
-export function checkForErrors(fields, customConditions) {
+export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   let errors = {}
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if(isEmptyArray || field === '') {
-      errors[fieldName] = 'Required'
+    if ((isEmptyArray || field === '')) {
+      errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
       if(Array.isArray(customConditions[fieldName])) {
@@ -257,4 +262,18 @@ export function getRolesForUser(user, roles) {
     userRoles.push([role.id, role.name])
   })
   return userRoles
+}
+
+export function isValidIPv4Address(address) {
+  if (!address) {
+    return false
+  }
+  return new Address4(address).isValid()
+}
+
+export function isValidIPv6Address(address) {
+  if (!address) {
+    return false
+  }
+  return new Address6(address).isValid()
 }
