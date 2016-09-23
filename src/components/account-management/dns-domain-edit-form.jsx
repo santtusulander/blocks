@@ -22,7 +22,7 @@ const DnsDomainEditForm = (props) => {
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> : edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form>
+    <form autoComplete="off">
       <Input
         {...name}
       type="text"
