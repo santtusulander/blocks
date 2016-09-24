@@ -190,7 +190,7 @@ class ContentItems extends React.Component {
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+)\.cdx.*\.unifieddeliverynetwork\.net/
+      const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
