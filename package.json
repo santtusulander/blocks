@@ -46,6 +46,7 @@
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.0",
     "underscore": "^1.8.3",
+    "validator": "^5.7.0",
     "webpack": "^1.13.2",
     "webpack-cleanup-plugin": "^0.2.0",
     "webpack-dev-server": "^1.15.0",
