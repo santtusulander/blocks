@@ -1,10 +1,17 @@
-jest.unmock('../url-report.jsx')
-
 import React from 'react'
 import { mount } from 'enzyme'
 import { fromJS } from 'immutable'
 
-import AnalysisURLReport from '../url-report.jsx'
+jest.autoMockOff()
+jest.unmock('../url-report.jsx')
+
+const AnalysisURLReport = require('../url-report.jsx')
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const urls = fromJS([
   {
@@ -29,7 +36,8 @@ describe('AnalysisURLReport', () => {
       props = {
         urls,
         serviceTypes: fromJS(['http']),
-        statusCodes: fromJS(['All'])
+        statusCodes: fromJS(['All']),
+        intl: intlMaker()
       }
       return mount(<AnalysisURLReport {...props}/>)
     }

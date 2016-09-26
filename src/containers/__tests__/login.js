@@ -29,7 +29,8 @@ function userActionsMaker(cbResponse) {
     }),
     checkToken: jest.genMockFunction().mockImplementation(() => {
       return {payload: {token:null}}
-    })
+    }),
+    saveName: jest.fn()
   }
 }
 
@@ -52,13 +53,6 @@ describe('Login', () => {
   it('should exist', () => {
     const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
     expect(login.length).toBe(1)
-  })
-
-  it('can show / hide password', () => {
-    const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
-    expect(login.find(Input).get(1).props.type).toBe('password')
-    login.instance().togglePasswordVisibility()
-    expect(login.find(Input).get(1).props.type).toBe('text')
   })
 
   it('maintains form state', () => {

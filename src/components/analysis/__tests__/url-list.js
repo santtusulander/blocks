@@ -34,7 +34,8 @@ describe('URLList', () => {
       props = {
         urls: fakeURLs,
         labelFormat,
-        intl: { formatMessage: jest.fn() }
+        intl: { formatMessage: jest.fn() },
+        searchState: ''
       }
       return mount(<URLList {...props}/>)
     }
@@ -72,7 +73,7 @@ describe('URLList', () => {
 
   it('should filter out urls according to search value', () => {
     const component = subject()
-    component.instance().changeSearch({ target: { value: 'abc' } })
+    component.setProps({searchState: 'abc'})
     expect(component.find('tr').length).toBe(2)
   })
 })
