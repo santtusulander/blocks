@@ -6,20 +6,21 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import {Map, List, fromJS} from 'immutable'
+import { Map, List } from 'immutable'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-import IconClose from '../icons/icon-close.jsx'
+import SelectWrapper from '../select-wrapper'
+// import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+// import IconClose from '../icons/icon-close.jsx'
 
 import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 
 import './group-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
-let errors = {}
 
 const validate = (values) => {
+  let errors = {}
   const {name} = values
   errors = {}
   if(!name || name.length === 0) {
@@ -59,7 +60,7 @@ class GroupForm extends React.Component {
   }
 
   save() {
-    if(!Object.keys(errors).length) {
+    if(!this.props.invalid) {
       const {
         fields: { name }
       } = this.props
@@ -101,33 +102,32 @@ class GroupForm extends React.Component {
   }
 
   isEdited() {
-    const {fields: {name}} = this.props
-    return name.value !== name.initialValue || this.state.usersToAdd.size || this.state.usersToDelete.size
+    return this.state.usersToAdd.size || this.state.usersToDelete.size
   }
 
   render() {
-    const { fields: {name}, show, onCancel } = this.props
-    const currentMembers = this.props.users.reduce((members, user) => {
-      if (this.state.usersToAdd.includes(user.get('email'))) {
-        return [user.set('toAdd', true), ...members]
-      }
-      if (this.state.usersToDelete.includes(user.get('email'))) {
-        return [...members, user.set('toDelete', true)]
-      }
-      if (user.get('group_id').includes(this.props.group.get('id'))) {
-        return [...members, user]
-      }
-      return members
-    }, [])
+    const { fields: { name, charge_id, charge_model }, invalid, show, onCancel } = this.props
+    // const currentMembers = this.props.users.reduce((members, user) => {
+    //   if (this.state.usersToAdd.includes(user.get('email'))) {
+    //     return [user.set('toAdd', true), ...members]
+    //   }
+    //   if (this.state.usersToDelete.includes(user.get('email'))) {
+    //     return [...members, user.set('toDelete', true)]
+    //   }
+    //   if (user.get('group_id').includes(this.props.group.get('id'))) {
+    //     return [...members, user]
+    //   }
+    //   return members
+    // }, [])
 
 
-    const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
-      const userEmail = user.get('email')
-      if(!user.get('group_id').includes(this.props.group.get('id'))) {
-        return [...arr, {label: userEmail, value: userEmail}]
-      }
-      return arr;
-    }, []))
+    // const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
+    //   const userEmail = user.get('email')
+    //   if(!user.get('group_id').includes(this.props.group.get('id'))) {
+    //     return [...arr, {label: userEmail, value: userEmail}]
+    //   }
+    //   return arr;
+    // }, []))
 
     const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
@@ -149,6 +149,20 @@ class GroupForm extends React.Component {
               placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
+            <Input
+              {...charge_id}
+              type="text"
+              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
+              placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+            {charge_id.touched && charge_id.error &&
+            <div className='error-msg'>{charge_id.error}</div>}
+            <SelectWrapper
+              {...charge_model}
+              options={[['95/5', '95/5'], ['Bytes Delivered', 'bytes_delivered']]}
+              value={charge_model.value}
+              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}/>
+            {charge_model.touched && charge_model.error &&
+            <div className='error-msg'>{charge_model.error}</div>}
 
             {/*
               Disable until API support allows listing groups for user with some assigned
@@ -198,7 +212,7 @@ class GroupForm extends React.Component {
             */}
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-              <Button disabled={!!Object.keys(errors).length || !this.isEdited()} bsStyle="primary"
+              <Button disabled={invalid || !this.isEdited()} bsStyle="primary"
                       onClick={this.save}>{!this.props.group.isEmpty() ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
             </ButtonToolbar>
           </form>
@@ -212,6 +226,8 @@ GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
+  intl: PropTypes.Object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
@@ -224,7 +240,7 @@ GroupForm.defaultProps = {
 }
 
 export default reduxForm({
-  fields: ['name'],
+  fields: ['name', 'charge_id', 'charge_model'],
   form: 'group-edit',
   validate
 })(injectIntl(GroupForm))
