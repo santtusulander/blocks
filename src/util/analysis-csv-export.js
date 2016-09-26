@@ -14,9 +14,10 @@ function mapTimestamps(item) {
 }
 
 export function createCSVExporters(filenamePart) {
-  function generate(name, data) {
+  function generate(name, data = {}) {
+    const jsData = data.toJS ? data.toJS() : data
     download(
-      Papa.unparse(data.toJS()),
+      Papa.unparse(jsData),
       `${name} - ${filenamePart}.csv`,
       'text/csv'
     )
@@ -56,6 +57,13 @@ export function createCSVExporters(filenamePart) {
     'file-error': (fileErrorURLs, serviceTypes) => {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
       generate('File Errors', data)
+    },
+    'cache-hit-rate': traffic => {
+      const data = traffic.map(item => ({
+        timestamp: moment(item.timestamp).format(),
+        cache_hit_ratio: item.chit_ratio || 0
+      }))
+      generate('Cache Hit Rate', data)
     },
     'url-report': urlMetrics => {
       generate('URL Report', urlMetrics)
