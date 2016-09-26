@@ -4,6 +4,7 @@ import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import { Address4, Address6 } from 'ip-address'
+import isFQDN from 'validator/lib/isFQDN'
 
 const BYTE_BASE = 1000
 
@@ -71,18 +72,6 @@ export function filterMetricsByAccounts(metrics, accounts) {
       return account.get('id') === metric.get('account')
     });
   });
-}
-
-export function matchesRegexp(string, pattern) {
-  if(!(pattern instanceof RegExp)) {
-    throw new Error(`${pattern} is not a valid RegExp string`);
-  }
-  var testPattern = new RegExp(pattern, 'i');
-  return testPattern.test(string);
-}
-
-export function isSafari() {
-  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
 
 /**
@@ -264,6 +253,45 @@ export function getRolesForUser(user, roles) {
   return userRoles
 }
 
+/**
+ * Check if string matches Regular expression
+ * @param string
+ * @param pattern
+ * @returns {boolean}
+ */
+export function matchesRegexp(string, pattern) {
+  if(!(pattern instanceof RegExp)) {
+    throw new Error(`${pattern} is not a valid RegExp string`);
+  }
+  var testPattern = new RegExp(pattern, 'i');
+  return testPattern.test(string);
+}
+
+/**
+ * Check if current userAgent is Safari
+ * @returns {boolean}
+ */
+export function isSafari() {
+  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
+}
+
+/**
+ * Check for Fully Qualified Domain Name (FQDN)
+ * @param domainName
+ * @returns {*}
+ */
+export function isValidFQDN(domainName) {
+  if (!domainName) {
+    return false
+  }
+  return isFQDN(domainName)
+}
+
+/**
+ * Check if address is valid IPv4
+ * @param address
+ * @returns {*}
+ */
 export function isValidIPv4Address(address) {
   if (!address) {
     return false
@@ -271,6 +299,11 @@ export function isValidIPv4Address(address) {
   return new Address4(address).isValid()
 }
 
+/**
+ * Check if address is valid IPv6
+ * @param address
+ * @returns {*}
+ */
 export function isValidIPv6Address(address) {
   if (!address) {
     return false
