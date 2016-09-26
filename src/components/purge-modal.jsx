@@ -2,6 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
 
+import { isValidFQDN } from '../util/helpers'
+
 import Select from './select'
 
 class PurgeModal extends React.Component {
@@ -48,10 +50,6 @@ class PurgeModal extends React.Component {
         purgeObjectsError: ''
       })
     }
-    clearTimeout(this.purgeObjectsValidationTimeout)
-    this.purgeObjectsValidationTimeout = setTimeout(() => {
-      this.validatePurgeObjects(value)
-    }, 1000)
     if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
         purgeObjectsWarning: 'Maximum amount of purge objects exceeded'
@@ -67,10 +65,22 @@ class PurgeModal extends React.Component {
       )
     }
   }
-  validatePurgeObjects(value) {
+  validatePurgeObjects(e) {
+    const value = e.target.value
+    const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
     if(!value) {
       this.setState({
         purgeObjectsError: 'Specify at least one purge object'
+      })
+      return true
+    }
+    const errors = values.filter(val => {
+      return !isValidFQDN(val)
+    })
+
+    if(errors.length){
+      this.setState({
+        purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
       })
       return true
     }
@@ -118,6 +128,7 @@ class PurgeModal extends React.Component {
           help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
           placeholder={placeholder}
           value={this.props.activePurge.get('objects').join(',\n')}
+          onBlur={this.validatePurgeObjects}
           onChange={this.parsePurgeObjects}/>
         <hr/>
       </div>
