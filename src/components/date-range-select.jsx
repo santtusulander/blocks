@@ -13,11 +13,11 @@ const endOfThisDay = () => moment().utc().endOf('day')
 const startOfYesterday = () => startOfThisDay().subtract(1, 'day')
 const endOfYesterday = () => endOfThisDay().subtract(1, 'day')
 const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
-const startOfLastWeek = () => startOfThisWeek().subtract(1, 'week')
-const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
 const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
+const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
+const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
 const startOfThisWeek = () => moment().utc().startOf('isoWeek')
 const endOfThisWeek = () => moment().utc().endOf('isoWeek')
 
