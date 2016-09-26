@@ -132,10 +132,12 @@ export class SetPassword extends React.Component {
       <Modal.Dialog className="login-modal">
 
         <Modal.Header className="login-header">
-          <div className="logo-ericsson">Ericsson</div>
-          <h1>{this.props.reset ? <FormattedMessage id="portal.passsword.resetPassword.text"/> : <FormattedMessage id="portal.passsword.setPassword.text"/>}</h1>
-          <p>Ericsson UDN Service</p>
           <div className="login-header-gradient"></div>
+          <h1>
+            <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
+            <FormattedMessage id="portal.login.title"/>
+          </h1>
+          <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
@@ -149,13 +151,12 @@ export class SetPassword extends React.Component {
             }
 
             {showPasswordRequirements ?
-              <Tooltip id="password-requirements" placement="top" className="input-tooltip in">
-                <div className="tooltip-header">Requirements:</div>
-                - at least 8 characters<br/>
-                - at least one uppercase character<br/>
-                - at least one number<br/>
-                - at least one special character:<br/>
-                (~ ! @ # $ - _ <em>space</em>)
+              <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
+                <span>Requirements:</span><br/>
+                <span>- at least 8 characters</span><br/>
+                <span>- at least one uppercase character</span><br/>
+                <span>- at least one number</span><br/>
+                <span>- at least one special character (!,?,#,$,...)</span>
               </Tooltip>
             : null}
 
@@ -164,7 +165,7 @@ export class SetPassword extends React.Component {
                 {this.state.passwordError ?
                   this.state.passwordError
                 :
-                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>                }
+                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>}
               </Tooltip>
             : null}
 
