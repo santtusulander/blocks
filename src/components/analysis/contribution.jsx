@@ -12,7 +12,7 @@ import {formatBytes} from '../../util/helpers'
 
 import { FormattedMessage } from 'react-intl'
 
-class AnalysisServiceProviders extends React.Component {
+class AnalysisContribution extends React.Component {
   constructor(props) {
     super(props);
 
@@ -177,7 +177,7 @@ class AnalysisServiceProviders extends React.Component {
           {this.props.fetching ?
           <LoadingSpinner /> :
           <div>
-            <SectionContainer className="analysis-service-providers">
+            <SectionContainer className="analysis-contribution">
               <div ref="stacksHolder">
                 <AnalysisStackedByGroup padding={40}
                   chartLabel={`${month}, Month to Date`}
@@ -231,8 +231,8 @@ class AnalysisServiceProviders extends React.Component {
   }
 }
 
-AnalysisServiceProviders.displayName = 'AnalysisServiceProviders'
-AnalysisServiceProviders.propTypes = {
+AnalysisContribution.displayName = 'AnalysisContribution'
+AnalysisContribution.propTypes = {
   fetching: React.PropTypes.bool,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   serviceProviderFilter: React.PropTypes.instanceOf(Immutable.List),
@@ -240,7 +240,7 @@ AnalysisServiceProviders.propTypes = {
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
-AnalysisServiceProviders.defaultProps = {
+AnalysisContribution.defaultProps = {
   onOffFilter: Immutable.List(),
   serviceProviderFilter: Immutable.List(),
   serviceProviders: Immutable.List(),
@@ -248,4 +248,4 @@ AnalysisServiceProviders.defaultProps = {
   stats: Immutable.List()
 }
 
-module.exports = AnalysisServiceProviders
+module.exports = AnalysisContribution

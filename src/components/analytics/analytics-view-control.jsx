@@ -84,8 +84,8 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
-      key: 'service-providers',
-      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      key: 'contribution',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
       hideHierarchy: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION,
       titles: {

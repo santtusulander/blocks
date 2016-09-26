@@ -3,12 +3,12 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import AnalysisServiceProviders from '../../../components/analysis/service-providers.jsx'
+import AnalysisServiceProviders from '../../../components/analysis/contribution.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
-class AnalyticsTabServiceProviders extends React.Component {
+class AnalyticsTabContribution extends React.Component {
   componentDidMount() {
     this.fetchData(
       this.props.params,
@@ -63,7 +63,7 @@ class AnalyticsTabServiceProviders extends React.Component {
   }
 }
 
-AnalyticsTabServiceProviders.propTypes = {
+AnalyticsTabContribution.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   allServiceProviders: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
@@ -75,7 +75,7 @@ AnalyticsTabServiceProviders.propTypes = {
   trafficActions: React.PropTypes.object
 }
 
-AnalyticsTabServiceProviders.defaultProps = {
+AnalyticsTabContribution.defaultProps = {
   filters: Immutable.Map(),
   serviceProviders: Immutable.Map()
 }
@@ -96,4 +96,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabServiceProviders);
+export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabContribution);
