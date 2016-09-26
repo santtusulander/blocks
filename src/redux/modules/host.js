@@ -150,7 +150,10 @@ export function changeActive(state, action) {
 }
 
 export function clearFetched(state) {
-  return state.set('allHosts', Immutable.List())
+  return state.merge({
+    'allHosts': Immutable.List(),
+    'configuredHostNames': Immutable.List()
+  })
 }
 
 export default handleActions({
