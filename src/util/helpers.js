@@ -134,7 +134,9 @@ export function generateNestedLink(base, linkParts) {
 
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
+  const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
+  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
 
   return {
     account: params.account,
@@ -143,7 +145,9 @@ export function buildAnalyticsOpts(params, filters){
     property: params.property,
     startDate: startDate.format('X'),
     endDate: endDate.format('X'),
-    service_type: serviceType
+    sp_account_ids: serviceProviders,
+    service_type: serviceType,
+    net_type: netType
   }
 }
 

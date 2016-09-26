@@ -56,6 +56,18 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
 
+// Group Permissions
+permissionMapping[PERMISSIONS.CREATE_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'modify', 'allowed'])
+
+// Users Permissions
+permissionMapping[PERMISSIONS.CREATE_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'modify', 'allowed'])
+
 
 // DNS permissions
 // Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed

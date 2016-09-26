@@ -834,13 +834,16 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.sp_asset.where)
       && queryOptions.push(optionsFinal.asset);
 
+    conditions.push('AND net_type IN ("on", "off")');
+    conditions.push('AND service_type IN ("http", "https")');
+
     let queryParameterized = `
       SELECT
         ${this.accountLevelFieldMap.sp_account.select},
         epoch_start as timestamp,
         net_type,
         sum(bytes) AS bytes
-      FROM sp_property_city_day
+      FROM sp_property_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -912,9 +915,15 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
@@ -922,7 +931,7 @@ class AnalyticsDB {
         net_type,
         service_type,
         sum(bytes) AS bytes
-      FROM sp_property_city_day
+      FROM sp_property_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -970,16 +979,22 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
         ${this.accountLevelFieldMap.sp_account_ids.select},
         country,
         sum(bytes) AS bytes
-      FROM sp_property_city_day
+      FROM sp_property_country_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -1028,14 +1043,20 @@ class AnalyticsDB {
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
+
     let queryParameterized = `
       SELECT
         sum(bytes) AS bytes
-      FROM sp_property_city_day
+      FROM sp_property_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')};

@@ -92,7 +92,6 @@
 //Account Management
 @import 'components/account-management/account-management-header';
 @import 'components/account-management/action-buttons';
-@import 'components/account-management/dns-list';
 @import 'components/account-management/user-list';
 @import 'components/account-management/groups';
 @import 'components/account-management/user-edit';
@@ -105,8 +104,6 @@
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
 @import 'components/analysis/service-providers';
-@import 'components/analysis/on-off-net-report';
-@import 'components/analysis/url-report';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
@@ -118,6 +115,8 @@
 @import 'components/layout/dialog';
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
+@import 'components/layout/section-header';
+@import 'components/layout/section-container';
 @import 'components/layout/sidebar';
 // Content
 @import 'components/content/content-item';
