@@ -9,7 +9,7 @@ module.exports = {
   analyticsTabVisitors: 'visitors',
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
-  analyticsTabServiceProviders: 'service-providers',
+  analyticsTabContribution: 'contribution',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
