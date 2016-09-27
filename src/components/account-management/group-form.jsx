@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, getValues } from 'redux-form'
 import {
   Modal,
   Input,
@@ -218,8 +218,9 @@ class GroupForm extends React.Component {
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
-  group: PropTypes.instanceOf(Map),
-  intl: PropTypes.Object,
+  formValues: PropTypes.object,
+  groupId: PropTypes.number,
+  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
