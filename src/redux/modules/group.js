@@ -113,8 +113,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const createGroup = createAction(GROUP_CREATED, (brand, account, name) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`, {name: name}, {
+export const createGroup = createAction(GROUP_CREATED, (brand, account, data) => {
+  return axios.post(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
