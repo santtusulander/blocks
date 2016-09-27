@@ -17,6 +17,7 @@ let routeVisitorsOS             = require('./routes/visitors/os');
 let routeVisitorsBrowser        = require('./routes/visitors/browser');
 let routeMetrics                = require('./routes/metrics');
 let routeFileErrors             = require('./routes/file-errors');
+let routeCPsWithTrafficForSP    = require('./routes/cps-with-traffic-for-sp');
 let routeSPsWithTrafficForCP    = require('./routes/sps-with-traffic-for-cp');
 let routeVersion                = require('./routes/version');
 
@@ -42,6 +43,7 @@ router.get(`/${configs.apiBaseFolder}/visitors/os`,              routeVisitorsOS
 router.get(`/${configs.apiBaseFolder}/visitors/browser`,         routeVisitorsBrowser);
 router.get(`/${configs.apiBaseFolder}/metrics`,                  routeMetrics);
 router.get(`/${configs.apiBaseFolder}/file-errors`,              routeFileErrors);
+router.get(`/${configs.apiBaseFolder}/cps-with-traffic-for-sp`,  routeCPsWithTrafficForSP);
 router.get(`/${configs.apiBaseFolder}/sps-with-traffic-for-cp`,  routeSPsWithTrafficForCP);
 
 // This middleware should always come after the configured routes.

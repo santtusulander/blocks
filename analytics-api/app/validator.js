@@ -69,6 +69,10 @@ class Validator {
       sp_entity: {
         validator : /^(?:accounts|groups|assets)$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid Service Provider entity type ('accounts', 'groups', 'assets'). Value received: ${value}`
+      },
+      cp_entity: {
+        validator : /^(?:accounts|groups|properties)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid Content Provider entity type ('accounts', 'groups', 'properties'). Value received: ${value}`
       }
     };
   }
