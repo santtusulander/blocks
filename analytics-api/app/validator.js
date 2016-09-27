@@ -65,6 +65,10 @@ class Validator {
       net_type: {
         validator : /^(?:on|off)$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid net type ('on' or 'off'). Value received: ${value}`
+      },
+      sp_entity: {
+        validator : /^(?:accounts|groups|assets)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid Service Provider entity type ('accounts', 'groups', 'assets'). Value received: ${value}`
       }
     };
   }
