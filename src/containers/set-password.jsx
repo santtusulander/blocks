@@ -8,6 +8,7 @@ import { getContentUrl } from '../util/routes'
 
 import * as userActionCreators from '../redux/modules/user'
 
+import PasswordValidation from '../components/password-validation'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
@@ -165,6 +166,8 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
+            <PasswordValidation loginPassword={false} />
+
             {showPasswordRequirements ?
               <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
                 <span>Requirements:</span><br/>
