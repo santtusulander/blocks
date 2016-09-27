@@ -74,7 +74,7 @@ describe('AnalysisStackedByTime', () => {
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
-    expect(texts[13].textContent).toBe('number')
+    expect(texts[0].textContent).toBeGreaterThan('01:00')
   });
 
   it('should have a y axis', () => {
