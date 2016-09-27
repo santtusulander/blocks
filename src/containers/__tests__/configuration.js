@@ -28,19 +28,25 @@ function hostActionsMaker() {
 
 function uiActionsMaker() {
   return {
-    changeNotification: jest.genMockFunction()
+    changeNotification: jest.fn()
   }
 }
 
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
   }
 }
 
 function groupActionsMaker() {
   return {
-    fetchGroup: jest.genMockFunction()
+    fetchGroup: jest.fn()
+  }
+}
+
+function securityActionsMaker() {
+  return {
+    fetchSSLCertificates: jest.fn()
   }
 }
 
@@ -245,6 +251,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -257,6 +264,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActions} fetching={true}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         params={urlParams} location={fakeLocation}/>
     )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
@@ -270,6 +278,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -294,12 +303,12 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(1).simulate('click');
+    config.setState({activeTab: 'defaults'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -322,12 +331,12 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        uiActions={uiActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(2).simulate('click');
+    config.setState({activeTab: 'policies'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -350,12 +359,11 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(3).simulate('click');
+    config.setState({activeTab: 'performance'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -378,12 +386,11 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(4).simulate('click');
+    config.setState({activeTab: 'security'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -406,12 +413,11 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(5).simulate('click');
+    config.setState({activeTab: 'certificates'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -429,17 +435,16 @@ describe('Configuration', () => {
 		expect(changelog.length).toEqual(0);
   })
 
-  it('should render performance change log when tab is clicked', () => {
+  it('should render change-log change log when tab is clicked', () => {
     let config = shallow(
       <Configuration hostActions={hostActionsMaker()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
-    let nav = config.find('nav');
-    let links = nav.find('a');
-    links.at(6).simulate('click');
+    config.setState({activeTab: 'change-log'})
 
     let details = config.find(ConfigurationDetails);
     let defaults = config.find(ConfigurationDefaults);
@@ -463,6 +468,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -481,6 +487,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
@@ -499,6 +506,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}/>
     );
@@ -517,6 +525,7 @@ describe('Configuration', () => {
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
@@ -532,6 +541,7 @@ describe('Configuration', () => {
     expect(config.instance().togglePublishModal.mock.calls.length).toBe(1)
   })
 
+  /* Not in 1.0
   it("should not show publish modal if version is retired", () => {
     const hostActions = hostActionsMaker()
     const uiActions = uiActionsMaker()
@@ -553,4 +563,5 @@ describe('Configuration', () => {
       .configuration_status.deployment_status).toBe(1)
     expect(config.instance().togglePublishModal.mock.calls.length).toBe(0)
   })
+  */
 })
