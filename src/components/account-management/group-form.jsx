@@ -19,18 +19,14 @@ import './group-form.scss'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 
-const validate = (values) => {
+const validate = ({ name }) => {
   let errors = {}
-  const {name} = values
-  errors = {}
   if(!name || name.length === 0) {
     errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
-
   if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
     errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
-
   return errors;
 }
 
@@ -205,8 +201,8 @@ class GroupForm extends React.Component {
             */}
             <ButtonToolbar className="text-right extra-margin-top">
               <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-              <Button disabled={invalid || !this.isEdited()} bsStyle="primary"
-                      onClick={this.save}>{!this.props.group.isEmpty() ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
+              <Button disabled={invalid} bsStyle="primary"
+                      onClick={this.save}>{this.props.groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
             </ButtonToolbar>
           </form>
         </Modal.Body>
