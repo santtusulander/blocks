@@ -3,18 +3,14 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
-jest.dontMock('../stacked-by-time.jsx')
+jest.unmock('../stacked-by-time.jsx')
 const AnalysisStackedByTime = require('../stacked-by-time.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
+jest.mock('numeral')
 const numeral = require('numeral')
-
-const momentFormatMock = jest.genMockFunction().mockReturnValue('time')
-const numeralFormatMock = jest.genMockFunction().mockReturnValue('number')
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+const numeralFormatMock = jest.fn(() => 'number')
+numeral.mockReturnValue({ format: numeralFormatMock })
 
 const fakeData = [
   [
@@ -73,25 +69,23 @@ describe('AnalysisStackedByTime', () => {
   });
 
   it('should have an x axis', () => {
-    moment.mockClear()
-    momentFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
     expect(texts[0].getAttribute('x')).toBe('20')
-    expect(texts[0].textContent).toBe('time')
-    expect(momentFormatMock.mock.calls[0][0]).toBe('D')
+    expect(texts[0].textContent).toBe('21:00')
   });
 
   it('should have a y axis', () => {
-    numeral.mockClear()
-    numeralFormatMock.mockClear()
+     numeral.mockClear()
+     numeralFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     );
     let texts = TestUtils.scryRenderedDOMComponentsWithTag(stacks, 'text')
-    expect(texts[3].textContent).toBe('number')
+
+    expect(texts[13].textContent).toBe('number')
     expect(numeral.mock.calls.length).toBe(2)
     expect(numeral.mock.calls[0]).toEqual([500])
     expect(numeralFormatMock.mock.calls[0][0]).toBe('0 a')
