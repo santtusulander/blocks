@@ -41,7 +41,7 @@ export class Groups extends React.Component {
     //}
   }
   createGroup(data, usersToAdd) {
-    return this.props.groupActions.createGroup('udn', this.props.params.account, data.name)
+    return this.props.groupActions.createGroup('udn', this.props.params.account, data)
       .then(({ payload }) => {
         this.props.clearFetchedHosts()
         return Promise.all(usersToAdd.map(email => {
