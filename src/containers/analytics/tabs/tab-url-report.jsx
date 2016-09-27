@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl'
 
 import AnalysisURLReport from '../../../components/analysis/url-report.jsx'
 
+import * as filterActionCreators from '../../../redux/modules/filters'
 import * as reportsActionCreators from '../../../redux/modules/reports'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
@@ -21,6 +22,7 @@ class AnalyticsTabUrlReport extends React.Component {
   componentWillReceiveProps(nextProps){
     if(changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+      this.props.filters.get('statusCodes') !== nextProps.filters.get('statusCodes') ||
       this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')) {
       this.fetchData(
         nextProps.params,
@@ -28,6 +30,10 @@ class AnalyticsTabUrlReport extends React.Component {
         nextProps.activeHostConfiguredName
       )
     }
+  }
+
+  componentWillUnmount() {
+    this.props.filterActions.resetFilters()
   }
 
   fetchData(params, filters, hostConfiguredName){
@@ -57,6 +63,7 @@ class AnalyticsTabUrlReport extends React.Component {
 AnalyticsTabUrlReport.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  filterActions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -81,6 +88,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    filterActions: bindActionCreators(filterActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }
 }
