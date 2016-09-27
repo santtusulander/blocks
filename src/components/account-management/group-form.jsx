@@ -235,12 +235,22 @@ GroupForm.propTypes = {
 }
 
 GroupForm.defaultProps = {
-  users: List(),
-  group: Map()
+  users: List()
+}
+
+function mapStateToProps({ user, group, account, form }, { groupId }) {
+  const isContentProviderAdmin = user.get('currentUser').get('roles').includes(2)
+  return {
+    formValues: getValues(form.groupEdit),
+    users: user.get('allUsers'),
+    account: account.get('activeAccount'),
+    fields: isContentProviderAdmin ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
+    initialValues: groupId ? group.get('activeGroup').toJS() : {}
+  }
 }
 
 export default reduxForm({
   fields: ['name', 'charge_id', 'charge_model'],
-  form: 'group-edit',
+  form: 'groupEdit',
   validate
-})(injectIntl(GroupForm))
+}, mapStateToProps)(injectIntl(GroupForm))
