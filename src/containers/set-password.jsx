@@ -102,14 +102,13 @@ export class SetPassword extends React.Component {
     this.changeField('confirm')(e)
     if(this.state.passwordValid) {
       this.setState({
-        confirmValid: this.state.password !== '' && this.state.password === e.target.value
+        confirmValid: this.state.password === e.target.value
       })
     }
   }
   changePassword(e) {
     this.changeField('password')(e)
     this.setState({
-      confirmValid: this.state.password !== '' && this.state.confirm === e.target.value,
       passwordValid: this.validatePassword(e.target.value),
       passwordLengthValid: this.validatePasswordLengthValid(e.target.value),
       passwordUppercaseValid: this.validatePasswordUppercaseValid(e.target.value),
@@ -149,7 +148,8 @@ export class SetPassword extends React.Component {
 
   render() {
     const showPasswordRequirements = this.state.passwordFocus && !this.state.passwordValid
-    const showConfirmError = this.state.confirm && !this.state.confirmValid && !this.state.confirmFocus
+    const showConfirmError = this.state.passwordValid && !this.state.confirmValid && !this.state.confirmFocus
+    // const showConfirmError = this.state.passwordValid && this.state.confirm && this.state.confirmValid && !this.state.confirmFocus
 
     return (
       <Modal.Dialog className="login-modal">
@@ -179,7 +179,7 @@ export class SetPassword extends React.Component {
               type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
-                + (showPasswordRequirements ? ' invalid' : '')
+                + (!this.state.passwordValid && !this.state.passwordFocus && this.state.password !== '' ? ' invalid' : '')
                 + (this.state.passwordValid ? ' valid' : '')
                 + (this.state.passwordFocus || this.state.password ? ' active' : '')}
               addonBefore={<IconPassword/>}
@@ -197,8 +197,8 @@ export class SetPassword extends React.Component {
               type={this.state.confirmVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-confirm'
-                + (showConfirmError ? ' invalid' : '')
-                + (this.state.confirmValid ? ' valid' : '')
+                + (showConfirmError && this.state.confirm !== '' ? ' invalid' : '')
+                + (this.state.confirmValid && this.state.confirm !== '' ? ' valid' : '')
                 + (this.state.confirmFocus || this.state.confirm ? ' active' : '')}
               addonBefore={<IconPassword/>}
               addonAfter={<a className={'input-addon-link' +
@@ -211,7 +211,7 @@ export class SetPassword extends React.Component {
               value={this.state.confirm}
               onChange={this.changeConfirm}/>
 
-            {showConfirmError ?
+            {showConfirmError && this.state.confirm !== '' ?
               <Tooltip id="confirm-error" placement="bottom" className="input-tooltip in">
                 <FormattedMessage id="portal.passsword.passwordDoNotMatch.text"/>
               </Tooltip>
