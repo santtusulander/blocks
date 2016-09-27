@@ -4,44 +4,54 @@ import { FormattedMessage } from 'react-intl'
 
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
-export class FilterContentProvider extends React.Component {
-  render() {
-    return (
-      <div className="action">
-        <div>
-          <h5><FormattedMessage id="portal.analysis.filters.contentProvider.title"/></h5>
-          <div className="sidebar-content">
-            <FilterChecklistDropdown className="btn-block"
-              onChange={this.props.changeContentProvider}
-              value={this.props.contentProviderValue}
-              options={this.props.contentProviderOptions}/>
-          </div>
-        </div>
-        <div>
-          <h5><FormattedMessage id="portal.analysis.filters.contentProviderGroups.title"/></h5>
-          <div className="sidebar-content">
-            <FilterChecklistDropdown className="btn-block"
-              onChange={this.props.changeContentProviderGroup}
-              value={this.props.contentProviderGroupValue}
-              options={this.props.contentProviderGroupOptions}/>
-          </div>
-        </div>
-        <div>
-          <h5><FormattedMessage id="portal.analysis.filters.contentProviderProperties.title"/></h5>
-          <div className="sidebar-content">
-            <FilterChecklistDropdown className="btn-block"
-              onChange={this.props.changeContentProviderProperty}
-              value={this.props.contentProviderPropertyValue}
-              options={this.props.contentProviderPropertyOptions}/>
-          </div>
+const FilterContentProvider = (props) => {
+  return (
+    <div className="action">
+      {props.visibleFields.includes('cp-account') && <div>
+        <h5>
+          <FormattedMessage id="portal.analysis.filters.contentProvider.title"/>
+        </h5>
+        <div className="sidebar-content">
+          <FilterChecklistDropdown className="btn-block"
+          onChange={props.changeContentProvider}
+          value={props.contentProviderValue}
+          options={props.contentProviderOptions}/>
         </div>
       </div>
-    );
-  }
+      }
+
+      {props.visibleFields.includes('cp-group') && <div>
+        <h5>
+          <FormattedMessage id="portal.analysis.filters.contentProviderGroups.title"/>
+        </h5>
+        <div className="sidebar-content">
+          <FilterChecklistDropdown className="btn-block"
+          onChange={props.changeContentProviderGroup}
+          value={props.contentProviderGroupValue}
+          options={props.contentProviderGroupOptions}/>
+        </div>
+      </div>
+      }
+
+      {props.visibleFields.includes('cp-property') && <div>
+        <h5>
+          <FormattedMessage id="portal.analysis.filters.contentProviderProperties.title"/>
+        </h5>
+        <div className="sidebar-content">
+          <FilterChecklistDropdown className="btn-block"
+          onChange={props.changeContentProviderProperty}
+          value={props.contentProviderPropertyValue}
+          options={props.contentProviderPropertyOptions}/>
+        </div>
+      </div>
+      }
+    </div>
+  );
 }
 
 FilterContentProvider.displayName = 'FilterContentProvider'
 FilterContentProvider.propTypes = {
+  visibleFields: React.PropTypes.array,
   changeContentProvider: React.PropTypes.func,
   changeContentProviderGroup: React.PropTypes.func,
   changeContentProviderProperty: React.PropTypes.func,
@@ -53,4 +63,4 @@ FilterContentProvider.propTypes = {
   contentProviderValue: React.PropTypes.instanceOf(List)
 }
 
-module.exports = FilterContentProvider
+export default FilterContentProvider
