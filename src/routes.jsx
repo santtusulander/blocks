@@ -124,7 +124,9 @@ export const getRoutes = store => {
       <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
         {/* default - set 'udn' as brand */}
         <IndexRedirect to="udn" />
-        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)} />
+        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)}>
+          {getAnalyticsTabRoutes(store)}
+        </Route>
         <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
             {getAnalyticsTabRoutes(store)}
         </Route>
