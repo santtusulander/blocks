@@ -9,38 +9,12 @@ import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
-import FilterPop from '../analysis/filters/pop.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
-
-const serviceProviderOpts = [
-  ['all', 'All'],
-  ['vodafone-group', 'Vodafone Group'],
-  ['telstra', 'Telstra'],
-  ['bharti', 'Bharti'],
-  ['singtel', 'Singtel'],
-  ['china-telecom', 'China Telecom'],
-  ['hgc', 'HGC'],
-  ['ais', 'AIS'],
-  ['tot', 'TOT'],
-  ['cht', 'CHT'],
-  ['fet', 'FET'],
-  ['xl-axiata', 'XL Axiata'],
-  ['telkom-indonesia', 'Telkom Indonesia'],
-  ['globe', 'Globe'],
-  ['mobifone', 'Mobifone'],
-  ['sk-bb', 'SK BB'],
-  ['lg-u', 'LG U+]']
-]
-
-const popOpts = [
-  ['all', 'All'],
-  ['option', 'Option']
-]
 
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
@@ -143,22 +117,10 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <FilterServiceProvider
           changeServiceProvider={val => {
-            props.onFilterChange('serviceProvider', val)
+            props.onFilterChange('serviceProviders', val)
           }}
-          options={serviceProviderOpts}
-          value={props.filters.get('serviceProvider')}
-          />
-        </div>
-      }
-
-      {props.showFilters.includes('pop') &&
-        <div className='action'>
-          <FilterPop
-          changePop={val => {
-            props.onFilterChange('pop', val)
-          }}
-          options={popOpts}
-          value={props.filters.get('pop')}
+          options={props.filterOptions.get('serviceProviders')}
+          value={props.filters.get('serviceProviders')}
           />
         </div>
       }

@@ -13,6 +13,12 @@ const numeral = require('numeral')
 const numeralFormatMock = jest.genMockFunction()
 numeral.mockReturnValue({format:numeralFormatMock})
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const fakeSummary = fromJS({
   e401: {"http":1,"https":2,"total":3},
   e404: {"http":2,"https":3,"total":5},
@@ -38,34 +44,45 @@ const fakeURLs = fromJS([
 ])
 
 describe('FileError', () => {
+
+  let subject = null
+
+  beforeEach(() => {
+    subject = (props) => {
+      let defaultProps = Object.assign({}, {
+        intl: intlMaker(),
+        serviceTypes: fromJS(['http', 'https']),
+        summary: fakeSummary,
+        urls: fakeURLs,
+        statusCodes: List(['All', '401', '404']),
+      }, props)
+      return shallow(<FileError {...defaultProps}/>)
+    }
+  })
+
   it('should have a client error box', () => {
-    const result = shallow(<FileError
-      serviceTypes={fromJS(['http', 'https'])}
-      summary={fakeSummary}
-      urls={fakeURLs}
-      statusCodes={List(['All', '401', '404'])}/>);
-    expect(result.find('#client-errors').prop('errs')).toEqual([
-      {code: 401, value: Map({"http":1,"https":2,"total":3})},
-      {code: 404, value: Map({"http":2,"https":3,"total":5})}
+    expect(subject().find('#client-errors').prop('errs')).toEqual([
+      { code: 401, value: Map({ "http": 1, "https": 2, "total": 3 }) },
+      { code: 404, value: Map({ "http": 2, "https": 3, "total": 5 }) }
     ])
-  });
+  })
+
   it('should have a server error box', () => {
-    const result = shallow(<FileError
-      serviceTypes={fromJS(['http', 'https'])}
-      summary={fakeSummary}
-      urls={fakeURLs}
-      statusCodes={List(['All', '500', '503'])}/>);
-    expect(result.find('#server-errors').prop('errs')).toEqual([
-      {code: 500, value: Map({"http":3,"https":4,"total":7})},
-      {code: 503, value: Map({"http":4,"https":5,"total":9})}
+    expect(
+      subject({ statusCodes: List(['All', '500', '503']) })
+        .find('#server-errors')
+        .prop('errs')
+    ).toEqual([
+      { code: 500, value: Map({ "http": 3, "https": 4, "total": 7 }) },
+      { code: 503, value: Map({ "http": 4, "https": 5, "total": 9 }) }
     ])
-  });
+  })
+
   it('should have a url list', () => {
-    const result = shallow(<FileError
-      serviceTypes={fromJS(['http', 'https'])}
-      summary={fakeSummary}
-      urls={fakeURLs}
-      statusCodes={List(['All', '401', '500'])}/>);
-    expect(result.find('AnalysisURLList').prop('urls')).toEqual(fakeURLs)
-  });
+    expect(
+      subject({ statusCodes: List(['All', '401', '500']) })
+        .find('AnalysisURLList')
+        .prop('urls')
+    ).toEqual(fakeURLs)
+  })
 })

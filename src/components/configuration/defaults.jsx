@@ -1,7 +1,10 @@
 import React from 'react'
 import {Row, Col, Input, Button} from 'react-bootstrap'
 import Immutable from 'immutable'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import ConfigurationSidebar from './sidebar'
@@ -10,8 +13,6 @@ import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers
 import Toggle from '../toggle'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 const policyPath = Immutable.List(['default_policy', 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
@@ -122,124 +123,119 @@ class ConfigurationDefaults extends React.Component {
       <div className="configuration-defaults">
 
         {/* Origin Cache Control */}
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
+        <SectionContainer>
+          {/* Ignore case from origin */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle value={config.getIn(policyPaths.ignore_case)}
+                changeValue={this.handleChange(policyPaths.ignore_case)}/>
+            </Col>
+          </Row>
 
-        <h2><FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/></h2>
+          {/* Enable e-Tag support */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.enableEtag.text"/>
+            </Col>
+            <Col lg={5} xs={6}>
+              <Select className="input-select"
+                onSelect={this.handleEtagChange(policyPaths.honor_etags)}
+                value={config.getIn(policyPaths.honor_etags)}
+                options={[
+                  ['strong', <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>],
+                  ['weak', <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>],
+                  ['false', <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>]]}/>
+            </Col>
+          </Row>
 
-        {/* Ignore case from origin */}
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle value={config.getIn(policyPaths.ignore_case)}
-              changeValue={this.handleChange(policyPaths.ignore_case)}/>
-          </Col>
-        </Row>
+          {/* Honor Origin Cache Control */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.honorOriginCacheControl.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle
+                value={config.getIn(policyPaths.honor_origin_cache_policies)}
+                changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
+            </Col>
+          </Row>
 
-        {/* Enable e-Tag support */}
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            <FormattedMessage id="portal.policy.edit.defaults.enableEtag.text"/>
-          </Col>
-          <Col lg={5} xs={6}>
-            <Select className="input-select"
-              onSelect={this.handleEtagChange(policyPaths.honor_etags)}
-              value={config.getIn(policyPaths.honor_etags)}
-              options={[
-                ['strong', <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>],
-                ['weak', <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>],
-                ['false', <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>]]}/>
-          </Col>
-        </Row>
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              {config.getIn(policyPaths.honor_origin_cache_policies) ?
+                <FormattedMessage id="portal.policy.edit.defaults.ttlIfNotPresent.text"/> :
+                'CDN TTL'}
+            </Col>
+            <Col lg={2} xs={3}>
+              <Input type="text"
+                className="ttl-value"
+                placeholder={intl.formatMessage({
+                  id: 'portal.policy.edit.defaults.timeToLive.text'
+                })}
+                value={ttlValue}
+                onChange={this.changeTTLValue(policyPaths.max_age)}/>
+            </Col>
+            <Col xs={3}>
+              <Select className="input-select"
+                onSelect={this.changeTTLUnit(policyPaths.max_age)}
+                value={this.state.ttlUnit}
+                options={[
+                  ['seconds', <FormattedMessage id="portal.units.seconds"/>],
+                  ['minutes', <FormattedMessage id="portal.units.minutes"/>],
+                  ['hours', <FormattedMessage id="portal.units.hours"/>],
+                  ['days', <FormattedMessage id="portal.units.days"/>]]}/>
+            </Col>
+          </Row>
+        </SectionContainer>
 
-        {/* Honor Origin Cache Control */}
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            <FormattedMessage id="portal.policy.edit.defaults.honorOriginCacheControl.text"/>
-          </Col>
-          <Col lg={8} xs={6}>
-            <Toggle
-              value={config.getIn(policyPaths.honor_origin_cache_policies)}
-              changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
-          </Col>
-        </Row>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/>} />
+        <SectionContainer>
+          <CacheKeyQueryStringForm
+            horizontal={true}
+            intl={intl}
+            set={config.getIn(policyPaths.cache_name)}
+            updateSet={this.updateCacheKeyQueryString}/>
+        </SectionContainer>
 
-        <Row className="form-group">
-          <Col lg={4} xs={6} className="toggle-label">
-            {config.getIn(policyPaths.honor_origin_cache_policies) ?
-              <FormattedMessage id="portal.policy.edit.defaults.ttlIfNotPresent.text"/> :
-              'CDN TTL'}
-          </Col>
-          <Col lg={2} xs={3}>
-            <Input type="text"
-              className="ttl-value"
-              placeholder={intl.formatMessage({
-                id: 'portal.policy.edit.defaults.timeToLive.text'
-              })}
-              value={ttlValue}
-              onChange={this.changeTTLValue(policyPaths.max_age)}/>
-          </Col>
-          <Col xs={3}>
-            <Select className="input-select"
-              onSelect={this.changeTTLUnit(policyPaths.max_age)}
-              value={this.state.ttlUnit}
-              options={[
-                ['seconds', <FormattedMessage id="portal.units.seconds"/>],
-                ['minutes', <FormattedMessage id="portal.units.minutes"/>],
-                ['hours', <FormattedMessage id="portal.units.hours"/>],
-                ['days', <FormattedMessage id="portal.units.days"/>]]}/>
-          </Col>
-        </Row>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>}>
+          <Button bsStyle="success" className="btn-icon"
+            onClick={this.addRule}>
+            <IconAdd />
+          </Button>
+        </SectionHeader>
 
-        <hr/>
-
-        <h3><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h3>
-
-        <CacheKeyQueryStringForm
-          horizontal={true}
-          intl={intl}
-          set={config.getIn(policyPaths.cache_name)}
-          updateSet={this.updateCacheKeyQueryString}/>
-
-        <hr/>
-
-        <Row className="header-btn-row">
-          <Col sm={8}>
-            <h3>
-              <FormattedMessage
-                id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>
-            </h3>
-          </Col>
-          <Col sm={4} className="text-right">
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.addRule}>
-              <IconAdd />
-            </Button>
-          </Col>
-        </Row>
-        <ConfigurationPolicyRules
-          defaultPolicies={config.getIn(['default_policy','policy_rules'])}
-          activateRule={this.props.activateRule}
-          deleteRule={this.deleteRule}/>
-        {this.props.activeRule ?
-          <ConfigurationSidebar
-            rightColVisible={!!activeEditForm}
-            handleRightColClose={()=>this.props.activateMatch(null)}
-            onHide={()=>this.props.activateRule(null)}
-            rightColContent={activeEditForm}>
-            <ConfigurationPolicyRuleEdit
-              activateMatch={this.props.activateMatch}
-              activateSet={this.props.activateSet}
-              activeMatchPath={this.props.activeMatch}
-              activeSetPath={this.props.activeSet}
-              changeValue={this.props.changeValue}
-              config={config}
-              rule={config.getIn(this.props.activeRule)}
-              rulePath={this.props.activeRule}
-              changeActiveRuleType={this.changeActiveRuleType}
-              hideAction={()=>this.props.activateRule(null)}/>
-          </ConfigurationSidebar>
-        : ''}
+        <SectionContainer>
+          <ConfigurationPolicyRules
+            defaultPolicies={config.getIn(['default_policy','policy_rules'])}
+            activateRule={this.props.activateRule}
+            deleteRule={this.deleteRule}/>
+          {this.props.activeRule ?
+            <ConfigurationSidebar
+              rightColVisible={!!activeEditForm}
+              handleRightColClose={()=>this.props.activateMatch(null)}
+              onHide={()=>this.props.activateRule(null)}
+              rightColContent={activeEditForm}>
+              <ConfigurationPolicyRuleEdit
+                activateMatch={this.props.activateMatch}
+                activateSet={this.props.activateSet}
+                activeMatchPath={this.props.activeMatch}
+                activeSetPath={this.props.activeSet}
+                changeValue={this.props.changeValue}
+                config={config}
+                rule={config.getIn(this.props.activeRule)}
+                rulePath={this.props.activeRule}
+                changeActiveRuleType={this.changeActiveRuleType}
+                hideAction={()=>this.props.activateRule(null)}/>
+            </ConfigurationSidebar>
+          : ''}
+        </SectionContainer>
       </div>
     )
   }

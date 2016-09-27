@@ -186,6 +186,7 @@ class ConfigurationDetails extends React.Component {
         {/* Published Hostname Value */}
 
         <Input type="text" label="Published Hostname Value"
+          disabled={true}
           id="published_name"
           labelClassName="col-xs-3"
           wrapperClassName="col-xs-9"

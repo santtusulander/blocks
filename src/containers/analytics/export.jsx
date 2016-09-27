@@ -33,9 +33,9 @@ class AnalyticsExport extends React.Component {
       case 'on-off-net':
         exportData = [this.props.onOffStats]
         break
-      case 'service-providers':
-        //TODO: There is no valid exporter for SP report yet
-        console.log('No valid exporter for SP report!')
+      case 'contribution':
+        //TODO: There is no valid exporter for contribution report yet
+        console.log('No valid exporter for contribution report!')
         break
       case 'file-error':
         exportData = [this.props.fileErrorURLs, this.props.serviceTypes]
@@ -53,7 +53,7 @@ class AnalyticsExport extends React.Component {
       <Button
         bsStyle="primary"
         className="has-icon"
-        disabled={this.props.activeTab === 'playback-demo'}
+        disabled={this.props.activeTab === 'playback-demo' || this.props.activeTab === 'contribution' || this.props.activeTab === 'cache-hit-rate'}
         onClick={this.exportCSV}>
         <IconExport />
         <FormattedMessage id="portal.button.export"/>

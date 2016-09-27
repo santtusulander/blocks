@@ -78,6 +78,10 @@ $action-padding-right: rem(30px);
         padding-bottom: 6px;
         text-transform: none;
       }
+
+      > div:not(:last-child) {
+        padding-bottom: $page-header-padding-bottom;
+      }
     }
 
     .action:not(:last-child) {

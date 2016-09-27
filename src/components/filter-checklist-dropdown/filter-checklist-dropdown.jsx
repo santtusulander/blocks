@@ -1,7 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { List } from 'immutable'
-import { Dropdown, Button, Input, MenuItem } from 'react-bootstrap'
+import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import './filter-checklist-dropdown.scss'
@@ -61,7 +61,7 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.value
+    let inputVal = this.refs.filterInput.getValue()
 
     this.setState({
       filterValue: inputVal
@@ -82,7 +82,12 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleClear() {
     this.setState({filterValue: ''})
-    this.props.handleCheck(List())
+
+    if (this.props.handleCheck) {
+      this.props.handleCheck(List())
+    } else {
+      this.props.onChange(List())
+    }
   }
 
   getLabel() {
@@ -157,7 +162,7 @@ export class FilterChecklistDropdown extends React.Component {
     return (
       <div className="form-group">
         <Dropdown id=""
-                  open={dropdownOpen}
+                  defaultOpen={dropdownOpen}
                   className={className}>
           <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>

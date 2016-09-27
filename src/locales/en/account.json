@@ -4,20 +4,32 @@
   "portal.account.dnsList.records.hiddenRecords": "({hiddenRecordCount}) hidden",
   "portal.account.dnsList.records.header": "Records",
   "portal.account.dnsList.hostname.header": "Hostname",
-  "portal.account.dnsList.address.header": "Adress",
+  "portal.account.dnsList.address.header": "Address",
   "portal.account.dnsList.ttl.header": "Ttl",
   "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 
+  "portal.account.recordForm.newRecord.title": "New DNS Record",
+  "portal.account.recordForm.editRecord.title": "Edit DNS Record",
   "portal.account.recordForm.selectRecordType.label": "Select Record Type",
   "portal.account.recordForm.hostName.label": "Host Name",
   "portal.account.recordForm.hostName.placeholder": "Enter Host Name",
+  "portal.account.recordForm.hostName.validationError": "Host Name is required",
   "portal.account.recordForm.address.label": "Address",
   "portal.account.recordForm.address.placeholder": "Enter Address",
+  "portal.account.recordForm.address.validationError.IPv4": "Address value must be a valid IPv4 address.",
+  "portal.account.recordForm.address.validationError.IPv6": "Address value must be a valid IPv6 address.",
   "portal.account.recordForm.prio.label": "Priority",
   "portal.account.recordForm.prio.placeholder": "Enter Priority",
+  "portal.account.recordForm.prio.validationError": "priority must be a number.",
   "portal.account.recordForm.ttl.label": "TTL Value",
   "portal.account.recordForm.ttl.placeholder": "Enter TTL Value",
+  "portal.account.recordForm.ttl.validationError": "TTL value must be a number.",
 
   "portal.account.domainForm.newDomain.title": "New Domain",
-  "portal.account.domainForm.editDomain.title": "Edit Domain"
+  "portal.account.domainForm.editDomain.title": "Edit Domain",
+
+  "portal.account.domainForm.validation.mailbox": "Mailbox should be entered as admin.example.com.",
+  "portal.account.domainForm.validation.domainName": "Domain Name is invalid",
+  "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
+  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required"
 }

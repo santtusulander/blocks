@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
-jest.dontMock('../content-item-chart.jsx')
+jest.unmock('../content-item-chart.jsx')
 const ContentItemChart = require('../content-item-chart.jsx')
 
 const fakePrimaryData = Immutable.List([
@@ -117,7 +117,7 @@ describe('ContentItemChart', () => {
   });
 
   it('should show day slices', () => {
-    let contentItem = TestUtils.renderIntoDocument(
+    let contentItem = shallow(
       <ContentItemChart
         primaryData={fakePrimaryData}
         secondaryData={fakeSecondaryData}
@@ -130,7 +130,7 @@ describe('ContentItemChart', () => {
         chartWidth='100'
         barMaxHeight='10' />
     )
-    const arcs = TestUtils.scryRenderedDOMComponentsWithClass(contentItem, 'day-arc')
+    const arcs = contentItem.find('.day-arc')
     expect(arcs.length).toBe(2)
   })
 })

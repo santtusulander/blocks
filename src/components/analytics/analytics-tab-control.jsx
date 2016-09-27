@@ -32,8 +32,8 @@ const AnalyticsTabControl = (props) => {
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET
     },
     {
-      key: 'service-providers',
-      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      key: 'contribution',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
       hideHierarchy: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
     },
@@ -52,6 +52,7 @@ const AnalyticsTabControl = (props) => {
     {
       key: 'playback-demo',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO,
       hideHierarchy: true
     }
   ]

@@ -3,29 +3,24 @@ import { Map, List } from 'immutable'
 import UserEditForm from './form'
 import { Modal } from 'react-bootstrap'
 
+import { ROLES_MAPPING } from '../../../constants/account-management-options'
+
 import { getCheckboxArrayOptions } from '../../../util/group-helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
     super(props)
 
-    this.getRolesForUser = this.getRolesForUser.bind(this)
+    this.getRoleOptions = this.getRoleOptions.bind(this)
   }
 
-  getRolesForUser(user) {
-    let roles = []
-    const mappedRoles = this.props.roles.size ?
-      user.get('roles').map(roleId => (
-        {
-          id: roleId,
-          name: this.props.roles.find(role => role.get('id') === roleId).get('name')
-        }
-      )).toJS()
-      : []
-    mappedRoles.forEach(role => {
-      roles.push([role.id, role.name])
-    })
-    return roles
+  getRoleOptions() {
+    return ROLES_MAPPING
+      .filter(role => role.accountTypes.includes(this.props.accountType))
+      .map(mapped_role => [
+        mapped_role.id,
+        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+      ])
   }
 
   render() {
@@ -49,7 +44,7 @@ class UserEditModal extends React.Component {
           <UserEditForm
             initialValues={initialValues}
             groupOptions={getCheckboxArrayOptions(groups)}
-            roleOptions={this.getRolesForUser(user)}
+            roleOptions={this.getRoleOptions()}
             onSave={onSave}
             onCancel={onCancel}
           />
@@ -60,10 +55,11 @@ class UserEditModal extends React.Component {
 }
 
 UserEditModal.propTypes = {
+  accountType: PropTypes.number,
   groups: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  roles: React.PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(List),
   show: PropTypes.bool,
   user: PropTypes.instanceOf(Map)
 }

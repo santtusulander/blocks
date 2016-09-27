@@ -21,6 +21,15 @@
     }
   }
 
+  .dataset-labels {
+    display: flex;
+  }
+
+  .chart-label-container {
+    display: flex;
+    align-items: center;
+  }
+
   .chart-label {
     font-weight: bold;
   }

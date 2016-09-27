@@ -1,92 +1,144 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import jsdom from 'jsdom'
 
-jest.dontMock('../groups.jsx')
-const Groups = require('../groups.jsx')
-const EditGroup = require('../../../../components/edit-group.jsx')
+import {shallow, mount, render} from 'enzyme'
+
+jest.unmock('../groups.jsx')
+import Groups from '../groups.jsx'
+
+jest.unmock('../../../__mocks__/promisify');
+import { promisify } from '../../../__mocks__/promisify'
+
+jest.unmock('../../../__mocks__/router');
+import { Router as routerMock } from '../../../__mocks__/router'
+
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
+global.window = document.defaultView
+
+const genAsyncMock = jest.genMockFn().mockReturnValue(promisify('whateva'))
 
 const fakeGroups = Immutable.fromJS([
+  {id: 3, name: 'bbb', created: new Date().getTime()  - 1},
   {id: 1, name: 'aaa', created: new Date().getTime()},
   {id: 2, name: 'ccc', created: new Date().getTime()  + 1},
-  {id: 3, name: 'bbb', created: new Date().getTime()  - 1}
 ])
+
+const groupsElem =
+  <Groups
+    groups={fakeGroups}
+    params={{}}
+    userActions={{
+      fetchUsers: genAsyncMock
+    }}
+    groupActions={{
+      fetchGroups: genAsyncMock
+    }}
+    router= { routerMock }
+  />
 
 describe('AccountManagementAccountGroups', () => {
   it('should exist', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups />
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.isCompositeComponent(groups)).toBeTruthy()
+    expect(groups.length).toBe(1)
   })
+
   it('should show groups', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'tr').length).toBe(4)
+    expect(groups.find('tr').length).toBe(4)
   })
-  it('should sort groups by name', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
+
+  it('should set sort values for table', () => {
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
-    groups.changeSort('name', -1)
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
+
+    groups.instance().changeSort('name', -1)
+    expect(groups.state('sortBy')).toBe('name')
+    expect(groups.state('sortDir')).toBe(-1)
+
   })
-  it('should sort groups by date', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
+
+  it('should sort data by name', () =>{
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
-    groups.changeSort('created', -1)
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
+
+    const sortedData = groups.instance().sortedData(fakeGroups, 'name', 1)
+    expect(sortedData.first().get('name')).toBe('aaa')
+    const sortedData2 = groups.instance().sortedData(fakeGroups, 'name', -1)
+    expect(sortedData2.first().get('name')).toBe('ccc')
+
   })
-  it('should show a row for adding a group', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
+
+  it('should sort date by date', () => {
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(0)
-    groups.addGroup({stopPropagation: jest.genMockFunction()})
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(1)
+    const sortedData = groups.instance().sortedData(fakeGroups, 'created', 1)
+    expect(sortedData.first().get('name')).toBe('bbb')
+    const sortedData2 = groups.instance().sortedData(fakeGroups, 'created', -1)
+    expect(sortedData2.first().get('name')).toBe('ccc')
+
   })
+
   it('should save an added group', () => {
-    const addGroup = jest.genMockFunction().mockReturnValue({
-        then: (cb => cb())
-      })
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups} addGroup={addGroup}/>
+    const addGroup = jest.genMockFn().mockReturnValue(promisify('whateva'))
+    const groups = shallow(
+      <Groups
+        groups={fakeGroups}
+        params={{}}
+        userActions={{
+          fetchUsers: genAsyncMock
+        }}
+        groupActions={{
+          fetchGroups: genAsyncMock
+        }}
+        router= { routerMock }
+        addGroup={ addGroup }
+      />
     )
-    groups.saveNewGroup('zzz')
-    expect(addGroup.mock.calls[0][0]).toBe('zzz')
+
+    groups.instance().saveNewGroup({name: 'zzz'})
+    expect(addGroup).toBeCalledWith('zzz')
   })
-  it('should show a row for editing a group', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
-    )
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(0)
-    groups.editGroup(1)({
-      stopPropagation: jest.genMockFunction(),
-      preventDefault: jest.genMockFunction()
-    })
-    expect(TestUtils.scryRenderedComponentsWithType(groups, EditGroup).length).toBe(1)
-  })
+
   it('should save an edited group', () => {
-    const editGroup = jest.genMockFunction().mockReturnValue({
-        then: (cb => cb())
-      })
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups} editGroup={editGroup}/>
-    )
-    groups.saveEditedGroup(1)('zzz')
+    const editGroup = jest.genMockFn().mockReturnValue(promisify('whateva'))
+    const groups = shallow(
+      <Groups
+        groups={fakeGroups}
+        params={{}}
+        userActions={{
+          fetchUsers: genAsyncMock
+        }}
+        groupActions={{
+          fetchGroups: genAsyncMock
+        }}
+        router= { routerMock }
+        editGroup={ editGroup }
+      />)
+
+    groups.instance().saveEditedGroup(1)('zzz')
     expect(editGroup.mock.calls[0][0]).toBe(1)
     expect(editGroup.mock.calls[0][1]).toBe('zzz')
   })
+
   it('should search groups', () => {
-    const groups = TestUtils.renderIntoDocument(
-      <Groups groups={fakeGroups}/>
+    const groups = shallow(
+      groupsElem
     )
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('aaa')
-    groups.changeSearch({target: {value: 'ccc'}})
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(groups, 'td')[0].textContent).toContain('ccc')
+
+    const filteredData = groups.instance().filteredData('a')
+    expect(filteredData.count()).toBe(1)
+    expect(filteredData.first().get('name')).toBe('aaa')
+
+
+
   })
 })

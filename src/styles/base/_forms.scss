@@ -5,6 +5,7 @@ $form-font-size: 14px;
 $form-line-height: 1.6;
 $form-vertical-padding: em(7px, $form-font-size);
 $form-horizontal-padding: em(12px, $form-font-size);
+$form-inline-min-width: em(228px, $form-font-size);
 $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
@@ -168,7 +169,7 @@ label {
 
     > .search-input,
     > .dropdown-select {
-      width: 16em;
+      width: $form-inline-min-width;
     }
   }
 
@@ -302,25 +303,50 @@ textarea {
     padding-left: 0;
     font-size: rem(14px);
     font-weight: 500;
+    cursor: default;
   }
 
   input {
     display: none;
 
-    + span::before {
-      display: inline-block;
-      width: calc(#{$bar-height} / 2);
-      height: calc(#{$bar-height} / 2);
-      margin: 0 calc(#{$bar-height} / 4) 0 0;
-      vertical-align: top;
+    + span {
       cursor: pointer;
-      content: '';
 
-      .dark-theme &,
-      .light-theme &,
-      .light-theme .sidebar-layout &,
-      .light-theme .configuration-sidebar & {
-        background: rgba($black, 0.2);
+      &::before {
+        display: inline-block;
+        width: calc(#{$bar-height} / 2);
+        height: calc(#{$bar-height} / 2);
+        margin: 0 calc(#{$bar-height} / 4) 0 0;
+        vertical-align: top;
+        cursor: pointer;
+        content: '';
+
+        .dark-theme &,
+        .light-theme &,
+        .light-theme .sidebar-layout &,
+        .light-theme .configuration-sidebar & {
+          background: rgba($black, 0.2);
+        }
+      }
+    }
+
+    &.disabled,
+    &[disabled] {
+
+      + span {
+        cursor: not-allowed;
+        opacity: 0.2;
+
+        &::before {
+          cursor: not-allowed;
+
+          .dark-theme &,
+          .light-theme &,
+          .light-theme .sidebar-layout &,
+          .light-theme .configuration-sidebar & {
+            background: rgba($black, 0.3);
+          }
+        }
       }
     }
   }
@@ -358,13 +384,12 @@ textarea {
 
     &:checked + span::after {
       position: absolute;
-      top: 50%;
+      top: 3px;
       left: 3px;
       width: 12px;
       height: 12px;
       border-radius: 50%;
       content: '';
-      transform: translateY(-50%);
     }
 
     .dark-theme &:checked + span,
@@ -395,12 +420,6 @@ textarea {
   @include lg {
     margin-right: 5px;
     margin-left: 5px;
-  }
-
-  @include md {
-    height: $md-btn-height;
-    margin-top: ($md-bar-height - $md-btn-height) / 2;
-    border-radius: $md-btn-height / 2;
   }
 
   .dark-theme & {

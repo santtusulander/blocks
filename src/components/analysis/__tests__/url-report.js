@@ -1,18 +1,12 @@
+jest.unmock('../url-report.jsx')
+
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
-import Immutable from 'immutable'
+import { mount } from 'enzyme'
+import { fromJS } from 'immutable'
 
-jest.dontMock('../url-report.jsx')
-const AnalysisURLReport = require('../url-report.jsx')
-const URLList = require('../url-list.jsx')
-const HorizontalBar = require('../horizontal-bar.jsx')
+import AnalysisURLReport from '../url-report.jsx'
 
-// Set up mocks to make sure formatting libs are used correctly
-const numeral = require('numeral')
-const numeralFormatMock = jest.genMockFunction()
-numeral.mockReturnValue({format:numeralFormatMock})
-
-const fakeData = Immutable.fromJS([
+const urls = fromJS([
   {
     url: 'www.abc.com',
     bytes: 1000,
@@ -23,36 +17,43 @@ const fakeData = Immutable.fromJS([
     url: 'www.cdg.com/123.mp4',
     bytes: 3000,
     requests: 343456,
-    service_type: 'http'
+    service_type: 'https'
   }
 ])
 
-const serviceTypes = Immutable.List(['http'])
-const statusCodes = Immutable.List(['All'])
-
 describe('AnalysisURLReport', () => {
-  it('should show urls in the table', () => {
-    const renderer = TestUtils.createRenderer()
-    renderer.render(
-      <AnalysisURLReport urls={fakeData}
-        serviceTypes={serviceTypes}
-        statusCodes={statusCodes}/>
-    );
-    const result = renderer.getRenderOutput()
-    const urlList = result.props.children[2]
-    expect(urlList.type).toEqual(URLList)
-    expect(urlList.props.urls).toEqual(fakeData)
+  let subject = null
+  let props = {}
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        urls,
+        serviceTypes: fromJS(['http']),
+        statusCodes: fromJS(['All'])
+      }
+      return mount(<AnalysisURLReport {...props}/>)
+    }
   })
-  it('should show urls in the bar chart', () => {
-    const renderer = TestUtils.createRenderer()
-    renderer.render(
-      <AnalysisURLReport urls={fakeData}
-        serviceTypes={serviceTypes}
-        statusCodes={statusCodes}/>
-    );
-    const result = renderer.getRenderOutput()
-    const barChart = result.props.children[0].props.children
-    expect(barChart.type).toEqual(HorizontalBar)
-    expect(barChart.props.data).toEqual(fakeData.toJS())
+
+  it('should exist', () => {
+    expect(subject().length).toBe(1);
+  });
+
+  it('should pass on filtered urls', () => {
+    expect(subject().find('AnalysisURLList').props().urls).toEqual(urls.pop())
+  })
+
+  it('should pass on proper chart height prop', () => {
+    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(108)
+  })
+
+  it('should select data type properly', () => {
+    const component = subject()
+    const bytesBtn = component.find('[value="bytes"]')
+    const requestsBtn = component.find('[value="requests"]')
+    requestsBtn.simulate('change')
+    expect(component.state().dataKey).toBe('requests')
+    bytesBtn.simulate('change')
+    expect(component.state().dataKey).toBe('bytes')
   })
 })

@@ -316,6 +316,8 @@ class Styleguide extends React.Component {
 
               <Input type="checkbox" label="Checkbox 3" />
 
+              <Input type="checkbox" disabled={true} label="Checkbox disabled" />
+
             </div>
 
             <div className="col-xs-6">
@@ -327,6 +329,8 @@ class Styleguide extends React.Component {
               <Input type="radio" label="Radio 2" name="radioGroup1" />
 
               <Input type="radio" label="Radio 3" name="radioGroup1" />
+
+              <Input type="radio" disabled={true} label="Radio disabled" name="radioGroup1" />
 
             </div>
 

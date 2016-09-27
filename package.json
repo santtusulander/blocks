@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0-patch1",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -61,6 +61,8 @@
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
+    "intl": "^1.2.5",
+    "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
@@ -111,6 +113,7 @@
       "json"
     ],
     "unmockedModulePathPatterns": [
+      "<rootDir>/src/constants",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/d3",

@@ -13,8 +13,8 @@ describe('ArrayTd', () => {
   });
 
   it('can be passed a custom class name', () => {
-    const arrayTd = shallow(<ArrayTd items={fakeItems} className="foobar"/>)
-    expect(arrayTd.find('.foobar').length).toBe(1)
+    const arrayTd = shallow(<ArrayTd items={fakeItems} className="test"/>)
+    expect(arrayTd.find('.test').length).toBe(1)
   });
 
   it('should show three first items', () => {

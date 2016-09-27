@@ -19,8 +19,8 @@ export default Immutable.fromJS([
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET
   },
   {
-    key: 'service-providers',
-    filters: ['date-range', 'service-provider', 'pop', 'service-type', 'on-off-net'],
+    key: 'contribution',
+    filters: ['date-range', 'service-provider', 'service-type', 'on-off-net'],
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
   },
   {

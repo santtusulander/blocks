@@ -1,59 +1,78 @@
+jest.unmock('numeral')
+jest.unmock('../url-list')
+
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { mount } from 'enzyme'
 
-jest.dontMock('../url-list.jsx')
-const URLList = require('../url-list.jsx')
-
-// Set up mocks to make sure formatting libs are used correctly
-const numeral = require('numeral')
-const numeralFormatMock = jest.genMockFunction()
-numeral.mockReturnValue({format:numeralFormatMock})
+import URLList from '../url-list'
 
 const fakeURLs = Immutable.fromJS([
   {
-    url: 'www.abc.com',
-    bytes: 1000,
-    requests: 3000
-  },
-  {
     url: 'www.def.com',
-    bytes: 2000,
+    bytes: 1000,
     requests: 2000
   },
   {
+    url: 'www.abc.com',
+    bytes: 4000,
+    requests: 3000
+  },
+  {
     url: 'www.ghi.com',
-    bytes: 3000,
+    bytes: 2000,
     requests: 1000
   }
 ])
 
 describe('URLList', () => {
+  let subject = null
+  let props = {}
+  const labelFormat = jest.fn()
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        urls: fakeURLs,
+        labelFormat,
+        intl: { formatMessage: jest.fn() }
+      }
+      return mount(<URLList {...props}/>)
+    }
+  })
   it('should exist', () => {
-    const renderer = TestUtils.createRenderer()
-    renderer.render(<URLList />);
-    const result = renderer.getRenderOutput()
-    expect(result.type).toEqual('div')
+    expect(subject().length).toBe(1)
   })
   it('should have a row for each url', () => {
-    const renderer = TestUtils.createRenderer()
-    renderer.render(
-      <URLList
-        urls={fakeURLs}
-        labelFormat={jest.genMockFunction()}/>
-    )
-    const result = renderer.getRenderOutput()
-    expect(result.props.children[1].props.children[1].props.children.length).toEqual(3)
+    expect(subject().find('tr').length).toBe(4)
   })
-  it('should use the label formatter', () => {
-    const renderer = TestUtils.createRenderer()
-    const labelFormatter = jest.genMockFunction()
-    renderer.render(
-      <URLList
-        urls={fakeURLs}
-        labelFormat={labelFormatter}/>
-    )
-    expect(labelFormatter.mock.calls.length).toEqual(3)
-    expect(labelFormatter.mock.calls[0][0].toJS()).toEqual(fakeURLs.get(2).toJS())
+
+  it('should sort the table by url (asc and desc)', () => {
+    const component = subject()
+    component.instance().changeSort('url', 1)
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
+    component.instance().changeSort('url', -1)
+    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
+  })
+
+  it('should sort the table by bytes (asc and desc)', () => {
+    const component = subject()
+    component.instance().changeSort('bytes', 1)
+    expect(component.find('td').at(1).props().children).toContain('www.def.com')
+    component.instance().changeSort('bytes', -1)
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
+  })
+
+  it('should sort the table by requests (asc and desc)', () => {
+    const component = subject()
+    component.instance().changeSort('requests', 1)
+    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
+    component.instance().changeSort('requests', -1)
+    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
+  })
+
+  it('should filter out urls according to search value', () => {
+    const component = subject()
+    component.instance().changeSearch({ target: { value: 'abc' } })
+    expect(component.find('tr').length).toBe(2)
   })
 })

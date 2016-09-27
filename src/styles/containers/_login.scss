@@ -3,11 +3,11 @@
 
 $login-modal-width: rem(654px);
 $modal-bg-color: $medium-blue;
-$login-modal-header-top-padding: rem(60px);
+$login-modal-header-top-padding: rem(54px);
 $login-modal-header-bottom-padding: rem(36px);
-$login-modal-body-bottom-padding: rem(78px);
+$login-modal-body-bottom-padding: rem(24px);
 $login-modal-vertical-padding: rem(60px);
-$login-modal-input-bottom-padding: rem(24px);
+$login-modal-body-bottom-margin: rem(24px);
 $login-modal-logo-width: rem(28px);
 $login-modal-logo-right-padding: rem(18px);
 $login-modal-logo-bottom-padding: rem(18px);
@@ -41,19 +41,27 @@ $login-modal-logo-left-padding: rem(12px);
     padding: 0 $login-modal-vertical-padding $login-modal-body-bottom-padding;
 
     .form-group {
-      padding-bottom: $login-modal-input-bottom-padding;
+      padding: 0;
+      margin-bottom: $login-modal-body-bottom-margin;
     }
 
     .input-group-addon:last-child {
-      padding: 0;
+      margin: 0;
     }
 
     .remember-checkbox {
       padding: 6px 0;
 
       .form-group {
-        padding-bottom: 0;
+        padding: 0;
+        margin: 0;
       }
+    }
+
+    .login-copyright {
+      padding: 0;
+      margin: $login-modal-body-bottom-margin 0 0;
+      color: rgba($dt-text-color, 0.5);
     }
   }
 }
@@ -133,12 +141,14 @@ $login-modal-logo-left-padding: rem(12px);
 
 // This is hacky code that should be removed when we no longer allow a light
 // themed login page. See: https://vidscale.atlassian.net/browse/UDNP-1328
-.light-theme .icon.two-tone {
-  .base {
-    fill: $white;
-  }
+.light-theme .login-modal {
 
-  .primary {
-    fill: $medium-blue;
+  .icon {
+    fill: $white;
+
+    &:hover,
+    &.active {
+      fill: $pale-blue;
+    }
   }
 }

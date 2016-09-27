@@ -58,27 +58,29 @@ class ContentItemList extends React.Component {
     return (
       <div className="content-item-list">
         <div className="content-item-list-section section-lg">
-          <Link className="content-item-list-link" to={this.props.linkTo}>
+          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={this.props.linkTo}>
             <div className="content-item-details">
               <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
-              <div className="content-item-list-details text-sm">
-                <p><FormattedMessage id="portal.contentItemList.lastEdited.text"/></p>
-                <p>Yesterday 12:30 pm</p>
-                <p>By John McKinley</p>
-              </div>
+              {/*
+                <div className="content-item-list-details text-sm">
+                  <p><FormattedMessage id="portal.contentItemList.lastEdited.text"/></p>
+                  <p>Yesterday 12:30 pm</p>
+                  <p>By John McKinley</p>
+                </div>
+              */}
             </div>
-          </Link>
+          </LinkWrapper>
 
-          <ButtonToolbar className="pull-right">
-            {this.props.configurationLink ?
+          <ButtonToolbar>
+            {this.props.configurationLink && this.props.isAllowedToConfigure ?
               <Link to={this.props.configurationLink}
-                className="btn btn-icon btn-round">
+                className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
               </Link> : ''
             }
-            {this.props.onConfiguration &&
+            {this.props.onConfiguration && this.props.isAllowedToConfigure &&
               <a onClick={this.props.onConfiguration}
-                 className="btn btn-icon btn-round">
+                 className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
               </a>
             }
@@ -89,7 +91,7 @@ class ContentItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <Link className="content-item-list-link" to={this.props.linkTo}>
+        <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={this.props.linkTo}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
               <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{this.props.maxTransfer}</b></p>
@@ -134,11 +136,27 @@ class ContentItemList extends React.Component {
               : ''}
             </ReactCSSTransitionGroup>
           </div>
-        </Link>
+        </LinkWrapper>
 
       </div>
     )
   }
+}
+
+const LinkWrapper = props => {
+  if(props.disableLinkTo) {
+    return <div>{props.children}</div>
+  }
+  return (
+    <Link className="content-item-list-link" to={props.linkTo}>
+      {props.children}
+    </Link>
+  )
+}
+LinkWrapper.propTypes = {
+  children: React.PropTypes.node,
+  disableLinkTo: React.PropTypes.bool,
+  linkTo: React.PropTypes.string
 }
 
 ContentItemList.displayName = 'ContentItemList'
@@ -149,8 +167,10 @@ ContentItemList.propTypes = {
   configurationLink: React.PropTypes.string,
   delete: React.PropTypes.func,
   description: React.PropTypes.string,
+  disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
+  isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,

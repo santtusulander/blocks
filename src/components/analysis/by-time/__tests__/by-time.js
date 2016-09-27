@@ -8,6 +8,8 @@ global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
 
 jest.unmock('../by-time.jsx')
+jest.unmock('../../../../util/helpers')
+import {formatBytes} from '../../../../util/helpers'
 import AnalysisByTime from '../by-time.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
@@ -26,160 +28,152 @@ moment.utc.mockReturnValue({
 })
 numeral.mockReturnValue({format:numeralFormatMock})
 
-const fakeData = [
+const LOADING_TEXT = 'Loading...'
+const NO_DATA_FOUND_TEXT = 'No data found'
+
+const datasets = [
   {
-    "bytes_out": 3265,
-    "bytes_in": 34857,
-    "timestamp": new Date("2016-01-01 00:00:00")
+    area: false,
+    color: '#00a9d4',
+    comparisonData: false,
+    data:[
+      {
+        bytes: 1,
+        timestamp: 1474357953068
+      },
+      {
+        bytes: 100,
+        timestamp: 1474357953123
+      }
+    ],
+    id: '',
+    label: 'On Net',
+    line: true,
+    stackedAgainst: false,
+    xAxisFormatter: false
   },
   {
-    "bytes_out": 4564,
-    "bytes_in": 68745,
-    "timestamp": new Date("2016-01-02 00:00:00")
-  },
-  {
-    "bytes_out": 4566,
-    "bytes_in": 67865,
-    "timestamp": new Date("2016-01-03 00:00:00")
-  },
-  {
-    "bytes_out": 3455,
-    "bytes_in": 67422,
-    "timestamp": new Date("2016-01-04 00:00:00")
-  },
-  {
-    "bytes_out": 2345,
-    "bytes_in": 67854,
-    "timestamp": new Date("2016-01-05 00:00:00")
+    area: false,
+    color: 'yellow',
+    comparisonData: false,
+    data:[
+      {
+        bytes: 1,
+        timestamp: 1474357953068
+      },
+      {
+        bytes: 100,
+        timestamp: 1474357953123
+      }
+    ],
+    id: '',
+    label: 'Off Net',
+    line: true,
+    stackedAgainst: false,
+    xAxisFormatter: false
   }
 ]
 
 describe('AnalysisByTime', () => {
-  it('should exist', () => {
-    let byTime = shallow(
-      <AnalysisByTime />
-    );
-    expect(byTime.length).toBe(1);
-  });
 
-  it('can be passed a custom css class', () => {
-    let byTime = shallow(
-      <AnalysisByTime className="foo" width={400} height={200} padding={10}
-        primaryData={fakeData}
-        dataKey="bytes_out"/>
-    );
-    let div = byTime.find('div.foo');
-    expect(div.length).toBe(1)
-  });
+  let subject, props = null
+
+  beforeEach(() => {
+    subject = (props) => {
+      let defaultProps = Object.assign({}, {
+        axes: true,
+        padding: 40,
+        dataKey: 'bytes',
+        dataSets: datasets,
+        yAxisCustomFormat: (val, setMax) => formatBytes(val, false, setMax),
+        width: 100,
+        height: 100 / 3,
+        showLegend: true,
+        showTooltip: false
+      }, props)
+      return shallow(<AnalysisByTime {...defaultProps}/>)
+    }
+  })
+
+  it('should exist', () => {
+    expect(subject().length).toBe(1);
+  })
 
   it('should show loading message if there is no width or data', () => {
-    let byTime = shallow(
-      <AnalysisByTime />
-    );
-    let div = byTime.find('div')
-    expect(div.text()).toContain('Loading');
-  });
+    let emptyAnalysis = shallow(<AnalysisByTime/>)
+    expect(
+      emptyAnalysis
+        .find('div')
+        .text()
+    ).toContain(LOADING_TEXT)
+  })
+
+  it('can be passed a custom css class', () => {
+    expect(
+      subject({className: 'foo'})
+        .find('.foo')
+        .length
+    ).toBe(1)
+  })
 
   it('should deactivate tooltip', () => {
-    let byTime = shallow(
-      <AnalysisByTime
-        showTooltip={true}
-      />
-    );
 
-    byTime.state.primaryTooltipText = "foo"
-    byTime.state.secondaryTooltipText = "bar"
+    let byTime = subject({showTooltip: true})
 
+    byTime.state().tooltipText = ['foo', 'bar']
     byTime.instance().deactivateTooltip()
 
-    expect(byTime.state().primaryTooltipText).toBe(null);
-    expect(byTime.state().secondaryTooltipText).toBe(null);
-  });
+    expect(byTime.state().tooltipText).toEqual([]);
+  })
 
   it('should have a data line and area', () => {
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200} padding={10}
-        primaryData={fakeData}
-        dataKey="bytes_out"/>
-    );
-    let paths = byTime.find('path')
-    expect(paths.length).toBe(2);
+    expect(
+      subject()
+        .find('path')
+        .length
+    ).toBe(2);
   });
 
   it('should have an x axis', () => {
     moment.mockClear()
     momentFormatMock.mockClear()
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        primaryData={fakeData}
-        secondaryData={fakeData}
-        dataKey="bytes_out"/>
-    );
-    let texts = byTime.find('text')
 
-    expect(texts.first().prop('x')).toBe(30)
-    expect(texts.first().prop('y')).toBe(190)
-    expect(momentFormatMock.mock.calls[0][0]).toBe('D')
+    let texts = subject().find('text')
+
+    expect(texts.first().prop('x')).toBeTruthy()
+    expect(texts.first().prop('y')).toBeTruthy()
   });
 
   it('should have a y axis', () => {
     numeral.mockClear()
     numeralFormatMock.mockClear()
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200} padding={10} axes={true}
-        primaryData={fakeData}
-        secondaryData={fakeData}
-        dataKey="bytes_out"/>
-    );
 
+    let texts = subject().find('text')
 
-    let texts = byTime.find('text')
-
-    expect(texts.at(2).prop('y')).toBe(190)
-
-    // FIXME: Why 8 calls ? result is 4??
-    //expect(numeral.mock.calls.length).toBe(8)
-
-    expect(numeral.mock.calls[0]).toEqual([1000])
-    expect(numeralFormatMock.mock.calls[0][0]).toBe('0 a')
-  });
+    expect(texts.first().prop('x')).toBeTruthy()
+    expect(texts.first().prop('y')).toBeTruthy()
+    expect(numeral.mock.calls.length).toBe(15)
+  })
 
   it('should have ability to turn axes off', () => {
     moment.mockClear()
     numeral.mockClear()
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200} padding={10} axes={false}
-        primaryData={fakeData}
-        secondaryData={fakeData}
-        dataKey="bytes_out"/>
-    );
-    let texts = byTime.find('text')
+    let texts = subject({axes: false}).find('text')
+
     expect(texts.length).toBe(0)
     expect(moment.mock.calls.length).toBe(0)
     expect(numeral.mock.calls.length).toBe(0)
-  });
+  })
 
-  it('should show no data if the data is empty', () => {
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200}
-        primaryData={[]}
-        secondaryData={null}/>
-    );
-    let div = byTime.find('div')
-    expect(div.text()).toContain('No data found.');
-  });
+  it('should show no data if the desired dataSet is empty', () => {
+    expect(subject({ dataKey: 'bytes_out' }).text()).toContain(NO_DATA_FOUND_TEXT);
+  })
 
   it('should have Legend', () => {
-    let byTime = shallow(
-      <AnalysisByTime width={400} height={200}
-        primaryData={fakeData}
-        secondaryData={fakeData}
-        dataKey="bytes_out"
-        showLegend={true}
-        primaryLabel='Test'
-      />
-    );
-
-    expect(byTime.find('Legend').length).toBe(1);
-  });
+    expect(
+      subject()
+        .find('Legend')
+        .length
+    ).toBe(1);
+  })
 })

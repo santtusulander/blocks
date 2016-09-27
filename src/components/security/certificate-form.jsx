@@ -5,28 +5,21 @@ import { List } from 'immutable'
 import SelectWrapper from '../select-wrapper.jsx'
 import UDNButton from '../button'
 
-export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, errors, editMode }) => {
-  const { account, group, title, privateKey, interMediateCert, certificate } = fields
+export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
+  const { group, title, privateKey, certificate } = fields
+  const groupsOptions = groups.map(group => [group.get('id'), group.get('name')])
+
   return (
     <form>
-      <div id="accounts">
-        <SelectWrapper
-          {...account}
-          disabled={editMode}
-          numericValues={true}
-          value={account.value}
-          className="input-select"
-          options={accounts.map(account => [account.get('id'), account.get('name')])}/>
-        <hr/>
-      </div>
       <div id="groups">
         <SelectWrapper
           {...group}
+          label="Assign to Group"
           disabled={editMode}
           numericValues={true}
           value={group.value}
           className="input-select"
-          options={groups.map(group => [group.get('id'), group.get('name')])}/>
+          options={groupsOptions.toJS()}/>
         <hr/>
       </div>
       <div id="sslCertTitle">
@@ -38,22 +31,15 @@ export const CertificateForm = ({ onCancel, onSave, accounts, groups, fields, er
       </div>
       <div id="privateKey">
         <Input type="textarea"
-          label="Private Key*"
+          label="Private Key"
           className="fixed-size-textarea"
           {...privateKey}/>
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
         <hr/>
       </div>
-      <div id="interMediateCert">
-        <Input type="textarea"
-          className="fixed-size-textarea"
-          label="Intermediate Certificate (optional)"
-        {...interMediateCert}/>
-        <hr/>
-      </div>
       <div id="certificate">
         <Input type="textarea"
-          label="Certificate*"
+          label="Certificate"
           className="fixed-size-textarea"
           {...certificate}/>
         {certificate.touched && certificate.error && <div className="error-msg">{certificate.error}</div>}

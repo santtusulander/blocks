@@ -6,6 +6,7 @@ $navbar-right-size: rem(30px);
 $navbar-right-vertical-margin: rem(9px);
 $navbar-right-horizontal-margin: rem(6px);
 $navbar-right-margin: rem(12px);
+$navbar-btn-user-vertical-margin: rem(6px);
 $header-seach-vertical-padding: rem(6px);
 $header-seach-right-padding: rem(12px);
 $header-seach-left-padding: rem(30px);
@@ -122,10 +123,6 @@ $header-seach-left-padding: rem(30px);
   .navbar-right {
     .btn-header,
     .btn-user-menu {
-      width: $navbar-right-size;
-      height: $navbar-right-size;
-      margin: $navbar-right-vertical-margin $navbar-right-horizontal-margin;
-
       &:hover,
       &:active,
       &.active,
@@ -144,6 +141,9 @@ $header-seach-left-padding: rem(30px);
     }
 
     .btn-header {
+      width: $navbar-right-size;
+      height: $navbar-right-size;
+      margin: $navbar-right-vertical-margin $navbar-right-horizontal-margin;
       background-color: rgba($black, 0.2);
 
       .dark-theme & {
@@ -214,15 +214,20 @@ $header-seach-left-padding: rem(30px);
     }
 
     .btn-user-menu {
-      margin-right: $navbar-right-margin;
-      overflow: hidden;
-      background: url('../assets/img/img-user.jpg') center center no-repeat;
-      background-size: cover;
+      margin: $navbar-btn-user-vertical-margin $navbar-right-margin $navbar-btn-user-vertical-margin $navbar-right-horizontal-margin;
 
-      img {
-        display: block;
-        width: 100%;
-        height: 100%;
+      &,
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &:active:hover,
+      &.active:focus {
+        background-color: transparent;
+      }
+
+      .icon {
+        fill: $dt-text-color;
       }
     }
 

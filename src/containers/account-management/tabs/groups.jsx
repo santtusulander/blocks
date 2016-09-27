@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Input, Table, Button, Row, Col } from 'react-bootstrap'
+import { Input, Table, Button } from 'react-bootstrap'
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -11,6 +11,7 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
@@ -23,6 +24,9 @@ import { checkForErrors } from '../../../util/helpers'
 import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
 
 import { FormattedMessage } from 'react-intl'
+import IsAllowed from '../../../components/is-allowed'
+import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
+
 
 
 class AccountManagementAccountGroups extends React.Component {
@@ -196,23 +200,26 @@ class AccountManagementAccountGroups extends React.Component {
     return true
   }
 
+  filteredData( groupName ) {
+    return this.props.groups.filter((group) => {
+      return group.get('name').toLowerCase().includes(groupName)
+    })
+  }
+
   render() {
-    const groups = this.props.groups;
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredGroups = groups.filter((group) => {
-      return group.get('name').toLowerCase().includes(this.state.search.toLowerCase())
-    })
+    const filteredGroups = this.filteredData(this.state.search.toLowerCase())
+
     const sortedGroups = this.sortedData(
       filteredGroups,
       this.state.sortBy,
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-
     const inlineAddInputs = [
       [
         {
@@ -235,28 +242,28 @@ class AccountManagementAccountGroups extends React.Component {
       ],
       []
     ]
+    const groupSize = sortedGroups.size
+    const groupText = ` Group${sortedGroups.size === 1 ? '' : 's'}`
+    const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} hidden)` : ''
+    const finalGroupText = groupSize + groupText + hiddenGroupText
+
     return (
       <PageContainer className="account-management-account-groups">
-        <Row className="header-btn-row">
-          <Col sm={6}>
-            <h3>
-              {sortedGroups.size} Group{sortedGroups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
-            </h3>
-          </Col>
-          <Col sm={6} className="text-right">
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={this.changeSearch} />
-            <Button bsStyle="success" className="btn-icon btn-add-new"
-              onClick={this.addGroup}>
+       <SectionHeader sectionHeaderTitle={finalGroupText}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder="Search"
+            value={this.state.search}
+            onChange={this.changeSearch} />
+          <IsAllowed to={CREATE_GROUP}>
+            <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
               <IconAdd />
             </Button>
-          </Col>
-        </Row>
+          </IsAllowed>
+        </SectionHeader>
+
         <Table striped={true}>
           <thead>
             <tr>
@@ -297,9 +304,9 @@ class AccountManagementAccountGroups extends React.Component {
                 <td>NEEDS_API</td>
                 */}
                 <td className="nowrap-column">
-                  <ActionButtons
-                    onEdit={() => {this.props.editGroup(group)}}
-                    onDelete={() => {this.props.deleteGroup(group)}} />
+                  <IsAllowed to={MODIFY_GROUP}>
+                     <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                  </IsAllowed>
                 </td>
               </tr>
             )

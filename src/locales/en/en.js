@@ -99,7 +99,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.role.edit.roleNameRequired.text': 'Role name is required',
   'portal.role.edit.title': 'Edit Role',
-  'portal.role.edit.discalimer.text': 'Lorem Ipsum',
+  'portal.role.edit.discalimer.text': 'Edit Role',
   'portal.role.edit.enterRoleName.text': 'Enter Role Name',
   'portal.role.edit.name.text': 'Name',
 
@@ -110,15 +110,17 @@ const TRANSLATED_MESSAGES = {
   'portal.role.list.search.noResults.text': 'No roles found',
   'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
 
+  'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
   'portal.analytics.fileErrors.serverErrors.label': 'Server errors',
 
   'portal.analytics.dataRangeFilter.pleaseSelect.label': 'Server errors',
 
-  'portal.analytics.onOfNet.noOptionsSelected.text': 'There must be at least one option selected.',
-  'portal.analytics.onOfNet.noOptionsSelected.title': 'Error',
-  'portal.analytics.onOfNet.primaryLabel.text': 'On Net',
-  'portal.analytics.onOfNet.secondaryLabel.text': 'Off Net',
+  'portal.analytics.onOffNet.text': 'ON/OFF NET',
+  'portal.analytics.onOffNet.noOptionsSelected.text': 'There must be at least one option selected.',
+  'portal.analytics.onOffNet.noOptionsSelected.title': 'Error',
+  'portal.analytics.onOffNet.primaryLabel.text': 'On Net',
+  'portal.analytics.onOffNet.secondaryLabel.text': 'Off Net',
 
   'portal.analytics.demoPlayback.safariNotSupported.text': 'This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox',
   'portal.analytics.demoPlayback.ttfp.text': 'Time to First Play',
@@ -128,10 +130,12 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
+  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.ofNetHttp.label': 'Of-Net HTTP',
-  'portal.analytics.serviceProviderContribution.ofNetHttps.label': 'Of-Net HTTPS',
+  'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
+  'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
   'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
@@ -192,7 +196,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
-  'portal.analytics.tabs.serviceProviders.label': 'SP Contribution',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -215,7 +218,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.dateRangeTo.title': 'To',
   'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',
   'portal.analysis.filters.onOffNet.title': 'On-Net/Off-Net',
-  'portal.analysis.filters.pop.title': 'POPs',
   'portal.analysis.filters.property.title': 'Properties',
   'portal.analysis.filters.recordType.title': 'Show as',
   'portal.analysis.filters.responseCode.title': 'Response Code',
@@ -426,7 +428,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.name.text': 'Name',
   'portal.policy.edit.policies.matchDirectory.text': 'Match a directory path like /wp-admin/',
   'portal.policy.edit.policies.directoryPath.text': 'Directory Path',
-  'portal.policy.edit.policies.matchHostname.text': 'Match a hostname like www.foobar.com',
+  'portal.policy.edit.policies.matchHostname.text': 'Match a hostname like www.test.com',
   'portal.policy.edit.policies.hostname.text': 'Hostname',
   'portal.policy.edit.policies.matchCookie.text': 'Match a cookie like tracking',
   'portal.policy.edit.policies.cookie.text': 'Cookie',
@@ -434,7 +436,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.policies.queryString.text': 'Query String',
   'portal.policy.edit.policies.policyRules.text': 'Policy Rules',
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
-  'portal.policy.edit.editRule.editPolicy.text': 'Edit Policy',
+  'portal.policy.edit.editRule.editPolicy.text': 'Update Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
@@ -446,7 +448,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.rules.noRulesAdded.text': 'No policies rules have been added yet.',
   'portal.policy.edit.publishVersion.versionName.text': 'Version Name',
   'portal.policy.edit.publishVersion.publishTo.text': 'Publish to',
-  'portal.policy.edit.publishVersion.stagingPlatform.text': 'Staging Platform',
+  'portal.policy.edit.publishVersion.sandboxPlatform.text': 'Sandbox Platform',
   'portal.policy.edit.publishVersion.productionPlatform.text': 'Production Platform',
   'portal.policy.edit.security.text': 'Security',
   'portal.policy.edit.versions.text': 'Versions',
@@ -540,7 +542,6 @@ const TRANSLATED_MESSAGES = {
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
-  'portal.accountManagement.dns.form.subHeader.text' : 'Lorem ipsum',
   'portal.accountManagement.dns.form.domainName.text' : 'Domain Name',
   'portal.accountManagement.dns.form.domainNamePlaceholder.text' : 'Enter Domain Name',
   'portal.accountManagement.dns.form.email.text' : 'Enter Responsible Person Mailbox',
@@ -600,7 +601,8 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
 
-  'portal.groups.accountContentSummary.text': 'ACCOUNT CONTENT SUMMARY',
+  'portal.groups.accountSummary.text': 'Account Summary',
+  'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
@@ -609,6 +611,8 @@ const TRANSLATED_MESSAGES = {
   'portal.login.logo.text': 'Ericsson',
   'portal.login.rememberMe.text': 'Remember me',
   'portal.login.forgotPassword.text': 'Forgot password?',
+  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
+  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
@@ -792,7 +796,6 @@ const TRANSLATED_MESSAGES = {
   'portal.button.publish': 'Publish',
   'portal.button.PUBLISHING': 'PUBLISHING...',
   'portal.button.saveAction': 'Save Action',
-  'portal.button.add': 'Add',
   'portal.button.yes': 'Yes',
   'portal.button.close': 'Close',
   'portal.button.reload': 'Reload',

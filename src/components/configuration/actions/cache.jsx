@@ -11,8 +11,14 @@ import { secondsToUnit, secondsFromUnit } from '../helpers'
 class Cache extends React.Component {
   constructor(props) {
     super(props)
+    let maxAge = props.set.get('max_age')
 
-    let maxAge = Number(props.set.get('max_age'))
+    if (!maxAge) {
+      maxAge = secondsFromUnit(7, 'days')
+    } else {
+      maxAge = Number(maxAge)
+    }
+
     let ttlType = 'seconds'
     if (maxAge / 86400 >= 1) {
       maxAge = secondsToUnit(maxAge, 'days')
