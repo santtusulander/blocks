@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
-import { List, Map } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
@@ -9,6 +9,7 @@ import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
+import FilterContentProvider from '../analysis/filters/content-provider.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
@@ -25,6 +26,46 @@ function getToggledValues( currentValues, toggleVal) {
 
   return currentValues.push( toggleVal )
 }
+
+// TODO: placeholder data
+const serviceProviderGroups = fromJS([
+  {value: 0, label: 'Group 0'},
+  {value: 1, label: 'Group 1'},
+  {value: 2, label: 'Group 2'},
+  {value: 3, label: 'Group 3'},
+  {value: 4, label: 'Group 4'},
+  {value: 5, label: 'Group 5'}
+])
+
+// TODO: placeholder data
+const contentProviders = fromJS([
+  {value: 0, label: 'Content Provider 0'},
+  {value: 1, label: 'Content Provider 1'},
+  {value: 2, label: 'Content Provider 2'},
+  {value: 3, label: 'Content Provider 3'},
+  {value: 4, label: 'Content Provider 4'},
+  {value: 5, label: 'Content Provider 5'}
+])
+
+// TODO: placeholder data
+const contentProviderGroups = fromJS([
+  {value: 0, label: 'Group 0'},
+  {value: 1, label: 'Group 1'},
+  {value: 2, label: 'Group 2'},
+  {value: 3, label: 'Group 3'},
+  {value: 4, label: 'Group 4'},
+  {value: 5, label: 'Group 5'}
+])
+
+// TODO: placeholder data
+const contentProviderProperties = fromJS([
+  {value: 0, label: 'Property 0'},
+  {value: 1, label: 'Property 1'},
+  {value: 2, label: 'Property 2'},
+  {value: 3, label: 'Property 3'},
+  {value: 4, label: 'Property 4'},
+  {value: 5, label: 'Property 5'}
+])
 
 const StatusCodes = ({ options, values, onChange }) => {
   const
@@ -114,15 +155,30 @@ const AnalyticsFilters = (props) => {
       }
 
       {props.showFilters.includes('service-provider') &&
-        <div className='action'>
-          <FilterServiceProvider
+        <FilterServiceProvider
           changeServiceProvider={val => {
             props.onFilterChange('serviceProviders', val)
           }}
-          options={props.filterOptions.get('serviceProviders')}
-          value={props.filters.get('serviceProviders')}
+          changeServiceProviderGroup={val => console.log('changed CP group: ' + val)}
+          serviceProviderOptions={props.filterOptions.get('serviceProviders')}
+          serviceProviderValue={props.filters.get('serviceProviders')}
+          serviceProviderGroupOptions={serviceProviderGroups}
+          serviceProviderGroupValue={fromJS([])}
           />
-        </div>
+      }
+
+      {props.showFilters.includes('content-provider') &&
+        <FilterContentProvider
+          changeContentProvider={val => console.log('changed CP: ' + val)}
+          changeContentProviderGroup={val => console.log('changed CP group: ' + val)}
+          changeContentProviderProperty={val => console.log('changed cp property: ' + val)}
+          contentProviderOptions={contentProviders}
+          contentProviderValue={fromJS([])}
+          contentProviderGroupOptions={contentProviderGroups}
+          contentProviderGroupValue={fromJS([])}
+          contentProviderPropertyOptions={contentProviderProperties}
+          contentProviderPropertyValue={fromJS([])}
+          />
       }
 
       {props.showFilters.includes('on-off-net') &&

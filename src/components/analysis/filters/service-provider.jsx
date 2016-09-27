@@ -6,19 +6,28 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 
 export class FilterServiceProvider extends React.Component {
   render() {
-    // debugger;
-    //
     const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
-    const options = Immutable.fromJS(this.props.options.map(arrayMapping))
+    const serviceProviderOptions = Immutable.fromJS(this.props.serviceProviderOptions.map(arrayMapping))
 
     return (
-      <div>
-        <h5><FormattedMessage id="portal.analysis.filters.serviceProvider.title"/></h5>
-        <div className="sidebar-content">
-          <FilterChecklistDropdown className="btn-block"
-            onChange={this.props.changeServiceProvider}
-            value={this.props.value}
-            options={options}/>
+      <div className="action">
+        <div>
+          <h5><FormattedMessage id="portal.analysis.filters.serviceProvider.title"/></h5>
+          <div className="sidebar-content">
+            <FilterChecklistDropdown className="btn-block"
+              onChange={this.props.changeServiceProvider}
+              value={this.props.serviceProviderValue}
+              options={serviceProviderOptions}/>
+          </div>
+        </div>
+        <div>
+          <h5><FormattedMessage id="portal.analysis.filters.serviceProviderGroups.title"/></h5>
+          <div className="sidebar-content">
+            <FilterChecklistDropdown className="btn-block"
+              onChange={this.props.changeServiceProviderGroup}
+              value={this.props.serviceProviderGroupValue}
+              options={this.props.serviceProviderGroupOptions}/>
+          </div>
         </div>
       </div>
     );
@@ -28,8 +37,11 @@ export class FilterServiceProvider extends React.Component {
 FilterServiceProvider.displayName = 'FilterServiceProvider'
 FilterServiceProvider.propTypes = {
   changeServiceProvider: React.PropTypes.func,
-  options: React.PropTypes.instanceOf(List),
-  value: React.PropTypes.instanceOf(List)
+  changeServiceProviderGroup: React.PropTypes.func,
+  serviceProviderGroupOptions: React.PropTypes.instanceOf(List),
+  serviceProviderGroupValue: React.PropTypes.instanceOf(List),
+  serviceProviderOptions: React.PropTypes.instanceOf(List),
+  serviceProviderValue: React.PropTypes.instanceOf(List)
 }
 
 module.exports = FilterServiceProvider
