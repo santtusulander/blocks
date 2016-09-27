@@ -168,10 +168,10 @@ export class SetPassword extends React.Component {
             {showPasswordRequirements ?
               <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
                 <span>Requirements:</span><br/>
-                <span className={this.state.passwordLengthValid ? 'active' : ''}>- at least 8 characters</span><br/>
-                <span className={this.state.passwordUppercaseValid ? 'active' : ''}>- at least one uppercase character</span><br/>
-                <span className={this.state.passwordNumberValid ? 'active' : ''}>- at least one number</span><br/>
-                <span className={this.state.passwordSpecialCharValid ? 'active' : ''}>- at least one special character (!,?,#,$,...)</span>
+                <span className={this.state.passwordLengthValid ? 'valid' : ''}>- at least 8 characters</span><br/>
+                <span className={this.state.passwordUppercaseValid ? 'valid' : ''}>- at least one uppercase character</span><br/>
+                <span className={this.state.passwordNumberValid ? 'valid' : ''}>- at least one number</span><br/>
+                <span className={this.state.passwordSpecialCharValid ? 'valid' : ''}>- at least one special character (!,?,#,$,...)</span>
               </Tooltip>
             : null}
 

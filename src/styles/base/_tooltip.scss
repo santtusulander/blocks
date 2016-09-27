@@ -116,7 +116,14 @@
 }
 
 .interactive-password-tooltip {
-  .active {
+  .valid {
     color: $green;
+
+    &::after {
+      padding-left: 18px;
+      background: url('../assets/icons/icon-valid.svg') right center no-repeat;
+      background-size: 14px;
+      content: '';
+    }
   }
 }
