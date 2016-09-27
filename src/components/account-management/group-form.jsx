@@ -45,37 +45,20 @@ class GroupForm extends React.Component {
     }
   }
 
-
-  componentWillMount() {
-    if (!this.props.group.isEmpty()) {
-      const {
-        group,
-        fields: {
-          name
-        }
-      } = this.props
-
-      name.onChange(group.get('name'))
-    }
-  }
-
   save() {
     if(!this.props.invalid) {
-      const {
-        fields: { name }
-      } = this.props
       // TODO: enable this when API is ready
       //const members = this.getMembers()
 
-      if (!this.props.group.isEmpty()) {
+      if (this.props.groupId) {
         this.props.onSave(
-          this.props.group.get('id'),
-          { name: name.value },
+          this.props.groupId,
+          this.props.formValues,
           this.state.usersToAdd,
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave({ name: name.value }, this.state.usersToAdd)
+        this.props.onSave(this.props.formValues, this.state.usersToAdd)
       }
     }
   }
