@@ -166,7 +166,7 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            <PasswordValidation loginPassword={false} />
+            <PasswordValidation loginPassword={true} />
 
             {showPasswordRequirements ?
               <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
