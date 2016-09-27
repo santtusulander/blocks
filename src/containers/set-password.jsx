@@ -132,10 +132,10 @@ export class SetPassword extends React.Component {
     ([?!@#\$%\^\&*\)\(\/\\\<\>\ ~`+=._-]+) should contain at least one special character
   */
   validatePassword(password) {
-    return password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[\ ~\!@\#\$\-_])[0-9a-zA-Z\ ?!@#\$%\^\&*\)\(\/\\\<\>~`+=._-]{8,}$/) !== null
+    return password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[\ ~\?!@\#\$\-_])[0-9a-zA-Z\ ~\?!@\#\$\-_]{8,}$/) !== null
   }
   validatePasswordLengthValid(password) {
-    return password.match(/([0-9a-zA-Z\ ?!@#\$%\^\&*\)\(\/\\\<\>~`+=._-]{8,})/) !== null
+    return password.match(/([0-9a-zA-Z\ ~\?!@\#\$\-_]{8,})/) !== null
   }
   validatePasswordUppercaseValid(password) {
     return password.match(/([A-Z]+)/) !== null
@@ -144,7 +144,7 @@ export class SetPassword extends React.Component {
     return password.match(/([0-9]+)/) !== null
   }
   validatePasswordSpecialCharValid(password) {
-    return password.match(/([?!@#\$%\^\&*\)\(\/\\\<\>\ ~`+=._-]+)/) !== null
+    return password.match(/([\ ~\?!@\#\$\-_]+)/) !== null
   }
 
   render() {
