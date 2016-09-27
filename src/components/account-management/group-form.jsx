@@ -112,8 +112,8 @@ class GroupForm extends React.Component {
     //   return arr;
     // }, []))
 
-    const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
-    const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
+    const title = this.props.groupId ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
+    const subTitle = this.props.groupId ? `${this.props.account.get('name')} / ${name}` : this.props.account.get('name')
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -132,21 +132,31 @@ class GroupForm extends React.Component {
               placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
             {name.touched && name.error &&
             <div className='error-msg'>{name.error}</div>}
-            <Input
-              {...charge_id}
-              type="text"
-              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-              placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
-            {charge_id.touched && charge_id.error &&
-            <div className='error-msg'>{charge_id.error}</div>}
-            <SelectWrapper
-              {...charge_model}
-              options={[['95/5', '95/5'], ['Bytes Delivered', 'bytes_delivered']]}
-              value={charge_model.value}
-              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}/>
-            {charge_model.touched && charge_model.error &&
-            <div className='error-msg'>{charge_model.error}</div>}
 
+            {charge_id &&
+              <div>
+                <Input
+                  {...charge_id}
+                  type="text"
+                  label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
+                  placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+                {charge_id.touched && charge_id.error &&
+                <div className='error-msg'>{charge_id.error}</div>}
+              </div>
+            }
+
+            {charge_model &&
+              <div>
+                <SelectWrapper
+                  {...charge_model}
+                  numericValues={true}
+                  options={[[1, '95/5'], [2, 'Bytes Delivered']]}
+                  value={charge_model.value}
+                  label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}/>
+                {charge_model.touched && charge_model.error &&
+                <div className='error-msg'>{charge_model.error}</div>}
+              </div>
+            }
             {/*
               Disable until API support allows listing groups for user with some assigned
             <hr/>
