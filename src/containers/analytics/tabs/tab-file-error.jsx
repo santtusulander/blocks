@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisFileError from '../../../components/analysis/file-error'
 
@@ -43,7 +44,7 @@ class AnalyticsTabFileError extends React.Component {
 
   render(){
     if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
-      <p>No error data found.</p>
+      <FormattedMessage id="portal.analytics.fileErrors.noData.text" />
     )
 
     return (
