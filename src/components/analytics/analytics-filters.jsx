@@ -4,9 +4,9 @@ import { List, Map, fromJS } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
-
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
+import ProviderTypes from '../../constants/provider-types'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterContentProvider from '../analysis/filters/content-provider.jsx'
@@ -118,6 +118,29 @@ StatusCodes.propTypes = {
 }
 
 const AnalyticsFilters = (props) => {
+  /* Filter options for FilterServiceProvider and FilterContentProvider */
+  let spFilterOptions = []
+  let cpFilterOptions = []
+
+  switch (props.providerType) {
+    case ProviderTypes.CONTENT_PROVIDER:
+      cpFilterOptions = ['cp-group','cp-property']
+      spFilterOptions = ['sp-account','sp-group']
+      break;
+    case ProviderTypes.SERVICE_PROVIDER:
+      cpFilterOptions = ['cp-account']
+      spFilterOptions = ['sp-group']
+      break;
+    case ProviderTypes.CLOUD_PROVIDER:
+      cpFilterOptions = ['cp-account','cp-group','cp-property']
+      spFilterOptions = ['sp-account','sp-group']
+      break;
+    default:
+      /* No account selected - user is UDN Admin - show all */
+      cpFilterOptions = ['cp-account','cp-group','cp-property']
+      spFilterOptions = ['sp-account','sp-group']
+  }
+
   return (
     <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
@@ -156,6 +179,7 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('service-provider') &&
         <FilterServiceProvider
+          visibleFields={spFilterOptions}
           changeServiceProvider={val => {
             props.onFilterChange('serviceProviders', val)
           }}
@@ -169,6 +193,7 @@ const AnalyticsFilters = (props) => {
 
       {props.showFilters.includes('content-provider') &&
         <FilterContentProvider
+          visibleFields={cpFilterOptions}
           changeContentProvider={val => console.log('changed CP: ' + val)}
           changeContentProviderGroup={val => console.log('changed CP group: ' + val)}
           changeContentProviderProperty={val => console.log('changed cp property: ' + val)}
@@ -252,6 +277,7 @@ AnalyticsFilters.propTypes = {
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
+  providerType: PropTypes.number,
   showFilters: PropTypes.instanceOf(List)
 }
 

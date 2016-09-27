@@ -91,6 +91,7 @@ class AnalyticsContainer extends React.Component {
 
   renderFilters() {
     const {
+      activeAccount,
       params,
       filterOptions,
       filters,
@@ -102,9 +103,11 @@ class AnalyticsContainer extends React.Component {
     }
 
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
+    const providerType = activeAccount && activeAccount.get('provider_type')
 
     return (
       <AnalyticsFilters
+        providerType={providerType}
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
