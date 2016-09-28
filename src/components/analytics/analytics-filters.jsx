@@ -130,11 +130,19 @@ StatusCodes.propTypes = {
 }
 
 const AnalyticsFilters = (props) => {
+  const {
+    filters,
+    activeAccountProviderType,
+    currentUserRole,
+    params: { account, group, property }
+  } = props
+
   /* Filter options for FilterServiceProvider and FilterContentProvider */
   let spFilterOptions = []
   let cpFilterOptions = []
 
-  switch (props.providerType) {
+  // the following builds the dropdown list based off of current user role
+  switch (currentUserRole) {
     case ProviderTypes.CONTENT_PROVIDER:
       cpFilterOptions = ['cp-group','cp-property']
       spFilterOptions = ['sp-account','sp-group']
@@ -147,10 +155,30 @@ const AnalyticsFilters = (props) => {
       cpFilterOptions = ['cp-account','cp-group','cp-property']
       spFilterOptions = ['sp-account','sp-group']
       break;
-    default:
-      /* No account selected - user is UDN Admin - show all */
-      cpFilterOptions = ['cp-account','cp-group','cp-property']
-      spFilterOptions = ['sp-account','sp-group']
+  }
+
+  // the following hides certain dropdowns based on GAS status and current user role
+  if (account) {
+    if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
+      spFilterOptions = spFilterOptions.filter(x => x !== 'sp-account')
+
+      if (group) {
+        spFilterOptions = spFilterOptions.filter(x => x !== 'sp-group')
+      }
+    } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
+      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-account')
+
+      if (group) {
+        cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-group')
+      }
+
+      if (property) {
+        cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-property')
+      }
+    } else {
+      cpFilterOptions = []
+      spFilterOptions = []
+    }
   }
 
   return (
@@ -189,7 +217,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('service-provider') &&
+      {(props.showFilters.includes('service-provider') && spFilterOptions.length > 0) &&
         <FilterServiceProvider
           visibleFields={spFilterOptions}
           changeServiceProvider={val => {
@@ -203,7 +231,7 @@ const AnalyticsFilters = (props) => {
           />
       }
 
-      {props.showFilters.includes('content-provider') &&
+      {(props.showFilters.includes('content-provider') && cpFilterOptions.length > 0) &&
         <FilterContentProvider
           visibleFields={cpFilterOptions}
           changeContentProvider={val => console.log('changed CP: ' + val)}
@@ -298,10 +326,12 @@ const AnalyticsFilters = (props) => {
 }
 
 AnalyticsFilters.propTypes = {
+  activeAccountProviderType: PropTypes.number,
+  currentUserRole: PropTypes.number,
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
-  providerType: PropTypes.number,
+  params: PropTypes.object,
   showFilters: PropTypes.instanceOf(List)
 }
 

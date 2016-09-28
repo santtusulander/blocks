@@ -19,7 +19,11 @@ const initialState = Immutable.fromJS({
     dateRangeLabel: 'Month to date',
     recordType: 'transfer_rates',
     serviceTypes: ['http', 'https'],
+    contentProviders: [],
+    contentProviderGroups: [],
+    contentProviderProperties: [],
     serviceProviders: [],
+    serviceProviderGroups: [],
     onOffNet: ['on-net', 'off-net'],
     errorCodes: httpErrorCodes,
     statusCodes: httpStatusCodes,
@@ -28,7 +32,11 @@ const initialState = Immutable.fromJS({
   filterOptions: {
     recordType: [{label: 'Bandwidth', value: 'transfer_rates'}, {label: 'Requests', value: 'requests'}],
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
+    contentProviders: [],
+    contentProviderGroups: [],
+    contentProviderProperties: [],
     serviceProviders: [],
+    serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
     errorCodes: httpErrorCodes.map((obj) => { return { label: obj, value: obj } } ),
     statusCodes: httpStatusCodes.map((obj) => { return { label: obj, value: obj } } )
