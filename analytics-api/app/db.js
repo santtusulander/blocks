@@ -795,13 +795,15 @@ class AnalyticsDB {
       SELECT
         url_path AS url,
         sum(bytes) AS bytes,
-        sum(requests) AS requests
+        sum(requests) AS requests,
+        status_code
       FROM url_property_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       GROUP BY
-        url_path
+        url_path,
+        status_code
       ORDER BY ${optionsFinal.sort_by || 'bytes'} ${optionsFinal.sort_dir.toUpperCase()}
       LIMIT ${optionsFinal.limit || 1000};
     `;
