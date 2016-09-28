@@ -23,19 +23,37 @@ export class Hosts extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      fetching: false
+    }
+
+    this.startFetching = this.startFetching.bind(this)
+    this.stopFetching = this.stopFetching.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
     if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
-      this.props.fetchGroupData().then(()=>{
-        this.props.fetchMetricsData()
-      })
+      this.startFetching();
+      this.props.fetchGroupData()
+        .then(this.stopFetching, this.stopFetching)
+        .then(() => {
+          this.props.fetchMetricsData()
+        })
     } else {
       this.props.fetchMetricsData()
     }
   }
+
+  startFetching() {
+    this.setState({fetching: true});
+  }
+
+  stopFetching() {
+    this.setState({fetching: false});
+  }
+
   createNewHost(id, deploymentMode) {
     return this.props.hostActions.createHost(
       this.props.params.brand,
@@ -99,7 +117,7 @@ export class Hosts extends React.Component {
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteHost}
-        fetching={this.props.fetching}
+        fetching={this.state.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
         group={group}
         headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
@@ -131,7 +149,6 @@ Hosts.propTypes = {
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
@@ -163,7 +180,6 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
-    fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
     propertyNames: state.host.get('configuredHostNames'),
@@ -189,11 +205,13 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchGroupData = () => {
-    hostActions.startFetching()
-    accountActions.fetchAccount(brand, account)
-    groupActions.fetchGroup(brand, account, group)
-    hostActions.fetchHosts(brand, account, group)
-    return hostActions.fetchConfiguredHostNames(brand, account, group)
+    return Promise.all([
+      hostActions.startFetching(),
+      accountActions.fetchAccount(brand, account),
+      groupActions.fetchGroup(brand, account, group),
+      hostActions.fetchHosts(brand, account, group),
+      hostActions.fetchConfiguredHostNames(brand, account, group)
+    ])
   }
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
