@@ -848,7 +848,7 @@ class AnalyticsDB {
         epoch_start as timestamp,
         net_type,
         sum(bytes) AS bytes
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -936,7 +936,7 @@ class AnalyticsDB {
         net_type,
         service_type,
         sum(bytes) AS bytes
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -999,7 +999,7 @@ class AnalyticsDB {
         ${this.accountLevelFieldMap.sp_account_ids.select},
         country,
         sum(bytes) AS bytes
-      FROM sp_property_country_day
+      FROM spc_country_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -1061,7 +1061,7 @@ class AnalyticsDB {
     let queryParameterized = `
       SELECT
         sum(bytes) AS bytes
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')};
@@ -1123,7 +1123,7 @@ class AnalyticsDB {
 
     let queryParameterized = `
       SELECT DISTINCT ${optionsFinal.entity}
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = "UTC"
         AND epoch_start BETWEEN ? AND ?
         ${conditions.join('\n        ')};
