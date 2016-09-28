@@ -31,5 +31,15 @@
   "portal.account.domainForm.validation.mailbox": "Mailbox should be entered as admin.example.com.",
   "portal.account.domainForm.validation.domainName": "Domain Name is invalid",
   "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
-  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required"
+  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required",
+
+  "portal.account.groupForm.name.validation.error": "Invalid Group name",
+  "portal.account.groupForm.name.required.error": "Group name is required",
+  "portal.account.groupForm.name.label": "Group Name",
+  "portal.account.groupForm.name.text": "Enter Group Name",
+  "portal.account.groupForm.charge_id.label": "Billing ID",
+  "portal.account.groupForm.charge_id.text": "Enter Billing ID",
+  "portal.account.groupForm.charge_model.label": "Billing Mode",
+  "portal.account.groupForm.editGroup.title": "Edit Group",
+  "portal.account.groupForm.newGroup.title": "Add new group"
 }

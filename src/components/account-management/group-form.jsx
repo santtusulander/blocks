@@ -23,10 +23,26 @@ const validate = ({ name }) => {
   const conditions = {
     name: {
       condition: !new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-      errorText: <FormattedMessage id="portal.group.edit.name.required.text"/>
+      errorText:
+        <div>
+          <FormattedMessage id="portal.account.groupForm.name.validation.error"/>,
+          <div key={1}>
+            <div style={{marginTop: '0.5em'}}>
+              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+              <ul>
+                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+              </ul>
+            </div>
+          </div>
+        </div>
     }
   }
-  return checkForErrors({ name }, conditions, { name: conditions.name.errorText });
+  return checkForErrors(
+    { name },
+    conditions,
+    { name: <FormattedMessage id="portal.account.groupForm.name.validation.error"/> }
+  )
 }
 
 class GroupForm extends React.Component {
@@ -119,7 +135,7 @@ class GroupForm extends React.Component {
     //   return arr;
     // }, []))
 
-    const title = groupId ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
+    const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
 
     return (
@@ -135,8 +151,8 @@ class GroupForm extends React.Component {
               <Input
                 {...name}
                 type="text"
-                label={intl.formatMessage({id: 'portal.group.edit.name.label'})}
-                placeholder={intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+                label={intl.formatMessage({id: 'portal.account.groupForm.name.label'})}
+                placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}/>
               {name.touched && name.error &&
               <div className='error-msg'>{name.error}</div>}
 
@@ -145,8 +161,8 @@ class GroupForm extends React.Component {
                   <Input
                     {...charge_id}
                     type="text"
-                    label={intl.formatMessage({id: 'portal.group.edit.charge_id.label'})}
-                    placeholder={intl.formatMessage({id: 'portal.group.edit.charge_id.enter.text'})}/>
+                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_id.label'})}
+                    placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
                   {charge_id.touched && charge_id.error &&
                   <div className='error-msg'>{charge_id.error}</div>}
                 </div>
@@ -159,7 +175,7 @@ class GroupForm extends React.Component {
                     numericValues={true}
                     options={[[1, '95/5'], [2, 'Bytes Delivered']]}
                     value={charge_model.value}
-                    label={intl.formatMessage({id: 'portal.group.edit.charge_model.label'})}/>
+                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_model.label'})}/>
                   {charge_model.touched && charge_model.error &&
                   <div className='error-msg'>{charge_model.error}</div>}
                 </div>
