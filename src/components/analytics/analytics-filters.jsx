@@ -144,40 +144,32 @@ const AnalyticsFilters = (props) => {
   // the following builds the dropdown list based off of current user role
   switch (currentUserRole) {
     case ProviderTypes.CONTENT_PROVIDER:
-      cpFilterOptions = ['cp-group','cp-property']
+    case ProviderTypes.CLOUD_PROVIDER:
+      cpFilterOptions = ['cp-account','cp-group','cp-property']
       spFilterOptions = ['sp-account','sp-group']
       break;
     case ProviderTypes.SERVICE_PROVIDER:
       cpFilterOptions = ['cp-account']
       spFilterOptions = ['sp-group']
       break;
-    case ProviderTypes.CLOUD_PROVIDER:
-      cpFilterOptions = ['cp-account','cp-group','cp-property']
-      spFilterOptions = ['sp-account','sp-group']
-      break;
   }
 
   // the following hides certain dropdowns based on GAS status and current user role
-  if (account) {
-    if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
-      spFilterOptions = spFilterOptions.filter(x => x !== 'sp-account')
+  if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
+    spFilterOptions = spFilterOptions.filter(x => x !== 'sp-account')
 
-      if (group) {
-        spFilterOptions = spFilterOptions.filter(x => x !== 'sp-group')
-      }
-    } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
-      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-account')
+    if (group) {
+      spFilterOptions = spFilterOptions.filter(x => x !== 'sp-group')
+    }
+  } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
+    cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-account')
 
-      if (group) {
-        cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-group')
-      }
+    if (group) {
+      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-group')
+    }
 
-      if (property) {
-        cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-property')
-      }
-    } else {
-      cpFilterOptions = []
-      spFilterOptions = []
+    if (property) {
+      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-property')
     }
   }
 

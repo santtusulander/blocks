@@ -103,7 +103,7 @@ class AnalyticsContainer extends React.Component {
       location: { pathname }
     } = this.props
 
-    if (!params.account && pathname.indexOf('contribution') < 0) {
+    if (!params.account) {
       return null
     }
 
@@ -126,8 +126,7 @@ class AnalyticsContainer extends React.Component {
 
   renderContent(children, filters) {
     const {
-      params,
-      location: { pathname }
+      params
     } = this.props
 
     let content = children && React.cloneElement(children, {
@@ -137,20 +136,11 @@ class AnalyticsContainer extends React.Component {
     })
 
     if (!params.account) {
-      if (pathname.indexOf('contribution') >= 0) {
-        // TODO: move this logic elsewhere once API support for this feature has been integrated
-        content = (
-          <div className="text-center">
-            <FormattedMessage id="portal.analytics.contribution.selectAccount.text" values={{br: <br/>}} />
-          </div>
-        )
-      } else {
-        content = (
-          <div className="text-center">
-            <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
-          </div>
-        )
-      }
+      content = (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
+        </div>
+      )
     }
 
     return (

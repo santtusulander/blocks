@@ -3,7 +3,6 @@
 
   "portal.analytics.allAccounts.text": "All Accounts",
   "portal.analytics.selectAccount.text": "Please select an account{br}from top left to see reports",
-  "portal.analytics.contribution.selectAccount.text": "Please select a service provider or content provider{br}from the filters above to see the contribution report",
 
   "portal.analysis.filters.serviceProviderGroups.title": "Service Provider Groups",
   "portal.analysis.filters.contentProvider.title": "Content Providers",
