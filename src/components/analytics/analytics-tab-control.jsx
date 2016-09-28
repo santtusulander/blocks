@@ -34,9 +34,10 @@ const AnalyticsTabControl = (props) => {
     {
       key: 'contribution',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
-      hideHierarchy: true
+      hideHierarchy: true,
       // TODO: Temporarily disabled as a part of UDNP-1534
       // permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
+      permission: PERMISSIONS.ALLOW_ALWAYS
     },
     {
       key: 'file-error',
