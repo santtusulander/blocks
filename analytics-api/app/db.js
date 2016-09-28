@@ -114,7 +114,10 @@ class AnalyticsDB {
       account_max  : null,
       group        : null,
       property     : null,
+      sp_account   : null,
+      sp_group     : null,
       asset        : null,
+      net_type     : null,
       service_type : null,
       dimension    : 'global',
       granularity  : 'hour',
@@ -792,13 +795,15 @@ class AnalyticsDB {
       SELECT
         url_path AS url,
         sum(bytes) AS bytes,
-        sum(requests) AS requests
+        sum(requests) AS requests,
+        status_code
       FROM url_property_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       GROUP BY
-        url_path
+        url_path,
+        status_code
       ORDER BY ${optionsFinal.sort_by || 'bytes'} ${optionsFinal.sort_dir.toUpperCase()}
       LIMIT ${optionsFinal.limit || 1000};
     `;
@@ -1064,6 +1069,67 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
 
+  }
+
+  /**
+   * Get list of entities
+   */
+  getEntitiesWithTrafficForEntities(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryOptions     = [];
+    let conditions       = [];
+
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.property
+      && conditions.push(this.accountLevelFieldMap.property.where)
+      && queryOptions.push(optionsFinal.property);
+
+    optionsFinal.sp_account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.sp_account);
+
+    optionsFinal.sp_group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.sp_group);
+
+    optionsFinal.asset
+      && conditions.push(this.accountLevelFieldMap.sp_asset.where)
+      && queryOptions.push(optionsFinal.asset);
+
+    optionsFinal.net_type
+      && conditions.push('AND net_type = ?')
+      && queryOptions.push(optionsFinal.net_type);
+
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
+
+    let queryParameterized = `
+      SELECT DISTINCT ${optionsFinal.entity}
+      FROM sp_property_global_day
+      WHERE timezone = "UTC"
+        AND epoch_start BETWEEN ? AND ?
+        ${conditions.join('\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
   }
 
   /**

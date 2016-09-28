@@ -2,6 +2,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
+import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
 import { Address4, Address6 } from 'ip-address'
 
@@ -137,6 +138,8 @@ export function buildAnalyticsOpts(params, filters){
   const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   return {
     account: params.account,
@@ -147,7 +150,8 @@ export function buildAnalyticsOpts(params, filters){
     endDate: endDate.format('X'),
     sp_account_ids: serviceProviders,
     service_type: serviceType,
-    net_type: netType
+    net_type: netType,
+    status_codes: statusCodes || errorCodes
   }
 }
 

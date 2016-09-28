@@ -2,30 +2,47 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisURLReport from '../../../components/analysis/url-report.jsx'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
+import * as filterActionCreators from '../../../redux/modules/filters'
 import * as reportsActionCreators from '../../../redux/modules/reports'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
 class AnalyticsTabUrlReport extends React.Component {
   componentDidMount() {
-    this.fetchData(
-      this.props.params,
-      this.props.filters,
-      this.props.activeHostConfiguredName
+    const {params, filters, activeHostConfiguredName} = this.props
+
+    // activeHostConfiguredName can be null when this container is mounted.
+    // In that case, the fetching actually triggers from componentWillReceiveProps.
+    // We immediately call startFetching, even though we may not trigger a fetch
+    // from componentDidMount. This ensures the loading spinner appears as soon
+    // as this container mounts.
+    this.props.reportsActions.startFetching()
+    activeHostConfiguredName && this.fetchData(
+      params,
+      filters,
+      activeHostConfiguredName
     )
   }
 
   componentWillReceiveProps(nextProps){
     if(changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+      this.props.filters.get('statusCodes') !== nextProps.filters.get('statusCodes') ||
+      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')) {
       this.fetchData(
         nextProps.params,
         nextProps.filters,
         nextProps.activeHostConfiguredName
       )
     }
+  }
+
+  componentWillUnmount() {
+    this.props.filterActions.resetFilters()
   }
 
   fetchData(params, filters, hostConfiguredName){
@@ -35,21 +52,25 @@ class AnalyticsTabUrlReport extends React.Component {
       })
     }
     const fetchOpts = buildAnalyticsOpts(params, filters)
-    this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
-    this.props.reportsActions.fetchURLMetrics(fetchOpts)
+    const {startFetching, finishFetching, fetchURLMetrics} = this.props.reportsActions
+    startFetching();
+    return fetchURLMetrics(fetchOpts).then(finishFetching, finishFetching)
   }
 
   render(){
-    if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
-      <p>No error data found.</p>
-    )
+    if (this.props.fetching) {
+      return <LoadingSpinner />
+    }
+
+    if (this.props.urlMetrics.count() === 0) {
+      return <FormattedMessage id="portal.analytics.urlList.noData.text" />
+    }
 
     return (
       <AnalysisURLReport fetching={this.props.fetching}
-        summary={this.props.fileErrorSummary}
         statusCodes={this.props.filters.get('statusCodes')}
         serviceTypes={this.props.filters.get('serviceTypes')}
-        urls={this.props.fileErrorURLs}/>
+        urlMetrics={this.props.urlMetrics}/>
     )
   }
 }
@@ -57,8 +78,7 @@ class AnalyticsTabUrlReport extends React.Component {
 AnalyticsTabUrlReport.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
-  fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
-  fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
+  filterActions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -67,8 +87,6 @@ AnalyticsTabUrlReport.propTypes = {
 }
 
 AnalyticsTabUrlReport.defaultProps = {
-  fileErrorSummary: Immutable.Map(),
-  fileErrorURLs: Immutable.List(),
   filters: Immutable.Map(),
   urlMetrics: Immutable.List()
 }
@@ -78,15 +96,14 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.reports.get('fetching'),
     filters: state.filters.get('filters'),
-    urlMetrics: state.reports.get('urlMetrics'),
-    fileErrorSummary: state.reports.get('fileErrorSummary'),
-    fileErrorURLs: state.reports.get('fileErrorURLs')
+    urlMetrics: state.reports.get('urlMetrics')
 
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    filterActions: bindActionCreators(filterActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }
 }

@@ -1,0 +1,98 @@
+import React from 'react'
+import Immutable from 'immutable'
+import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
+
+jest.dontMock('../contribution.jsx')
+jest.dontMock('../../table-sorter.jsx')
+
+const AnalysisContribution = require('../contribution.jsx')
+
+// Set up mocks to make sure formatting libs are used correctly
+const moment = require('moment')
+const numeral = require('numeral')
+
+const momentFormatMock = jest.genMockFunction()
+const numeralFormatMock = jest.genMockFunction()
+
+moment.mockReturnValue({format:momentFormatMock})
+numeral.mockReturnValue({format:numeralFormatMock})
+
+const fakeStats = Immutable.fromJS([
+  {
+    "name": "Vodafone",
+    "http": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "https": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "countries": [
+      {
+        "name": "Germany",
+        "code": "GER",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.35
+      },
+      {
+        "name": "France",
+        "code": "FRA",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.20
+      }
+    ]
+  },
+  {
+    "name": "Telstra",
+    "http": {
+      "net_on": 50000,
+      "net_on_bps": 50000,
+      "net_off": 25000,
+      "net_off_bps": 25000
+    },
+    "https": {
+      "net_on": 25000,
+      "net_on_bps": 25000,
+      "net_off": 50000,
+      "net_off_bps": 50000
+    },
+    "countries": [
+      {
+        "name": "Australia",
+        "code": "AUS",
+        "bytes": 150000,
+        "bits_per_second": 150000,
+        "percent_total": 0.30
+      }
+    ]
+  }
+])
+
+describe('AnalysisContribution', () => {
+  it('should exist', () => {
+    const analysisContribution = shallow(
+      <AnalysisContribution
+        fetching={true}
+        stats={fakeStats}/>
+    );
+    expect(TestUtils.isCompositeComponent(analysisContribution)).toBeTruthy();
+  });
+
+  it('should show data rows in table', () => {
+    const analysisContribution = shallow(
+      <AnalysisContribution
+        fetching={false}
+        stats={fakeStats}/>
+    );
+    const trs = analysisContribution.find('tr')
+    expect(trs.length).toBe(4);
+  });
+})

@@ -32,8 +32,8 @@ const AnalyticsTabControl = (props) => {
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET
     },
     {
-      key: 'service-providers',
-      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      key: 'contribution',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
       hideHierarchy: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
     },
@@ -59,7 +59,6 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      {props.params.account &&
       <Nav bsStyle="tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
@@ -81,7 +80,6 @@ const AnalyticsTabControl = (props) => {
           return lis
         }, [])}
       </Nav>
-      }
     </div>
   )
 }

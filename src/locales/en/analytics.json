@@ -1,3 +1,10 @@
 {
-  "portal.analytics.xxx": "value xxx"
+  "portal.analytics.tabs.contribution.label": "Contribution",
+
+  "portal.analytics.allAccounts.text": "All Accounts",
+  "portal.analytics.selectAccount.text": "Please select an account{br}from top left to see contribution reports",
+  "portal.analytics.contribution.selectAccount.text": "Please select a service provider or content provider{br}from the filters above to see the contribution report",
+
+  "portal.analytics.fileErrors.noData.text": "No error data found.",
+  "portal.analytics.urlList.noData.text": "No URL data found."
 }
