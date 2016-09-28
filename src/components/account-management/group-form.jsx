@@ -1,33 +1,32 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, getValues } from 'redux-form'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import { Map, List } from 'immutable'
 import {
   Modal,
   Input,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import { Map, List } from 'immutable'
 
 import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
 
 import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import { checkForErrors } from '../../util/helpers'
 
 import './group-form.scss'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
-
 
 const validate = ({ name }) => {
-  let errors = {}
-  if(!name || name.length === 0) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+  const conditions = {
+    name: {
+      condition: !new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+      errorText: <FormattedMessage id="portal.group.edit.name.required.text"/>
+    }
   }
-  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
-  }
-  return errors;
+  return checkForErrors({ name }, conditions, { name: conditions.name.errorText });
 }
 
 class GroupForm extends React.Component {
@@ -42,19 +41,20 @@ class GroupForm extends React.Component {
   }
 
   save() {
-    if(!this.props.invalid) {
+    const { formValues, groupId, invalid, onSave } = this.props
+    if(!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
-
-      if (this.props.groupId) {
-        this.props.onSave(
-          this.props.groupId,
-          this.props.formValues,
+      formValues.charge_model === null && delete formValues.charge_model
+      if (groupId) {
+        onSave(
+          groupId,
+          formValues,
           this.state.usersToAdd,
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave(this.props.formValues, this.state.usersToAdd)
+        onSave(this.props.formValues, this.state.usersToAdd)
       }
     }
   }
@@ -109,7 +109,7 @@ class GroupForm extends React.Component {
     // }, []))
 
     const title = this.props.groupId ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
-    const subTitle = this.props.groupId ? `${this.props.account.get('name')} / ${name}` : this.props.account.get('name')
+    const subTitle = this.props.groupId ? `${this.props.account.get('name')} / ${name.value}` : this.props.account.get('name')
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -121,89 +121,89 @@ class GroupForm extends React.Component {
         <Modal.Body>
           <form>
 
-            <Input
-              {...name}
-              type="text"
-              label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-              placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
-            {name.touched && name.error &&
-            <div className='error-msg'>{name.error}</div>}
+              <Input
+                {...name}
+                type="text"
+                label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
+                placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+              {name.touched && name.error &&
+              <div className='error-msg'>{name.error}</div>}
 
-            {charge_id &&
-              <div>
-                <Input
-                  {...charge_id}
-                  type="text"
-                  label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-                  placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
-                {charge_id.touched && charge_id.error &&
-                <div className='error-msg'>{charge_id.error}</div>}
+              {charge_id &&
+                <div>
+                  <Input
+                    {...charge_id}
+                    type="text"
+                    label={this.props.intl.formatMessage({id: 'portal.group.edit.charge_id.label'})}
+                    placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.charge_id.enter.text'})}/>
+                  {charge_id.touched && charge_id.error &&
+                  <div className='error-msg'>{charge_id.error}</div>}
+                </div>
+              }
+
+              {charge_model &&
+                <div>
+                  <SelectWrapper
+                    {...charge_model}
+                    numericValues={true}
+                    options={[[1, '95/5'], [2, 'Bytes Delivered']]}
+                    value={charge_model.value}
+                    label={this.props.intl.formatMessage({id: 'portal.group.edit.charge_model.label'})}/>
+                  {charge_model.touched && charge_model.error &&
+                  <div className='error-msg'>{charge_model.error}</div>}
+                </div>
+              }
+              {/*
+                Disable until API support allows listing groups for user with some assigned
+              <hr/>
+              <div className="form-group add-members">
+                <label className="control-label">Add Members</label>
+                <FilterChecklistDropdown
+                  noClear={true}
+                  options={addMembersOptions}
+                  value={this.state.usersToAdd || List()}
+                  handleCheck={val => {
+                    this.setState({usersToAdd: val})
+                  }}
+                />
               </div>
-            }
 
-            {charge_model &&
-              <div>
-                <SelectWrapper
-                  {...charge_model}
-                  numericValues={true}
-                  options={[[1, '95/5'], [2, 'Bytes Delivered']]}
-                  value={charge_model.value}
-                  label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}/>
-                {charge_model.touched && charge_model.error &&
-                <div className='error-msg'>{charge_model.error}</div>}
+              <div className="form-group">
+                <label className="control-label">
+                  {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
+                </label>
+                <ul className="members-list">
+                  {currentMembers.map((val) => {
+                    let className = 'members-list__member '
+                    className += val.get('toAdd') ? 'members-list__member--new ' : ''
+                    className += val.get('toDelete') ? 'members-list__member--delete ' : ''
+                    return(
+                      <li key={val.get('email')} className={className}>
+                        <span className="members-list__member__label">{val.get('email')}</span>
+                        <span className="members-list__member__actions">
+                          {val.get('toAdd') && <span className="members-list__member__actions__new">
+                            NEW
+                          </span>}
+                          {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
+                            onClick={() => this.undoDelete(val.get('email'))}>
+                            UNDO
+                          </Button> :
+                          <Button bsStyle="link" className="delete-button"
+                            onClick={() => this.deleteMember(val.get('email'))}>
+                            <IconClose width="20" height="20"/>
+                          </Button>}
+                        </span>
+                      </li>
+                    )
+                  })}
+                </ul>
               </div>
-            }
-            {/*
-              Disable until API support allows listing groups for user with some assigned
-            <hr/>
-            <div className="form-group add-members">
-              <label className="control-label">Add Members</label>
-              <FilterChecklistDropdown
-                noClear={true}
-                options={addMembersOptions}
-                value={this.state.usersToAdd || List()}
-                handleCheck={val => {
-                  this.setState({usersToAdd: val})
-                }}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="control-label">
-                {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
-              </label>
-              <ul className="members-list">
-                {currentMembers.map((val) => {
-                  let className = 'members-list__member '
-                  className += val.get('toAdd') ? 'members-list__member--new ' : ''
-                  className += val.get('toDelete') ? 'members-list__member--delete ' : ''
-                  return(
-                    <li key={val.get('email')} className={className}>
-                      <span className="members-list__member__label">{val.get('email')}</span>
-                      <span className="members-list__member__actions">
-                        {val.get('toAdd') && <span className="members-list__member__actions__new">
-                          NEW
-                        </span>}
-                        {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
-                          onClick={() => this.undoDelete(val.get('email'))}>
-                          UNDO
-                        </Button> :
-                        <Button bsStyle="link" className="delete-button"
-                          onClick={() => this.deleteMember(val.get('email'))}>
-                          <IconClose width="20" height="20"/>
-                        </Button>}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-            */}
-            <ButtonToolbar className="text-right extra-margin-top">
-              <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
-              <Button disabled={invalid} bsStyle="primary"
-                      onClick={this.save}>{this.props.groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
-            </ButtonToolbar>
+              */}
+              <ButtonToolbar className="text-right extra-margin-top">
+                <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+                <Button disabled={invalid} bsStyle="primary"
+                        onClick={this.save}>{this.props.groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
+              </ButtonToolbar>
           </form>
         </Modal.Body>
       </Modal>
