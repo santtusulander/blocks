@@ -85,7 +85,18 @@ class GroupForm extends React.Component {
   }
 
   render() {
-    const { fields: { name, charge_id, charge_model }, invalid, show, onCancel } = this.props
+    const {
+      fields: {
+        name,
+        charge_id,
+        charge_model
+      },
+      invalid,
+      show,
+      onCancel,
+      groupId,
+      account,
+      intl } = this.props
     // const currentMembers = this.props.users.reduce((members, user) => {
     //   if (this.state.usersToAdd.includes(user.get('email'))) {
     //     return [user.set('toAdd', true), ...members]
@@ -108,8 +119,8 @@ class GroupForm extends React.Component {
     //   return arr;
     // }, []))
 
-    const title = this.props.groupId ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
-    const subTitle = this.props.groupId ? `${this.props.account.get('name')} / ${name.value}` : this.props.account.get('name')
+    const title = groupId ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
+    const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -124,8 +135,8 @@ class GroupForm extends React.Component {
               <Input
                 {...name}
                 type="text"
-                label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-                placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+                label={intl.formatMessage({id: 'portal.group.edit.name.label'})}
+                placeholder={intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
               {name.touched && name.error &&
               <div className='error-msg'>{name.error}</div>}
 
@@ -134,8 +145,8 @@ class GroupForm extends React.Component {
                   <Input
                     {...charge_id}
                     type="text"
-                    label={this.props.intl.formatMessage({id: 'portal.group.edit.charge_id.label'})}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.charge_id.enter.text'})}/>
+                    label={intl.formatMessage({id: 'portal.group.edit.charge_id.label'})}
+                    placeholder={intl.formatMessage({id: 'portal.group.edit.charge_id.enter.text'})}/>
                   {charge_id.touched && charge_id.error &&
                   <div className='error-msg'>{charge_id.error}</div>}
                 </div>
@@ -148,7 +159,7 @@ class GroupForm extends React.Component {
                     numericValues={true}
                     options={[[1, '95/5'], [2, 'Bytes Delivered']]}
                     value={charge_model.value}
-                    label={this.props.intl.formatMessage({id: 'portal.group.edit.charge_model.label'})}/>
+                    label={intl.formatMessage({id: 'portal.group.edit.charge_model.label'})}/>
                   {charge_model.touched && charge_model.error &&
                   <div className='error-msg'>{charge_model.error}</div>}
                 </div>
@@ -202,7 +213,7 @@ class GroupForm extends React.Component {
               <ButtonToolbar className="text-right extra-margin-top">
                 <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
                 <Button disabled={invalid} bsStyle="primary"
-                        onClick={this.save}>{this.props.groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
+                        onClick={this.save}>{groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
               </ButtonToolbar>
           </form>
         </Modal.Body>
