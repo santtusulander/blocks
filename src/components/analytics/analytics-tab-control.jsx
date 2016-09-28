@@ -59,7 +59,6 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      {props.params.account &&
       <Nav bsStyle="tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
@@ -81,7 +80,6 @@ const AnalyticsTabControl = (props) => {
           return lis
         }, [])}
       </Nav>
-      }
     </div>
   )
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -89,17 +90,16 @@ class AnalyticsContainer extends React.Component {
   }
 
   renderFilters() {
-    const params = this.props.params
-
-    if (!params.account) {
-      return null
-    }
-
     const {
+      params,
       filterOptions,
       filters,
       location: { pathname }
     } = this.props
+
+    if (!params.account && pathname.indexOf('contribution') < 0) {
+      return null
+    }
 
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
 
@@ -114,25 +114,37 @@ class AnalyticsContainer extends React.Component {
   }
 
   renderContent(children, filters) {
-    const params = this.props.params
+    const {
+      params,
+      location: { pathname }
+    } = this.props
+
+    let content = children && React.cloneElement(children, {
+      params: params,
+      filters: filters,
+      location: location
+    })
 
     if (!params.account) {
-      return (
-        <p className='text-center'>Please select an account<br/>
-            from top left to see analytics</p>
-      )
+      if (pathname.indexOf('contribution') >= 0) {
+        // TODO: move this logic elsewhere once API support for this feature has been integrated
+        content = (
+          <div className="text-center">
+            <FormattedMessage id="portal.analytics.contribution.selectAccount.text" values={{br: <br/>}} />
+          </div>
+        )
+      } else {
+        content = (
+          <div className="text-center">
+            <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
+          </div>
+        )
+      }
     }
 
     return (
       <PageContainer className='analytics-container'>
-        {
-          /* Render tab -content */
-          children && React.cloneElement(children, {
-            params: params,
-            filters: filters,
-            location: location
-          } )
-        }
+        {content}
       </PageContainer>
     )
   }
