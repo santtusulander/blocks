@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 
 import AnalysisURLReport from '../../../components/analysis/url-report.jsx'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import * as filterActionCreators from '../../../redux/modules/filters'
 import * as reportsActionCreators from '../../../redux/modules/reports'
@@ -12,10 +13,18 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabUrlReport extends React.Component {
   componentDidMount() {
-    this.fetchData(
-      this.props.params,
-      this.props.filters,
-      this.props.activeHostConfiguredName
+    const {params, filters, activeHostConfiguredName} = this.props
+
+    // activeHostConfiguredName can be null when this container is mounted.
+    // In that case, the fetching actually triggers from componentWillReceiveProps.
+    // We immediately call startFetching, even though we may not trigger a fetch
+    // from componentDidMount. This ensures the loading spinner appears as soon
+    // as this container mounts.
+    this.props.reportsActions.startFetching()
+    activeHostConfiguredName && this.fetchData(
+      params,
+      filters,
+      activeHostConfiguredName
     )
   }
 
@@ -43,10 +52,16 @@ class AnalyticsTabUrlReport extends React.Component {
       })
     }
     const fetchOpts = buildAnalyticsOpts(params, filters)
-    this.props.reportsActions.fetchURLMetrics(fetchOpts)
+    const {startFetching, finishFetching, fetchURLMetrics} = this.props.reportsActions
+    startFetching();
+    return fetchURLMetrics(fetchOpts).then(finishFetching, finishFetching)
   }
 
   render(){
+    if (this.props.fetching) {
+      return <LoadingSpinner />
+    }
+
     if (this.props.urlMetrics.count() === 0) {
       return <FormattedMessage id="portal.analytics.urlList.noData.text" />
     }
