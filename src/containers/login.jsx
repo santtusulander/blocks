@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -14,6 +14,7 @@ import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
+import IconEye from '../components/icons/icon-eye.jsx'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -23,11 +24,13 @@ export class Login extends React.Component {
       loginError: null,
       password: '',
       passwordActive: false,
+      passwordVisible: false,
       rememberUsername: !!props.username,
       username: props.username,
       usernameActive: false
     }
 
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.checkUsernameActive = this.checkUsernameActive.bind(this)
     this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
@@ -83,6 +86,11 @@ export class Login extends React.Component {
       else {
         this.setState({loginError: action.payload.message})
       }
+    })
+  }
+  togglePasswordVisibility() {
+    this.setState({
+      passwordVisible: !this.state.passwordVisible
     })
   }
   checkUsernameActive(hasFocus) {
@@ -143,11 +151,16 @@ export class Login extends React.Component {
               value={this.state.username}
               onChange={this.changeField('username')}/>
             <Input id="password"
-              type="password"
+              type={this.state.passwordVisible ? 'text' : 'password'}
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
                 + (this.state.passwordActive || this.state.password ? ' active' : '')}
               addonBefore={<IconPassword/>}
+              addonAfter={<a className={'input-addon-link' +
+                  (this.state.passwordVisible ? ' active' : '')}
+                  onClick={this.togglePasswordVisibility}>
+                    <IconEye/>
+                </a>}
               onFocus={this.checkPasswordActive(true)}
               onBlur={this.checkPasswordActive(false)}
               value={this.state.password}
