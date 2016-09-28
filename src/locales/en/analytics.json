@@ -8,5 +8,8 @@
   "portal.analysis.filters.serviceProviderGroups.title": "Service Provider Groups",
   "portal.analysis.filters.contentProvider.title": "Content Providers",
   "portal.analysis.filters.contentProviderGroups.title": "Content Provider Groups",
-  "portal.analysis.filters.contentProviderProperties.title": "Content Provider Properties"
+  "portal.analysis.filters.contentProviderProperties.title": "Content Provider Properties",
+
+  "portal.analytics.fileErrors.noData.text": "No error data found.",
+  "portal.analytics.urlList.noData.text": "No URL data found."
 }

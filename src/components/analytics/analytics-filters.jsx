@@ -67,12 +67,14 @@ const contentProviderProperties = fromJS([
   {value: 5, label: 'Property 5'}
 ])
 
-const StatusCodes = ({ options, values, onChange }) => {
+const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
   const
     isChecked = option =>
       option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
     fiveHundreds = [ '500', '501', '502', '503' ],
     fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
+    twoHundreds = [ '200', '201', '202', '204' ],
+    twoHundredsChecked = isChecked(twoHundreds),
     fourHundredsChecked = isChecked(fourHundreds),
     fiveHundredsChecked = isChecked(fiveHundreds),
     handleCheck = (optionValue, checked) => () => {
@@ -93,6 +95,15 @@ const StatusCodes = ({ options, values, onChange }) => {
       options={options}
       value={values}
       handleCheck={onChange}>
+      {!errorCodesOnly &&
+        <li role="presentation" className="children">
+          <Input type="checkbox"
+            label='2XX'
+            value={twoHundreds}
+            checked={twoHundredsChecked}
+            onChange={handleCheck(twoHundreds, twoHundredsChecked)}/>
+        </li>
+      }
       <li role="presentation" className="children">
         <Input type="checkbox"
           label='4XX'
@@ -112,6 +123,7 @@ const StatusCodes = ({ options, values, onChange }) => {
 }
 
 StatusCodes.propTypes = {
+  errorCodesOnly: PropTypes.bool,
   onChange: PropTypes.func,
   options: PropTypes.instanceOf(List),
   values: PropTypes.instanceOf(List)
@@ -253,6 +265,18 @@ const AnalyticsFilters = (props) => {
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes
+            errorCodesOnly={true}
+            options={props.filterOptions.get('errorCodes')}
+            values={props.filters.get('errorCodes')}
+            onChange={values => props.onFilterChange('errorCodes', values.toJS())}/>
+        </div>
+      }
+
+      {props.showFilters.includes('status-code') &&
+        <div className='action'>
+          <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
+          <StatusCodes
+            errorCodesOnly={false}
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
             onChange={values => props.onFilterChange('statusCodes', values.toJS())}/>
