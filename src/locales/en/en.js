@@ -130,7 +130,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
-  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+  'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
