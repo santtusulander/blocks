@@ -21,7 +21,7 @@ class AnalysisCacheHitRate extends React.Component {
       sortBy: 'timestamp',
       sortDir: -1,
       sortFunc: '',
-      chartType: 'area'
+      chartType: 'column'
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -84,6 +84,7 @@ class AnalysisCacheHitRate extends React.Component {
       chart = (
         <AnalysisStackedByTime
           padding={40}
+          dontShowHours={true}
           dataKey='chit_ratio'
           dataSets={dataSets}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
@@ -126,7 +127,7 @@ class AnalysisCacheHitRate extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.cacheHitRateByDay.text"/>}>
           <Select
             className='pull-right'
-            options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
+            options={[{value: 'column', label: 'Column Chart'}]}
             value={this.state.chartType}
             onSelect= {this.changeChartType}
           />
