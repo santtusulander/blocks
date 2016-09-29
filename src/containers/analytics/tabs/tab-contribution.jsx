@@ -7,6 +7,7 @@ import AnalysisServiceProviders from '../../../components/analysis/contribution.
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
   componentDidMount() {
@@ -14,7 +15,8 @@ class AnalyticsTabContribution extends React.Component {
       this.props.params,
       this.props.filters,
       this.props.location,
-      this.props.activeHostConfiguredName
+      this.props.activeHostConfiguredName,
+      this.props.accountType
     )
   }
 
@@ -28,12 +30,13 @@ class AnalyticsTabContribution extends React.Component {
         nextProps.params,
         nextProps.filters,
         nextProps.location,
-        nextProps.activeHostConfiguredName
+        nextProps.activeHostConfiguredName,
+        nextProps.accountType
       )
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName){
+  fetchData(params, filters, location, hostConfiguredName, accountType){
     if(params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
@@ -44,9 +47,19 @@ class AnalyticsTabContribution extends React.Component {
     const queryOpts = Object.assign({}, fetchOpts)
     queryOpts.granularity = 'day'
 
-    this.props.trafficActions.startFetching()
-    this.props.trafficActions.fetchServiceProviders(queryOpts)
-      .then(this.props.trafficActions.finishFetching, this.props.trafficActions.finishFetching)
+    let fetchAction
+
+    if (accountType === ProviderTypes.CONTENT_PROVIDER) {
+      fetchAction = this.props.trafficActions.fetchServiceProviders
+    } else if (accountType === ProviderTypes.SERVICE_PROVIDER) {
+      fetchAction = this.props.trafficActions.fetchContentProviders
+    }
+
+    if (fetchAction) {
+      this.props.trafficActions.startFetching()
+      fetchAction(queryOpts)
+        .then(this.props.trafficActions.finishFetching, this.props.trafficActions.finishFetching)
+    }
   }
 
   render(){
@@ -64,6 +77,7 @@ class AnalyticsTabContribution extends React.Component {
 }
 
 AnalyticsTabContribution.propTypes = {
+  accountType: React.PropTypes.number,
   activeHostConfiguredName: React.PropTypes.string,
   allServiceProviders: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
@@ -82,6 +96,7 @@ AnalyticsTabContribution.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    accountType: state.account.getIn(['activeAccount', 'provider_type']),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     serviceProviders: state.traffic.get('serviceProviders'),

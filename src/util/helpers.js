@@ -136,6 +136,9 @@ export function generateNestedLink(base, linkParts) {
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
+  const serviceProviderGroups = filters.get('serviceProviderGroups').size === 0 ? undefined : filters.get('serviceProviderGroups').toJS().join(',')
+  const contentProviders = filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',')
+  const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
   const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
@@ -149,6 +152,9 @@ export function buildAnalyticsOpts(params, filters){
     startDate: startDate.format('X'),
     endDate: endDate.format('X'),
     sp_account_ids: serviceProviders,
+    sp_group_ids: serviceProviderGroups,
+    account_ids: contentProviders,
+    group_ids: contentProviderGroups,
     service_type: serviceType,
     net_type: netType,
     status_codes: statusCodes || errorCodes

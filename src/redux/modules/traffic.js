@@ -16,6 +16,7 @@ const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
 const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
+const TRAFFIC_CONTENT_PROVIDERS_FETCHED = 'TRAFFIC_CONTENT_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
@@ -46,6 +47,7 @@ const emptyTraffic = Immutable.Map({
     total: 0
   }),
   serviceProviders: Immutable.List(),
+  contentProviders: Immutable.List(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -174,6 +176,17 @@ export function trafficServiceProvidersFailure(state){
   })
 }
 
+export function trafficContentProvidersSuccess(state, action){
+  return state.merge({
+    contentProviders: Immutable.fromJS(action.payload.data)
+  })
+}
+export function trafficContentProvidersFailure(state){
+  return state.merge({
+    contentProviders: Immutable.Map()
+  })
+}
+
 export function trafficStorageSuccess(state, action){
   action.payload.data = action.payload.data.map(datapoint => {
     datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
@@ -208,6 +221,7 @@ export default handleActions({
   TRAFFIC_ON_OFF_NET_FETCHED: mapReducers(trafficOnOffNetSuccess, trafficOnOffNetFailure),
   TRAFFIC_ON_OFF_NET_TODAY_FETCHED: mapReducers(trafficOnOffNetTodaySuccess, trafficOnOffNetTodayFailure),
   TRAFFIC_SERVICE_PROVIDERS_FETCHED: mapReducers(trafficServiceProvidersSuccess, trafficServiceProvidersFailure),
+  TRAFFIC_CONTENT_PROVIDERS_FETCHED: mapReducers(trafficContentProvidersSuccess, trafficContentProvidersFailure),
   TRAFFIC_STORAGE_FETCHED: mapReducers(trafficStorageSuccess, trafficStorageFailure),
   TRAFFIC_START_FETCH: trafficStartFetch,
   TRAFFIC_FINISH_FETCH: trafficFinishFetch
@@ -256,6 +270,11 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
+  .then(parseResponseData)
+})
+
+export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
 })
 
