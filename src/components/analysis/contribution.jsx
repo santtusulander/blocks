@@ -62,49 +62,13 @@ class AnalysisContribution extends React.Component {
     })
   }
 
-  /**
-   * Converts an `Immutable.List` of service provider objects into a lookup table
-   * of service provider objects keyed against their `id`.
-   *
-   * Example input (Immutable.List):
-   *  [
-   *    {'id': 123, 'name': 'service provider 123', ... },
-   *    {'id': 137, 'name': 'service provider 137', ...},
-   *    ...
-   *  ]
-   *
-   * Example output (Immutable.Map):
-   *  {
-   *    '123': {'id': 123, 'name': 'service provider 123', ...},
-   *    '137': {'id': 137, 'name': 'service provider 137', ...},
-   *    ...
-   *  }
-   *
-   * @param {Immutable.List} serviceProviders - a list of service provider objects
-   * @return {Immutable.Map} a map of the service providers keyed against their `id`
-   */
-  lookUpTableForAccountNames(accounts) {
-    return accounts.toMap().mapEntries((entry) => {
-      let account = entry[1]
-      let id = account.get('id')
-
-      return [ id, account ]
-    })
-  }
-
-  nameForProvider(provider, lookUpTable) {
-    const id = Number(provider.get('sp_account') || provider.get('account'))
-    const account = lookUpTable.get(id)
-    return account ? account.get('name') : `ID: ${id}`
-  }
-
   render() {
     const month = moment().format('MMMM YYYY')
-    const lookUpTable = this.lookUpTableForAccountNames(this.props.accounts)
     const isHttp = this.props.serviceTypes.includes('http')
     const isHttps = this.props.serviceTypes.includes('https')
     const isOnNet = this.props.onOffFilter.includes('on-net')
     const isOffNet = this.props.onOffFilter.includes('off-net')
+
 
     const providers = this.props.stats.reduce((list, provider, i) => {
       let data = [0, 0, 0, 0];
@@ -119,7 +83,7 @@ class AnalysisContribution extends React.Component {
         data[3] = (provider.getIn(['https','net_off_bytes'], 0))
 
       const providerRecord = Immutable.fromJS({
-        group: this.nameForProvider(provider, lookUpTable),
+        group: provider.get('name'),
         groupIndex: i,
         data: data
       })
@@ -138,7 +102,7 @@ class AnalysisContribution extends React.Component {
     const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
       const countryRecord = provider.get('countries').map(country => {
         return Immutable.Map({
-          provider: this.nameForProvider(provider, lookUpTable),
+          provider: provider.get('name'),
           country: country.get('name'),
           bytes: country.get('bytes'),
           percent_total: country.get('percent_total')

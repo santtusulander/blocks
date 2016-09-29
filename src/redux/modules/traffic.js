@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
+import { urlBase, analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -166,7 +166,7 @@ export function trafficOnOffNetTodayFailure(state){
 
 export function trafficServiceProvidersSuccess(state, action){
   return state.merge({
-    contribution: Immutable.fromJS(action.payload.data)
+    contribution: Immutable.fromJS(action.payload)
   })
 }
 export function trafficServiceProvidersFailure(state){
@@ -177,7 +177,7 @@ export function trafficServiceProvidersFailure(state){
 
 export function trafficContentProvidersSuccess(state, action){
   return state.merge({
-    contribution: Immutable.fromJS(action.payload.data)
+    contribution: Immutable.fromJS(action.payload)
   })
 }
 export function trafficContentProvidersFailure(state){
@@ -268,13 +268,47 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 })
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
+  let data = {}
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
+  .then(action => Promise.all(action.data.map(datum => {
+    const account = Number(datum.sp_account)
+    const group = Number(datum.sp_group)
+
+    if (opts.sp_account_ids && group) {
+      data[group] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+    } else {
+      data[account] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+    }
+  })))
+  .then(resp => resp.map(resp => {
+    let name = resp.data.name || `ID: ${resp.data.id}`
+    return Object.assign({}, data[resp.data.id], {name: name})
+  }))
 })
 
 export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
+  let data = {}
   return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
+  .then(action => Promise.all(action.data.map(datum => {
+    const account = Number(datum.account)
+    const group = Number(datum.group)
+
+    if (opts.account_ids && group) {
+      data[group] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+    } else {
+      data[account] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+    }
+  })))
+  .then(resp => resp.map(resp => {
+    let name = resp.data.name || `ID: ${resp.data.id}`
+    return Object.assign({}, data[resp.data.id], {name: name})
+  }))
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

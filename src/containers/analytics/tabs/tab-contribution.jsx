@@ -117,14 +117,13 @@ AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeHostConfiguredName: React.PropTypes.string,
-  allGroups: React.PropTypes.instanceOf(Immutable.List),
+  contribution: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  contribution: React.PropTypes.instanceOf(Immutable.List),
   trafficActions: React.PropTypes.object
 }
 
@@ -137,7 +136,6 @@ AnalyticsTabContribution.defaultProps = {
 function mapStateToProps(state) {
   return {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
-    allGroups: state.group.get('allGroups'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
