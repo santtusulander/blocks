@@ -53,6 +53,18 @@ export function setValue(state, action) {
   const filterName = action.payload.filterName
   const filterValue = action.payload.filterValue
 
+  if (filterName === 'serviceProviders') {
+    if (filterValue !== state.getIn(['filters', 'serviceProviders'])) {
+      state = state.setIn(['filters', 'serviceProviderGroups'], Immutable.List())
+      state = state.setIn(['filterOptions', 'serviceProviderGroups'], Immutable.List())
+    }
+  } else if (filterName === 'contentProviders') {
+    if (filterValue !== state.getIn(['filters', 'contentProviders'])) {
+      state = state.setIn(['filters', 'contentProviderGroups'], Immutable.List())
+      state = state.setIn(['filterOptions', 'contentProviderGroups'], Immutable.List())
+    }
+  }
+
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
