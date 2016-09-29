@@ -45,8 +45,8 @@ export function setValue(state, action) {
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
-export function resetDefaults() {
-  return initialState
+export function resetDefaults(state) {
+  return state.set(initialState)
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
