@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal-analytics-api",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "A Node Express API server used by the Ericsson UDN Portal. The API responds to various GET requests with data from a remote MySQL database.",
   "main": "index.js",
   "scripts": {

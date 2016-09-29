@@ -34,7 +34,8 @@ function routeTrafficServiceProvider(req, res) {
     account        : params.account,
     group          : params.group,
     property       : params.property,
-    sp_account_ids : params.sp_account_ids,
+    sp_account_ids : params.sp_account_ids && params.sp_account_ids.split(','),
+    sp_group_ids   : params.sp_group_ids && params.sp_group_ids.split(','),
     net_type       : params.net_type,
     service_type   : params.service_type
   };
@@ -44,10 +45,11 @@ function routeTrafficServiceProvider(req, res) {
 
   db.getSPContributionData(optionsFinal).spread((trafficData, countryData, totalBytes) => {
     let finalTrafficData = [];
-    let trafficDataGrouped = _.groupBy(trafficData, 'sp_account');
-    let countryDataGrouped = _.groupBy(countryData, 'sp_account');
+    let groupingEntity = optionsFinal.sp_group_ids ? 'sp_group' : 'sp_account';
+    let trafficDataGrouped = _.groupBy(trafficData, groupingEntity);
+    let countryDataGrouped = _.groupBy(countryData, groupingEntity);
 
-    _.forOwn(trafficDataGrouped, (data, sp_account_id) => {
+    _.forOwn(trafficDataGrouped, (data, sp_entity_id) => {
       let record = {};
 
       // HTTP traffic
@@ -64,7 +66,7 @@ function routeTrafficServiceProvider(req, res) {
       let httpsOnNetBytes    = _.get(httpsOnNetTraffic, 'bytes', null);
       let httpsOffNetBytes   = _.get(httpsOffNetTraffic, 'bytes', null);
 
-      record.sp_account = sp_account_id;
+      record[groupingEntity] = sp_entity_id;
 
       record.http = {
         net_on_bytes: httpOnNetBytes,
@@ -80,7 +82,7 @@ function routeTrafficServiceProvider(req, res) {
         net_off_bps: dataUtils.getBPSFromBytes(httpsOffNetBytes, duration)
       };
 
-      record.countries = countryDataGrouped[sp_account_id].map(countryRecord => {
+      record.countries = countryDataGrouped[sp_entity_id].map(countryRecord => {
         return {
           name: dataUtils.getCountryNameFromCode(countryRecord.country),
           code: dataUtils.get3CharCountryCodeFromCode(countryRecord.country),
