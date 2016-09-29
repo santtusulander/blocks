@@ -1,27 +1,25 @@
 'use strict';
 
 require('express-jsend');
-let _         = require('lodash');
 let db        = require('../../db');
 let dataUtils = require('../../data-utils');
 let log       = require('../../logger');
 let validator = require('../../validator');
-// let testData  = require('./sp-contribution-data');
 
-function routeTrafficSPContribution(req, res) {
-  log.info('Getting traffic/sp-contribution');
+function routeTrafficCPContribution(req, res) {
+  log.info('Getting traffic/cp-contribution');
   log.debug('query params:', req.query);
 
   let params = req.query;
   let errors = validator.validate(params, {
     start          : {required: true, type: 'Timestamp'},
     end            : {required: false, type: 'Timestamp'},
-    account        : {required: true, type: 'ID'},
-    group          : {required: false, type: 'ID'},
-    property       : {required: false, type: 'Property'},
-    sp_account_ids : {required: false, type: 'List'},
-    sp_group_ids   : {required: false, type: 'List'},
-    assets         : {required: false, type: 'List'},
+    sp_account     : {required: true, type: 'ID'},
+    sp_group       : {required: false, type: 'ID'},
+    asset          : {required: false, type: 'Property'},
+    account_ids    : {required: false, type: 'List'},
+    group_ids      : {required: false, type: 'List'},
+    properties     : {required: false, type: 'List'},
     net_type       : {required: false, type: 'Net_Type'},
     service_type   : {required: false, type: 'Service'}
   });
@@ -30,16 +28,16 @@ function routeTrafficSPContribution(req, res) {
   if (!errors) {
     let customErrors = [];
     let invalidParamsSent = !!(
-      params.sp_account ||
-      params.sp_group ||
-      params.asset ||
-      params.account_ids ||
-      params.group_ids ||
-      params.properties
+      params.account ||
+      params.group ||
+      params.property ||
+      params.sp_account_ids ||
+      params.sp_group_ids ||
+      params.assets
     );
 
     invalidParamsSent && customErrors.push(
-      'You may not pass the sp_account, sp_group, asset, account_ids, group_ids, or properties params.'
+      'You may not pass the account, group, property, sp_account_ids, sp_group_ids, or assets params.'
     );
 
     if (customErrors.length) {
@@ -54,12 +52,12 @@ function routeTrafficSPContribution(req, res) {
   let options = {
     start          : params.start,
     end            : params.end,
-    account        : params.account,
-    group          : params.group,
-    property       : params.property,
-    sp_account_ids : params.sp_account_ids && params.sp_account_ids.split(','),
-    sp_group_ids   : params.sp_group_ids && params.sp_group_ids.split(','),
-    assets         : params.assets && params.assets.split(','),
+    sp_account     : params.sp_account,
+    sp_group       : params.sp_group,
+    asset          : params.asset,
+    account_ids    : params.account_ids && params.account_ids.split(','),
+    group_ids      : params.group_ids && params.group_ids.split(','),
+    properties     : params.properties && params.properties.split(','),
     net_type       : params.net_type,
     service_type   : params.service_type
   };
@@ -87,4 +85,4 @@ function routeTrafficSPContribution(req, res) {
 
 }
 
-module.exports = routeTrafficSPContribution;
+module.exports = routeTrafficCPContribution;
