@@ -42,10 +42,10 @@ class AnalyticsTabContribution extends React.Component {
         property: hostConfiguredName
       })
     }
-    const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     const queryOpts = Object.assign({}, fetchOpts)
     queryOpts.granularity = 'day'
+    const fetchOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
     let fetchAction
 
