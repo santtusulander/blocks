@@ -136,7 +136,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
   'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
   'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
@@ -223,7 +222,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
-  'portal.analysis.filters.serviceProvider.title': 'Service Providers',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',

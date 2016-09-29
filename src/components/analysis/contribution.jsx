@@ -121,7 +121,7 @@ class AnalysisContribution extends React.Component {
     return (
       <div>
         <SectionHeader
-          sectionHeaderTitle={<FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>} />
+          sectionHeaderTitle={this.props.sectionHeaderTitle} />
           {this.props.fetching ?
           <LoadingSpinner /> :
           <div>
@@ -145,16 +145,16 @@ class AnalysisContribution extends React.Component {
                 <thead>
                   <tr>
                     <TableSorter {...sorterProps} column="provider">
-                      Service Provider
+                      <FormattedMessage id="portal.analytics.contribution.provider.label"/>
                     </TableSorter>
                     <TableSorter {...sorterProps} column="country">
-                      Country
+                      <FormattedMessage id="portal.analytics.contribution.country.label"/>
                     </TableSorter>
                     <TableSorter {...sorterProps} column="bytes">
-                      Traffic
+                      <FormattedMessage id="portal.analytics.contribution.traffic.label"/>
                     </TableSorter>
                     <TableSorter {...sorterProps} column="percent_total">
-                      % of Traffic
+                      <FormattedMessage id="portal.analytics.contribution.trafficPercentage.label"/>
                     </TableSorter>
                   </tr>
                 </thead>
@@ -184,6 +184,7 @@ AnalysisContribution.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
+  sectionHeaderTitle: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }

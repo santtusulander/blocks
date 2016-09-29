@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
@@ -101,9 +102,15 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render(){
+    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    if (this.props.accountType === ProviderTypes.SERVICE_PROVIDER) {
+      sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
+    }
+
     return (
       <AnalysisContribution
         fetching={this.props.fetching}
+        sectionHeaderTitle={sectionHeaderTitle}
         stats={this.props.contribution}
         accounts={this.props.accounts}
         onOffFilter={this.props.filters.get('onOffNet')}
