@@ -46,8 +46,7 @@ const emptyTraffic = Immutable.Map({
     net_off: {bytes: 0, percent_total: 0},
     total: 0
   }),
-  serviceProviders: Immutable.List(),
-  contentProviders: Immutable.List(),
+  contribution: Immutable.List(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -167,23 +166,23 @@ export function trafficOnOffNetTodayFailure(state){
 
 export function trafficServiceProvidersSuccess(state, action){
   return state.merge({
-    serviceProviders: Immutable.fromJS(action.payload.data)
+    contribution: Immutable.fromJS(action.payload.data)
   })
 }
 export function trafficServiceProvidersFailure(state){
   return state.merge({
-    serviceProviders: Immutable.Map()
+    contribution: Immutable.Map()
   })
 }
 
 export function trafficContentProvidersSuccess(state, action){
   return state.merge({
-    contentProviders: Immutable.fromJS(action.payload.data)
+    contribution: Immutable.fromJS(action.payload.data)
   })
 }
 export function trafficContentProvidersFailure(state){
   return state.merge({
-    contentProviders: Immutable.Map()
+    contribution: Immutable.Map()
   })
 }
 

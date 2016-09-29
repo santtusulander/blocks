@@ -164,7 +164,7 @@ export class FilterChecklistDropdown extends React.Component {
         <Dropdown id=""
                   defaultOpen={dropdownOpen}
                   className={className}>
-          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
+          <Dropdown.Toggle disabled={this.props.disabled} onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
             {this.getLabel()}
           </Dropdown.Toggle>
@@ -203,6 +203,7 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   children: React.PropTypes.array,
   className: React.PropTypes.string,
+  disabled: React.PropTypes.boolean,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,

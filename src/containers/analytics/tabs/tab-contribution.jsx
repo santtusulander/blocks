@@ -3,10 +3,11 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import AnalysisServiceProviders from '../../../components/analysis/contribution.jsx'
+import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
+import * as filterActionCreators from '../../../redux/modules/filters'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+import {buildAnalyticsOptsForContribution, changedParamsFiltersQS} from '../../../util/helpers.js'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
@@ -23,8 +24,7 @@ class AnalyticsTabContribution extends React.Component {
   componentWillReceiveProps(nextProps){
     if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
-      this.props.filters.get('onOffNet') !== nextProps.filters.get('onOffNet') ||
-      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')
+      this.props.filters !== nextProps.filters
     ) {
       this.fetchData(
         nextProps.params,
@@ -43,32 +43,69 @@ class AnalyticsTabContribution extends React.Component {
       })
     }
 
-    const queryOpts = Object.assign({}, fetchOpts)
-    queryOpts.granularity = 'day'
     const fetchOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+    const dataQueryOpts = Object.assign({}, fetchOpts)
+    dataQueryOpts.granularity = 'day'
 
-    let fetchAction
+    let fetchDataAction
 
     if (accountType === ProviderTypes.CONTENT_PROVIDER) {
-      fetchAction = this.props.trafficActions.fetchServiceProviders
+      this.props.filterActions.fetchContentProviderGroups(params.brand, params.account)
+
+      this.props.filterActions.fetchServiceProvidersWithTrafficForCP(
+        params.brand,
+        fetchOpts
+      )
+
+      if (filters.get('serviceProviders').size === 1) {
+        const spAccount = filters.getIn(['serviceProviders', 0])
+        const filterFetchOpts = Object.assign({}, fetchOpts)
+        delete filterFetchOpts.sp_account_ids
+
+        this.props.filterActions.fetchServiceProviderGroupsWithTrafficForCP(
+          params.brand,
+          spAccount,
+          filterFetchOpts
+        )
+      }
+
+      fetchDataAction = this.props.trafficActions.fetchServiceProviders
     } else if (accountType === ProviderTypes.SERVICE_PROVIDER) {
-      fetchAction = this.props.trafficActions.fetchContentProviders
+      this.props.filterActions.fetchServiceProviderGroups(params.brand, params.account)
+
+      this.props.filterActions.fetchContentProvidersWithTrafficForSP(
+        params.brand,
+        fetchOpts
+      )
+
+      if (filters.get('contentProviders').size === 1) {
+        const cpAccount = filters.getIn(['contentProviders', 0])
+        const filterFetchOpts = Object.assign({}, fetchOpts)
+        delete filterFetchOpts.cp_account_ids
+
+        this.props.filterActions.fetchContentProviderGroupsWithTrafficForSP(
+          params.brand,
+          cpAccount,
+          filterFetchOpts
+        )
+      }
+
+      fetchDataAction = this.props.trafficActions.fetchContentProviders
     }
 
-    if (fetchAction) {
+    if (fetchDataAction) {
       this.props.trafficActions.startFetching()
-      fetchAction(queryOpts)
+      fetchDataAction(dataQueryOpts)
         .then(this.props.trafficActions.finishFetching, this.props.trafficActions.finishFetching)
     }
   }
 
   render(){
     return (
-      <AnalysisServiceProviders
+      <AnalysisContribution
         fetching={this.props.fetching}
-        stats={this.props.serviceProviders}
-        serviceProviders={this.props.allServiceProviders}
-        serviceProviderFilter={this.props.filters.get('serviceProviders')}
+        stats={this.props.contribution}
+        accounts={this.props.accounts}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
       />
@@ -78,35 +115,40 @@ class AnalyticsTabContribution extends React.Component {
 
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
+  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeHostConfiguredName: React.PropTypes.string,
-  allServiceProviders: React.PropTypes.instanceOf(Immutable.List),
+  allGroups: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  filterActions: React.PropTypes.object,
   filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
+  contribution: React.PropTypes.instanceOf(Immutable.List),
   trafficActions: React.PropTypes.object
 }
 
 AnalyticsTabContribution.defaultProps = {
+  accounts: Immutable.List(),
   filters: Immutable.Map(),
-  serviceProviders: Immutable.Map()
+  contribution: Immutable.Map()
 }
 
 function mapStateToProps(state) {
   return {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
+    allGroups: state.group.get('allGroups'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
-    serviceProviders: state.traffic.get('serviceProviders'),
-    allServiceProviders: state.filters.get('filterOptions').get('serviceProviders'),
+    contribution: state.traffic.get('contribution'),
+    accounts: state.account.get('allAccounts'),
     filters: state.filters.get('filters')
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    filterActions: bindActionCreators(filterActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
 }

@@ -7,6 +7,7 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 const FilterServiceProvider = (props) => {
   const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
   const serviceProviderOptions = Immutable.fromJS(props.serviceProviderOptions.map(arrayMapping))
+  const serviceProviderGroupOptions = Immutable.fromJS(props.serviceProviderGroupOptions.map(arrayMapping))
 
   return (
     <div className="action">
@@ -16,6 +17,7 @@ const FilterServiceProvider = (props) => {
         </h5>
         <div className="sidebar-content">
           <FilterChecklistDropdown className="btn-block"
+          disabled={serviceProviderOptions.size === 0}
           onChange={props.changeServiceProvider}
           value={props.serviceProviderValue}
           options={serviceProviderOptions}/>
@@ -28,9 +30,10 @@ const FilterServiceProvider = (props) => {
         </h5>
         <div className="sidebar-content">
           <FilterChecklistDropdown className="btn-block"
+          disabled={serviceProviderGroupOptions.size === 0}
           onChange={props.changeServiceProviderGroup}
           value={props.serviceProviderGroupValue}
-          options={props.serviceProviderGroupOptions}/>
+          options={serviceProviderGroupOptions}/>
         </div>
       </div>
       }
@@ -47,6 +50,12 @@ FilterServiceProvider.propTypes = {
   serviceProviderGroupValue: React.PropTypes.instanceOf(List),
   serviceProviderOptions: React.PropTypes.instanceOf(List),
   serviceProviderValue: React.PropTypes.instanceOf(List)
+}
+FilterServiceProvider.defaultProps = {
+  serviceProviderGroupOptions: List(),
+  serviceProviderGroupValue: List(),
+  serviceProviderOptions: List(),
+  serviceProviderValue: List()
 }
 
 export default FilterServiceProvider

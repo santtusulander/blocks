@@ -26,7 +26,6 @@ class AnalysisContribution extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
-    this.isProviderInFilter = this.isProviderInFilter.bind(this)
   }
   componentDidMount() {
     this.measureContainers()
@@ -84,34 +83,24 @@ class AnalysisContribution extends React.Component {
    * @param {Immutable.List} serviceProviders - a list of service provider objects
    * @return {Immutable.Map} a map of the service providers keyed against their `id`
    */
-  lookUpTableForServiceProviderNames(serviceProviders) {
-    return serviceProviders.toMap().mapEntries((entry) => {
-      let serviceProvider = entry[1]
-      let id = serviceProvider.get('id')
+  lookUpTableForAccountNames(accounts) {
+    return accounts.toMap().mapEntries((entry) => {
+      let account = entry[1]
+      let id = account.get('id')
 
-      return [ id, serviceProvider ]
+      return [ id, account ]
     })
   }
 
-  nameForServiceProvider(provider, lookUpTable) {
-    const id = Number(provider.get('sp_account'))
-    const serviceProvider = lookUpTable.get(id)
-    return serviceProvider ? serviceProvider.get('name') : `ID: ${id}`
-  }
-
-  /**
-   * Return true if the provider has been selected in the filter dropdown,
-   * or nothing has been selected in the filter dropdown.
-   */
-  isProviderInFilter(provider) {
-    const providerId = Number(provider.get('sp_account'))
-    const isProviderInFilter = this.props.serviceProviderFilter.includes(providerId)
-    return isProviderInFilter || !this.props.serviceProviderFilter.size
+  nameForProvider(provider, lookUpTable) {
+    const id = Number(provider.get('sp_account') || provider.get('account'))
+    const account = lookUpTable.get(id)
+    return account ? account.get('name') : `ID: ${id}`
   }
 
   render() {
     const month = moment().format('MMMM YYYY')
-    const lookUpTable = this.lookUpTableForServiceProviderNames(this.props.serviceProviders)
+    const lookUpTable = this.lookUpTableForAccountNames(this.props.accounts)
     const isHttp = this.props.serviceTypes.includes('http')
     const isHttps = this.props.serviceTypes.includes('https')
     const isOnNet = this.props.onOffFilter.includes('on-net')
@@ -130,7 +119,7 @@ class AnalysisContribution extends React.Component {
         data[3] = (provider.getIn(['https','net_off_bytes'], 0))
 
       const providerRecord = Immutable.fromJS({
-        group: this.nameForServiceProvider(provider, lookUpTable),
+        group: this.nameForProvider(provider, lookUpTable),
         groupIndex: i,
         data: data
       })
@@ -138,7 +127,7 @@ class AnalysisContribution extends React.Component {
       // Only show the data for this provider if it is selected in the filter
       // and there is data for the provider after taking the on/off net and
       // service type filters into account.
-      if (this.isProviderInFilter(provider) && data.length && data.some(val => val > 0)) {
+      if (data.length && data.some(val => val > 0)) {
         return list.push(providerRecord);
       } else {
         return list;
@@ -146,22 +135,17 @@ class AnalysisContribution extends React.Component {
 
     }, Immutable.List())
 
-
     const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
       const countryRecord = provider.get('countries').map(country => {
         return Immutable.Map({
-          provider: this.nameForServiceProvider(provider, lookUpTable),
+          provider: this.nameForProvider(provider, lookUpTable),
           country: country.get('name'),
           bytes: country.get('bytes'),
           percent_total: country.get('percent_total')
         })
       })
 
-      if (this.isProviderInFilter(provider)) {
-        return byCountry.push(...countryRecord);
-      } else {
-        return byCountry;
-      }
+      return byCountry.push(...countryRecord);
     }, Immutable.List())
 
     const sorterProps = {
@@ -233,17 +217,15 @@ class AnalysisContribution extends React.Component {
 
 AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
+  accounts: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
-  serviceProviderFilter: React.PropTypes.instanceOf(Immutable.List),
-  serviceProviders: React.PropTypes.instanceOf(Immutable.List),
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisContribution.defaultProps = {
+  accounts: Immutable.List(),
   onOffFilter: Immutable.List(),
-  serviceProviderFilter: Immutable.List(),
-  serviceProviders: Immutable.List(),
   serviceTypes: Immutable.List(),
   stats: Immutable.List()
 }

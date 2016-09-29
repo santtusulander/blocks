@@ -27,46 +27,6 @@ function getToggledValues( currentValues, toggleVal) {
   return currentValues.push( toggleVal )
 }
 
-// TODO: placeholder data
-const serviceProviderGroups = fromJS([
-  {value: 0, label: 'Group 0'},
-  {value: 1, label: 'Group 1'},
-  {value: 2, label: 'Group 2'},
-  {value: 3, label: 'Group 3'},
-  {value: 4, label: 'Group 4'},
-  {value: 5, label: 'Group 5'}
-])
-
-// TODO: placeholder data
-const contentProviders = fromJS([
-  {value: 0, label: 'Content Provider 0'},
-  {value: 1, label: 'Content Provider 1'},
-  {value: 2, label: 'Content Provider 2'},
-  {value: 3, label: 'Content Provider 3'},
-  {value: 4, label: 'Content Provider 4'},
-  {value: 5, label: 'Content Provider 5'}
-])
-
-// TODO: placeholder data
-const contentProviderGroups = fromJS([
-  {value: 0, label: 'Group 0'},
-  {value: 1, label: 'Group 1'},
-  {value: 2, label: 'Group 2'},
-  {value: 3, label: 'Group 3'},
-  {value: 4, label: 'Group 4'},
-  {value: 5, label: 'Group 5'}
-])
-
-// TODO: placeholder data
-const contentProviderProperties = fromJS([
-  {value: 0, label: 'Property 0'},
-  {value: 1, label: 'Property 1'},
-  {value: 2, label: 'Property 2'},
-  {value: 3, label: 'Property 3'},
-  {value: 4, label: 'Property 4'},
-  {value: 5, label: 'Property 5'}
-])
-
 const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
   const
     isChecked = option =>
@@ -215,26 +175,34 @@ const AnalyticsFilters = (props) => {
           changeServiceProvider={val => {
             props.onFilterChange('serviceProviders', val)
           }}
-          changeServiceProviderGroup={val => console.log('changed CP group: ' + val)}
+          changeServiceProviderGroup={val => {
+            props.onFilterChange('serviceProviderGroups', val)
+          }}
           serviceProviderOptions={props.filterOptions.get('serviceProviders')}
           serviceProviderValue={props.filters.get('serviceProviders')}
-          serviceProviderGroupOptions={serviceProviderGroups}
-          serviceProviderGroupValue={fromJS([])}
+          serviceProviderGroupOptions={props.filterOptions.get('serviceProviderGroups')}
+          serviceProviderGroupValue={props.filters.get('serviceProviderGroups')}
           />
       }
 
       {(props.showFilters.includes('content-provider') && cpFilterOptions.length > 0) &&
         <FilterContentProvider
           visibleFields={cpFilterOptions}
-          changeContentProvider={val => console.log('changed CP: ' + val)}
-          changeContentProviderGroup={val => console.log('changed CP group: ' + val)}
-          changeContentProviderProperty={val => console.log('changed cp property: ' + val)}
-          contentProviderOptions={contentProviders}
-          contentProviderValue={fromJS([])}
-          contentProviderGroupOptions={contentProviderGroups}
-          contentProviderGroupValue={fromJS([])}
-          contentProviderPropertyOptions={contentProviderProperties}
-          contentProviderPropertyValue={fromJS([])}
+          changeContentProvider={val => {
+            props.onFilterChange('contentProviders', val)
+          }}
+          changeContentProviderGroup={val => {
+            props.onFilterChange('contentProviderGroups', val)
+          }}
+          changeContentProviderProperty={val => {
+            props.onFilterChange('contentProviderProperties', val)
+          }}
+          contentProviderOptions={props.filterOptions.get('contentProviders')}
+          contentProviderValue={props.filters.get('contentProviders')}
+          contentProviderGroupOptions={props.filterOptions.get('contentProviderGroups')}
+          contentProviderGroupValue={props.filters.get('contentProviderGroups')}
+          contentProviderPropertyOptions={props.filterOptions.get('contentProviderProperties')}
+          contentProviderPropertyValue={props.filters.get('contentProviderProperties')}
           />
       }
 
