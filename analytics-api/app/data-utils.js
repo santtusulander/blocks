@@ -253,6 +253,100 @@ class DataUtils {
     return countries[code] ? countries[code].alpha3 : code;
   }
 
+  /**
+   * Get the grouping entity based on the params passed. This is used to figure
+   * out how to group data for the contribution report endpoints.
+   * @param  {object} options  The options object from the endpoint.
+   * @return {string}
+   */
+  getGroupingEntityForContributionReport(options) {
+    let groupingEntity;
+
+    // For cp-contribution
+    if (options.properties) {
+      groupingEntity = 'property';
+    } else if (options.group_ids) {
+      groupingEntity = 'group'
+    } else if (options.account_ids) {
+      groupingEntity = 'account'
+
+    // For sp-contribution
+    } else if (options.assets) {
+      groupingEntity = 'asset'
+    } else if (options.sp_group_ids) {
+      groupingEntity = 'sp_group'
+    } else if (options.sp_group_ids) {
+      groupingEntity = 'sp_account'
+
+    // Catch-all for sp-contribution
+    } else if (options.account) {
+      groupingEntity = 'sp_account'
+
+    // Catch-all for cp-contribution
+    } else if (options.sp_account) {
+      groupingEntity = 'account'
+    }
+
+    return groupingEntity;
+  }
+
+  /**
+   * Process data for the SP and CP contribution reports.
+   */
+  processContributionData(duration, groupingEntity, trafficData, countryData, totalBytes) {
+    let finalTrafficData = [];
+    let trafficDataGrouped = _.groupBy(trafficData, groupingEntity);
+    let countryDataGrouped = _.groupBy(countryData, groupingEntity);
+
+    _.forOwn(trafficDataGrouped, (data, entity_id) => {
+      let record = {};
+
+      // HTTP traffic
+      let httpTraffic       = _.filter(data, {service_type: 'http'});
+      let httpOnNetTraffic  = _.find(httpTraffic, {net_type: 'on'});
+      let httpOffNetTraffic = _.find(httpTraffic, {net_type: 'off'});
+      let httpOnNetBytes    = _.get(httpOnNetTraffic, 'bytes', null);
+      let httpOffNetBytes   = _.get(httpOffNetTraffic, 'bytes', null);
+
+      // HTTPS traffic
+      let httpsTraffic       = _.filter(data, {service_type: 'https'});
+      let httpsOnNetTraffic  = _.find(httpsTraffic, {net_type: 'on'});
+      let httpsOffNetTraffic = _.find(httpsTraffic, {net_type: 'off'});
+      let httpsOnNetBytes    = _.get(httpsOnNetTraffic, 'bytes', null);
+      let httpsOffNetBytes   = _.get(httpsOffNetTraffic, 'bytes', null);
+
+      record[groupingEntity] = entity_id;
+
+      record.http = {
+        net_on_bytes: httpOnNetBytes,
+        net_off_bytes: httpOffNetBytes,
+        net_on_bps: this.getBPSFromBytes(httpOnNetBytes, duration),
+        net_off_bps: this.getBPSFromBytes(httpOffNetBytes, duration)
+      };
+
+      record.https = {
+        net_on_bytes: httpsOnNetBytes,
+        net_off_bytes: httpsOffNetBytes,
+        net_on_bps: this.getBPSFromBytes(httpsOnNetBytes, duration),
+        net_off_bps: this.getBPSFromBytes(httpsOffNetBytes, duration)
+      };
+
+      record.countries = countryDataGrouped[entity_id].map(countryRecord => {
+        return {
+          name: this.getCountryNameFromCode(countryRecord.country),
+          code: this.get3CharCountryCodeFromCode(countryRecord.country),
+          bytes: countryRecord.bytes,
+          bits_per_second: this.getBPSFromBytes(countryRecord.bytes, duration),
+          percent_total: parseFloat((countryRecord.bytes / totalBytes).toFixed(4))
+        }
+      });
+
+      finalTrafficData.push(record);
+    })
+
+    return finalTrafficData;
+  }
+
 }
 
 module.exports = new DataUtils();
