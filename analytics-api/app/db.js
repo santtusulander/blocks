@@ -46,12 +46,12 @@ class AnalyticsDB {
         field: 'property'
       },
       sp_account: {
-        select: 'sp_account_id AS `account`',
+        select: 'sp_account_id AS `sp_account`',
         where: 'AND sp_account_id = ?',
         field: 'sp_account_id'
       },
       sp_group: {
-        select: 'sp_group_id AS `group`',
+        select: 'sp_group_id AS `sp_group`',
         where: 'AND sp_group_id = ?',
         field: 'sp_group_id'
       },
@@ -64,6 +64,11 @@ class AnalyticsDB {
         select: 'sp_account_id AS `sp_account`',
         where: 'AND sp_account_id IN ( ? )',
         field: 'sp_account_id'
+      },
+      sp_group_ids: {
+        select: 'sp_group_id AS `sp_group`',
+        where: 'AND sp_group_id IN ( ? )',
+        field: 'sp_group_id'
       }
     }
 
@@ -895,6 +900,7 @@ class AnalyticsDB {
     let optionsFinal     = this._getQueryOptions(options);
     let queryOptions     = [];
     let conditions       = [];
+    let groupingEntity   = optionsFinal.sp_group_ids ? 'sp_group_id' : 'sp_account_id';
 
     queryOptions.push(optionsFinal.start);
     queryOptions.push(optionsFinal.end);
@@ -916,6 +922,10 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
       && queryOptions.push(optionsFinal.sp_account_ids);
 
+    optionsFinal.sp_group_ids
+      && conditions.push(this.accountLevelFieldMap.sp_group_ids.where)
+      && queryOptions.push(optionsFinal.sp_group_ids);
+
     optionsFinal.net_type
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
@@ -933,6 +943,7 @@ class AnalyticsDB {
     let queryParameterized = `
       SELECT
         ${this.accountLevelFieldMap.sp_account_ids.select},
+        ${this.accountLevelFieldMap.sp_group.select},
         net_type,
         service_type,
         sum(bytes) AS bytes
@@ -941,7 +952,7 @@ class AnalyticsDB {
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       GROUP BY
-        sp_account_id,
+        ${groupingEntity},
         net_type,
         service_type;
     `;
@@ -959,6 +970,7 @@ class AnalyticsDB {
     let optionsFinal     = this._getQueryOptions(options);
     let queryOptions     = [];
     let conditions       = [];
+    let groupingEntity   = optionsFinal.sp_group_ids ? 'sp_group_id' : 'sp_account_id';
 
     queryOptions.push(optionsFinal.start);
     queryOptions.push(optionsFinal.end);
@@ -980,6 +992,10 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
       && queryOptions.push(optionsFinal.sp_account_ids);
 
+    optionsFinal.sp_group_ids
+      && conditions.push(this.accountLevelFieldMap.sp_group_ids.where)
+      && queryOptions.push(optionsFinal.sp_group_ids);
+
     optionsFinal.net_type
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
@@ -997,6 +1013,7 @@ class AnalyticsDB {
     let queryParameterized = `
       SELECT
         ${this.accountLevelFieldMap.sp_account_ids.select},
+        ${this.accountLevelFieldMap.sp_group.select},
         country,
         sum(bytes) AS bytes
       FROM spc_country_day
@@ -1004,7 +1021,7 @@ class AnalyticsDB {
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       GROUP BY
-        sp_account_id,
+        ${groupingEntity},
         country;
     `;
 
@@ -1043,6 +1060,10 @@ class AnalyticsDB {
     optionsFinal.sp_account_ids
       && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
       && queryOptions.push(optionsFinal.sp_account_ids);
+
+    optionsFinal.sp_group_ids
+      && conditions.push(this.accountLevelFieldMap.sp_group_ids.where)
+      && queryOptions.push(optionsFinal.sp_group_ids);
 
     optionsFinal.net_type
       && conditions.push('AND net_type = ?')
