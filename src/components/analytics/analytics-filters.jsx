@@ -116,21 +116,9 @@ const AnalyticsFilters = (props) => {
 
   // the following hides certain dropdowns based on GAS status and current user role
   if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
-    spFilterOptions = spFilterOptions.filter(x => x !== 'sp-account')
-
-    if (group) {
-      spFilterOptions = spFilterOptions.filter(x => x !== 'sp-group')
-    }
+    spFilterOptions = []
   } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
-    cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-account')
-
-    if (group) {
-      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-group')
-    }
-
-    if (property) {
-      cpFilterOptions = cpFilterOptions.filter(x => x !== 'cp-property')
-    }
+    cpFilterOptions = []
   }
 
   return (
