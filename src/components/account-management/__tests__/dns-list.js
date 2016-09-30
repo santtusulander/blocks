@@ -11,12 +11,12 @@ jest.unmock('../../../components/icons/icon-trash')
 jest.unmock('../../table-sorter')
 jest.unmock('../../button')
 jest.unmock('../dns-list')
-
 import DNSList, { SortableTable } from '../dns-list'
+import recordTypes, { recordFields } from '../../../constants/dns-record-types'
 
 function intlMaker() {
   return {
-    formatMessage: jest.fn()
+    formatMessage: jest.fn(),
   }
 }
 

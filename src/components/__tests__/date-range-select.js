@@ -2,7 +2,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
 // Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
+/*const moment = require('moment')
 const momentFormatMock = jest.genMockFunction()
 const momentStartOfMock = jest.genMockFunction()
 const momentEndOfMock = jest.genMockFunction()
@@ -13,9 +13,10 @@ moment.mockReturnValue({
   endOf: momentEndOfMock,
   utc: momentUtcMock
 })
-
+*/
 jest.dontMock('../date-range-select.jsx')
 const DateRange = require('../date-range-select.jsx')
+import moment from 'moment'
 
 describe('DateRangeSelect', () => {
   it('should exist', () => {

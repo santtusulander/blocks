@@ -11,7 +11,7 @@ jest.dontMock('../by-location.jsx')
 const AnalysisByLocation = require('../by-location.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
+/*const moment = require('moment')
 const numeral = require('numeral')
 
 const momentFormatMock = jest.genMockFunction()
@@ -19,6 +19,7 @@ const numeralFormatMock = jest.genMockFunction()
 
 moment.mockReturnValue({format:momentFormatMock})
 numeral.mockReturnValue({format:numeralFormatMock})
+*/
 
 let topojson = require('topojson')
 topojson.feature = topojson.feature.mockImplementation(function(topo) {
