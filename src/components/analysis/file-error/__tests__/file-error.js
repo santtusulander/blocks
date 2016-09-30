@@ -8,11 +8,6 @@ jest.unmock('../../../../constants/status-codes.js')
 import FileError from '../file-error.jsx'
 import STATUS_CODES from '../../../../constants/status-codes.js'
 
-// Set up mocks to make sure formatting libs are used correctly
-/*const numeral = require('numeral')
-const numeralFormatMock = jest.genMockFunction()
-numeral.mockReturnValue({format:numeralFormatMock})
-*/
 const intlMaker = () => {
   return {
     formatMessage: jest.fn()
