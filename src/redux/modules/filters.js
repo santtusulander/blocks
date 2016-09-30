@@ -1,6 +1,7 @@
 import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import { urlBase, mapReducers, parseResponseData } from '../util'
 import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
@@ -12,8 +13,8 @@ export const httpStatusCodes = httpOKCodes.concat(httpErrorCodes)
 const initialState = Immutable.fromJS({
   filters: {
     dateRange: {
-      startDate: null,
-      endDate: null
+      startDate: moment().utc().startOf('month'),
+      endDate: moment().utc().endOf('day')
     },
     includeComparison: false,
     dateRangeLabel: 'Month to date',
@@ -45,8 +46,8 @@ export function setValue(state, action) {
   return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
 }
 
-export function resetDefaults() {
-  return initialState
+export function resetDefaults(state) {
+  return state.merge(initialState)
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
