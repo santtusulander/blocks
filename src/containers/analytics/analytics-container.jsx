@@ -20,6 +20,7 @@ import Content from '../../components/layout/content'
 import { getTabName } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
+import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
 
@@ -77,7 +78,10 @@ class AnalyticsContainer extends React.Component {
       this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
-    if ((brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
+    // service providers cannot see properties, UDNP-1498
+    const currentUserRole = this.props.user.getIn(['roles', 0], null)
+    const userIsServiceProvider = currentUserRole && currentUserRole === ACCOUNT_TYPE_SERVICE_PROVIDER
+    if (!userIsServiceProvider && (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }
@@ -91,20 +95,27 @@ class AnalyticsContainer extends React.Component {
 
   renderFilters() {
     const {
+      activeAccount,
       params,
       filterOptions,
       filters,
+      user,
       location: { pathname }
     } = this.props
 
-    if (!params.account && pathname.indexOf('contribution') < 0) {
+    if (!params.account) {
       return null
     }
 
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
+    const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
+    const currentUserRole = user.getIn(['roles', 0], null)
 
     return (
       <AnalyticsFilters
+        activeAccountProviderType={activeAccountProviderType}
+        currentUserRole={currentUserRole}
+        params={params}
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
@@ -115,8 +126,7 @@ class AnalyticsContainer extends React.Component {
 
   renderContent(children, filters) {
     const {
-      params,
-      location: { pathname }
+      params
     } = this.props
 
     let content = children && React.cloneElement(children, {
@@ -126,20 +136,11 @@ class AnalyticsContainer extends React.Component {
     })
 
     if (!params.account) {
-      if (pathname.indexOf('contribution') >= 0) {
-        // TODO: move this logic elsewhere once API support for this feature has been integrated
-        content = (
-          <div className="text-center">
-            <FormattedMessage id="portal.analytics.contribution.selectAccount.text" values={{br: <br/>}} />
-          </div>
-        )
-      } else {
-        content = (
-          <div className="text-center">
-            <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
-          </div>
-        )
-      }
+      content = (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
+        </div>
+      )
     }
 
     return (
@@ -156,7 +157,6 @@ class AnalyticsContainer extends React.Component {
       brands,
       accounts,
       groups,
-      properties,
       filters,
       activeAccount,
       activeGroup,
@@ -170,7 +170,6 @@ class AnalyticsContainer extends React.Component {
           brands={brands}
           accounts={accounts}
           groups={groups}
-          properties={properties}
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
@@ -200,7 +199,6 @@ AnalyticsContainer.propTypes = {
   groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
   propertyActions: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   user: React.PropTypes.instanceOf(Immutable.Map)
@@ -211,7 +209,6 @@ AnalyticsContainer.defaultProps = {
   brands: Immutable.List(),
   filters: Immutable.Map(),
   groups: Immutable.List(),
-  properties: Immutable.List(),
   roles: Immutable.List(),
   user: Immutable.Map()
 }
@@ -223,7 +220,6 @@ function mapStateToProps(state) {
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
-    properties: state.host.get('allHosts'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
     roles: state.roles.get('roles'),

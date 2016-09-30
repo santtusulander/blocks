@@ -315,7 +315,12 @@ class DataUtils {
       let httpsOnNetBytes    = _.get(httpsOnNetTraffic, 'bytes', null);
       let httpsOffNetBytes   = _.get(httpsOffNetTraffic, 'bytes', null);
 
-      record[groupingEntity] = entity_id;
+      record.account = _.get(data, '0.account', null);
+      record.group = _.get(data, '0.group', null);
+      record.property = _.get(data, '0.property', null);
+      record.sp_account = _.get(data, '0.sp_account', null);
+      record.sp_group = _.get(data, '0.sp_group', null);
+      record.asset = _.get(data, '0.asset', null);
 
       record.http = {
         net_on_bytes: httpOnNetBytes,
