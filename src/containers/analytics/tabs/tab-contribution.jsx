@@ -137,7 +137,7 @@ AnalyticsTabContribution.propTypes = {
 AnalyticsTabContribution.defaultProps = {
   accounts: Immutable.List(),
   filters: Immutable.Map(),
-  contribution: Immutable.Map()
+  contribution: Immutable.List()
 }
 
 function mapStateToProps(state) {

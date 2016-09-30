@@ -60,7 +60,6 @@ const FilterContentProvider = (props) => {
 
 FilterContentProvider.displayName = 'FilterContentProvider'
 FilterContentProvider.propTypes = {
-  visibleFields: React.PropTypes.array,
   changeContentProvider: React.PropTypes.func,
   changeContentProviderGroup: React.PropTypes.func,
   changeContentProviderProperty: React.PropTypes.func,
@@ -69,7 +68,8 @@ FilterContentProvider.propTypes = {
   contentProviderOptions: React.PropTypes.instanceOf(List),
   contentProviderPropertyOptions: React.PropTypes.instanceOf(List),
   contentProviderPropertyValue: React.PropTypes.instanceOf(List),
-  contentProviderValue: React.PropTypes.instanceOf(List)
+  contentProviderValue: React.PropTypes.instanceOf(List),
+  visibleFields: React.PropTypes.array
 }
 
 export default FilterContentProvider

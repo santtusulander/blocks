@@ -171,7 +171,7 @@ export function trafficServiceProvidersSuccess(state, action){
 }
 export function trafficServiceProvidersFailure(state){
   return state.merge({
-    contribution: Immutable.Map()
+    contribution: Immutable.List()
   })
 }
 
@@ -182,7 +182,7 @@ export function trafficContentProvidersSuccess(state, action){
 }
 export function trafficContentProvidersFailure(state){
   return state.merge({
-    contribution: Immutable.Map()
+    contribution: Immutable.List()
   })
 }
 

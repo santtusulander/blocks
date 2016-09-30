@@ -203,7 +203,7 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   children: React.PropTypes.array,
   className: React.PropTypes.string,
-  disabled: React.PropTypes.boolean,
+  disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,
