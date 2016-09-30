@@ -69,7 +69,8 @@ class AccountManagementSystemDNS extends Component {
 
     const {domainSearch, recordSearch} = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
-    const visibleRecords = records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
+    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,

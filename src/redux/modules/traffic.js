@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
+import { urlBase, analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -16,6 +16,7 @@ const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
 const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
+const TRAFFIC_CONTENT_PROVIDERS_FETCHED = 'TRAFFIC_CONTENT_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 
 const emptyTraffic = Immutable.Map({
@@ -45,7 +46,7 @@ const emptyTraffic = Immutable.Map({
     net_off: {bytes: 0, percent_total: 0},
     total: 0
   }),
-  serviceProviders: Immutable.List(),
+  contribution: Immutable.List(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -165,12 +166,23 @@ export function trafficOnOffNetTodayFailure(state){
 
 export function trafficServiceProvidersSuccess(state, action){
   return state.merge({
-    serviceProviders: Immutable.fromJS(action.payload.data)
+    contribution: Immutable.fromJS(action.payload)
   })
 }
 export function trafficServiceProvidersFailure(state){
   return state.merge({
-    serviceProviders: Immutable.Map()
+    contribution: Immutable.List()
+  })
+}
+
+export function trafficContentProvidersSuccess(state, action){
+  return state.merge({
+    contribution: Immutable.fromJS(action.payload)
+  })
+}
+export function trafficContentProvidersFailure(state){
+  return state.merge({
+    contribution: Immutable.List()
   })
 }
 
@@ -208,6 +220,7 @@ export default handleActions({
   TRAFFIC_ON_OFF_NET_FETCHED: mapReducers(trafficOnOffNetSuccess, trafficOnOffNetFailure),
   TRAFFIC_ON_OFF_NET_TODAY_FETCHED: mapReducers(trafficOnOffNetTodaySuccess, trafficOnOffNetTodayFailure),
   TRAFFIC_SERVICE_PROVIDERS_FETCHED: mapReducers(trafficServiceProvidersSuccess, trafficServiceProvidersFailure),
+  TRAFFIC_CONTENT_PROVIDERS_FETCHED: mapReducers(trafficContentProvidersSuccess, trafficContentProvidersFailure),
   TRAFFIC_STORAGE_FETCHED: mapReducers(trafficStorageSuccess, trafficStorageFailure),
   TRAFFIC_START_FETCH: trafficStartFetch,
   TRAFFIC_FINISH_FETCH: trafficFinishFetch
@@ -255,8 +268,47 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 })
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
+  let data = {}
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
+  .then(action => Promise.all(action.data.map(datum => {
+    const account = Number(datum.sp_account)
+    const group = Number(datum.sp_group)
+
+    if (opts.sp_group_ids && group) {
+      data[group] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+    } else {
+      data[account] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+    }
+  })))
+  .then(resp => resp.map(resp => {
+    let name = resp.data.name || `ID: ${resp.data.id}`
+    return Object.assign({}, data[resp.data.id], {name: name})
+  }))
+})
+
+export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
+  let data = {}
+  return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
+  .then(parseResponseData)
+  .then(action => Promise.all(action.data.map(datum => {
+    const account = Number(datum.account)
+    const group = Number(datum.group)
+
+    if (opts.group_ids && group) {
+      data[group] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+    } else {
+      data[account] = datum
+      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+    }
+  })))
+  .then(resp => resp.map(resp => {
+    let name = resp.data.name || `ID: ${resp.data.id}`
+    return Object.assign({}, data[resp.data.id], {name: name})
+  }))
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

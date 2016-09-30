@@ -130,13 +130,12 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
-  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+  'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
   'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
   'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
@@ -184,7 +183,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.traffic.propertyTitle': 'Property Traffic Overview',
   'portal.analytics.tabs.traffic.groupTitle': 'Group Traffic Overview',
   'portal.analytics.tabs.traffic.accountTitle': 'Account Traffic Overview',
-  'portal.analytics.tabs.cacheHitRate.label': 'Cache Hit Rate',
+  'portal.analytics.tabs.cacheHitRate.label': 'Daily Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.propertyTitle': 'Property Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.groupTitle': 'Group Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.accountTitle': 'Account Cache Hit Rate',
@@ -223,7 +222,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
-  'portal.analysis.filters.serviceProvider.title': 'Service Providers',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',

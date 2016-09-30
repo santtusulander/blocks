@@ -80,7 +80,11 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
   [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
   [PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE, routes.analyticsTabCacheHitRate, AnalyticsTabCacheHitRate],
-  [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabContribution, AnalyticsTabContribution],
+
+  // TODO: Temporarily disabled as a part of UDNP-1534
+  // [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabContribution, AnalyticsTabContribution],
+  [PERMISSIONS.ALLOW_ALWAYS, routes.analyticsTabContribution, AnalyticsTabContribution],
+
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
@@ -90,10 +94,16 @@ const analyticsTabs = [
 /* helper for creating Analytics Tab-Routes */
 const getAnalyticsTabRoutes = store => <Route>
   <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component], i) => <Route
-    path={path} key={i}
-    component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
-  )}
+  {analyticsTabs.map(([permission, path, component], i) => {
+    if (permission === null) {
+      return <Route path={path} key={i} />
+    }
+    return (
+      <Route
+        path={path} key={i}
+        component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+    )
+  })}
 </Route>
 
 /* helper for creating Support Tab-Routes */
