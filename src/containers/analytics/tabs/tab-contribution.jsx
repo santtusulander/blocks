@@ -102,9 +102,9 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render(){
-    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.SERVICE_PROVIDER) {
-      sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
+      sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     }
 
     return (
