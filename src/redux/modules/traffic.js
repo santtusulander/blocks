@@ -275,7 +275,7 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
     const account = Number(datum.sp_account)
     const group = Number(datum.sp_group)
 
-    if (opts.sp_account_ids && group) {
+    if (opts.sp_group_ids && group) {
       data[group] = datum
       return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
     } else {
@@ -297,7 +297,7 @@ export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETC
     const account = Number(datum.account)
     const group = Number(datum.group)
 
-    if (opts.account_ids && group) {
+    if (opts.group_ids && group) {
       data[group] = datum
       return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
     } else {
