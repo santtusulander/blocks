@@ -25,7 +25,8 @@ class AnalyticsTabContribution extends React.Component {
   componentWillReceiveProps(nextProps){
     if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
-      this.props.filters !== nextProps.filters
+      this.props.filters !== nextProps.filters ||
+      this.props.accountType !== nextProps.accountType
     ) {
       this.fetchData(
         nextProps.params,
