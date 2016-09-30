@@ -130,7 +130,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
-  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+  'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
@@ -184,7 +184,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.traffic.propertyTitle': 'Property Traffic Overview',
   'portal.analytics.tabs.traffic.groupTitle': 'Group Traffic Overview',
   'portal.analytics.tabs.traffic.accountTitle': 'Account Traffic Overview',
-  'portal.analytics.tabs.cacheHitRate.label': 'Cache Hit Rate',
+  'portal.analytics.tabs.cacheHitRate.label': 'Daily Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.propertyTitle': 'Property Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.groupTitle': 'Group Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.accountTitle': 'Account Cache Hit Rate',
