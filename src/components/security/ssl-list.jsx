@@ -6,12 +6,15 @@ import {FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import ActionButtons from '../action-buttons'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 
-import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE } from '../../constants/permissions'
+import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
 
 const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
   return (
     <div>
-      <AccountManagementHeader title={`${certificates.size} Certificates`} onAdd={uploadCertificate}/>
+      <AccountManagementHeader
+        title={`${certificates.size} Certificates`}
+        onAdd={uploadCertificate}
+        creationPermission={CREATE_CERTIFICATE}/>
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
