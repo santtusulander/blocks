@@ -2,7 +2,7 @@ import {createAction} from 'redux-actions'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-//import { urlBase, mapReducers, parseResponseData } from '../util'
+//import { BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
 
 const EXPORTS_SHOW_DIALOG = 'EXPORTS_SHOW_DIALOG'
 const EXPORTS_HIDE_DIALOG = 'EXPORTS_HIDE_DIALOG'
@@ -22,7 +22,7 @@ export const exportsHideDialog = createAction(EXPORTS_HIDE_DIALOG);
 export const exportsDownloadFile = createAction(EXPORTS_DOWNLOAD_FILE, (exportParams) => {
 
   /* TODO: Make API call similar to this
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts`, {}, {
+  return axios.post(`${BASE_URL_AAA}/brands/${brand}/accounts`, {}, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -60,7 +60,7 @@ export function showDialog(state, action) {
   return state.merge( payload );
 }
 
-export function hideDialog(state, action) {
+export function hideDialog(state) {
   return state.set('dialogVisible',false)
 }
 

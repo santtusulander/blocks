@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { mapReducers, parseResponseData, urlBase } from '../util'
+import { mapReducers, parseResponseData, BASE_URL_AAA } from '../util'
 
 const ROLES_FETCHED = 'ROLES_FETCHED'
 
@@ -26,15 +26,15 @@ export default handleActions({
 
 // ACTIONS
 export const fetchRoles = createAction(ROLES_FETCHED, () => {
-  return axios.get(`${urlBase}/v2/roles`)
+  return axios.get(`${BASE_URL_AAA}/roles`)
     .then(parseResponseData)
     .then(roles => Promise.all(roles.map(role => {
       return Promise.all([
-        axios.get(`${urlBase}/v2/roles/${role.id}/services/AAA`)
+        axios.get(`${BASE_URL_AAA}/roles/${role.id}/services/AAA`)
           .then(parseResponseData),
-        axios.get(`${urlBase}/v2/roles/${role.id}/services/North`)
+        axios.get(`${BASE_URL_AAA}/roles/${role.id}/services/North`)
           .then(parseResponseData),
-        axios.get(`${urlBase}/v2/roles/${role.id}/services/UI`)
+        axios.get(`${BASE_URL_AAA}/roles/${role.id}/services/UI`)
           .then(parseResponseData)
       ])
       .then(axios.spread((permissionsAAA, permissionsNorth, permissionsUI) => {

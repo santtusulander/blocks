@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { urlBase, analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
+import { BASE_URL_AAA, analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -277,10 +277,10 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
 
     if (opts.sp_group_ids && group) {
       data[group] = datum
-      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
     } else {
       data[account] = datum
-      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
     }
   })))
   .then(resp => resp.map(resp => {
@@ -299,10 +299,10 @@ export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETC
 
     if (opts.group_ids && group) {
       data[group] = datum
-      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}/groups/${group}`)
+      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
     } else {
       data[account] = datum
-      return axios.get(`${urlBase}/v2/brands/${opts.brand}/accounts/${account}`)
+      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
     }
   })))
   .then(resp => resp.map(resp => {
