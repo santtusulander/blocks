@@ -27,14 +27,18 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond} from '../util/helpers'
-import {getContentUrl} from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
-import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
+import IsAllowed from '../components/is-allowed'
+
+import {formatBitsPerSecond} from '../util/helpers'
+import {getContentUrl} from '../util/routes'
+
+import DateRanges from '../constants/date-ranges'
 import { paleblue } from '../constants/colors'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -362,7 +366,9 @@ export class Property extends React.Component {
             </div>
           </AccountSelector>
           <ButtonToolbar>
-            <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            <IsAllowed to={MODIFY_PROPERTY}>
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            </IsAllowed>
             <Link className="btn btn-success btn-icon"
                   to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
               <IconChart/>
@@ -371,9 +377,11 @@ export class Property extends React.Component {
                   to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
               <IconConfiguration/>
             </Link>
-            <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-              <IconTrash/>
-            </Button>
+            <IsAllowed to={DELETE_PROPERTY}>
+              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+            </IsAllowed>
           </ButtonToolbar>
         </PageHeader>
 

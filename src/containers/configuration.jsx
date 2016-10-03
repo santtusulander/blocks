@@ -14,7 +14,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import { getContentUrl, getUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
-import { MODIFY_PROPERTY } from '../constants/permissions'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -267,7 +267,7 @@ export class Configuration extends React.Component {
             </div>
           </AccountSelector>
           <ButtonToolbar className="pull-right">
-            <IsAllowed to={MODIFY_PROPERTY}>
+            <IsAllowed to={DELETE_PROPERTY}>
               <Button
                 bsStyle="danger"
                 className="btn btn-icon"
