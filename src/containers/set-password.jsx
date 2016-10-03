@@ -22,6 +22,7 @@ export class SetPassword extends React.Component {
 
     this.goToLoginPage = this.goToLoginPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.validPassword = this.validPassword.bind(this)
   }
   goToLoginPage() {
     this.props.router.push(getContentUrl('/login', {}))
@@ -46,6 +47,11 @@ export class SetPassword extends React.Component {
     // })
   }
 
+  validPassword(password) {
+    console.log(password)
+    this.setState({'validPassword': password});
+  }
+
   render() {
     return (
       <Modal.Dialog className="login-modal">
@@ -61,7 +67,7 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            <PasswordFields loginPassword={true} />
+            <PasswordFields loginPassword={true} validPassword={this.validPassword} />
             <Row>
               <Col xs={12}>
                 <Button type="submit" bsStyle="primary" className="pull-right"

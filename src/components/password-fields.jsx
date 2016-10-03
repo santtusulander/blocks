@@ -1,11 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Tooltip } from 'react-bootstrap'
 
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
-
-import { injectIntl } from 'react-intl';
 
 class PasswordFields extends React.Component {
   constructor(props) {
@@ -66,6 +64,7 @@ class PasswordFields extends React.Component {
       passwordNumberValid: this.validatePasswordNumberValid(e.target.value),
       passwordSpecialCharValid: this.validatePasswordSpecialCharValid(e.target.value)
     })
+    this.doPasswordsMatch(e.target.value, this.state.confirm)
   }
 
   toggleConfirmVisibility() {
@@ -85,11 +84,7 @@ class PasswordFields extends React.Component {
 
   changeConfirm(e) {
     this.changeField('confirm')(e)
-    if(this.state.passwordValid) {
-      this.setState({
-        confirmValid: this.state.password === e.target.value
-      })
-    }
+    this.doPasswordsMatch(this.state.password, e.target.value)
   }
 
   changeField(key) {
@@ -98,6 +93,14 @@ class PasswordFields extends React.Component {
       newState[key] = e.target.value
       this.setState(newState)
     }
+  }
+
+  doPasswordsMatch(password, confirm) {
+    const validPassword = password === confirm
+    this.setState({
+      confirmValid: validPassword
+    })
+    this.props.validPassword(validPassword)
   }
 
   validatePassword(password) {
@@ -162,7 +165,7 @@ class PasswordFields extends React.Component {
           wrapperClassName={loginPassword && ('input-addon-before input-addon-after-outside '
             + 'has-login-label login-label-confirm'
             + (showConfirmError ? ' invalid' : '')
-            + (this.state.confirmValid && this.state.confirm !== '' ? ' valid' : '')
+            + (this.state.passwordValid && this.state.confirmValid && this.state.confirm !== '' ? ' valid' : '')
             + (this.state.confirmFocus || this.state.confirm ? ' active' : ''))}
           addonBefore={loginPassword && <IconPassword/>}
           addonAfter={loginPassword && <a className={'input-addon-link' +
@@ -188,7 +191,8 @@ class PasswordFields extends React.Component {
 PasswordFields.displayName = 'PasswordFields'
 PasswordFields.propTypes = {
   intl: React.PropTypes.object,
-  loginPassword: React.PropTypes.bool
+  loginPassword: React.PropTypes.bool,
+  validPassword: React.PropTypes.func
 };
 
 export default injectIntl(PasswordFields)
