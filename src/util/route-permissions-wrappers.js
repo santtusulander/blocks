@@ -115,7 +115,7 @@ export const UserCanViewHosts = (store) => {
       let path = ownProps.location.pathname.replace(/\/$/, '')
       return path.substr(0, path.lastIndexOf('/'))
     },
-    wrapperDisplayName: 'UserCanViewGroupsSummary',
+    wrapperDisplayName: 'UserCanViewHosts',
     predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_PROPERTIES, store),
     allowRedirectBack: false
   })
