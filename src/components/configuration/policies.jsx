@@ -9,7 +9,10 @@ import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
+import IsAllowed from '../is-allowed'
+
 import { getActiveMatchSetForm } from './helpers'
+import { MODIFY_PROPERTY } from '../../constants/permissions'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -83,10 +86,12 @@ class ConfigurationPolicies extends React.Component {
       <div id="configuration-policies">
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.policies.policyRules.text"/>}>
-          <Button bsStyle="success" className="btn-icon"
-            onClick={this.addRule}>
-            <IconAdd />
-          </Button>
+          <IsAllowed to={MODIFY_PROPERTY}>
+            <Button bsStyle="success" className="btn-icon"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
+          </IsAllowed>
         </SectionHeader>
         <SectionContainer>
           <ConfigurationPolicyRules
