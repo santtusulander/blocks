@@ -72,7 +72,10 @@ class AnalyticsTabContribution extends React.Component {
       }
 
       fetchDataAction = this.props.trafficActions.fetchServiceProviders
-    } else if (accountType === ProviderTypes.SERVICE_PROVIDER) {
+    } else if (
+      accountType === ProviderTypes.SERVICE_PROVIDER ||
+      accountType === ProviderTypes.CLOUD_PROVIDER
+    ) {
       this.props.filterActions.fetchServiceProviderGroups(params.brand, params.account)
 
       this.props.filterActions.fetchContentProvidersWithTrafficForSP(
@@ -103,9 +106,9 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render(){
-    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
-    if (this.props.accountType === ProviderTypes.SERVICE_PROVIDER) {
-      sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
+      sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
     }
 
     return (

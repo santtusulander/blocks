@@ -102,16 +102,15 @@ const AnalyticsFilters = (props) => {
   let cpFilterOptions = []
 
   // the following builds the dropdown list based off of current user role
-  switch (currentUserRole) {
-    case ProviderTypes.CONTENT_PROVIDER:
-    case ProviderTypes.CLOUD_PROVIDER:
-      cpFilterOptions = ['cp-account','cp-group','cp-property']
-      spFilterOptions = ['sp-account','sp-group']
-      break;
-    case ProviderTypes.SERVICE_PROVIDER:
-      cpFilterOptions = ['cp-account']
-      spFilterOptions = ['sp-group']
-      break;
+  if (userIsServiceProvider(currentUser)) {
+    cpFilterOptions = ['cp-account']
+    spFilterOptions = ['sp-group']
+  } else if (userIsContentProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+    spFilterOptions = ['sp-account','sp-group']
+  } else if (userIsCloudProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+    spFilterOptions = ['sp-group']
   }
 
   // the following hides certain dropdowns based on GAS status and current user role
