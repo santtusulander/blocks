@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
-
-import ActionButtons from '../../components/action-buttons.jsx'
-import { AccountManagementHeader } from '../account-management/account-management-header.jsx'
-
 import {FormattedMessage, injectIntl, intlShape} from 'react-intl'
+
+import ActionButtons from '../action-buttons'
+import { AccountManagementHeader } from '../account-management/account-management-header'
+
+import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE } from '../../constants/permissions'
 
 const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
   return (
@@ -43,6 +44,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
                 <td>{groupName}</td>
                 <td className="nowrap-column">
                   <ActionButtons
+                    permissions={{ modify: MODIFY_CERTIFICATE, delete: DELETE_CERTIFICATE }}
                     onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
                     onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
                 </td>
