@@ -280,7 +280,10 @@ export class Property extends React.Component {
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    const dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    let dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    if (dateRange < moment.duration(28, 'days')) {
+      dateRange = moment.duration(28, 'days')
+    }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])

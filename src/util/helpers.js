@@ -1,9 +1,13 @@
 import moment from 'moment'
 import numeral from 'numeral'
+import { fromJS } from 'immutable'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
+import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
 import { Address4, Address6 } from 'ip-address'
+import PROVIDER_TYPES from '../constants/provider-types.js'
+import { ROLES_MAPPING } from '../constants/account-management-options'
 
 const BYTE_BASE = 1000
 
@@ -135,8 +139,13 @@ export function generateNestedLink(base, linkParts) {
 export function buildAnalyticsOpts(params, filters){
   const {startDate, endDate} = getDateRange(filters)
   const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
+  const serviceProviderGroups = filters.get('serviceProviderGroups').size === 0 ? undefined : filters.get('serviceProviderGroups').toJS().join(',')
+  const contentProviders = filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',')
+  const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   return {
     account: params.account,
@@ -146,9 +155,56 @@ export function buildAnalyticsOpts(params, filters){
     startDate: startDate.format('X'),
     endDate: endDate.format('X'),
     sp_account_ids: serviceProviders,
+    sp_group_ids: serviceProviderGroups,
+    account_ids: contentProviders,
+    group_ids: contentProviderGroups,
     service_type: serviceType,
-    net_type: netType
+    net_type: netType,
+    status_codes: statusCodes || errorCodes
   }
+}
+
+export function buildAnalyticsOptsForContribution(params, filters, accountType) {
+  const {startDate, endDate} = getDateRange(filters)
+  const serviceProviders = filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',')
+  const serviceProviderGroups = filters.get('serviceProviderGroups').size === 0 ? undefined : filters.get('serviceProviderGroups').toJS().join(',')
+  const contentProviders = filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',')
+  const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
+  const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
+  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
+
+  if (accountType === PROVIDER_TYPES.CONTENT_PROVIDER) {
+    return {
+      account: params.account,
+      brand: params.brand,
+      group: params.group,
+      property: params.property,
+      startDate: startDate.format('X'),
+      endDate: endDate.format('X'),
+      sp_account_ids: serviceProviders,
+      sp_group_ids: serviceProviderGroups,
+      service_type: serviceType,
+      net_type: netType,
+      status_codes: statusCodes || errorCodes
+    }
+  } else if (accountType === PROVIDER_TYPES.SERVICE_PROVIDER) {
+    return {
+      sp_account: params.account,
+      brand: params.brand,
+      sp_group: params.group,
+      startDate: startDate.format('X'),
+      endDate: endDate.format('X'),
+      account_ids: contentProviders,
+      group_ids: contentProviderGroups,
+      service_type: serviceType,
+      net_type: netType,
+      status_codes: statusCodes || errorCodes
+    }
+  }
+
+  return null
 }
 
 export function filterChangeNeedsReload(currentFilters, nextFilters) {
@@ -262,6 +318,36 @@ export function getRolesForUser(user, roles) {
     userRoles.push([role.id, role.name])
   })
   return userRoles
+}
+
+export function userIsServiceProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.SERVICE_PROVIDER)
+}
+
+export function userIsContentProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.CONTENT_PROVIDER)
+}
+
+export function userIsCloudProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.CLOUD_PROVIDER)
+}
+
+export function userHasRole(user, roleToFind) {
+  const userRoles = user.get('roles').toJS()
+  const mapping = fromJS(ROLES_MAPPING)
+
+  for (let roleId of userRoles) {
+    const role = mapping.find(role => role.get('id') === roleId)
+    const accountTypes = role.get('accountTypes')
+
+    if (role && accountTypes && accountTypes.size > 0) {
+      if (accountTypes.find(roleId => roleId === roleToFind)) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 export function isValidIPv4Address(address) {

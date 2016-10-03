@@ -27,7 +27,7 @@ import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
 import AnalyticsTabCacheHitRate from './containers/analytics/tabs/tab-cache-hit-rate.jsx'
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
-import AnalyticsTabServiceProviders from './containers/analytics/tabs/tab-service-providers.jsx'
+import AnalyticsTabContribution from './containers/analytics/tabs/tab-contribution.jsx'
 import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
 import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
@@ -80,7 +80,11 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
   [PERMISSIONS.VIEW_ANALYTICS_SP_ON_OFF_NET, routes.analyticsTabOnOffNet, AnalyticsTabOnOffNet],
   [PERMISSIONS.VIEW_ANALYTICS_CACHE_HIT_RATE, routes.analyticsTabCacheHitRate, AnalyticsTabCacheHitRate],
-  [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabServiceProviders, AnalyticsTabServiceProviders],
+
+  // TODO: Temporarily disabled as a part of UDNP-1534
+  // [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabContribution, AnalyticsTabContribution],
+  [PERMISSIONS.ALLOW_ALWAYS, routes.analyticsTabContribution, AnalyticsTabContribution],
+
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
@@ -90,10 +94,16 @@ const analyticsTabs = [
 /* helper for creating Analytics Tab-Routes */
 const getAnalyticsTabRoutes = store => <Route>
   <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component], i) => <Route
-    path={path} key={i}
-    component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
-  )}
+  {analyticsTabs.map(([permission, path, component], i) => {
+    if (permission === null) {
+      return <Route path={path} key={i} />
+    }
+    return (
+      <Route
+        path={path} key={i}
+        component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+    )
+  })}
 </Route>
 
 /* helper for creating Support Tab-Routes */
@@ -124,7 +134,9 @@ export const getRoutes = store => {
       <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
         {/* default - set 'udn' as brand */}
         <IndexRedirect to="udn" />
-        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)} />
+        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)}>
+          {getAnalyticsTabRoutes(store)}
+        </Route>
         <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
             {getAnalyticsTabRoutes(store)}
         </Route>
