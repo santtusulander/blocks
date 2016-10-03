@@ -255,17 +255,15 @@ class ContentItems extends React.Component {
               onSelect={this.handleSortChange}
               value={currentValue}
               options={sortOptions.map(opt => [opt.value, opt.label])}/>
-            <UDNButton bsStyle="primary"
+            <UDNButton bsStyle={viewingChart ? 'primary' : 'secondary'}
                        icon={true}
                        toggleView={true}
-                       hidden={viewingChart}
                        onClick={this.props.toggleChartView}>
               <IconItemChart/>
             </UDNButton>
-            <UDNButton bsStyle="primary"
+            <UDNButton bsStyle={!viewingChart ? 'primary' : 'secondary'}
                        icon={true}
                        toggleView={true}
-                       hidden={!viewingChart}
                        onClick={this.props.toggleChartView}>
               <IconItemList/>
             </UDNButton>
