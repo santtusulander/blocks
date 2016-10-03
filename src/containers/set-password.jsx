@@ -48,7 +48,6 @@ export class SetPassword extends React.Component {
   }
 
   validPassword(password) {
-    console.log(password)
     this.setState({'validPassword': password});
   }
 
