@@ -21,7 +21,7 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
-    '/v2': {
+    '/v3': {
       target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
       secure: false
     },
