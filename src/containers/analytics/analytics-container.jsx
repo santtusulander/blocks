@@ -17,10 +17,9 @@ import AnalyticsFilters from '../../components/analytics/analytics-filters'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 
-import { getTabName } from '../../util/helpers.js'
+import { getTabName, userIsServiceProvider } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
-import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
 
@@ -30,6 +29,7 @@ class AnalyticsContainer extends React.Component {
   constructor(props){
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
+    this.fetchData = this.fetchData.bind(this)
     this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
@@ -79,9 +79,9 @@ class AnalyticsContainer extends React.Component {
     }
 
     // service providers cannot see properties, UDNP-1498
-    const currentUserRole = this.props.user.getIn(['roles', 0], null)
-    const userIsServiceProvider = currentUserRole && currentUserRole === ACCOUNT_TYPE_SERVICE_PROVIDER
-    if (!userIsServiceProvider && (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
+    if (!userIsServiceProvider(this.props.user) &&
+        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group)
+    {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }

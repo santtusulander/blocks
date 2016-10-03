@@ -1,11 +1,13 @@
 import moment from 'moment'
 import numeral from 'numeral'
+import { fromJS } from 'immutable'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
 import { Address4, Address6 } from 'ip-address'
 import PROVIDER_TYPES from '../constants/provider-types.js'
+import { ROLES_MAPPING } from '../constants/account-management-options'
 
 const BYTE_BASE = 1000
 
@@ -316,6 +318,36 @@ export function getRolesForUser(user, roles) {
     userRoles.push([role.id, role.name])
   })
   return userRoles
+}
+
+export function userIsServiceProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.SERVICE_PROVIDER)
+}
+
+export function userIsContentProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.CONTENT_PROVIDER)
+}
+
+export function userIsCloudProvider(user) {
+  return userHasRole(user, PROVIDER_TYPES.CLOUD_PROVIDER)
+}
+
+export function userHasRole(user, roleToFind) {
+  const userRoles = user.get('roles').toJS()
+  const mapping = fromJS(ROLES_MAPPING)
+
+  for (let roleId of userRoles) {
+    const role = mapping.find(role => role.get('id') === roleId)
+    const accountTypes = role.get('accountTypes')
+
+    if (role && accountTypes && accountTypes.size > 0) {
+      if (accountTypes.find(roleId => roleId === roleToFind)) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 export function isValidIPv4Address(address) {
