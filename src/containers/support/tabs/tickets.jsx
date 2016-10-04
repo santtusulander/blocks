@@ -24,7 +24,7 @@ import { Image } from 'react-bootstrap'
 //   getOpenTicketStatuses
 // } from '../../../util/support-helper'
 
-import { ACCOUNT_TYPES } from '../../../constants/account-management-options'
+import { userIsServiceProvider } from '../../../util/helpers.js'
 
 import SectionContainer from '../../../components/layout/section-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -160,13 +160,9 @@ class SupportTabTickets extends React.Component {
   // }
 
   render() {
-    const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
-    const userRole = this.props.currentUser.getIn(['roles', 0])
-    const isSP = accountType && userRole ? accountType.value === 2 && userRole === 3 : false
-
     return (
       <div>
-      {isSP ?
+      {userIsServiceProvider(this.props.currentUser) ?
         <div>
           <SectionHeader sectionHeaderTitle="5 Open Tickets">
             <div className="form-group inline">

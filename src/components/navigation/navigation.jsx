@@ -23,7 +23,7 @@ import {VIEW_ACCOUNT_SECTION,
   VIEW_SERVICES_SECTION,
   VIEW_SUPPORT_SECTION} from '../../constants/permissions'
 
-import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import { userIsServiceProvider } from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -44,9 +44,7 @@ const Navigation = (props) => {
   const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
-  const accountType = ACCOUNT_TYPES.find(type => props.activeAccount.get('provider_type') === type.value)
-  const userRole = props.currentUser.getIn(['roles', 0])
-  const isSP = accountType && userRole ? accountType.value === 2 && userRole === 3 : false
+  const isSP = userIsServiceProvider(props.currentUser)
 
   return (
     <nav className='navigation-sidebar text-sm'>

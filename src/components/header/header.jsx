@@ -18,7 +18,7 @@ import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
 
 import { FormattedMessage } from 'react-intl'
 
-import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+import { userIsServiceProvider } from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -195,9 +195,7 @@ class Header extends React.Component {
         router.push(getContentUrl(...params))
       }
     }
-    const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
-    const isSP = accountType ? accountType.value === 2 : false
-    const logoLink = isSP ?
+    const logoLink = userIsServiceProvider(user) ?
       `/network/udn/${this.props.activeAccount.get('id')}` :
       getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
