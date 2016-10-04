@@ -1,3 +1,4 @@
+import React from 'react'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
@@ -98,25 +99,13 @@ export const UserCanViewDns = (store) => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
       const path = ownProps.location.pathname.replace(/\/dns/, 'accounts')
 
       return `${path}`
     },
     wrapperDisplayName: 'UserCanViewDns',
     predicate: permissionChecker(PERMISSIONS.VIEW_DNS, store),
-    allowRedirectBack: false
-  })
-}
-
-export const UserCanViewHosts = (store) => {
-  return UserAuthWrapper({
-    authSelector: authSelector,
-    failureRedirectPath: (state, ownProps) => {
-      let path = ownProps.location.pathname.replace(/\/$/, '')
-      return path.substr(0, path.lastIndexOf('/'))
-    },
-    wrapperDisplayName: 'UserCanViewHosts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_PROPERTIES, store),
     allowRedirectBack: false
   })
 }

@@ -9,8 +9,7 @@ import {
   UserCanManageAccounts,
   UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
-  UserCanViewDns,
-  UserCanViewHosts
+  UserCanViewDns
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -155,7 +154,7 @@ export const getRoutes = store => {
         <Route component={ContentTransition}>
           <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
           <Route path={routes.contentAccount} component={Groups}/>
-          <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+          <Route path={routes.contentGroup} component={Hosts}/>
         </Route>
         <Route path={routes.contentProperty} component={Property} />
         <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >

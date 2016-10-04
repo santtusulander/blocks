@@ -59,7 +59,7 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
-  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'list', 'allowed'])
+  (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
 
 // Account Permissions
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
