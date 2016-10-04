@@ -29,7 +29,8 @@ function userActionsMaker(cbResponse) {
     }),
     checkToken: jest.genMockFunction().mockImplementation(() => {
       return {payload: {token:null}}
-    })
+    }),
+    saveName: jest.genMockFunction()
   }
 }
 
@@ -54,11 +55,14 @@ describe('Login', () => {
     expect(login.length).toBe(1)
   })
 
-  it('can show / hide password', () => {
-    const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
-    expect(login.find(Input).get(1).props.type).toBe('password')
-    login.instance().togglePasswordVisibility()
-    expect(login.find(Input).get(1).props.type).toBe('text')
+  it('toggles username remember', () => {
+    const login = TestUtils.renderIntoDocument(
+      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
+    )
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(login, 'input')
+    expect(login.state.rememberUsername).toBe(false)
+    TestUtils.Simulate.change(inputs[2])
+    expect(login.state.rememberUsername).toBe(true)
   })
 
   it('maintains form state', () => {
@@ -130,9 +134,10 @@ describe('Login', () => {
         router={fakeRouter}
         intl={intlMaker()}/>
     )
-    login.setState({username: 'aaa', password: 'bbb'})
+    login.setState({username: 'aaa', password: 'bbb', rememberUsername: true})
     const form = TestUtils.findRenderedDOMComponentWithTag(login, 'form')
     TestUtils.Simulate.submit(form)
+    expect(userActions.saveName.mock.calls[0][0]).toBe('aaa')
     expect(rolesActions.fetchRoles.mock.calls.length).toBe(1)
     expect(userActions.fetchUser.mock.calls[0][0]).toBe('aaa')
   })

@@ -4,7 +4,7 @@ import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 import { FormattedMessage } from 'react-intl'
 
-const DeleteDnsRecordModal = ({ itemToDelete, submit, cancel }) =>
+const DeleteDnsRecordModal = ({ itemToDelete, submit, cancel, loading }) =>
   <Modal show={true} className="delete-modal">
     <Modal.Header className="delete-modal-header">
       <h1><FormattedMessage id="portal.dnsRecord.delete.title"/></h1>
@@ -19,9 +19,10 @@ const DeleteDnsRecordModal = ({ itemToDelete, submit, cancel }) =>
         <Button onClick={cancel} className="btn-outline"><FormattedMessage id="portal.button.cancel"/></Button>
         <Button onClick={submit}
                 type="submit"
+                disabled={loading}
                 bsStyle="secondary"
                 className="delete-modal-submit delete-user-submit">
-          <FormattedMessage id="portal.button.delete"/>
+          {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
         </Button>
       </ButtonToolbar>
     </Modal.Footer>
@@ -31,6 +32,7 @@ DeleteDnsRecordModal.propTypes = {
   cancel: PropTypes.func,
   fields: PropTypes.object,
   itemToDelete: PropTypes.string,
+  loading: PropTypes.bool,
   submit: PropTypes.func
 }
 

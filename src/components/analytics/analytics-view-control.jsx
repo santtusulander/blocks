@@ -6,7 +6,6 @@ import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../constants/permissions'
 
-//import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName } from '../../util/helpers.js'
@@ -14,25 +13,6 @@ import { getAnalyticsUrl, getContentUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
 
-/* Not USED atm - will be used when filter dropdown is implemented
- function createDropdownOptions ( opts ) {
- return opts.map(opt => {
- return {
- link: opt.get('id').toString(),
- label: opt.get('name')
- }
- })
- }
-
- function createPropertyDropdownOptions ( opts ){
- return opts.map( opt => {
- return {
- link: opt,
- label: opt
- }
- })
- }
- */
 const AnalyticsViewControl = (props) => {
 
   const {
@@ -84,8 +64,8 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
-      key: 'service-providers',
-      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      key: 'contribution',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
       hideHierarchy: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION,
       titles: {
@@ -128,11 +108,6 @@ const AnalyticsViewControl = (props) => {
     }
   ]
 
-  /*
-   const brandOptions = createOptions( props.brands )
-   const groupDropdownOptions = createDropdownOptions( props.groups )
-   const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
-   */
   let title = "Analytics"
   let active
   if(props.activeTab) {
@@ -237,7 +212,6 @@ AnalyticsViewControl.propTypes = {
   intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object
 }
 
@@ -248,7 +222,6 @@ AnalyticsViewControl.defaultProps = {
   activeHost: Immutable.Map(),
   brands: Immutable.List(),
   groups: Immutable.List(),
-  properties: Immutable.List(),
   params: {}
 }
 
