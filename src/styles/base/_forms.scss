@@ -188,13 +188,15 @@ label {
 
 .inline-form-layout {
   display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
 
-  > .form-group {
+  .form-group {
     width: 50%;
-    margin-right: $form-inline-margin-right;
 
-    &:last-child {
-      margin-right: 0;
+    &:not(:last-child) {
+      margin-right: $form-inline-margin-right;
     }
   }
 }

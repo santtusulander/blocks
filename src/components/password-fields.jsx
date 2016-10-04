@@ -169,52 +169,60 @@ class PasswordFields extends React.Component {
 
     const passwordField = (
       <Input id="password"
-        type={this.state.passwordVisible || !stackedPassword && this.state.confirmVisible ? 'text' : 'password'}
-        placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
         wrapperClassName={passwordWrapperClassName}
         addonBefore={stackedPassword && <IconPassword/>}
         addonAfter={stackedPassword && <a className={'input-addon-link' +
-            (this.state.passwordVisible ? ' active' : '')}
-            onClick={this.togglePasswordVisibility}>
-              <IconEye/>
-          </a>}
-        onFocus={this.passwordFocus(true)}
-        onBlur={this.passwordFocus(false)}
-        value={this.state.password}
-        onChange={this.changePassword} />
-    )
-
-    const confirmationField = (
-      <Input id="confirm"
-        type={this.state.confirmVisible ? 'text' : 'password'}
-        placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
-        wrapperClassName={confirmWrapperClassName}
-        addonBefore={stackedPassword && <IconPassword/>}
-        addonAfter={<a className={'input-addon-link' +
-            (this.state.confirmVisible ? ' active' : '')}
-            onClick={this.toggleConfirmVisibility}>
-              <IconEye/>
-          </a>}
-        onFocus={this.confirmFocus(true)}
-        onBlur={this.confirmFocus(false)}
-        value={this.state.confirm}
-        onChange={this.changeConfirm} />
+          (this.state.passwordVisible ? ' active' : '')}
+          onClick={this.togglePasswordVisibility}>
+            <IconEye/>
+        </a>}>
+        {requirementsTooltip}
+        <input
+          type={this.state.passwordVisible || !stackedPassword && this.state.confirmVisible ? 'text' : 'password'}
+          placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
+          className="form-control"
+          onFocus={this.passwordFocus(true)}
+          onBlur={this.passwordFocus(false)}
+          value={this.state.password}
+          onChange={this.changePassword} />
+      </Input>
     )
 
     const confirmErrorTooltip = (
       showConfirmError ?
-        <Tooltip id="confirm-error" placement="bottom" className="input-tooltip in">
+        <Tooltip id="confirm-error"
+          placement={stackedPassword ? 'bottom' : 'top'}
+          className={(stackedPassword ? 'stacked-tooltip ' : '') + 'input-tooltip in'}>
           <FormattedMessage id="portal.password.passwordDoNotMatch.text"/>
         </Tooltip>
       : null
     )
 
+    const confirmationField = (
+      <Input id="confirm"
+        wrapperClassName={confirmWrapperClassName}
+        addonBefore={stackedPassword && <IconPassword/>}
+        addonAfter={<a className={'input-addon-link' +
+          (this.state.confirmVisible ? ' active' : '')}
+          onClick={this.toggleConfirmVisibility}>
+            <IconEye/>
+        </a>}>
+        {confirmErrorTooltip}
+        <input
+          type={this.state.confirmVisible ? 'text' : 'password'}
+          placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
+          className="form-control"
+          onFocus={this.confirmFocus(true)}
+          onBlur={this.confirmFocus(false)}
+          value={this.state.confirm}
+          onChange={this.changeConfirm} />
+      </Input>
+    )
+
     return (
       <div className={layoutClassName}>
-        {requirementsTooltip}
         {passwordField}
         {confirmationField}
-        {confirmErrorTooltip}
       </div>
     )
   }
