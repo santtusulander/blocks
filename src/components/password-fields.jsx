@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Tooltip } from 'react-bootstrap'
+import classNames from 'classnames'
 
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
@@ -100,7 +101,9 @@ class PasswordFields extends React.Component {
     this.setState({
       confirmValid: validPassword
     })
-    this.props.validPassword(validPassword)
+    if (this.props.validPassword) {
+      this.props.validPassword(validPassword)
+    }
   }
 
   validatePassword(password) {
@@ -124,65 +127,94 @@ class PasswordFields extends React.Component {
   }
 
   render() {
-    const { loginPassword, intl } = this.props
+    const { stackedPassword, inlinePassword, intl } = this.props
     const showPasswordRequirements = this.state.passwordFocus && !this.state.passwordValid
     const showPasswordError = !this.state.passwordValid && !this.state.passwordFocus && this.state.password !== ''
     const showConfirmError = this.state.passwordValid && !this.state.confirmValid && !this.state.confirmFocus && this.state.confirm !== ''
 
+    let passwordWrapperClassName = classNames(
+      {
+        'input-addon-before input-addon-after-outside has-login-label login-label-password': stackedPassword,
+        'invalid': showPasswordError,
+        'valid': this.state.passwordValid,
+        'active': this.state.passwordFocus || this.state.password
+      }
+    )
+
+    let confirmWrapperClassName = classNames(
+      {
+        'input-addon-before has-login-label login-label-confirm': stackedPassword,
+        'invalid': showConfirmError,
+        'valid': this.state.passwordValid && this.state.confirmValid && this.state.confirm !== '',
+        'active': this.state.confirmFocus || this.state.confirm
+      },
+      'input-addon-after-outside'
+    )
+
+    let layoutClassName = classNames(
+      {
+        'inline-form-layout': inlinePassword
+      }
+    )
+
+    const requirementsTooltip = showPasswordRequirements ?
+      <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
+        <span>Requirements:</span><br/>
+        <span className={this.state.passwordLengthValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordLengthValid.text"/></span><br/>
+        <span className={this.state.passwordUppercaseValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordUppercaseValid.text"/></span><br/>
+        <span className={this.state.passwordNumberValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordNumberValid.text"/></span><br/>
+        <span className={this.state.passwordSpecialCharValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordSpecialCharValid.text"/></span>
+      </Tooltip>
+    : null
+
+    const passwordField = (
+      <Input id="password"
+        type={this.state.passwordVisible || !stackedPassword && this.state.confirmVisible ? 'text' : 'password'}
+        placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
+        wrapperClassName={passwordWrapperClassName}
+        addonBefore={stackedPassword && <IconPassword/>}
+        addonAfter={stackedPassword && <a className={'input-addon-link' +
+            (this.state.passwordVisible ? ' active' : '')}
+            onClick={this.togglePasswordVisibility}>
+              <IconEye/>
+          </a>}
+        onFocus={this.passwordFocus(true)}
+        onBlur={this.passwordFocus(false)}
+        value={this.state.password}
+        onChange={this.changePassword} />
+    )
+
+    const confirmationField = (
+      <Input id="confirm"
+        type={this.state.confirmVisible ? 'text' : 'password'}
+        placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
+        wrapperClassName={confirmWrapperClassName}
+        addonBefore={stackedPassword && <IconPassword/>}
+        addonAfter={<a className={'input-addon-link' +
+            (this.state.confirmVisible ? ' active' : '')}
+            onClick={this.toggleConfirmVisibility}>
+              <IconEye/>
+          </a>}
+        onFocus={this.confirmFocus(true)}
+        onBlur={this.confirmFocus(false)}
+        value={this.state.confirm}
+        onChange={this.changeConfirm} />
+    )
+
+    const confirmErrorTooltip = (
+      showConfirmError ?
+        <Tooltip id="confirm-error" placement="bottom" className="input-tooltip in">
+          <FormattedMessage id="portal.password.passwordDoNotMatch.text"/>
+        </Tooltip>
+      : null
+    )
+
     return (
-      <div>
-        {showPasswordRequirements ?
-          <Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
-            <span>Requirements:</span><br/>
-            <span className={this.state.passwordLengthValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordLengthValid.text"/></span><br/>
-            <span className={this.state.passwordUppercaseValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordUppercaseValid.text"/></span><br/>
-            <span className={this.state.passwordNumberValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordNumberValid.text"/></span><br/>
-            <span className={this.state.passwordSpecialCharValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordSpecialCharValid.text"/></span>
-          </Tooltip>
-        : null}
-
-        <Input id="password"
-          type={this.state.passwordVisible ? 'text' : 'password'}
-          placeholder={!loginPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
-          wrapperClassName={loginPassword && ('input-addon-before input-addon-after-outside '
-            + 'has-login-label login-label-password'
-            + (showPasswordError ? ' invalid' : '')
-            + (this.state.passwordValid ? ' valid' : '')
-            + (this.state.passwordFocus || this.state.password ? ' active' : ''))}
-          addonBefore={loginPassword && <IconPassword/>}
-          addonAfter={loginPassword && <a className={'input-addon-link' +
-              (this.state.passwordVisible ? ' active' : '')}
-              onClick={this.togglePasswordVisibility}>
-                <IconEye/>
-            </a>}
-          onFocus={loginPassword && this.passwordFocus(true)}
-          onBlur={loginPassword && this.passwordFocus(false)}
-          value={this.state.password}
-          onChange={this.changePassword} />
-
-        <Input id="confirm"
-          type={this.state.confirmVisible ? 'text' : 'password'}
-          wrapperClassName={loginPassword && ('input-addon-before input-addon-after-outside '
-            + 'has-login-label login-label-confirm'
-            + (showConfirmError ? ' invalid' : '')
-            + (this.state.passwordValid && this.state.confirmValid && this.state.confirm !== '' ? ' valid' : '')
-            + (this.state.confirmFocus || this.state.confirm ? ' active' : ''))}
-          addonBefore={loginPassword && <IconPassword/>}
-          addonAfter={loginPassword && <a className={'input-addon-link' +
-              (this.state.confirmVisible ? ' active' : '')}
-              onClick={this.toggleConfirmVisibility}>
-                <IconEye/>
-            </a>}
-          onFocus={loginPassword && this.confirmFocus(true)}
-          onBlur={loginPassword && this.confirmFocus(false)}
-          value={this.state.confirm}
-          onChange={this.changeConfirm} />
-
-        {showConfirmError ?
-          <Tooltip id="confirm-error" placement="bottom" className="input-tooltip in">
-            <FormattedMessage id="portal.password.passwordDoNotMatch.text"/>
-          </Tooltip>
-        : null}
+      <div className={layoutClassName}>
+        {requirementsTooltip}
+        {passwordField}
+        {confirmationField}
+        {confirmErrorTooltip}
       </div>
     )
   }
@@ -190,8 +222,9 @@ class PasswordFields extends React.Component {
 
 PasswordFields.displayName = 'PasswordFields'
 PasswordFields.propTypes = {
+  inlinePassword: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  loginPassword: React.PropTypes.bool,
+  stackedPassword: React.PropTypes.bool,
   validPassword: React.PropTypes.func
 };
 

@@ -66,7 +66,7 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            <PasswordFields loginPassword={true} validPassword={this.validPassword} />
+            <PasswordFields stackedPassword={true} validPassword={this.validPassword} />
             <Row>
               <Col xs={12}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
