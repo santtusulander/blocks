@@ -1,7 +1,10 @@
 import Papa from 'papaparse'
 import download from 'downloadjs'
 import moment from 'moment'
+import numeral from 'numeral'
 import Immutable from 'immutable'
+
+import { formatBytes } from './helpers'
 
 function filterByServiceType(serviceTypes) {
   return item => serviceTypes.includes(
@@ -9,14 +12,26 @@ function filterByServiceType(serviceTypes) {
   )
 }
 
+const formatContributionData = data => data.reduce((byCountry, provider) => {
+  const countryRecord = provider.countries.map(country => ({
+    provider: provider.name,
+    country: country.name,
+    bytes: country.bytes,
+    percent_total: country.percent_total
+  }))
+  byCountry.push(...countryRecord)
+  return byCountry
+}, [])
+
 function mapTimestamps(item) {
   return item.set('timestamp', moment(item.get('timestamp')).format())
 }
 
 export function createCSVExporters(filenamePart) {
   function generate(name, data) {
+    const jsData = data.toJS ? data.toJS() : data
     download(
-      Papa.unparse(data.toJS()),
+      Papa.unparse(jsData),
       `${name} - ${filenamePart}.csv`,
       'text/csv'
     )
@@ -43,15 +58,14 @@ export function createCSVExporters(filenamePart) {
         }))
       generate('On Off Net', data)
     },
-    'contribution': onOffNet => {
-      const data = onOffNet
-        .map(item => Immutable.Map({
-          timestamp: moment(item.get('timestamp')).format(),
-          on_net: item.getIn(['net_on', 'bytes']),
-          off_net: item.getIn(['net_off', 'bytes']),
-          total: item.get('total')
-        }))
-      generate('Service Provider', data)
+    'contribution': data => {
+      const toExport = formatContributionData(data).map(({ country, provider, bytes, percent_total }) => ({
+        country,
+        provider,
+        bytes: formatBytes(bytes),
+        percent_total: numeral(percent_total).format('0%')
+      }))
+      generate('Service Provider', toExport)
     },
     'file-error': (fileErrorURLs, serviceTypes) => {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
