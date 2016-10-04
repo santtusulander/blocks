@@ -3,7 +3,7 @@ import { reduxForm } from 'redux-form'
 import { Button, ButtonToolbar, Col, Input, Row } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 // import moment from 'moment'
-
+import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
 import IconEye from '../icons/icon-eye.jsx'
 // import IconUser from '../icons/icon-user.jsx'
@@ -245,6 +245,10 @@ class UserEditForm extends React.Component {
 
                 {this.state.showPasswordField || savingPassword ?
                   <div>
+                    <Col xs={6}>
+                      <PasswordFields inlinePassword={true} />                      
+                    </Col>
+                    {/*
                     <Col xs={3}>
                       <Input
                         {...password}
@@ -269,7 +273,7 @@ class UserEditForm extends React.Component {
                           </a>
                         }/>
                     </Col>
-
+                    */}
                     <Col xs={3} xsOffset={1}>
                       <ButtonToolbar>
                         <Button
