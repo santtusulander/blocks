@@ -113,7 +113,7 @@ const AnalyticsFilters = (props) => {
     spFilterOptions = ['sp-account','sp-group']
   } else if (userIsCloudProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
-    spFilterOptions = ['sp-group']
+    spFilterOptions = ['sp-account','sp-group']
   }
 
   // the following hides certain dropdowns based on GAS status and current user role
