@@ -189,7 +189,10 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       net_type: netType,
       status_codes: statusCodes || errorCodes
     }
-  } else if (accountType === PROVIDER_TYPES.SERVICE_PROVIDER) {
+  } else if (
+    accountType === PROVIDER_TYPES.SERVICE_PROVIDER ||
+    accountType === PROVIDER_TYPES.CLOUD_PROVIDER
+  ) {
     return {
       sp_account: params.account,
       brand: params.brand,
