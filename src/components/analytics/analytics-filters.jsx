@@ -117,7 +117,10 @@ const AnalyticsFilters = (props) => {
   }
 
   // the following hides certain dropdowns based on GAS status and current user role
-  if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
+  if (
+    activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER ||
+    activeAccountProviderType === ProviderTypes.CLOUD_PROVIDER
+  ) {
     spFilterOptions = []
   } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
     cpFilterOptions = []
