@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
+import { getAnalyticsUrl, getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
@@ -100,7 +100,12 @@ export class Groups extends React.Component {
       return getContentUrl('group', groupID, this.props.params)
     }
     const analyticsURLBuilder = (...groupID) => {
-      return getAnalyticsUrl('group', groupID, this.props.params)
+      //link needs to be constructed to allowed tab, thats why roles and user is needed
+      const groupParams = {
+        ...this.props.params,
+        group: groupID
+      }
+      return getAnalyticsUrlFromParams(groupParams, this.props.user.get('currentUser'), this.props.roles)
     }
 
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
