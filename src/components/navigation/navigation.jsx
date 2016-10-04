@@ -8,6 +8,7 @@ import {
   getAnalyticsUrlFromParams,
   getContentUrlFromParams,
   getDashboardUrlFromParams,
+  getNetworkUrlFromParams,
   getServicesUrlFromParams,
   getSupportUrlFromParams,
   getSecurityUrlFromParams
@@ -53,20 +54,25 @@ const Navigation = (props) => {
 
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
-        <IsAllowed to={VIEW_CONTENT_SECTION}>
+        <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
             <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
               <IconContent />
               <span>
-                {isSP ?
-                  <FormattedMessage id="portal.navigation.network.text"/>
-                :
-                  <FormattedMessage id="portal.navigation.content.text"/>
-                }
+                <FormattedMessage id="portal.navigation.content.text"/>
               </span>
             </Link>
           </li>
         </IsAllowed>
+
+        {isSP &&
+          <li>
+            <Link to={getNetworkUrlFromParams(params)} activeClassName="active">
+              <IconContent />
+              <span><FormattedMessage id="portal.navigation.network.text"/></span>
+            </Link>
+          </li>
+        }
 
         {isSP &&
           <li>

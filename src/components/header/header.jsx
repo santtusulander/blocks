@@ -18,6 +18,8 @@ import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
 
 import { FormattedMessage } from 'react-intl'
 
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -148,6 +150,8 @@ class Header extends React.Component {
       links.push( {label:  'Support'} )
     } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
       links.push( {label:  'Configuration'} )
+    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
+      links.push( {label:  'Network'} )
     } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
       links.push( {label:  'Dashboard'} )
     }
@@ -185,10 +189,17 @@ class Header extends React.Component {
         router.push(getUrl('/security', ...params))
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
+      } else if(router.isActive('/network')) {
+        router.push(getContentUrl(...params))
       } else if(router.isActive('/dashboard')) {
         router.push(getContentUrl(...params))
       }
     }
+    const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
+    const isSP = accountType ? accountType.value === 2 : false
+    const logoLink = isSP ?
+      `/network/udn/${this.props.activeAccount.get('id')}` :
+      getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -205,10 +216,7 @@ class Header extends React.Component {
                 </Link>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <Link to={getRoute('contentAccount', {
-                  brand: 'udn',
-                  account: user.get('account_id')
-                })} className="logo">
+                <Link to={logoLink} className="logo">
                   <IconEricsson />
                 </Link>
               </IsAllowed>

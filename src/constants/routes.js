@@ -74,5 +74,8 @@ module.exports = {
   // TEMP UDNP-1545
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
-  dashboardAccount: '/dashboard/:brand/:account'
+  dashboardAccount: '/dashboard/:brand/:account',
+  network: '/network',
+  networkBrand: '/network/:brand',
+  networkAccount: '/network/:brand/:account'
 }
