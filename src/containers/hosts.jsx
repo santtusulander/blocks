@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
+import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -77,7 +77,7 @@ export class Hosts extends React.Component {
   render() {
     const params = this.props.params
     const { brand, account, group } = this.props.params
-    const { activeAccount, activeGroup } = this.props
+    const { activeAccount, activeGroup, roles, user } = this.props
     const propertyNames = this.props.propertyNames.size ?
       this.props.propertyNames : this.props.hosts
     const properties = propertyNames.map(host => {
@@ -93,7 +93,11 @@ export class Hosts extends React.Component {
       return getContentUrl('propertyConfiguration', property, params)
     }
     const analyticsURLBuilder = (...property) => {
-      return getAnalyticsUrl('property', property, params)
+      return getAnalyticsUrlFromParams(
+        {...this.props.params, property},
+        user.get('currentUser'),
+        roles
+      )
     }
     const breadcrumbs = [
       {
@@ -123,7 +127,7 @@ export class Hosts extends React.Component {
         headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
         ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
         // TODO: We need to use published_hosts permissions from the north API
-        // instead of groups permissions, but they don't exist yet.
+        // instead of groups permissions, but they dont exist yet.
         isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
