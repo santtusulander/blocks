@@ -1,6 +1,7 @@
 import { getRoute } from '../routes.jsx'
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
 import checkPermissions from './permissions'
+import VIEW_CONTENT_PROPERTIES from '../constants/permissions'
 
 export function getUrl(baseUrl, linkType, val, params) {
   const { brand, account, group } = params;
@@ -97,13 +98,14 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   }
 }
 
-export function getContentUrlFromParams(params) {
+export function getContentUrlFromParams(params, currentUser, roles) {
   const { brand, account, group, property } = params,
-    baseUrl = getRoute('content')
+    baseUrl = getRoute('content'),
+    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES)
 
   if (property) {
     return `${baseUrl}/${brand}/${account}/${group}/${property}`
-  } else if (group) {
+  } else if (group && canListProperties) {
     return `${baseUrl}/${brand}/${account}/${group}`
   } else if (account) {
     return `${baseUrl}/${brand}/${account}`
