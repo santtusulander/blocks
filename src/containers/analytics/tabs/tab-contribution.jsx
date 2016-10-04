@@ -24,7 +24,7 @@ class AnalyticsTabContribution extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if (this.props.activeAccount !== nextProps.activeAccount) {
-      filterActionCreators.resetFilters()
+      this.props.filterActions.resetFilters()
     }
 
     if (changedParamsFiltersQS(this.props, nextProps) ||
