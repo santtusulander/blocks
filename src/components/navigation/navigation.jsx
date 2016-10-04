@@ -56,7 +56,7 @@ const Navigation = (props) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
-            <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
+            <Link to={getContentUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive}>
               <IconContent />
               <span>
                 <FormattedMessage id="portal.navigation.content.text"/>

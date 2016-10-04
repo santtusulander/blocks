@@ -8,7 +8,7 @@ import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
 import * as filterActionCreators from '../../../redux/modules/filters'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import {buildAnalyticsOptsForContribution, changedParamsFiltersQS} from '../../../util/helpers.js'
+import { buildAnalyticsOptsForContribution, changedParamsFiltersQS, userIsCloudProvider } from '../../../util/helpers.js'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
@@ -79,25 +79,24 @@ class AnalyticsTabContribution extends React.Component {
       }
 
       fetchDataAction = this.props.trafficActions.fetchServiceProviders
-    } else if (
-      accountType === ProviderTypes.SERVICE_PROVIDER ||
-      accountType === ProviderTypes.CLOUD_PROVIDER
-    ) {
+    } else {
       this.props.filterActions.fetchContentProvidersWithTrafficForSP(
         params.brand,
         fetchOpts
       )
 
-      if (filters.get('contentProviders').size === 1) {
-        const cpAccount = filters.getIn(['contentProviders', 0])
-        const filterFetchOpts = Object.assign({}, fetchOpts)
-        delete filterFetchOpts.cp_account_ids
+      if (userIsCloudProvider(this.props.currentUser)) {
+        if (filters.get('contentProviders').size === 1) {
+          const cpAccount = filters.getIn(['contentProviders', 0])
+          const filterFetchOpts = Object.assign({}, fetchOpts)
+          delete filterFetchOpts.cp_account_ids
 
-        this.props.filterActions.fetchContentProviderGroupsWithTrafficForSP(
-          params.brand,
-          cpAccount,
-          filterFetchOpts
-        )
+          this.props.filterActions.fetchContentProviderGroupsWithTrafficForSP(
+            params.brand,
+            cpAccount,
+            filterFetchOpts
+          )
+        }
       }
 
       fetchDataAction = this.props.trafficActions.fetchContentProviders
@@ -135,6 +134,7 @@ AnalyticsTabContribution.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: React.PropTypes.instanceOf(Immutable.Map),
@@ -146,6 +146,7 @@ AnalyticsTabContribution.propTypes = {
 
 AnalyticsTabContribution.defaultProps = {
   accounts: Immutable.List(),
+  currentUser: Immutable.Map(),
   filters: Immutable.Map(),
   contribution: Immutable.List()
 }
@@ -158,7 +159,8 @@ function mapStateToProps(state) {
     fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
     accounts: state.account.get('allAccounts'),
-    filters: state.filters.get('filters')
+    filters: state.filters.get('filters'),
+    currentUser: state.user.get('currentUser')
   }
 }
 
