@@ -23,10 +23,15 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    if (this.props.activeAccount !== nextProps.activeAccount) {
+      this.props.filterActions.resetContributionFilters()
+    }
+
     if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
       this.props.filters !== nextProps.filters ||
-      this.props.accountType !== nextProps.accountType
+      this.props.accountType !== nextProps.accountType ||
+      this.props.activeAccount !== nextProps.activeAccount
     ) {
       this.fetchData(
         nextProps.params,
@@ -36,6 +41,10 @@ class AnalyticsTabContribution extends React.Component {
         nextProps.accountType
       )
     }
+  }
+
+  componentWillUnmount() {
+    this.props.filterActions.resetContributionFilters()
   }
 
   fetchData(params, filters, location, hostConfiguredName, accountType){
@@ -52,8 +61,6 @@ class AnalyticsTabContribution extends React.Component {
     let fetchDataAction
 
     if (accountType === ProviderTypes.CONTENT_PROVIDER) {
-      this.props.filterActions.fetchContentProviderGroups(params.brand, params.account)
-
       this.props.filterActions.fetchServiceProvidersWithTrafficForCP(
         params.brand,
         fetchOpts
@@ -72,9 +79,10 @@ class AnalyticsTabContribution extends React.Component {
       }
 
       fetchDataAction = this.props.trafficActions.fetchServiceProviders
-    } else if (accountType === ProviderTypes.SERVICE_PROVIDER) {
-      this.props.filterActions.fetchServiceProviderGroups(params.brand, params.account)
-
+    } else if (
+      accountType === ProviderTypes.SERVICE_PROVIDER ||
+      accountType === ProviderTypes.CLOUD_PROVIDER
+    ) {
       this.props.filterActions.fetchContentProvidersWithTrafficForSP(
         params.brand,
         fetchOpts
@@ -103,9 +111,9 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render(){
-    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
-    if (this.props.accountType === ProviderTypes.SERVICE_PROVIDER) {
-      sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
+    if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
+      sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
     }
 
     return (
@@ -124,6 +132,7 @@ class AnalyticsTabContribution extends React.Component {
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
@@ -144,6 +153,7 @@ AnalyticsTabContribution.defaultProps = {
 function mapStateToProps(state) {
   return {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
+    activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
