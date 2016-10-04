@@ -177,3 +177,15 @@ export function getSecurityUrlFromParams(params) {
     return getRoute('securityBrand', { brand: 'udn' })
   }
 }
+
+export function getDashboardUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('dashboardAccount', params)
+  } else if (brand) {
+    return getRoute('dashboardBrand', params)
+  } else {
+    return getRoute('dashboardBrand', { brand: 'udn' })
+  }
+}

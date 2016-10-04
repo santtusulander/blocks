@@ -490,6 +490,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.services.text': 'Services',
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
+  'portal.navigation.network.text': 'Network',
 
   'portal.security.header.text': 'SECURITY',
 

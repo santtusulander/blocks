@@ -7,6 +7,7 @@ import {
   getAccountManagementUrlFromParams,
   getAnalyticsUrlFromParams,
   getContentUrlFromParams,
+  getDashboardUrlFromParams,
   getServicesUrlFromParams,
   getSupportUrlFromParams,
   getSecurityUrlFromParams
@@ -21,9 +22,12 @@ import {VIEW_ACCOUNT_SECTION,
   VIEW_SERVICES_SECTION,
   VIEW_SUPPORT_SECTION} from '../../constants/permissions'
 
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
+
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
 import IconContent from '../icons/icon-content.jsx'
+import IconDashboard from '../icons/icon-dashboard.jsx'
 import IconServices from '../icons/icon-services.jsx'
 import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
@@ -39,19 +43,39 @@ const Navigation = (props) => {
   const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
+  const accountType = ACCOUNT_TYPES.find(type => props.activeAccount.get('provider_type') === type.value)
+  const userRole = props.currentUser.getIn(['roles', 0])
+  const isSP = accountType && userRole ? accountType.value === 2 && userRole === 3 : false
+
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
+
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION}>
           <li>
             <Link to={getContentUrlFromParams(params)} activeClassName="active" className={contentActive}>
               <IconContent />
-              <span><FormattedMessage id="portal.navigation.content.text"/></span>
+              <span>
+                {isSP ?
+                  <FormattedMessage id="portal.navigation.network.text"/>
+                :
+                  <FormattedMessage id="portal.navigation.content.text"/>
+                }
+              </span>
             </Link>
           </li>
         </IsAllowed>
+
+        {isSP &&
+          <li>
+            <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
+              <IconDashboard />
+              <span>Dashboard</span>
+            </Link>
+          </li>
+        }
 
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
@@ -105,6 +129,7 @@ const Navigation = (props) => {
 
 Navigation.displayName = 'Navigation'
 Navigation.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
