@@ -15,7 +15,8 @@ function mapTimestamps(item) {
 
 export function createCSVExporters(filenamePart) {
   function generate(name, data = {}) {
-    const jsData = data.toJS ? data.toJS() : data
+    const jsData = data instanceof Immutable.List || data instanceof Immutable.Map
+    ? data.toJS() : data
     download(
       Papa.unparse(jsData),
       `${name} - ${filenamePart}.csv`,
