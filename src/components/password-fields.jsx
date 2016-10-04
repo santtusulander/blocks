@@ -134,11 +134,12 @@ class PasswordFields extends React.Component {
 
     let passwordWrapperClassName = classNames(
       {
-        'input-addon-before input-addon-after-outside has-login-label login-label-password': stackedPassword,
+        'input-addon-before input-addon-after-outside has-login-label': stackedPassword,
         'invalid': showPasswordError,
         'valid': this.state.passwordValid,
         'active': this.state.passwordFocus || this.state.password
-      }
+      },
+      'login-label-password'
     )
 
     let confirmWrapperClassName = classNames(
@@ -171,14 +172,15 @@ class PasswordFields extends React.Component {
       <Input id="password"
         wrapperClassName={passwordWrapperClassName}
         addonBefore={stackedPassword && <IconPassword/>}
-        addonAfter={stackedPassword && <a className={'input-addon-link' +
-          (this.state.passwordVisible ? ' active' : '')}
+        addonAfter={stackedPassword && <a
+          className={'input-addon-link' +
+          (this.state.confirmVisible ? ' active' : '')}
           onClick={this.togglePasswordVisibility}>
             <IconEye/>
         </a>}>
         {requirementsTooltip}
         <input
-          type={this.state.passwordVisible || !stackedPassword && this.state.confirmVisible ? 'text' : 'password'}
+          type={this.state.passwordVisible || (!stackedPassword && this.state.confirmVisible) ? 'text' : 'password'}
           placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
           className="form-control"
           onFocus={this.passwordFocus(true)}
@@ -202,7 +204,8 @@ class PasswordFields extends React.Component {
       <Input id="confirm"
         wrapperClassName={confirmWrapperClassName}
         addonBefore={stackedPassword && <IconPassword/>}
-        addonAfter={<a className={'input-addon-link' +
+        addonAfter={<a
+          className={'input-addon-link' +
           (this.state.confirmVisible ? ' active' : '')}
           onClick={this.toggleConfirmVisibility}>
             <IconEye/>
