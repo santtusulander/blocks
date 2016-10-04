@@ -24,7 +24,7 @@ class AnalyticsTabContribution extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if (this.props.activeAccount !== nextProps.activeAccount) {
-      this.props.filterActions.resetFilters()
+      this.props.filterActions.resetContributionFilters()
     }
 
     if (changedParamsFiltersQS(this.props, nextProps) ||
@@ -41,6 +41,10 @@ class AnalyticsTabContribution extends React.Component {
         nextProps.accountType
       )
     }
+  }
+
+  componentWillUnmount() {
+    this.props.filterActions.resetContributionFilters()
   }
 
   fetchData(params, filters, location, hostConfiguredName, accountType){

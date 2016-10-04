@@ -73,6 +73,21 @@ export function resetDefaults(state) {
   return state.merge(initialState)
 }
 
+export function resetContributionDefaults(state) {
+  state = state.setIn(['filters', 'contentProviders'], Immutable.List())
+  state = state.setIn(['filters', 'contentProviderGroups'], Immutable.List())
+  state = state.setIn(['filters', 'contentProviderProperties'], Immutable.List())
+  state = state.setIn(['filters', 'serviceProviders'], Immutable.List())
+  state = state.setIn(['filters', 'serviceProviderGroups'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviders'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviderGroups'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviderProperties'], Immutable.List())
+  state = state.setIn(['filterOptions', 'serviceProviders'], Immutable.List())
+  state = state.setIn(['filterOptions', 'serviceProviderGroups'], Immutable.List())
+
+  return state
+}
+
 export function fetchServiceProvidersSuccess(state, action) {
   const data = action.payload.data
   const sortedData = data.sort((lhs, rhs) => {
@@ -259,6 +274,7 @@ export function fetchCPGroupsforSPFailure(state) {
 
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
 const RESET_FILTERS = 'RESET_FILTERS'
+const RESET_CONTRIBUTION_FILTERS = 'RESET_CONTRIBUTION_FILTERS'
 const SERVICE_PROVIDERS_FETCHED = 'SERVICE_PROVIDERS_FETCHED'
 const SERVICE_PROVIDER_GROUPS_FETCHED = 'SERVICE_PROVIDER_GROUPS_FETCHED'
 const SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED = 'SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED'
@@ -271,6 +287,7 @@ const CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED = 'CONTENT_PROVIDER_GR
 export default handleActions({
   SET_FILTER_VALUE: setValue,
   RESET_FILTERS: resetDefaults,
+  RESET_CONTRIBUTION_FILTERS: resetContributionDefaults,
   SERVICE_PROVIDERS_FETCHED: mapReducers(fetchServiceProvidersSuccess, fetchServiceProvidersFailure),
   CONTENT_PROVIDERS_FETCHED: mapReducers(fetchContentProvidersSuccess, fetchContentProvidersFailure),
   SERVICE_PROVIDER_GROUPS_FETCHED: mapReducers(fetchServiceProviderGroupsSuccess, fetchServiceProviderGroupsFailure),
@@ -285,6 +302,7 @@ export default handleActions({
 
 export const setFilterValue = createAction(SET_FILTER_VALUE)
 export const resetFilters = createAction(RESET_FILTERS)
+export const resetContributionFilters = createAction(RESET_CONTRIBUTION_FILTERS)
 
 export const fetchServiceProviders = createAction(SERVICE_PROVIDERS_FETCHED, (brand) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_SERVICE_PROVIDER}`)
