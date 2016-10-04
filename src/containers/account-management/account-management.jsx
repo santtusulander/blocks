@@ -80,6 +80,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
     else if(this.props.accounts.size) {
+      this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
     }
   }
@@ -90,6 +91,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
     else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+      this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
   }

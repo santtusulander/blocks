@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase, mapReducers} from '../util'
+import {BASE_URL_AAA, mapReducers} from '../util'
 
 const CONTENT_FETCHED = 'CONTENT_FETCHED'
 const CONTENT_START_FETCH = 'CONTENT_START_FETCH'
@@ -71,7 +71,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchContent = createAction(CONTENT_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/content`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/content`)
   .then((res) => {
     if(res) {
       return res.data;

@@ -2,9 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisFileError from '../../../components/analysis/file-error'
 
+import * as filterActionCreators from '../../../redux/modules/filters'
 import * as reportsActionCreators from '../../../redux/modules/reports'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
 
@@ -21,7 +23,9 @@ class AnalyticsTabFileError extends React.Component {
   componentWillReceiveProps(nextProps){
     if( this.props.filters !== nextProps.filters ||
       changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+      this.props.filters.get('statusCodes') !== nextProps.filters.get('statusCodes') ||
+      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')) {
       this.fetchData(
         nextProps.params,
         nextProps.filters,
@@ -29,6 +33,10 @@ class AnalyticsTabFileError extends React.Component {
         nextProps.activeHostConfiguredName
       )
     }
+  }
+
+  componentWillUnmount() {
+    this.props.filterActions.resetFilters()
   }
 
   fetchData(params, filters, location, hostConfiguredName){
@@ -43,7 +51,7 @@ class AnalyticsTabFileError extends React.Component {
 
   render(){
     if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
-      <p>No error data found.</p>
+      <FormattedMessage id="portal.analytics.fileErrors.noData.text" />
     )
 
     return (
@@ -61,6 +69,7 @@ AnalyticsTabFileError.propTypes = {
   fetching: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
+  filterActions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -88,6 +97,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    filterActions: bindActionCreators(filterActionCreators, dispatch),
     reportsActions: bindActionCreators(reportsActionCreators, dispatch)
   }
 }
