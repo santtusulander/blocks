@@ -23,10 +23,15 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    if (this.props.activeAccount !== nextProps.activeAccount) {
+      filterActionCreators.resetFilters()
+    }
+
     if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
       this.props.filters !== nextProps.filters ||
-      this.props.accountType !== nextProps.accountType
+      this.props.accountType !== nextProps.accountType ||
+      this.props.activeAccount !== nextProps.activeAccount
     ) {
       this.fetchData(
         nextProps.params,
@@ -127,6 +132,7 @@ class AnalyticsTabContribution extends React.Component {
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
@@ -147,6 +153,7 @@ AnalyticsTabContribution.defaultProps = {
 function mapStateToProps(state) {
   return {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
+    activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
