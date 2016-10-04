@@ -1,12 +1,17 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
-import { List, Map, fromJS } from 'immutable'
+import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 import ProviderTypes from '../../constants/provider-types'
+import {
+  userIsServiceProvider,
+  userIsContentProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterContentProvider from '../analysis/filters/content-provider.jsx'
@@ -91,10 +96,8 @@ StatusCodes.propTypes = {
 
 const AnalyticsFilters = (props) => {
   const {
-    filters,
     activeAccountProviderType,
-    currentUserRole,
-    params: { account, group, property }
+    currentUser
   } = props
 
   /* Filter options for FilterServiceProvider and FilterContentProvider */
@@ -274,6 +277,7 @@ const AnalyticsFilters = (props) => {
 
 AnalyticsFilters.propTypes = {
   activeAccountProviderType: PropTypes.number,
+  activeUser: PropTypes.instanceOf(Map),
   currentUserRole: PropTypes.number,
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
