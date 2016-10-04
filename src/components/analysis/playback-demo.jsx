@@ -2,7 +2,7 @@ import React from 'react'
 import Hls from 'hls.js'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import { isSafari } from '../../util/helpers'
+import { isSafari } from '../../util/validators'
 import AnalysisByKey from './by-key'
 
 import { FormattedMessage } from 'react-intl'

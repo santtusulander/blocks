@@ -21,7 +21,8 @@ import ArrayTd from '../../../components/array-td/array-td'
 import UDNButton from '../../../components/button'
 
 import { checkForErrors } from '../../../util/helpers'
-import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+import { isValidAccountName } from '../../../util/validators'
+
 
 import { FormattedMessage } from 'react-intl'
 import IsAllowed from '../../../components/is-allowed'
@@ -116,7 +117,7 @@ class AccountManagementAccountGroups extends React.Component {
           errorText: 'That group name is taken'
         },
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          condition: !isValidAccountName(name),
           errorText: <div>{['Group name is invalid.', <div key={name}>
                                                         <div style={{marginTop: '0.5em'}}>
                                                           <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />

@@ -3,6 +3,8 @@ import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
 
+import { isEmail, isInLength } from '../../util/validators'
+
 import UDNButton from '../button'
 
 import './soa-edit.form.scss'
@@ -26,19 +28,19 @@ const validate = values => {
   if(!personResponsible) {
     errors.personResponsible = 'Required'
   }
-  else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i.test(personResponsible)) {
+  else if(!isEmail(personResponsible)) {
     errors.personResponsible = 'Invalid input'
   }
   if(!zoneSerialNumber) {
     errors.zoneSerialNumber = 'Required'
   }
-  else if(!/^[0-9]{1,20}$/i.test(zoneSerialNumber)) {
+  else if(!isInLength(zoneSerialNumber, 20)) {
     errors.zoneSerialNumber = 'Invalid input'
   }
   if(!refresh) {
     errors.refresh = 'Required'
   }
-  else if(!/^[0-9]{1,10}$/i.test(refresh)) {
+  else if(!isInLength(refresh)) {
     errors.refresh = 'Invalid input'
   }
   return errors

@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
 
 import Select from './select'
+import { isEmail } from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
@@ -77,8 +78,7 @@ class PurgeModal extends React.Component {
   }
   validateEmail() {
     if(this.props.activePurge.get('feedback') &&
-      (!this.props.activePurge.getIn(['feedback','email']) ||
-      !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(this.props.activePurge.getIn(['feedback','email'])))) {
+      (!this.props.activePurge.getIn(['feedback', 'email']) || !isEmail(this.props.activePurge.getIn(['feedback', 'email'])))) {
       this.setState({
         purgeEmailError: 'Enter a valid Email address'
       })
