@@ -277,7 +277,7 @@ const AnalyticsFilters = (props) => {
 
 AnalyticsFilters.propTypes = {
   activeAccountProviderType: PropTypes.number,
-  activeUser: PropTypes.instanceOf(Map),
+  currentUser: PropTypes.instanceOf(Map),
   currentUserRole: PropTypes.number,
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
