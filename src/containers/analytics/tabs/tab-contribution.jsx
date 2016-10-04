@@ -61,8 +61,6 @@ class AnalyticsTabContribution extends React.Component {
     let fetchDataAction
 
     if (accountType === ProviderTypes.CONTENT_PROVIDER) {
-      this.props.filterActions.fetchContentProviderGroups(params.brand, params.account)
-
       this.props.filterActions.fetchServiceProvidersWithTrafficForCP(
         params.brand,
         fetchOpts
@@ -85,8 +83,6 @@ class AnalyticsTabContribution extends React.Component {
       accountType === ProviderTypes.SERVICE_PROVIDER ||
       accountType === ProviderTypes.CLOUD_PROVIDER
     ) {
-      this.props.filterActions.fetchServiceProviderGroups(params.brand, params.account)
-
       this.props.filterActions.fetchContentProvidersWithTrafficForSP(
         params.brand,
         fetchOpts
