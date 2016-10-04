@@ -62,7 +62,6 @@
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
     "intl": "^1.2.5",
-    "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
