@@ -1,5 +1,7 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
+import { Image } from 'react-bootstrap'
 // import { connect } from 'react-redux'
 // import { withRouter } from 'react-router'
 // import { bindActionCreators } from 'redux'
@@ -22,7 +24,18 @@ import { FormattedMessage } from 'react-intl'
 //   getOpenTicketStatuses
 // } from '../../../util/support-helper'
 
+import { ACCOUNT_TYPES } from '../../../constants/account-management-options'
+
+import SectionContainer from '../../../components/layout/section-container'
+import SectionHeader from '../../../components/layout/section-header'
+import SelectWrapper from '../../../components/select-wrapper'
+import UDNButton from '../../../components/button'
+import IconAdd from '../../../components/icons/icon-add.jsx'
+
 import './tickets.scss'
+
+import '../../../assets/img/temp-support-open-tickets.png'
+import '../../../assets/img/temp-support-closed-tickets.png'
 
 // Most of the code in here has been disabled until we get Zendesk integration working
 class SupportTabTickets extends React.Component {
@@ -147,16 +160,51 @@ class SupportTabTickets extends React.Component {
   // }
 
   render() {
+    const accountType = ACCOUNT_TYPES.find(type => this.props.activeAccount.get('provider_type') === type.value)
+    const userRole = this.props.currentUser.getIn(['roles', 0])
+    const isSP = accountType && userRole ? accountType.value === 2 && userRole === 3 : false
+
     return (
-      <div className="account-support-tickets text-center">
-        <p className="lead"><FormattedMessage id="portal.support.tickets.body.text" values={{br: <br/>}}/></p>
-        <p>
-          <a href="http://support.ericssonudn.com/"
-            target="_blank"
-            className="btn btn-primary">
-            <FormattedMessage id="portal.support.tickets.body.link" />
-          </a>
-        </p>
+      <div>
+      {isSP ?
+        <div>
+          <SectionHeader sectionHeaderTitle="5 Open Tickets">
+            <div className="form-group inline">
+              <SelectWrapper options={[[1, 'All Types'], [2, 'Alerts']]} value={1}/>
+            </div>
+            <div className="form-group inline">
+              <SelectWrapper options={[[1, 'All Priorities'], [2, 'Critical']]} value={1}/>
+            </div>
+            <UDNButton bsStyle="success" icon={true} addNew={true}>
+              <IconAdd/>
+            </UDNButton>
+          </SectionHeader>
+          <SectionContainer>
+            <Image
+              className="center-block"
+              responsive={true}
+              src="../../../assets/img/temp-support-open-tickets.png"/>
+          </SectionContainer>
+          <SectionHeader sectionHeaderTitle="5 Closed Tickets" />
+          <SectionContainer>
+            <Image
+              className="center-block"
+              responsive={true}
+              src="../../../assets/img/temp-support-closed-tickets.png"/>
+          </SectionContainer>
+        </div>
+      :
+        <div className="account-support-tickets text-center">
+          <p className="lead"><FormattedMessage id="portal.support.tickets.body.text" values={{br: <br/>}}/></p>
+          <p>
+            <a href="http://support.ericssonudn.com/"
+              target="_blank"
+              className="btn btn-primary">
+              <FormattedMessage id="portal.support.tickets.body.link" />
+            </a>
+          </p>
+        </div>
+      }
       </div>
     )
   }
@@ -212,6 +260,8 @@ class SupportTabTickets extends React.Component {
 
 SupportTabTickets.displayName = 'SupportTabTickets'
 SupportTabTickets.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  currentUser: React.PropTypes.instanceOf(Immutable.Map)
   // allTickets: PropTypes.Array,
   // supportActions: PropTypes.object,
   // uiActions: PropTypes.object
