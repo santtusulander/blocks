@@ -38,12 +38,14 @@ class UserEditForm extends React.Component {
     super(props)
 
     this.state = {
-      passwordVisible: false
+      passwordVisible: false,
+      validPassword: false
     }
 
     this.save = this.save.bind(this)
     this.resetPassword = this.resetPassword.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.changePassword = this.changePassword.bind(this)
   }
 
   save() {
@@ -84,6 +86,14 @@ class UserEditForm extends React.Component {
     })
   }
 
+  changePassword(isPasswordValid, password) {
+    this.setState({
+      'validPassword': isPasswordValid
+    });
+
+    this.props.fields.password.value = password
+  }
+
   render() {
     const {
       fields: {
@@ -91,7 +101,6 @@ class UserEditForm extends React.Component {
         first_name,
         last_name,
         password,
-        confirm,
         phone_number,
         role
       },
@@ -164,7 +173,7 @@ class UserEditForm extends React.Component {
           <Row>
             <Col xs={11}>
               <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
-              <PasswordFields inlinePassword={true} {...password} />
+              <PasswordFields inlinePassword={true} changePassword={this.changePassword} passwordField={password} />
               {/*
               <Row>
                 <Col xs={6}>
@@ -221,7 +230,7 @@ class UserEditForm extends React.Component {
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
+          <Button disabled={!!Object.keys(errors).length || !this.state.validPassword} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
