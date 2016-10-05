@@ -53,18 +53,18 @@ class AnalysisURLList extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredURLs = urls.filter((url, i) => {
+    const sortedURLs = this.sortedData(
+      urls,
+      this.state.sortBy,
+      this.state.sortDir
+    )
+    const filteredURLs = sortedURLs.filter((url, i) => {
       if (i >= 15) {
         return false;
       }
 
       return url.get('url').toLowerCase().includes(searchState.toLowerCase())
     })
-    const sortedURLs = this.sortedData(
-      filteredURLs,
-      this.state.sortBy,
-      this.state.sortDir
-    )
 
 
     return (
@@ -87,7 +87,7 @@ class AnalysisURLList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {sortedURLs.map((url, i) => {
+            {filteredURLs.map((url, i) => {
               const bytesOfMax = (url.get('bytes') / maxBytes) * 100
               const reqsOfMax = (url.get('requests') / maxReqs) * 100
               return (
