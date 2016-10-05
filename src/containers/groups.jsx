@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
+import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
+import { userIsServiceProvider } from '../util/helpers.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
@@ -94,17 +95,23 @@ export class Groups extends React.Component {
   render() {
 
     const { brand, account } = this.props.params
-    const { activeAccount, activeGroup } = this.props
+    const { activeAccount, activeGroup, roles, user } = this.props
 
     const nextPageURLBuilder = (groupID) => {
       return getContentUrl('group', groupID, this.props.params)
     }
-    const analyticsURLBuilder = (...groupID) => {
-      return getAnalyticsUrl('group', groupID, this.props.params)
+    const analyticsURLBuilder = (...group) => {
+      return getAnalyticsUrlFromParams(
+        {...this.props.params, group},
+        user.get('currentUser'),
+        roles
+      )
     }
 
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
     const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
+    const currentUser = user.get('currentUser')
+    const selectionDisabled = userIsServiceProvider(currentUser) === true
 
     return (
       <ContentItems
@@ -128,6 +135,7 @@ export class Groups extends React.Component {
         metrics={this.props.metrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionStartTier="group"
+        selectionDisabled={selectionDisabled}
         showAnalyticsLink={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
