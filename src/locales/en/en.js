@@ -615,7 +615,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
-  'portal.notFound.pageNotFound.text': 'We couldn&rsquo;t find the page you were looking for',
+  'portal.notFound.pageNotFound.text': 'We couldn\'t find the page you were looking for',
 
   'portal.security.sslCertificate.text': 'SSL CERTIFICATE',
   'portal.security.tokenAuth.text': 'TOKEN AUTHENTICATION',
