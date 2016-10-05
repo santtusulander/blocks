@@ -18,6 +18,7 @@ jest.mock('../../util/helpers', () => {
 })
 
 jest.unmock('../groups.jsx')
+
 import { Groups } from '../groups.jsx'
 
 function groupActionsMaker() {
