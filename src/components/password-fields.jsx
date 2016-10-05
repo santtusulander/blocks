@@ -101,8 +101,8 @@ class PasswordFields extends React.Component {
     this.setState({
       confirmValid: validPassword
     })
-    if (this.props.validPassword) {
-      this.props.validPassword(validPassword)
+    if (this.props.changePassword) {
+      this.props.changePassword(validPassword, password)
     }
   }
 
@@ -185,8 +185,8 @@ class PasswordFields extends React.Component {
           className="form-control"
           onFocus={this.passwordFocus(true)}
           onBlur={this.passwordFocus(false)}
-          value={this.state.password}
-          onChange={this.changePassword} />
+          onChange={this.changePassword}
+          value={this.props.passwordField ? this.props.passwordField.value : this.state.password} />
       </Input>
     )
 
@@ -233,10 +233,11 @@ class PasswordFields extends React.Component {
 
 PasswordFields.displayName = 'PasswordFields'
 PasswordFields.propTypes = {
+  changePassword: React.PropTypes.func,
   inlinePassword: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  stackedPassword: React.PropTypes.bool,
-  validPassword: React.PropTypes.func
+  passwordField: React.PropTypes.object,
+  stackedPassword: React.PropTypes.bool
 };
 
 export default injectIntl(PasswordFields)

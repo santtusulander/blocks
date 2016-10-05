@@ -22,7 +22,7 @@ export class SetPassword extends React.Component {
 
     this.goToLoginPage = this.goToLoginPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.validPassword = this.validPassword.bind(this)
+    this.changePassword = this.changePassword.bind(this)
   }
   goToLoginPage() {
     this.props.router.push(getContentUrl('/login', {}))
@@ -47,8 +47,8 @@ export class SetPassword extends React.Component {
     // })
   }
 
-  validPassword(password) {
-    this.setState({'validPassword': password});
+  changePassword(isPasswordValid) {
+    this.setState({'validPassword': isPasswordValid});
   }
 
   render() {
@@ -66,7 +66,7 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            <PasswordFields stackedPassword={true} validPassword={this.validPassword} />
+            <PasswordFields stackedPassword={true} changePassword={this.changePassword} />
             <Row>
               <Col xs={12}>
                 <Button type="submit" bsStyle="primary" className="pull-right"

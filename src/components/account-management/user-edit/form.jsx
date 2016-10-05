@@ -5,8 +5,6 @@ import ReactTelephoneInput from 'react-telephone-input'
 import SelectWrapper from '../../select-wrapper'
 import PasswordFields from '../../password-fields'
 
-import IconEye from '../../icons/icon-eye.jsx'
-
 import {FormattedMessage, injectIntl} from 'react-intl';
 
 let errors = {}
@@ -166,7 +164,7 @@ class UserEditForm extends React.Component {
           <Row>
             <Col xs={11}>
               <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
-              <PasswordFields inlinePassword={true}/>
+              <PasswordFields inlinePassword={true} {...password} />
               {/*
               <Row>
                 <Col xs={6}>

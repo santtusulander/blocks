@@ -5,8 +5,6 @@ import ReactTelephoneInput from 'react-telephone-input'
 // import moment from 'moment'
 import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
-import IconEye from '../icons/icon-eye.jsx'
-// import IconUser from '../icons/icon-user.jsx'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
@@ -41,7 +39,8 @@ class UserEditForm extends React.Component {
     this.state = {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
-      passwordVisible: false
+      passwordVisible: false,
+      validPassword: false
     }
 
     this.save = this.save.bind(this)
@@ -49,6 +48,7 @@ class UserEditForm extends React.Component {
     this.showMiddleName = this.showMiddleName.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.changePassword = this.changePassword.bind(this)
   }
 
   save() {
@@ -108,10 +108,17 @@ class UserEditForm extends React.Component {
     })
   }
 
+  changePassword(isPasswordValid, password) {
+    this.setState({
+      'validPassword': isPasswordValid
+    });
+
+    this.props.fields.password.value = password
+  }
+
   render() {
     const {
       fields: {
-        confirm,
         email,
         first_name,
         last_name,
@@ -246,34 +253,8 @@ class UserEditForm extends React.Component {
                 {this.state.showPasswordField || savingPassword ?
                   <div>
                     <Col xs={6}>
-                      <PasswordFields inlinePassword={true} />                      
+                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} passwordField={password} />
                     </Col>
-                    {/*
-                    <Col xs={3}>
-                      <Input
-                        {...password}
-                        type={this.state.passwordVisible ? 'text' : 'password'}
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.newPassword.text'})} />
-                      {password.touched && password.error && !password.active && !confirm.active &&
-                        <div className="error-msg">{password.error}</div>
-                      }
-                    </Col>
-
-                    <Col xs={3}>
-                      <Input
-                        {...confirm}
-                        type={this.state.passwordVisible ? 'text' : 'password'}
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
-                        wrapperClassName="input-addon-after-outside"
-                        addonAfter={
-                          <a className={'input-addon-link' +
-                            (this.state.passwordVisible ? ' active' : '')}
-                            onClick={this.togglePasswordVisibility}>
-                            <IconEye/>
-                          </a>
-                        }/>
-                    </Col>
-                    */}
                     <Col xs={3} xsOffset={1}>
                       <ButtonToolbar>
                         <Button
@@ -283,7 +264,7 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!!Object.keys(passwordErrors).length || !password.value || savingPassword}
+                          disabled={!this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
