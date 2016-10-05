@@ -12,7 +12,8 @@ jest.mock('../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
-    removeProps: jest.fn()
+    removeProps: jest.fn(),
+    userIsServiceProvider: jest.fn()
   }
 })
 
