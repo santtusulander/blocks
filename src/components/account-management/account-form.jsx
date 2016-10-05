@@ -25,7 +25,7 @@ import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName = '', accountBrand, accountType, services }) => {
   const conditions = {
     accountName: [
       {
@@ -42,6 +42,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
       }
     ]
   }
+
   return checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
 }
 
@@ -162,7 +163,7 @@ class AccountForm extends React.Component {
             <CheckboxArray iterable={serviceTypes} field={services}/>
             <ButtonToolbar className="text-right extra-margin-top">
               <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
-              <Button id="save-btn" disabled={this.props.invalid || !accountName.touched} bsStyle="primary"
+              <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
                       onClick={this.save}>{this.props.account ? <FormattedMessage id="portal.button.save" /> : <FormattedMessage id="portal.button.add" />}</Button>
             </ButtonToolbar>
           </form>
