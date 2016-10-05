@@ -731,6 +731,8 @@ class AnalyticsDB {
         }
       });
       conditions.push(`AND (${statusCodeConditions.join(' OR ')})`);
+    } else {
+      conditions.push("AND (status_code LIKE '4%' OR status_code LIKE '5%')");
     }
 
     optionsFinal.service_type
