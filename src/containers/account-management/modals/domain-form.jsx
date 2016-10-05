@@ -14,7 +14,7 @@ import DeleteDomainModal from '../../../components/account-management/delete-dom
 
 import { checkForErrors } from '../../../util/helpers'
 import {
-  isFQDN,
+  isValidFQDN,
   isInt,
   isValidIPv4Address,
   isValidNameserver,
@@ -44,7 +44,7 @@ const validate = fields => {
       errorText: <FormattedMessage id='portal.account.domainForm.validation.nameServer'/>
     },
     name: {
-      condition: !isFQDN(name),
+      condition: !isValidFQDN(name),
       errorText: <FormattedMessage id='portal.account.domainForm.validation.domainName'/>
     },
     email_addr: {

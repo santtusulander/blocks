@@ -11,7 +11,7 @@ import { matchesRegexp } from './helpers'
  * @param email
  * @returns {*}
  */
-export function isEmail(email) {
+export function isValidEmail(email) {
   return !!email && validator.isEmail(email)
 }
 
@@ -31,25 +31,6 @@ export function isValidIPv4Address(address) {
  */
 export function isValidIPv6Address(address) {
   return !!address && validator.isIP(address, 6)
-}
-
-/**
- * Check if string is in range
- * @param str
- * @param opts
- * @returns {*}
- */
-export function isInLength(str, length = 10) {
-  return !!str && validator.isLength(str, { min: 1, max: length })
-}
-
-/**
- * Check if Integer
- * @param int
- * @returns {*}
- */
-export function isInt(int) {
-  return !!int && !isNaN(int)
 }
 
 /**
@@ -76,7 +57,7 @@ export function isValidSOARecord(record) {
  * @param opts
  * @returns {boolean|*}
  */
-export function isFQDN(domainName, opts = {}) {
+export function isValidFQDN(domainName, opts = {}) {
   return !!domainName && validator.isFQDN(domainName, opts)
 }
 
@@ -87,6 +68,25 @@ export function isFQDN(domainName, opts = {}) {
  */
 export function isValidAccountName(name) {
   return matchesRegexp(name, /^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$/)
+}
+
+/**
+ * Check if string is in range
+ * @param str
+ * @param opts
+ * @returns {*}
+ */
+export function isInLength(str, length = 10) {
+  return !!str && validator.isLength(str, { min: 1, max: length })
+}
+
+/**
+ * Check if Integer
+ * @param int
+ * @returns {*}
+ */
+export function isInt(int) {
+  return !!int && !isNaN(int)
 }
 
 /**

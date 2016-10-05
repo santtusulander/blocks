@@ -3,7 +3,7 @@ import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
 
-import { isEmail, isInLength } from '../../util/validators'
+import { isValidEmail, isInLength } from '../../util/validators'
 
 import UDNButton from '../button'
 
@@ -28,7 +28,7 @@ const validate = values => {
   if(!personResponsible) {
     errors.personResponsible = 'Required'
   }
-  else if(!isEmail(personResponsible)) {
+  else if(!isValidEmail(personResponsible)) {
     errors.personResponsible = 'Invalid input'
   }
   if(!zoneSerialNumber) {
