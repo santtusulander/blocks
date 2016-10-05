@@ -175,6 +175,7 @@ class AccountForm extends React.Component {
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
+  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
