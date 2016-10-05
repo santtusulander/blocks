@@ -21,11 +21,10 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if( this.props.filters !== nextProps.filters ||
-      changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
-      this.props.filters.get('statusCodes') !== nextProps.filters.get('statusCodes') ||
-      this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
+        this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
+        this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')
+    ) {
       this.fetchData(
         nextProps.params,
         nextProps.filters,
@@ -57,7 +56,7 @@ class AnalyticsTabFileError extends React.Component {
     return (
       <AnalysisFileError fetching={this.props.fetching}
         summary={this.props.fileErrorSummary}
-        statusCodes={this.props.filters.get('statusCodes')}
+        statusCodes={this.props.filters.get('errorCodes')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         urls={this.props.fileErrorURLs}/>
     )
