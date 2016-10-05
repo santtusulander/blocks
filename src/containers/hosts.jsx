@@ -92,8 +92,7 @@ export class Hosts extends React.Component {
     const configURLBuilder = (property) => {
       return getContentUrl('propertyConfiguration', property, params)
     }
-    const analyticsURLBuilder = (...property) => {
-      if (property.length === 0) property = undefined
+    const analyticsURLBuilder = (property) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, property},
         user.get('currentUser'),

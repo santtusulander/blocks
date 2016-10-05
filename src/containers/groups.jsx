@@ -100,8 +100,7 @@ export class Groups extends React.Component {
     const nextPageURLBuilder = (groupID) => {
       return getContentUrl('group', groupID, this.props.params)
     }
-    const analyticsURLBuilder = (...group) => {
-      if (group.length === 0) group = undefined
+    const analyticsURLBuilder = (group) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, group},
         user.get('currentUser'),
