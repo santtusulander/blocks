@@ -8,6 +8,8 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 
 import { getContentUrl } from '../util/routes'
 
+import { userIsServiceProvider } from '../util/helpers.js'
+
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -42,8 +44,8 @@ export class Login extends React.Component {
       this.props.uiActions.setLoginUrl(null)
     }
     else {
-      // Role 3 === SP Admin
-      if(this.props.currentUser.getIn(['roles', 0]) === 3) {
+      // Temp UDNP-1545
+      if(userIsServiceProvider(this.props.currentUser)) {
         if(this.props.currentUser.get('account_id')) {
           this.props.router.push(`/network/udn/${this.props.currentUser.get('account_id')}`)
         } else {
