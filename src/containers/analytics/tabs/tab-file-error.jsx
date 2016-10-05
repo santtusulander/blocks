@@ -57,7 +57,7 @@ class AnalyticsTabFileError extends React.Component {
     return (
       <AnalysisFileError fetching={this.props.fetching}
         summary={this.props.fileErrorSummary}
-        statusCodes={this.props.filters.get('statusCodes')}
+        statusCodes={this.props.filters.get('errorCodes')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         urls={this.props.fileErrorURLs}/>
     )
