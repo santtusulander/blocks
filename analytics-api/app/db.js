@@ -721,7 +721,17 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
-    conditions.push("AND (status_code LIKE '4%' OR status_code LIKE '5%')");
+    if (optionsFinal.status_codes) {
+      let statusCodeConditions = [];
+      optionsFinal.status_codes.forEach((code) => {
+        if (code.indexOf('xx') === 1) {
+          statusCodeConditions.push(`status_code LIKE '${code.charAt(0)}%'`);
+        } else {
+          statusCodeConditions.push(`status_code = ${code}`);
+        }
+      });
+      conditions.push(`AND (${statusCodeConditions.join(' OR ')})`);
+    }
 
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
