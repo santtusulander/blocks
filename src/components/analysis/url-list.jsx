@@ -58,14 +58,11 @@ class AnalysisURLList extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
-    const filteredURLs = sortedURLs.filter((url, i) => {
-      if (i >= 15) {
-        return false;
-      }
-
+    const filteredURLs = sortedURLs.filter((url) => {
       return url.get('url').toLowerCase().includes(searchState.toLowerCase())
     })
 
+    const finalURLs = filteredURLs.slice(0, 15)
 
     return (
       <div>
@@ -87,7 +84,7 @@ class AnalysisURLList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {filteredURLs.map((url, i) => {
+            {finalURLs.map((url, i) => {
               const bytesOfMax = (url.get('bytes') / maxBytes) * 100
               const reqsOfMax = (url.get('requests') / maxReqs) * 100
               return (
