@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -6,6 +7,8 @@ import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import { getContentUrl } from '../util/routes'
+
+import { userIsServiceProvider } from '../util/helpers.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
@@ -41,7 +44,16 @@ export class Login extends React.Component {
       this.props.uiActions.setLoginUrl(null)
     }
     else {
-      this.props.router.push(getContentUrl('brand', 'udn', {}))
+      // Temp UDNP-1545
+      if(userIsServiceProvider(this.props.currentUser)) {
+        if(this.props.currentUser.get('account_id')) {
+          this.props.router.push(`/network/udn/${this.props.currentUser.get('account_id')}`)
+        } else {
+          this.props.router.push(`/network/udn`)
+        }
+      } else {
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
+      }
     }
   }
   /**
@@ -192,6 +204,7 @@ export class Login extends React.Component {
 Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
@@ -202,9 +215,13 @@ Login.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
+Login.defaultProps = {
+  currentUser: Immutable.Map()
+}
 
 function mapStateToProps(state) {
   return {
+    currentUser: state.user.get('currentUser'),
     fetching: state.user.get('fetching') || state.account.get('fetching'),
     loggedIn: state.user.get('loggedIn'),
     loginUrl: state.ui.get('loginUrl'),
