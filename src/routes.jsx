@@ -34,11 +34,13 @@ import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.js
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
+import Dashboard from './containers/dashboard'
 import ForgotPassword from './containers/forgot-password'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
+import Network from './containers/network'
 import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property'
 import Purge from './containers/configure/purge'
@@ -251,6 +253,18 @@ export const getRoutes = store => {
         <IndexRedirect to={getRoute('userBrand', {brand: 'udn'})} />
         <Route path={routes.userBrand} component={User}/>
         <Route path={routes.userAccount} component={User}/>
+      </Route>
+
+      {/* TEMP UDNP-1545 - routes */}
+      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+        <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
+        <Route path={routes.dashboardBrand} component={Dashboard}/>
+        <Route path={routes.dashboardAccount} component={Dashboard}/>
+      </Route>
+      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
+        <Route path={routes.networkBrand} component={Network}/>
+        <Route path={routes.networkAccount} component={Network}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />
