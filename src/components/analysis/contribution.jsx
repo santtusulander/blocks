@@ -26,7 +26,6 @@ class AnalysisContribution extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
-    this.isProviderInFilter = this.isProviderInFilter.bind(this)
 
     this.measureContainersTimeout = null
   }
