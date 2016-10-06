@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { isValidEmail, isInLength } from '../../util/validators'
 
@@ -20,28 +21,28 @@ const validate = values => {
           zoneSerialNumber
         } = values
   if(!domainName) {
-    errors.domainName = 'Required'
+    errors.domainName = <FormattedMessage id="portal.account.soaForm.validation.required"/>
   }
   if(!nameServer) {
-    errors.nameServer = 'Required'
+    errors.nameServer = <FormattedMessage id="portal.account.soaForm.validation.required"/>
   }
   if(!personResponsible) {
-    errors.personResponsible = 'Required'
+    errors.personResponsible = <FormattedMessage id="portal.account.soaForm.validation.required"/>
   }
   else if(!isValidEmail(personResponsible)) {
-    errors.personResponsible = 'Invalid input'
+    errors.personResponsible = <FormattedMessage id="portal.account.soaForm.validation.invalid"/>
   }
   if(!zoneSerialNumber) {
-    errors.zoneSerialNumber = 'Required'
+    errors.zoneSerialNumber = <FormattedMessage id="portal.account.soaForm.validation.required"/>
   }
   else if(!isInLength(zoneSerialNumber, 20)) {
-    errors.zoneSerialNumber = 'Invalid input'
+    errors.zoneSerialNumber = <FormattedMessage id="portal.account.soaForm.validation.invalid"/>
   }
   if(!refresh) {
-    errors.refresh = 'Required'
+    errors.refresh = <FormattedMessage id="portal.account.soaForm.validation.required"/>
   }
   else if(!isInLength(refresh)) {
-    errors.refresh = 'Invalid input'
+    errors.refresh = <FormattedMessage id="portal.account.soaForm.validation.invalid"/>
   }
   return errors
 }
@@ -71,7 +72,7 @@ export const SoaEditForm = props => {
           <Input
             { ...domainName }
             type="text"
-            label="Domain Name"/>
+            label={props.intl.formatMessage({id: 'portal.account.soaForm.domainName.label'})}/>
 
           {domainName.touched && domainName.error && <div className="error-msg">{domainName.error}</div>}
 
@@ -80,7 +81,7 @@ export const SoaEditForm = props => {
           <Input
             { ...nameServer }
             type="text"
-            label="Primary Nameserver"/>
+            label={props.intl.formatMessage({id: 'portal.account.soaForm.nameServer.label'})}/>
 
           {nameServer.touched && nameServer.error && <div className="error-msg">{nameServer.error}</div>}
 
@@ -90,7 +91,7 @@ export const SoaEditForm = props => {
             { ...personResponsible }
             type="text"
             className="soa-form-input"
-            label="Responsible Person Mailbox"/>
+            label={props.intl.formatMessage({id: 'portal.account.soaForm.personResponsible.label'})}/>
 
           {personResponsible.touched && personResponsible.error &&
           <div className="error-msg">{personResponsible.error}</div>}
@@ -101,7 +102,7 @@ export const SoaEditForm = props => {
             { ...zoneSerialNumber }
             type="text"
             className="soa-form-input"
-            label="Serial # of Zone"/>
+            label={props.intl.formatMessage({id: 'portal.account.soaForm.zoneSerialNumber.label'})}/>
 
           {zoneSerialNumber.touched && zoneSerialNumber.error &&
           <div className="error-msg">{zoneSerialNumber.error}</div>}
@@ -112,7 +113,7 @@ export const SoaEditForm = props => {
             { ...refresh }
             type="text"
             className="soa-form-input refresh-input"
-            label="Refresh"/>
+            label={props.intl.formatMessage({id: 'portal.account.soaForm.refresh.label'})}/>
 
           {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
 
@@ -123,14 +124,14 @@ export const SoaEditForm = props => {
               id="cancel_button"
               outLine={true}
               onClick={onCancel}>
-              Cancel
+              <FormattedMessage id="portal.common.button.cancel"/>
             </UDNButton>
             <UDNButton
               id="save_button"
               bsStyle="primary"
               disabled={Object.keys(errors).length !== 0}
               onClick={onSave}>
-              Save
+              <FormattedMessage id="portal.common.button.save"/>
             </UDNButton>
           </ButtonToolbar>
         </form>
@@ -143,6 +144,7 @@ SoaEditForm.propTypes = {
   activeDomain: PropTypes.instanceOf(Map),
   fields: PropTypes.object,
   initialValues: PropTypes.object,
+  intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
@@ -151,4 +153,4 @@ export default reduxForm({
   fields: ['domainName', 'nameServer', 'personResponsible', 'zoneSerialNumber', 'refresh'],
   form: 'soaEditForm',
   validate
-})(SoaEditForm)
+})(injectIntl(SoaEditForm))

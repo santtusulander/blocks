@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Select from './select'
 import { isValidEmail } from '../util/validators'
@@ -55,7 +56,7 @@ class PurgeModal extends React.Component {
     }, 1000)
     if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
-        purgeObjectsWarning: 'Maximum amount of purge objects exceeded'
+        purgeObjectsWarning: <FormattedMessage id="portal.analytics.purgeModal.maxAmount.error"/>
       })
     } else if (this.state.purgeObjectsWarning !== '' && parsedObjs.length <= maxObjects) {
       this.setState({
@@ -71,7 +72,7 @@ class PurgeModal extends React.Component {
   validatePurgeObjects(value) {
     if(!value) {
       this.setState({
-        purgeObjectsError: 'Specify at least one purge object'
+        purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
       })
       return true
     }
@@ -80,7 +81,7 @@ class PurgeModal extends React.Component {
     if(this.props.activePurge.get('feedback') &&
       (!this.props.activePurge.getIn(['feedback', 'email']) || !isValidEmail(this.props.activePurge.getIn(['feedback', 'email'])))) {
       this.setState({
-        purgeEmailError: 'Enter a valid Email address'
+        purgeEmailError: <FormattedMessage id="portal.analytics.purgeModal.email.error"/>
       })
       return true
     }
@@ -129,16 +130,16 @@ class PurgeModal extends React.Component {
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
         onHide={this.props.hideAction}>
         <Modal.Header>
-          <h1>Purge Content</h1>
+          <h1><FormattedMessage id="portal.analytics.purgeModal.title.text"/></h1>
         </Modal.Header>
         <Modal.Body>
-          {this.props.activePurge ?
+          {this.props.activePurge &&
             <form onSubmit={this.submitForm}>
 
               {/* SECTION - Property */}
               {showPropertySelect ?
                 <div>
-                  <h3>Property</h3>
+                  <h3><FormattedMessage id="portal.analytics.purgeModal.property.text"/></h3>
 
                   {/* If it's possible to change the property, show a list */}
                   <Select className="input-select"
@@ -153,14 +154,14 @@ class PurgeModal extends React.Component {
               }
 
               {/* SECTION - What do you want to purge? */}
-              <h3>What do you want to purge?</h3>
+              <h3><FormattedMessage id="portal.analytics.purgeModal.whatDoYouWantToPurge.text"/></h3>
               <Select className="input-select"
                 value={this.state.type}
                 options={[
-                  ['url', 'URLs'],
-                  ['directory', 'Directories'],
-                  ['hostname', 'Hostnames'],
-                  ['group', 'Entire Group']
+                  ['url', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.url.text'})],
+                  ['directory', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.directory.text'})],
+                  ['hostname', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.hostname.text'})],
+                  ['group', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.group.text'})]
                 ]}
                 onSelect={type => this.setState({type: type})}/>
               <hr/>
@@ -169,37 +170,37 @@ class PurgeModal extends React.Component {
                 && this.state.type !== 'group' && <div>
 
                 {this.state.type === 'url' && <this.purgeObjInput
-                  title="URLs to Purge"
-                  help="Up to 100 urls, separated by comma"
-                  placeholder="Enter URLs"/>}
+                  title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.title'})}
+                  help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.help'})}
+                  placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.placeholder'})}/>}
 
                 {this.state.type === 'directory' && <this.purgeObjInput
-                  title="Directories to Purge"
-                  help="Up to 100 directories, separated by comma"
-                  placeholder="Enter directory paths"/>}
+                  title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.title'})}
+                  help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.help'})}
+                  placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.placeholder'})}/>}
 
                 {/* SECTION - Content Removal Method */}
-                <h3>Content Removal Method</h3>
+                <h3><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></h3>
 
                 {/* Invalidate content on platform */}
                 <Input type="radio" name="purge__content-removal-method-invalidate"
-                  label="Invalidate content"
+                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.invalidate.label'})}
                   value="invalidate"
                   checked={this.props.activePurge.get('action') === 'invalidate'}
                   onChange={this.change(['action'])}/>
 
                 {/* Delete content from platform */}
                 <Input type="radio" name="purge__content-removal-method-delete"
-                  label="Delete content"
+                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.delete.label'})}
                   value="purge"
                   checked={this.props.activePurge.get('action') === 'purge'}
                   onChange={this.change(['action'])}/>
                 <hr/>
 
                 {/* SECTION - Notification */}
-                <h3>Notification</h3>
+                <h3><FormattedMessage id="portal.analytics.purgeModal.notification.section.title"/></h3>
                 <Input type="checkbox" name="purge__notification"
-                  label="Notify me when purge is completed"
+                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.notification.label'})}
                   checked={!!this.props.activePurge.get('feedback')}
                   onChange={this.toggleNotification}/>
 
@@ -209,40 +210,39 @@ class PurgeModal extends React.Component {
                   <Input type="text"
                     bsStyle={this.state.purgeEmailError ? 'error' : null}
                     help={this.state.purgeEmailError}
-                    placeholder="Enter Email address"
+                    placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.email.label'})}
                     value={this.props.activePurge.getIn(['feedback','email'])}
                     onChange={this.change(['feedback','email'])}/>
                 </Panel>
                 <hr/>
-                <h3>Note</h3>
+                <h3><FormattedMessage id="portal.analytics.purgeModal.note.section.title"/></h3>
                 <Input type="textarea" id="purge__note"
-                  placeholder="A note about the purge"
+                  placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.note.placeholder'})}
                   value={this.props.activePurge.get('note')}
                   onChange={this.change(['note'])}/>
 
                 {/* Action buttons */}
                 <ButtonToolbar className="text-right">
                   <Button bsStyle="primary" onClick={this.props.hideAction}>
-                    Cancel
+                    <FormattedMessage id="portal.common.button.cancel"/>
                   </Button>
                   <Button type="submit" bsStyle="primary"
                     disabled={this.state.purgeObjectsError || this.state.purgeEmailError
                       ? true : false}>
-                    Purge
+                    <FormattedMessage id="portal.analytics.purgeModal.button.purge.text"/>
                   </Button>
                 </ButtonToolbar>
               </div>}
 
               {this.state.type === 'hostname' && <div>
-                Purge by hostname will be supported in a future version.
+                <FormattedMessage id="portal.analytics.purgeModal.hostName.text"/>
               </div>}
 
               {this.state.type === 'group' && <div>
-                Purge entire group will be supported in a future version.
+                <FormattedMessage id="portal.analytics.purgeModal.group.text"/>
               </div>}
 
             </form>
-            : 'Loading...'
           }
         </Modal.Body>
       </Modal>
@@ -262,4 +262,4 @@ PurgeModal.propTypes = {
   showNotification: React.PropTypes.func
 }
 
-module.exports = PurgeModal
+export default injectIntl(PurgeModal)
