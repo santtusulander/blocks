@@ -10,7 +10,7 @@ import ActionButtons from '../../components/action-buttons'
 import TableSorter from '../table-sorter'
 import IsAllowed from '../is-allowed'
 
-import recordTypes from '../../constants/dns-record-types'
+import recordTypes, { recordFields } from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
 import { CREATE_RECORD } from '../../constants/permissions'
 
@@ -49,12 +49,13 @@ class DNSList extends Component {
     /**
      * Create rows of records by a given record type, sorted by a given sorting function.
      */
-    const getContent = type => sortingFunc =>
-      sortingFunc(recordsByType[type]).map((record, i) =>
+    const getContent = type => sort =>
+      sort(recordsByType[type]).map((record, i) =>
         <tr key={i}>
           <td>{record.name}</td>
           <td>{getRecordValueString(record.value)}</td>
           <td>{record.ttl}</td>
+          {recordFields.prio.includes(record.type) && <td>{record.value.prio}</td>}
           <td className="nowrap-column">
             <ActionButtons
               onEdit={() => onEditEntry(record.id)}
@@ -72,10 +73,9 @@ class DNSList extends Component {
         tables.push(
           <SectionContainer key={index}>
             <SectionHeader
-              sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}
+              sectionSubHeaderTitle={`${type} ${intl.formatMessage({id: 'portal.account.dnsList.records.header'})}`}
               subHeaderId={'table-label-' + index} />
-
-            <SortableTable content={getContent(type)}/>
+            <SortableTable shouldHavePrio={recordFields.prio.includes(type)} content={getContent(type)}/>
           </SectionContainer>
         )
       }
@@ -115,8 +115,10 @@ export class SortableTable extends Component {
   }
 
   render() {
-    const { sortDirection } = this.state
-    const changeSort = (column, direction) => this.setState({ sortDirection: direction })
+    const { state: { sortDirection }, props: { shouldHavePrio, content } } = this
+    /**
+     * Sorting function
+     */
     const sort = array =>
       array.sort((a, b) => {
         if (a.name.toLowerCase() < b.name.toLowerCase()) {
@@ -126,7 +128,7 @@ export class SortableTable extends Component {
         }
         return 0
       })
-    const sortedContent = this.props.content(sort)
+    const changeSort = (column, direction) => this.setState({ sortDirection: direction })
     const sorterProps = {
       activateSort: changeSort,
       activeDirection: sortDirection,
@@ -139,18 +141,19 @@ export class SortableTable extends Component {
             <TableSorter {...sorterProps} column="name" width="30%"><FormattedMessage id='portal.account.dnsList.hostname.header' /></TableSorter>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
             <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
+            {shouldHavePrio && <th width="30%"><FormattedMessage id='portal.account.dnsList.prio.header' /></th>}
             <th width="1%"></th>
           </tr>
         </thead>
         <tbody>
-          {sortedContent}
+          {content(sort)}
         </tbody>
       </table>
     )
   }
 }
 
-SortableTable.propTypes = { content: PropTypes.func }
+SortableTable.propTypes = { content: PropTypes.func, shouldHavePrio: PropTypes.bool }
 
 DNSList.propTypes = {
   hiddenRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
@@ -161,7 +164,7 @@ DNSList.propTypes = {
   records: PropTypes.array,
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string,
-  visibleRecordCount: PropTypes.object
+  visibleRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ])
 }
 
 export default injectIntl(DNSList)

@@ -46,12 +46,9 @@ class AccountManagementSystemDNS extends Component {
     this.props.fetchRecords(nextProps.activeDomain)
   }
 
-  deleteDnsRecord(activeDomain) {
-    const { recordToDelete } = this.state
-    this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
-    this.setState({
-      recordToDelete: null
-    })
+  deleteDnsRecord() {
+    const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
+    deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
   }
 
   closeDeleteDnsRecordModal() {
@@ -72,7 +69,8 @@ class AccountManagementSystemDNS extends Component {
 
     const {domainSearch, recordSearch} = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
-    const visibleRecords = records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
+    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,
@@ -132,10 +130,12 @@ class AccountManagementSystemDNS extends Component {
           <DomainForm
             edit={this.editingDomain}
             closeModal={() => toggleModal(null)}/>}
-        {this.state.recordToDelete && <DeleteDnsRecordModal
-          itemToDelete={this.state.recordToDelete.name}
-          cancel={this.closeDeleteDnsRecordModal}
-          submit={() => { this.deleteDnsRecord(activeDomain) }}/>}
+        {this.state.recordToDelete &&
+          <DeleteDnsRecordModal
+            itemToDelete={this.state.recordToDelete.name}
+            cancel={this.closeDeleteDnsRecordModal}
+            loading={loadingRecords}
+            submit={this.deleteDnsRecord}/>}
       </div>
     )
   }
@@ -145,6 +145,7 @@ AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
   activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
+  deleteRecord: PropTypes.func,
   domains: PropTypes.array,
   fetchDomain: PropTypes.func,
   fetchDomains: PropTypes.func,
@@ -184,7 +185,10 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       startFetchingDomains()
       return fetchDomains(brand)
     },
-    removeResource,
+    deleteRecord: (domain, record, onResponse) => {
+      startFetching()
+      removeResource(domain, record.name, record).then(onResponse)
+    },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),

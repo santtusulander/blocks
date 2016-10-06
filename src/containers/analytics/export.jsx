@@ -33,12 +33,14 @@ class AnalyticsExport extends React.Component {
       case 'on-off-net':
         exportData = [this.props.onOffStats]
         break
-      case 'service-providers':
-        //TODO: There is no valid exporter for SP report yet
-        console.log('No valid exporter for SP report!')
+      case 'contribution':
+        exportData = [this.props.contribution]
         break
       case 'file-error':
         exportData = [this.props.fileErrorURLs, this.props.serviceTypes]
+        break
+      case 'cache-hit-rate':
+        exportData = [this.props.traffic]
         break
       case 'url-report':
         exportData = [this.props.urlMetrics]
@@ -53,7 +55,7 @@ class AnalyticsExport extends React.Component {
       <Button
         bsStyle="primary"
         className="has-icon"
-        disabled={this.props.activeTab === 'playback-demo' || this.props.activeTab === 'service-providers' || this.props.activeTab === 'cache-hit-rate'}
+        disabled={this.props.activeTab === 'playback-demo'}
         onClick={this.exportCSV}>
         <IconExport />
         <FormattedMessage id="portal.button.export"/>
@@ -67,10 +69,12 @@ AnalyticsExport.propTypes = {
   activeGroup: PropTypes.instanceOf(Map),
   activeHost: PropTypes.instanceOf(Map),
   activeTab: PropTypes.string,
+  contribution: PropTypes.instanceOf(List),
   fileErrorURLs: PropTypes.instanceOf(List),
   onOffStats: PropTypes.instanceOf(List),
   params: PropTypes.object,
   serviceTypes: PropTypes.instanceOf(List),
+  traffic: PropTypes.instanceOf(List),
   trafficByTime: PropTypes.instanceOf(List),
   urlMetrics: PropTypes.instanceOf(List),
   visitorsByTime: PropTypes.instanceOf(List)
@@ -93,10 +97,12 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
+    contribution: state.traffic.get('contribution'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     onOffStats: state.traffic.get('onOffNet').get('detail'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
     trafficByTime: state.traffic.get('byTime'),
+    traffic: state.traffic.getIn(['traffic', 0, 'detail']),
     urlMetrics: state.reports.get('urlMetrics'),
     visitorsByTime: state.visitors.get('byTime')
   }
