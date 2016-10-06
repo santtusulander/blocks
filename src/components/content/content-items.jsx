@@ -273,13 +273,13 @@ class ContentItems extends React.Component {
             <UDNButton bsStyle={viewingChart ? 'primary' : 'secondary'}
                        icon={true}
                        toggleView={true}
-                       onClick={this.props.toggleChartView}>
+                       onClick={!viewingChart ? this.props.toggleChartView : () => false}>
               <IconItemChart/>
             </UDNButton>
             <UDNButton bsStyle={!viewingChart ? 'primary' : 'secondary'}
                        icon={true}
                        toggleView={true}
-                       onClick={this.props.toggleChartView}>
+                       onClick={viewingChart ? this.props.toggleChartView : () => false}>
               <IconItemList/>
             </UDNButton>
           </ButtonToolbar>
