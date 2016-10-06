@@ -7,6 +7,7 @@ const reactRedux = require('react-redux')
 reactRedux.connect = jest.genMockFunction()
 reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
+jest.autoMockOff()
 jest.dontMock('../traffic.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
@@ -16,12 +17,8 @@ const AnalysisTraffic = require('../traffic.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const momentToDateMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
-
-moment.mockReturnValue({format:momentFormatMock, toDate:momentToDateMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeCountryData = Immutable.fromJS([
   {

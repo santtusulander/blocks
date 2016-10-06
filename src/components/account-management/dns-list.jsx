@@ -73,7 +73,7 @@ class DNSList extends Component {
         tables.push(
           <SectionContainer key={index}>
             <SectionHeader
-              sectionSubHeaderTitle={`${type} ` + intl.formatMessage({id: 'portal.account.dnsList.records.header'})}
+              sectionSubHeaderTitle={`${type} ${intl.formatMessage({id: 'portal.account.dnsList.records.header'})}`}
               subHeaderId={'table-label-' + index} />
             <SortableTable shouldHavePrio={recordFields.prio.includes(type)} content={getContent(type)}/>
           </SectionContainer>
@@ -164,7 +164,7 @@ DNSList.propTypes = {
   records: PropTypes.array,
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string,
-  visibleRecordCount: PropTypes.object
+  visibleRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ])
 }
 
 export default injectIntl(DNSList)
