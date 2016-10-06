@@ -356,25 +356,6 @@ describe('Property', () => {
     expect(hostActions.fetchHost.mock.calls[0][2]).toBe('2')
   });
 
-  it('should display the property name', () => {
-    const property = TestUtils.renderIntoDocument(
-      <Property hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        metricsActions={metricsActionsMaker()}
-        params={urlParams} location={fakeLocation}
-        activeHost={fakeHost}
-        trafficActions={trafficActionsMaker()}
-        properties={Immutable.List(['www.abc.com'])}
-        metrics={fakeMetrics}
-        trafficByTime={Immutable.List()}
-        visitorsByCountry={fakeVisitors}
-        visitorsActions={visitorsActionsMaker()}/>
-    )
-    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'page-header-container')
-    expect(header.textContent).toContain('www.abc.com')
-  });
-
   it('should toggle property menu', () => {
     const property = TestUtils.renderIntoDocument(
       <Property
