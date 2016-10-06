@@ -12,11 +12,13 @@ jest.mock('../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
-    removeProps: jest.fn()
+    removeProps: jest.fn(),
+    userIsServiceProvider: jest.fn()
   }
 })
 
 jest.unmock('../groups.jsx')
+
 import { Groups } from '../groups.jsx'
 
 function groupActionsMaker() {

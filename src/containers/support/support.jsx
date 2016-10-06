@@ -82,17 +82,20 @@ Support.displayName = 'Support'
 Support.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Map),
   children: PropTypes.node,
+  currentUser: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,
   router: PropTypes.object
 }
 
 Support.defaultProps = {
-  activeAccount: Map()
+  activeAccount: Map(),
+  currentUser: Map()
 }
 
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount')
+    activeAccount: state.account.get('activeAccount'),
+    currentUser: state.user.get('currentUser')
   };
 }
 
