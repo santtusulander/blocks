@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 // For authentication, account, group, user, role, permission management
-export const BASE_URL_AAA = '/v3'
+export const BASE_URL_AAA = '/v2'
 
 // For Content/Serivce Provider management and configuration
 export const BASE_URL_NORTH = '/VCDN/v2'

@@ -28,6 +28,7 @@ class AccountSelector extends Component {
     this.onCaretClick = this.onCaretClick.bind(this)
     this.onItemClick = this.onItemClick.bind(this)
     this.onTopbarClick = this.onTopbarClick.bind(this)
+    this.isDrillable = this.isDrillable.bind(this)
   }
 
   componentWillMount() {
@@ -54,6 +55,14 @@ class AccountSelector extends Component {
       this.props.roles,
       this.props.currentUser,
       PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+    )
+  }
+
+  canSeeProperties() {
+    return checkPermissions(
+      this.props.roles,
+      this.props.currentUser,
+      PERMISSIONS.VIEW_CONTENT_PROPERTIES
     )
   }
 
@@ -166,8 +175,20 @@ class AccountSelector extends Component {
     })
   }
 
+  isDrillable() {
+    let { restrictedTo } = this.props
+
+    if (!this.canSeeProperties() && this.tier === 'group') {
+      return false
+    }
+
+    return restrictedTo
+      && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
+      || this.tier === 'property' ? false : true
+  }
+
   render() {
-    const { topBarTexts, resetChanged, getChangedItem, restrictedTo, open, searchValue, accountSelectorActions, ...other } = this.props
+    const { topBarTexts, resetChanged, getChangedItem, open, searchValue, accountSelectorActions, ...other } = this.props
     const topBarText = this.tier === 'group' && !this.canSeeAccounts() ? '' : topBarTexts[this.tier]
     const menuProps = Object.assign(other, {
       close: () => this.props.accountSelectorActions.setOpen(false),
@@ -176,9 +197,7 @@ class AccountSelector extends Component {
         accountSelectorActions.setOpen(!open)
       },
       onSearch: e => accountSelectorActions.setSearch(e.target.value),
-      drillable: restrictedTo
-        && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
-        || this.tier === 'property' ? false : true,
+      drillable: this.isDrillable(),
       items: this.sortedOptions().toJS(),
       topBarText: topBarText,
       onSelect: this.selectOption,
