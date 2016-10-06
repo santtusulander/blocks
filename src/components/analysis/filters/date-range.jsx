@@ -21,6 +21,7 @@ export class FilterDateRange extends React.Component {
               DateRanges.MONTH_TO_DATE,
               DateRanges.LAST_MONTH,
               DateRanges.LAST_WEEK,
+              DateRanges.THIS_WEEK,
               DateRanges.TODAY,
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
