@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
+import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -52,9 +52,11 @@ export class Accounts extends React.Component {
       fetching,
       fetchingMetrics,
       metrics,
+      roles,
       sortDirection,
       sortValuePath,
       viewingChart,
+      user,
       uiActions } = this.props
 
     const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
@@ -62,8 +64,12 @@ export class Accounts extends React.Component {
     const nextPageURLBuilder = (accountID) => {
       return getContentUrl('account', accountID, this.props.params)
     }
-    const analyticsURLBuilder = (...accountID) => {
-      return getAnalyticsUrl('account', accountID, this.props.params)
+    const analyticsURLBuilder = (...account) => {
+      return getAnalyticsUrlFromParams(
+        {...this.props.params, account},
+        user.get('currentUser'),
+        roles
+      )
     }
     return (
       <ContentItems

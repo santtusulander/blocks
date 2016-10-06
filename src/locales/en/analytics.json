@@ -2,8 +2,20 @@
   "portal.analytics.tabs.contribution.label": "Contribution",
 
   "portal.analytics.allAccounts.text": "All Accounts",
-  "portal.analytics.selectAccount.text": "Please select an account{br}from top left to see contribution reports",
-  "portal.analytics.contribution.selectAccount.text": "Please select a service provider or content provider{br}from the filters above to see the contribution report",
+  "portal.analytics.selectAccount.text": "Please select an account{br}from top left to see reports",
+
+  "portal.analysis.filters.serviceProviderGroups.title": "Service Provider Groups",
+  "portal.analysis.filters.serviceProvider.title": "Service Providers",
+  "portal.analysis.filters.contentProvider.title": "Content Providers",
+  "portal.analysis.filters.contentProviderGroups.title": "Content Provider Groups",
+  "portal.analysis.filters.contentProviderProperties.title": "Content Provider Properties",
+
+  "portal.analytics.contentProviderContribution.totalTraffic.label": "TOTAL TRAFFIC BY CONTENT PROVIDER",
+  "portal.analytics.serviceProviderContribution.totalTraffic.label": "TOTAL TRAFFIC BY SERVICE PROVIDER",
+  "portal.analytics.contribution.provider.label": "Provider",
+  "portal.analytics.contribution.country.label": "Country",
+  "portal.analytics.contribution.traffic.label": "Traffic",
+  "portal.analytics.contribution.trafficPercentage.label": "% of traffic",
 
   "portal.analytics.fileErrors.noData.text": "No error data found.",
   "portal.analytics.urlList.noData.text": "No URL data found."

@@ -4,11 +4,17 @@ import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
-
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
+import ProviderTypes from '../../constants/provider-types'
+import {
+  userIsServiceProvider,
+  userIsContentProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
+import FilterContentProvider from '../analysis/filters/content-provider.jsx'
 import FilterOnOffNet from '../analysis/filters/on-off-net.jsx'
 import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
@@ -89,6 +95,39 @@ StatusCodes.propTypes = {
 }
 
 const AnalyticsFilters = (props) => {
+  const {
+    activeAccountProviderType,
+    currentUser
+  } = props
+
+  /* Filter options for FilterServiceProvider and FilterContentProvider */
+  let spFilterOptions = []
+  let cpFilterOptions = []
+
+  // the following builds the dropdown list based off of current user role
+  if (userIsServiceProvider(currentUser)) {
+    cpFilterOptions = ['cp-account']
+    spFilterOptions = ['sp-group']
+  } else if (userIsContentProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+
+    // spFilterOptions = ['sp-account','sp-group'] // TODO: uncomment line as part of UDNP-1577
+    spFilterOptions = ['sp-account'] // TODO: delete line as part of UDNP-1577
+  } else if (userIsCloudProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+    spFilterOptions = ['sp-account','sp-group']
+  }
+
+  // the following hides certain dropdowns based on GAS status and current user role
+  if (
+    activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER ||
+    activeAccountProviderType === ProviderTypes.CLOUD_PROVIDER
+  ) {
+    spFilterOptions = []
+  } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
+    cpFilterOptions = []
+  }
+
   return (
     <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
@@ -125,16 +164,41 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('service-provider') &&
-        <div className='action'>
-          <FilterServiceProvider
+      {(props.showFilters.includes('service-provider') && spFilterOptions.length > 0) &&
+        <FilterServiceProvider
+          visibleFields={spFilterOptions}
           changeServiceProvider={val => {
             props.onFilterChange('serviceProviders', val)
           }}
-          options={props.filterOptions.get('serviceProviders')}
-          value={props.filters.get('serviceProviders')}
+          changeServiceProviderGroup={val => {
+            props.onFilterChange('serviceProviderGroups', val)
+          }}
+          serviceProviderOptions={props.filterOptions.get('serviceProviders')}
+          serviceProviderValue={props.filters.get('serviceProviders')}
+          serviceProviderGroupOptions={props.filterOptions.get('serviceProviderGroups')}
+          serviceProviderGroupValue={props.filters.get('serviceProviderGroups')}
           />
-        </div>
+      }
+
+      {(props.showFilters.includes('content-provider') && cpFilterOptions.length > 0) &&
+        <FilterContentProvider
+          visibleFields={cpFilterOptions}
+          changeContentProvider={val => {
+            props.onFilterChange('contentProviders', val)
+          }}
+          changeContentProviderGroup={val => {
+            props.onFilterChange('contentProviderGroups', val)
+          }}
+          changeContentProviderProperty={val => {
+            props.onFilterChange('contentProviderProperties', val)
+          }}
+          contentProviderOptions={props.filterOptions.get('contentProviders')}
+          contentProviderValue={props.filters.get('contentProviders')}
+          contentProviderGroupOptions={props.filterOptions.get('contentProviderGroups')}
+          contentProviderGroupValue={props.filters.get('contentProviderGroups')}
+          contentProviderPropertyOptions={props.filterOptions.get('contentProviderProperties')}
+          contentProviderPropertyValue={props.filters.get('contentProviderProperties')}
+          />
       }
 
       {props.showFilters.includes('on-off-net') &&
@@ -217,9 +281,12 @@ const AnalyticsFilters = (props) => {
 }
 
 AnalyticsFilters.propTypes = {
+  activeAccountProviderType: PropTypes.number,
+  currentUser: PropTypes.instanceOf(Map),
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
+  params: PropTypes.object,
   showFilters: PropTypes.instanceOf(List)
 }
 
