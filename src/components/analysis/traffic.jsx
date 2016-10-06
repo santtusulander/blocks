@@ -41,6 +41,7 @@ class AnalysisTraffic extends React.Component {
       clearTimeout(this.measureContainersTimeout)
     }
 
+    // TODO: remove this timeout as part of UDNP-1426
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
   }
 

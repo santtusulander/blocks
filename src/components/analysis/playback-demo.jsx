@@ -32,6 +32,7 @@ export class PlaybackDemo extends React.Component {
   componentDidMount() {
     this.playVideo()
     this.measureContainers()
+    // TODO: remove this timeout as part of UDNP-1426
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
