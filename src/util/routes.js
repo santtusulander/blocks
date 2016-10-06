@@ -81,16 +81,17 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
     roles, currentUser, tab.get('permission')
   ))
-  const landingTab = allowedTab ? `/${allowedTab.get('key')}` : ''
+  const landingTab = allowedTab ? allowedTab.get('key') : ''
   const { brand, account, group, property } = params,
     baseUrl = getRoute('analytics')
 
+
   if (property) {
-    return `${baseUrl}/${brand}/${account}/${group}/${property}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${group}/${property}/${landingTab}`
   } else if (group) {
-    return `${baseUrl}/${brand}/${account}/${group}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${group}/${landingTab}`
   } else if (account) {
-    return `${baseUrl}/${brand}/${account}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${landingTab}`
   } else if (brand) {
     return `${baseUrl}/${brand}`
   } else {
