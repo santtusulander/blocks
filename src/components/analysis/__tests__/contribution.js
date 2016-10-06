@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 
+jest.autoMockOff()
 jest.dontMock('../contribution.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
@@ -12,11 +13,8 @@ const AnalysisContribution = require('../contribution.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeStats = Immutable.fromJS([
   {
