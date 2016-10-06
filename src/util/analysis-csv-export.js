@@ -14,11 +14,9 @@ function mapTimestamps(item) {
 }
 
 export function createCSVExporters(filenamePart) {
-  function generate(name, data = {}) {
-    const jsData = data instanceof Immutable.List || data instanceof Immutable.Map
-    ? data.toJS() : data
+  function generate(name, data) {
     download(
-      Papa.unparse(jsData),
+      Papa.unparse(data.toJS()),
       `${name} - ${filenamePart}.csv`,
       'text/csv'
     )
@@ -59,10 +57,10 @@ export function createCSVExporters(filenamePart) {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
       generate('File Errors', data)
     },
-    'cache-hit-rate': traffic => {
-      const data = traffic.map(item => ({
-        timestamp: moment(item.timestamp).format(),
-        cache_hit_ratio: item.chit_ratio || 0
+    'cache-hit-rate': cacheHitRate => {
+      const data = cacheHitRate.map(item => ({
+        timestamp: moment(item.get('timestamp')).format(),
+        cache_hit_ratio: item.get('chit_ratio') || 0
       }))
       generate('Cache Hit Rate', data)
     },

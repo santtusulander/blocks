@@ -41,7 +41,7 @@ class AnalyticsExport extends React.Component {
         exportData = [this.props.fileErrorURLs, this.props.serviceTypes]
         break
       case 'cache-hit-rate':
-        exportData = [this.props.traffic.toJS()]
+        exportData = [this.props.traffic]
         break
       case 'url-report':
         exportData = [this.props.urlMetrics]
