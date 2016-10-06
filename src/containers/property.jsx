@@ -33,8 +33,8 @@ import TruncatedTitle from '../components/truncated-title'
 import DeleteModal from '../components/delete-modal'
 import IsAllowed from '../components/is-allowed'
 
-import {formatBitsPerSecond} from '../util/helpers'
-import {getContentUrl} from '../util/routes'
+import { formatBitsPerSecond } from '../util/helpers'
+import { getContentUrl, getAnalyticsUrl } from '../util/routes'
 
 import DateRanges from '../constants/date-ranges'
 import { paleblue } from '../constants/colors'
@@ -370,7 +370,7 @@ export class Property extends React.Component {
               <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
             </IsAllowed>
             <Link className="btn btn-success btn-icon"
-                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                  to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
               <IconChart/>
             </Link>
             <Link className="btn btn-success btn-icon"
