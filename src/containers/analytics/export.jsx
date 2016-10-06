@@ -34,8 +34,7 @@ class AnalyticsExport extends React.Component {
         exportData = [this.props.onOffStats]
         break
       case 'contribution':
-        //TODO: There is no valid exporter for contribution report yet
-        console.log('No valid exporter for contribution report!')
+        exportData = [this.props.contribution]
         break
       case 'file-error':
         exportData = [this.props.fileErrorURLs, this.props.serviceTypes]
@@ -56,7 +55,7 @@ class AnalyticsExport extends React.Component {
       <Button
         bsStyle="primary"
         className="has-icon"
-        disabled={this.props.activeTab === 'playback-demo' || this.props.activeTab === 'contribution'}
+        disabled={this.props.activeTab === 'playback-demo'}
         onClick={this.exportCSV}>
         <IconExport />
         <FormattedMessage id="portal.button.export"/>
@@ -70,6 +69,7 @@ AnalyticsExport.propTypes = {
   activeGroup: PropTypes.instanceOf(Map),
   activeHost: PropTypes.instanceOf(Map),
   activeTab: PropTypes.string,
+  contribution: PropTypes.instanceOf(List),
   fileErrorURLs: PropTypes.instanceOf(List),
   onOffStats: PropTypes.instanceOf(List),
   params: PropTypes.object,
@@ -97,6 +97,7 @@ function mapStateToProps(state) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
+    contribution: state.traffic.get('contribution'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     onOffStats: state.traffic.get('onOffNet').get('detail'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
