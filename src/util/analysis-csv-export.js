@@ -13,11 +13,11 @@ function filterByServiceType(serviceTypes) {
 }
 
 const formatContributionData = data => data.reduce((byCountry, provider) => {
-  const countryRecord = provider.countries.map(country => ({
-    provider: provider.name,
-    country: country.name,
-    bytes: country.bytes,
-    percent_total: country.percent_total
+  const countryRecord = provider.get('countries').map(country => ({
+    provider: provider.get('name'),
+    country: country.get('name'),
+    bytes: country.get('bytes'),
+    percent_total: country.get('percent_total')
   }))
   byCountry.push(...countryRecord)
   return byCountry
@@ -29,10 +29,8 @@ function mapTimestamps(item) {
 
 export function createCSVExporters(filenamePart) {
   function generate(name, data) {
-    const jsData = data instanceof Immutable.List || data instanceof Immutable.Map
-      ? data.toJS() : data
     download(
-      Papa.unparse(jsData),
+      Papa.unparse(data.toJS()),
       `${name} - ${filenamePart}.csv`,
       'text/csv'
     )
@@ -66,7 +64,7 @@ export function createCSVExporters(filenamePart) {
         bytes: formatBytes(bytes),
         percent_total: numeral(percent_total).format('0%')
       }))
-      generate('Service Provider', toExport)
+      generate('Contribution', Immutable.fromJS(toExport))
     },
     'file-error': (fileErrorURLs, serviceTypes) => {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
