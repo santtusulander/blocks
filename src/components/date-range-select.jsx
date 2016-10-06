@@ -46,14 +46,17 @@ export class DateRangeSelect extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // This is used when filters are resetted and this component re-mounted and
+    // the filters prop might get updated after the mount with a delay
+    // TODO: This is not now working on property summary page
     const nextState = {}
     let dateChanged = false
-    if(nextProps.startDate && (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
-      nextState.startDate = nextProps.startDate
+    if (nextProps.startDate && (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
+      nextState.startDate = nextProps.startDate || startOfThisMonth()
       dateChanged = true
     }
-    if(nextProps.endDate && (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
-      nextState.endDate = nextProps.endDate
+    if (nextProps.endDate && (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
+      nextState.endDate = nextProps.endDate || endOfThisDay()
       dateChanged = true
     }
     if(dateChanged) {

@@ -110,6 +110,11 @@ class DnsDomainEditFormContainer  extends Component {
     })
   }
 
+  componentDidMount(){
+    //show errors on edit even without touching fields
+    if (this.props.edit) this.props.touchAll()
+  }
+
   render() {
     const { edit, saveDomain, closeModal, ...formProps } = this.props
     const domainFormProps = {

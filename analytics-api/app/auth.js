@@ -41,7 +41,7 @@ function auth(req, res, next) {
     const data                             = resp.data;
     // NOTE: userAccount is the account ID the user is associated with
     const userAccount                      = data.account_id;
-    const requestedAccount                 = req.query.account;
+    const requestedAccount                 = req.query.account || req.query.sp_account;
     const userCanListAccounts              = _.get(data, 'services.AAA.permissions.resources.accounts.list.allowed', false);
     const userIsTryingToAccessWrongAccount = !userCanListAccounts && (userAccount != requestedAccount);
 

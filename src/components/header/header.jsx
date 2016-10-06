@@ -18,6 +18,8 @@ import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
 
 import { FormattedMessage } from 'react-intl'
 
+import { userIsServiceProvider } from '../../util/helpers.js'
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -148,6 +150,10 @@ class Header extends React.Component {
       links.push( {label:  'Support'} )
     } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
       links.push( {label:  'Configuration'} )
+    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
+      links.push( {label:  'Network'} )
+    } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
+      links.push( {label:  'Dashboard'} )
     }
 
     return links.reverse()
@@ -183,8 +189,15 @@ class Header extends React.Component {
         router.push(getUrl('/security', ...params))
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
+      } else if(router.isActive('/network')) {
+        router.push(getContentUrl(...params))
+      } else if(router.isActive('/dashboard')) {
+        router.push(getContentUrl(...params))
       }
     }
+    const logoLink = userIsServiceProvider(user) ?
+      `/network/udn/${this.props.activeAccount.get('id')}` :
+      getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
@@ -201,10 +214,7 @@ class Header extends React.Component {
                 </Link>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <Link to={getRoute('contentAccount', {
-                  brand: 'udn',
-                  account: user.get('account_id')
-                })} className="logo">
+                <Link to={logoLink} className="logo">
                   <IconEricsson />
                 </Link>
               </IsAllowed>
