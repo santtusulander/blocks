@@ -10,7 +10,7 @@ import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import { paleblue } from '../../constants/colors'
-import Select from '../select'
+// import Select from '../select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class AnalysisCacheHitRate extends React.Component {
       sortBy: 'timestamp',
       sortDir: -1,
       sortFunc: '',
-      chartType: 'area'
+      chartType: 'column'
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -87,6 +87,7 @@ class AnalysisCacheHitRate extends React.Component {
       chart = (
         <AnalysisStackedByTime
           padding={40}
+          dontShowHours={true}
           dataKey='chit_ratio'
           dataSets={dataSets}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
@@ -127,12 +128,14 @@ class AnalysisCacheHitRate extends React.Component {
       <div>
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.cacheHitRateByDay.text"/>}>
+          {/* Disabled as part of UDNP-1531
           <Select
             className='pull-right'
-            options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
+            options={[{value: 'column', label: 'Column Chart'}]}
             value={this.state.chartType}
             onSelect= {this.changeChartType}
           />
+          */}
         </SectionHeader>
 
         <SectionContainer>

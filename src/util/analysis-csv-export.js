@@ -43,7 +43,7 @@ export function createCSVExporters(filenamePart) {
         }))
       generate('On Off Net', data)
     },
-    'service-providers': onOffNet => {
+    'contribution': onOffNet => {
       const data = onOffNet
         .map(item => Immutable.Map({
           timestamp: moment(item.get('timestamp')).format(),

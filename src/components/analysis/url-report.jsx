@@ -52,26 +52,10 @@ class AnalysisURLReport extends React.Component {
     })
   }
   render() {
-
-    //REFACTOR: Shared code with file-error.jsx
-
-    //URL filtering
-    //by serviceType
-    const {serviceTypes, statusCodes, urls} = this.props;
+    const {urlMetrics} = this.props;
     const {dataKey, xAxisCustomFormat} = this.state;
-    const filteredUrls = urls.filter( (url) => {
-      return serviceTypes.includes(url.get('service_type'))
-    })
-      //filter by error code
-      .filter((url, i) => {
-        if (i >= 15) {
-          return false;
-        }
-
-        return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
-      })
-
-    const chartHeight = filteredUrls.size * 36 + 72
+    const top15URLs = urlMetrics.filter((metric, i) => i < 15)
+    const chartHeight = top15URLs.size * 36 + 72
 
     return (
       <div>
@@ -82,7 +66,7 @@ class AnalysisURLReport extends React.Component {
         <SectionContainer>
           <div ref="chartHolder">
             <AnalysisHorizontalBar
-              data={filteredUrls.toJS()}
+              data={top15URLs.toJS()}
               dataKey={dataKey}
               height={chartHeight}
               labelKey="url"
@@ -102,8 +86,8 @@ class AnalysisURLReport extends React.Component {
         </SectionHeader>
         <SectionContainer>
           <AnalysisURLList
-            urls={filteredUrls}
-            labelFormat={url => url.get('url')}
+            urls={urlMetrics}
+            labelFormat={metric => metric.get('url')}
             searchState={this.state.search} />
         </SectionContainer>
       </div>
@@ -116,10 +100,10 @@ AnalysisURLReport.propTypes = {
   intl: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   statusCodes: React.PropTypes.instanceOf(Immutable.List),
-  urls: React.PropTypes.instanceOf(Immutable.List)
+  urlMetrics: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLReport.defaultProps = {
-  urls: Immutable.List()
+  urlMetrics: Immutable.List()
 }
 
 module.exports = injectIntl(AnalysisURLReport)

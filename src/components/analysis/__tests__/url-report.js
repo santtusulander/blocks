@@ -1,10 +1,17 @@
-jest.unmock('../url-report.jsx')
-
 import React from 'react'
-import { mount } from 'enzyme'
+import { shallow,mount } from 'enzyme'
 import { fromJS } from 'immutable'
 
-import AnalysisURLReport from '../url-report.jsx'
+//jest.autoMockOff()
+jest.unmock('../url-report.jsx')
+
+const AnalysisURLReport = require('../url-report.jsx')
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const urls = fromJS([
   {
@@ -21,6 +28,11 @@ const urls = fromJS([
   }
 ])
 
+const urlMetrics = fromJS([
+    {1: 'dummy'},
+    {2: 'dummy 2'}
+  ])
+
 describe('AnalysisURLReport', () => {
   let subject = null
   let props = {}
@@ -28,10 +40,12 @@ describe('AnalysisURLReport', () => {
     subject = () => {
       props = {
         urls,
+        urlMetrics,
         serviceTypes: fromJS(['http']),
-        statusCodes: fromJS(['All'])
+        statusCodes: fromJS(['All']),
+        intl: intlMaker()
       }
-      return mount(<AnalysisURLReport {...props}/>)
+      return shallow(<AnalysisURLReport {...props}/>)
     }
   })
 
@@ -40,20 +54,20 @@ describe('AnalysisURLReport', () => {
   });
 
   it('should pass on filtered urls', () => {
-    expect(subject().find('AnalysisURLList').props().urls).toEqual(urls.pop())
+    expect(subject().find('AnalysisURLList').props().urls).toEqual(urlMetrics/*.pop()*/)
   })
 
   it('should pass on proper chart height prop', () => {
-    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(108)
+    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(144)
   })
 
   it('should select data type properly', () => {
     const component = subject()
     const bytesBtn = component.find('[value="bytes"]')
     const requestsBtn = component.find('[value="requests"]')
-    requestsBtn.simulate('change')
+    requestsBtn.simulate('change', {target: {value: 'requests'} } )
     expect(component.state().dataKey).toBe('requests')
-    bytesBtn.simulate('change')
+    bytesBtn.simulate('change',{target: {value: 'bytes'} })
     expect(component.state().dataKey).toBe('bytes')
   })
 })
