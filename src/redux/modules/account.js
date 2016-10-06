@@ -2,7 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
 
-import { urlBase, mapReducers, parseResponseData } from '../util'
+import { BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
 const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
@@ -128,7 +128,7 @@ export default handleActions({
 // ACTIONS
 
 export const createAccount = createAction(ACCOUNT_CREATED, (brand, account) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts`, account, {
+  return axios.post(`${BASE_URL_AAA}/brands/${brand}/accounts`, account, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -137,24 +137,24 @@ export const createAccount = createAction(ACCOUNT_CREATED, (brand, account) => {
 })
 
 export const deleteAccount = createAction(ACCOUNT_DELETED, (brand, id) => {
-  return axios.delete(`${urlBase}/v2/brands/${brand}/accounts/${id}`)
+  return axios.delete(`${BASE_URL_AAA}/brands/${brand}/accounts/${id}`)
   .then(() => {
     return {id: id}
   });
 })
 
 export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${id}`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${id}`)
   .then(parseResponseData);
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
   .then(parseResponseData);
 })
 
 export const updateAccount = createAction(ACCOUNT_UPDATED, (brand, id, account) => {
-  return axios.put(`${urlBase}/v2/brands/${brand}/accounts/${id}`, account, {
+  return axios.put(`${BASE_URL_AAA}/brands/${brand}/accounts/${id}`, account, {
     headers: {
       'Content-Type': 'application/json'
     }

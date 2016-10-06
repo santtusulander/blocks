@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { analyticsBase, qsBuilder, urlBase, mapReducers, parseResponseData } from '../util'
+import { analyticsBase, qsBuilder, BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
 import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CONTENT_PROVIDER
@@ -71,6 +71,21 @@ export function setValue(state, action) {
 
 export function resetDefaults(state) {
   return state.merge(initialState)
+}
+
+export function resetContributionDefaults(state) {
+  state = state.setIn(['filters', 'contentProviders'], Immutable.List())
+  state = state.setIn(['filters', 'contentProviderGroups'], Immutable.List())
+  state = state.setIn(['filters', 'contentProviderProperties'], Immutable.List())
+  state = state.setIn(['filters', 'serviceProviders'], Immutable.List())
+  state = state.setIn(['filters', 'serviceProviderGroups'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviders'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviderGroups'], Immutable.List())
+  state = state.setIn(['filterOptions', 'contentProviderProperties'], Immutable.List())
+  state = state.setIn(['filterOptions', 'serviceProviders'], Immutable.List())
+  state = state.setIn(['filterOptions', 'serviceProviderGroups'], Immutable.List())
+
+  return state
 }
 
 export function fetchServiceProvidersSuccess(state, action) {
@@ -259,6 +274,7 @@ export function fetchCPGroupsforSPFailure(state) {
 
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
 const RESET_FILTERS = 'RESET_FILTERS'
+const RESET_CONTRIBUTION_FILTERS = 'RESET_CONTRIBUTION_FILTERS'
 const SERVICE_PROVIDERS_FETCHED = 'SERVICE_PROVIDERS_FETCHED'
 const SERVICE_PROVIDER_GROUPS_FETCHED = 'SERVICE_PROVIDER_GROUPS_FETCHED'
 const SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED = 'SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED'
@@ -271,6 +287,7 @@ const CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED = 'CONTENT_PROVIDER_GR
 export default handleActions({
   SET_FILTER_VALUE: setValue,
   RESET_FILTERS: resetDefaults,
+  RESET_CONTRIBUTION_FILTERS: resetContributionDefaults,
   SERVICE_PROVIDERS_FETCHED: mapReducers(fetchServiceProvidersSuccess, fetchServiceProvidersFailure),
   CONTENT_PROVIDERS_FETCHED: mapReducers(fetchContentProvidersSuccess, fetchContentProvidersFailure),
   SERVICE_PROVIDER_GROUPS_FETCHED: mapReducers(fetchServiceProviderGroupsSuccess, fetchServiceProviderGroupsFailure),
@@ -285,31 +302,32 @@ export default handleActions({
 
 export const setFilterValue = createAction(SET_FILTER_VALUE)
 export const resetFilters = createAction(RESET_FILTERS)
+export const resetContributionFilters = createAction(RESET_CONTRIBUTION_FILTERS)
 
 export const fetchServiceProviders = createAction(SERVICE_PROVIDERS_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_SERVICE_PROVIDER}`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_SERVICE_PROVIDER}`)
   .then(parseResponseData);
 })
 
 export const fetchContentProviders = createAction(CONTENT_PROVIDERS_FETCHED, (brand) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_CONTENT_PROVIDER}`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts?provider_type=${ACCOUNT_TYPE_CONTENT_PROVIDER}`)
   .then(parseResponseData);
 })
 
 export const fetchServiceProviderGroups = createAction(SERVICE_PROVIDER_GROUPS_FETCHED, (brand, account) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
   .then(parseResponseData);
 })
 
 export const fetchContentProviderGroups = createAction(CONTENT_PROVIDER_GROUPS_FETCHED, (brand, account) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
   .then(parseResponseData);
 })
 
 export const fetchServiceProvidersWithTrafficForCP = createAction(SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=accounts`)
     .then(action => Promise.all(action.data.data.map(
-      account => axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}`)
+      account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
     )))
     .then(resp => resp.map(resp => resp.data))
 })
@@ -317,7 +335,7 @@ export const fetchServiceProvidersWithTrafficForCP = createAction(SERVICE_PROVID
 export const fetchContentProvidersWithTrafficForSP = createAction(CONTENT_PROVIDERS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=accounts`)
   .then(action => Promise.all(action.data.data.map(
-    account => axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}`)
+    account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
   )))
   .then(resp => resp.map(resp => resp.data))
 })
@@ -325,7 +343,7 @@ export const fetchContentProvidersWithTrafficForSP = createAction(CONTENT_PROVID
 export const fetchServiceProviderGroupsWithTrafficForCP = createAction(SERVICE_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, sp_account, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=groups&sp_account=${sp_account}`)
     .then(action => Promise.all(action.data.data.map(
-      group => axios.get(`${urlBase}/v2/brands/${brand}/accounts/${sp_account}/groups/${group}`)
+      group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${sp_account}/groups/${group}`)
     )))
     .then(resp => resp.map(resp => resp.data))
 })
@@ -333,7 +351,7 @@ export const fetchServiceProviderGroupsWithTrafficForCP = createAction(SERVICE_P
 export const fetchContentProviderGroupsWithTrafficForSP = createAction(CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, cp_account, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=groups&account=${cp_account}`)
   .then(action => Promise.all(action.data.data.map(
-    group => axios.get(`${urlBase}/v2/brands/${brand}/accounts/${cp_account}/groups/${group}`)
+    group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${cp_account}/groups/${group}`)
   )))
   .then(resp => resp.map(resp => resp.data))
 })
