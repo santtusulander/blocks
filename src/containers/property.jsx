@@ -28,7 +28,7 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
-import {getContentUrl} from '../util/routes'
+import { getContentUrl, getAnalyticsUrl } from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
@@ -280,7 +280,10 @@ export class Property extends React.Component {
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    const dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    let dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    if (dateRange < moment.duration(28, 'days')) {
+      dateRange = moment.duration(28, 'days')
+    }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
@@ -361,7 +364,7 @@ export class Property extends React.Component {
           <ButtonToolbar>
             <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
             <Link className="btn btn-success btn-icon"
-                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                  to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
               <IconChart/>
             </Link>
             <Link className="btn btn-success btn-icon"

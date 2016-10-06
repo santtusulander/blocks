@@ -7,18 +7,8 @@ const reactRedux = require('react-redux')
 reactRedux.connect = jest.genMockFunction()
 reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
-jest.dontMock('../by-location.jsx')
-const AnalysisByLocation = require('../by-location.jsx')
-
-// Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
-const numeral = require('numeral')
-
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+jest.unmock('../by-location.jsx')
+import AnalysisByLocation from '../by-location.jsx'
 
 let topojson = require('topojson')
 topojson.feature = topojson.feature.mockImplementation(function(topo) {

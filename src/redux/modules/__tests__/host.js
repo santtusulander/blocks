@@ -52,7 +52,8 @@ describe('Host Module', () => {
 
   it('should handle delete host success', () => {
     const state = fromJS({
-      allHosts: [1]
+      allHosts: [1],
+      configuredHostNames: [1]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
     expect(newState.get('allHosts')).not.toContain(1);

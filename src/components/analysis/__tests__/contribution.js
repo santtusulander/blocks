@@ -1,21 +1,20 @@
 import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../service-providers.jsx')
+jest.autoMockOff()
+jest.dontMock('../contribution.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
-const AnalysisServiceProviders = require('../service-providers.jsx')
+const AnalysisContribution = require('../contribution.jsx')
 
 // Set up mocks to make sure formatting libs are used correctly
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeStats = Immutable.fromJS([
   {
@@ -75,23 +74,23 @@ const fakeStats = Immutable.fromJS([
   }
 ])
 
-describe('AnalysisServiceProviders', () => {
+describe('AnalysisContribution', () => {
   it('should exist', () => {
-    const analysisServiceProviders = TestUtils.renderIntoDocument(
-      <AnalysisServiceProviders
+    const analysisContribution = shallow(
+      <AnalysisContribution
         fetching={true}
         stats={fakeStats}/>
     );
-    expect(TestUtils.isCompositeComponent(analysisServiceProviders)).toBeTruthy();
+    expect(TestUtils.isCompositeComponent(analysisContribution)).toBeTruthy();
   });
 
   it('should show data rows in table', () => {
-    const analysisServiceProviders = TestUtils.renderIntoDocument(
-      <AnalysisServiceProviders
+    const analysisContribution = shallow(
+      <AnalysisContribution
         fetching={false}
         stats={fakeStats}/>
     );
-    const trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisServiceProviders, 'tr')
+    const trs = analysisContribution.find('tr')
     expect(trs.length).toBe(4);
   });
 })

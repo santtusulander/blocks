@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {urlBase, mapReducers} from '../util'
+import {BASE_URL_AAA, mapReducers} from '../util'
 
 const GROUP_CREATED = 'GROUP_CREATED'
 const GROUP_DELETED = 'GROUP_DELETED'
@@ -114,7 +114,7 @@ export default handleActions({
 // ACTIONS
 
 export const createGroup = createAction(GROUP_CREATED, (brand, account, name) => {
-  return axios.post(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`, {name: name}, {
+  return axios.post(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, {name: name}, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -127,14 +127,14 @@ export const createGroup = createAction(GROUP_CREATED, (brand, account, name) =>
 })
 
 export const deleteGroup = createAction(GROUP_DELETED, (brand, account, id) => {
-  return axios.delete(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups/${id}`)
+  return axios.delete(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
   .then(() => {
     return {id: id}
   });
 })
 
 export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups/${id}`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -143,7 +143,7 @@ export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -152,7 +152,7 @@ export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
 })
 
 export const updateGroup = createAction(GROUP_UPDATED, (brand, account, id, group) => {
-  return axios.put(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups/${id}`, group, {
+  return axios.put(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`, group, {
     headers: {
       'Content-Type': 'application/json'
     }

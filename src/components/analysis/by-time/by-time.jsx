@@ -23,7 +23,7 @@ const getExtent = (datasets, key) => {
 
 const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
-  const val = actualVal || positionVal
+  const val = actualVal || 0
   const formattedValue = formatY(val)
   const text = formatter ?
     formatter(date, val) :
