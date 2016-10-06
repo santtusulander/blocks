@@ -1,12 +1,17 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
-import { List, Map, fromJS } from 'immutable'
+import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
 import DateRangeSelect from '../date-range-select.jsx'
 import DateRanges from '../../constants/date-ranges'
 import ProviderTypes from '../../constants/provider-types'
+import {
+  userIsServiceProvider,
+  userIsContentProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 import FilterServiceProvider from '../analysis/filters/service-provider.jsx'
 import FilterContentProvider from '../analysis/filters/content-provider.jsx'
@@ -91,10 +96,8 @@ StatusCodes.propTypes = {
 
 const AnalyticsFilters = (props) => {
   const {
-    filters,
     activeAccountProviderType,
-    currentUserRole,
-    params: { account, group, property }
+    currentUser
   } = props
 
   /* Filter options for FilterServiceProvider and FilterContentProvider */
@@ -102,20 +105,24 @@ const AnalyticsFilters = (props) => {
   let cpFilterOptions = []
 
   // the following builds the dropdown list based off of current user role
-  switch (currentUserRole) {
-    case ProviderTypes.CONTENT_PROVIDER:
-    case ProviderTypes.CLOUD_PROVIDER:
-      cpFilterOptions = ['cp-account','cp-group','cp-property']
-      spFilterOptions = ['sp-account','sp-group']
-      break;
-    case ProviderTypes.SERVICE_PROVIDER:
-      cpFilterOptions = ['cp-account']
-      spFilterOptions = ['sp-group']
-      break;
+  if (userIsServiceProvider(currentUser)) {
+    cpFilterOptions = ['cp-account']
+    spFilterOptions = ['sp-group']
+  } else if (userIsContentProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+
+    // spFilterOptions = ['sp-account','sp-group'] // TODO: uncomment line as part of UDNP-1577
+    spFilterOptions = ['sp-account'] // TODO: delete line as part of UDNP-1577
+  } else if (userIsCloudProvider(currentUser)) {
+    cpFilterOptions = ['cp-account','cp-group','cp-property']
+    spFilterOptions = ['sp-account','sp-group']
   }
 
   // the following hides certain dropdowns based on GAS status and current user role
-  if (activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER) {
+  if (
+    activeAccountProviderType === ProviderTypes.SERVICE_PROVIDER ||
+    activeAccountProviderType === ProviderTypes.CLOUD_PROVIDER
+  ) {
     spFilterOptions = []
   } else if (activeAccountProviderType === ProviderTypes.CONTENT_PROVIDER) {
     cpFilterOptions = []
@@ -275,7 +282,7 @@ const AnalyticsFilters = (props) => {
 
 AnalyticsFilters.propTypes = {
   activeAccountProviderType: PropTypes.number,
-  currentUserRole: PropTypes.number,
+  currentUser: PropTypes.instanceOf(Map),
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
