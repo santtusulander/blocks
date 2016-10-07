@@ -109,12 +109,11 @@ class AnalyticsContainer extends React.Component {
 
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
     const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
-    const currentUserRole = user.getIn(['roles', 0], null)
 
     return (
       <AnalyticsFilters
         activeAccountProviderType={activeAccountProviderType}
-        currentUserRole={currentUserRole}
+        currentUser={user}
         params={params}
         onFilterChange={this.onFilterChange}
         filters={filters}

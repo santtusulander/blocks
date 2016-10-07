@@ -26,14 +26,18 @@ class AnalysisContribution extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     if (!this.refs.stacksHolder) {
@@ -165,7 +169,7 @@ class AnalysisContribution extends React.Component {
                         <td>{country.get('provider')}</td>
                         <td>{country.get('country')}</td>
                         <td>{formatBytes(country.get('bytes'))}</td>
-                        <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                        <td>{numeral(country.get('percent_total')).format('0.00%')}</td>
                       </tr>
                     )
                   })}
