@@ -66,6 +66,7 @@ describe('AnalysisStackedByTime', () => {
       <AnalysisStackedByTime width={400} height={200} padding={10} dataSets={fakeData}/>
     )
     const texts = wrapper.find('text')
-    expect(texts.first().text()).toBeGreaterThan('01:00')
+    const first = Number(texts.first().text())
+    expect(first).toBeGreaterThan(400)
   });
 });
