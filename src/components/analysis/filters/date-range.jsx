@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
@@ -37,9 +37,12 @@ const FilterDateRange = ({ onFilterChange, startDate, endDate, showComparison, i
 
 FilterDateRange.displayName = 'FilterDateRange'
 FilterDateRange.propTypes = {
-  changeDateRange: React.PropTypes.func,
-  endDate: React.PropTypes.instanceOf(moment),
-  startDate: React.PropTypes.instanceOf(moment)
+  changeDateRange: PropTypes.func,
+  endDate: PropTypes.instanceOf(moment),
+  includeComparison: PropTypes.bool,
+  onFilterChange: PropTypes.func,
+  showComparison: PropTypes.bool,
+  startDate: PropTypes.instanceOf(moment)
 }
 
-module.exports = FilterDateRange
+export default FilterDateRange
