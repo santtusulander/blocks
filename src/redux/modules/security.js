@@ -38,7 +38,7 @@ export function fetchGroupsFailure(state) {
 }
 
 export function fetchSSLCertificatesSuccess(state, action) {
-  return state.merge({ sslCertificates: state.get('sslCertificates').merge(action.payload) })
+  return state.set('sslCertificates', fromJS(action.payload))
 }
 
 export function fetchSSLCertificatesFailure(state) {

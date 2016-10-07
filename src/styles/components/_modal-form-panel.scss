@@ -35,6 +35,10 @@
     margin-bottom: 15px;
   }
 
+  .dropdown-menu {
+    z-index: 9999;
+  }
+
   .btn-toolbar {
     position: fixed;
     bottom: 0;
