@@ -23,14 +23,18 @@ class AnalysisURLReport extends React.Component {
     this.changeSearch = this.changeSearch.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.selectDataType = this.selectDataType.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     this.setState({
