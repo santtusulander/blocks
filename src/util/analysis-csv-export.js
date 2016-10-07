@@ -57,6 +57,13 @@ export function createCSVExporters(filenamePart) {
       const data = fileErrorURLs.filter(filterByServiceType(serviceTypes))
       generate('File Errors', data)
     },
+    'cache-hit-rate': cacheHitRate => {
+      const data = cacheHitRate.map(item => ({
+        timestamp: moment(item.get('timestamp')).format(),
+        cache_hit_ratio: item.get('chit_ratio') || 0
+      }))
+      generate('Cache Hit Rate', data)
+    },
     'url-report': urlMetrics => {
       generate('URL Report', urlMetrics)
     },
