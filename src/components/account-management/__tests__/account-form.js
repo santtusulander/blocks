@@ -2,15 +2,11 @@ import React from 'react'
 import { shallow, mount, render } from 'enzyme'
 import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
-// import jsdom from 'jsdom'
 
 jest.unmock('../account-form.jsx')
 jest.genMockFromModule('react-bootstrap')
 
 import AccountForm from '../account-form.jsx'
-
-// global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-// global.window = document.defaultView
 
 const intlMaker = () => {
   return {
