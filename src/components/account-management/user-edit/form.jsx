@@ -13,17 +13,11 @@ const validate = (values) => {
 
   const {
     email,
-    password,
-    confirm,
     role
   } = values
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
-  }
-
-  if(password && password !== confirm) {
-    errors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
   }
 
   if(!role || role.length === 0) {
@@ -86,12 +80,10 @@ class UserEditForm extends React.Component {
     })
   }
 
-  changePassword(isPasswordValid, password) {
+  changePassword(isPasswordValid) {
     this.setState({
       'validPassword': isPasswordValid
     });
-
-    this.props.fields.password.value = password
   }
 
   render() {
@@ -173,7 +165,7 @@ class UserEditForm extends React.Component {
           <Row>
             <Col xs={11}>
               <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
-              <PasswordFields inlinePassword={true} changePassword={this.changePassword} passwordField={password} />
+              <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
               {/*
               <Row>
                 <Col xs={6}>

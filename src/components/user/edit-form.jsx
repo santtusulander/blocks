@@ -5,6 +5,7 @@ import ReactTelephoneInput from 'react-telephone-input'
 // import moment from 'moment'
 import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
+// import IconUser from '../icons/icon-user.jsx'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
@@ -108,12 +109,10 @@ class UserEditForm extends React.Component {
     })
   }
 
-  changePassword(isPasswordValid, password) {
+  changePassword(isPasswordValid) {
     this.setState({
       'validPassword': isPasswordValid
     });
-
-    this.props.fields.password.value = password
   }
 
   render() {
@@ -253,7 +252,7 @@ class UserEditForm extends React.Component {
                 {this.state.showPasswordField || savingPassword ?
                   <div>
                     <Col xs={6}>
-                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} passwordField={password} />
+                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
                     </Col>
                     <Col xs={3} xsOffset={1}>
                       <ButtonToolbar>

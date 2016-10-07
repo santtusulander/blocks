@@ -57,6 +57,9 @@ class PasswordFields extends React.Component {
   }
 
   changePassword(e) {
+    if(this.props.onChange) {
+      this.props.onChange(e)
+    }
     this.changeField('password')(e)
     this.setState({
       passwordValid: this.validatePassword(e.target.value),
@@ -102,7 +105,7 @@ class PasswordFields extends React.Component {
       confirmValid: validPassword
     })
     if (this.props.changePassword) {
-      this.props.changePassword(validPassword, password)
+      this.props.changePassword(validPassword)
     }
   }
 
@@ -169,7 +172,7 @@ class PasswordFields extends React.Component {
     : null
 
     const passwordField = (
-      <Input id="password"
+      <Input
         wrapperClassName={passwordWrapperClassName}
         addonBefore={stackedPassword && <IconPassword/>}
         addonAfter={stackedPassword && <a
@@ -186,7 +189,7 @@ class PasswordFields extends React.Component {
           onFocus={this.passwordFocus(true)}
           onBlur={this.passwordFocus(false)}
           onChange={this.changePassword}
-          value={this.props.passwordField ? this.props.passwordField.value : this.state.password} />
+          value={this.props.value || this.state.password} />
       </Input>
     )
 
@@ -201,7 +204,7 @@ class PasswordFields extends React.Component {
     )
 
     const confirmationField = (
-      <Input id="confirm"
+      <Input
         wrapperClassName={confirmWrapperClassName}
         addonBefore={stackedPassword && <IconPassword/>}
         addonAfter={<a
@@ -212,6 +215,7 @@ class PasswordFields extends React.Component {
         </a>}>
         {confirmErrorTooltip}
         <input
+          id="confirm"
           type={this.state.confirmVisible ? 'text' : 'password'}
           placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
           className="form-control"
@@ -236,8 +240,10 @@ PasswordFields.propTypes = {
   changePassword: React.PropTypes.func,
   inlinePassword: React.PropTypes.bool,
   intl: React.PropTypes.object,
+  onChange: React.PropTypes.func,
   passwordField: React.PropTypes.object,
-  stackedPassword: React.PropTypes.bool
+  stackedPassword: React.PropTypes.bool,
+  value: React.PropTypes.string
 };
 
 export default injectIntl(PasswordFields)
