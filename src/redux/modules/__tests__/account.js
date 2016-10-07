@@ -36,7 +36,7 @@ describe('Account Module', () => {
       allAccounts: [{id: 1}]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
-    expect(newState.get('allAccounts')).not.toContain(1);
+    expect(newState.get('allAccounts').toJS()).not.toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
@@ -45,7 +45,7 @@ describe('Account Module', () => {
       allAccounts: [1]
     });
     const newState = deleteFailure(state, {payload: {id: 1}});
-    expect(newState.get('allAccounts')).toContain(1);
+    expect(newState.get('allAccounts').toJS()).toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
