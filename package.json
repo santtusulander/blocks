@@ -101,6 +101,9 @@
       "src",
       "__mocks__"
     ],
+    "testPathIgnorePatterns": [
+      "__tests__/coverage"
+    ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {
       "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
