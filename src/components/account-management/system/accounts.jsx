@@ -22,11 +22,11 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
-  ACCOUNT_TYPE_CLOUD_PROVIDER,
-  NAME_VALIDATION_REGEXP
+  ACCOUNT_TYPE_CLOUD_PROVIDER
 } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
+import { isValidAccountName } from '../../../util/validators'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
@@ -67,7 +67,7 @@ class AccountList extends Component {
           errorText: 'That account name is taken'
         },
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          condition: ! isValidAccountName(name),
           errorText:
           <div>
           {[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>,
