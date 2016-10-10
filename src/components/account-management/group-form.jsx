@@ -40,7 +40,7 @@ const validate = ({ name }) => {
   return checkForErrors(
     { name },
     conditions,
-    { name: <FormattedMessage id="portal.account.groupForm.name.validation.error"/> }
+    { name: <FormattedMessage id="portal.account.groupForm.name.required.error"/> }
   )
 }
 
