@@ -12,7 +12,15 @@ import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
 
-import { checkForErrors, isValidIPv4Address } from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
+import {
+  isValidFQDN,
+  isInt,
+  isValidIPv4Address,
+  isValidNameserver,
+  isValidSOARecord
+} from '../../../util/validators'
+
 
 const validate = fields => {
   // TODO: name_server validation
@@ -29,30 +37,27 @@ const validate = fields => {
   // and end with a '.' (dot), for example, ns1.example.net.
   const { ttl, negative_ttl, email_addr, name, name_server, refresh } = fields
   const maxTtl = 2147483647;
-  const notValidNameserver = !(new RegExp(/^([a-zA-Z0-9*]([a-zA-Z0-9-*]*[a-zA-Z0-9*]+)?\.)+$/).test(name_server))
-  const notValidDomainName = !(new RegExp(/^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?\.)?([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]+)\.([a-zA-Z]{2,}(\.[a-zA-Z]{2,6})?)$/).test(name))
-  // Note that this is not an usual email address
-  const notValidMailbox = !new RegExp(/^(([-a-z0-9~!$%^&*_=+}{.\'?]*)\.)$/).test(email_addr)
+
   const customConditions = {
     name_server: {
-      condition: !isValidIPv4Address(name_server) ? notValidNameserver : false,
+      condition: !isValidIPv4Address(name_server) ? !isValidNameserver(name_server) : false,
       errorText: <FormattedMessage id='portal.account.domainForm.validation.nameServer'/>
     },
     name: {
-      condition: notValidDomainName,
+      condition: !isValidFQDN(name),
       errorText: <FormattedMessage id='portal.account.domainForm.validation.domainName'/>
     },
     email_addr: {
-      condition: notValidMailbox,
+      condition: !isValidSOARecord(email_addr),
       errorText: <FormattedMessage id='portal.account.domainForm.validation.mailbox'/>
     },
     refresh: {
-      condition: isNaN(refresh),
+      condition: !isInt(refresh),
       errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
     },
     ttl: [
       {
-        condition: isNaN(ttl),
+        condition: !isInt(ttl),
         errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
       },
       {

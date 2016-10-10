@@ -9,6 +9,21 @@
   "portal.account.dnsList.prio.header": "Priority",
   "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 
+  "portal.account.groups.name.error.exists": "That group name is taken",
+  "portal.account.groups.name.error.invalid": "Group name is invalid.",
+  "portal.account.groups.name.placeholder": "Name",
+  "portal.account.groups.single.text": "Group",
+  "portal.account.groups.multiple.text": "Groups",
+  "portal.account.groups.email.notSet.placeholder": "No Email",
+  "portal.account.groups.hidden.text": "hidden",
+  "portal.account.groups.table.name.text": "Name",
+  "portal.account.groups.table.members.text": "Members",
+  "portal.account.groups.table.createdOn.text": "Created On",
+  "portal.account.groups.table.properties.text": "Properties",
+  "portal.account.groups.table.noMembers.text": "No members",
+  "portal.account.groups.table.noGroupsFound.text": "No groups found with the search term {searchTerm}",
+  "portal.account.groups.modal.unsaved.content": "You have made changes to the Group(s), are you sure you want to exit without saving?",
+
   "portal.account.recordForm.newRecord.title": "New DNS Record",
   "portal.account.recordForm.editRecord.title": "Edit DNS Record",
   "portal.account.recordForm.selectRecordType.label": "Select Record Type",
@@ -32,5 +47,13 @@
   "portal.account.domainForm.validation.mailbox": "Mailbox should be entered as admin.example.com.",
   "portal.account.domainForm.validation.domainName": "Domain Name is invalid",
   "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
-  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required"
+  "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required",
+
+  "portal.account.soaForm.validation.required": "Required",
+  "portal.account.soaForm.validation.invalid": "Invalid input",
+  "portal.account.soaForm.domainName.label": "Domain Name",
+  "portal.account.soaForm.nameServer.label": "Primary Nameserver",
+  "portal.account.soaForm.personResponsible.label": "Responsible Person Mailbox",
+  "portal.account.soaForm.zoneSerialNumber.label": "Serial # of Zone",
+  "portal.account.soaForm.refresh.label": "Refresh"
 }

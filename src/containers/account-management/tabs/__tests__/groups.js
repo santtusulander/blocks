@@ -13,6 +13,12 @@ import { Router as routerMock } from '../../../__mocks__/router'
 
 const genAsyncMock = jest.genMockFn().mockReturnValue(promisify('whateva'))
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const fakeGroups = Immutable.fromJS([
   {id: 3, name: 'bbb', created: new Date().getTime()  - 1},
   {id: 1, name: 'aaa', created: new Date().getTime()},
@@ -30,6 +36,7 @@ const groupsElem =
       fetchGroups: genAsyncMock
     }}
     router= { routerMock }
+    intl={intlMaker()}
   />
 
 describe('AccountManagementAccountGroups', () => {
@@ -95,6 +102,7 @@ describe('AccountManagementAccountGroups', () => {
         }}
         router= { routerMock }
         addGroup={ addGroup }
+        intl={intlMaker()}
       />
     )
 
@@ -116,6 +124,7 @@ describe('AccountManagementAccountGroups', () => {
         }}
         router= { routerMock }
         editGroup={ editGroup }
+        intl={intlMaker()}
       />)
 
     groups.instance().saveEditedGroup(1)('zzz')
@@ -131,5 +140,9 @@ describe('AccountManagementAccountGroups', () => {
     const filteredData = groups.instance().filteredData('a')
     expect(filteredData.count()).toBe(1)
     expect(filteredData.first().get('name')).toBe('aaa')
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
   })
 })

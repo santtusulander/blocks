@@ -169,7 +169,7 @@ class AnalysisContribution extends React.Component {
                         <td>{country.get('provider')}</td>
                         <td>{country.get('country')}</td>
                         <td>{formatBytes(country.get('bytes'))}</td>
-                        <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                        <td>{numeral(country.get('percent_total')).format('0.00%')}</td>
                       </tr>
                     )
                   })}
