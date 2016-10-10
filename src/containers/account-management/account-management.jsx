@@ -17,7 +17,6 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import DeleteModal from '../../components/delete-modal'
@@ -28,7 +27,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 
-import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
@@ -39,6 +38,7 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
+import { isValidAccountName } from '../../util/validators'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -252,7 +252,7 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
+          condition: !isValidAccountName(accountName),
           errorText:
             <div key={accountName}>
               {[

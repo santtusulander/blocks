@@ -66,6 +66,7 @@ describe('Security', () => {
     props = {
       fetchAccountData: jest.genMockFunction(),
       activeAccount: Immutable.Map({name: 'foo'}),
+      groups: Immutable.List([Immutable.Map({id: 1})]),
       params: { subPage: 'a' },
       location: {pathname: 'bar'},
       securityActions: {

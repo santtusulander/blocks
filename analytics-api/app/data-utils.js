@@ -315,6 +315,8 @@ class DataUtils {
       let httpsOnNetBytes    = _.get(httpsOnNetTraffic, 'bytes', null);
       let httpsOffNetBytes   = _.get(httpsOffNetTraffic, 'bytes', null);
 
+      let countryDataFinal   = [];
+
       record.account = _.get(data, '0.account', null);
       record.group = _.get(data, '0.group', null);
       record.property = _.get(data, '0.property', null);
@@ -336,15 +338,21 @@ class DataUtils {
         net_off_bps: this.getBPSFromBytes(httpsOffNetBytes, duration)
       };
 
-      record.countries = countryDataGrouped[entity_id].map(countryRecord => {
-        return {
-          name: this.getCountryNameFromCode(countryRecord.country),
-          code: this.get3CharCountryCodeFromCode(countryRecord.country),
-          bytes: countryRecord.bytes,
-          bits_per_second: this.getBPSFromBytes(countryRecord.bytes, duration),
-          percent_total: parseFloat((countryRecord.bytes / totalBytes).toFixed(4))
-        }
-      });
+      // NOTE: It is possible that we may not have matching country data for an entity,
+      // in which case record.countries should be an empty array. See: UDNP-1562
+      if (countryDataGrouped[entity_id]) {
+        countryDataFinal = countryDataGrouped[entity_id].map(countryRecord => {
+          return {
+            name: this.getCountryNameFromCode(countryRecord.country),
+            code: this.get3CharCountryCodeFromCode(countryRecord.country),
+            bytes: countryRecord.bytes,
+            bits_per_second: this.getBPSFromBytes(countryRecord.bytes, duration),
+            percent_total: parseFloat((countryRecord.bytes / totalBytes).toFixed(4))
+          }
+        });
+      }
+
+      record.countries = countryDataFinal;
 
       finalTrafficData.push(record);
     })

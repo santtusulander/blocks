@@ -13,16 +13,15 @@ import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
 
-import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
 import { checkForErrors } from '../../util/helpers'
+import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
-
 
 const validate = ({ name }) => {
   const conditions = {
     name: {
-      condition: !new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+      condition: !isValidAccountName(name),
       errorText:
         <div>
           <FormattedMessage id="portal.account.groupForm.name.validation.error"/>,

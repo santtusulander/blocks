@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import {shallow, mount} from 'enzyme'
 
+jest.autoMockOff()
 jest.dontMock('../helpers.js')
 jest.dontMock('../defaults.jsx')
 jest.dontMock('../actions/cache-key-query-string-form.jsx')

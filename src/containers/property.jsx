@@ -28,7 +28,7 @@ import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import {formatBitsPerSecond} from '../util/helpers'
-import {getContentUrl} from '../util/routes'
+import { getContentUrl, getAnalyticsUrl } from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
@@ -83,6 +83,8 @@ export class Property extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
     this.hoverSlice = this.hoverSlice.bind(this)
     this.selectSlice = this.selectSlice.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -94,7 +96,8 @@ export class Property extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {
@@ -127,6 +130,7 @@ export class Property extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   getEmptyHourlyTraffic(startDate, endDate) {
     let hourlyTraffic = [];
@@ -364,7 +368,7 @@ export class Property extends React.Component {
           <ButtonToolbar>
             <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
             <Link className="btn btn-success btn-icon"
-                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                  to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
               <IconChart/>
             </Link>
             <Link className="btn btn-success btn-icon"
@@ -390,10 +394,6 @@ export class Property extends React.Component {
               <h3>
                 {activeConfig.get('edge_configuration').get('published_name')}
               </h3>
-            </Col>
-            <Col xs={2} className="kpi">
-              Current Version
-              <h3>{activeConfig.get('config_name')}</h3>
             </Col>
             <Col xs={4} className="kpi">
               Deployed

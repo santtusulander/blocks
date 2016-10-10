@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
+jest.autoMockOff()
 jest.dontMock('../on-off-net-report.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
@@ -11,11 +12,8 @@ const AnalysisOnOffNetReport = require('../on-off-net-report.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.fn()
-const numeralFormatMock = jest.fn()
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeOnOffStats = Immutable.fromJS({
  total: 31000000,
@@ -71,17 +69,15 @@ describe('AnalysisOnOffNetReport', () => {
   });
 
   it('should show summary stats', () => {
-    moment.mockClear()
-    numeral.mockClear()
-    TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    expect(numeral.mock.calls.length).toBe(8)
-    expect(numeral.mock.calls[0]).toEqual([0.5])
-    expect(numeralFormatMock.mock.calls[0][0]).toBe('0%')
+    let summaryBoxes = TestUtils.scryRenderedDOMComponentsWithClass(analysisOnOffNetReport, 'analysis-data-box')
+    expect(summaryBoxes[0].textContent).toContain('123 KB')
+    expect(summaryBoxes[1].textContent).toContain('31 MB')
   });
 })
