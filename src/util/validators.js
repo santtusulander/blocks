@@ -62,6 +62,16 @@ export function isValidFQDN(domainName, opts = {}) {
 }
 
 /**
+ * Check if valid host-name
+ * @param hostName
+ * @param opts
+ * @returns {boolean|*}
+ */
+export function isValidHostName(hostName, opts = {}) {
+  return isValidFQDN(hostName, opts)
+}
+
+/**
  * Check if valid account-name
  * @param name
  * @returns {boolean}
@@ -73,7 +83,7 @@ export function isValidAccountName(name) {
 /**
  * Check if string is in range
  * @param str
- * @param opts
+ * @param length
  * @returns {*}
  */
 export function isInLength(str, length = 10) {

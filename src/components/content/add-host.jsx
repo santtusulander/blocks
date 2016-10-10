@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, ButtonToolbar, Input } from 'react-bootstrap'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { isValidHostName } from '../../util/validators'
 
 class AddHost extends React.Component {
   constructor(props) {
@@ -20,16 +21,15 @@ class AddHost extends React.Component {
   validate() {
     const hostName = this.refs.new_host_name.getValue()
     this.setState({
-      valid: !!hostName
+      valid: isValidHostName(hostName)
     })
   }
   createHost(e) {
     e.preventDefault()
 
-    const hostName = this.refs.new_host_name.getValue()
-    if (hostName) {
+    if (this.state.valid) {
       this.props.createHost(
-        hostName,
+        this.refs.new_host_name.getValue(),
         this.state.deploymentMode
       )
     }
