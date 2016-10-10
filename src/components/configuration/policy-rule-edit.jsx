@@ -144,6 +144,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   render() {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
+
+    const disableButton = () => {
+      return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
+        !flattenedPolicy.matches[0].field ||
+        !flattenedPolicy.sets.length ||
+        !flattenedPolicy.sets[0].setkey
+    }
+
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
 
@@ -294,7 +302,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             <Button bsStyle="primary" onClick={this.cancelChanges}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary" onClick={this.props.hideAction}>
+            <Button bsStyle="primary"
+                    onClick={this.props.hideAction}
+                    disabled={disableButton()}>
               <FormattedMessage id="portal.button.add"/>
             </Button>
           </ButtonToolbar>

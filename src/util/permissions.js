@@ -46,15 +46,36 @@ permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
 
 // Content Item listing
 permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
-  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'list', 'allowed'])
+  (role) => {
+    // TODO: This role check was implemented to fix UDNP-1556.
+    // This is a temporary fix and is definitely considered a hack. We should never
+    // do role checking in our permission mapping functions. This should be removed
+    // once we come up with a better way to support listing accounts for the
+    // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
+    let isSuperAdmin = role.get('id') === 1 // NOTE: 1 is the role ID for UDN Admins
+    let canListAccounts = role.getIn(['permissions', 'aaa', 'accounts', 'list', 'allowed'], false)
+    return isSuperAdmin && canListAccounts
+  }
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
-  (role) => role.getIn(['permissions', 'north', 'locations', 'list', 'allowed'])
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'list', 'allowed'])
 
 // Account Permissions
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+
+// Group Permissions
+permissionMapping[PERMISSIONS.CREATE_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'modify', 'allowed'])
+
+// Users Permissions
+permissionMapping[PERMISSIONS.CREATE_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_USER] =
+  (role) => role.getIn(['permissions', 'aaa', 'users', 'modify', 'allowed'])
 
 
 // DNS permissions

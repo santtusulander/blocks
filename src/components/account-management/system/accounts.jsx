@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Row, Col, Input } from 'react-bootstrap'
+import { Button, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import PageContainer from '../../../components/layout/page-container'
+import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../inline-add'
@@ -21,14 +22,15 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
-  NAME_VALIDATION_REGEXP
+  ACCOUNT_TYPE_CLOUD_PROVIDER
 } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
+import { isValidAccountName } from '../../../util/validators'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== 3)
+const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
 
 class AccountList extends Component {
   constructor(props) {
@@ -65,7 +67,7 @@ class AccountList extends Component {
           errorText: 'That account name is taken'
         },
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
+          condition: ! isValidAccountName(name),
           errorText:
           <div>
           {[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>,
@@ -185,27 +187,25 @@ class AccountList extends Component {
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values =>
       values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
+    const accountsSize = sortedAccounts.size
+    const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
+    const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
+    const finalAccountsText = accountsSize + accountsText + hiddenAccountsText
+
     return (
       <PageContainer>
-        <Row className="header-btn-row">
-          <Col sm={6}>
-            <h3>
-              {sortedAccounts.size} Account{sortedAccounts.size === 1 ? '' : 's'} {!!hiddenAccs && `(${hiddenAccs} hidden)`}
-            </h3>
-          </Col>
-          <Col sm={6} className="text-right">
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={({ target: { value } }) => this.setState({ search: value })} />
-            <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
-              <IconAdd/>
-            </Button>
-          </Col>
-        </Row>
+        <SectionHeader sectionHeaderTitle={finalAccountsText}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder="Search"
+            value={this.state.search}
+            onChange={({ target: { value } }) => this.setState({ search: value })} />
+          <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
+            <IconAdd/>
+          </Button>
+        </SectionHeader>
         <table className="table table-striped cell-text-left">
           <thead >
           <tr>

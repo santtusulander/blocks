@@ -82,7 +82,12 @@ export class FilterChecklistDropdown extends React.Component {
 
   handleClear() {
     this.setState({filterValue: ''})
-    this.props.handleCheck(List())
+
+    if (this.props.handleCheck) {
+      this.props.handleCheck(List())
+    } else {
+      this.props.onChange(List())
+    }
   }
 
   getLabel() {
@@ -157,9 +162,9 @@ export class FilterChecklistDropdown extends React.Component {
     return (
       <div className="form-group">
         <Dropdown id=""
-                  open={dropdownOpen}
+                  defaultOpen={dropdownOpen}
                   className={className}>
-          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
+          <Dropdown.Toggle disabled={this.props.disabled} onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
             {this.getLabel()}
           </Dropdown.Toggle>
@@ -198,6 +203,7 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   children: React.PropTypes.array,
   className: React.PropTypes.string,
+  disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,

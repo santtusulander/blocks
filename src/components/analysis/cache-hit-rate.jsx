@@ -1,17 +1,16 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
+import {FormattedMessage} from 'react-intl'
 
+import SectionHeader from '../layout/section-header'
+import SectionContainer from '../layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
-import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
-import Select from '../select'
-
-import './cache-hit-rate.scss'
+// import Select from '../select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
@@ -22,21 +21,25 @@ class AnalysisCacheHitRate extends React.Component {
       sortBy: 'timestamp',
       sortDir: -1,
       sortFunc: '',
-      chartType: 'area'
+      chartType: 'column'
     }
 
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.changeChartType = this.changeChartType.bind(this)
     this.sortedData = this.sortedData.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     this.setState({
@@ -85,6 +88,7 @@ class AnalysisCacheHitRate extends React.Component {
       chart = (
         <AnalysisStackedByTime
           padding={40}
+          dontShowHours={true}
           dataKey='chit_ratio'
           dataSets={dataSets}
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
@@ -122,49 +126,50 @@ class AnalysisCacheHitRate extends React.Component {
     }
     const sortedStats = this.sortedData(detail, this.state.sortBy, this.state.sortDir)
     return (
-      <div className="analysis-cache-hit-rate">
-        <Row>
-          <Col sm={8}>
-            <h3>Cache Hit Rate By Day</h3>
-          </Col>
+      <div>
+        <SectionHeader
+          sectionHeaderTitle={<FormattedMessage id="portal.analytics.cacheHitRateByDay.text"/>}>
+          {/* Disabled as part of UDNP-1531
+          <Select
+            className='pull-right'
+            options={[{value: 'column', label: 'Column Chart'}]}
+            value={this.state.chartType}
+            onSelect= {this.changeChartType}
+          />
+          */}
+        </SectionHeader>
 
-          <Col sm={4}>
-            <Select
-              className='pull-right'
-              options={[{value: 'area', label: 'Area Chart'}, {value: 'column', label: 'Column Chart'}]}
-              value={this.state.chartType}
-              onSelect= {this.changeChartType}
-            />
-          </Col>
-        </Row>
+        <SectionContainer>
+          <div ref="stacksHolder">
+            {this.props.fetching ?
+              <div>Loading...</div> : chart}
+          </div>
+        </SectionContainer>
 
-        <div ref="stacksHolder">
-          {this.props.fetching ?
-            <div>Loading...</div> : chart}
-        </div>
-
-        <table className="table table-striped table-analysis extra-margin-top">
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="timestamp">
-              Date
-              </TableSorter>
-              <TableSorter {...sorterProps} column="chit_ratio">
-              Cache Hit Rate (%)
-              </TableSorter>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStats.map((day, i) => {
-              return (
-                <tr key={i}>
-                  <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                  <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <SectionContainer>
+          <table className="table table-striped table-analysis">
+            <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="timestamp">
+                Date
+                </TableSorter>
+                <TableSorter {...sorterProps} column="chit_ratio">
+                Cache Hit Rate (%)
+                </TableSorter>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedStats.map((day, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                    <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </SectionContainer>
       </div>
     )
   }

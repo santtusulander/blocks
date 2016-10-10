@@ -1,29 +1,61 @@
 import React from 'react'
+import Immutable, { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import Select from '../../../components/select'
+import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
-export class FilterServiceProvider extends React.Component {
-  render() {
-    return (
-      <div>
-        <h5><FormattedMessage id="portal.analysis.filters.serviceProvider.title"/></h5>
+const FilterServiceProvider = (props) => {
+  const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
+  const serviceProviderOptions = Immutable.fromJS(props.serviceProviderOptions.map(arrayMapping))
+  const serviceProviderGroupOptions = Immutable.fromJS(props.serviceProviderGroupOptions.map(arrayMapping))
+
+  return (
+    <div className="action">
+      {props.visibleFields.includes('sp-account') && <div>
+        <h5>
+          <FormattedMessage id="portal.analysis.filters.serviceProvider.title"/>
+        </h5>
         <div className="sidebar-content">
-          <Select className="btn-block"
-            onSelect={this.props.changeServiceProvider}
-            value={this.props.value}
-            options={this.props.options}/>
+          <FilterChecklistDropdown className="btn-block"
+          disabled={serviceProviderOptions.size === 0}
+          onChange={props.changeServiceProvider}
+          value={props.serviceProviderValue}
+          options={serviceProviderOptions}/>
         </div>
       </div>
-    );
-  }
+      }
+      {props.visibleFields.includes('sp-group') && <div>
+        <h5>
+          <FormattedMessage id="portal.analysis.filters.serviceProviderGroups.title"/>
+        </h5>
+        <div className="sidebar-content">
+          <FilterChecklistDropdown className="btn-block"
+          disabled={serviceProviderGroupOptions.size === 0}
+          onChange={props.changeServiceProviderGroup}
+          value={props.serviceProviderGroupValue}
+          options={serviceProviderGroupOptions}/>
+        </div>
+      </div>
+      }
+    </div>
+  );
 }
 
 FilterServiceProvider.displayName = 'FilterServiceProvider'
 FilterServiceProvider.propTypes = {
+  visibleFields: React.PropTypes.array,
   changeServiceProvider: React.PropTypes.func,
-  options: React.PropTypes.array,
-  value: React.PropTypes.string
+  changeServiceProviderGroup: React.PropTypes.func,
+  serviceProviderGroupOptions: React.PropTypes.instanceOf(List),
+  serviceProviderGroupValue: React.PropTypes.instanceOf(List),
+  serviceProviderOptions: React.PropTypes.instanceOf(List),
+  serviceProviderValue: React.PropTypes.instanceOf(List)
+}
+FilterServiceProvider.defaultProps = {
+  serviceProviderGroupOptions: List(),
+  serviceProviderGroupValue: List(),
+  serviceProviderOptions: List(),
+  serviceProviderValue: List()
 }
 
-module.exports = FilterServiceProvider
+export default FilterServiceProvider

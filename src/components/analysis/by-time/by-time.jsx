@@ -23,7 +23,7 @@ const getExtent = (datasets, key) => {
 
 const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
-  const val = actualVal || positionVal
+  const val = actualVal || 0
   const formattedValue = formatY(val)
   const text = formatter ?
     formatter(date, val) :
@@ -146,7 +146,7 @@ class AnalysisByTime extends React.Component {
     }
     if(!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
-      return <div className="no-data-list-section section-sm text-sm"><p>No data found.</p></div>
+      return <h4>No data found.</h4>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
       if(dataset.get('stackedAgainst')) {
@@ -255,8 +255,14 @@ class AnalysisByTime extends React.Component {
             showHours={endDate - startDate <= 24*60*60*1000}
             />}
           {this.props.axes ? (() => {
-            const yMax = Math.max(...yScale.ticks(4))
-            return yScale.ticks(4).reduce((axes, tick, i) => {
+            let numTicks = 4;
+            const yMax = Math.max(...yScale.ticks(numTicks))
+
+            // If the yMax is less than the number of ticks, we end up seeing
+            // multiple ticks on the Y axis with the same number. See UDNP-1586
+            numTicks = yMax < numTicks ? yMax : numTicks
+
+            return yScale.ticks(numTicks).reduce((axes, tick, i) => {
               if(i) {
                 axes.push(
                   <g key={i}>

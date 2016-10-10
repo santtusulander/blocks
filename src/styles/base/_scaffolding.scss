@@ -46,6 +46,11 @@ a {
   .light-theme & {
     color: $pale-blue;
   }
+
+  .dark-theme &.btn:not(.btn-link),
+  .light-theme &.btn:not(.btn-link) {
+    color: $white;
+  }
 }
 
 .btn-link svg {

@@ -1,11 +1,14 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router'
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import { getContentUrl } from '../util/routes'
+
+import { userIsServiceProvider } from '../util/helpers.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
@@ -14,7 +17,6 @@ import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
-import IconEye from '../components/icons/icon-eye.jsx'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -24,13 +26,11 @@ export class Login extends React.Component {
       loginError: null,
       password: '',
       passwordActive: false,
-      passwordVisible: false,
       rememberUsername: !!props.username,
       username: props.username,
       usernameActive: false
     }
 
-    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.checkUsernameActive = this.checkUsernameActive.bind(this)
     this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
@@ -44,7 +44,16 @@ export class Login extends React.Component {
       this.props.uiActions.setLoginUrl(null)
     }
     else {
-      this.props.router.push(getContentUrl('brand', 'udn', {}))
+      // Temp UDNP-1545
+      if(userIsServiceProvider(this.props.currentUser)) {
+        if(this.props.currentUser.get('account_id')) {
+          this.props.router.push(`/network/udn/${this.props.currentUser.get('account_id')}`)
+        } else {
+          this.props.router.push(`/network/udn`)
+        }
+      } else {
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
+      }
     }
   }
   /**
@@ -86,11 +95,6 @@ export class Login extends React.Component {
       else {
         this.setState({loginError: action.payload.message})
       }
-    })
-  }
-  togglePasswordVisibility() {
-    this.setState({
-      passwordVisible: !this.state.passwordVisible
     })
   }
   checkUsernameActive(hasFocus) {
@@ -151,16 +155,11 @@ export class Login extends React.Component {
               value={this.state.username}
               onChange={this.changeField('username')}/>
             <Input id="password"
-              type={this.state.passwordVisible ? 'text' : 'password'}
+              type="password"
               wrapperClassName={'input-addon-before input-addon-after-outside '
                 + 'has-login-label login-label-password'
                 + (this.state.passwordActive || this.state.password ? ' active' : '')}
               addonBefore={<IconPassword/>}
-              addonAfter={<a className={'input-addon-link' +
-                  (this.state.passwordVisible ? ' active' : '')}
-                  onClick={this.togglePasswordVisibility}>
-                    <IconEye/>
-                </a>}
               onFocus={this.checkPasswordActive(true)}
               onBlur={this.checkPasswordActive(false)}
               value={this.state.password}
@@ -179,7 +178,7 @@ export class Login extends React.Component {
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
 
-                <a href='mailto:support@ericssonudn.com?subject=Password reset request&body=Please, reset my password.' className="btn btn-link pull-right">
+                <a href='mailto:support@ericssonudn.com?subject=Forgot Password&body=Please email us at support@ericssonudn.com to request a password change using the email address associated with your UDN account. Our support team will verify your account information before sending resetting your password. Thank you.' className="btn btn-link pull-right">
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
                 </a>
 
@@ -205,6 +204,7 @@ export class Login extends React.Component {
 Login.displayName = 'Login'
 Login.propTypes = {
   accountActions: React.PropTypes.object,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
@@ -215,9 +215,13 @@ Login.propTypes = {
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
+Login.defaultProps = {
+  currentUser: Immutable.Map()
+}
 
 function mapStateToProps(state) {
   return {
+    currentUser: state.user.get('currentUser'),
     fetching: state.user.get('fetching') || state.account.get('fetching'),
     loggedIn: state.user.get('loggedIn'),
     loginUrl: state.ui.get('loginUrl'),

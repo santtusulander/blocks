@@ -1,6 +1,7 @@
 import account from './account.json'
 import analytics from './analytics.json'
 import common from './common.json'
+import configuration from './configuration.json'
 import content from './content.json'
 import security from './security.json'
 import services from './security.json'
@@ -14,6 +15,7 @@ export default Object.assign({},
   account,
   analytics,
   common,
+  configuration,
   content,
   security,
   services,

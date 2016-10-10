@@ -25,13 +25,13 @@ module.exports = {
 
     client
       .expect.element('.dropdown-account-menu li:nth-of-type(1) a')
-      .text.to.contain('FooBar');
+      .text.to.contain('test');
 
     headerPage
       .click('.dropdown-account-menu li:first-of-type');
 
     accountsPage
-      .expect.element('@pageTitle').text.to.contain('FOOBAR');
+      .expect.element('@pageTitle').text.to.contain('test');
   },
 
   'Selected item should have active class in account menu dropdown': (client) => {

@@ -116,8 +116,7 @@ describe('Traffic Module', () => {
     })
     it('should handle trafficServiceProvidersSuccess', () => {
       const newState = trafficServiceProvidersSuccess(state, {payload: {data:  [{value: 'test', timestamp: timestamp}] } })
-
-      expect(newState.get('serviceProviders').count() ).toBe(1);
+      expect(newState.get('contribution').count() ).toBe(1);
 
     })
     it('should handle trafficServiceProvidersFailure', () => {

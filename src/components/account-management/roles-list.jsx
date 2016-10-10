@@ -1,16 +1,14 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Row, Col, Input } from 'react-bootstrap'
+import {FormattedMessage, injectIntl} from 'react-intl'
+import { Input } from 'react-bootstrap'
 
+import SectionHeader from '../../components/layout/section-header'
 import RolesEditForm from './role-edit-form.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 
 import TableSorter from '../table-sorter'
 import ArrayTd from '../array-td/array-td'
-
-import './roles-list.scss';
-
-import {FormattedMessage, injectIntl} from 'react-intl'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -78,27 +76,25 @@ class RolesList extends React.Component {
       this.state.sortBy,
       this.state.sortDir
     )
+
     const hiddenRoles = this.props.roles.size - sortedRoles.size
+
+    const rolesSize = sortedRoles.size
+    const rolesText = ` Role${sortedRoles.size === 1 ? '' : 's'}`
+    const hiddenRolesText = hiddenRoles ? ` (${hiddenRoles} hidden)` : ''
+    const finalRolesText = rolesSize + rolesText + hiddenRolesText
 
     return (
       <div className='roles-list'>
-        <Row className="header-btn-row">
-          <Col sm={6}>
-            <h3>
-              {sortedRoles.size} Role{sortedRoles.size === 1 ? '' : 's'} {!!hiddenRoles && `(${hiddenRoles} hidden)`}
-            </h3>
-          </Col>
-          <Col sm={6} className="text-right">
-            <Input
+        <SectionHeader sectionHeaderTitle={finalRolesText}>
+          <Input
             type="text"
             className="search-input"
             groupClassName="search-input-group"
             placeholder={this.props.intl.formatMessage({id: 'portal.role.list.search.placeholder'})}
             value={this.state.search}
             onChange={({ target: { value } }) => this.setState({ search: value })} />
-          </Col>
-        </Row>
-
+        </SectionHeader>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -116,7 +112,7 @@ class RolesList extends React.Component {
                 .size
 
               return (
-                <tr className='roles-list-row' key={i}>
+                <tr key={i}>
                   <td className={`name-${i}`}>
                     {role.get('name')}
                   </td>

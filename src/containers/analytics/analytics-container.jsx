@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -16,7 +17,7 @@ import AnalyticsFilters from '../../components/analytics/analytics-filters'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 
-import { getTabName } from '../../util/helpers.js'
+import { getTabName, userIsServiceProvider } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
@@ -28,6 +29,7 @@ class AnalyticsContainer extends React.Component {
   constructor(props){
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
+    this.fetchData = this.fetchData.bind(this)
     this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
@@ -69,13 +71,17 @@ class AnalyticsContainer extends React.Component {
       this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
+      this.props.filtersActions.fetchServiceProviders(params.brand)
     }
 
     if((brandChanged || accountChanged || refresh) && params.account) {
       this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
-    if ((brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
+    // service providers cannot see properties, UDNP-1498
+    if (!userIsServiceProvider(this.props.user) &&
+        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group)
+    {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }
@@ -88,22 +94,27 @@ class AnalyticsContainer extends React.Component {
   }
 
   renderFilters() {
-    const params = this.props.params
+    const {
+      activeAccount,
+      params,
+      filterOptions,
+      filters,
+      user,
+      location: { pathname }
+    } = this.props
 
     if (!params.account) {
       return null
     }
 
-    const {
-      filterOptions,
-      filters,
-      location: { pathname }
-    } = this.props
-
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
+    const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
 
     return (
       <AnalyticsFilters
+        activeAccountProviderType={activeAccountProviderType}
+        currentUser={user}
+        params={params}
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
@@ -113,25 +124,27 @@ class AnalyticsContainer extends React.Component {
   }
 
   renderContent(children, filters) {
-    const params = this.props.params
+    const {
+      params
+    } = this.props
+
+    let content = children && React.cloneElement(children, {
+      params: params,
+      filters: filters,
+      location: location
+    })
 
     if (!params.account) {
-      return (
-        <p className='text-center'>Please select an account<br/>
-            from top left to see analytics</p>
+      content = (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectAccount.text" values={{br: <br/>}} />
+        </div>
       )
     }
 
     return (
       <PageContainer className='analytics-container'>
-        {
-          /* Render tab -content */
-          children && React.cloneElement(children, {
-            params: params,
-            filters: filters,
-            location: location
-          } )
-        }
+        {content}
       </PageContainer>
     )
   }
@@ -143,7 +156,6 @@ class AnalyticsContainer extends React.Component {
       brands,
       accounts,
       groups,
-      properties,
       filters,
       activeAccount,
       activeGroup,
@@ -157,7 +169,6 @@ class AnalyticsContainer extends React.Component {
           brands={brands}
           accounts={accounts}
           groups={groups}
-          properties={properties}
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
@@ -187,7 +198,6 @@ AnalyticsContainer.propTypes = {
   groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
   propertyActions: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   user: React.PropTypes.instanceOf(Immutable.Map)
@@ -198,7 +208,6 @@ AnalyticsContainer.defaultProps = {
   brands: Immutable.List(),
   filters: Immutable.Map(),
   groups: Immutable.List(),
-  properties: Immutable.List(),
   roles: Immutable.List(),
   user: Immutable.Map()
 }
@@ -210,7 +219,6 @@ function mapStateToProps(state) {
     brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
     accounts: state.account.get('allAccounts'),
     groups: state.group.get('allGroups'),
-    properties: state.host.get('allHosts'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
     roles: state.roles.get('roles'),

@@ -1,24 +1,19 @@
 import React from 'react'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import { Input } from 'react-bootstrap'
-
+import { FormattedMessage } from 'react-intl'
 import { formatBytes } from '../../util/helpers'
 import TableSorter from '../table-sorter'
-
-import { FormattedMessage, injectIntl } from 'react-intl'
 
 class AnalysisURLList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      search: '',
       sortBy: 'bytes',
       sortDir: -1
     }
 
-    this.changeSearch = this.changeSearch.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
   }
@@ -49,7 +44,8 @@ class AnalysisURLList extends React.Component {
   }
 
   render() {
-    const { urls } = this.props
+
+    const {urls, searchState} = this.props
     const maxBytes = Math.max(...urls.toJS().map(url => url.bytes))
     const maxReqs = Math.max(...urls.toJS().map(url => url.requests))
     const sorterProps = {
@@ -57,33 +53,26 @@ class AnalysisURLList extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const filteredURLs = urls.filter((url, i) => {
-      if (i >= 15) {
-        return false;
-      }
-
-      return url.get('url').toLowerCase().includes(this.state.search.toLowerCase())
-    })
     const sortedURLs = this.sortedData(
-      filteredURLs,
+      urls,
       this.state.sortBy,
       this.state.sortDir
     )
+    const filteredURLs = sortedURLs.filter((url) => {
+      return url.get('url').toLowerCase().includes(searchState.toLowerCase())
+    })
 
+    const finalURLs = filteredURLs.slice(0, 15)
 
     return (
       <div>
-        <Input className="search-input" type="text"
-          placeholder={this.props.intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
-          value={this.state.search}
-          onChange={this.changeSearch}/>
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="status">
+              <TableSorter {...sorterProps} column="status_code" width="1%">
                 <FormattedMessage id="portal.analytics.urlList.status.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="url">
+              <TableSorter {...sorterProps} column="url" textAlign="left" width="59%">
                 <FormattedMessage id="portal.analytics.urlList.url.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="bytes" width="20%">
@@ -95,13 +84,13 @@ class AnalysisURLList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {sortedURLs.map((url, i) => {
+            {finalURLs.map((url, i) => {
               const bytesOfMax = (url.get('bytes') / maxBytes) * 100
               const reqsOfMax = (url.get('requests') / maxReqs) * 100
               return (
                 <tr key={i}>
                   <td>{url.get('status_code')}</td>
-                  <td>{url.get('url')}</td>
+                  <td className="text-left">{url.get('url')}</td>
                   <td>
                     {formatBytes(url.get('bytes'))}
                     <div className="table-percentage-line">
@@ -126,11 +115,11 @@ class AnalysisURLList extends React.Component {
 
 AnalysisURLList.displayName = 'AnalysisURLList'
 AnalysisURLList.propTypes = {
-  intl: React.PropTypes.object,
+  searchState: React.PropTypes.string,
   urls: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLList.defaultProps = {
   urls: Immutable.List()
 }
 
-export default injectIntl(AnalysisURLList)
+export default AnalysisURLList
