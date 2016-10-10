@@ -140,9 +140,6 @@ describe('AccountManagementAccountGroups', () => {
     const filteredData = groups.instance().filteredData('a')
     expect(filteredData.count()).toBe(1)
     expect(filteredData.first().get('name')).toBe('aaa')
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
   })
 })
