@@ -14,12 +14,13 @@ import CheckboxArray from '../checkboxes.jsx'
 import {
   ACCOUNT_TYPES,
   SERVICE_TYPES,
-  NAME_VALIDATION_REGEXP,
   BRAND_OPTIONS,
   ACCOUNT_TYPE_OPTIONS
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
+import { isValidAccountName } from '../../util/validators'
+
 
 import './account-form.scss'
 
@@ -29,7 +30,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
   const conditions = {
     accountName: [
       {
-        condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
+        condition: ! isValidAccountName(accountName),
         errorText: <div key={accountName}>{[<FormattedMessage id="portal.account.manage.invalidAccountName.text" />, <div key={1}>
                     <div style={{marginTop: '0.5em'}}>
                       <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
