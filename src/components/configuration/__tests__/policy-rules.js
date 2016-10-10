@@ -127,7 +127,7 @@ describe('ConfigurationPolicyRules', () => {
       let defaultProps = Object.assign({}, {
         intl: intlMaker()
       }, props)
-      return shallow(<ConfigurationPolicyRules {...defaultProps}/>)
+      return mount(<ConfigurationPolicyRules {...defaultProps}/>)
     }
   })
 
