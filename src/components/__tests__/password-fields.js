@@ -40,6 +40,22 @@ describe('PasswordFields', () => {
     expect(passwordFields.state('confirmVisible')).toBe(true)
   })
 
+  it('toggles active class when focused and blurred', () => {
+    const usernameHolder = inputs.at(0)
+    expect(passwordFields.state('passwordFocus')).toBe(false)
+    usernameHolder.simulate('focus')
+    expect(passwordFields.state('passwordFocus')).toBe(true)
+    usernameHolder.simulate('blur')
+    expect(passwordFields.state('passwordFocus')).toBe(false)
+
+    const passwordHolder = inputs.at(1)
+    expect(passwordFields.state('confirmFocus')).toBe(false)
+    inputs.at(1).simulate('focus')
+    expect(passwordFields.state('confirmFocus')).toBe(true)
+    inputs.at(1).simulate('blur')
+    expect(passwordFields.state('confirmFocus')).toBe(false)
+  })
+
   it('shows an interactive password requirement tooltip', () => {
     let tooltip = passwordFields.find('Tooltip')
     expect(tooltip.length).toBe(0)
@@ -99,5 +115,31 @@ describe('PasswordFields', () => {
     inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
     inputs.at(1).simulate('change', {target: {value: 'V@lid_P@55word'}})
     expect(passwordFields.state('confirmValid')).toBe(true)
+  })
+
+  it('calls redux-form onChange prop on password change', () => {
+    const onChange = jest.fn()
+    const passwordFields = shallow(<PasswordFields intl={intlMaker()} onChange={onChange}/>)
+    const inputs = passwordFields.find('input')
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    expect(onChange).toHaveBeenCalled()
+  })
+
+  it('calls changePassword prop with false paramter when passwords do not match', () => {
+    const changePassword = jest.fn()
+    const passwordFields = shallow(<PasswordFields intl={intlMaker()} changePassword={changePassword}/>)
+    const inputs = passwordFields.find('input')
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(1).simulate('change', {target: {value: 'different_password'}})
+    expect(changePassword).toHaveBeenCalledWith(false)
+  })
+
+  it('calls changePassword prop with true paramter when passwords do match', () => {
+    const changePassword = jest.fn()
+    const passwordFields = shallow(<PasswordFields intl={intlMaker()} changePassword={changePassword}/>)
+    const inputs = passwordFields.find('input')
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(1).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    expect(changePassword).toHaveBeenCalledWith(true)
   })
 })
