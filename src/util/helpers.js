@@ -5,7 +5,6 @@ import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
-import { Address4, Address6 } from 'ip-address'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { ROLES_MAPPING } from '../constants/account-management-options'
 
@@ -77,16 +76,18 @@ export function filterMetricsByAccounts(metrics, accounts) {
   });
 }
 
+/**
+ * Test if string matches regExp-pattern
+ * @param string
+ * @param pattern
+ * @returns {boolean}
+ */
 export function matchesRegexp(string, pattern) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
   var testPattern = new RegExp(pattern, 'i');
   return testPattern.test(string);
-}
-
-export function isSafari() {
-  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
 
 /**
@@ -351,18 +352,4 @@ export function userHasRole(user, roleToFind) {
   }
 
   return false
-}
-
-export function isValidIPv4Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address4(address).isValid()
-}
-
-export function isValidIPv6Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address6(address).isValid()
 }

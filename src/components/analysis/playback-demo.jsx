@@ -2,7 +2,7 @@ import React from 'react'
 import Hls from 'hls.js'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import { isSafari } from '../../util/helpers'
+import { isSafari } from '../../util/validators'
 import AnalysisByKey from './by-key'
 
 import { FormattedMessage } from 'react-intl'
@@ -26,11 +26,14 @@ export class PlaybackDemo extends React.Component {
     this.playVideo = this.playVideo.bind(this)
     this.destroyVideo = this.destroyVideo.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.playVideo()
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUpdate(nextProps) {
@@ -54,6 +57,7 @@ export class PlaybackDemo extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
     this.destroyVideo()
   }
   measureContainers() {

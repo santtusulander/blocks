@@ -10,7 +10,7 @@
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^6.0.4",
-    "babel-jest": "^12.0.2",
+    "babel-jest": "^16.0.0",
     "babel-loader": "^6.2.2",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
@@ -28,7 +28,7 @@
     "history": "^1.17.0",
     "hls.js": "^0.5.20",
     "jasmine-reporters": "^2.1.1",
-    "jest-cli": "^12.0.2",
+    "jest-cli": "^16.0.1",
     "jsdom": "^9.2.1",
     "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
@@ -63,7 +63,6 @@
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
     "intl": "^1.2.5",
-    "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
@@ -83,7 +82,8 @@
     "redux-form": "^5.2.5",
     "redux-promise": "^0.5.1",
     "topojson": "^1.6.22",
-    "uniqid": "^4.0.0"
+    "uniqid": "^4.0.0",
+    "validator": "^6.0.0"
   },
   "scripts": {
     "start": "node dev-server.js",
@@ -102,17 +102,23 @@
       "src",
       "__mocks__"
     ],
+    "testPathIgnorePatterns": [
+      "__tests__/coverage"
+    ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {
       "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
     },
-    "setupEnvScriptFile": "<rootDir>/jest-env-setup.js",
+    "setupFiles": [
+      "<rootDir>/jest-env-setup.js"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup.js",
     "moduleFileExtensions": [
       "js",
       "jsx",
       "json"
     ],
+    "automock": true,
     "unmockedModulePathPatterns": [
       "<rootDir>/src/constants",
       "<rootDir>/node_modules/axios",
