@@ -74,8 +74,8 @@ class ModalWindow extends React.Component {
             <Button
               bsStyle="danger"
               onClick={deleteButton}
-              disabled={verifyDelete ? invalid : false}>
-              <FormattedMessage id="portal.button.delete"/>
+              disabled={loading || (verifyDelete ? invalid : false)}>
+              {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
             </Button>}
 
             {okButton &&
