@@ -11,15 +11,15 @@ function intlMaker() {
   }
 }
 
+const passwordFields = shallow(<PasswordFields intl={intlMaker()}/>)
+const inputs = passwordFields.find('input')
+
 describe('PasswordFields', () => {
   it('should exist', () => {
-    const passwordFields = shallow(<PasswordFields intl={intlMaker()}/>)
     expect(passwordFields).toBeDefined()
   })
 
   it('updates password and confirmation state', () => {
-    const passwordFields = shallow(<PasswordFields intl={intlMaker()}/>)
-    let inputs = passwordFields.find('input')
     inputs.at(0).simulate('change', {target: {value: 'aaa'}})
     inputs.at(1).simulate('change', {target: {value: 'bbb'}})
     expect(passwordFields.state('password')).toBe('aaa')
@@ -40,23 +40,38 @@ describe('PasswordFields', () => {
 
   })
 
-  xit('validates the password length requirement', () => {
-
+  it('validates the password length requirement', () => {
+    inputs.at(0).simulate('change', {target: {value: 'shortpw'}})
+    expect(passwordFields.state('passwordLengthValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'verylongpw'}})
+    expect(passwordFields.state('passwordLengthValid')).toBe(true)
   })
 
-  xit('validates the password uppercase requirement', () => {
-
+  it('validates the password uppercase requirement', () => {
+    inputs.at(0).simulate('change', {target: {value: 'notuppercasepw'}})
+    expect(passwordFields.state('passwordUppercaseValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'Uppercasepw'}})
+    expect(passwordFields.state('passwordUppercaseValid')).toBe(true)
   })
 
-  xit('validates the password number requirement', () => {
-
+  it('validates the password number requirement', () => {
+    inputs.at(0).simulate('change', {target: {value: 'nonumberpw'}})
+    expect(passwordFields.state('passwordNumberValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'number1pw'}})
+    expect(passwordFields.state('passwordNumberValid')).toBe(true)
   })
 
-  xit('validates the password special character requirement', () => {
-
+  it('validates the password special character requirement', () => {
+    inputs.at(0).simulate('change', {target: {value: 'nospecialcharpw'}})
+    expect(passwordFields.state('passwordSpecialCharValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'specialcharpw!'}})
+    expect(passwordFields.state('passwordSpecialCharValid')).toBe(true)
   })
 
-  xit('validates the password with all the requirements', () => {
-
+  it('validates the password with all the requirements', () => {
+    inputs.at(0).simulate('change', {target: {value: 'notvalid'}})
+    expect(passwordFields.state('passwordValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'Has4requirements!'}})
+    expect(passwordFields.state('passwordValid')).toBe(true)
   })
 })

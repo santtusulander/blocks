@@ -183,6 +183,7 @@ export class PasswordFields extends Component {
         </a>}>
         {requirementsTooltip}
         <input
+          id="password"
           type={this.state.passwordVisible || (!stackedPassword && this.state.confirmVisible) ? 'text' : 'password'}
           placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
           className="form-control"
