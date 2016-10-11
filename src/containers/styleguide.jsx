@@ -361,7 +361,15 @@ class Styleguide extends React.Component {
               <Typeahead
                 multiple={true}
                 onChange={() => null}
-                options={['Belarus', 'Canada', 'Finland', 'Germany', 'Sweden', 'Ukraine', 'United States']}/>
+                options={[
+                  {id: 'BY', label: 'Belarus'},
+                  {id: 'CA', label: 'Canada'},
+                  {id: 'FI', label: 'Finland'},
+                  {id: 'DE', label: 'Germany'},
+                  {id: 'SE', label: 'Sweden'},
+                  {id: 'UA', label: 'Ukraine'},
+                  {id: 'US', label: 'United States'}
+                ]}/>
             </Col>
 
             <Col xs={6}>
