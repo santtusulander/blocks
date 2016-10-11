@@ -11,8 +11,8 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
     // TODO: Maybe some general error messaging box?
     if(onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
       showInfoDialog({
-        title: <FormattedMessage id="portal.analytics.onOfNet.noOptionsSelected.title"/>,
-        content: <FormattedMessage id="portal.analytics.onOfNet.noOptionsSelected.text"/>,
+        title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
+        content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,
         okButton: hideInfoDialog
       });
     }

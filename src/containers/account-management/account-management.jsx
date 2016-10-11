@@ -27,7 +27,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 
-import { ACCOUNT_TYPES, NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
   DELETE_ACCOUNT,
@@ -38,6 +38,7 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
+import { isValidAccountName } from '../../util/validators'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -77,6 +78,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
     else if(this.props.accounts.size) {
+      this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
     }
   }
@@ -87,6 +89,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
     else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+      this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
   }
@@ -244,7 +247,7 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
+          condition: ! isValidAccountName(accountName),
           errorText: <div key={accountName}>{[<FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
                                                                             <div style={{marginTop: '0.5em'}}>
                                                                               <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />

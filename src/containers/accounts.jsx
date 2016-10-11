@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrl, getContentUrl } from '../util/routes.js'
+import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -13,6 +13,9 @@ import * as uiActionCreators from '../redux/modules/ui'
 import { filterMetricsByAccounts } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
+
+import * as PERMISSIONS from '../constants/permissions'
+import checkPermissions from '../util/permissions'
 
 import { FormattedMessage } from 'react-intl';
 
@@ -49,9 +52,11 @@ export class Accounts extends React.Component {
       fetching,
       fetchingMetrics,
       metrics,
+      roles,
       sortDirection,
       sortValuePath,
       viewingChart,
+      user,
       uiActions } = this.props
 
     const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
@@ -59,8 +64,12 @@ export class Accounts extends React.Component {
     const nextPageURLBuilder = (accountID) => {
       return getContentUrl('account', accountID, this.props.params)
     }
-    const analyticsURLBuilder = (...accountID) => {
-      return getAnalyticsUrl('account', accountID, this.props.params)
+    const analyticsURLBuilder = (...account) => {
+      return getAnalyticsUrlFromParams(
+        {...this.props.params, account},
+        user.get('currentUser'),
+        roles
+      )
     }
     return (
       <ContentItems
@@ -76,6 +85,7 @@ export class Accounts extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: <FormattedMessage id='portal.brand.allAccounts.message'/> }}
+        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
@@ -104,6 +114,7 @@ Accounts.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
@@ -115,6 +126,7 @@ Accounts.defaultProps = {
   activeAccount: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
+  roles: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -126,6 +138,7 @@ function mapStateToProps(state) {
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
+    roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),

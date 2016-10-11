@@ -2,7 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
-import {urlBase, mapReducers, parseResponseData} from '../util'
+import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -178,7 +178,7 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${urlBase}/v2/tokens`,
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`,
     {
       "username": username,
       "password": password
@@ -202,7 +202,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = localStorage.getItem('EricssonUDNUserToken')
 
   if (token) {
-    loginAxios.delete(`${urlBase}/v2/tokens/${token}`,
+    loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
   }
@@ -217,7 +217,7 @@ export const finishFetching = createAction(USER_FINISH_FETCH)
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
   const token = localStorage.getItem('EricssonUDNUserToken')
   if(token) {
-    return loginAxios.get(`${urlBase}/v2/tokens/${token}`,
+    return loginAxios.get(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
@@ -235,7 +235,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
-  return axios.get(`${urlBase}/v2/users/${username}`)
+  return axios.get(`${BASE_URL_AAA}/users/${username}`)
     .then(parseResponseData)
 })
 
@@ -249,23 +249,23 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     query = `?brand_id=${brandId}`
   }
 
-  return axios.get(`${urlBase}/v2/users${query}`)
+  return axios.get(`${BASE_URL_AAA}/users${query}`)
     .then(parseResponseData)
 })
 
 export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
-  return Promise.all(accounts.map(account => axios.get(`${urlBase}/v2/users?brand_id=${brandId}&account_id=${account.get('id')}`)
+  return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`)
     .then(parseResponseData)
   ))
   .then(allUsers => fromJS(allUsers).flatten(true))
 })
 
 export const deleteUser = createAction(USER_DELETED, user =>
-  axios.delete(`${urlBase}/v2/users/${user}`).then(() => user)
+  axios.delete(`${BASE_URL_AAA}/users/${user}`).then(() => user)
 )
 
 export const createUser = createAction(USER_CREATED, user =>
-  axios.post(`${urlBase}/v2/users`, user, { headers: { 'Content-Type': 'application/json' } })
+  axios.post(`${BASE_URL_AAA}/users`, user, { headers: { 'Content-Type': 'application/json' } })
     .then(parseResponseData)
     .catch(err => {
       throw new Error(err.data.message)
@@ -273,7 +273,7 @@ export const createUser = createAction(USER_CREATED, user =>
 )
 
 export const updateUser = createAction(USER_UPDATED, (email, user) => {
-  return axios.put(`${urlBase}/v2/users/${email}`, user, {
+  return axios.put(`${BASE_URL_AAA}/users/${email}`, user, {
     headers: {
       'Content-Type': 'application/json'
     }

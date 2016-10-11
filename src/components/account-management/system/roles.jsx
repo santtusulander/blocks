@@ -1,8 +1,13 @@
-import React from 'react'
+  import React from 'react'
 import Immutable from 'immutable'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../layout/page-container'
+import LoadingSpinner from '../../loading-spinner/loading-spinner'
 import RolesList from '../roles-list.jsx'
+
+import * as accountActionCreators from '../../../redux/modules/account'
 
 class AccountManagementSystemRoles extends React.Component {
   constructor(props){
@@ -17,6 +22,13 @@ class AccountManagementSystemRoles extends React.Component {
     this.showAddNewRoleDialog = this.showAddNewRoleDialog.bind(this)
     this.hideAddNewRoleDialog = this.hideAddNewRoleDialog.bind(this)
     this.saveRole = this.saveRole.bind(this)
+  }
+
+  componentWillMount() {
+    const { accountActions } = this.props
+
+    accountActions.startFetching()
+    accountActions.fetchAccounts( this.props.params.brand )
   }
 
   showAddNewRoleDialog(){
@@ -35,23 +47,25 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   saveRole(){
-    console.log('SaveRole()');
     this.hideAddNewRoleDialog();
   }
 
   render() {
     return (
       <PageContainer>
-        <RolesList
-          editRole={this.state.editRole}
-          roles={this.props.roles}
-          users={this.props.users}
-          permissions={this.props.permissions}
-          onCancel={this.hideAddNewRoleDialog}
-          onSave={this.saveRole}
-          onAdd={this.showAddNewRoleDialog}
-          onEdit={this.editRole}
-          showAddNewDialog={this.state.showAddNewDialog} />
+        {this.props.fetchingAccounts || this.props.fetchingUsers
+          ? <LoadingSpinner/>
+          : <RolesList
+            editRole={this.state.editRole}
+            roles={this.props.roles}
+            users={this.props.users}
+            permissions={this.props.permissions}
+            onCancel={this.hideAddNewRoleDialog}
+            onSave={this.saveRole}
+            onAdd={this.showAddNewRoleDialog}
+            onEdit={this.editRole}
+            showAddNewDialog={this.state.showAddNewDialog} />
+        }
       </PageContainer>
     )
   }
@@ -59,6 +73,9 @@ class AccountManagementSystemRoles extends React.Component {
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
+  accountActions: React.PropTypes.object,
+  fetchingAccounts: React.PropTypes.bool,
+  params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
   users: React.PropTypes.instanceOf(Immutable.List)
@@ -69,4 +86,17 @@ AccountManagementSystemRoles.defaultProps = {
   users: Immutable.List()
 }
 
-module.exports = AccountManagementSystemRoles
+function mapStateToProps(state) {
+  return {
+    fetchingAccounts: state.account.get('fetching'),
+    fetchingUsers: state.user.get('fetching')
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    accountActions: bindActionCreators(accountActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountManagementSystemRoles)

@@ -1,8 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import jsdom from 'jsdom'
-
 import {shallow, mount, render} from 'enzyme'
 
 jest.unmock('../groups.jsx')
@@ -14,10 +11,13 @@ import { promisify } from '../../../__mocks__/promisify'
 jest.unmock('../../../__mocks__/router');
 import { Router as routerMock } from '../../../__mocks__/router'
 
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
-
 const genAsyncMock = jest.genMockFn().mockReturnValue(promisify('whateva'))
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const fakeGroups = Immutable.fromJS([
   {id: 3, name: 'bbb', created: new Date().getTime()  - 1},
@@ -36,6 +36,7 @@ const groupsElem =
       fetchGroups: genAsyncMock
     }}
     router= { routerMock }
+    intl={intlMaker()}
   />
 
 describe('AccountManagementAccountGroups', () => {
@@ -101,6 +102,7 @@ describe('AccountManagementAccountGroups', () => {
         }}
         router= { routerMock }
         addGroup={ addGroup }
+        intl={intlMaker()}
       />
     )
 
@@ -122,6 +124,7 @@ describe('AccountManagementAccountGroups', () => {
         }}
         router= { routerMock }
         editGroup={ editGroup }
+        intl={intlMaker()}
       />)
 
     groups.instance().saveEditedGroup(1)('zzz')
@@ -137,8 +140,6 @@ describe('AccountManagementAccountGroups', () => {
     const filteredData = groups.instance().filteredData('a')
     expect(filteredData.count()).toBe(1)
     expect(filteredData.first().get('name')).toBe('aaa')
-
-
 
   })
 })

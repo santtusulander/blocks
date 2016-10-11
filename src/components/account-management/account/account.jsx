@@ -143,7 +143,7 @@ class AccountManagementAccountDetails extends React.Component {
                     <OverlayTrigger placement="top" overlay={
                       <Tooltip id="tooltip_brand">
                         <div className="tooltip-header">Brand</div>
-                        <div className="text-sm">Lorem ipsum ...</div>
+                        <div className="text-sm"> ...</div>
                       </Tooltip>
                       }>
 
@@ -179,7 +179,7 @@ class AccountManagementAccountDetails extends React.Component {
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_brand">
                       <div className="tooltip-header">Account Name</div>
-                      <div className="text-sm">Lorem ipsum ...</div>
+                      <div className="text-sm"> ...</div>
                     </Tooltip>
                     }>
 
@@ -217,7 +217,7 @@ class AccountManagementAccountDetails extends React.Component {
                   <OverlayTrigger placement="top" overlay={
                     <Tooltip id="tooltip_account_type">
                       <div className="tooltip-header">Account Type</div>
-                      <div className="text-sm">Lorem ipsum ...</div>
+                      <div className="text-sm"> ...</div>
                     </Tooltip>
                     }>
 
@@ -237,12 +237,9 @@ class AccountManagementAccountDetails extends React.Component {
           </div>
 
           <ButtonToolbar className="text-right extra-margin-top">
-            <UDNButton
-              disabled={this.props.invalid}
-              bsStyle="primary"
-              onClick={this.save}>
-              Save
-            </UDNButton>
+            <IsAllowed to={MODIFY_ACCOUNTS}>
+              <UDNButton disabled={this.props.invalid} bsStyle="primary" onClick={this.save}>Save</UDNButton> 
+            </IsAllowed>
           </ButtonToolbar>
         </form>
       </PageContainer>

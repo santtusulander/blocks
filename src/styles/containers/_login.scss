@@ -142,12 +142,14 @@ $login-modal-logo-left-padding: rem(12px);
 
 // This is hacky code that should be removed when we no longer allow a light
 // themed login page. See: https://vidscale.atlassian.net/browse/UDNP-1328
-.light-theme .icon.two-tone {
-  .base {
-    fill: $white;
-  }
+.light-theme .login-modal {
 
-  .primary {
-    fill: $medium-blue;
+  .icon {
+    fill: $white;
+
+    &:hover,
+    &.active {
+      fill: $pale-blue;
+    }
   }
 }

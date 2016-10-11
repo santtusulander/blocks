@@ -1,7 +1,7 @@
 import React from 'react'
+import { Input, Table, Button } from 'react-bootstrap'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
-import { Input, Table, Button, Row, Col } from 'react-bootstrap'
-import { formatUnixTimestamp} from '../../../util/helpers'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -11,18 +11,20 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
+import IsAllowed from '../../../components/is-allowed'
 
+import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
-import { NAME_VALIDATION_REGEXP } from '../../../constants/account-management-options'
+import { isValidAccountName } from '../../../util/validators'
 
-import { FormattedMessage } from 'react-intl'
-
+import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -108,11 +110,11 @@ class AccountManagementAccountGroups extends React.Component {
       name: [
         {
           condition: this.props.groups.findIndex(account => account.get('name') === name) > -1,
-          errorText: 'That group name is taken'
+          errorText: <FormattedMessage id="portal.account.groups.name.error.exists"/>
         },
         {
-          condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(name),
-          errorText: <div>{['Group name is invalid.', <div key={name}>
+          condition: !isValidAccountName(name),
+          errorText: <div>{[<FormattedMessage id="portal.account.groups.name.error.invalid"/>, <div key={name}>
                                                         <div style={{marginTop: '0.5em'}}>
                                                           <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
                                                           <ul>
@@ -179,8 +181,8 @@ class AccountManagementAccountGroups extends React.Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.adding) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the Group(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id="portal.common.error.warning.title"/>,
+        content: <FormattedMessage id="portal.account.groups.modal.unsaved.content"/>,
         stayButton: this.props.uiActions.hideInfoDialog,
         continueButton: () => {
           this.isLeaving = true
@@ -213,11 +215,10 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-
     const inlineAddInputs = [
       [
         {
-          input: <Input id='name' placeholder="Name" type="text"/>
+          input: <Input id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})} type="text"/>
         }
       ],
       [
@@ -229,47 +230,47 @@ class AccountManagementAccountGroups extends React.Component {
         //     value={this.state.newUsers}
         //     handleCheck={this.changeNewUsers}
         //     options={this.props.users.map(user => Immutable.Map({
-        //       label: user.get('email') || 'No Email',
+        //       label: user.get('email') || this.props.intl.formatMessage({id: 'portal.account.groups.email.notSet.placeholder'}),
         //       value: user.get('email')
         //     }))}/>
         // }
       ],
       []
     ]
+    const groupSize = sortedGroups.size
+    const groupText = sortedGroups.size === 1 ? <FormattedMessage id="portal.account.groups.single.text"/> : <FormattedMessage id="portal.account.groups.multiple.text"/>
+    const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
+    const finalGroupText = groupSize + groupText + hiddenGroupText
+
     return (
       <PageContainer className="account-management-account-groups">
-        <Row className="header-btn-row">
-          <Col sm={6}>
-            <h3>
-              {sortedGroups.size} Group{sortedGroups.size === 1 ? '' : 's'} {!!numHiddenGroups && `(${numHiddenGroups} hidden)`}
-            </h3>
-          </Col>
-          <Col sm={6} className="text-right">
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={this.changeSearch} />
-            <Button bsStyle="success" className="btn-icon btn-add-new"
-              onClick={this.addGroup}>
+       <SectionHeader sectionHeaderTitle={finalGroupText}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group"
+            placeholder={this.props.intl.formatMessage({id: 'portal.common.search.text'})}
+            value={this.state.search}
+            onChange={this.changeSearch} />
+          <IsAllowed to={CREATE_GROUP}>
+            <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
               <IconAdd />
             </Button>
-          </Col>
-        </Row>
+          </IsAllowed>
+        </SectionHeader>
+
         <Table striped={true}>
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="name">
-                Name
+                <FormattedMessage id="portal.account.groups.table.name.text"/>
               </TableSorter>
-              <th>Members</th>
+              <th><FormattedMessage id="portal.account.groups.table.members.text"/></th>
               <TableSorter {...sorterProps} column="created">
-                Created On
+                <FormattedMessage id="portal.account.groups.table.createdOn.text"/>
               </TableSorter>
               {/* Not on 0.7
-              <th>Properties</th>
+              <th><FormattedMessage id="portal.account.groups.table.properties.text"/></th>
               */}
               <th width="1%"/>
             </tr>
@@ -292,15 +293,15 @@ class AccountManagementAccountGroups extends React.Component {
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
-                <ArrayTd items={userEmails.size ? userEmails.toArray() : ['No members']} />
+                <ArrayTd items={userEmails.size ? userEmails.toArray() : [this.props.intl.formatMessage({id: 'portal.account.groups.table.noMembers.text'})]} />
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
                 {/* Not on 0.7
                 <td>NEEDS_API</td>
                 */}
                 <td className="nowrap-column">
-                  <ActionButtons
-                    onEdit={() => {this.props.editGroup(group)}}
-                    onDelete={() => {this.props.deleteGroup(group)}} />
+                  <IsAllowed to={MODIFY_GROUP}>
+                     <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                  </IsAllowed>
                 </td>
               </tr>
             )
@@ -311,7 +312,7 @@ class AccountManagementAccountGroups extends React.Component {
         {
           sortedGroups.size === 0 &&
           this.state.search.length > 0 &&
-          <div className="text-center">No groups found with the search term "{this.state.search}"</div>
+          <div className="text-center"><FormattedMessage id="portal.account.groups.table.noGroupsFound.text" values={{searchTerm: this.state.search}}/></div>
         }
       </PageContainer>
     )
@@ -325,6 +326,7 @@ AccountManagementAccountGroups.propTypes    = {
   editGroup: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
+  intl: React.PropTypes.object,
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -353,4 +355,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountGroups))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(AccountManagementAccountGroups)))

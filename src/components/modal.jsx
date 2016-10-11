@@ -12,7 +12,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loginButton, okButton, reloadButton, show, stayButton, submitButton, title, verifyDelete } = this.props
+    const { cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, show, stayButton, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="modal-window">
@@ -135,6 +135,7 @@ ModalWindow.propTypes = {
   fields: PropTypes.object,
   intl: React.PropTypes.object,
   invalid: PropTypes.bool,
+  loading: PropTypes.bool,
   loginButton: PropTypes.bool,
   okButton: PropTypes.func,
   reloadButton: PropTypes.func,

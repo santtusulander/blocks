@@ -9,7 +9,7 @@ module.exports = {
   analyticsTabVisitors: 'visitors',
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
-  analyticsTabServiceProviders: 'service-providers',
+  analyticsTabContribution: 'contribution',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
@@ -69,5 +69,13 @@ module.exports = {
 
   user: '/user',
   userBrand: '/user/:brand',
-  userAccount: '/user/:brand/:account'
+  userAccount: '/user/:brand/:account',
+
+  // TEMP UDNP-1545
+  dashboard: '/dashboard',
+  dashboardBrand: '/dashboard/:brand',
+  dashboardAccount: '/dashboard/:brand/:account',
+  network: '/network',
+  networkBrand: '/network/:brand',
+  networkAccount: '/network/:brand/:account'
 }

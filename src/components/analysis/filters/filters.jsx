@@ -8,7 +8,6 @@ import Select from '../../../components/select'
 import TabTitles from '../../../constants/report-tab-titles'
 // Filters
 import ServiceProvider from './service-provider'
-import Pop from './pop'
 import ChartType from './chart-type'
 import OnOffNet from './on-off-net'
 import ServiceType from './service-type'

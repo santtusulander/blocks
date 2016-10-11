@@ -78,7 +78,7 @@ function fakeRouterMaker() {
 const fakeProperties = fromJS([
   {
     "account_id": 1, "group_id": 1,
-    "property": "www.foobar.com",
+    "property": "www.test.com",
     "last_edited": 1451607200,
     "last_editor": "Jenny Steele",
     "status": "production"

@@ -5,6 +5,7 @@ $form-font-size: 14px;
 $form-line-height: 1.6;
 $form-vertical-padding: em(7px, $form-font-size);
 $form-horizontal-padding: em(12px, $form-font-size);
+$form-inline-min-width: em(228px, $form-font-size);
 $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
@@ -168,7 +169,7 @@ label {
 
     > .search-input,
     > .dropdown-select {
-      width: 16em;
+      width: $form-inline-min-width;
     }
   }
 
@@ -419,12 +420,6 @@ textarea {
   @include lg {
     margin-right: 5px;
     margin-left: 5px;
-  }
-
-  @include md {
-    height: $md-btn-height;
-    margin-top: ($md-bar-height - $md-btn-height) / 2;
-    border-radius: $md-btn-height / 2;
   }
 
   .dark-theme & {
