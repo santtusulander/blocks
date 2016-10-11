@@ -26,18 +26,26 @@ describe('PasswordFields', () => {
     expect(passwordFields.state('confirm')).toBe('bbb')
   })
 
-  xit('can be passed a stackedPassword prop for a stacked input layout', () => {
+  it('can show / hide the initial password', () => {
     const passwordFields = shallow(<PasswordFields intl={intlMaker()} stackedPassword={true}/>)
-
+    expect(passwordFields.state('passwordVisible')).toBe(false)
+    passwordFields.instance().togglePasswordVisibility()
+    expect(passwordFields.state('passwordVisible')).toBe(true)
   })
 
-  xit('can be passed a inlinePassword prop for an inline input layout', () => {
-    const passwordFields = shallow(<PasswordFields intl={intlMaker()} inlinePassword={true}/>)
-
+  it('can show / hide the confirmation password', () => {
+    const passwordFields = shallow(<PasswordFields intl={intlMaker()} stackedPassword={true}/>)
+    expect(passwordFields.state('confirmVisible')).toBe(false)
+    passwordFields.instance().toggleConfirmVisibility()
+    expect(passwordFields.state('confirmVisible')).toBe(true)
   })
 
-  xit('shows an interactive password requirement tooltip', () => {
-
+  it('shows an interactive password requirement tooltip', () => {
+    let tooltip = passwordFields.find('Tooltip')
+    expect(tooltip.length).toBe(0)
+    inputs.at(0).simulate('focus')
+    tooltip = passwordFields.find('Tooltip')
+    expect(tooltip.length).toBe(1)
   })
 
   it('validates the password length requirement', () => {

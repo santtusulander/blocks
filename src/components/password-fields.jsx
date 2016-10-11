@@ -16,6 +16,7 @@ export class PasswordFields extends Component {
       passwordError: null,
       passwordFocus: false,
       passwordValid: false,
+      passwordVisible: false,
       confirm: '',
       confirmActive: false,
       confirmFocus: false,
