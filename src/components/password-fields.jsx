@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import IconPassword from '../components/icons/icon-password.jsx'
 import IconEye from '../components/icons/icon-eye.jsx'
 
-class PasswordFields extends React.Component {
+export class PasswordFields extends Component {
   constructor(props) {
     super(props)
 
