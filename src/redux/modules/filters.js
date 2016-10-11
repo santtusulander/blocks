@@ -9,9 +9,10 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
-export const httpErrorCodes = ['400', '401', '402', '403', '404', '405', '411', '412', '413', '500', '501', '502', '503']
-export const httpOKCodes = ['200', '201', '202', '204']
-export const httpStatusCodes = httpOKCodes.concat(httpErrorCodes)
+import {
+  getResponseCodes,
+  getErrorResponseCodes
+} from '../../util/status-codes'
 
 const initialState = Immutable.fromJS({
   filters: {
@@ -29,8 +30,8 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: ['on-net', 'off-net'],
-    errorCodes: httpErrorCodes,
-    statusCodes: httpStatusCodes,
+    errorCodes: getErrorResponseCodes(),
+    statusCodes: getResponseCodes(),
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
@@ -42,8 +43,8 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
-    errorCodes: httpErrorCodes.map((obj) => { return { label: obj, value: obj } } ),
-    statusCodes: httpStatusCodes.map((obj) => { return { label: obj, value: obj } } )
+    errorCodes: getErrorResponseCodes().map((obj) => { return { label: obj, value: obj } } ),
+    statusCodes: getResponseCodes().map((obj) => { return { label: obj, value: obj } } )
   },
   fetching: false
 })
