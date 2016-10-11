@@ -14,11 +14,14 @@ jest.mock('../../util/helpers', () => {
     getContentUrl: jest.fn(),
     removeProps: jest.fn(),
     filterAccountsByUserName: jest.fn(),
-    filterMetricsByAccounts: jest.fn()
+    filterMetricsByAccounts: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
-jest.dontMock('../accounts.jsx')
+jest.unmock('../accounts.jsx')
+jest.unmock('../../util/status-codes')
+
 const Accounts = require('../accounts.jsx').Accounts
 
 function accountActionsMaker() {

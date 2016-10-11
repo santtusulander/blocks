@@ -6,7 +6,8 @@ import { Input } from 'react-bootstrap'
 jest.mock('../../util/helpers', () => {
   return {
     getContentUrl: jest.genMockFunction()
-      .mockImplementation(val => '/path/after/login')
+      .mockImplementation(val => '/path/after/login'),
+    matchesRegexp: jest.fn()
   }
 })
 

@@ -5,7 +5,8 @@ import TestUtils from 'react-addons-test-utils'
 jest.mock('../../util/helpers', () => {
   return {
     getContentUrl: jest.genMockFunction()
-      .mockImplementation(val => '/path/after/login')
+      .mockImplementation(val => '/path/after/login'),
+    matchesRegexp: jest.fn()
   }
 })
 
