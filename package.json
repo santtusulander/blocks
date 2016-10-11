@@ -97,6 +97,10 @@
   },
   "jest": {
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.jsx",
+      "!src/**/__stories__"
+    ],
     "testPathDirs": [
       "src",
       "__mocks__"
