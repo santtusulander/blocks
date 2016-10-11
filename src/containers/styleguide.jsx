@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import Typeahead from 'react-bootstrap-typeahead'
 
 // React-Bootstrap
 // ===============
@@ -11,7 +12,6 @@ import {
   ButtonToolbar,
   Col,
   Dropdown,
-  DropdownButton,
   Input,
   Label,
   MenuItem,
@@ -19,7 +19,6 @@ import {
   Pagination,
   Popover,
   Row,
-  SplitButton,
   Table,
   Tab,
   Tabs
@@ -354,6 +353,28 @@ class Styleguide extends React.Component {
             </Dropdown>
           </div>
 
+          <h1 className="page-header">Token input</h1>
+
+          <Row>
+            <Col xs={6}>
+              <label>Predefined list</label>
+              <Typeahead
+                multiple={true}
+                onChange={() => null}
+                options={['Belarus', 'Canada', 'Finland', 'Germany', 'Sweden', 'Ukraine', 'United States']}/>
+            </Col>
+
+            <Col xs={6}>
+              <label>Allows custom token creation</label>
+              <Typeahead
+                emptyLabel="Add tokens by typing"
+                newSelectionPrefix="Add token: "
+                allowNew={true}
+                multiple={true}
+                onChange={() => null}
+                options={[]}/>
+            </Col>
+          </Row>
 
           <h1 className="page-header">Pagination</h1>
 
