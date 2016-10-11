@@ -79,7 +79,25 @@ describe('PasswordFields', () => {
   it('validates the password with all the requirements', () => {
     inputs.at(0).simulate('change', {target: {value: 'notvalid'}})
     expect(passwordFields.state('passwordValid')).toBe(false)
-    inputs.at(0).simulate('change', {target: {value: 'Has4requirements!'}})
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
     expect(passwordFields.state('passwordValid')).toBe(true)
+  })
+
+  it('does not compare when password is invalid', () => {
+    inputs.at(0).simulate('change', {target: {value: 'invalid_password'}})
+    inputs.at(1).simulate('change', {target: {value: 'invalid_password'}})
+    expect(passwordFields.state('confirmValid')).toBe(false)
+  })
+
+  it('does not give a match if password is valid but does not match confirm', () => {
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(1).simulate('change', {target: {value: 'different_password'}})
+    expect(passwordFields.state('confirmValid')).toBe(false)
+  })
+
+  it('gives a valid match when password is valid and matches confirm', () => {
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(1).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    expect(passwordFields.state('confirmValid')).toBe(true)
   })
 })

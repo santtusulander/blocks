@@ -101,7 +101,7 @@ export class PasswordFields extends Component {
   }
 
   doPasswordsMatch(password, confirm) {
-    const validPassword = password === confirm
+    const validPassword = password === confirm && this.state.passwordValid
     this.setState({
       confirmValid: validPassword
     })
