@@ -1,6 +1,5 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 import Select from '../../../select'
 
@@ -21,21 +20,20 @@ describe('Matcher', () => {
         match={fakeConfig}
         path={fakePath}/>
     )
-    expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy()
+    expect(matcher).toBeDefined()
   })
 
   it('should update the state as changes happen', () => {
     let changeValue = jest.fn()
-    let matcher = TestUtils.renderIntoDocument(
+    let matcher = shallow(
       <Matcher
         changeValue={changeValue}
         match={fakeConfig}
         path={fakePath}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(matcher, 'input')
-    inputs[0].value = 'new'
-    TestUtils.Simulate.change(inputs[0])
-    expect(matcher.state.val).toEqual('new')
+    let inputs = matcher.find('Input')
+    inputs.at(0).simulate('change', { target: { value: 'new' } })
+    expect(matcher.state('val')).toEqual('new')
   })
 
   it('should update the parameters as select change happens', () => {
