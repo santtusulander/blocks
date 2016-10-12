@@ -86,7 +86,7 @@ export function matchesRegexp(string, pattern) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = new RegExp(pattern, 'i');
+  var testPattern = new RegExp(pattern);
   return testPattern.test(string);
 }
 
