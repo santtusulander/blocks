@@ -72,6 +72,20 @@ describe('Matcher', () => {
     }))
   })
 
+  it('should include the rule selector by default', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}/>
+    )
+    const inputSelects = matcher.find('Select')
+    expect(inputSelects.length).toEqual(1)
+  })
+
   it('should be able to hide the rule selector', () => {
     const changeValue = jest.fn()
     const close = jest.fn()
@@ -83,7 +97,7 @@ describe('Matcher', () => {
         close={close}
         disableRuleSelector={true}/>
     )
-    const inputSelects = matcher.find('#input-select')
+    const inputSelects = matcher.find('Select')
     expect(inputSelects.length).toEqual(0)
   })
 })

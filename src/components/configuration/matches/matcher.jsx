@@ -134,8 +134,6 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-          {/*this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})*/}
-          {/*`Enter ${this.props.name} Name`*/}
           <Input type="text" label={this.props.label}
             placeholder={this.props.placeholder}
             id="matches_val"
