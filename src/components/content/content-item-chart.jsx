@@ -297,13 +297,13 @@ class ContentItemChart extends React.Component {
                   <IconChart/>
                 </Link>
               }
-              {this.props.configurationLink &&
+              {this.props.configurationLink && this.props.isAllowedToConfigure &&
                 <Link to={this.props.configurationLink}
                   className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
                 </Link>
               }
-              {this.props.onConfiguration &&
+              {this.props.onConfiguration && this.props.isAllowedToConfigure &&
                 <a onClick={this.props.onConfiguration}
                   className="btn btn-icon btn-round invisible">
                   <IconConfiguration/>
@@ -355,6 +355,7 @@ ContentItemChart.propTypes = {
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
+  isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,

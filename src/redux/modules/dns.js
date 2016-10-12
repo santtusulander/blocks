@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { urlBase, parseResponseData, mapReducers } from '../util'
+import { BASE_URL_NORTH, parseResponseData, mapReducers } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_DELETED = 'DOMAIN_DELETED'
@@ -103,20 +103,20 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
-  axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones`).then(parseResponseData))
+  axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones`).then(parseResponseData))
 
 export const fetchDomain = createAction(DOMAIN_EDITED_OR_FETCHED,
-  (brand, domain) => axios.get(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
+  (brand, domain) => axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones/${domain}`)
     .then(({ data }) => ({ data, domain }))
 )
 
 export const deleteDomain = createAction(DOMAIN_DELETED, (brand, domain) =>
-  axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`)
+  axios.delete(`${BASE_URL_NORTH}/brands/${brand}/zones/${domain}`)
     .then(() => domain)
 )
 
 export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =>
-  axios.post(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
+  axios.post(`${BASE_URL_NORTH}/brands/${brand}/zones/${domain}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -124,7 +124,7 @@ export const createDomain = createAction(DOMAIN_CREATED, (brand, domain, data) =
 )
 
 export const editDomain = createAction(DOMAIN_EDITED_OR_FETCHED, (brand, domain, data) =>
-  axios.put(`${urlBase}/VCDN/v2/brands/${brand}/zones/${domain}`, data, {
+  axios.put(`${BASE_URL_NORTH}/brands/${brand}/zones/${domain}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -137,4 +137,3 @@ export const stopFetchingDomains = createAction(DNS_STOP_FETCHING)
 export const editSOA = createAction(SOA_RECORD_EDITED)
 export const changeActiveDomain = createAction(CHANGE_ACTIVE_DOMAIN)
 export const changeActiveRecordType = createAction(CHANGE_ACTIVE_RECORD_TYPE)
-

@@ -1,6 +1,10 @@
 import moment from 'moment'
 
-export const urlBase = ''
+// For authentication, account, group, user, role, permission management
+export const BASE_URL_AAA = '/v2'
+
+// For Content/Serivce Provider management and configuration
+export const BASE_URL_NORTH = '/VCDN/v2'
 
 export const topoBase = () => {
   switch(process.env.NODE_ENV) {

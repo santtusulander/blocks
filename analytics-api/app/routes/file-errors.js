@@ -18,6 +18,7 @@ function routeFileErrors(req, res) {
     account      : {required: true, type: 'ID'},
     group        : {required: false, type: 'ID'},
     property     : {required: false, type: 'Property'},
+    status_codes : {required: false, type: 'Status_Codes'},
     service_type : {required: false, type: 'Service'}
   });
 
@@ -31,6 +32,7 @@ function routeFileErrors(req, res) {
     account      : params.account,
     group        : params.group,
     property     : params.property,
+    status_codes : params.status_codes && params.status_codes.split(','),
     service_type : params.service_type
   };
 

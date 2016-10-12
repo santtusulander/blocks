@@ -13,6 +13,7 @@ import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
+import SectionHeader from '../../../components/layout/section-header'
 import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/action-buttons'
@@ -29,6 +30,9 @@ import UDNButton from '../../../components/button'
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
+
+import IsAllowed from '../../../components/is-allowed'
+import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -194,7 +198,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Input id='confirmPw' placeholder=" Confirm password"
             type={this.state.passwordVisible ? 'text' : 'password'}
             wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link btn-primary' +
+            addonAfter={<a className={'input-addon-link btn-primary btn-icon' +
                 (this.state.passwordVisible ? ' active' : '')}
                 onClick={this.togglePasswordVisibility}>
                   <IconEye/>
@@ -379,46 +383,47 @@ export class AccountManagementAccountUsers extends React.Component {
       group.get('name')
     ]).insert(0, ['all', 'All Groups']).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
+
+    const usersSize = sortedUsers.size
+    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
+    const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
+    const finalUserText = usersSize + usersText + hiddenUserText
+
     return (
       <PageContainer>
-        <Row className="header-btn-row">
-          <Col lg={2}>
-            <h3>
-              {sortedUsers.size} User{sortedUsers.size === 1 ? '' : 's'} {!!numHiddenUsers && `(${numHiddenUsers} hidden)`}
-            </h3>
-          </Col>
-          <Col lg={10} className="text-right">
-            <Input
-              type="text"
-              className="search-input"
-              groupClassName="search-input-group inline"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={this.changeSearch} />
-            <div className="form-group inline">
-              <SelectWrapper
-                id='filtered-roles'
-                value={this.state.filteredRoles}
-                onChange={value => {
-                  this.setState({ filteredRoles: value })
-                }}
-                options={roleOptions}/>
-            </div>
-            <div className="form-group inline">
-              <SelectWrapper
-                id='filtered-groups'
-                value={this.state.filteredGroups}
-                onChange={value => {
-                  this.setState({ filteredGroups: value })
-                }}
-                options={groupOptions}/>
-            </div>
-            <Button bsStyle="success" className="btn-icon btn-add-new"
+        <SectionHeader sectionHeaderTitle={finalUserText}>
+          <Input
+            type="text"
+            className="search-input"
+            groupClassName="search-input-group inline"
+            placeholder="Search"
+            value={this.state.search}
+            onChange={this.changeSearch} />
+          <div className="form-group inline">
+            <SelectWrapper
+              id='filtered-roles'
+              value={this.state.filteredRoles}
+              onChange={value => {
+                this.setState({ filteredRoles: value })
+              }}
+              options={roleOptions}/>
+          </div>
+          <div className="form-group inline">
+            <SelectWrapper
+              id='filtered-groups'
+              value={this.state.filteredGroups}
+              onChange={value => {
+                this.setState({ filteredGroups: value })
+              }}
+              options={groupOptions}/>
+          </div>
+          <IsAllowed to={CREATE_USER}>
+            <Button bsStyle="success" className="btn-icon"
               onClick={this.toggleInlineAdd}>
               <IconAdd />
             </Button>
-          </Col>
-        </Row>
+          </IsAllowed>
+        </SectionHeader>
         <Table striped={true}>
           <thead>
             <tr>
@@ -450,9 +455,11 @@ export class AccountManagementAccountUsers extends React.Component {
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   <td className="nowrap-column">
-                    <ActionButtons
-                      onEdit={() => {this.editUser(user)}}
-                      onDelete={() => this.deleteUser(user.get('email'))} />
+                    <IsAllowed to={MODIFY_USER}>
+                      <ActionButtons
+                        onEdit={() => {this.editUser(user)}}
+                        onDelete={() => this.deleteUser(user.get('email'))} />
+                    </IsAllowed>
                   </td>
                 </tr>
               )
