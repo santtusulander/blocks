@@ -8,12 +8,6 @@ jest.unmock('../matcher.jsx')
 jest.unmock('../../../../util/policy-config.js')
 const Matcher = require('../matcher.jsx')
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
@@ -25,8 +19,7 @@ describe('Matcher', () => {
     let matcher = shallow(
       <Matcher
         match={fakeConfig}
-        path={fakePath}
-        intl={intlMaker()}/>
+        path={fakePath}/>
     )
     expect(TestUtils.isCompositeComponent(matcher)).toBeTruthy()
   })
@@ -37,8 +30,7 @@ describe('Matcher', () => {
       <Matcher
         changeValue={changeValue}
         match={fakeConfig}
-        path={fakePath}
-        intl={intlMaker()}/>
+        path={fakePath}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(matcher, 'input')
     inputs[0].value = 'new'
@@ -52,8 +44,7 @@ describe('Matcher', () => {
       <Matcher
         changeValue={changeValue}
         match={fakeConfig}
-        path={fakePath}
-        intl={intlMaker()}/>
+        path={fakePath}/>
     )
     expect(matcher.state('activeFilter')).toBe('exists')
     matcher.instance().handleMatchesChange('foo')
@@ -68,8 +59,7 @@ describe('Matcher', () => {
         changeValue={changeValue}
         match={fakeConfig}
         path={fakePath}
-        close={close}
-        intl={intlMaker()}/>
+        close={close}/>
     )
     matcher.setState({
       val: 'aaa'
@@ -91,8 +81,7 @@ describe('Matcher', () => {
         match={fakeConfig}
         path={fakePath}
         close={close}
-        disableRuleSelector={true}
-        intl={intlMaker()}/>
+        disableRuleSelector={true}/>
     )
     const inputSelects = matcher.find('#input-select')
     expect(inputSelects.length).toEqual(0)

@@ -9,7 +9,7 @@ import {
   getMatchFilterType
 } from '../../../util/policy-config'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Matcher extends React.Component {
   constructor(props) {
@@ -134,9 +134,10 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-
-          <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
-            placeholder={`Enter ${this.props.name} Name`}
+          {/*this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})*/}
+          {/*`Enter ${this.props.name} Name`*/}
+          <Input type="text" label={this.props.label}
+            placeholder={this.props.placeholder}
             id="matches_val"
             value={this.state.val}
             onChange={this.handleValChange}/>
@@ -184,10 +185,11 @@ Matcher.propTypes = {
   contains: React.PropTypes.bool,
   description: React.PropTypes.string,
   disableRuleSelector: React.PropTypes.bool,
-  intl: React.PropTypes.object,
+  label: React.PropTypes.string,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,
-  path: React.PropTypes.instanceOf(Immutable.List)
+  path: React.PropTypes.instanceOf(Immutable.List),
+  placeholder: React.PropTypes.string
 }
 
-module.exports = injectIntl(Matcher)
+module.exports = Matcher

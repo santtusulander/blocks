@@ -40,7 +40,9 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationMatcher
             contains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
-            name={formatMessage({id: 'portal.policy.edit.policies.name.text'})}
+            name={formatMessage({id: 'portal.policy.edit.policies.header.text'})}
+            label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.header.placeholder'})}
             {...matcherProps}/>
         )
         break
@@ -49,6 +51,8 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationMatcher
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
+            label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.directoryPath.placeholder'})}
             {...matcherProps}/>
         )
         break
@@ -57,6 +61,8 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationMatcher
             description={formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
+            label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.hostname.placeholder'})}
             {...matcherProps}/>
         )
         break
@@ -65,6 +71,8 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationMatcher
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
+            label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.url.placeholder'})}
             disableRuleSelector={true}
             {...matcherProps}/>
         )
@@ -75,6 +83,8 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             contains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
+            label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.cookie.placeholder'})}
             {...matcherProps}/>
         )
         break
@@ -84,6 +94,8 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             contains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
+            label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
+            placeholder={formatMessage({id: 'portal.policy.edit.policies.queryString.placeholder'})}
             {...matcherProps}/>
         )
         break
