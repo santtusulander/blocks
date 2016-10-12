@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
+import Select from '../../../select'
 
 jest.unmock('../matcher.jsx')
 jest.unmock('../../../../util/policy-config.js')
@@ -79,5 +80,21 @@ describe('Matcher', () => {
     expect(changeValue.mock.calls[0][1]).toEqual(Immutable.fromJS({
       "cases": [["aaa", undefined]]
     }))
+  })
+
+  it('should be able to hide the rule selector', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        disableRuleSelector={true}
+        intl={intlMaker()}/>
+    )
+    const inputSelects = matcher.find('#input-select')
+    expect(inputSelects.length).toEqual(0)
   })
 })

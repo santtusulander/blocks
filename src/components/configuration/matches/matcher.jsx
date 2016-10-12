@@ -143,22 +143,24 @@ class Matcher extends React.Component {
 
           <hr />
 
-          <div className="form-groups">
-            <InputConnector show={hasContainingRule} noLabel={true} />
-            <div className="form-group">
-              <Select className="input-select"
-                onSelect={this.handleMatchesChange}
-                value={this.state.activeFilter}
-                options={matchOpts}/>
-            </div>
+          {!this.props.disableRuleSelector &&
+            <div className="form-groups">
+              <InputConnector show={hasContainingRule} noLabel={true} />
+              <div className="form-group">
+                <Select className="input-select"
+                  onSelect={this.handleMatchesChange}
+                  value={this.state.activeFilter}
+                  options={matchOpts}/>
+              </div>
 
-            <Panel className="form-panel" collapsible={true}
-              expanded={hasContainingRule}>
-              <Input type="text" label="Value"
-                value={this.state.containsVal}
-                onChange={this.handleContainsValChange}/>
-            </Panel>
-          </div>
+              <Panel className="form-panel" collapsible={true}
+                expanded={hasContainingRule}>
+                <Input type="text" label="Value"
+                  value={this.state.containsVal}
+                  onChange={this.handleContainsValChange}/>
+              </Panel>
+            </div>
+          }
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="default" onClick={this.props.close}>
@@ -181,6 +183,7 @@ Matcher.propTypes = {
   close: React.PropTypes.func,
   contains: React.PropTypes.bool,
   description: React.PropTypes.string,
+  disableRuleSelector: React.PropTypes.bool,
   intl: React.PropTypes.object,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,

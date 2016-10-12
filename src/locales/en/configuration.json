@@ -1,4 +1,8 @@
 {
   "portal.configuration.security.enable.text": "Enable HTTPS",
-  "portal.configuration.security.sslCertificate.text": "SSL Certificate"
+  "portal.configuration.security.sslCertificate.text": "SSL Certificate",
+
+  "portal.policy.edit.matchesSelection.url.text": "URL",
+  "portal.policy.edit.policies.matchURL.text": "Match a URL like www.test.com",
+  "portal.policy.edit.policies.url.text": "URL"
 }

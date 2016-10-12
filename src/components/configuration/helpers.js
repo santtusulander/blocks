@@ -60,6 +60,15 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             {...matcherProps}/>
         )
         break
+      case 'request_url':
+        activeEditForm = (
+          <ConfigurationMatcher
+            description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
+            name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
+            disableRuleSelector={true}
+            {...matcherProps}/>
+        )
+        break
       case 'request_cookie':
         activeEditForm = (
           <ConfigurationMatcher
