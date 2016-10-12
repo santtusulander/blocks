@@ -38,6 +38,7 @@ class TruncatedTitle extends React.Component {
         <h3>{this.props.content}</h3>
       </Tooltip>
     )
+
     return (
       <div
         className={className}
@@ -57,24 +58,12 @@ class TruncatedTitle extends React.Component {
 }
 
 TruncatedTitle.displayName = 'TruncatedTitle'
-
-const contentPropTypeValidator = (props, propName, componentName) => {
-  componentName = componentName || TruncatedTitle.displayName
-
-  if (props[propName]) {
-    const value = props[propName]
-
-    if (typeof value !== 'string' && value.type !== FormattedMessage) {
-      return new Error(propName + ' in ' + componentName + ' is not a string or a FormattedMessage')
-    }
-  }
-
-  return null
-}
-
 TruncatedTitle.propTypes = {
   className: React.PropTypes.string,
-  content: contentPropTypeValidator,
+  content: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object
+  ]),
   tooltipPlacement: React.PropTypes.string
 };
 
