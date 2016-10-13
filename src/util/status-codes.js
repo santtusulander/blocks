@@ -7,6 +7,11 @@ import { matchesRegexp } from './helpers'
  * @type []
  */
 export const HTTP_RESPONSES = [
+  // { code: 100, message: <FormattedMessage id="portal.common.statusCode.100"/> },
+  // { code: 101, message: <FormattedMessage id="portal.common.statusCode.101"/> },
+  // { code: 102, message: <FormattedMessage id="portal.common.statusCode.102"/> },
+
+  { code: 200, message: <FormattedMessage id="portal.common.statusCode.200"/> },
   { code: 201, message: <FormattedMessage id="portal.common.statusCode.201"/> },
   { code: 202, message: <FormattedMessage id="portal.common.statusCode.202"/> },
   { code: 203, message: <FormattedMessage id="portal.common.statusCode.203"/> },
@@ -33,11 +38,13 @@ export const HTTP_RESPONSES = [
   { code: 403, message: <FormattedMessage id="portal.common.statusCode.403"/> },
   { code: 404, message: <FormattedMessage id="portal.common.statusCode.404"/> },
   { code: 405, message: <FormattedMessage id="portal.common.statusCode.405"/> },
-  { code: 406, message: <FormattedMessage id="portal.common.statusCode.406"/> },
-  { code: 407, message: <FormattedMessage id="portal.common.statusCode.407"/> },
-  { code: 408, message: <FormattedMessage id="portal.common.statusCode.408"/> },
-  { code: 409, message: <FormattedMessage id="portal.common.statusCode.409"/> },
-  { code: 410, message: <FormattedMessage id="portal.common.statusCode.410"/> },
+
+  // { code: 406, message: <FormattedMessage id="portal.common.statusCode.406"/> },
+  // { code: 407, message: <FormattedMessage id="portal.common.statusCode.407"/> },
+  // { code: 408, message: <FormattedMessage id="portal.common.statusCode.408"/> },
+  // { code: 409, message: <FormattedMessage id="portal.common.statusCode.409"/> },
+  // { code: 410, message: <FormattedMessage id="portal.common.statusCode.410"/> },
+
   { code: 411, message: <FormattedMessage id="portal.common.statusCode.411"/> },
   { code: 412, message: <FormattedMessage id="portal.common.statusCode.412"/> },
   { code: 413, message: <FormattedMessage id="portal.common.statusCode.413"/> },
@@ -46,7 +53,7 @@ export const HTTP_RESPONSES = [
   // { code: 415, message: <FormattedMessage id="portal.common.statusCode.415"/> },
   // { code: 416, message: <FormattedMessage id="portal.common.statusCode.416"/> },
   // { code: 417, message: <FormattedMessage id="portal.common.statusCode.417"/> },
-  { code: 418, message: <FormattedMessage id="portal.common.statusCode.418"/> },
+  // { code: 418, message: <FormattedMessage id="portal.common.statusCode.418"/> },
   // { code: 421, message: <FormattedMessage id="portal.common.statusCode.421"/> },
   // { code: 422, message: <FormattedMessage id="portal.common.statusCode.422"/> },
   // { code: 423, message: <FormattedMessage id="portal.common.statusCode.423"/> },
@@ -62,8 +69,8 @@ export const HTTP_RESPONSES = [
   { code: 501, message: <FormattedMessage id="portal.common.statusCode.501"/> },
   { code: 502, message: <FormattedMessage id="portal.common.statusCode.502"/> },
   { code: 503, message: <FormattedMessage id="portal.common.statusCode.503"/> },
-  { code: 504, message: <FormattedMessage id="portal.common.statusCode.504"/> },
 
+  // { code: 504, message: <FormattedMessage id="portal.common.statusCode.504"/> },
   // { code: 505, message: <FormattedMessage id="portal.common.statusCode.505"/> },
   // { code: 506, message: <FormattedMessage id="portal.common.statusCode.506"/> },
   // { code: 507, message: <FormattedMessage id="portal.common.statusCode.507"/> },
@@ -101,6 +108,16 @@ export function getPickedResponseCodes(responseCodes = [], onlyCodes = true) {
 export function getErrorResponseCodes(onlyCodes = true) {
   const errorResponses = HTTP_RESPONSES.filter(response => matchesRegexp(response.code, /([4,5]).\d/))
   return onlyCodes ? extractNumericalCodes(errorResponses) : errorResponses
+}
+
+/**
+ * Get analysis error codes
+ * @param onlyCodes
+ * @returns {Array.<*>}
+ */
+export function getAnalysisErrorCodes(onlyCodes = true){
+  const errorCodes = [401, 402, 403, 404, 405, 411, 412, 413, 500, 501, 502, 503]
+  return getPickedResponseCodes(errorCodes, onlyCodes)
 }
 
 /**
