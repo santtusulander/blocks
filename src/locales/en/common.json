@@ -15,6 +15,10 @@
   "portal.common.error.unauthorized.title": "Unauthorized",
   "portal.common.error.unauthorized.content": "You do not have permission to access information on this page.",
 
+  "portal.common.statusCode.100": "Continue",
+  "portal.common.statusCode.101": "Switching Protocols",
+  "portal.common.statusCode.102": "Processing",
+  "portal.common.statusCode.200": "OK",
   "portal.common.statusCode.201": "Created",
   "portal.common.statusCode.202": "Accepted",
   "portal.common.statusCode.203": "Non-Authoritative Information",
