@@ -4,9 +4,6 @@ import Immutable from 'immutable'
 
 import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
-import IconArrowUp from '../icons/icon-arrow-up.jsx'
-import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
@@ -236,9 +233,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={2} className="text-right">
                     <ActionButtons
-                      secondaryBtns={true}
+                      secondaryBtn={true}
                       onDelete={this.deleteMatch(match.path)}
-                      disabled={flattenedPolicy.matches.length < 2} />
+                      deleteDisabled={flattenedPolicy.matches.length < 2} />
                   </Col>
                 </div>
               )
@@ -274,25 +271,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <p>{i + 1} {set.setkey}</p>
                   </Col>
                   <Col xs={4} className="text-right">
-                    <Button
-                      disabled={i <= 0}
-                      onClick={i > 0 ? this.moveSet(set.path, i-1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowUp/>
-                    </Button>
-                    <Button
-                      disabled={i >= flattenedPolicy.sets.length - 1}
-                      onClick={i < flattenedPolicy.sets.length - 1 ?
+                    <ActionButtons
+                      secondaryBtn={true}
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
+                      arrowUpDisabled={i <= 0}
+                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
                         this.moveSet(set.path, i+1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowDown/>
-                    </Button>
-                    <Button onClick={this.deleteSet(set.path)} bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
+                      onDelete={this.deleteMatch(set.path)} />
                   </Col>
                 </div>
               )
