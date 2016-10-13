@@ -42,6 +42,15 @@ export const VIEW_CONTENT_PROPERTIES = 'VIEW_CONTENT_PROPERTIES'
 // AAA Account Permissions
 export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
 
+// AAA Group Permissions
+export const CREATE_GROUP = 'CREATE_GROUP'
+export const MODIFY_GROUP = 'MODIFY_GROUP'
+
+// AAA Users Permissions
+export const CREATE_USER = 'CREATE_USER'
+export const MODIFY_USER = 'MODIFY_USER'
+
+
 //DNS Permissions
 export const CREATE_RECORD = 'CREATE_RECORD'
 export const VIEW_DNS = 'VIEW_DNS'

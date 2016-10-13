@@ -33,37 +33,38 @@ class AnalyticsDB {
       account: {
         select: 'account_id AS `account`',
         where: 'AND account_id = ?',
+        whereIn: 'AND account_id IN ( ? )',
         field: 'account_id'
       },
       group: {
         select: 'group_id AS `group`',
         where: 'AND group_id = ?',
+        whereIn: 'AND group_id IN ( ? )',
         field: 'group_id'
       },
       property: {
         select: 'property',
         where: 'AND property = ?',
+        whereIn: 'AND property IN ( ? )',
         field: 'property'
       },
       sp_account: {
-        select: 'sp_account_id AS `account`',
+        select: 'sp_account_id AS `sp_account`',
         where: 'AND sp_account_id = ?',
+        whereIn: 'AND sp_account_id IN ( ? )',
         field: 'sp_account_id'
       },
       sp_group: {
-        select: 'sp_group_id AS `group`',
+        select: 'sp_group_id AS `sp_group`',
         where: 'AND sp_group_id = ?',
+        whereIn: 'AND sp_group_id IN ( ? )',
         field: 'sp_group_id'
       },
-      sp_asset: {
+      asset: {
         select: 'sp_asset AS `asset`',
         where: 'AND sp_asset = ?',
+        whereIn: 'AND sp_asset IN ( ? )',
         field: 'sp_asset'
-      },
-      sp_account_ids: {
-        select: 'sp_account_id AS `sp_account`',
-        where: 'AND sp_account_id IN ( ? )',
-        field: 'sp_account_id'
       }
     }
 
@@ -114,7 +115,10 @@ class AnalyticsDB {
       account_max  : null,
       group        : null,
       property     : null,
+      sp_account   : null,
+      sp_group     : null,
       asset        : null,
+      net_type     : null,
       service_type : null,
       dimension    : 'global',
       granularity  : 'hour',
@@ -717,7 +721,19 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
-    conditions.push("AND (status_code LIKE '4%' OR status_code LIKE '5%')");
+    if (optionsFinal.status_codes) {
+      let statusCodeConditions = [];
+      optionsFinal.status_codes.forEach((code) => {
+        if (code.indexOf('xx') === 1) {
+          statusCodeConditions.push(`status_code LIKE '${code.charAt(0)}%'`);
+        } else {
+          statusCodeConditions.push(`status_code = ${code}`);
+        }
+      });
+      conditions.push(`AND (${statusCodeConditions.join(' OR ')})`);
+    } else {
+      conditions.push("AND (status_code LIKE '4%' OR status_code LIKE '5%')");
+    }
 
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
@@ -792,13 +808,15 @@ class AnalyticsDB {
       SELECT
         url_path AS url,
         sum(bytes) AS bytes,
-        sum(requests) AS requests
+        sum(requests) AS requests,
+        status_code
       FROM url_property_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
       GROUP BY
-        url_path
+        url_path,
+        status_code
       ORDER BY ${optionsFinal.sort_by || 'bytes'} ${optionsFinal.sort_dir.toUpperCase()}
       LIMIT ${optionsFinal.limit || 1000};
     `;
@@ -831,8 +849,11 @@ class AnalyticsDB {
       && queryOptions.push(optionsFinal.group);
 
     optionsFinal.asset
-      && conditions.push(this.accountLevelFieldMap.sp_asset.where)
+      && conditions.push(this.accountLevelFieldMap.asset.where)
       && queryOptions.push(optionsFinal.asset);
+
+    conditions.push('AND net_type IN ("on", "off")');
+    conditions.push('AND service_type IN ("http", "https")');
 
     let queryParameterized = `
       SELECT
@@ -840,7 +861,7 @@ class AnalyticsDB {
         epoch_start as timestamp,
         net_type,
         sum(bytes) AS bytes
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
         ${conditions.join('\n        ')}
@@ -859,12 +880,12 @@ class AnalyticsDB {
    * @param  {object}  options Options that get piped into SQL queries
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  getSPContributionData(options) {
+  getContributionData(options) {
     let queries = [];
 
-    queries.push(this.getSPContributionTraffic(options));
-    queries.push(this.getSPContributionCountryTraffic(options));
-    queries.push(this.getSPContributionTrafficTotal(options));
+    queries.push(this.getContributionTraffic(options));
+    queries.push(this.getContributionCountryTraffic(options));
+    queries.push(this.getContributionTrafficTotal(options));
 
     return Promise.all(queries)
       .then((queryData) => {
@@ -878,20 +899,16 @@ class AnalyticsDB {
   }
 
   /**
-   * Get traffic information for a CP account broken down by service provider, service type, and net type.
-   *
-   * @param  {object}  options Options that get piped into an SQL query
-   * @return {Promise}         A promise that is fulfilled with the query results
+   * Shared logic for the query options for the three contribution queries.
    */
-  getSPContributionTraffic(options) {
-    let optionsFinal     = this._getQueryOptions(options);
+  _buildContributionQueryOptions(optionsFinal) {
     let queryOptions     = [];
     let conditions       = [];
 
     queryOptions.push(optionsFinal.start);
     queryOptions.push(optionsFinal.end);
 
-    // Build the WHERE clause
+    // CP Entity
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.account.where)
       && queryOptions.push(optionsFinal.account);
@@ -904,35 +921,95 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
+    // SP Entity
+    optionsFinal.sp_account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.sp_account);
+
+    optionsFinal.sp_group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.sp_group);
+
+    optionsFinal.asset
+      && conditions.push(this.accountLevelFieldMap.asset.where)
+      && queryOptions.push(optionsFinal.asset);
+
+    // SP IDs
     optionsFinal.sp_account_ids
-      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
+      && conditions.push(this.accountLevelFieldMap.sp_account.whereIn)
       && queryOptions.push(optionsFinal.sp_account_ids);
 
+    optionsFinal.sp_group_ids
+      && conditions.push(this.accountLevelFieldMap.sp_group.whereIn)
+      && queryOptions.push(optionsFinal.sp_group_ids);
+
+    // CP IDs
+    optionsFinal.account_ids
+      && conditions.push(this.accountLevelFieldMap.account.whereIn)
+      && queryOptions.push(optionsFinal.account_ids);
+
+    optionsFinal.group_ids
+      && conditions.push(this.accountLevelFieldMap.group.whereIn)
+      && queryOptions.push(optionsFinal.group_ids);
+
+    optionsFinal.properties
+      && conditions.push(this.accountLevelFieldMap.property.whereIn)
+      && queryOptions.push(optionsFinal.properties);
+
+    // Other filters
     optionsFinal.net_type
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
+
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
 
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
+
+    return {
+      queryOptions: queryOptions,
+      conditions: conditions
+    }
+  }
+
+  /**
+   * Get traffic information for a CP account broken down by service provider, or vice-versa.
+   * Data is filtered by service type, and net type.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getContributionTraffic(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryVars        = this._buildContributionQueryOptions(optionsFinal);
+
     let queryParameterized = `
       SELECT
-        ${this.accountLevelFieldMap.sp_account_ids.select},
+        ${this.accountLevelFieldMap.account.select},
+        ${this.accountLevelFieldMap.group.select},
+        ${this.accountLevelFieldMap.property.select},
+        ${this.accountLevelFieldMap.sp_account.select},
+        ${this.accountLevelFieldMap.sp_group.select},
+        ${this.accountLevelFieldMap.asset.select},
         net_type,
         service_type,
         sum(bytes) AS bytes
-      FROM sp_property_global_day
+      FROM spc_global_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
-        ${conditions.join('\n        ')}
+        ${queryVars.conditions.join('\n        ')}
       GROUP BY
-        sp_account_id,
+        ${this.accountLevelFieldMap[optionsFinal.groupingEntity].field},
         net_type,
         service_type;
     `;
 
-    return this._executeQuery(queryParameterized, queryOptions);
+    return this._executeQuery(queryParameterized, queryVars.queryOptions);
   }
 
   /**
@@ -941,54 +1018,30 @@ class AnalyticsDB {
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  getSPContributionCountryTraffic(options) {
+  getContributionCountryTraffic(options) {
     let optionsFinal     = this._getQueryOptions(options);
-    let queryOptions     = [];
-    let conditions       = [];
-
-    queryOptions.push(optionsFinal.start);
-    queryOptions.push(optionsFinal.end);
-
-    // Build the WHERE clause
-    optionsFinal.account
-      && conditions.push(this.accountLevelFieldMap.account.where)
-      && queryOptions.push(optionsFinal.account);
-
-    optionsFinal.group
-      && conditions.push(this.accountLevelFieldMap.group.where)
-      && queryOptions.push(optionsFinal.group);
-
-    optionsFinal.property
-      && conditions.push(this.accountLevelFieldMap.property.where)
-      && queryOptions.push(optionsFinal.property);
-
-    optionsFinal.sp_account_ids
-      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
-      && queryOptions.push(optionsFinal.sp_account_ids);
-
-    optionsFinal.net_type
-      && conditions.push('AND net_type = ?')
-      && queryOptions.push(optionsFinal.net_type);
-
-    optionsFinal.service_type
-      && conditions.push('AND service_type = ?')
-      && queryOptions.push(optionsFinal.service_type);
+    let queryVars        = this._buildContributionQueryOptions(optionsFinal);
 
     let queryParameterized = `
       SELECT
-        ${this.accountLevelFieldMap.sp_account_ids.select},
+        ${this.accountLevelFieldMap.sp_account.select},
+        ${this.accountLevelFieldMap.sp_group.select},
+        ${this.accountLevelFieldMap.asset.select},
+        ${this.accountLevelFieldMap.account.select},
+        ${this.accountLevelFieldMap.group.select},
+        ${this.accountLevelFieldMap.property.select},
         country,
         sum(bytes) AS bytes
-      FROM sp_property_country_day
+      FROM spc_country_day
       WHERE timezone = 'UTC'
         AND epoch_start BETWEEN ? and ?
-        ${conditions.join('\n        ')}
+        ${queryVars.conditions.join('\n        ')}
       GROUP BY
-        sp_account_id,
+        ${this.accountLevelFieldMap[optionsFinal.groupingEntity].field},
         country;
     `;
 
-    return this._executeQuery(queryParameterized, queryOptions);
+    return this._executeQuery(queryParameterized, queryVars.queryOptions);
 
   }
 
@@ -999,7 +1052,27 @@ class AnalyticsDB {
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  getSPContributionTrafficTotal(options) {
+  getContributionTrafficTotal(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queryVars        = this._buildContributionQueryOptions(optionsFinal);
+
+    let queryParameterized = `
+      SELECT
+        sum(bytes) AS bytes
+      FROM spc_global_day
+      WHERE timezone = 'UTC'
+        AND epoch_start BETWEEN ? and ?
+        ${queryVars.conditions.join('\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, queryVars.queryOptions);
+
+  }
+
+  /**
+   * Get list of entities
+   */
+  getEntitiesWithTrafficForEntities(options) {
     let optionsFinal     = this._getQueryOptions(options);
     let queryOptions     = [];
     let conditions       = [];
@@ -1020,29 +1093,41 @@ class AnalyticsDB {
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
-    optionsFinal.sp_account_ids
-      && conditions.push(this.accountLevelFieldMap.sp_account_ids.where)
-      && queryOptions.push(optionsFinal.sp_account_ids);
+    optionsFinal.sp_account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.sp_account);
+
+    optionsFinal.sp_group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.sp_group);
+
+    optionsFinal.asset
+      && conditions.push(this.accountLevelFieldMap.asset.where)
+      && queryOptions.push(optionsFinal.asset);
 
     optionsFinal.net_type
       && conditions.push('AND net_type = ?')
       && queryOptions.push(optionsFinal.net_type);
 
+    !optionsFinal.net_type
+      && conditions.push('AND net_type IN ("on", "off")');
+
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    !optionsFinal.service_type
+      && conditions.push('AND service_type IN ("http", "https")');
+
     let queryParameterized = `
-      SELECT
-        sum(bytes) AS bytes
-      FROM sp_property_global_day
-      WHERE timezone = 'UTC'
-        AND epoch_start BETWEEN ? and ?
+      SELECT DISTINCT ${optionsFinal.entity}
+      FROM spc_global_day
+      WHERE timezone = "UTC"
+        AND epoch_start BETWEEN ? AND ?
         ${conditions.join('\n        ')};
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
-
   }
 
   /**

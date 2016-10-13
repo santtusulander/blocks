@@ -9,6 +9,7 @@ import moment from 'moment'
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
+import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import { getContentUrl } from '../util/routes'
@@ -55,6 +56,7 @@ export class Configuration extends React.Component {
     }
 
     this.changeValue = this.changeValue.bind(this)
+    this.changeValues = this.changeValues.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
     this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
@@ -71,6 +73,7 @@ export class Configuration extends React.Component {
     this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
+    this.props.securityActions.fetchSSLCertificates(brand, account, group)
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
@@ -86,10 +89,25 @@ export class Configuration extends React.Component {
     return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
   changeValue(path, value) {
+    return this.changeValues([[path, value]])
+  }
+
+  // allows changing multiple values while only changing state once
+  // this is mostly useful for the enable SSL button in the security tab
+  changeValues(values) {
+    let activeConfig = this.getActiveConfig()
+
+    for (const obj of values) {
+      const path = obj[0]
+      const value = obj[1]
+
+      activeConfig = activeConfig.setIn(path, value)
+    }
+
     return this.props.hostActions.changeActiveHost(
       this.props.activeHost.setIn(
         ['services', 0, 'configurations', this.state.activeConfig],
-        this.getActiveConfig().setIn(path, value)
+        activeConfig
       )
     )
   }
@@ -284,6 +302,9 @@ export class Configuration extends React.Component {
           <NavItem eventKey={'policies'}>
             <FormattedMessage id="portal.configuration.policies.text"/>
           </NavItem>
+          <NavItem eventKey={'security'}>
+            <FormattedMessage id="portal.configuration.security.text"/>
+          </NavItem>
           {/* Hide in 1.0 – UDNP-1406
           <NavItem eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -338,7 +359,11 @@ export class Configuration extends React.Component {
               : null}
 
             {this.state.activeTab === 'security' ?
-              <ConfigurationSecurity/>
+              <ConfigurationSecurity
+                changeValue={this.changeValue}
+                changeValues={this.changeValues}
+                config={activeConfig}
+                sslCertificates={this.props.sslCertificates} />
               : null}
 
             {this.state.activeTab === 'certificates' ?
@@ -424,12 +449,15 @@ Configuration.propTypes = {
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
+  securityActions: React.PropTypes.object,
+  sslCertificates: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
-  activeHost: Immutable.Map()
+  activeHost: Immutable.Map(),
+  sslCertificates: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -442,7 +470,8 @@ function mapStateToProps(state) {
     notification: state.ui.get('notification'),
     policyActiveMatch: state.ui.get('policyActiveMatch'),
     policyActiveRule: state.ui.get('policyActiveRule'),
-    policyActiveSet: state.ui.get('policyActiveSet')
+    policyActiveSet: state.ui.get('policyActiveSet'),
+    sslCertificates: state.security.get('sslCertificates')
   };
 }
 
@@ -451,6 +480,7 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
+    securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

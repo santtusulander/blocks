@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.0.0-rc4",
+  "version": "1.0.1-rc2",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -10,8 +10,9 @@
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^6.0.4",
-    "babel-jest": "^12.0.2",
+    "babel-jest": "^16.0.0",
     "babel-loader": "^6.2.2",
+    "babel-plugin-array-includes": "^2.0.3",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.7.2",
     "babel-preset-es2015": "^6.5.0",
@@ -27,8 +28,7 @@
     "history": "^1.17.0",
     "hls.js": "^0.5.20",
     "jasmine-reporters": "^2.1.1",
-    "jest-cli": "^12.0.2",
-    "jsdom": "^9.2.1",
+    "jest-cli": "^16.0.1",
     "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^3.4.2",
@@ -62,7 +62,6 @@
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.2",
     "intl": "^1.2.5",
-    "ip-address": "^5.8.2",
     "moment": "^2.11.2",
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
@@ -70,6 +69,7 @@
     "react": "^0.14.7",
     "react-addons-css-transition-group": "^0.14.7",
     "react-bootstrap": "^0.28.2",
+    "react-bootstrap-typeahead": "^0.9.4",
     "react-datepicker": "^0.21.0",
     "react-dom": "^0.14.7",
     "react-intl": "^2.1.3",
@@ -82,7 +82,8 @@
     "redux-form": "^5.2.5",
     "redux-promise": "^0.5.1",
     "topojson": "^1.6.22",
-    "uniqid": "^4.0.0"
+    "uniqid": "^4.0.0",
+    "validator": "^6.0.0"
   },
   "scripts": {
     "start": "node dev-server.js",
@@ -97,32 +98,45 @@
   },
   "jest": {
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.jsx",
+      "!src/**/__stories__"
+    ],
     "testPathDirs": [
       "src",
       "__mocks__"
+    ],
+    "testPathIgnorePatterns": [
+      "__tests__/coverage"
     ],
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "moduleNameMapper": {
       "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
     },
-    "setupEnvScriptFile": "<rootDir>/jest-env-setup.js",
+    "setupFiles": [
+      "<rootDir>/jest-env-setup.js"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/jasmine-env-setup.js",
     "moduleFileExtensions": [
       "js",
       "jsx",
       "json"
     ],
+    "automock": true,
     "unmockedModulePathPatterns": [
       "<rootDir>/src/constants",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
+      "<rootDir>/node_modules/moment",
+      "<rootDir>/node_modules/numeral",
       "<rootDir>/node_modules/d3",
       "<rootDir>/node_modules/hls.js",
       "<rootDir>/node_modules/immutable",
-      "<rootDir>/node_modules/jsdom",
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/react-redux",
+      "<rootDir>/node_modules/intl",
+      "<rootDir>/node_modules/react-intl",
       "<rootDir>/node_modules/redux"
     ]
   },

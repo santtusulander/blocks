@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers, urlBase } from '../util'
+import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_SSL_CERTIFICATE_FETCH = 'SECURITY_SSL_CERTIFICATE_FETCH'
@@ -38,7 +38,7 @@ export function fetchGroupsFailure(state) {
 }
 
 export function fetchSSLCertificatesSuccess(state, action) {
-  return state.merge({ sslCertificates: state.get('sslCertificates').merge(action.payload) })
+  return state.set('sslCertificates', fromJS(action.payload))
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -127,7 +127,7 @@ export default handleActions({
 
 // ACTIONS
 export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
-  return axios.post(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
+  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -135,11 +135,11 @@ export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOA
 })
 
 export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, (brand, account, group, cert) => {
-  return axios.delete(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
+  return axios.delete(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
 })
 
 export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, data, cert) => {
-  return axios.put(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
+  return axios.put(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -147,20 +147,32 @@ export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (
 })
 
 export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, commonName) => {
-  return axios.get(`${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
     .then(response => response && { account, group, certificate: response.data })
 })
 
 
 export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
-  const groupRequestUrl = `${urlBase}/VCDN/v2/brands/${brand}/accounts/${account}/groups/${group}/certs`
-  return group ? axios.get(groupRequestUrl).then(response =>
-    response && response.data.map(cn => { return { group, cn, account } })) :
-    Promise.resolve([])
+  if (!account || !group) {
+    return Promise.resolve([])
+  }
+
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`)
+    .then(action => Promise.all(action.data.map(
+      cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
+    )))
+    .then(resp => resp.map(certificate => {
+      return {
+        group,
+        cn: certificate.data.cn,
+        title: certificate.data.title,
+        account
+      }
+    }))
 })
 
 export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
-  return axios.get(`${urlBase}/v2/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
   .then((res) => {
     if(res) {
       return res.data;
@@ -173,4 +185,3 @@ export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATE
 })
 
 export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)
-

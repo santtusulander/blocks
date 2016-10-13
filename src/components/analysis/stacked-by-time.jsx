@@ -1,6 +1,5 @@
 import React from 'react'
 import d3 from 'd3'
-import moment from 'moment'
 import numeral from 'numeral'
 
 import TimeAxisLabels from './time-axis-labels'
@@ -87,7 +86,7 @@ class AnalysisStackedByTime extends React.Component {
             xScale={xScale}
             padding={this.props.padding}
             height={this.props.height}
-            showHours={xExtent[1] - xExtent[0] <= 24*60*60*1000}
+            showHours={this.props.dontShowHours ? false : xExtent[1] - xExtent[0] <= 24*60*60*1000}
             />}
           {yScale.ticks(4).reduce((axes, tick, i) => {
             if(i) {
@@ -117,6 +116,7 @@ AnalysisStackedByTime.propTypes = {
   className: React.PropTypes.string,
   dataKey: React.PropTypes.string,
   dataSets: React.PropTypes.array,
+  dontShowHours: React.PropTypes.bool,
   height: React.PropTypes.number,
   padding: React.PropTypes.number,
   width: React.PropTypes.number,

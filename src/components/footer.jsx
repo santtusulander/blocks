@@ -15,7 +15,6 @@ class Footer extends React.Component {
             <FormattedMessage id="portal.footer.poweredBy.text"/>
             <a href="http://www.ericsson.com" target="_blank"> Ericsson </a>
             (v {VERSION}).
-            <a href="https://www.ericsson.com/legal"> <FormattedMessage id="portal.footer.termsOfUse.text"/></a>
           </p>
         </div>
       </footer>

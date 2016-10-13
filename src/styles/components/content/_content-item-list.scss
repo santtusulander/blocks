@@ -113,16 +113,6 @@
     }
   }
 
-  .no-data-list-section {
-    height: $content-item-list-height;
-    padding: 89px 30px 30px;
-
-    @include md {
-      height: $md-content-item-list-height;
-      padding: 60px 15px 15px;
-    }
-  }
-
   .content-item-list-name {
     overflow: hidden;
     font-size: 30px;

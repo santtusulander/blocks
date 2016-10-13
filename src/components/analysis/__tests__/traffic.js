@@ -1,12 +1,13 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 // This component has a child that connects to redux, so mock that
 const reactRedux = require('react-redux')
 reactRedux.connect = jest.genMockFunction()
 reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
+jest.autoMockOff()
 jest.dontMock('../traffic.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
@@ -16,12 +17,8 @@ const AnalysisTraffic = require('../traffic.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.genMockFunction()
-const momentToDateMock = jest.genMockFunction()
-const numeralFormatMock = jest.genMockFunction()
-
-moment.mockReturnValue({format:momentFormatMock, toDate:momentToDateMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeCountryData = Immutable.fromJS([
   {
@@ -67,7 +64,7 @@ function intlMaker() {
 
 describe('AnalysisTraffic', () => {
   it('should exist', () => {
-    let traffic = TestUtils.renderIntoDocument(
+    let traffic = shallow(
       <AnalysisTraffic
         fetching={true}
         byTime={Immutable.List()}
@@ -76,11 +73,11 @@ describe('AnalysisTraffic', () => {
         dateRange='foo'
         intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(traffic)).toBeTruthy();
+    expect(traffic).toBeDefined();
   });
 
   it('should show data rows in table', () => {
-    let traffic = TestUtils.renderIntoDocument(
+    let traffic = shallow(
       <AnalysisTraffic
         fetching={false}
         byTime={Immutable.List()}
@@ -89,7 +86,7 @@ describe('AnalysisTraffic', () => {
         dateRange='foo'
         intl={intlMaker()}/>
     );
-    let tds = TestUtils.scryRenderedDOMComponentsWithTag(traffic, 'td')
+    let tds = traffic.find('td')
     expect(tds.length).toBe(6);
   });
 })

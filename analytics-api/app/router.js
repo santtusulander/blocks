@@ -8,6 +8,7 @@ let routeTraffic                = require('./routes/traffic');
 let routeTrafficTime            = require('./routes/traffic/time');
 let routeTrafficCountry         = require('./routes/traffic/country');
 let routeTrafficTotal           = require('./routes/traffic/total');
+let routeTrafficCPContribution  = require('./routes/traffic/cp-contribution');
 let routeTrafficSPContribution  = require('./routes/traffic/sp-contribution');
 let routeTrafficOnOffNet        = require('./routes/traffic/on-off-net');
 let routeTrafficUrls            = require('./routes/traffic/urls');
@@ -17,6 +18,8 @@ let routeVisitorsOS             = require('./routes/visitors/os');
 let routeVisitorsBrowser        = require('./routes/visitors/browser');
 let routeMetrics                = require('./routes/metrics');
 let routeFileErrors             = require('./routes/file-errors');
+let routeCPsWithTrafficForSP    = require('./routes/cps-with-traffic-for-sp');
+let routeSPsWithTrafficForCP    = require('./routes/sps-with-traffic-for-cp');
 let routeVersion                = require('./routes/version');
 
 router.errorHandler = errorHandler;
@@ -32,6 +35,7 @@ router.get(`/${configs.apiBaseFolder}/traffic`,                  routeTraffic);
 router.get(`/${configs.apiBaseFolder}/traffic/time`,             routeTrafficTime);
 router.get(`/${configs.apiBaseFolder}/traffic/country`,          routeTrafficCountry);
 router.get(`/${configs.apiBaseFolder}/traffic/total`,            routeTrafficTotal);
+router.get(`/${configs.apiBaseFolder}/traffic/cp-contribution`,  routeTrafficCPContribution);
 router.get(`/${configs.apiBaseFolder}/traffic/sp-contribution`,  routeTrafficSPContribution);
 router.get(`/${configs.apiBaseFolder}/traffic/on-off-net`,       routeTrafficOnOffNet);
 router.get(`/${configs.apiBaseFolder}/traffic/urls`,             routeTrafficUrls);
@@ -41,6 +45,8 @@ router.get(`/${configs.apiBaseFolder}/visitors/os`,              routeVisitorsOS
 router.get(`/${configs.apiBaseFolder}/visitors/browser`,         routeVisitorsBrowser);
 router.get(`/${configs.apiBaseFolder}/metrics`,                  routeMetrics);
 router.get(`/${configs.apiBaseFolder}/file-errors`,              routeFileErrors);
+router.get(`/${configs.apiBaseFolder}/cps-with-traffic-for-sp`,  routeCPsWithTrafficForSP);
+router.get(`/${configs.apiBaseFolder}/sps-with-traffic-for-cp`,  routeSPsWithTrafficForCP);
 
 // This middleware should always come after the configured routes.
 // Valid requests will send responses before Express gets here. If any requests

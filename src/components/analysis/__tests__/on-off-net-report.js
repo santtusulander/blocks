@@ -1,7 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
+jest.autoMockOff()
 jest.dontMock('../on-off-net-report.jsx')
 jest.dontMock('../../table-sorter.jsx')
 
@@ -11,11 +12,8 @@ const AnalysisOnOffNetReport = require('../on-off-net-report.jsx')
 const moment = require('moment')
 const numeral = require('numeral')
 
-const momentFormatMock = jest.fn()
-const numeralFormatMock = jest.fn()
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+moment.format = jest.fn()
+numeral.format = jest.fn()
 
 const fakeOnOffStats = Immutable.fromJS({
  total: 31000000,
@@ -48,40 +46,38 @@ function intlMaker() {
 
 describe('AnalysisOnOffNetReport', () => {
   it('should exist', () => {
-    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={true}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(analysisOnOffNetReport)).toBeTruthy();
+    expect(analysisOnOffNetReport).toBeDefined();
   });
 
   it('should show data rows in table', () => {
-    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisOnOffNetReport, 'tr')
+    let trs = analysisOnOffNetReport.find('tr')
     expect(trs.length).toBe(3);
   });
 
   it('should show summary stats', () => {
-    moment.mockClear()
-    numeral.mockClear()
-    TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    expect(numeral.mock.calls.length).toBe(8)
-    expect(numeral.mock.calls[0]).toEqual([0.5])
-    expect(numeralFormatMock.mock.calls[0][0]).toBe('0%')
+    let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
+    expect(summaryBoxes.at(0).text()).toContain('123 KB')
+    expect(summaryBoxes.at(1).text()).toContain('31 MB')
   });
 })
