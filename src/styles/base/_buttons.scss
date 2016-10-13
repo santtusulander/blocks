@@ -112,58 +112,6 @@ $lt-caret-color: $silver-60;
   }
 }
 
-// TODO: move to header file and update styling
-.header-toggle {
-  position: relative;
-  height: auto;
-  min-width: 0;
-  padding: 0 30px 0 0;
-  line-height: inherit;
-  text-align: left;
-
-  h3 {
-    max-width: calc(100% - #{$bar-height});
-    white-space: normal;
-  }
-
-  .icon {
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: middle;
-    border-width: 0;
-  }
-
-  &:hover .icon,
-  &:focus .icon {
-
-    .dark-theme &,
-    .light-theme & {
-      stroke: $pale-blue;
-    }
-  }
-
-  .dark-theme .open > &,
-  .light-theme .open > & {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus,
-    .icon {
-      color: $pale-blue;
-      background-color: transparent;
-      box-shadow: none;
-      stroke: $pale-blue;
-    }
-  }
-
-  h1,
-  h3 {
-    display: inline-block;
-    vertical-align: middle;
-  }
-}
-
 .dark-theme,
 .light-theme {
 
