@@ -28,7 +28,7 @@ const validate = (values) => {
   }
 
   if( name && !isValidAccountName(name) ) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+    errors.name = <FormattedMessage id="portal.group.edit.name.invalid.text" />
   }
 
   return errors;
