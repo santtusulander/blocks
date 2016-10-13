@@ -47,6 +47,11 @@ class ActionsSelection extends React.Component {
               </a>
             </li>
             <li>
+              <a href="#" onClick={this.setSetKey('tokenauth')}>
+                <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
+              </a>
+            </li>
+            <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
                 <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>
               </a>

@@ -11,6 +11,7 @@ import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationTokenAuthentication from './actions/token-authentication'
 import ConfigurationActionRedirection from './actions/redirection'
 import ConfigurationActionOriginHostname from './actions/origin-hostname'
 import ConfigurationActionCompression from './actions/compression'
@@ -134,6 +135,11 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
       case 'header':
         activeEditForm = (
           <ConfigurationActionHeader {...setterProps}/>
+        )
+        break
+      case 'tokenauth':
+        activeEditForm = (
+          <ConfigurationTokenAuthentication {...setterProps}/>
         )
         break
       default:
