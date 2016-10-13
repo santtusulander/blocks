@@ -67,7 +67,17 @@ export function isValidFQDN(domainName, opts = {}) {
  * @returns {boolean}
  */
 export function isValidAccountName(name) {
-  return matchesRegexp(name, /^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$/)
+  const accountNameRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
+  return accountNameRegexp.test(name) && !isOnlyWhiteSpace(name)
+}
+
+/**
+ * Check if string only contains whitespace
+ * @param val
+ * @returns {boolean}
+ */
+export function isOnlyWhiteSpace(val) {
+  return /^\s+$/.test(val)
 }
 
 /**
