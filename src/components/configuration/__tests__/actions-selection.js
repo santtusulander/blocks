@@ -19,7 +19,7 @@ describe('ConditionSelection', () => {
       <ActionsSelection
         changeValue={changeValue}
         activateSet={activateSet}
-        path={[]}
+        path={Immutable.List()}
         config={Immutable.Map()} />
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(actionsSelection, 'a');

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tooltip } from 'react-bootstrap'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.mock('../../util/helpers', () => {
   return {
@@ -28,115 +28,105 @@ function userActionsMaker(cbResponse) {
 
 describe('SetPassword', () => {
   it('should exist', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    expect(TestUtils.isCompositeComponent(setPassword)).toBeTruthy();
+    expect(setPassword).toBeTruthy();
   })
 
   it('can show / hide password', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    expect(inputs[0].type).toBe('password')
-    let toggler = TestUtils.scryRenderedDOMComponentsWithClass(setPassword, 'input-addon-link')
-    TestUtils.Simulate.click(toggler[0])
-    expect(inputs[0].type).toBe('text')
+    const inputs = setPassword.find('Input')
+    expect(setPassword.find('#password').prop('type')).toBe('password')
+    // setPassword.find('.input-addon-link').at(0).simulate('click')
+    setPassword.setState({passwordVisible: true})
+    expect(setPassword.find('#password').prop('type')).toBe('text')
   })
 
   it('maintains form state', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    inputs[0].value = 'aaa'
-    TestUtils.Simulate.change(inputs[0])
-    inputs[1].value = 'bbb'
-    TestUtils.Simulate.change(inputs[1])
-    expect(setPassword.state.password).toBe('aaa')
-    expect(setPassword.state.confirm).toBe('bbb')
+    let inputs = setPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'aaa'}})
+    inputs.at(1).simulate('change', {target: {value: 'bbb'}})
+    expect(setPassword.state('password')).toBe('aaa')
+    expect(setPassword.state('confirm')).toBe('bbb')
   })
 
   it('toggles active class when focused and blurred', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
+    const inputs = setPassword.find('Input')
 
-    const passwordHolder = TestUtils.findRenderedDOMComponentWithClass(setPassword, 'login-label-password')
-    expect(passwordHolder.getAttribute('class')).not.toContain('active')
-    TestUtils.Simulate.focus(inputs[0])
-    expect(passwordHolder.getAttribute('class')).toContain('active')
-    TestUtils.Simulate.blur(inputs[0])
-    expect(passwordHolder.getAttribute('class')).not.toContain('active')
+    const usernameHolder = inputs.at(0)
+    expect(setPassword.state('passwordFocus')).toBe(false)
+    usernameHolder.simulate('focus')
+    expect(setPassword.state('passwordFocus')).toBe(true)
+    usernameHolder.simulate('blur')
+    expect(setPassword.state('passwordFocus')).toBe(false)
 
-    const confirmHolder = TestUtils.findRenderedDOMComponentWithClass(setPassword, 'login-label-confirm')
-    expect(confirmHolder.getAttribute('class')).not.toContain('active')
-    TestUtils.Simulate.focus(inputs[1])
-    expect(confirmHolder.getAttribute('class')).toContain('active')
-    TestUtils.Simulate.blur(inputs[1])
-    expect(confirmHolder.getAttribute('class')).not.toContain('active')
+    const passwordHolder = inputs.at(1)
+    expect(setPassword.state('confirmFocus')).toBe(false)
+    inputs.at(1).simulate('focus')
+    expect(setPassword.state('confirmFocus')).toBe(true)
+    inputs.at(1).simulate('blur')
+    expect(setPassword.state('confirmFocus')).toBe(false)
   })
 
   it('shows a tooltip', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    let tooltip = TestUtils.scryRenderedComponentsWithType(setPassword, Tooltip)
+    const inputs = setPassword.find('Input')
+    let tooltip = setPassword.find('Tooltip')
     expect(tooltip.length).toBe(0)
-    TestUtils.Simulate.focus(inputs[0])
-    tooltip = TestUtils.scryRenderedComponentsWithType(setPassword, Tooltip)
+    inputs.at(0).simulate('focus')
+    tooltip = setPassword.find('Tooltip')
     expect(tooltip.length).toBe(1)
   })
 
   it('validates the password', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    inputs[0].value = 'invalid_password'
-    TestUtils.Simulate.change(inputs[0])
-    expect(setPassword.state.passwordValid).toBe(false)
-    inputs[0].value = 'V@lid_P@55word'
-    TestUtils.Simulate.change(inputs[0])
-    expect(setPassword.state.passwordValid).toBe(true)
+    const inputs = setPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'invalid_password'}})
+    expect(setPassword.state('passwordValid')).toBe(false)
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    expect(setPassword.state('passwordValid')).toBe(true)
   })
 
   it('does not compare when password is invalid', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    inputs[0].value = 'invalid_password'
-    TestUtils.Simulate.change(inputs[0])
-    inputs[1].value = 'invalid_password'
-    TestUtils.Simulate.change(inputs[1])
-    expect(setPassword.state.confirmValid).toBe(false)
+    const inputs = setPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'invalid_password'}})
+    inputs.at(1).simulate('change', {target: {value: 'invalid_password'}})
+    expect(setPassword.state('confirmValid')).toBe(false)
   })
 
   it('does not give a match if password is valid but does not match confirm', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    inputs[0].value = 'V@lid_P@55word'
-    TestUtils.Simulate.change(inputs[0])
-    inputs[1].value = 'different_password'
-    TestUtils.Simulate.change(inputs[1])
-    expect(setPassword.state.confirmValid).toBe(false)
+    const inputs = setPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(0).simulate('change', {target: {value: 'different_password'}})
+    expect(setPassword.state('confirmValid')).toBe(false)
   })
 
   it('give a valid match when password is valid and matches confirm', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(setPassword, 'input')
-    inputs[0].value = 'V@lid_P@55word'
-    TestUtils.Simulate.change(inputs[0])
-    inputs[1].value = 'V@lid_P@55word'
-    TestUtils.Simulate.change(inputs[1])
-    expect(setPassword.state.confirmValid).toBe(true)
+    const inputs = setPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    inputs.at(1).simulate('change', {target: {value: 'V@lid_P@55word'}})
+    expect(setPassword.state('confirmValid')).toBe(true)
   })
 })
