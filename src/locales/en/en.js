@@ -87,7 +87,6 @@ const TRANSLATED_MESSAGES = {
   'portal.brand.list.usedBy.text': 'Used By',
 
   'portal.group.edit.name.required.text': 'Group name is required',
-  'portal.group.edit.name.invalid.text': 'Group name is invalid',
   'portal.group.edit.name.label': 'Group Name',
   'portal.group.edit.name.enter.text': 'Enter Group Name',
   'portal.group.edit.editGroup.title': 'Edit Group',
