@@ -1,5 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.autoMockOff()
@@ -121,26 +121,26 @@ function intlMaker() {
 
 describe('AnalysisVisitors', () => {
   it('should exist', () => {
-    let visitors = TestUtils.renderIntoDocument(
+    const visitors = shallow(
       <AnalysisVisitors fetching={true}
         serviceTypes={Immutable.List()}
         intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(visitors)).toBeTruthy();
+    expect(visitors).toBeTruthy();
   });
 
   it('should show loading message if there is no data', () => {
-    let visitors = TestUtils.renderIntoDocument(
+    const visitors = shallow(
       <AnalysisVisitors fetching={true}
         serviceTypes={Immutable.List()}
         intl={intlMaker()}/>
     );
-    let div = TestUtils.scryRenderedDOMComponentsWithTag(visitors, 'div')
-    expect(div[0].textContent).toContain('Loading...');
+    const div = visitors.find('div')
+    expect(div.at(0).html()).toContain('Loading...');
   });
 
   it('should show data in tables', () => {
-    let visitors = TestUtils.renderIntoDocument(
+    const visitors = shallow(
       <AnalysisVisitors
         fetching={false}
         serviceTypes={Immutable.List()}
@@ -150,7 +150,7 @@ describe('AnalysisVisitors', () => {
         byTime={fakeByTimeData}
         intl={intlMaker()}/>
     );
-    let tds = TestUtils.scryRenderedDOMComponentsWithTag(visitors, 'td')
+    const tds = visitors.find('td')
     expect(tds.length).toBe(24);
   });
 })

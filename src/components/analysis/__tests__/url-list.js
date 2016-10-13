@@ -1,10 +1,8 @@
-jest.unmock('numeral')
-jest.unmock('../url-list')
-
 import React from 'react'
 import Immutable from 'immutable'
 import { mount } from 'enzyme'
 
+jest.unmock('../url-list')
 import URLList from '../url-list'
 
 const fakeURLs = Immutable.fromJS([
