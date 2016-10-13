@@ -21,7 +21,7 @@ import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
-import DeleteModal from '../components/delete-modal'
+import ModalWindow from '../components/modal'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -385,13 +385,20 @@ export class Configuration extends React.Component {
             saving={this.props.fetching}
             />
 
-          {this.state.deleteModal && <DeleteModal
-          itemToDelete="Property"
-          cancel={toggleDelete}
-          submit={() => {
+        {this.state.deleteModal &&
+        <ModalWindow
+          show={true}
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          cancelButton={toggleDelete}
+          deleteButton={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+          </p>
+        </ModalWindow>
         }
 
         {this.state.showPublishModal &&

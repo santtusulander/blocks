@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -16,8 +17,7 @@ import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
 
-import ErrorModal from '../components/error-modal'
-import InfoModal from '../components/info-modal'
+import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import * as PERMISSIONS from '../constants/permissions.js'
@@ -155,13 +155,16 @@ export class Main extends React.Component {
             : null}
         </div>
 
-        <ErrorModal
-          showErrorDialog={this.props.showErrorDialog}
-          uiActions={this.props.uiActions}/>
-        <InfoModal
-          showErrorDialog={this.props.showInfoDialog}
-          uiActions={this.props.uiActions}
+        <ModalWindow
+          show={this.props.showErrorDialog}
+          title={<FormattedMessage id="portal.errorModal.errorOccured.text"/>}
+          content={<FormattedMessage id="portal.errorModal.reloadNote.text"/>}
+          closeButtonSecondary={() => this.props.uiActions.hideErrorDialog()}
+          reloadButton={() => location.reload(true)}/>
+        <ModalWindow
+          show={this.props.showInfoDialog}
           {...infoDialogOptions}/>
+
 
         <ReactCSSTransitionGroup
           component="div"
