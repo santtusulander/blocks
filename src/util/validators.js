@@ -68,7 +68,16 @@ export function isValidFQDN(domainName, opts = {}) {
  */
 export function isValidAccountName(name) {
   const accountNameRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
-  return accountNameRegexp.test(name)
+  return accountNameRegexp.test(name) && !isOnlyWhiteSpace(name)
+}
+
+/**
+ * Check if string only contains whitespace
+ * @param val
+ * @returns {boolean}
+ */
+export function isOnlyWhiteSpace(val) {
+  return /^\s+$/.test(val)
 }
 
 /**
@@ -97,4 +106,3 @@ export function isInt(int) {
 export function isSafari() {
   return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
-
