@@ -90,14 +90,7 @@
       }
     }
 
-    .dark-theme & {
-      color: $pale-blue;
-
-      &:hover {
-        color: rgba($pale-blue, 0.8);
-      }
-    }
-
+    .dark-theme &,
     .light-theme & {
       color: $pale-blue;
 
