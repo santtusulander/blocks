@@ -22,9 +22,9 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   .dropdown-toggle {
     display: flex;
     min-width: 0;
-    flex-wrap: nowrap;
-    align-items: center;
     cursor: pointer;
+    align-items: center;
+    flex-wrap: nowrap;
 
     > :first-child {
       float: left;
@@ -49,7 +49,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
       a {
         position: relative;
         display: flex;
-        width: calc(100% - #{($dd-horizontal-padding * 2) + $dd-caret-width};
+        width: calc(100% - #{($dd-horizontal-padding * 2) + $dd-caret-width});
         align-items: center;
         flex-direction: row;
         flex-grow: 1;
@@ -59,7 +59,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         width: auto;
         flex-shrink: 1;
 
-        .caret {
+        .caret-selector {
           border-top: $caret-width-base solid transparent;
           border-bottom: $caret-width-base solid transparent;
           border-width: $caret-width-base;
@@ -76,20 +76,20 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
         &:hover {
           .dark-theme & {
-            .caret {
+            .caret-selector {
               border-left-color: $white;
             }
           }
 
           .light-theme & {
-            .caret {
+            .caret-selector {
               border-left-color: $black;
             }
           }
         }
 
         &:focus {
-          .caret {
+          .caret-selector {
             border-left-color: $pale-blue;
           }
         }

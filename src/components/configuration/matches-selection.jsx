@@ -27,31 +27,37 @@ class MatchesSelection extends React.Component {
           <ul className="condition-selection list-unstyled">
             <li>
               <a href="#" onClick={this.setMatchField('request_host')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.hostname.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_url')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.url.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_path')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.directoryPath.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_query')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.queryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_header')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.header.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_cookie')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
               </a>
             </li>

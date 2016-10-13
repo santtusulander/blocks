@@ -33,61 +33,73 @@ class ActionsSelection extends React.Component {
           <ul className="condition-selection list-unstyled">
             <li>
               <a href="#" onClick={this.setSetKey('cache_control')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.cache.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setSetKey('cache_name')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.cacheKeyQueryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setSetKey('header')}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.header.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.originHostname.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.compression.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.path.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.queryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.removeVary.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.allowBlock.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.postSupport.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
+                <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.actionSelection.cors.text"/>
               </a>
             </li>
