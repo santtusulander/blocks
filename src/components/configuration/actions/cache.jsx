@@ -169,7 +169,7 @@ class Cache extends React.Component {
           </Input>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>

@@ -2,6 +2,7 @@ import React from 'react'
 import {Button, Input, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 import IconArrowUp from '../icons/icon-arrow-up.jsx'
@@ -234,11 +235,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
-                    <Button onClick={this.deleteMatch(match.path)} bsStyle="primary"
-                      disabled={flattenedPolicy.matches.length < 2}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                    <ActionButtons
+                      onDelete={this.deleteMatch(match.path)}
+                      disabled={flattenedPolicy.matches.length < 2} />
                   </Col>
                 </div>
               )

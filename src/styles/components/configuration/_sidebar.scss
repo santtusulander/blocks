@@ -181,21 +181,6 @@
     background-color: rgba($pale-blue, 0.5);
   }
 
-  .btn-default {
-    color: $white;
-    background-color: transparent;
-    border: 1px solid rgba($pale-blue, 0.5);
-    text-transform: uppercase;
-
-    &.dropdown-toggle {
-      text-transform: none;
-    }
-
-    .light-theme & {
-      color: rgba($pale-blue, 0.5);
-    }
-  }
-
   .small-select {
     min-width: 150px;
 
