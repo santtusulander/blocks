@@ -395,10 +395,6 @@ export class Property extends React.Component {
                 {activeConfig.get('edge_configuration').get('published_name')}
               </h3>
             </Col>
-            <Col xs={2} className="kpi">
-              Current Version
-              <h3>{activeConfig.get('config_name')}</h3>
-            </Col>
             <Col xs={4} className="kpi">
               Deployed
               <h3>

@@ -59,6 +59,8 @@ axios.interceptors.response.use(function (response) {
         const method = error.config.method.toLowerCase()
         const tokenDidExpire = loggedIn && method === 'get'
 
+        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
+
         if (tokenDidExpire) {
           store.dispatch(showInfoDialog({
             title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
@@ -72,7 +74,6 @@ axios.interceptors.response.use(function (response) {
             )
           }));
         } else {
-          store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
           browserHistory.push('/login')
         }
       }

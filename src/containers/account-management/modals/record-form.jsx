@@ -8,7 +8,8 @@ import * as recordActionCreators from '../../../redux/modules/dns-records/action
 
 import RecordForm from '../../../components/account-management/record-form'
 
-import { checkForErrors, isValidIPv4Address, isValidIPv6Address } from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
+import { isValidIPv4Address, isValidIPv6Address, isInt } from '../../../util/validators'
 
 import { getRecordFormInitialValues, isShown, recordValues } from '../../../util/dns-records-helpers'
 
@@ -51,11 +52,11 @@ const validate = (fields, props) => {
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
-      condition: !new RegExp('^[0-9]*$').test(filteredFields.prio),
+      condition: !isInt(filteredFields.prio),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !new RegExp('^[0-9]+$').test(filteredFields.ttl),
+      condition: !isInt(filteredFields.ttl),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
     },
     name: {

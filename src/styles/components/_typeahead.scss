@@ -1,0 +1,69 @@
+// Typeahead
+// =========
+
+$token-background: $gradient-teal;
+$token-vertical-padding: em(4px, $form-font-size);
+$token-horizontal-padding: em(12px, $form-font-size);
+
+.bootstrap-typeahead {
+
+  .form-control {
+    min-height: 36px;
+    padding-bottom: 5px;
+
+    &.focus {
+      box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
+    }
+  }
+
+  .bootstrap-tokenizer-input div {
+    // This fixes the input width calculations
+    font-size: rem($form-font-size) !important;
+  }
+
+  .token {
+    position: relative;
+    display: inline-block;
+    padding: $token-vertical-padding $token-horizontal-padding;
+    margin-right: em(6px, $form-font-size);
+    margin-bottom: em(2px, $form-font-size);
+    line-height: 1em;
+    color: $white;
+    background-color: $token-background;
+    border-radius: 1em;
+
+    &:hover {
+      background-image: linear-gradient(rgba($white, 0.2), rgba($white, 0.2));
+    }
+
+    .close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      padding: $token-vertical-padding em(8px, $form-font-size);
+
+      &:hover {
+        color: $dt-text-color;
+      }
+    }
+  }
+
+  .token-removeable {
+    padding-right: em(26px, $form-font-size);
+    cursor: pointer;
+  }
+
+  .token-selected {
+    text-decoration: none;
+    outline: none;
+
+    .dark-theme & {
+      box-shadow: 0 0 0 2px $white;
+    }
+
+    .light-theme & {
+      box-shadow: 0 0 0 2px rgba($black, 0.4);
+    }
+  }
+}

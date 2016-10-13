@@ -1,5 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.autoMockOff()
 jest.dontMock('../forgot-password.jsx')
@@ -19,33 +19,32 @@ function userActionsMaker(cbResponse) {
 
 describe('ForgotPassword', () => {
   it('should exist', () => {
-    const forgotPassword = TestUtils.renderIntoDocument(
+    const forgotPassword = shallow(
       <ForgotPassword userActions={userActionsMaker({})}/>
     )
-    expect(TestUtils.isCompositeComponent(forgotPassword)).toBeTruthy();
+    expect(forgotPassword).toBeDefined();
   })
 
   it('maintains form state', () => {
-    const forgotPassword = TestUtils.renderIntoDocument(
+    const forgotPassword = shallow(
       <ForgotPassword userActions={userActionsMaker({})}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(forgotPassword, 'input')
-    inputs[0].value = 'aaa'
-    TestUtils.Simulate.change(inputs[0])
-    expect(forgotPassword.state.email).toBe('aaa')
+    let inputs = forgotPassword.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'aaa'}})
+    expect(forgotPassword.state('email')).toBe('aaa')
   })
 
   it('toggles active class when focused and blurred', () => {
-    const forgotPassword = TestUtils.renderIntoDocument(
+    const forgotPassword = shallow(
       <ForgotPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = TestUtils.scryRenderedDOMComponentsWithTag(forgotPassword, 'input')
+    let inputs = forgotPassword.find('Input')
 
-    const usernameHolder = TestUtils.findRenderedDOMComponentWithClass(forgotPassword, 'login-label-email')
-    expect(usernameHolder.getAttribute('class')).not.toContain('active')
-    TestUtils.Simulate.focus(inputs[0])
-    expect(usernameHolder.getAttribute('class')).toContain('active')
-    TestUtils.Simulate.blur(inputs[0])
-    expect(usernameHolder.getAttribute('class')).not.toContain('active')
+    const usernameHolder = inputs.at(0)
+    expect(forgotPassword.state('emailActive')).toBe(false)
+    usernameHolder.simulate('focus')
+    expect(forgotPassword.state('emailActive')).toBe(true)
+    usernameHolder.simulate('blur')
+    expect(forgotPassword.state('emailActive')).toBe(false)
   })
 })
