@@ -1,30 +1,43 @@
 import React, {PropTypes} from 'react'
 import {Button} from 'react-bootstrap'
+import classNames from 'classnames'
 
 import IconEdit from './icons/icon-edit.jsx'
 import IconTrash from './icons/icon-trash.jsx'
 
-const ActionButtons = props =>
-    <div className='action-buttons'>
-      {props.onEdit &&
-      <Button id='edit-button' onClick={props.onEdit} className="btn btn-icon">
+const ActionButtons = ({ disabled, onEdit, onDelete, secondaryBtns }) => {
+  let className = classNames(
+    'action-buttons',
+    {
+      'primary': !secondaryBtns,
+      'secondary': secondaryBtns
+    }
+  );
+
+  return (
+    <div className={className}>
+      {onEdit &&
+      <Button id='edit-button' onClick={onEdit} className="btn btn-icon">
         <IconEdit />
       </Button>
       }
-      {props.onDelete &&
+      {onDelete &&
       <Button id='delete-button'
-        onClick={props.onDelete}
+        onClick={onDelete}
         className="btn btn-icon"
-        disabled={props.disabled}>
+        disabled={disabled}>
         <IconTrash/>
       </Button>
       }
     </div>
+  )
+}
 
 ActionButtons.propTypes = {
   disabled: PropTypes.func,
   onDelete: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  secondaryBtns: PropTypes.string
 }
 
 export default ActionButtons

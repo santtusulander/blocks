@@ -236,6 +236,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={2} className="text-right">
                     <ActionButtons
+                      secondaryBtns={true}
                       onDelete={this.deleteMatch(match.path)}
                       disabled={flattenedPolicy.matches.length < 2} />
                   </Col>
