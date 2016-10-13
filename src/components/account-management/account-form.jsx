@@ -31,7 +31,7 @@ const validate = ({ accountName = '', accountBrand, accountType, services }) => 
     accountName: [
       {
         condition: ! isValidAccountName(accountName),
-        errorText: <div key={accountName}>{[<FormattedMessage id="portal.account.manage.invalidAccountName.text" />, <div key={1}>
+        errorText: <div key={accountName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
                     <div style={{marginTop: '0.5em'}}>
                       <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
                       <ul>
