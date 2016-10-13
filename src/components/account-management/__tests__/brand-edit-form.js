@@ -4,15 +4,10 @@
 // import { createStore, combineReducers } from 'redux'
 // import { reducer as formReducer } from 'redux-form'
 //
-// import jsdom from 'jsdom'
-//
 // jest.unmock('../../../components/account-management/brand-edit-form');
 // jest.unmock('../../../components/udn-file-input');
 // jest.unmock('../../../components/select-wrapper');
 // import BrandEditForm from '../../../components/account-management/brand-edit-form'
-//
-// global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-// global.window = document.defaultView
 
 
 describe("BrandEditForm", () => {

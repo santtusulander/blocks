@@ -295,7 +295,7 @@ AnalysisOnOffNetReport.propTypes = {
 AnalysisOnOffNetReport.defaultProps = {
   onOffStats: Immutable.Map(),
   onOffStatsToday: Immutable.Map(),
-  onOffFilter: Immutable.Map()
+  onOffFilter: Immutable.List()
 }
 
 module.exports = injectIntl(AnalysisOnOffNetReport)
