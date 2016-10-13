@@ -324,7 +324,13 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
-
+  
+  /**
+   * Get total and detailed Service Provider traffic information.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
   getSPTrafficTotals(options) {
     let queryOptions = [];
     queryOptions.push(options.start);
@@ -355,6 +361,13 @@ class AnalyticsDB {
     return this._executeQuery(queryParameterized, queryOptions);
   }
 
+  /**
+   * Returns Service Provider traffic for a group or account.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
   getSpTraffic(options) {
     let queryOptions = [];
     queryOptions.push(options.start);
@@ -385,6 +398,13 @@ class AnalyticsDB {
     return this._executeQuery(queryParameterized, queryOptions);
   }
 
+  /**
+   * Get Service Provider traffic for a group or account for a
+   * requested time frame AND the previous time frame of the same duration.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the query results
+   */
   getSpTrafficWithHistorical(options) {
     let optionsFinal    = this._getQueryOptions(options);
     let start           = parseInt(optionsFinal.start);
