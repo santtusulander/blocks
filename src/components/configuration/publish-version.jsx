@@ -19,7 +19,12 @@ class ConfigurationPublishVersion extends React.Component {
   }
   handleSave(e) {
     e.preventDefault()
-    this.props.saveChanges(this.state.publishTarget)
+
+    if (this.state.publishTarget) {
+      this.props.saveChanges(this.state.publishTarget)
+    } else {
+      // TODO: notify user?
+    }
   }
   render() {
     return (

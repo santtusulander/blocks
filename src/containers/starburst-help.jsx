@@ -180,6 +180,15 @@ class StarburstHelp extends React.Component {
                 <tspan x="0" y="56">
                   <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwithFttb.text"/>
                 </tspan>
+                <tspan x="0" y="98">
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.sortingNote.text"/>
+                </tspan>
+                <tspan x="0" y="126">
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.notRepresentative.text"/>
+                </tspan>
+                <tspan x="0" y="154">
+                  <FormattedMessage tagName="tspan" id="portal.startburstHelp.displayedOnStarburst.text"/>
+                </tspan>
               </text>
             </g>
             {/* Day Wedge */}

@@ -1,7 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import jsdom from 'jsdom'
 
 jest.mock('../../util/helpers', () => {
   return {
@@ -13,10 +12,6 @@ jest.mock('../../util/helpers', () => {
 
 jest.unmock('../hosts.jsx')
 import { Hosts } from '../hosts.jsx'
-
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
-
 
 function hostActionsMaker() {
   return {
