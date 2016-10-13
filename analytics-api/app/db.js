@@ -325,6 +325,87 @@ class AnalyticsDB {
     return this._executeQuery(queryParameterized, queryOptions);
   }
 
+  getSPTrafficTotals(options) {
+    let queryOptions = [];
+    queryOptions.push(options.start);
+    queryOptions.push(options.end);
+
+    if (options.account) {
+      queryOptions.push(options.account);
+    }
+
+    let select = options.account ? 'sp_group_id AS "group"' : "sp_account_id AS account";
+    let group = options.account ? "sp_group_id" : "sp_account_id";
+    let where = options.account ? " AND sp_account_id = ?" : "";
+
+    let queryParameterized = `
+      SELECT
+        ${select},
+        max(bytes) as bytes_peak,
+        min(bytes) as bytes_lowest,
+        avg(bytes) as bytes_average,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
+      FROM spc_global_day
+      WHERE timezone = "UTC"
+        AND epoch_start BETWEEN ? AND ? ${where}
+      GROUP BY ${group};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  getSpTraffic(options) {
+    let queryOptions = [];
+    queryOptions.push(options.start);
+    queryOptions.push(options.end);
+
+    if (options.account) {
+      queryOptions.push(options.account);
+    }
+
+    let select = options.account ? 'sp_group_id AS "group"' : "sp_account_id AS account";
+    let group = options.account ? "sp_group_id" : "sp_account_id";
+    let where = options.account ? " AND sp_account_id = ?" : "";
+
+    let queryParameterized = `
+      SELECT
+        ${select},
+        epoch_start as timestamp,
+        sum(bytes) AS bytes
+      FROM spc_global_hour
+      WHERE epoch_start BETWEEN ? AND ? ${where}
+      GROUP BY
+        ${group},
+        epoch_start
+      ORDER BY
+        sp_account_id,
+        epoch_start;`;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  getSpTrafficWithHistorical(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let start           = parseInt(optionsFinal.start);
+    let end             = parseInt(optionsFinal.end);
+    let duration        = end - start + 1;
+    let optionsHistoric = Object.assign({}, optionsFinal, {
+      start: start - duration,
+      end: start - 1
+    });
+    let queries = [
+      this.getSpTraffic(optionsFinal),
+      this.getSpTraffic(optionsHistoric)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
+  }
 
   /**
    * Get total and detailed traffic information.
@@ -370,7 +451,9 @@ class AnalyticsDB {
   getMetrics(options) {
     let queries = [
       this.getEgressWithHistorical(options, true),
-      this._getAggregateNumbers(options, true)
+      this._getAggregateNumbers(options, true),
+      this.getSPTrafficTotals(options),
+      this.getSpTrafficWithHistorical(options)
     ];
 
     return Promise.all(queries)
@@ -383,6 +466,8 @@ class AnalyticsDB {
 
         // queryData[1] is an array of account levels with aggregate traffic data
         queryDataOrganized.push(queryData[1]);
+        queryDataOrganized.push(queryData[2]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[3]);
 
         // NOTE: queryDataOrganized ends up looking something like this:
         // [trafficData, historicalTrafficData, aggregateData]
