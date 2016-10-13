@@ -14,7 +14,6 @@ import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
 import SelectWrapper from '../../../components/select-wrapper'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import UDNButton from '../../../components/button'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -148,14 +147,12 @@ class AccountList extends Component {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.title'/>,
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
-        buttons:  [
-          <UDNButton key="button-1" onClick={() => {
-            this.isLeaving = true
-            this.props.router.push(pathname)
-            this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary">Continue</UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
-        ]
+        stayButton: this.props.uiActions.hideInfoDialog,
+        continueButton: () => {
+          this.isLeaving = true
+          this.props.router.push(pathname)
+          this.props.uiActions.hideInfoDialog()
+        }
       })
       return false;
     }

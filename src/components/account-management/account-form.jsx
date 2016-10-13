@@ -26,7 +26,7 @@ import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName = '', accountBrand, accountType, services }) => {
   const conditions = {
     accountName: [
       {
@@ -43,6 +43,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
       }
     ]
   }
+
   return checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
 }
 
@@ -176,6 +177,7 @@ class AccountForm extends React.Component {
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
+  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

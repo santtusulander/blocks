@@ -1,7 +1,6 @@
 // Login
 // =====
 
-$login-modal-width: rem(654px);
 $modal-bg-color: $medium-blue;
 $login-modal-header-top-padding: rem(54px);
 $login-modal-header-bottom-padding: rem(36px);
@@ -18,16 +17,18 @@ $login-modal-logo-left-padding: rem(12px);
     position: absolute;
     top: 50%;
     left: 50%;
-    width: $login-modal-width;
     transform: translate(-50%, -50%);
   }
 
-  // TODO: this needs to be updated to be used on all modals
-  // Using important to override background properties on modals
-  // !important will be removed once the base modal colors are updated
+  // TODO: This should be removed when we no longer allow a light
+  // themed login page. See: https://vidscale.atlassian.net/browse/UDNP-1328
   .modal-content {
     background-color: $modal-bg-color !important;
     background-image: none !important;
+
+    .light-theme & {
+      color: $dt-text-color;
+    }
   }
 
   .modal-header {
