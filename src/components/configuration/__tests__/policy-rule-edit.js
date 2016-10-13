@@ -79,14 +79,14 @@ const fakeConfig = Immutable.fromJS({
   }
 })
 
-const fakeRulePath = ["request_policy", "policy_rules", 0]
+const fakeRulePath = Immutable.fromJS(["request_policy", "policy_rules", 0])
 
 describe('ConfigurationPolicyRuleEdit', () => {
   it('should exist', () => {
     const policyRule = shallow(<ConfigurationPolicyRuleEdit rule={Immutable.Map()}
       rule={fakeConfig}
       config={Immutable.Map()}
-      rulePath={[]}
+      rulePath={Immutable.List()}
       activeAccount={fakeAccounts}
       activeGroup={fakeGroups}
       location={fakeLocation}/>)
@@ -99,7 +99,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit changeValue={changeValue}
         rule={fakeConfig}
         config={Immutable.Map()}
-        rulePath={[]}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         location={fakeLocation}/>
@@ -107,7 +107,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'input');
     inputs[0].value = "new"
     TestUtils.Simulate.change(inputs[0])
-    expect(changeValue.mock.calls[0][0]).toEqual(['rule_name'])
+    expect(changeValue.mock.calls[0][0].toJS()).toEqual(['rule_name'])
     expect(changeValue.mock.calls[0][1]).toBe('new')
   });
 
@@ -117,7 +117,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit hideAction={hideAction}
         rule={fakeConfig}
         config={Immutable.Map()}
-        rulePath={[]}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         location={fakeLocation}/>
@@ -133,7 +133,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit activateMatch={activateMatch}
         rule={fakeConfig}
         config={Immutable.Map()}
-        rulePath={[]}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         location={fakeLocation}/>
@@ -148,7 +148,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit activateSet={activateSet}
         rule={fakeConfig}
         config={Immutable.Map()}
-        rulePath={[]}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         location={fakeLocation}/>
@@ -164,7 +164,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit
         rule={fakeConfig}
         config={Immutable.Map()}
-        rulePath={[]}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         location={fakeLocation}
@@ -185,7 +185,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
       <ConfigurationPolicyRuleEdit
         rule={fakeConfig}
         config={fakeConfig}
-        rulePath={Immutable.List([])}
+        rulePath={Immutable.List()}
         activeAccount={fakeAccounts}
         activeGroup={fakeGroups}
         changeValue={changeValue}

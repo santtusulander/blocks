@@ -28,10 +28,10 @@ function userActionsMaker(cbResponse) {
 
 describe('SetPassword', () => {
   it('should exist', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    expect(TestUtils.isCompositeComponent(setPassword)).toBeTruthy();
+    expect(setPassword).toBeTruthy();
   })
 
   it('sets the validPassword state to false when the isValidPassword paramter is false', () => {

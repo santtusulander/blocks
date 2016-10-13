@@ -10,7 +10,7 @@ describe('ConfigurationSecurity', () => {
     const security = shallow(
       <ConfigurationSecurity
         config={Immutable.Map()}
-        sslCertificates={Immutable.Map()}/>
+        sslCertificates={Immutable.List()}/>
     )
     expect(security).toBeDefined()
   });
