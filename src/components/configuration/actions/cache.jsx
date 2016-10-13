@@ -33,9 +33,9 @@ class Cache extends React.Component {
 
     this.state = {
       checkEtag: props.set.get('check_etag') || 'false',
-      honorOrigin: props.set.get('honor_origin'),
+      honorOrigin: props.set.get('honor_origin') || false,
       maxAge: maxAge,
-      noStore: props.set.get('no_store'),
+      noStore: props.set.get('no_store') || false,
       ttlType: ttlType
     }
 
