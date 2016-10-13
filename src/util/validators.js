@@ -90,10 +90,19 @@ export function isInt(int) {
 }
 
 /**
+ * Check if is valid base64-encoded string (example: c2hhcmVkLXNlY3JldA==)
+ * RegEx sourced from http://stackoverflow.com/a/475217/2715
+ * @param string
+ * @returns {*}
+ */
+export function isBase64(str) {
+  return !!str && matchesRegexp(str, /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/)
+}
+
+/**
  * Check if current browser is Safari
  * @returns {boolean}
  */
 export function isSafari() {
   return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
-

@@ -2,27 +2,31 @@ import React from 'react'
 import { Map } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../token-authentication.jsx')
-const TokenAuthentication = require('../token-authentication.jsx')
+jest.unmock('../token-authentication.jsx')
+jest.unmock('react-bootstrap')
+jest.unmock('redux-form')
+
+const TokenAuthentication = require('../token-authentication.jsx').TokenAuthentication
 
 describe('TokenAuthentication', () => {
   const intlMaker = () => { return { formatMessage: jest.fn() } }
-  let changeValue, close
+  let changeValue, onChange, close
   let component, buttons
 
   beforeEach(() => {
     changeValue = jest.fn()
+    onChange = jest.fn()
     close = jest.fn()
 
-    component = shallow(
-      <TokenAuthentication
-        changeValue={changeValue}
-        close={close}
-        set={Map()}
-        intl={intlMaker()}
-      />
-    )
+    let props = {
+      changeValue,
+      close,
+      set: Map(),
+      fields: { sharedKey: { onChange } },
+      intl: intlMaker()
+    }
 
+    component = shallow(<TokenAuthentication {...props} />)
     buttons = component.find('Button')
   })
 
@@ -33,7 +37,7 @@ describe('TokenAuthentication', () => {
   it('should update internal state as changes happen', () => {
     let inputs = component.find('Input')
     inputs.at(0).simulate('change', {target: {value: 'c2hhcmVkLXNlY3JldA=='}})
-    expect(component.state('shared_key')).toEqual('c2hhcmVkLXNlY3JldA==')
+    expect(onChange).toHaveBeenCalled()
     expect(changeValue).not.toHaveBeenCalled()
   })
 

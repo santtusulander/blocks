@@ -1,7 +1,10 @@
 import React from 'react'
+import { reduxForm } from 'redux-form'
 import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import { checkForErrors } from '../../../util/helpers'
+import { isBase64 } from '../../../util/validators'
 import Select from '../../select'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -11,27 +14,50 @@ const placeholderEncryptionValue = placeholderEncryptionOptions[0].value
 const placeholderSchemaOptions = [{label: "URL", value: "url"}]
 const placeholderSchemaValue = placeholderSchemaOptions[0].value
 
-class TokenAuthentication extends React.Component {
+const validate = ({ sharedKey }) => {
+  const conditions = {
+    sharedKey: [
+      {
+        condition: ! isBase64(sharedKey),
+        errorText: (
+          <div>
+            <FormattedMessage id="portal.policy.edit.policies.url.validation.base64" />
+          </div>
+        )
+      }
+    ]
+  }
+  return checkForErrors({ sharedKey }, conditions)
+}
+
+export class TokenAuthentication extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeFilter: 'tokenauth',
-      shared_key: props.set.get('shared_key')
+      activeFilter: 'tokenauth'
     }
 
     this.saveChanges = this.saveChanges.bind(this)
   }
-  saveChanges() {
-    this.props.changeValue(
-      this.props.path,
-      Immutable.fromJS({ shared_key: this.state.shared_key })
-    )
-    this.props.close()
+
+  componentWillMount() {
+    const { fields: { sharedKey }, set } = this.props
+    sharedKey.onChange(set.get('shared_key'))
   }
+
+  saveChanges() {
+    const { close, invalid, changeValue, path, fields: { sharedKey } } = this.props
+
+    if (!invalid) {
+      const newSet = Immutable.fromJS({ shared_key: sharedKey.value })
+      changeValue(path, newSet)
+      close()
+    }
+  }
+
   render() {
-    const { shared_key } = this.state
-    const { close, intl: { formatMessage } } = this.props
+    const { close, fields: { sharedKey }, intl: { formatMessage } } = this.props
 
     return (
       <div>
@@ -71,19 +97,19 @@ class TokenAuthentication extends React.Component {
 
           <div className="form-group">
               <Input type="text"
+                {...sharedKey}
                 label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
-                placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
-                value={shared_key}
-                onChange={(e) => this.setState({
-                  shared_key: e.target.value
-                })}/>
+                placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})} />
+                {sharedKey.touched && sharedKey.error &&
+                  <div className='error-msg'>{sharedKey.error}</div>
+                }
           </div>
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="default" onClick={close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges}>
+            <Button bsStyle="primary" disabled={this.props.invalid} onClick={this.saveChanges}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>
@@ -98,9 +124,15 @@ TokenAuthentication.displayName = 'TokenAuthentication'
 TokenAuthentication.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  fields: React.PropTypes.object,
   intl: React.PropTypes.object,
+  invalid: React.PropTypes.bool,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = injectIntl(TokenAuthentication)
+export default reduxForm({
+  fields: ['sharedKey'],
+  form: 'token-authentication',
+  validate
+})(injectIntl(TokenAuthentication))

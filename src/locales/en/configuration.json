@@ -16,6 +16,7 @@
   "portal.policy.edit.policies.directoryPath.placeholder": "Enter Directory Path Name",
   "portal.policy.edit.policies.hostname.placeholder": "Enter Hostname",
   "portal.policy.edit.policies.url.placeholder": "Enter URL",
+  "portal.policy.edit.policies.url.validation.base64": "is not a base64-encoded string",
   "portal.policy.edit.policies.cookie.placeholder": "Enter Cookie Name",
   "portal.policy.edit.policies.queryString.placeholder": "Enter Query String Name",
 
