@@ -65,13 +65,7 @@ axios.interceptors.response.use(function (response) {
           store.dispatch(showInfoDialog({
             title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
             content: <FormattedMessage id='portal.common.error.tokenExpire.content'/>,
-            buttons: (
-              <a href="/login">
-                <Button bsStyle="primary">
-                  <FormattedMessage id='portal.common.error.tokenExpire.button'/>
-                </Button>
-              </a>
-            )
+            loginButton: true
           }));
         } else {
           browserHistory.push('/login')
@@ -82,11 +76,7 @@ axios.interceptors.response.use(function (response) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
-        buttons: (
-          <Button onClick={() => store.dispatch(hideInfoDialog())} bsStyle="primary">
-            <FormattedMessage id='portal.common.button.ok'/>
-          </Button>
-        )
+        okButton: () => store.dispatch(hideInfoDialog())
       }));
     }
     else if (status === 500 || status === 404) {

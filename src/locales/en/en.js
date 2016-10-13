@@ -500,8 +500,10 @@ const TRANSLATED_MESSAGES = {
 
   'portal.services.header.text': 'SERVICES',
 
+  'portal.deleteModal.validation.label': 'To confirm, write "DELETE" below',
+  'portal.deleteModal.validation.placeholder': 'DELETE',
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
-  'portal.deleteModal.header.text': 'Delete {itemToDelete}',
+  'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
   'portal.errorModal.errorOccured.text': 'An error occured',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
@@ -525,7 +527,7 @@ const TRANSLATED_MESSAGES = {
   'portal.fileInput.chooseFile.text': 'Choose file',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
-  'portal.accountManagement.deleetConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deleteConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
   'portal.accountManagement.noActiveAccount.text': 'No active account',
   'portal.accountManagement.invalidAccountName.text': 'Account name is invalid.',
   'portal.accountManagement.account.text': 'ACCOUNT',
