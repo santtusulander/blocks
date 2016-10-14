@@ -111,13 +111,23 @@ export function getErrorResponseCodes(onlyCodes = true) {
 }
 
 /**
- * Get analysis error codes
+ * Get analysis error codes (used in File-error report)
  * @param onlyCodes
  * @returns {Array.<*>}
  */
 export function getAnalysisErrorCodes(onlyCodes = true){
   const errorCodes = [401, 402, 403, 404, 405, 411, 412, 413, 500, 501, 502, 503]
   return getPickedResponseCodes(errorCodes, onlyCodes)
+}
+
+/**
+ * Get analysis status codes (used in URL report)
+ * @param onlyCodes
+ * @returns {Array.<*>}
+ */
+export function getAnalysisStatusCodes(onlyCodes = true){
+  const statusCodes = [200, 201, 202, 204, 400, 401, 402, 403, 404, 405, 411, 412, 413, 500, 501, 502, 503]
+  return getPickedResponseCodes(statusCodes, onlyCodes)
 }
 
 /**
