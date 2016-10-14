@@ -3,11 +3,15 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+import ProviderTypes from '../../../constants/provider-types'
+import { hasRole } from '../../../util/user-helpers'
+
 
 class AnalyticsTabOnOffNet extends React.Component {
   componentDidMount() {
@@ -51,6 +55,17 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 
   render(){
+    const { activeAccount, currentUser } = this.props
+
+    // Role number 1 is UDN admin
+    if (hasRole(currentUser, 1) && (!activeAccount || activeAccount.get('provider_type') !== ProviderTypes.SERVICE_PROVIDER)) {
+      return (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectServiceProviderAccount.text" values={{ br: <br/> }}/>
+        </div>
+      )
+    }
+
     return (
       <AnalysisOnOffNetReport
         fetching={this.props.fetching}
@@ -64,6 +79,7 @@ class AnalyticsTabOnOffNet extends React.Component {
 }
 
 AnalyticsTabOnOffNet.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
@@ -83,12 +99,14 @@ AnalyticsTabOnOffNet.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffStats: state.traffic.get('onOffNet'),
     onOffStatsToday: state.traffic.get('onOffNetToday'),
-    filters: state.filters.get('filters')
+    filters: state.filters.get('filters'),
+    currentUser: state.user.get('currentUser')
   }
 }
 
