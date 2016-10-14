@@ -89,7 +89,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             {...matcherProps}/>
         )
         break
-      case 'request_query':
+      case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
             contains={true}
