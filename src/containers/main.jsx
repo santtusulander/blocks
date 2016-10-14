@@ -155,15 +155,21 @@ export class Main extends React.Component {
             : null}
         </div>
 
+        {this.props.showErrorDialog &&
         <ModalWindow
-          show={this.props.showErrorDialog}
+          show={true}
           title={<FormattedMessage id="portal.errorModal.errorOccured.text"/>}
           content={<FormattedMessage id="portal.errorModal.reloadNote.text"/>}
+          cancel
           closeButtonSecondary={() => this.props.uiActions.hideErrorDialog()}
           reloadButton={() => location.reload(true)}/>
+        }
+        {
+        this.props.showInfoDialog &&
         <ModalWindow
-          show={this.props.showInfoDialog}
+          show={true}
           {...infoDialogOptions}/>
+        }
 
 
         <ReactCSSTransitionGroup

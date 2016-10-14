@@ -12,7 +12,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, show, stayButton, submitButton, title, verifyDelete } = this.props
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, show, stayButton, submit, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={show} dialogClassName="modal-window">
@@ -66,14 +66,14 @@ class ModalWindow extends React.Component {
             {cancelButton &&
             <Button
               className="btn-secondary"
-              onClick={cancelButton}>
+              onClick={cancel}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>}
 
             {deleteButton &&
             <Button
               bsStyle="danger"
-              onClick={deleteButton}
+              onClick={submit}
               disabled={loading || (verifyDelete ? invalid : false)}>
               {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
             </Button>}
