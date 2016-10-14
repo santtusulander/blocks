@@ -1,3 +1,5 @@
+import { fromJS } from 'immutable'
+
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
   'contains': ['cases', 0, 1],
@@ -16,6 +18,11 @@ export function getMatchFilterType(match) {
     return 'does_not_contain'
   }
   return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
+}
+
+export function policyContainsSetComponent(policy, setComponent) {
+  const sets = fromJS(policy.sets)
+  return sets.filter(set => set.get('setkey') === setComponent).count() > 0
 }
 
 export function parsePolicy(policy, path) {

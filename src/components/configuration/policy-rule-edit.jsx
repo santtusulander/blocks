@@ -9,7 +9,8 @@ import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
-  parsePolicy
+  parsePolicy,
+  policyContainsSetComponent
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -145,6 +146,15 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
+    const disableAddMatchButton = () => {
+      return policyContainsSetComponent(flattenedPolicy, 'tokenauth')
+    }
+
+    const disableAddActionButton = () => {
+      return !flattenedPolicy.matches[0].field ||
+              policyContainsSetComponent(flattenedPolicy, 'tokenauth')
+    }
+
     const disableButton = () => {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
         !flattenedPolicy.matches[0].field ||
@@ -185,7 +195,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col sm={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addMatch(flattenedPolicy.matches[0])}>
+                onClick={this.addMatch(flattenedPolicy.matches[0])}
+                disabled={disableAddMatchButton()}>
                 <IconAdd />
               </Button>
             </Col>
@@ -253,7 +264,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button bsStyle="primary"
                       className="btn-icon btn-add-new"
                       onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={!flattenedPolicy.matches[0].field}
+                      disabled={disableAddActionButton()}
               >
                 <IconAdd />
               </Button>
