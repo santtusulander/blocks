@@ -10,7 +10,7 @@ import {
 } from '../../constants/account-management-options'
 
 import {
-  getResponseCodes,
+  getAnalysisStatusCodes,
   getErrorResponseCodes
 } from '../../util/status-codes'
 
@@ -31,7 +31,7 @@ const initialState = Immutable.fromJS({
     serviceProviderGroups: [],
     onOffNet: ['on-net', 'off-net'],
     errorCodes: getErrorResponseCodes(),
-    statusCodes: getResponseCodes(),
+    statusCodes: getAnalysisStatusCodes(),
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
@@ -44,7 +44,7 @@ const initialState = Immutable.fromJS({
     serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
     errorCodes: getErrorResponseCodes().map((obj) => { return { label: obj, value: obj } } ),
-    statusCodes: getResponseCodes().map((obj) => { return { label: obj, value: obj } } )
+    statusCodes: getAnalysisStatusCodes().map((obj) => { return { label: obj, value: obj } } )
   },
   fetching: false
 })
