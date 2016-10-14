@@ -28,7 +28,9 @@ export function policyContainsMatchField(policy, field, count) {
 export function policyIsCompatibleWithAction(policy, action) {
   switch (action) {
     case 'tokenauth':
-      return policy.sets.length === 1 && policyContainsMatchField(policy, 'request_url', 1)
+      return policy.matches.length === 1
+              && policy.sets.length === 1
+              && policyContainsMatchField(policy, 'request_url', 1)
   }
   return true
 }
