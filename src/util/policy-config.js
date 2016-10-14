@@ -20,6 +20,19 @@ export function getMatchFilterType(match) {
   return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
 }
 
+export function policyContainsMatchField(policy, field, count) {
+  const matches = fromJS(policy.matches)
+  return matches.filter(match => match.get('field') === field).count() === count
+}
+
+export function policyIsCompatibleWithAction(policy, action) {
+  switch (action) {
+    case 'tokenauth':
+      return policy.sets.length === 1 && policyContainsMatchField(policy, 'request_url', 1)
+  }
+  return true
+}
+
 export function policyContainsSetComponent(policy, setComponent) {
   const sets = fromJS(policy.sets)
   return sets.filter(set => set.get('setkey') === setComponent).count() > 0
