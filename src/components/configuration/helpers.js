@@ -23,7 +23,7 @@ import ConfigurationActionAllowBlock from './actions/allow-block'
 import ConfigurationActionPostSupport from './actions/post-support'
 import ConfigurationActionCors from './actions/cors'
 
-export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
+export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
   const clearActiveMatchSet = () => activateSet(null)
   let activeEditForm = null
@@ -148,6 +148,7 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             activateSet={activateSet}
             config={config}
             path={setPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break
