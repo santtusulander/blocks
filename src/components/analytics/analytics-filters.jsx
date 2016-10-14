@@ -38,7 +38,7 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
       option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
     fiveHundreds = [500, 501, 502, 503],
     fourHundreds = [400, 401, 402, 403, 404, 405, 411, 412, 413],
-    twoHundreds = [200, 201, 202, 203, 204],
+    twoHundreds = [200, 201, 202, 204],
     twoHundredsChecked = isChecked(twoHundreds),
     fourHundredsChecked = isChecked(fourHundreds),
     fiveHundredsChecked = isChecked(fiveHundreds),
