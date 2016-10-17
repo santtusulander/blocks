@@ -44,7 +44,7 @@ class MatchesSelection extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#" onClick={this.setMatchField('request_query')}>
+              <a href="#" onClick={this.setMatchField('request_query_arg')}>
                 <span className="caret left"></span>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.queryString.text"/>
               </a>

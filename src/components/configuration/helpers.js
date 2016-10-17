@@ -11,6 +11,7 @@ import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationTokenAuthentication from './actions/token-authentication'
 import ConfigurationActionRedirection from './actions/redirection'
 import ConfigurationActionOriginHostname from './actions/origin-hostname'
 import ConfigurationActionCompression from './actions/compression'
@@ -22,7 +23,7 @@ import ConfigurationActionAllowBlock from './actions/allow-block'
 import ConfigurationActionPostSupport from './actions/post-support'
 import ConfigurationActionCors from './actions/cors'
 
-export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
+export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
   const clearActiveMatchSet = () => activateSet(null)
   let activeEditForm = null
@@ -88,7 +89,7 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             {...matcherProps}/>
         )
         break
-      case 'request_query':
+      case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
             contains={true}
@@ -136,12 +137,18 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationActionHeader {...setterProps}/>
         )
         break
+      case 'tokenauth':
+        activeEditForm = (
+          <ConfigurationTokenAuthentication {...setterProps}/>
+        )
+        break
       default:
         activeEditForm = (
           <ActionsSelection
             activateSet={activateSet}
             config={config}
             path={setPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break
