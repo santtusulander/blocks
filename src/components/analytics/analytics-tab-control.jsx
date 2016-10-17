@@ -1,14 +1,17 @@
 import React, { PropTypes } from 'react'
 import { Link, withRouter } from 'react-router'
-import { Nav } from 'react-bootstrap'
 import { injectIntl } from 'react-intl'
 
+import Tabs from '../tabs'
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
 import { getTabLink } from '../../util/helpers.js'
 
 const AnalyticsTabControl = (props) => {
+  const getActiveTabKey = (tabs, tab) => {
+    return tabs.findIndex(item => item.key === tab) + 1
+  }
   const tabs = [
     {
       key: 'traffic',
@@ -61,7 +64,7 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      <Nav bsStyle="tabs">
+      <Tabs activeKey={getActiveTabKey(tabs, props.activeTab)}>
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
@@ -81,13 +84,14 @@ const AnalyticsTabControl = (props) => {
           }
           return lis
         }, [])}
-      </Nav>
+      </Tabs>
     </div>
   )
 }
 
 
 AnalyticsTabControl.propTypes = {
+  activeTab: PropTypes.string,
   intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object

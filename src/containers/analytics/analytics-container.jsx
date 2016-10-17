@@ -176,6 +176,7 @@ class AnalyticsContainer extends React.Component {
         <AnalyticsTabControl
           params={params}
           location={this.props.location}
+          activeTab={getTabName(pathname)}
         />
         {this.renderFilters()}
         {this.renderContent(children, filters)}
