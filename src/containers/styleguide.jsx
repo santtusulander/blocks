@@ -15,18 +15,18 @@ import {
   Input,
   Label,
   MenuItem,
+  NavItem,
   OverlayTrigger,
   Pagination,
   Popover,
   Row,
-  Table,
-  Tab,
-  Tabs
+  Table
 } from 'react-bootstrap';
 
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
+import Tabs from '../components/tabs'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -78,6 +78,13 @@ const filterCheckboxOptions = Immutable.fromJS([
 ]);
 
 class Styleguide extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      activeTab: 1
+    }
+  }
   render() {
     return (
       <div className="styleguide-page">
@@ -123,24 +130,36 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Tabs</h1>
 
-          <Tabs defaultActiveKey={1} className="styleguide-row">
-
-            <Tab eventKey={1} title="Tab 1">
-              <h4>Tab 1</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={2} title="Tab 2">
-              <h4>Tab 2</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={3} title="Tab 3">
-              <h4>Tab 3</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
+          <Tabs
+            activeKey={this.state.activeTab}
+            className="styleguide-row"
+            onSelect={key => this.setState({ activeTab: key })}>
+            <NavItem eventKey={1}>Tab Name 1</NavItem>
+            <NavItem eventKey={2}>Long Tab Name 2</NavItem>
+            <NavItem eventKey={3}>Longer Tab Name 3</NavItem>
+            <NavItem eventKey={4}>Even Longer Tab Name 4</NavItem>
+            <NavItem eventKey={5}>Can't believe how Long Tab Name 5</NavItem>
+            <NavItem eventKey={6}>Normal Tab Name 6</NavItem>
           </Tabs>
+
+          {this.state.activeTab === 1 &&
+            <div>Tab 1 content</div>
+          }
+          {this.state.activeTab ===2 &&
+            <div>Tab 2 content</div>
+          }
+          {this.state.activeTab ===3 &&
+            <div>Tab 3 content</div>
+          }
+          {this.state.activeTab ===4 &&
+            <div>Tab 4 content</div>
+          }
+          {this.state.activeTab ===5 &&
+            <div>Tab 5 content</div>
+          }
+          {this.state.activeTab ===6 &&
+            <div>Tab 6 content</div>
+          }
 
 
           <hr />
