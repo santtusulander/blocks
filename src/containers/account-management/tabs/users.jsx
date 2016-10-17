@@ -292,7 +292,8 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
-        okButton: this.props.uiActions.hideInfoDialog
+        okButton: true,
+        cancel: this.props.uiActions.hideInfoDialog
       })
     }
     else {
@@ -491,7 +492,6 @@ export class AccountManagementAccountUsers extends React.Component {
         }
         {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
           <ModalWindow
-            show={this.state.showPermissionsModal}
             title="View Permissions"
             closeModal={this.togglePermissionModal}
             closeButton={this.togglePermissionModal}>

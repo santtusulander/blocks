@@ -47,6 +47,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   deleteDnsRecord() {
+    console.log('ye')
     const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
     deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
   }
@@ -134,23 +135,18 @@ class AccountManagementSystemDNS extends Component {
         }
         {this.state.recordToDelete &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.dnsRecord.delete.title"/>}
-          cancelButton={this.closeDeleteDnsRecordModal}
-          deleteButton={this.deleteDnsRecord}
-          loading={loadingRecords}>
+          cancelButton={true}
+          deleteButton={true}
+          cancel={this.closeDeleteDnsRecordModal}
+          submit={this.deleteDnsRecord}
+          loading={loadingRecords}
+          invalid={false}>
           <p>
             <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
           </p>
         </ModalWindow>
         }
-        {/*
-          <DeleteDnsRecordModal
-            itemToDelete={this.state.recordToDelete.name}
-            cancel={this.closeDeleteDnsRecordModal}
-            loading={loadingRecords}
-            submit={this.deleteDnsRecord}/>
-          */}
       </div>
     )
   }

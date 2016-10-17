@@ -387,14 +387,13 @@ export class Configuration extends React.Component {
 
         {this.state.deleteModal &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
-          cancel={toggleDelete}
           cancelButton={true}
+          deleteButton={true}
+          cancel={toggleDelete}
           submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
-          deleteButton={true}
           invalid={true}
           verifyDelete={true}>
           <p>
@@ -404,7 +403,7 @@ export class Configuration extends React.Component {
         }
 
         {this.state.showPublishModal &&
-          <Modal show={true}
+          <Modal
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
             <Modal.Header>

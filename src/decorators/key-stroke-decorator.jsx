@@ -19,11 +19,12 @@ export default function(WrappedModal) {
     }
 
     submit() {
-      const { submit, cancel, invalid } = this.props
+      const { submit, cancel, invalid, verifyDelete } = this.props
       if (!submit) {
         return cancel()
       }
-      if (!this.submitCalled && !invalid) {
+
+      if (!this.submitCalled && (!verifyDelete || (verifyDelete && !invalid))) {
         submit()
         this.submitCalled = true
       }
@@ -51,7 +52,8 @@ export default function(WrappedModal) {
   KeyStrokeSupport.propTypes = {
     cancel: PropTypes.func,
     invalid: PropTypes.bool,
-    submit: PropTypes.func
+    submit: PropTypes.func,
+    verifyDelete: PropTypes.bool
   }
 
   return KeyStrokeSupport

@@ -12,10 +12,10 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, show, stayButton, submit, submitButton, title, verifyDelete } = this.props
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, submit, submitButton, title, verifyDelete } = this.props
 
     return (
-      <Modal show={show} dialogClassName="modal-window">
+      <Modal show={true} dialogClassName="modal-window">
         <Modal.Header>
           <h1>{title}</h1>
         </Modal.Header>
@@ -38,28 +38,28 @@ class ModalWindow extends React.Component {
             {closeButton &&
             <Button
               bsStyle="primary"
-              onClick={closeButton}>
+              onClick={cancel}>
               <FormattedMessage id="portal.button.close"/>
             </Button>}
 
             {submitButton &&
             <Button
               bsStyle="primary"
-              onClick={submitButton}>
+              onClick={submit}>
               <FormattedMessage id="portal.button.submt"/>
             </Button>}
 
             {stayButton &&
             <Button
               className="btn-secondary"
-              onClick={stayButton}>
+              onClick={cancel}>
               <FormattedMessage id="portal.button.stay"/>
             </Button>}
 
             {continueButton &&
             <Button
               bsStyle="primary"
-              onClick={continueButton}>
+              onClick={submit}>
               <FormattedMessage id="portal.button.continue"/>
             </Button>}
 
@@ -81,7 +81,7 @@ class ModalWindow extends React.Component {
             {okButton &&
             <Button
               bsStyle="primary"
-              onClick={okButton}>
+              onClick={cancel}>
               <FormattedMessage id="portal.button.ok"/>
             </Button>}
 
@@ -95,14 +95,14 @@ class ModalWindow extends React.Component {
             {closeButtonSecondary &&
             <Button
               className="btn-secondary"
-              onClick={closeButtonSecondary}>
+              onClick={cancel}>
               <FormattedMessage id="portal.button.close"/>
             </Button>}
 
             {reloadButton &&
             <Button
               bsStyle="primary"
-              onClick={reloadButton}>
+              onClick={submit}>
               <FormattedMessage id="portal.button.reload"/>
             </Button>}
           </ButtonToolbar>
@@ -111,7 +111,7 @@ class ModalWindow extends React.Component {
         {closeModal &&
         <a
           className="close-modal"
-          onClick={closeModal}>
+          onClick={cancel}>
           <IconClose />
         </a>}
       </Modal>
@@ -121,27 +121,29 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
-  cancelButton: PropTypes.func,
+  cancel: PropTypes.func,
+  cancelButton: PropTypes.bool,
   children: PropTypes.node,
-  closeButton: PropTypes.func,
-  closeButtonSecondary: PropTypes.func,
+  closeButton: PropTypes.bool,
+  closeButtonSecondary: PropTypes.bool,
   closeModal: PropTypes.func,
   content: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.object
   ]),
-  continueButton: PropTypes.func,
-  deleteButton: PropTypes.func,
+  continueButton: PropTypes.bool,
+  deleteButton: PropTypes.bool,
   fields: PropTypes.object,
   intl: React.PropTypes.object,
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
   loginButton: PropTypes.bool,
-  okButton: PropTypes.func,
-  reloadButton: PropTypes.func,
+  okButton: PropTypes.bool,
+  reloadButton: PropTypes.bool,
   show: PropTypes.bool,
-  stayButton: PropTypes.func,
-  submitButton: PropTypes.func,
+  stayButton: PropTypes.bool,
+  submit: PropTypes.func,
+  submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
