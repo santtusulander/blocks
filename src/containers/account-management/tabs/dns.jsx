@@ -47,7 +47,7 @@ class AccountManagementSystemDNS extends Component {
   }
 
   deleteDnsRecord() {
-    const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this;
+    const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
     deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
   }
 
