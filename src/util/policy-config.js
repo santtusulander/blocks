@@ -40,6 +40,10 @@ export function policyIsCompatibleWithAction(policy, action) {
       return policy.matches.length === 1
               && policy.sets.length === 1
               && policyContainsMatchField(policy, 'request_url', 1)
+    case 'content_targeting':
+      return policy.matches.length === 1
+              && policy.sets.length >= 1
+              && policy.sets[0].path.indexOf('script_lua') !== -1
   }
   return true
 }
