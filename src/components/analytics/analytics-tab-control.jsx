@@ -9,9 +9,6 @@ import IsAllowed from '../is-allowed'
 import { getTabLink } from '../../util/helpers.js'
 
 const AnalyticsTabControl = (props) => {
-  const getActiveTabKey = (tabs, tab) => {
-    return tabs.findIndex(item => item.key === tab) + 1
-  }
   const tabs = [
     {
       key: 'traffic',
@@ -64,18 +61,18 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      <Tabs activeKey={getActiveTabKey(tabs, props.activeTab)}>
+      <Tabs activeKey={props.activeTab}>
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              <IsAllowed key={tab.key} to={tab.permission}>
+              <IsAllowed key={tab.key} to={tab.permission} eventKey={tab.key}>
                 <li role="tab">
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
               </IsAllowed>
             :
-              <li key={tab.key} role="tab">
+              <li key={tab.key} role="tab" eventKey={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
                 activeClassName='active'>{tab.label}</Link>
               </li>
