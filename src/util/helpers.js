@@ -6,7 +6,7 @@ import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { ROLES_MAPPING } from '../constants/account-management-options'
-import { getResponseCodes, getErrorResponseCodes } from './status-codes'
+import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 
 const BYTE_BASE = 1000
 
@@ -145,8 +145,8 @@ export function buildAnalyticsOpts(params, filters){
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
-  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getErrorResponseCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
-  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getResponseCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   return {
     account: params.account,
@@ -173,8 +173,8 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
-  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getErrorResponseCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
-  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getResponseCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   if (accountType === PROVIDER_TYPES.CONTENT_PROVIDER) {
     return {

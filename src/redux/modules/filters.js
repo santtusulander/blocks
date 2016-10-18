@@ -11,7 +11,7 @@ import {
 
 import {
   getAnalysisStatusCodes,
-  getErrorResponseCodes
+  getAnalysisErrorCodes
 } from '../../util/status-codes'
 
 const initialState = Immutable.fromJS({
@@ -30,7 +30,7 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: ['on-net', 'off-net'],
-    errorCodes: getErrorResponseCodes(),
+    errorCodes: getAnalysisErrorCodes(),
     statusCodes: getAnalysisStatusCodes(),
     video: '/elephant/169ar/elephant_master.m3u8'
   },
@@ -43,7 +43,7 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
-    errorCodes: getErrorResponseCodes().map((obj) => { return { label: obj, value: obj } } ),
+    errorCodes: getAnalysisErrorCodes().map((obj) => { return { label: obj, value: obj } } ),
     statusCodes: getAnalysisStatusCodes().map((obj) => { return { label: obj, value: obj } } )
   },
   fetching: false
