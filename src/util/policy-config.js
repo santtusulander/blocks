@@ -94,6 +94,7 @@ export function parsePolicy(policy, path) {
       sets: policy.get('set').keySeq().toArray().map((key) => {
         return {
           setkey: key,
+          name: key,
           path: path.concat(['set', key])
         }
       })

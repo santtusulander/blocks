@@ -309,7 +309,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateSet(set.path)}>
                   <Col xs={8}>
-                    <p>{i + 1} {set.setkey}</p>
+                    <p>{i + 1} {set.name}</p>
                   </Col>
                   <Col xs={4} className="text-right">
                     <Button
