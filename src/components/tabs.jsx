@@ -10,7 +10,7 @@ class Tabs extends React.Component {
     super(props)
 
     this.state = {
-      hiddenChildren: []
+      hiddenTabs: []
     }
 
     this.timeout
@@ -30,27 +30,31 @@ class Tabs extends React.Component {
     clearTimeout(this.timeout)
   }
   measureTabs() {
-    let hiddenChildren = []
-    let visibleChildrenLength = this.props.children.length
-    this.setState({ hiddenChildren: hiddenChildren })
+    if (!this.props.children || !this.props.children.length) return
+
+    let hiddenTabs = []
+    this.setState({ hiddenTabs: hiddenTabs })
+    let reverseTabs = [].concat(this.props.children).reverse()
 
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (ReactDOM.findDOMNode(this.refs.tab0) !== undefined &&
-        ReactDOM.findDOMNode(this.refs.hiddenChildren) !== undefined) {
+      if (ReactDOM.findDOMNode(this.refs['tab0']) !== undefined &&
+        ReactDOM.findDOMNode(this.refs['hiddenTabs']) !== undefined) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
-        // fit on same line and we need to hide some of them.
-        while (this.getDOMNodeTop('hiddenChildren') > this.getDOMNodeTop('tab0') && visibleChildrenLength) {
-          // Don't hide the active tab, but the one before that instead
-          const childToHide = this.props.activeKey === visibleChildrenLength ?
-            visibleChildrenLength - 2 : visibleChildrenLength - 1
-          hiddenChildren.push(childToHide)
-          this.setState({ hiddenChildren: hiddenChildren })
-          visibleChildrenLength--
-        }
+        // fit on same line and we need to hide some of them. Looping through
+        // tabs in reverse since we start hiding them from the end
+        reverseTabs.forEach((tab, i) => {
+          if (this.getDOMNodeTop('hiddenTabs') > this.getDOMNodeTop('tab0')) {
+            // Don't hide active tab
+            if(tab.props.eventKey !== this.props.activeKey) {
+              hiddenTabs.push(this.props.children.length - 1 - i)
+              this.setState({ hiddenTabs: hiddenTabs })
+            }
+          }
+        })
       }
     })
   }
@@ -61,30 +65,31 @@ class Tabs extends React.Component {
     const { activeKey, children, className, onSelect } = this.props
     return (
       <Nav bsStyle="tabs" className={className} activeKey={activeKey} onSelect={onSelect}>
-        {children.map((element, i) => {
-          if(!this.state.hiddenChildren.includes(i)) {
+        {children && children.length > 1 ?
+          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
-              element, {
+              tab, {
                 ref: `tab${i}`,
                 key: i
               }
             )
-          }
-        })}
-        <li ref="hiddenChildren">
-          {this.state.hiddenChildren.length !== 0 ?
+          })
+          : children
+        }
+        <li ref="hiddenTabs">
+          {this.state.hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
               <Dropdown.Toggle bsStyle="link" noCaret={true}>
                 <FormattedMessage id="portal.common.MORE.text"/>
                 <IconSelectCaret/>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-wide-menu">
-                {children.map((element, i) => {
-                  if(this.state.hiddenChildren.includes(i)) {
+                {children.map((tab, i) => {
+                  if (this.state.hiddenTabs.includes(i)) {
                     return React.cloneElement(
-                      element, {
+                      tab, {
                         key: i,
-                        onClick: () => onSelect(i + 1)
+                        onClick: () => onSelect && onSelect(tab.props.eventKey)
                       }
                     )
                   }
@@ -100,7 +105,7 @@ class Tabs extends React.Component {
 
 Tabs.displayName = 'Tabs'
 Tabs.propTypes = {
-  activeKey: PropTypes.number,
+  activeKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
   onSelect: PropTypes.func
