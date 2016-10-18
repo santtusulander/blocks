@@ -241,17 +241,28 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               else if(match.filterType === 'does_not_contain') {
                 filterText = `Does not contain ${match.containsVal}`
               }
+
+              let matchName = (<div className="condition-name">
+                {match.field}&nbsp;:&nbsp;
+                <TruncatedTitle
+                  content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
+              </div>)
+
+              const matchCondition = this.props.config.getIn(match.path)
+              const isContentTargeting = matchIsContentTargeting(matchCondition)
+
+              if (isContentTargeting) {
+                matchName = <div className="condition-name">Content Targeting</div>
+                filterText = null
+              }
+
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateMatch(match.path)}>
+                  onClick={isContentTargeting ? null : this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <div className="condition-name">
-                        {match.field}&nbsp;:&nbsp;
-                        <TruncatedTitle
-                          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
-                      </div>
+                      matchName
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
