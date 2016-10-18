@@ -116,7 +116,7 @@ export function getErrorResponseCodes(onlyCodes = true) {
  * @returns {Array.<*>}
  */
 export function getAnalysisErrorCodes(onlyCodes = true){
-  const errorCodes = [401, 402, 403, 404, 405, 411, 412, 413, 500, 501, 502, 503]
+  const errorCodes = [400, 401, 402, 403, 404, 405, 411, 412, 413, 500, 501, 502, 503]
   return getPickedResponseCodes(errorCodes, onlyCodes)
 }
 
