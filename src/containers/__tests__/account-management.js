@@ -50,7 +50,9 @@ describe('AccountManagement', () => {
         router={fakeRouterMaker()}
         params={fakeParams}
         dnsActions={ { changeRecordType: jest.fn() } }
-      />
+      >
+        <div route={{path: 'foo'}}></div>
+      </AccountManagement>
     );
     expect(accountManagement.length).toBe(1)
   });
