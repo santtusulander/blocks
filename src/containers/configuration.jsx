@@ -22,6 +22,7 @@ import AccountSelector from '../components/global-account-selector/global-accoun
 import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
 import ModalWindow from '../components/modal'
+import Tabs from '../components/tabs'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -291,7 +292,7 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
 
-        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+        <Tabs activeKey={this.state.activeTab}
           onSelect={this.activateTab}>
           <NavItem eventKey={'details'}>
             <FormattedMessage id="portal.configuration.hostname.text"/>
@@ -319,7 +320,7 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.changeLog.text"/>
           </NavItem>
           */}
-        </Nav>
+        </Tabs>
 
         <PageContainer>
           {this.state.activeTab === 'details' ?
