@@ -159,7 +159,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
         if (rootMatchInfo) {
           const rootMatch = config.getIn(rootMatchInfo.path)
-          return matchIsContentTargeting(rootMatch)
+
+          if (rootMatch) {
+            return matchIsContentTargeting(rootMatch)
+          }
         }
       }
 
@@ -249,7 +252,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               </div>)
 
               const matchCondition = this.props.config.getIn(match.path)
-              const isContentTargeting = matchIsContentTargeting(matchCondition)
+              const isContentTargeting = matchCondition && matchIsContentTargeting(matchCondition)
 
               if (isContentTargeting) {
                 matchName = <div className="condition-name">Content Targeting</div>
