@@ -19,6 +19,10 @@
   "portal.policy.edit.policies.url.validation.base64": "is not a base64-encoded string",
   "portal.policy.edit.policies.cookie.placeholder": "Enter Cookie Name",
   "portal.policy.edit.policies.queryString.placeholder": "Enter Query String Name",
+  "portal.policy.edit.matchesSelection.contentTargeting.text": "Content Targeting",
+  "portal.policy.edit.policies.matchContentTargeting.text": "Define conditions.",
+  "portal.policy.edit.policies.matchContentTargeting.include.text": "Include Areas",
+  "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
   "portal.policy.edit.policies.cancel.text": "Cancel",
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
 

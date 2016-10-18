@@ -9,11 +9,28 @@ class MatchesSelection extends React.Component {
     super(props);
 
     this.setMatchField = this.setMatchField.bind(this)
+    this.setMatchFieldForContentTargeting = this.setMatchFieldForContentTargeting.bind(this)
   }
   setMatchField(field) {
     return e => {
       e.preventDefault()
       this.props.changeValue(this.props.path.concat(['field']), field)
+    }
+  }
+  setMatchFieldForContentTargeting() {
+    return e => {
+      e.preventDefault()
+      const match = Immutable.fromJS({
+        cases: [
+          ['', [{
+            script_lua: {
+              target: { }
+            }
+          }]]
+        ],
+        field: 'request_host'
+      })
+      this.props.changeValue(this.props.path, match)
     }
   }
   render() {
@@ -53,6 +70,11 @@ class MatchesSelection extends React.Component {
             <li>
               <a href="#" onClick={this.setMatchField('request_cookie')}>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
+              </a>
+            </li>
+            <li>
+              <a href="#" onClick={this.setMatchFieldForContentTargeting()}>
+                <FormattedMessage id="portal.policy.edit.matchesSelection.contentTargeting.text"/>
               </a>
             </li>
             {/*<li>

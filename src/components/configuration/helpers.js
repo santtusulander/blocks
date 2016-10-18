@@ -7,6 +7,7 @@ import ConfigurationMatchMimeType from './matches/mime-type'
 import ConfigurationMatchFileExtension from './matches/file-extension'
 import ConfigurationMatchFileName from './matches/file-name'
 import ConfigurationMatchIpAddress from './matches/ip-address'
+import ConfigurationContentTargeting from './matches/content-targeting'
 import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
@@ -23,6 +24,8 @@ import ConfigurationActionAllowBlock from './actions/allow-block'
 import ConfigurationActionPostSupport from './actions/post-support'
 import ConfigurationActionCors from './actions/cors'
 
+import { matchIsContentTargeting } from '../../util/policy-config'
+
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
   const clearActiveMatchSet = () => activateSet(null)
@@ -35,7 +38,14 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       match: activeMatch,
       path: matchPath
     }
-    switch(activeMatch.get('field')) {
+
+    let matchType = activeMatch.get('field')
+
+    if (matchIsContentTargeting(activeMatch)) {
+      matchType = 'content_targeting'
+    }
+
+    switch(matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
@@ -99,6 +109,9 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             placeholder={formatMessage({id: 'portal.policy.edit.policies.queryString.placeholder'})}
             {...matcherProps}/>
         )
+        break
+      case 'content_targeting':
+        activeEditForm = <ConfigurationContentTargeting {...matcherProps} />
         break
       default:
         activeEditForm = (
