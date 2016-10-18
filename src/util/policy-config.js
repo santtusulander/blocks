@@ -40,6 +40,11 @@ export function policyContainsSetComponent(policy, setComponent) {
   return sets.filter(set => set.get('setkey') === setComponent).count() > 0
 }
 
+export function matchIsContentTargeting(match) {
+  return match.get('field') === 'request_host'
+          && match.getIn(["cases", 0, 1, 0, "script_lua"])
+}
+
 export function parsePolicy(policy, path) {
   // if this is a match
   if(policy && policy.has('match')) {
