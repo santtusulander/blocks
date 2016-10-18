@@ -124,7 +124,7 @@ describe('Groups', () => {
 
   it('should add a new group when called', () => {
     subject().instance().createGroup({name: 'bbb'})
-    expect(groupActions.createGroup.mock.calls[0].toString()).toEqual('udn,1,bbb')
+    expect(groupActions.createGroup.mock.calls[0]).toEqual(['udn','1',{name: 'bbb'}])
   })
 
   it('should delete a group when clicked', () => {
