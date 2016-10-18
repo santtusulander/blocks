@@ -126,7 +126,7 @@ ModalWindow.propTypes = {
   children: PropTypes.node,
   closeButton: PropTypes.bool,
   closeButtonSecondary: PropTypes.bool,
-  closeModal: PropTypes.func,
+  closeModal: PropTypes.bool,
   content: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.object
