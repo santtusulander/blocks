@@ -145,19 +145,19 @@ class Styleguide extends React.Component {
           {this.state.activeTab === 1 &&
             <div>Tab 1 content</div>
           }
-          {this.state.activeTab ===2 &&
+          {this.state.activeTab === 2 &&
             <div>Tab 2 content</div>
           }
-          {this.state.activeTab ===3 &&
+          {this.state.activeTab === 3 &&
             <div>Tab 3 content</div>
           }
-          {this.state.activeTab ===4 &&
+          {this.state.activeTab === 4 &&
             <div>Tab 4 content</div>
           }
-          {this.state.activeTab ===5 &&
+          {this.state.activeTab === 5 &&
             <div>Tab 5 content</div>
           }
-          {this.state.activeTab ===6 &&
+          {this.state.activeTab === 6 &&
             <div>Tab 6 content</div>
           }
 
