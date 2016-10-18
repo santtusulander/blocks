@@ -10,7 +10,8 @@ import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
   parsePolicy,
-  policyContainsSetComponent
+  policyContainsSetComponent,
+  matchIsContentTargeting
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -147,7 +148,22 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
     const disableAddMatchButton = () => {
-      return policyContainsSetComponent(flattenedPolicy, 'tokenauth')
+      // token auth
+      if (policyContainsSetComponent(flattenedPolicy, 'tokenauth')) {
+        return true
+
+      // content targeting
+      } else {
+        const config = this.props.config
+        const rootMatchInfo = flattenedPolicy.matches[0]
+
+        if (rootMatchInfo) {
+          const rootMatch = config.getIn(rootMatchInfo.path)
+          return matchIsContentTargeting(rootMatch)
+        }
+      }
+
+      return false
     }
 
     const disableAddActionButton = () => {
