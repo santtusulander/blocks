@@ -164,8 +164,7 @@ export class Main extends React.Component {
           cancel={() => this.props.uiActions.hideErrorDialog()}
           submit={() => location.reload(true)}/>
         }
-        {
-        this.props.showInfoDialog &&
+        {this.props.showInfoDialog &&
         <ModalWindow
           {...infoDialogOptions}/>
         }

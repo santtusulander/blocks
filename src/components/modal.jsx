@@ -140,7 +140,6 @@ ModalWindow.propTypes = {
   loginButton: PropTypes.bool,
   okButton: PropTypes.bool,
   reloadButton: PropTypes.bool,
-  show: PropTypes.bool,
   stayButton: PropTypes.bool,
   submit: PropTypes.func,
   submitButton: PropTypes.bool,

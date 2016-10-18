@@ -403,7 +403,7 @@ export class Configuration extends React.Component {
         }
 
         {this.state.showPublishModal &&
-          <Modal
+          <Modal show={true}
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
             <Modal.Header>
