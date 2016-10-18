@@ -11,7 +11,8 @@ import {
   matchFilterChildPaths,
   parsePolicy,
   policyContainsSetComponent,
-  matchIsContentTargeting
+  matchIsContentTargeting,
+  policyIsCompatibleWithAction
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -27,6 +28,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.addMatch = this.addMatch.bind(this)
     this.addAction = this.addAction.bind(this)
+    this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
@@ -61,6 +63,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   addAction(deepestMatch) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.addContentTargetingAction(deepestMatch)
+    }
     return e => {
       e.preventDefault()
       const childPath = matchFilterChildPaths[deepestMatch.filterType]
@@ -74,6 +80,24 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         )
       )
       this.props.activateSet(newPath.concat([newSets.size - 1, 'set', '']))
+    }
+  }
+  addContentTargetingAction(deepestMatch) {
+    return e => {
+      e.preventDefault()
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const contentTargetingPath = [0, 'script_lua', 'target', 'geo', 0, 'country']
+      const newPath = deepestMatch.path.concat(childPath).concat(contentTargetingPath)
+      const currentSets = this.props.config.getIn(newPath)
+      const newSets = currentSets.push(Immutable.fromJS({"in": [], "response": { "code": 200 }}))
+      this.props.changeValue([],
+        this.props.config.setIn(
+          newPath,
+          newSets
+        )
+      )
+      debugger;
+      this.props.activateSet(newPath.concat([newSets.size - 1]))
     }
   }
   deleteMatch(path) {
