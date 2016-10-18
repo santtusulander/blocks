@@ -100,6 +100,36 @@ export function parsePolicy(policy, path) {
       })
     }
   }
+  // if this is a content targeting "action"
+  else if (policy && policy.has('script_lua')) {
+    // we will search for actions in the following paths
+    // this is forward-thinking for when we eventually add city/state support
+    const searchPaths = [
+      // ['script_lua', 'target', 'geo', 0, 'city'],
+      // ['script_lua', 'target', 'geo', 0, 'state'],
+      ['script_lua', 'target', 'geo', 0, 'country']
+    ]
+
+    let sets = []
+
+    for (let searchPath of searchPaths) {
+      if (policy.getIn(searchPath)) {
+        const actions = policy.getIn(searchPath).map((action, index) => {
+          return {
+            setkey: index,
+            name: 'Content Targeting Action', // TODO: localize this
+            path: path.concat(searchPath).concat([index])
+          }
+        }).toJS()
+        sets = sets.concat(actions)
+      }
+    }
+
+    return {
+      matches: [],
+      sets
+    }
+  }
   else {
     return {
       matches: [],

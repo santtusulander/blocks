@@ -32,8 +32,8 @@ describe('ContentTargeting', () => {
     const close = jest.fn()
     const component = subject({changeValue, close})
     component.setState({
-      includes: [{value: 'US'}],
-      excludes: [{value: 'CA'}]
+      includes: [{id: 'US'}],
+      excludes: [{id: 'CA'}]
     })
     component.instance().saveChanges()
     expect(close.mock.calls.length).toBe(1)
@@ -65,7 +65,7 @@ describe('ContentTargeting', () => {
                               "CA"
                             ],
                             "response": {
-                              "code": 500
+                              "code": 401
                             }
                           }
                         ]
