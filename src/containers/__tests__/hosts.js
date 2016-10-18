@@ -6,11 +6,13 @@ jest.mock('../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
-    removeProps: jest.fn()
+    removeProps: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
 jest.unmock('../hosts.jsx')
+jest.unmock('../../util/status-codes')
 import { Hosts } from '../hosts.jsx'
 
 function hostActionsMaker() {
