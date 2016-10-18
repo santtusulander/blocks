@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Nav, Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -26,6 +25,7 @@ import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
+import Tabs from '../../components/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -384,41 +384,41 @@ export class AccountManagement extends Component {
             <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
           </IsAllowed>
         </PageHeader>
-        {account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        {account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-        </Nav>}
-        {!account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        </Tabs>}
+        {!account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li className="navbar">
+          {/*<li eventKey="brands">
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS}>
-           <li className="navbar">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+           <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li className="navbar">
+          <li eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li className="navbar">
+           <li eventKey="services">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
-        </Nav>}
+        </Tabs>}
 
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
