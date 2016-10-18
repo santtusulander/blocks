@@ -99,7 +99,7 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+            okButton: this.props.hideInfoDialog
           })
         } else if(item && name) {
           this.hideModal()
@@ -117,7 +117,7 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+            okButton: this.props.hideInfoDialog
           })
         } else if(item && name) {
           this.hideModal()

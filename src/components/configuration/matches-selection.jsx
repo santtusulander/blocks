@@ -31,12 +31,17 @@ class MatchesSelection extends React.Component {
               </a>
             </li>
             <li>
+              <a href="#" onClick={this.setMatchField('request_url')}>
+                <FormattedMessage id="portal.policy.edit.matchesSelection.url.text"/>
+              </a>
+            </li>
+            <li>
               <a href="#" onClick={this.setMatchField('request_path')}>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.directoryPath.text"/>
               </a>
             </li>
             <li>
-              <a href="#" onClick={this.setMatchField('request_query')}>
+              <a href="#" onClick={this.setMatchField('request_query_arg')}>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.queryString.text"/>
               </a>
             </li>

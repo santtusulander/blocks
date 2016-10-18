@@ -1,12 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import jsdom from 'jsdom'
-
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
 
 jest.mock('../../util/helpers', () => {
   return {

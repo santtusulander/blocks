@@ -1,3 +1,4 @@
+import React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
 import IconIncident from '../components/icons/icon-incident'

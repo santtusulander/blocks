@@ -495,8 +495,10 @@ const TRANSLATED_MESSAGES = {
 
   'portal.services.header.text': 'SERVICES',
 
+  'portal.deleteModal.validation.label': 'To confirm, write "DELETE" below',
+  'portal.deleteModal.validation.placeholder': 'DELETE',
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
-  'portal.deleteModal.header.text': 'Delete {itemToDelete}',
+  'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
   'portal.errorModal.errorOccured.text': 'An error occured',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
@@ -520,7 +522,7 @@ const TRANSLATED_MESSAGES = {
   'portal.fileInput.chooseFile.text': 'Choose file',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
-  'portal.accountManagement.deleetConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deleteConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
   'portal.accountManagement.noActiveAccount.text': 'No active account',
   'portal.accountManagement.invalidAccountName.text': 'Account name is invalid.',
   'portal.accountManagement.account.text': 'ACCOUNT',
@@ -642,6 +644,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
   'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
   'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
+  'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
+  'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',
   'portal.startburstHelp.dayWedge.text': 'Day Wedge',
   'portal.startburstHelp.wedgeDisclaimer.text': 'Each wedge represents one day of data',
   'portal.startburstHelp.ttfb.text': 'TTFB (Time to First Byte)',

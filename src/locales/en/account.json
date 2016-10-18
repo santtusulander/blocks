@@ -10,6 +10,7 @@
   "portal.account.dnsList.searchRecords.placeholder": "Search Records",
 
   "portal.account.groups.name.error.exists": "That group name is taken",
+  "portal.account.groups.name.error.required": "'Group name is required',",
   "portal.account.groups.name.error.invalid": "Group name is invalid.",
   "portal.account.groups.name.placeholder": "Name",
   "portal.account.groups.single.text": "Group",
