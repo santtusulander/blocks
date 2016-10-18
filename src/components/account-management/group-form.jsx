@@ -24,11 +24,11 @@ const validate = (values) => {
   const {name} = values
   errors = {}
   if(!name || name.length === 0) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.required"/>
   }
 
   if( name && !isValidAccountName(name) ) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.invalid" />
   }
 
   return errors;
@@ -186,7 +186,7 @@ class GroupForm extends React.Component {
                           onClick={() => this.undoDelete(val.get('email'))}>
                           UNDO
                         </Button> :
-                        <Button bsStyle="link" className="delete-button"
+                        <Button bsStyle="link" className="dėlete-button"
                           onClick={() => this.deleteMember(val.get('email'))}>
                           <IconClose width="20" height="20"/>
                         </Button>}

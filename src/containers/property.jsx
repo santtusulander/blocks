@@ -30,13 +30,14 @@ import PurgeModal from '../components/purge-modal'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import TruncatedTitle from '../components/truncated-title'
-import DeleteModal from '../components/delete-modal'
 import IsAllowed from '../components/is-allowed'
+import ModalWindow from '../components/modal'
 
 import { formatBitsPerSecond } from '../util/helpers'
 import { getContentUrl, getAnalyticsUrl } from '../util/routes'
 
 import DateRanges from '../constants/date-ranges'
+
 import { paleblue } from '../constants/colors'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
@@ -504,13 +505,21 @@ export class Property extends React.Component {
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
           showNotification={this.showNotification}/>}
-        {this.state.deleteModal && <DeleteModal
-          itemToDelete="Property"
-          cancel={toggleDelete}
-          submit={() => {
+        {this.state.deleteModal &&
+        <ModalWindow
+          show={true}
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          cancelButton={toggleDelete}
+          deleteButton={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>}
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+          </p>
+        </ModalWindow>
+        }
       </Content>
     )
   }

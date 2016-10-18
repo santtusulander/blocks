@@ -117,6 +117,7 @@ class ConfigurationDefaults extends React.Component {
       activateSet: this.props.activateSet
     }
     const activeEditForm = getActiveMatchSetForm(
+      this.props.activeRule ? config.getIn(this.props.activeRule) : null,
       this.props.activeMatch,
       this.props.activeSet,
       config,

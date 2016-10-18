@@ -3,8 +3,9 @@ import {storiesOf, action} from '@kadira/storybook'
 import { reducer as form } from 'redux-form'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
+import {FormattedMessage} from 'intl'
 
-import DeleteModal from '../delete-modal.jsx'
+import ModalWindow from '../modal.jsx'
 import ThemeWrap from './theme-wrap.jsx'
 
 const reducer = combineReducers({ form });
@@ -18,9 +19,8 @@ storiesOf('Delete Modal', module)
     </ThemeWrap>
   ))
   .add('Default', () => (
-    <DeleteModal
-      itemToDelete={'Certificate'}
-      onDelete={action('delete pressed')}
-      onCancel={action('delete pressed')}/>
+    <ModalWindow
+      title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Certificate'}}/>}
+      deleteButton={action('delete pressed')}
+      cancelButton={action('delete pressed')}/>
   ))
-

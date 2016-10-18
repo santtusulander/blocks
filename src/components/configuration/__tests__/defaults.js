@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {shallow, mount} from 'enzyme'
+import { shallow } from 'enzyme'
 
 jest.unmock('../../layout/section-header.jsx')
 jest.unmock('../../layout/section-container.jsx')
@@ -53,7 +53,7 @@ describe('ConfigurationDefaults', () => {
   it('should change ttl value based on unit', () => {
     const agePath = Immutable.List(['default_policy','policy_rules',0,'set','cache_control','max_age'])
     const changeValue = jest.fn()
-    const defaults = mount(
+    const defaults = shallow(
       <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     )
