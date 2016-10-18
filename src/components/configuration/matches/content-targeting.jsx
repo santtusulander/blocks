@@ -45,7 +45,7 @@ class ContentTargeting extends React.Component {
   saveChanges() {
     const includes = this.state.includes.map(country => {
       return {
-        in: [country.value],
+        in: [country.id],
         response: {
           code: 200
         }
@@ -53,9 +53,9 @@ class ContentTargeting extends React.Component {
     })
     const excludes = this.state.excludes.map(country => {
       return {
-        in: [country.value],
+        in: [country.id],
         response: {
-          code: 500
+          code: 401
         }
       }
     })
@@ -97,7 +97,7 @@ class ContentTargeting extends React.Component {
           <Typeahead
             multiple={true}
             onChange={this.handleIncludeChange()}
-            defaultSelected={includes}
+            selected={includes}
             options={this.state.includeOptions}/>
 
           <label><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.exclude.text" /></label>
@@ -105,7 +105,7 @@ class ContentTargeting extends React.Component {
             className="exclude"
             multiple={true}
             onChange={this.handleExcludeChange()}
-            defaultSelected={excludes}
+            selected={excludes}
             options={this.state.excludeOptions}/>
 
           <hr />
