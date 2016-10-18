@@ -3,6 +3,10 @@ import { Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import { FormattedMessage } from 'react-intl'
+import {
+  parsePolicy,
+  policyIsCompatibleWithMatch
+} from '../../util/policy-config'
 
 class MatchesSelection extends React.Component {
   constructor(props) {
@@ -34,6 +38,13 @@ class MatchesSelection extends React.Component {
     }
   }
   render() {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    const enableContentTargeting = policyIsCompatibleWithMatch(flattenedPolicy, 'content_targeting')
+    const contentTargetingClassName = enableContentTargeting ? null : "inactive"
+    const contentTargetingOnClick = enableContentTargeting ?
+                                      this.setMatchFieldForContentTargeting()
+                                      : this.setMatchField(null)
+
     return (
       <div>
         <Modal.Header>
@@ -73,7 +84,7 @@ class MatchesSelection extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#" onClick={this.setMatchFieldForContentTargeting()}>
+              <a href="#" className={contentTargetingClassName} onClick={contentTargetingOnClick}>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.contentTargeting.text"/>
               </a>
             </li>
@@ -112,7 +123,8 @@ class MatchesSelection extends React.Component {
 MatchesSelection.displayName = 'MatchesSelection'
 MatchesSelection.propTypes = {
   changeValue: React.PropTypes.func,
-  path: React.PropTypes.instanceOf(Immutable.List)
+  path: React.PropTypes.instanceOf(Immutable.List),
+  rule: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = MatchesSelection

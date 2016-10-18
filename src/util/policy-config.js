@@ -25,6 +25,15 @@ export function policyContainsMatchField(policy, field, count) {
   return matches.filter(match => match.get('field') === field).count() === count
 }
 
+export function policyIsCompatibleWithMatch(policy, match) {
+  switch (match) {
+    case 'content_targeting':
+      return policy.matches.length === 1
+              && policy.sets.length === 0
+  }
+  return true
+}
+
 export function policyIsCompatibleWithAction(policy, action) {
   switch (action) {
     case 'tokenauth':

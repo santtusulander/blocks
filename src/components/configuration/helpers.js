@@ -117,6 +117,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <MatchesSelection
             path={matchPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break
