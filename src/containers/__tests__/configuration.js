@@ -3,26 +3,27 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow }  from 'enzyme'
 
-jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
+jest.disableAutomock() // Uses react-bootstrap extensively, so don't auto mock
+jest.unmock('../../util/status-codes')
 
-const Configuration = require('../configuration.jsx').Configuration
-const ConfigurationDetails = require('../../components/configuration/details')
-const ConfigurationDefaults = require('../../components/configuration/defaults')
-const ConfigurationPolicies = require('../../components/configuration/policies')
-const ConfigurationPerformance = require('../../components/configuration/performance')
-const ConfigurationSecurity = require('../../components/configuration/security')
-const ConfigurationCertificates = require('../../components/configuration/certificates')
-const ConfigurationChangeLog = require('../../components/configuration/change-log')
+import Configuration from '../configuration'
+import ConfigurationDetails from '../../components/configuration/details'
+import ConfigurationDefaults from '../../components/configuration/defaults'
+import ConfigurationPolicies from '../../components/configuration/policies'
+import ConfigurationPerformance from '../../components/configuration/performance'
+import ConfigurationSecurity from '../../components/configuration/security'
+import ConfigurationCertificates from '../../components/configuration/certificates'
+import ConfigurationChangeLog from '../../components/configuration/change-log'
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction(),
-    updateHost: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchHost: jest.fn(),
+    updateHost: jest.fn().mockImplementation(() => {
       return {then: cb => cb({payload: {}})}
     }),
-    changeActiveHost: jest.genMockFunction(),
-    deleteConfiguration: jest.genMockFunction()
+    changeActiveHost: jest.fn(),
+    deleteConfiguration: jest.fn()
   }
 }
 
@@ -530,7 +531,7 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().togglePublishModal = jest.fn()
     config.instance().changeActiveVersionEnvironment(2)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
@@ -553,7 +554,7 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().togglePublishModal = jest.fn()
     config.instance().changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')

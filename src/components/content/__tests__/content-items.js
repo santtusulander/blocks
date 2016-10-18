@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import { shallow, mount } from 'enzyme'
 
 jest.dontMock('../../../constants/content-item-sort-options.js')
+jest.unmock('../../../util/status-codes')
 jest.dontMock('../content-items.jsx')
 
 const ContentItems = require('../content-items.jsx').default

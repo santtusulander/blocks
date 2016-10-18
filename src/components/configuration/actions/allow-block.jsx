@@ -1,11 +1,13 @@
 import React from 'react'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { getPickedResponseCodes } from '../../../util/status-codes'
+
 
 class AllowBlock extends React.Component {
   constructor(props) {
@@ -68,18 +70,11 @@ class AllowBlock extends React.Component {
             <div className="form-group">
               <label className="control-label">Error Response</label>
               <Select className="input-select"
-                onSelect={this.handleSelectChange('activeErrorResponse',
-                  ['edge_configuration', 'cache_rule', 'actions', 'allow_block_error_response']
-                )}
-                value={this.state.activeErrorResponse}
-                options={[
-                  ['301', <FormattedMessage id="portal.policy.edit.allowBlock.301.text"/>],
-                  ['302', <FormattedMessage id="portal.policy.edit.allowBlock.302.text"/>],
-                  ['307', <FormattedMessage id="portal.policy.edit.allowBlock.307.text"/>],
-                  ['404', <FormattedMessage id="portal.policy.edit.allowBlock.404.text"/>],
-                  ['410', <FormattedMessage id="portal.policy.edit.allowBlock.410.text"/>],
-                  ['418', <FormattedMessage id="portal.policy.edit.allowBlock.418.text"/>],
-                  ['503', <FormattedMessage id="portal.policy.edit.allowBlock.503.text"/>]]}/>
+                      onSelect={this.handleSelectChange('activeErrorResponse',
+                        ['edge_configuration', 'cache_rule', 'actions', 'allow_block_error_response']
+                      )}
+                      value={this.state.activeErrorResponse}
+                      options={getPickedResponseCodes([301, 302, 307, 404, 410, 418, 503], false).map(response => [response.code, response.message])}/>
             </div>
 
             <Panel className="form-panel" collapsible={true}
