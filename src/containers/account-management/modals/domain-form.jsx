@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import { reduxForm } from 'redux-form'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
@@ -10,7 +10,7 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
-import DeleteDomainModal from '../../../components/account-management/delete-domain-modal'
+import ModalWindow from '../../../components/modal'
 
 import { checkForErrors } from '../../../util/helpers'
 import {
@@ -98,6 +98,11 @@ class DnsDomainEditFormContainer  extends Component {
     this.hideDeleteModal = this.hideDeleteModal.bind(this)
   }
 
+  componentDidMount(){
+    //show errors on edit even without touching fields
+    if (this.props.edit) this.props.touchAll()
+  }
+
   deleteDomain() {
     this.props.deleteDomain(this.state.domainToDelete)
     this.hideDeleteModal()
@@ -113,11 +118,6 @@ class DnsDomainEditFormContainer  extends Component {
     this.setState({
       domainToDelete: null
     })
-  }
-
-  componentDidMount(){
-    //show errors on edit even without touching fields
-    if (this.props.edit) this.props.touchAll()
   }
 
   render() {
@@ -146,9 +146,20 @@ class DnsDomainEditFormContainer  extends Component {
             <DnsDomainEditForm {...domainFormProps}/>
           </Modal.Body>
         </Modal>
-        {this.state.domainToDelete && <DeleteDomainModal
+        {this.state.domainToDelete &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
+          cancelButton={true}
+          deleteButton={true}
           cancel={this.hideDeleteModal}
-          submit={() => { this.deleteDomain() }}/>}
+          submit={() => {this.deleteDomain()}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.dnsDomain.delete.disclaimer.text"/>
+          </p>
+        </ModalWindow>
+        }
       </div>
     )
   }
@@ -207,9 +218,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
-                <FormattedMessage id="portal.button.ok"/>
-              </Button>
+              okButton: true,
+              cancel: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()
@@ -236,9 +246,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
-              buttons: <Button onClick={()=>dispatch(hideInfoDialog())} bsStyle="primary">
-                <FormattedMessage id="portal.button.ok"/>
-              </Button>
+              okButton: true,
+              cancel: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()

@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.autoMockOff()
 jest.dontMock('../on-off-net-report.jsx')
@@ -46,38 +46,38 @@ function intlMaker() {
 
 describe('AnalysisOnOffNetReport', () => {
   it('should exist', () => {
-    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={true}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(analysisOnOffNetReport)).toBeTruthy();
+    expect(analysisOnOffNetReport).toBeDefined();
   });
 
   it('should show data rows in table', () => {
-    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    let trs = TestUtils.scryRenderedDOMComponentsWithTag(analysisOnOffNetReport, 'tr')
+    let trs = analysisOnOffNetReport.find('tr')
     expect(trs.length).toBe(3);
   });
 
   it('should show summary stats', () => {
-    let analysisOnOffNetReport = TestUtils.renderIntoDocument(
+    let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    let summaryBoxes = TestUtils.scryRenderedDOMComponentsWithClass(analysisOnOffNetReport, 'analysis-data-box')
-    expect(summaryBoxes[0].textContent).toContain('123 KB')
-    expect(summaryBoxes[1].textContent).toContain('31 MB')
+    let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
+    expect(summaryBoxes.at(0).text()).toContain('123 KB')
+    expect(summaryBoxes.at(1).text()).toContain('31 MB')
   });
 })

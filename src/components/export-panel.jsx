@@ -41,7 +41,7 @@ const ExportPanel = (props) => {
 }
 
 module.exports = {
-  injectIntl(ExportPanel),
+  ExportPanel: injectIntl(ExportPanel),
   EXPORT_EMAIL_TAB,
   EXPORT_FILE_TAB
 }

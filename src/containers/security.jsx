@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
 // import { Nav } from 'react-bootstrap'
 // import { Link, withRouter } from 'react-router'
@@ -13,10 +14,10 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import DeleteModal from '../components/delete-modal'
+import ModalWindow from '../components/modal'
+import PageContainer from '../components/layout/page-container'
 import SecurityPageHeader from '../components/security/security-page-header'
 import CertificateForm from '../components/security/certificate-form-container'
-import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
 
@@ -27,8 +28,6 @@ import {
   EDIT_CERTIFICATE,
   DELETE_CERTIFICATE
 } from '../constants/account-management-modals.js'
-
-import { FormattedMessage } from 'react-intl'
 
 export class Security extends React.Component {
   constructor(props) {
@@ -162,10 +161,20 @@ export class Security extends React.Component {
 
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
-        {activeModal === DELETE_CERTIFICATE && <DeleteModal
-            itemToDelete='Certificate'
-            cancel={() => toggleModal(null)}
-            submit={() => onDelete(toDelete)}/>}
+        {activeModal === DELETE_CERTIFICATE &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => toggleModal(null)}
+          submit={() => onDelete(toDelete)}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>
+          </p>
+        </ModalWindow>
+        }
       </Content>
     )
   }
@@ -184,7 +193,7 @@ Security.propTypes = {
   params: PropTypes.object,
   router: React.PropTypes.object,
   securityActions: PropTypes.object,
-  sslCertificates: PropTypes.instanceOf(List),
+  sslCertificates: PropTypes.instanceOf(Map),
   toDelete: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func
 }

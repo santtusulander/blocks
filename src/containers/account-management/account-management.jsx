@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { Nav, Button } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
@@ -17,11 +18,9 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
-import DeleteModal from '../../components/delete-modal'
-import DeleteUserModal from '../../components/account-management/delete-user-modal'
+import ModalWindow from '../../components/modal'
 import AccountForm from '../../components/account-management/account-form'
 import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
@@ -40,8 +39,6 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
-
-import { FormattedMessage } from 'react-intl'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -156,7 +153,8 @@ export class AccountManagement extends Component {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
-          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+          okButton: true,
+          cancel: this.props.uiActions.hideInfoDialog
         })
     })
   }
@@ -289,15 +287,24 @@ export class AccountManagement extends Component {
     switch(accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
-          itemToDelete: 'Account',
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          invalid: true,
+          verifyDelete: true,
+          cancelButton: true,
+          deleteButton: true,
           cancel: () => toggleModal(null),
           submit: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
-          itemToDelete: this.state.groupToDelete.get('name'),
-          description: <FormattedMessage id="portal.accountManagement.deleetConfirmation.text"/>,
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          invalid: true,
+          verifyDelete: true,
+          cancelButton: true,
+          deleteButton: true,
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
@@ -425,12 +432,21 @@ export class AccountManagement extends Component {
           account={this.accountToUpdate}
           onCancel={() => toggleModal(null)}
           show={true}/>}
-        {deleteModalProps && <DeleteModal {...deleteModalProps}/>}
+        {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
         {accountManagementModal === DELETE_USER &&
-        <DeleteUserModal
-          itemToDelete={this.userToDelete}
+        <ModalWindow
+          title="Delete User?"
+          cancelButton={true}
+          deleteButton={true}
           cancel={() => toggleModal(null)}
-          submit={this.deleteUser}/>}
+          submit={() => this.deleteUser()}>
+          <h3>
+            {this.userToDelete}<br/>
+          </h3>
+          <p>
+           <FormattedMessage id="portal.user.delete.disclaimer.text"/>
+          </p>
+        </ModalWindow>}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
@@ -522,7 +538,8 @@ function mapDispatchToProps(dispatch) {
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            buttons: <Button onClick={uiActions.hideInfoDialog} bsStyle="primary">OK</Button>
+            okButton: true,
+            cancel: uiActions.hideInfoDialog
           })
         }
       })

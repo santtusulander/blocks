@@ -1,35 +1,30 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../../global-account-selector/selector-component')
+jest.unmock('../../../decorators/select-auto-close')
 jest.unmock('../domain-toolbar')
 import DomainToolbar from '../domain-toolbar'
 
 const fakeDomains = [ { id: 'asdsa' }, { id: 'asdsa' }, { id: 'asdsa' } ]
+const onAddDomain = jest.fn()
+const onEditDomain = jest.fn()
+const changeActiveDomain = jest.fn()
+
+const subject = (activeDomain, domains, searchValue) => {
+    const props = {
+      activeDomain: activeDomain,
+      domains: domains || [],
+      searchValue: searchValue || '',
+      onAddDomain,
+      onEditDomain,
+      changeActiveDomain,
+      searchFunc: jest.genMockFunction(),
+      emptyDomainsTxt: 'bb'
+    }
+    return shallow(<DomainToolbar {...props}/>)
+  }
 
 describe('Domain Toolbar', () => {
-  let props = {}
-  let subject = null
-  const onAddDomain = jest.fn()
-  const onEditDomain = jest.fn()
-  const changeActiveDomain = jest.fn()
-
-  beforeEach(() => {
-    subject = (activeDomain, domains, searchValue) => {
-      props = {
-        activeDomain: activeDomain,
-        domains: domains || [],
-        searchValue: searchValue || '',
-        onAddDomain,
-        onEditDomain,
-        changeActiveDomain,
-        searchFunc: jest.genMockFunction(),
-        emptyDomainsTxt: 'bb'
-      }
-      return shallow(<DomainToolbar {...props}/>)
-    }
-  })
-
   it('should exist', () => {
     expect(subject().length).toBe(1)
   });
