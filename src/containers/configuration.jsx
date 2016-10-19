@@ -387,10 +387,11 @@ export class Configuration extends React.Component {
 
         {this.state.deleteModal &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
-          cancelButton={toggleDelete}
-          deleteButton={() => {
+          cancelButton={true}
+          deleteButton={true}
+          cancel={toggleDelete}
+          submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
