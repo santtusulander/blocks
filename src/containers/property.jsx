@@ -33,7 +33,7 @@ import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
 import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
-import DeleteModal from '../components/delete-modal'
+import ModalWindow from '../components/modal'
 import { paleblue } from '../constants/colors'
 
 const endOfThisDay = () => moment().utc().endOf('day')
@@ -395,10 +395,6 @@ export class Property extends React.Component {
                 {activeConfig.get('edge_configuration').get('published_name')}
               </h3>
             </Col>
-            <Col xs={2} className="kpi">
-              Current Version
-              <h3>{activeConfig.get('config_name')}</h3>
-            </Col>
             <Col xs={4} className="kpi">
               Deployed
               <h3>
@@ -500,13 +496,22 @@ export class Property extends React.Component {
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
           showNotification={this.showNotification}/>}
-        {this.state.deleteModal && <DeleteModal
-          itemToDelete="Property"
+        {this.state.deleteModal &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          cancelButton={true}
+          deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>}
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+          </p>
+        </ModalWindow>
+        }
       </Content>
     )
   }

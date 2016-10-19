@@ -1,12 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import {shallow,mount} from 'enzyme'
-import jsdom from 'jsdom'
-
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
+import {shallow} from 'enzyme'
 
 jest.mock('../../util/helpers', () => {
   return {
@@ -14,11 +8,14 @@ jest.mock('../../util/helpers', () => {
     getContentUrl: jest.fn(),
     removeProps: jest.fn(),
     filterAccountsByUserName: jest.fn(),
-    filterMetricsByAccounts: jest.fn()
+    filterMetricsByAccounts: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
-jest.dontMock('../accounts.jsx')
+jest.unmock('../accounts.jsx')
+jest.unmock('../../util/status-codes')
+
 const Accounts = require('../accounts.jsx').Accounts
 
 function accountActionsMaker() {
@@ -88,8 +85,7 @@ const urlParams = {brand: 'udn'}
 describe('Accounts', () => {
   it('should exist', () => {
     const fetchData=jest.fn()
-    let accounts = TestUtils.renderIntoDocument(
-
+    let accounts = shallow(
       <Accounts
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
@@ -100,13 +96,13 @@ describe('Accounts', () => {
         fetchingMetrics={true}
         params={urlParams}/>
     )
-    expect(TestUtils.isCompositeComponent(accounts)).toBeTruthy()
+    expect(accounts).toBeDefined()
   });
 
   it('should request data on mount', () => {
     const accountActions = accountActionsMaker()
     const fetchData=jest.fn()
-    TestUtils.renderIntoDocument(
+    shallow(
       <Accounts
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
@@ -137,7 +133,7 @@ describe('Accounts', () => {
 
   it('should delete an account when clicked', () => {
     const accountActions = accountActionsMaker()
-    let accounts = TestUtils.renderIntoDocument(
+    let accounts = shallow(
       <Accounts
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
@@ -148,7 +144,7 @@ describe('Accounts', () => {
         username="test"
         metrics={fakeMetrics}/>
     )
-    accounts.deleteAccount('1')
+    accounts.instance().deleteAccount('1')
     expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn','1'])
   })
 })
