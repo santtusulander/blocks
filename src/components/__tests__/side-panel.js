@@ -7,12 +7,13 @@ jest.unmock('../side-panel.jsx')
 describe('SidePanel', () => {
   let sidePanel = null
   beforeEach(() => {
-    sidePanel = (account, cancel, cancelButton, children, invalid, show, submit, submitButton, subTitle, title) => {
+    sidePanel = (account, cancel, cancelButton, children, group, invalid, show, submit, submitButton, subTitle, title) => {
       let props = {
         account,
         cancel,
         cancelButton,
         children,
+        group,
         invalid,
         show,
         submit,
