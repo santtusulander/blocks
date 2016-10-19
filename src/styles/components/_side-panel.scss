@@ -18,7 +18,6 @@ $lt-side-panel-bg-color: $white;
   @include sm {
     width: 100%;
     max-width: $side-panel-width;
-    margin-left: 12px;
   }
 
   .fade & {
@@ -28,6 +27,12 @@ $lt-side-panel-bg-color: $white;
 
   .in & {
     transform: translate(0, 0);
+  }
+
+  .modal-content {
+    @include sm {
+      margin-left: 12px;
+    }
   }
 
   .modal-header {
