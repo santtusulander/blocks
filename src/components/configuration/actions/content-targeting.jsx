@@ -15,6 +15,7 @@ class ContentTargeting extends React.Component {
 
     this.handleCountryChange = this.handleCountryChange.bind(this)
     this.handleTypeChange = this.handleTypeChange.bind(this)
+    this.filterCountries = this.filterCountries.bind(this)
     this.handleInclusionChange = this.handleInclusionChange.bind(this)
     this.handleRedirectURLChange = this.handleRedirectURLChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
@@ -73,6 +74,9 @@ class ContentTargeting extends React.Component {
         redirectURL
       })
     }
+  }
+  filterCountries(data){
+    return !this.state.countries.includes(data) ? data : null
   }
   handleInclusionChange() {
     return inclusion => {
@@ -143,6 +147,7 @@ class ContentTargeting extends React.Component {
               className={this.state.type === 'deny' ? 'exclude' : null}
               multiple={true}
               selected={this.state.countries}
+              filterBy={this.filterCountries}
               onChange={this.handleCountryChange()}
               options={country_list}/>
           </div>
