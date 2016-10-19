@@ -90,17 +90,18 @@ class ContentTargeting extends React.Component {
   }
   saveChanges() {
     const countries = this.state.countries.map(country => country.id)
-    const updatedSet = Immutable.fromJS({
-      in: this.state.inclusion === 'in' ? countries : undefined,
-      not_in: this.state.inclusion === 'not_in' ? countries : undefined,
+    const updatedSet = {
       response: {
-        code: this.state.status_code,
-        headers: this.state.type === 'redirect' ? { Location: this.state.redirectURL } : undefined
+        code: this.state.status_code
       }
-    })
+    }
+    updatedSet[this.state.inclusion] = countries
+    if (this.state.type === 'redirect') {
+      updatedSet.response.headers = { Location: this.state.redirectURL }
+    }
     this.props.changeValue(
       this.props.path,
-      updatedSet
+      Immutable.fromJS(updatedSet)
     )
     this.props.close()
   }
