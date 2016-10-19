@@ -15,6 +15,12 @@ $lt-side-panel-bg-color: $white;
   width: $side-panel-width;
   margin: 0;
 
+  @include sm {
+    width: 100%;
+    max-width: $side-panel-width;
+    margin-right: 12px;
+  }
+
   .fade & {
     transform: translate(100%, 0);
     transition: transform 0.3s ease-out, margin 0.3s ease-out;
