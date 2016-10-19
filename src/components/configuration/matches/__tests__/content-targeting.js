@@ -44,7 +44,7 @@ describe('ContentTargeting', () => {
       {
         "cases": [
           [
-            "",
+            ".*",
             [
               {
                 "script_lua": {
