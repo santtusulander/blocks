@@ -1,22 +1,30 @@
 import React, {PropTypes} from 'react'
 import {Button} from 'react-bootstrap'
 
-import IconEdit from './icons/icon-edit.jsx'
-import IconTrash from './icons/icon-trash.jsx'
+import IconEdit from './icons/icon-edit'
+import IconTrash from './icons/icon-trash'
+import IsAllowed from './is-allowed'
 
-const ActionButtons = props =>
+import { ALLOW_ALWAYS } from '../constants/permissions'
+
+const ActionButtons = ({ onEdit, onDelete, permissions }) =>
     <div className='action-buttons'>
-      <Button id='edit-button' onClick={props.onEdit} className="btn btn-icon">
-        <IconEdit />
-      </Button>
-      <Button id='delete-button' onClick={props.onDelete} className="btn btn-icon">
-        <IconTrash/>
-      </Button>
+      <IsAllowed to={permissions ? permissions.modify : ALLOW_ALWAYS}>
+        <Button id='edit-button' onClick={onEdit} className="btn btn-icon btn-primary">
+          <IconEdit />
+        </Button>
+      </IsAllowed>
+      <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
+        <Button id='delete-button' onClick={onDelete} className="btn btn-icon btn-danger">
+          <IconTrash/>
+        </Button>
+      </IsAllowed>
     </div>
 
 ActionButtons.propTypes = {
   onDelete: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  permissions: PropTypes.object
 }
 
 export default ActionButtons
