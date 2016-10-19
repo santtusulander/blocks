@@ -2,19 +2,20 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow }  from 'enzyme'
 
-jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
+jest.disableAutomock() // Uses react-bootstrap extensively, so don't auto mock
+jest.unmock('../../util/status-codes')
 jest.unmock('../configuration.jsx')
 import { Configuration } from '../configuration.jsx'
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction(),
-    updateHost: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchHost: jest.fn(),
+    updateHost: jest.fn().mockImplementation(() => {
       return {then: cb => cb({payload: {}})}
     }),
-    changeActiveHost: jest.genMockFunction(),
-    deleteConfiguration: jest.genMockFunction()
+    changeActiveHost: jest.fn(),
+    deleteConfiguration: jest.fn()
   }
 }
 
@@ -424,7 +425,7 @@ describe('Configuration', () => {
   })
 
   it("should change a version's deployment_status", () => {
-    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().togglePublishModal = jest.fn()
     config.instance().changeActiveVersionEnvironment(2)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
@@ -447,7 +448,7 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.instance().togglePublishModal = jest.genMockFunction()
+    config.instance().togglePublishModal = jest.fn()
     config.instance().changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')

@@ -76,7 +76,8 @@ axios.interceptors.response.use(function (response) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
-        okButton: () => store.dispatch(hideInfoDialog())
+        okButton: true,
+        cancel: () => store.dispatch(hideInfoDialog())
       }));
     }
     else if (status === 500 || status === 404) {

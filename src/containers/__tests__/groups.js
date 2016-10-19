@@ -8,10 +8,12 @@ jest.mock('../../util/helpers', () => {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
     removeProps: jest.fn(),
-    userIsServiceProvider: jest.fn()
+    userIsServiceProvider: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
+jest.unmock('../../util/status-codes')
 jest.unmock('../groups.jsx')
 
 import { Groups } from '../groups.jsx'

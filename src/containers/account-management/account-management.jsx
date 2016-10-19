@@ -153,7 +153,8 @@ export class AccountManagement extends Component {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
-          okButton: this.props.uiActions.hideInfoDialog
+          okButton: true,
+          cancel: this.props.uiActions.hideInfoDialog
         })
     })
   }
@@ -286,24 +287,26 @@ export class AccountManagement extends Component {
     switch(accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
-          show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
-          cancelButton: () => toggleModal(null),
-          deleteButton: () => onDelete(brand, account || this.accountToDelete, router)
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => toggleModal(null),
+          submit: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
-          show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
-          cancelButton: () => toggleModal(null),
-          deleteButton: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => toggleModal(null),
+          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
     }
 
@@ -432,10 +435,11 @@ export class AccountManagement extends Component {
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
         {accountManagementModal === DELETE_USER &&
         <ModalWindow
-          show={true}
           title="Delete User?"
-          cancelButton={() => toggleModal(null)}
-          deleteButton={this.deleteUser}>
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => toggleModal(null)}
+          submit={() => this.deleteUser()}>
           <h3>
             {this.userToDelete}<br/>
           </h3>
@@ -534,7 +538,8 @@ function mapDispatchToProps(dispatch) {
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            okButton: uiActions.hideInfoDialog
+            okButton: true,
+            cancel: uiActions.hideInfoDialog
           })
         }
       })

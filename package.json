@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.0.2-b1",
+  "version": "1.0.2-b2",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -92,12 +92,12 @@
     "lint:js": "eslint src/ --ext .js,.jsx",
     "lint:styles": "./node_modules/.bin/sass-lint -v -q; exit 0;",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "storybook": "start-storybook -p 9001",
     "e2e-setup": "node selenium-download.js"
   },
   "jest": {
-    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.jsx",
       "!src/**/__stories__"

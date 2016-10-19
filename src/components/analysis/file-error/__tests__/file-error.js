@@ -3,10 +3,8 @@ import { shallow } from 'enzyme'
 import { fromJS, Map, List } from 'immutable'
 
 jest.unmock('../file-error.jsx')
-jest.unmock('../../../../constants/status-codes.js')
 
 import FileError from '../file-error.jsx'
-import STATUS_CODES from '../../../../constants/status-codes.js'
 
 const intlMaker = () => {
   return {
