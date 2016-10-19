@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Map }from 'immutable'
-import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { Input } from 'react-bootstrap'
 
 import SidePanel from '../side-panel'
 import SelectWrapper from '../select-wrapper.jsx'
@@ -102,71 +102,6 @@ class AccountForm extends React.Component {
 
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
-
-    {/*
-      <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
-        <Modal.Header>
-          <h1>{title}</h1>
-          <p>{subTitle}</p>
-        </Modal.Header>
-
-        <Modal.Body>
-          <form>
-
-            <Input
-              {...accountName}
-              id="account-name"
-              type="text"
-              label="Account name"
-              placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
-            {accountName.touched && accountName.error &&
-              <div className='error-msg'>{accountName.error}</div>
-            }
-
-            <hr/>
-
-            <div className='form-group'>
-              <label className='control-label'><FormattedMessage id="portal.account.manage.brand.title" /></label>
-              <SelectWrapper
-                {... accountBrand}
-                className="input-select"
-                value={accountBrand.value}
-                options={BRAND_OPTIONS}
-              />
-            </div>
-            {accountBrand.touched && accountBrand.error &&
-            <div className='error-msg'>{accountBrand.error}</div>}
-
-            <hr/>
-
-            <div className='form-group'>
-              <label className='control-label'><FormattedMessage id="portal.account.manage.accountType.title" /></label>
-              {this.props.account ?
-                <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
-              :
-                <SelectWrapper
-                  {...accountType}
-                  numericValues={true}
-                  value={accountType.value}
-                  className="input-select"
-                  options={ACCOUNT_TYPE_OPTIONS}
-                />
-              }
-            </div>
-
-            <hr/>
-
-            <label><FormattedMessage id="portal.account.manage.services.title" /></label>
-            <CheckboxArray iterable={serviceTypes} field={services}/>
-            <ButtonToolbar className="text-right extra-margin-top">
-              <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
-              <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
-                      onClick={this.save}>{this.props.account ? <FormattedMessage id="portal.button.save" /> : <FormattedMessage id="portal.button.add" />}</Button>
-            </ButtonToolbar>
-          </form>
-        </Modal.Body>
-      </Modal>
-    */}
 
     return (
       <SidePanel
