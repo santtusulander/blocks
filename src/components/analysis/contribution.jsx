@@ -70,8 +70,8 @@ class AnalysisContribution extends React.Component {
     const month = moment().format('MMMM YYYY')
     const isHttp = this.props.serviceTypes.includes('http')
     const isHttps = this.props.serviceTypes.includes('https')
-    const isOnNet = this.props.onOffFilter.includes('on-net')
-    const isOffNet = this.props.onOffFilter.includes('off-net')
+    const isOnNet = this.props.onOffFilter.includes('on')
+    const isOffNet = this.props.onOffFilter.includes('off')
 
 
     const providers = this.props.stats.reduce((list, provider, i) => {

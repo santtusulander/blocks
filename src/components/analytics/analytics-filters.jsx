@@ -130,7 +130,7 @@ const AnalyticsFilters = (props) => {
 
   return (
     <PageHeader secondaryPageHeader={true}>
-      {props.showFilters.includes('date-range') &&
+      {props.showFilters.includes('dateRange') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect

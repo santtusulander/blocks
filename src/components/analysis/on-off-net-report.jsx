@@ -110,18 +110,18 @@ class AnalysisOnOffNetReport extends React.Component {
     })
 
     let dataSets = [];
-    if ( this.props.onOffFilter.contains('on-net') ) {
+    if ( this.props.onOffFilter.contains('on') ) {
       dataSets.push( onNet.toJS() )
     } else {
       dataSets.push( [] )
     }
 
-    if ( this.props.onOffFilter.contains('off-net') ) {
+    if ( this.props.onOffFilter.contains('off') ) {
       dataSets.push( offNet.toJS() )
     }
 
     const datasets = []
-    if(this.props.onOffFilter.contains('on-net') && onNet) {
+    if(this.props.onOffFilter.contains('on') && onNet) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -134,7 +134,7 @@ class AnalysisOnOffNetReport extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(this.props.onOffFilter.contains('off-net') && offNet) {
+    if(this.props.onOffFilter.contains('off') && offNet) {
       datasets.push({
         area: false,
         color: 'yellow',
@@ -184,7 +184,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <h4>Traffic today</h4>
                 <p>{formatBytes(statsToday.get('total'))}</p>
                 <Row className="extra-margin-top">
-                {this.props.onOffFilter.contains('on-net') &&
+                {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
                     <h4>On-net</h4>
                     <p className="on-net">
@@ -192,7 +192,7 @@ class AnalysisOnOffNetReport extends React.Component {
                     </p>
                   </Col>
                 }
-                {this.props.onOffFilter.contains('off-net') &&
+                {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
                     <h4>Off-net</h4>
                     <p className="off-net">
@@ -206,7 +206,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <h4>Traffic Month to Date</h4>
                 <p>{formatBytes(stats.get('total'))}</p>
                 <Row className="extra-margin-top">
-                {this.props.onOffFilter.contains('on-net') &&
+                {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
                     <h4>On-net</h4>
                     <p className="on-net">
@@ -214,7 +214,7 @@ class AnalysisOnOffNetReport extends React.Component {
                     </p>
                   </Col>
                 }
-                {this.props.onOffFilter.contains('off-net') &&
+                {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
                     <h4>Off-net</h4>
                     <p className="off-net">

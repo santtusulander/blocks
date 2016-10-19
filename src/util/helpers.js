@@ -140,40 +140,53 @@ export function generateNestedLink(base, linkParts) {
 
 export function buildAnalyticsOpts(params, filters, location ){
 
-  //only get visible filters
   const tabKey = getTabName(location.pathname)
+  //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
   const visibleFilters = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey ).get('filters')
 
-  debugger
+  //get filter values
+  let filterValues = {}
+  visibleFilters.forEach( filterName => {
+    const filterValue = filters.get( filterName )
+    filterValues[filterName] = filterValue && filterValue
+  })
 
-  const {startDate, endDate} = visibleFilters.includes('date-range') ? getDateRange(filters) : undefined
+  const {startDate, endDate} = visibleFilters.includes('dateRange') ? getDateRange(filters) : {startDate: undefined, endDate: undefined}
 
-  const  serviceProviders =  visibleFilters.includes('service-provider') ? filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',') : undefined
-  const serviceProviderGroups =  visibleFilters.includes('service-provider') ? filters.get('serviceProviderGroups').size === 0 ? undefined : filters.get('serviceProviderGroups').toJS().join(',') : undefined
-
-  const contentProviders = visibleFilters.includes('content-provider') ? filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',') : undefined
-  const contentProviderGroups = visibleFilters.includes('content-provider') ? filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',') : undefined
-
-  const serviceType = visibleFilters.includes('service-type') ? filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS() : undefined
-  const netType = visibleFilters.includes('service-type') ? filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '') : undefined
-  const errorCodes = visibleFilters.includes('error-code') ? filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',') : undefined
-  const statusCodes = visibleFilters.includes('error-code') ? filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',') : undefined
-
-  return {
+  const opts = {
     account: params.account,
     brand: params.brand,
     group: params.group,
     property: params.property,
-    startDate: startDate.format('X'),
-    endDate: endDate.format('X'),
-    sp_account_ids: serviceProviders,
-    sp_group_ids: serviceProviderGroups,
-    account_ids: contentProviders,
-    group_ids: contentProviderGroups,
-    service_type: serviceType,
-    net_type: netType,
-    status_codes: statusCodes || errorCodes
+    startDate: toUnixTimestamp( startDate ),
+    endDate: toUnixTimestamp( endDate ),
+    sp_account_ids: filterValues.serviceProviders && filterValues.serviceProviders.join(','),
+    sp_group_ids: filterValues.serviceProviderGroups && filterValues.serviceProviderGroups.join(','),
+    account_ids: filterValues.contentProviders && filterValues.contentProviders.join(','),
+    group_ids: filterValues.contentProviderGroups && filterValues.contentProviderGroups.join(','),
+    service_type: filterValues.serviceTypes && createToggledFilter( filterValues.serviceTypes),
+    net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet),
+    status_codes: filterValues.statusCodes && filterValues.statusCodes.join(',') || filterValues.errorCodes && filterValues.errorCodes.join(',')
   }
+
+  return opts
+}
+
+/**
+ * Returns filter params, if filter is needed ie. not all options selected
+ * @param options
+ * @returns {*}
+ */
+const createToggledFilter = ( options ) => {
+  //FIXME: this only works when there are only 2 options
+  //if all opts selected - remove filter
+  if (options.size > 1) return undefined
+
+  return options
+}
+
+const toUnixTimestamp = ( date ) => {
+  return date && date.format('X')
 }
 
 export function buildAnalyticsOptsForContribution(params, filters, accountType) {
@@ -183,7 +196,7 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
   const contentProviders = filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',')
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
-  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
+  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0) //.replace(/-.*$/, '')
   const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
   const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
