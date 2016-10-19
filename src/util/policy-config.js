@@ -7,6 +7,8 @@ export const matchFilterChildPaths = {
   'does_not_contain': ['cases', 1, 1]
 }
 
+export const WILDCARD_REGEXP = '.*';
+
 export function getMatchFilterType(match) {
   if(!match.get('field_detail')) {
     return match.get('default') ? 'does_not_exist' : 'exists'

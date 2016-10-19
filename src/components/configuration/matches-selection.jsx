@@ -5,7 +5,8 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import {
   parsePolicy,
-  policyIsCompatibleWithMatch
+  policyIsCompatibleWithMatch,
+  WILDCARD_REGEXP
 } from '../../util/policy-config'
 
 class MatchesSelection extends React.Component {
@@ -26,7 +27,7 @@ class MatchesSelection extends React.Component {
       e.preventDefault()
       const match = Immutable.fromJS({
         cases: [
-          ['', [{
+          [WILDCARD_REGEXP, [{
             script_lua: {
               target: { }
             }

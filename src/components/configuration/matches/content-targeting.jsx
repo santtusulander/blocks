@@ -5,6 +5,7 @@ import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage } from 'react-intl'
 
 import country_list from '../../../constants/country-list'
+import { WILDCARD_REGEXP } from '../../../util/policy-config'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class ContentTargeting extends React.Component {
 
     const newMatch = Immutable.fromJS({
       cases: [
-        ['', [{
+        [WILDCARD_REGEXP, [{
           script_lua: {
             target: {
               geo: [{
