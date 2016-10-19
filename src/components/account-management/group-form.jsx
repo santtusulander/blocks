@@ -186,7 +186,7 @@ class GroupForm extends React.Component {
                           onClick={() => this.undoDelete(val.get('email'))}>
                           UNDO
                         </Button> :
-                        <Button bsStyle="link" className="dėlete-button"
+                        <Button bsStyle="link" className="delete-button"
                           onClick={() => this.deleteMember(val.get('email'))}>
                           <IconClose width="20" height="20"/>
                         </Button>}
