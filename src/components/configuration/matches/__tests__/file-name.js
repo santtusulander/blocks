@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.dontMock('../file-name.jsx')
 const FileName = require('../file-name.jsx')
@@ -19,34 +19,33 @@ function intlMaker() {
 
 describe('FileName', () => {
   it('should exist', () => {
-    let fileName = TestUtils.renderIntoDocument(
+    let fileName = shallow(
       <FileName match={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(fileName)).toBeTruthy();
+    expect(fileName).toBeDefined();
   })
 
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
-    let fileName = TestUtils.renderIntoDocument(
+    let fileName = shallow(
       <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(fileName, 'textarea')
-    inputs[0].value = 'new'
-    TestUtils.Simulate.change(inputs[0])
+    let inputs = fileName.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
 
   it('should update the parameters as select change happens', () => {
     let changeValue = jest.genMockFunction()
-    let fileName = TestUtils.renderIntoDocument(
+    let fileName = shallow(
       <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    expect(fileName.state.activeFilter).toBe('matches')
-    fileName.handleSelectChange('activeFilter')('foo')
-    expect(fileName.state.activeFilter).toBe('foo')
+    expect(fileName.state('activeFilter')).toBe('matches')
+    fileName.instance().handleSelectChange('activeFilter')('foo')
+    expect(fileName.state('activeFilter')).toBe('foo')
     expect(changeValue.mock.calls[0][1]).toBe('foo')
   })
 })

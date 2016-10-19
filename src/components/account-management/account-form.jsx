@@ -14,23 +14,24 @@ import CheckboxArray from '../checkboxes.jsx'
 import {
   ACCOUNT_TYPES,
   SERVICE_TYPES,
-  NAME_VALIDATION_REGEXP,
   BRAND_OPTIONS,
   ACCOUNT_TYPE_OPTIONS
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
+import { isValidAccountName } from '../../util/validators'
+
 
 import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName = '', accountBrand, accountType, services }) => {
   const conditions = {
     accountName: [
       {
-        condition: ! new RegExp( NAME_VALIDATION_REGEXP ).test(accountName),
-        errorText: <div key={accountName}>{[<FormattedMessage id="portal.account.manage.invalidAccountName.text" />, <div key={1}>
+        condition: ! isValidAccountName(accountName),
+        errorText: <div key={accountName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
                     <div style={{marginTop: '0.5em'}}>
                       <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
                       <ul>
@@ -42,6 +43,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
       }
     ]
   }
+
   return checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
 }
 
@@ -175,6 +177,7 @@ class AccountForm extends React.Component {
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fields: PropTypes.object,
+  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

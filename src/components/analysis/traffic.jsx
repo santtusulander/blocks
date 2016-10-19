@@ -173,7 +173,6 @@ class AnalysisTraffic extends React.Component {
         })
       }
     }
-
     return (
       <div className="analysis-traffic">
         {/*<div className="analysis-data-box">
@@ -214,7 +213,8 @@ class AnalysisTraffic extends React.Component {
                 showLegend={true}
                 showTooltip={false}
                 yAxisCustomFormat={byTimeYAxisFormat}
-                width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
+                width={this.state.byTimeWidth}
+                height={this.state.byTimeWidth / 2.5}/>
             }
           </div>
         </SectionContainer>

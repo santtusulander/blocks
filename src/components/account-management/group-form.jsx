@@ -6,16 +6,17 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import {Map, List, fromJS} from 'immutable'
+import { Map, List, fromJS } from 'immutable'
+import { FormattedMessage, formatMessage, injectIntl } from 'react-intl'
 
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import IconClose from '../icons/icon-close.jsx'
 
-import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import { isValidAccountName } from '../../util/validators'
+
 
 import './group-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 let errors = {}
 
@@ -23,11 +24,11 @@ const validate = (values) => {
   const {name} = values
   errors = {}
   if(!name || name.length === 0) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.required"/>
   }
 
-  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+  if( name && !isValidAccountName(name) ) {
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.invalid" />
   }
 
   return errors;

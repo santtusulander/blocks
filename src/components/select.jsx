@@ -77,7 +77,7 @@ class Select extends Component {
     return (
       <Dropdown id="" disabled={this.props.disabled} className={className}
                 onSelect={this.selectOption}>
-        <Dropdown.Toggle noCaret={true}>
+        <Dropdown.Toggle noCaret={true} className={this.props.disabled && 'disabled'}>
           <IconSelectCaret/>
           {this.getSelectedItem()}
         </Dropdown.Toggle>

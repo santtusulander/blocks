@@ -45,7 +45,6 @@ class AnalysisByTime extends React.Component {
       tooltipX: [],
       tooltipY: [],
       tooltipOffsetTop: [],
-
       labelWidth: []
     }
 
@@ -205,14 +204,18 @@ class AnalysisByTime extends React.Component {
         slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
+
+    // Set some extra height to chart if we have more than two datasets as the legends take up approx. 25px per legend
+    const extraHeight = stackedDatasets.length > 2 ? stackedDatasets.length * 25 : 0
+
     return (
       <div className={className}
       onMouseMove={this.moveMouse(xScale, yScale, stackedDatasets)}
       onMouseOut={this.deactivateTooltip}>
         <svg
-          viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
+          viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}
-          height={this.props.height}
+          height={this.props.height + extraHeight}
           ref='chart'>
           {stackedDatasets.map((dataset, i) => {
             return (
