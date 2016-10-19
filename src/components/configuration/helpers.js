@@ -7,6 +7,7 @@ import ConfigurationMatchMimeType from './matches/mime-type'
 import ConfigurationMatchFileExtension from './matches/file-extension'
 import ConfigurationMatchFileName from './matches/file-name'
 import ConfigurationMatchIpAddress from './matches/ip-address'
+import ConfigurationContentTargetingMatch from './matches/content-targeting'
 import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
@@ -22,6 +23,9 @@ import ConfigurationActionRemoveVary from './actions/remove-vary'
 import ConfigurationActionAllowBlock from './actions/allow-block'
 import ConfigurationActionPostSupport from './actions/post-support'
 import ConfigurationActionCors from './actions/cors'
+import ConfigurationContentTargetingAction from './actions/content-targeting'
+
+import { matchIsContentTargeting } from '../../util/policy-config'
 
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
@@ -35,7 +39,14 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       match: activeMatch,
       path: matchPath
     }
-    switch(activeMatch.get('field')) {
+
+    let matchType = activeMatch.get('field')
+
+    if (matchIsContentTargeting(activeMatch)) {
+      matchType = 'content_targeting'
+    }
+
+    switch(matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
@@ -100,10 +111,14 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             {...matcherProps}/>
         )
         break
+      case 'content_targeting':
+        activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
+        break
       default:
         activeEditForm = (
           <MatchesSelection
             path={matchPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break
@@ -121,7 +136,13 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       path: setPath,
       set: activeSet
     }
-    switch(setPath.last()) {
+
+    let setType = setPath.last()
+    if (setPath.contains('script_lua')) {
+      setType = 'content_targeting'
+    }
+
+    switch(setType) {
       case 'cache_name':
         activeEditForm = (
           <ConfigurationActionCacheKeyQueryString {...setterProps}/>
@@ -140,6 +161,11 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'tokenauth':
         activeEditForm = (
           <ConfigurationTokenAuthentication {...setterProps}/>
+        )
+        break
+      case 'content_targeting':
+        activeEditForm = (
+          <ConfigurationContentTargetingAction {...setterProps}/>
         )
         break
       default:

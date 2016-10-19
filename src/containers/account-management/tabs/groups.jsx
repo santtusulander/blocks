@@ -183,8 +183,10 @@ class AccountManagementAccountGroups extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id="portal.common.error.warning.title"/>,
         content: <FormattedMessage id="portal.account.groups.modal.unsaved.content"/>,
-        stayButton: this.props.uiActions.hideInfoDialog,
-        continueButton: () => {
+        stayButton: true,
+        continueButton: true,
+        cancel: this.props.uiActions.hideInfoDialog,
+        submit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()

@@ -4,10 +4,11 @@ import TestUtils from 'react-addons-test-utils'
 
 jest.mock('../../util/helpers', () => {
   return {
-    formatBitsPerSecond: jest.genMockFunction(),
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction()
+    formatBitsPerSecond: jest.fn(),
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
@@ -18,58 +19,58 @@ const Property = require('../property.jsx').Property
 
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
   }
 }
 
 function groupActionsMaker() {
   return {
-    fetchGroup: jest.genMockFunction()
+    fetchGroup: jest.fn()
   }
 }
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction(),
-    fetchHosts: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchHost: jest.fn(),
+    fetchHosts: jest.fn()
   }
 }
 
 function metricsActionsMaker() {
   return {
-    fetchDailyHostTraffic: jest.genMockFunction(),
-    fetchHostMetrics: jest.genMockFunction(),
-    fetchHourlyHostTraffic: jest.genMockFunction()
+    fetchDailyHostTraffic: jest.fn(),
+    fetchHostMetrics: jest.fn(),
+    fetchHourlyHostTraffic: jest.fn()
   }
 }
 
 function purgeActionsMaker() {
   return {
-    resetActivePurge: jest.genMockFunction()
+    resetActivePurge: jest.fn()
   }
 }
 
 function trafficActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchByTime: jest.genMockFunction(),
-    finishFetching: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchByTime: jest.fn(),
+    finishFetching: jest.fn()
   }
 }
 
 function uiActionsMaker() {
   return {
-    changeNotification: jest.genMockFunction()
+    changeNotification: jest.fn()
   }
 }
 
 function visitorsActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchByCountry: jest.genMockFunction(),
-    finishFetching: jest.genMockFunction(),
-    visitorsReset: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchByCountry: jest.fn(),
+    finishFetching: jest.fn(),
+    visitorsReset: jest.fn()
   }
 }
 
