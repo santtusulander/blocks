@@ -4,8 +4,9 @@ import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 import Typeahead from 'react-bootstrap-typeahead'
 
-import SelectWrapper from '../../../components/select-wrapper'
+import Select from '../../../components/select'
 import country_list from '../../../constants/country-list'
+import * as StatusCodes from '../../../util/status-codes'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ContentTargeting extends React.Component {
     this.handleTypeChange = this.handleTypeChange.bind(this)
     this.handleInclusionChange = this.handleInclusionChange.bind(this)
     this.handleRedirectURLChange = this.handleRedirectURLChange.bind(this)
+    this.handleStatusCodeChange = this.handleStatusCodeChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -88,6 +90,13 @@ class ContentTargeting extends React.Component {
       })
     }
   }
+  handleStatusCodeChange() {
+    return status_code => {
+      this.setState({
+        status_code
+      })
+    }
+  }
   saveChanges() {
     const countries = this.state.countries.map(country => country.id)
     const updatedSet = {
@@ -106,6 +115,10 @@ class ContentTargeting extends React.Component {
     this.props.close()
   }
   render() {
+    const statusCodeOptions = StatusCodes
+                                .getPickedResponseCodes([401, 403, 404], false)
+                                .map(code => { return { value: code.code, label: code.message } })
+
     return (
       <div>
         <Modal.Header>
@@ -116,25 +129,25 @@ class ContentTargeting extends React.Component {
 
           <div className="form-group">
             <label className="control-label">Action</label>
-            <SelectWrapper
+            <Select
               className="input-select"
-              onChange={this.handleTypeChange()}
+              onSelect={this.handleTypeChange()}
               value={this.state.type}
               options={[
-                ['allow', 'Allow'],
-                ['redirect', 'Redirect'],
-                ['deny', 'Deny']
+                { value: 'allow', label: 'Allow'},
+                { value: 'redirect', label: 'Redirect'},
+                { value: 'deny', label: 'Deny'}
               ]}/>
           </div>
 
           <div className="form-group">
-            <SelectWrapper
+            <Select
               className="input-select"
-              onChange={this.handleInclusionChange()}
+              onSelect={this.handleInclusionChange()}
               value={this.state.inclusion}
               options={[
-                ['in', 'Users from'],
-                ['not_in', 'Users NOT from']
+                { value: 'in', label: 'Users from' },
+                { value: 'not_in', label: 'Users NOT from' }
               ]}/>
           </div>
 
@@ -165,15 +178,12 @@ class ContentTargeting extends React.Component {
               <p>and present</p>
 
               <div className="form-group">
-                <SelectWrapper
+                <Select
                   className="input-select"
-                  onChange={() => null}
+                  onSelect={this.handleStatusCodeChange()}
+                  numericValues={true}
                   value={this.state.status_code}
-                  options={[
-                    [401, '401'],
-                    [403, '403'],
-                    [404, '404']
-                  ]}/>
+                  options={statusCodeOptions}/>
               </div>
             </div>
           }
