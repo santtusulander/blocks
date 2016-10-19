@@ -96,7 +96,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           newSets
         )
       )
-      debugger;
       this.props.activateSet(newPath.concat([newSets.size - 1]))
     }
   }
@@ -202,7 +201,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
         !flattenedPolicy.matches[0].field ||
         !flattenedPolicy.sets.length ||
-        !flattenedPolicy.sets[0].setkey
+        flattenedPolicy.sets[0].setkey === '' ||
+        flattenedPolicy.sets[0].setkey == null
     }
 
     return (
