@@ -593,6 +593,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.month_to_date': 'Month to Date',
   'portal.constants.date-ranges.last_28': 'Last 28 Days',
   'portal.constants.date-ranges.last_month': 'Last Month',
+  'portal.constants.date-ranges.last_week': 'Last Week',
   'portal.constants.date-ranges.this_week': 'This Week',
   'portal.constants.date-ranges.today': 'Today',
   'portal.constants.date-ranges.yesterday': 'Yesterday',
