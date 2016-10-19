@@ -2,12 +2,13 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
-import {parsePolicy} from '../../util/policy-config'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { parsePolicy } from '../../util/policy-config'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -66,6 +67,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{sets.map(set => set.setkey).join(', ')}</td>
           <td className="nowrap-column">
             <ActionButtons
+              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
               onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
               onDelete={this.showConfirmation(`${type}_policy`, i)} />
             {this.state[`${type}_policy`] !== false &&
@@ -139,4 +141,4 @@ ConfigurationPolicyRules.defaultProps = {
   responsePolicies: Immutable.List()
 }
 
-module.exports = injectIntl(ConfigurationPolicyRules)
+export default injectIntl(ConfigurationPolicyRules)
