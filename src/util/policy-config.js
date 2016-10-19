@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import _ from 'underscore'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -6,6 +7,10 @@ export const matchFilterChildPaths = {
   'does_not_exist': ['default'],
   'does_not_contain': ['cases', 1, 1]
 }
+
+export const ALLOW_RESPONSE_CODES = [200]
+export const DENY_RESPONSE_CODES = [401,404,500]
+export const REDIRECT_RESPONSE_CODES = [301,302]
 
 export const WILDCARD_REGEXP = '.*';
 
@@ -142,4 +147,20 @@ export function parsePolicy(policy, path) {
       sets: []
     }
   }
+}
+
+/**
+ * Parse countries that have response code specified in responseCodes
+ * @param scriptLua, responseCodes
+ * @returns {*|Array}
+ */
+export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
+  const countries = scriptLua.target.geo[0].country
+
+  return _.flatten(countries.filter( c => {
+    return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
+  }).map( c => {
+    const cArray = c.in || c.not_in
+    return (cArray)
+  }))
 }

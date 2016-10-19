@@ -5,7 +5,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
-import {parsePolicy} from '../../util/policy-config'
+import {parsePolicy, matchIsContentTargeting,parseCountriesByResponseCodes, ALLOW_RESPONSE_CODES, DENY_RESPONSE_CODES, REDIRECT_RESPONSE_CODES} from '../../util/policy-config'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -58,12 +58,32 @@ class ConfigurationPolicyRules extends React.Component {
       if(!policy.has('match')) {
         return null
       }
+
       const {matches, sets} = parsePolicy(policy, [])
+
+      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
+      let matchLabel = ''
+      let actionsLabel = ''
+      if ( matchIsContentTargeting(policy.get('match') )) {
+        matchLabel = 'Content Targeting'
+        actionsLabel = ''
+
+        const allowCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), ALLOW_RESPONSE_CODES)
+        const denyCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), DENY_RESPONSE_CODES)
+        const redirectCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), REDIRECT_RESPONSE_CODES)
+
+        if ( allowCountries ) actionsLabel += 'ALLOW: ' + allowCountries.join(', ')
+        if ( denyCountries ) actionsLabel += ' DENY: ' + denyCountries.join(', ')
+        if ( redirectCountries ) actionsLabel += ' REDIRECT: ' + redirectCountries.join(', ')
+      } else {
+        matchLabel = matches.map(match => match.field).join(', ')
+        actionsLabel = sets.map(set => set.setkey).join(', ')
+      }
       return (
         <tr key={i}>
           <td>{policy.get('rule_name')}</td>
-          <td>{matches.map(match => match.field).join(', ')}</td>
-          <td>{sets.map(set => set.setkey).join(', ')}</td>
+          <td>{matchLabel}</td>
+          <td>{actionsLabel}</td>
           <td className="nowrap-column">
             <ActionButtons
               onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
@@ -92,6 +112,7 @@ class ConfigurationPolicyRules extends React.Component {
         </tr>
       )
     }
+
     const rows = [
       ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
