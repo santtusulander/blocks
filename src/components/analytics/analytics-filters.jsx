@@ -135,6 +135,9 @@ const AnalyticsFilters = (props) => {
           <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
           <DateRangeSelect
             changeDateRange={(startDate, endDate, activeDateRange) => {
+
+              console.log('activeDateRange', activeDateRange)
+
               props.onFilterChange(
                 'dateRange', {startDate: startDate, endDate: endDate}
               )
