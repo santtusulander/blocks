@@ -1,2 +1,44 @@
 // Side Panels
 // ===========
+$side-panel-width: rem(636px);
+$side-panel-horizontal-padding: rem(42px);
+$side-panel-header-top-padding: rem(30px);
+$side-panel-body-top-margin: rem(36px);
+$side-panel-body-bottom-margin: rem(54px);
+$side-panel-body-max-height: rem(390px);
+$side-panel-footer-vertical-padding: rem(24px);
+$dt-side-panel-bg-color: $medium-blue;
+$lt-side-panel-bg-color: $white;
+
+.side-panel.modal-dialog {
+  float: right;
+  width: $side-panel-width;
+  margin: 0;
+
+  .modal-header {
+    padding: $side-panel-header-top-padding $side-panel-horizontal-padding 0;
+
+    .dark-theme & {
+      color: $white;
+    }
+  }
+
+  .modal-body {
+    max-height: $side-panel-body-max-height;
+    padding: 0 $side-panel-horizontal-padding;
+    margin: $side-panel-body-top-margin 0 $side-panel-body-bottom-margin;
+    overflow: auto;
+  }
+
+  .modal-footer {
+    padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
+
+    .dark-theme & {
+      background: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background: rgba($black, 0.04);
+    }
+  }
+}
