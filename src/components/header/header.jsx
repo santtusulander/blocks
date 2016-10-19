@@ -264,6 +264,7 @@ class Header extends React.Component {
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
                 user={user}
+                params={this.props.params}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>
