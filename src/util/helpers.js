@@ -3,12 +3,11 @@ import numeral from 'numeral'
 import { fromJS } from 'immutable'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
-import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
-import { Address4, Address6 } from 'ip-address'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { ROLES_MAPPING } from '../constants/account-management-options'
+import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 
 const BYTE_BASE = 1000
 
@@ -78,16 +77,18 @@ export function filterMetricsByAccounts(metrics, accounts) {
   });
 }
 
+/**
+ * Test if string matches regExp-pattern
+ * @param string
+ * @param pattern
+ * @returns {boolean}
+ */
 export function matchesRegexp(string, pattern) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = new RegExp(pattern, 'i');
+  var testPattern = new RegExp(pattern);
   return testPattern.test(string);
-}
-
-export function isSafari() {
-  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
 }
 
 /**
@@ -143,6 +144,8 @@ export function buildAnalyticsOpts(params, filters, location ){
   const tabKey = getTabName(location.pathname)
   const visibleFilters = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey ).get('filters')
 
+  debugger
+
   const {startDate, endDate} = visibleFilters.includes('date-range') ? getDateRange(filters) : undefined
 
   const  serviceProviders =  visibleFilters.includes('service-provider') ? filters.get('serviceProviders').size === 0 ? undefined : filters.get('serviceProviders').toJS().join(',') : undefined
@@ -181,8 +184,8 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
-  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
-  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   if (accountType === PROVIDER_TYPES.CONTENT_PROVIDER) {
     return {
@@ -360,18 +363,4 @@ export function userHasRole(user, roleToFind) {
   }
 
   return false
-}
-
-export function isValidIPv4Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address4(address).isValid()
-}
-
-export function isValidIPv6Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address6(address).isValid()
 }

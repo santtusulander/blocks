@@ -1,0 +1,132 @@
+// Modals
+// ======
+
+$modal-width: rem(654px);
+$modal-vertical-padding: rem(48px);
+$modal-horizontal-padding: rem(48px);
+$modal-body-top-margin: rem(36px);
+$modal-body-bottom-margin: rem(54px);
+$modal-body-max-height: rem(390px);
+$modal-footer-vertical-padding: rem(24px);
+$dt-modal-bg-color: $medium-blue;
+$lt-modal-bg-color: $white;
+
+.modal-dialog {
+  width: $modal-width;
+
+  .modal-content {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    .dark-theme & {
+      background-color: $dt-modal-bg-color;
+    }
+
+    .light-theme & {
+      background-color: $lt-modal-bg-color;
+    }
+  }
+
+  .modal-header,
+  .modal-footer {
+    border: 0;
+  }
+}
+
+.modal-window {
+  .modal-header {
+    padding: $modal-vertical-padding $modal-horizontal-padding 0;
+
+    .dark-theme & {
+      color: $white;
+    }
+  }
+
+  .modal-body {
+    max-height: $modal-body-max-height;
+    padding: 0 $modal-horizontal-padding;
+    margin: $modal-body-top-margin 0 $modal-body-bottom-margin;
+    overflow: auto;
+
+    > p,
+    > span,
+    > .form-group {
+      display: block;
+      padding-bottom: 0;
+      margin-bottom: 36px;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+
+    > .panel-group {
+      margin-bottom: 18px;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+
+    .form-control {
+      .light-theme & {
+        box-shadow: inset 0 0 0 1px rgba($black, 0.2);
+
+        &:focus,
+        &:active {
+          box-shadow: inset 0 0 0 2px $pale-blue;
+        }
+      }
+    }
+
+    label {
+      padding-bottom: 6px;
+
+      .dark-theme & {
+        color: $white;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: $modal-footer-vertical-padding $modal-horizontal-padding;
+
+    .dark-theme & {
+      background: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background: rgba($black, 0.04);
+    }
+  }
+}
+
+.close-modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.modal-backdrop {
+  .dark-theme & {
+    background-color: $black;
+
+    &.in {
+      opacity: 0.3;
+    }
+  }
+
+  .light-theme & {
+    background-color: $black;
+
+    &.in {
+      opacity: 0.1;
+    }
+  }
+}

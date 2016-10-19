@@ -1,9 +1,13 @@
+import { fromJS } from 'immutable'
+
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
   'contains': ['cases', 0, 1],
   'does_not_exist': ['default'],
   'does_not_contain': ['cases', 1, 1]
 }
+
+export const WILDCARD_REGEXP = '.*';
 
 export function getMatchFilterType(match) {
   if(!match.get('field_detail')) {
@@ -16,6 +20,44 @@ export function getMatchFilterType(match) {
     return 'does_not_contain'
   }
   return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
+}
+
+export function policyContainsMatchField(policy, field, count) {
+  const matches = fromJS(policy.matches)
+  return matches.filter(match => match.get('field') === field).count() === count
+}
+
+export function policyIsCompatibleWithMatch(policy, match) {
+  switch (match) {
+    case 'content_targeting':
+      return policy.matches.length === 1
+              && policy.sets.length === 0
+  }
+  return true
+}
+
+export function policyIsCompatibleWithAction(policy, action) {
+  switch (action) {
+    case 'tokenauth':
+      return policy.matches.length === 1
+              && policy.sets.length === 1
+              && policyContainsMatchField(policy, 'request_url', 1)
+    case 'content_targeting':
+      return policy.matches.length === 1
+              && policy.sets.length >= 1
+              && policy.sets[0].path.indexOf('script_lua') !== -1
+  }
+  return true
+}
+
+export function policyContainsSetComponent(policy, setComponent) {
+  const sets = fromJS(policy.sets)
+  return sets.filter(set => set.get('setkey') === setComponent).count() > 0
+}
+
+export function matchIsContentTargeting(match) {
+  return match.get('field') === 'request_host'
+          && match.getIn(["cases", 0, 1, 0, "script_lua"])
 }
 
 export function parsePolicy(policy, path) {
@@ -58,9 +100,40 @@ export function parsePolicy(policy, path) {
       sets: policy.get('set').keySeq().toArray().map((key) => {
         return {
           setkey: key,
+          name: key,
           path: path.concat(['set', key])
         }
       })
+    }
+  }
+  // if this is a content targeting "action"
+  else if (policy && policy.has('script_lua')) {
+    // we will search for actions in the following paths
+    // this is forward-thinking for when we eventually add city/state support
+    const searchPaths = [
+      // ['script_lua', 'target', 'geo', 0, 'city'],
+      // ['script_lua', 'target', 'geo', 0, 'state'],
+      ['script_lua', 'target', 'geo', 0, 'country']
+    ]
+
+    let sets = []
+
+    for (let searchPath of searchPaths) {
+      if (policy.getIn(searchPath)) {
+        const actions = policy.getIn(searchPath).map((action, index) => {
+          return {
+            setkey: index,
+            name: 'Content Targeting Action', // TODO: localize this
+            path: path.concat(searchPath).concat([index])
+          }
+        }).toJS()
+        sets = sets.concat(actions)
+      }
+    }
+
+    return {
+      matches: [],
+      sets
     }
   }
   else {

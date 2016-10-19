@@ -36,9 +36,9 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
   const
     isChecked = option =>
       option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
-    fiveHundreds = [ '500', '501', '502', '503' ],
-    fourHundreds = [ '400', '401', '402', '403', '404', '405', '411', '412', '413' ],
-    twoHundreds = [ '200', '201', '202', '204' ],
+    fiveHundreds = [500, 501, 502, 503],
+    fourHundreds = [400, 401, 402, 403, 404, 405, 411, 412, 413],
+    twoHundreds = [200, 201, 202, 204],
     twoHundredsChecked = isChecked(twoHundreds),
     fourHundredsChecked = isChecked(fourHundreds),
     fiveHundredsChecked = isChecked(fiveHundreds),
@@ -152,7 +152,7 @@ const AnalyticsFilters = (props) => {
               DateRanges.YESTERDAY,
               DateRanges.CUSTOM_TIMERANGE
             ]}/>
-          {props.showFilters.includes('comparison') &&
+          {props.showFilters.includes('includeComparison') &&
             <FilterIncludeComparison
               includeComparison={props.filters.get('includeComparison')}
               toggleComparison={val => {
@@ -164,7 +164,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {(props.showFilters.includes('service-provider') && spFilterOptions.length > 0) &&
+      {(props.showFilters.includes('serviceProviders') && spFilterOptions.length > 0) &&
         <FilterServiceProvider
           visibleFields={spFilterOptions}
           changeServiceProvider={val => {
@@ -180,7 +180,7 @@ const AnalyticsFilters = (props) => {
           />
       }
 
-      {(props.showFilters.includes('content-provider') && cpFilterOptions.length > 0) &&
+      {(props.showFilters.includes('contentProviders') && cpFilterOptions.length > 0) &&
         <FilterContentProvider
           visibleFields={cpFilterOptions}
           changeContentProvider={val => {
@@ -201,7 +201,7 @@ const AnalyticsFilters = (props) => {
           />
       }
 
-      {props.showFilters.includes('on-off-net') &&
+      {props.showFilters.includes('onOffNet') &&
         <div className='action'>
           <FilterOnOffNet
             onOffNetValues={props.filters.get('onOffNet')}
@@ -215,7 +215,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('service-type') &&
+      {props.showFilters.includes('serviceTypes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.serviceTypes.title"/></h5>
 
@@ -231,7 +231,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('record-type') &&
+      {props.showFilters.includes('recordType') &&
         <div className='action'>
           <FilterRecordType
             recordType={props.filters.get('recordType')}
@@ -244,7 +244,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('error-code') &&
+      {props.showFilters.includes('errorCodes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes
@@ -255,7 +255,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('status-code') &&
+      {props.showFilters.includes('statusCodes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes

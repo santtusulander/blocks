@@ -65,12 +65,12 @@ describe('Header', () => {
       <Header theme="dark" fetching={false} location={fakeLocation}
         params={fakeParams} router={fakeRouterMaker()} />
     )
-    expect(header.instance().state.animatingGradient).toBe(false)
+    expect(header.state('animatingGradient')).toBe(false)
     header = shallow(
       <Header theme="dark" fetching={true} location={fakeLocation}
         params={fakeParams} router={fakeRouterMaker()} />
     )
-    expect(header.instance().state.animatingGradient).toBe(true)
+    expect(header.state('animatingGradient')).toBe(true)
   });
   // TODO: Figure out how to do these with both refs and react-intl
   // it('should show gradient animation when fetching', () => {

@@ -9,7 +9,10 @@ import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
-  parsePolicy
+  parsePolicy,
+  policyContainsSetComponent,
+  matchIsContentTargeting,
+  policyIsCompatibleWithAction
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -25,6 +28,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.addMatch = this.addMatch.bind(this)
     this.addAction = this.addAction.bind(this)
+    this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
@@ -59,6 +63,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   addAction(deepestMatch) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.addContentTargetingAction(deepestMatch)
+    }
     return e => {
       e.preventDefault()
       const childPath = matchFilterChildPaths[deepestMatch.filterType]
@@ -72,6 +80,23 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         )
       )
       this.props.activateSet(newPath.concat([newSets.size - 1, 'set', '']))
+    }
+  }
+  addContentTargetingAction(deepestMatch) {
+    return e => {
+      e.preventDefault()
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const contentTargetingPath = [0, 'script_lua', 'target', 'geo', 0, 'country']
+      const newPath = deepestMatch.path.concat(childPath).concat(contentTargetingPath)
+      const currentSets = this.props.config.getIn(newPath)
+      const newSets = currentSets.push(Immutable.fromJS({"in": [], "response": { "code": 200 }}))
+      this.props.changeValue([],
+        this.props.config.setIn(
+          newPath,
+          newSets
+        )
+      )
+      this.props.activateSet(newPath.concat([newSets.size - 1]))
     }
   }
   deleteMatch(path) {
@@ -145,11 +170,39 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
+    const disableAddMatchButton = () => {
+      // token auth
+      if (policyContainsSetComponent(flattenedPolicy, 'tokenauth')) {
+        return true
+
+      // content targeting
+      } else {
+        const config = this.props.config
+        const rootMatchInfo = flattenedPolicy.matches[0]
+
+        if (rootMatchInfo) {
+          const rootMatch = config.getIn(rootMatchInfo.path)
+
+          if (rootMatch) {
+            return matchIsContentTargeting(rootMatch)
+          }
+        }
+      }
+
+      return false
+    }
+
+    const disableAddActionButton = () => {
+      return !flattenedPolicy.matches[0].field ||
+              policyContainsSetComponent(flattenedPolicy, 'tokenauth')
+    }
+
     const disableButton = () => {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
         !flattenedPolicy.matches[0].field ||
         !flattenedPolicy.sets.length ||
-        !flattenedPolicy.sets[0].setkey
+        flattenedPolicy.sets[0].setkey === '' ||
+        flattenedPolicy.sets[0].setkey == null
     }
 
     return (
@@ -185,7 +238,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col sm={4} className="text-right">
               <Button bsStyle="primary" className="btn-icon btn-add-new"
-                onClick={this.addMatch(flattenedPolicy.matches[0])}>
+                onClick={this.addMatch(flattenedPolicy.matches[0])}
+                disabled={disableAddMatchButton()}>
                 <IconAdd />
               </Button>
             </Col>
@@ -214,17 +268,28 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               else if(match.filterType === 'does_not_contain') {
                 filterText = `Does not contain ${match.containsVal}`
               }
+
+              let matchName = (<div className="condition-name">
+                {match.field}&nbsp;:&nbsp;
+                <TruncatedTitle
+                  content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
+              </div>)
+
+              const matchCondition = this.props.config.getIn(match.path)
+              const isContentTargeting = matchCondition && matchIsContentTargeting(matchCondition)
+
+              if (isContentTargeting) {
+                matchName = <div className="condition-name">Content Targeting</div>
+                filterText = null
+              }
+
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateMatch(match.path)}>
+                  onClick={isContentTargeting ? null : this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <div className="condition-name">
-                        {match.field}&nbsp;:&nbsp;
-                        <TruncatedTitle
-                          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
-                      </div>
+                      matchName
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
@@ -253,7 +318,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button bsStyle="primary"
                       className="btn-icon btn-add-new"
                       onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={!flattenedPolicy.matches[0].field}
+                      disabled={disableAddActionButton()}
               >
                 <IconAdd />
               </Button>
@@ -271,7 +336,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateSet(set.path)}>
                   <Col xs={8}>
-                    <p>{i + 1} {set.setkey}</p>
+                    <p>{i + 1} {set.name}</p>
                   </Col>
                   <Col xs={4} className="text-right">
                     <Button

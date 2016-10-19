@@ -11,7 +11,7 @@ describe('Page Header layout', () => {
   beforeEach(() => {
     subject = (distCols, secPageHeader, pageSubTitle) => {
       let props = {
-        children: [<div id='child'/>],
+        children: [<div key='child' id='child'/>],
         className: 'aa',
         distributedColumns: distCols || false,
         pageHeaderDetails: ['a', 'b', 'c'],
