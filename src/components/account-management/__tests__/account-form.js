@@ -41,20 +41,6 @@ describe('AccountForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should handle onCancel click', () => {
-    subject()
-      .find('#cancel-btn')
-      .simulate('click')
-    expect(onCancel.mock.calls.length).toBe(1)
-  })
-
-  it('should handle onSave click', () => {
-    subject()
-      .find('#save-btn')
-      .simulate('click')
-    expect(onSave.mock.calls.length).toBe(1)
-  })
-
   it('should render an error message', () => {
     touched = true
     expect(
