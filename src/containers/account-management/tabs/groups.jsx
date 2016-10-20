@@ -240,7 +240,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     const groupSize = sortedGroups.size
-    const groupText = sortedGroups.size === 1 ? <FormattedMessage id="portal.account.groups.single.text"/> : <FormattedMessage id="portal.account.groups.multiple.text"/>
+    const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
     const finalGroupText = groupSize + groupText + hiddenGroupText
 
