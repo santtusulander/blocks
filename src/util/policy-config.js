@@ -1,3 +1,5 @@
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
 
 export const matchFilterChildPaths = {
@@ -120,13 +122,13 @@ export function parsePolicy(policy, path) {
 
     for (let searchPath of searchPaths) {
       if (policy.getIn(searchPath)) {
-        const actions = policy.getIn(searchPath).map((action, index) => {
+        const actions = policy.getIn(searchPath).toJS().map((action, index) => {
           return {
             setkey: index,
-            name: 'Content Targeting Action', // TODO: localize this
+            name: setContentTargetingActionName(action), // TODO: localize this
             path: path.concat(searchPath).concat([index])
           }
-        }).toJS()
+        })
         sets = sets.concat(actions)
       }
     }
@@ -155,4 +157,32 @@ export const getVaryHeaderRuleId = ( config ) => {
   return path.findIndex( rule => {
     return 'Vary' === rule.getIn(['set', 'header','header'])
   })
+}
+
+/*
+ * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
+ * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
+ */
+const setContentTargetingActionName = action => {
+  const { response: { headers, code } } = action
+  const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
+  const fromOrNotFromPart = action.not_in ?
+    'portal.policy.edit.policies.contentTargeting.notFrom.text' :
+    'portal.policy.edit.policies.contentTargeting.from.text'
+  const redirectTo = headers && headers.Location
+  const redirLocationPart = redirectTo ? (': ' + redirectTo) : ''
+  let actionTypePart = null
+  if (code < 300) {
+    actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
+  } else if(code < 400) {
+    actionTypePart = 'portal.policy.edit.allowBlock.redirect.text'
+  } else {
+    actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
+  }
+  return (
+    <span>
+      <FormattedMessage id={actionTypePart}/> <FormattedMessage id={fromOrNotFromPart}/> {countries}
+      {redirLocationPart}
+    </span>
+  )
 }
