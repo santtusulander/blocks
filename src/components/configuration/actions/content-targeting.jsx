@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import Typeahead from 'react-bootstrap-typeahead'
 
 import SelectWrapper from '../../../components/select-wrapper'
@@ -216,4 +216,4 @@ ContentTargeting.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-export default injectIntl(ContentTargeting)
+export default ContentTargeting
