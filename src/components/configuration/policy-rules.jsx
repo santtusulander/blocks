@@ -61,7 +61,7 @@ class ConfigurationPolicyRules extends React.Component {
       }
       const {matches, sets} = parsePolicy(policy, [])
       return (
-        <tr key={i}>
+        <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
           <td>{matches.map(match => match.field).join(', ')}</td>
           <td>{sets.map(set => set.setkey).join(', ')}</td>

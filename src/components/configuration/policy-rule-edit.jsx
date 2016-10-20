@@ -66,7 +66,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
   addAction(deepestMatch) {
     const flattenedPolicy = parsePolicy(this.props.rule, [])
-    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')
+          || this.props.rule.getIn(['match', 'cases', 0, 1, 0, 'script_lua']))
+    {
       return this.addContentTargetingAction(deepestMatch)
     }
     return e => {
