@@ -240,9 +240,9 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     const groupSize = sortedGroups.size
-    const groupTextId = sortedGroups.size === 1 ? "portal.account.groups.single.text" : "portal.account.groups.multiple.text"
+    const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
-    const finalGroupText = groupSize + ` ${this.props.intl.formatMessage({ id: groupTextId })}` + hiddenGroupText
+    const finalGroupText = groupSize + groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
        <SectionHeader sectionHeaderTitle={finalGroupText}>

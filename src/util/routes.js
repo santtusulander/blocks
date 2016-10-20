@@ -204,3 +204,15 @@ export function getNetworkUrlFromParams(params) {
     return getRoute('networkBrand', { brand: 'udn' })
   }
 }
+
+export function getUserUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('userAccount', params)
+  } else if (brand) {
+    return getRoute('userBrand', params)
+  } else {
+    return getRoute('userBrand', { brand: 'udn' })
+  }
+}
