@@ -47,7 +47,6 @@ const validate = ({ name }) => {
 class GroupForm extends React.Component {
   constructor(props) {
     super(props)
-
     this.save = this.save.bind(this)
     this.state = {
       usersToAdd: List(),
@@ -60,7 +59,6 @@ class GroupForm extends React.Component {
     if(!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
-      formValues.charge_model === null && delete formValues.charge_model
       if (groupId) {
         onSave(
           groupId,
@@ -111,7 +109,7 @@ class GroupForm extends React.Component {
       onCancel,
       groupId,
       account,
-      intl: { formatMessage } } = this.props
+      intl } = this.props
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
      */
@@ -175,7 +173,10 @@ class GroupForm extends React.Component {
                   <SelectWrapper
                     {...charge_model}
                     numericValues={true}
-                    options={[[1, '95/5'], [2, 'Bytes Delivered']]}
+                    options={[
+                      [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
+                      [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
+                    ]}
                     value={charge_model.value}
                     label={intl.formatMessage({id: 'portal.account.groupForm.charge_model.label'})}/>
                   {charge_model.touched && charge_model.error &&
@@ -257,6 +258,9 @@ GroupForm.defaultProps = {
   users: List()
 }
 
+/**
+ * If not editing a group, pass empty initial values
+ */
 const determineInitialValues = (groupId, activeGroup) => {
   let initialValues = {}
   if (groupId) {
