@@ -45,7 +45,8 @@ export class User extends React.Component {
           this.props.uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            okButton: this.props.uiActions.hideInfoDialog
+            okButton: true,
+            cancel: this.props.uiActions.hideInfoDialog
           })
         }
         this.setState({

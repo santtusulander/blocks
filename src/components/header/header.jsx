@@ -174,6 +174,8 @@ class Header extends React.Component {
     const { activeAccount, router, user, params: { account, brand } } = this.props
     const activeAccountName = activeAccount && this.props.params.account ?
       activeAccount.get('name') : 'UDN Admin'
+    const activeAccountNameNoPlaceholder = activeAccount && this.props.params.account ?
+      activeAccount.get('name') : ''
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
@@ -235,7 +237,7 @@ class Header extends React.Component {
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <div className="active-account-name">{activeAccountName}</div>
+                <div className="active-account-name">{activeAccountNameNoPlaceholder}</div>
               </IsAllowed>
             </li>
             {this.renderBreadcrumb()}
@@ -264,6 +266,7 @@ class Header extends React.Component {
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
                 user={user}
+                params={this.props.params}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>
