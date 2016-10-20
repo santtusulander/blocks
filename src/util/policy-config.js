@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -120,13 +121,13 @@ export function parsePolicy(policy, path) {
 
     for (let searchPath of searchPaths) {
       if (policy.getIn(searchPath)) {
-        const actions = policy.getIn(searchPath).map((action, index) => {
+        const actions = policy.getIn(searchPath).toJS().map((action, index) => {
           return {
             setkey: index,
-            name: 'Content Targeting Action', // TODO: localize this
+            name: setContentTargetingActionName(action), // TODO: localize this
             path: path.concat(searchPath).concat([index])
           }
-        }).toJS()
+        })
         sets = sets.concat(actions)
       }
     }
@@ -142,4 +143,20 @@ export function parsePolicy(policy, path) {
       sets: []
     }
   }
+}
+
+const setContentTargetingActionName = action => {
+  const { response: { headers, code } } = action
+  const fromOrNotFromPart = action.not_in ? `users NOT from ${action.not_in.join(', ')}` : `users from ${action.in.join(', ')}`
+  const redirectTo = headers && headers.Location
+  const redirLocationPart = redirectTo ? ' to ' + redirectTo : ''
+  let actionTypePart = null
+  if(code < 300) {
+    actionTypePart = 'Allow '
+  } else if(code < 400) {
+    actionTypePart = 'Redirect '
+  } else {
+    actionTypePart = 'Deny '
+  }
+  return `${actionTypePart} ${fromOrNotFromPart + redirLocationPart}`
 }
