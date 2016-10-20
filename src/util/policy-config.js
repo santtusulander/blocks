@@ -146,6 +146,11 @@ export function parsePolicy(policy, path) {
   }
 }
 
+/**
+ * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
+ * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
+ */
+
 const setContentTargetingActionName = action => {
   const { response: { headers, code } } = action
   const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
