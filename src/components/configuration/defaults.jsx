@@ -14,6 +14,7 @@ import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IsAllowed from '../is-allowed'
 
+import {getVaryHeaderRuleId} from '../../util/policy-config'
 import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 
@@ -39,6 +40,10 @@ class ConfigurationDefaults extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
     this.updateCacheKeyQueryString = this.updateCacheKeyQueryString.bind(this)
+
+    this.toggleVaryHeaderRule = this.toggleVaryHeaderRule.bind(this)
+    this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
+    this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
   }
   addRule(e) {
     e.preventDefault()
@@ -85,6 +90,48 @@ class ConfigurationDefaults extends React.Component {
     const index = getNameIndex(this.props.config)
     this.props.changeValue(policyPath.push(index,'set','cache_name'), set)
   }
+
+  /**
+   * Adds Remove Vary Header Rule to response_policy
+   */
+  addVaryHeaderRule (){
+    const id = getVaryHeaderRuleId( this.props.config )
+    if ( id === -1 ) {
+      const varyHeaderRule = Immutable.fromJS({
+        rule_name: "Remove Vary header from response",
+        set: {
+          header: {
+            action: "set",
+            header: "Vary",
+            value: ""
+          }
+        }
+      })
+
+      const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
+      const newRules = rules.push( varyHeaderRule )
+      this.props.changeValue(['response_policy', 'policy_rules'], newRules)
+    }
+  }
+  /**
+   * Removes Remove Vary Header Rule from response_policy
+   */
+  removeVaryHeaderRule( ruleId ){
+    const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
+    this.props.changeValue(['response_policy', 'policy_rules'], rules.delete(ruleId) )
+  }
+
+  /**
+   * Toggles Remove Vary Header - rule
+   */
+  toggleVaryHeaderRule( varyHeaderRuleId ){
+    if (varyHeaderRuleId === -1) {
+      this.addVaryHeaderRule()
+    } else {
+      this.removeVaryHeaderRule( varyHeaderRuleId )
+    }
+  }
+
   render() {
     const { config, intl, readOnly } = this.props;
     if(!config || !config.size) {
@@ -123,6 +170,9 @@ class ConfigurationDefaults extends React.Component {
       config,
       activeEditFormActions
     )
+
+    const varyHeaderRuleId = getVaryHeaderRuleId( config )
+
     return (
       <div className="configuration-defaults">
 
@@ -130,6 +180,18 @@ class ConfigurationDefaults extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
         <SectionContainer>
+          {/* Remove Vary Header */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.removeVaryHeader.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle
+                readonly={readOnly}
+                value={ varyHeaderRuleId !== -1}
+                changeValue={ () => this.toggleVaryHeaderRule(varyHeaderRuleId) }/>
+            </Col>
+          </Row>
           {/* Ignore case from origin */}
           <Row className="form-group">
             <Col lg={4} xs={6} className="toggle-label">
