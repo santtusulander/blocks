@@ -72,10 +72,11 @@ class CacheKeyQueryStringForm extends React.Component {
     this.props.updateSet(newSet)
   }
   render() {
-    const {intl: {formatMessage}, horizontal} = this.props
+    const {intl: {formatMessage}, horizontal, disabled} = this.props
     const hasContainingRule =
       this.state.activeFilter === 'include_some_parameters'
     const keySelect = (<Select className="input-select"
+      disabled={disabled}
       onSelect={this.handleSelectChange}
       value={this.state.activeFilter}
       options={[
@@ -139,10 +140,11 @@ class CacheKeyQueryStringForm extends React.Component {
 
 CacheKeyQueryStringForm.displayName = 'CacheKeyQueryStringForm'
 CacheKeyQueryStringForm.propTypes = {
+  disabled: React.PropTypes.bool,
   horizontal: React.PropTypes.bool,
   intl: React.PropTypes.object,
   set: React.PropTypes.instanceOf(Immutable.Map),
   updateSet: React.PropTypes.func
 }
 
-module.exports = injectIntl(CacheKeyQueryStringForm)
+export default injectIntl(CacheKeyQueryStringForm)

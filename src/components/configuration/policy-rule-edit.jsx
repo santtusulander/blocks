@@ -31,6 +31,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
+    this.deleteContentTargetingSet = this.deleteContentTargetingSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
     this.moveContentTargetingSet = this.moveContentTargetingSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
@@ -113,12 +114,27 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   deleteSet(path) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.deleteContentTargetingSet(path)
+    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
       const setContainerPath = path.slice(0, -3)
       const filtered = this.props.config.getIn(setContainerPath)
         .filterNot((val, i) => i === path.get(path.size-3))
+      this.props.changeValue(setContainerPath, filtered)
+      this.props.activateSet(null)
+    }
+  }
+  deleteContentTargetingSet(path) {
+    return e => {
+      e.preventDefault()
+      e.stopPropagation()
+      const setIndex = path.last()
+      const setContainerPath = path.slice(0, -1)
+      const filtered = this.props.config.getIn(setContainerPath).delete(setIndex)
       this.props.changeValue(setContainerPath, filtered)
       this.props.activateSet(null)
     }
