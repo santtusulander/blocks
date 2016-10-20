@@ -176,7 +176,20 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
   }))
 }
 
-/*
+/**
+ *
+ * @param config
+ * @returns {number|*}
+ */
+export const getVaryHeaderRuleId = ( config ) => {
+  const path = config.getIn(['response_policy', 'policy_rules'])
+
+  return path.findIndex( rule => {
+    return 'Vary' === rule.getIn(['set', 'header','header'])
+  })
+}
+
+/**
  * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
  * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
  */
