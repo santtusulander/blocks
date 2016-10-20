@@ -23,6 +23,8 @@
   "portal.policy.edit.policies.matchContentTargeting.text": "Define conditions.",
   "portal.policy.edit.policies.matchContentTargeting.include.text": "Include Areas",
   "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
+  "portal.policy.edit.policies.contentTargeting.from.text": "Users from",
+  "portal.policy.edit.policies.contentTargeting.notFrom.text": "Users NOT from",
   "portal.policy.edit.policies.cancel.text": "Cancel",
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
 

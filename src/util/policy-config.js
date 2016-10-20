@@ -1,5 +1,6 @@
-import { fromJS } from 'immutable'
+import React from 'react'
 import { FormattedMessage } from 'react-intl'
+import { fromJS } from 'immutable'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -147,16 +148,24 @@ export function parsePolicy(policy, path) {
 
 const setContentTargetingActionName = action => {
   const { response: { headers, code } } = action
-  const fromOrNotFromPart = action.not_in ? `users NOT from ${action.not_in.join(', ')}` : `users from ${action.in.join(', ')}`
+  const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
+  const fromOrNotFromPart = action.not_in ?
+    'portal.policy.edit.policies.contentTargeting.notFrom.text' :
+    'portal.policy.edit.policies.contentTargeting.from.text'
   const redirectTo = headers && headers.Location
-  const redirLocationPart = redirectTo ? ' to ' + redirectTo : ''
+  const redirLocationPart = redirectTo ? (': ' + redirectTo) : ''
   let actionTypePart = null
-  if(code < 300) {
-    actionTypePart = 'Allow '
+  if (code < 300) {
+    actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
   } else if(code < 400) {
-    actionTypePart = 'Redirect '
+    actionTypePart = 'portal.policy.edit.allowBlock.redirect.text'
   } else {
-    actionTypePart = 'Deny '
+    actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
   }
-  return `${actionTypePart} ${fromOrNotFromPart + redirLocationPart}`
+  return (
+    <span>
+      <FormattedMessage id={actionTypePart}/> <FormattedMessage id={fromOrNotFromPart}/> {countries}
+      {redirLocationPart}
+    </span>
+  )
 }
