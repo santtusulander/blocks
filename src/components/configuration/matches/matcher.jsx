@@ -6,7 +6,8 @@ import Select from '../../select'
 import InputConnector from '../../input-connector'
 import {
   matchFilterChildPaths,
-  getMatchFilterType
+  getMatchFilterType,
+  WILDCARD_REGEXP
 } from '../../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
