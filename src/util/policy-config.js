@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
+import _ from 'underscore'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -8,6 +9,10 @@ export const matchFilterChildPaths = {
   'does_not_exist': ['default'],
   'does_not_contain': ['cases', 1, 1]
 }
+
+export const ALLOW_RESPONSE_CODES = [200]
+export const DENY_RESPONSE_CODES = [401,404,500]
+export const REDIRECT_RESPONSE_CODES = [301,302]
 
 export const WILDCARD_REGEXP = '.*';
 
@@ -125,7 +130,7 @@ export function parsePolicy(policy, path) {
         const actions = policy.getIn(searchPath).toJS().map((action, index) => {
           return {
             setkey: index,
-            name: setContentTargetingActionName(action), // TODO: localize this
+            name: setContentTargetingActionName(action),
             path: path.concat(searchPath).concat([index])
           }
         })
@@ -147,6 +152,31 @@ export function parsePolicy(policy, path) {
 }
 
 /**
+ * Get script_lua block from policy rule
+ * @param policy
+ * @returns {*}
+ */
+export const getScriptLua = ( policy ) => {
+  return policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS()
+}
+
+/**
+ * Parse countries that have response code specified in responseCodes
+ * @param scriptLua, responseCodes
+ * @returns {*|Array}
+ */
+export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
+  const countries = scriptLua.target.geo[0].country
+
+  return _.flatten(countries.filter( c => {
+    return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
+  }).map( c => {
+    const cArray = c.in || c.not_in
+    return (cArray)
+  }))
+}
+
+/**
  *
  * @param config
  * @returns {number|*}
@@ -159,7 +189,7 @@ export const getVaryHeaderRuleId = ( config ) => {
   })
 }
 
-/*
+/**
  * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
  * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
  */
