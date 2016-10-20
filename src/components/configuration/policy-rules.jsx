@@ -5,7 +5,15 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
-import {parsePolicy, matchIsContentTargeting,parseCountriesByResponseCodes, ALLOW_RESPONSE_CODES, DENY_RESPONSE_CODES, REDIRECT_RESPONSE_CODES} from '../../util/policy-config'
+import {
+  getScriptLua,
+  matchIsContentTargeting,
+  parsePolicy,
+  parseCountriesByResponseCodes,
+  ALLOW_RESPONSE_CODES,
+  DENY_RESPONSE_CODES,
+  REDIRECT_RESPONSE_CODES
+} from '../../util/policy-config'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -65,16 +73,22 @@ class ConfigurationPolicyRules extends React.Component {
       let matchLabel = ''
       let actionsLabel = ''
       if ( matchIsContentTargeting(policy.get('match') )) {
-        matchLabel = 'Content Targeting'
+        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
         actionsLabel = ''
 
-        const allowCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), ALLOW_RESPONSE_CODES)
-        const denyCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), DENY_RESPONSE_CODES)
-        const redirectCountries = parseCountriesByResponseCodes( policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS(), REDIRECT_RESPONSE_CODES)
+        const scriptLua = getScriptLua( policy )
 
-        if ( allowCountries ) actionsLabel += 'ALLOW: ' + allowCountries.join(', ')
-        if ( denyCountries ) actionsLabel += ' DENY: ' + denyCountries.join(', ')
-        if ( redirectCountries ) actionsLabel += ' REDIRECT: ' + redirectCountries.join(', ')
+        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
+        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
+        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
+
+        let ctActionLabels = []
+        if ( allowCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+        if ( denyCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+        if ( redirectCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+
+        actionsLabel = ctActionLabels.join(' | ')
+
       } else {
         matchLabel = matches.map(match => match.field).join(', ')
         actionsLabel = sets.map(set => set.setkey).join(', ')

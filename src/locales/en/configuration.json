@@ -26,5 +26,11 @@
   "portal.policy.edit.policies.cancel.text": "Cancel",
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
 
-  "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication"
+  "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
+
+  "portal.configuration.policies.contentTargeting.text": "Content Targeting",
+  "portal.configuration.policies.allow.text": "Allow",
+  "portal.configuration.policies.deny.text": "Deny",
+  "portal.configuration.policies.redirect.text": "Redirect"
+
 }

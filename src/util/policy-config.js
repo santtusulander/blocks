@@ -150,6 +150,15 @@ export function parsePolicy(policy, path) {
 }
 
 /**
+ * Get script_lua block from policy rule
+ * @param policy
+ * @returns {*}
+ */
+export const getScriptLua = ( policy ) => {
+  return policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS()
+}
+
+/**
  * Parse countries that have response code specified in responseCodes
  * @param scriptLua, responseCodes
  * @returns {*|Array}
