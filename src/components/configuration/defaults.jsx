@@ -188,8 +188,8 @@ class ConfigurationDefaults extends React.Component {
             <Col lg={8} xs={6}>
               <Toggle
                 readonly={readOnly}
-                value={ varyHeaderRuleId !== -1}
-                changeValue={ () => this.toggleVaryHeaderRule(varyHeaderRuleId) }/>
+                value={varyHeaderRuleId !== -1}
+                changeValue={() => this.toggleVaryHeaderRule(varyHeaderRuleId)}/>
             </Col>
           </Row>
           {/* Ignore case from origin */}
@@ -326,7 +326,8 @@ ConfigurationDefaults.propTypes = {
   activeSet: React.PropTypes.instanceOf(Immutable.List),
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  intl: React.PropTypes.object
+  intl: React.PropTypes.object,
+  readOnly: React.PropTypes.bool
 }
 ConfigurationDefaults.defaultProps = {
   config: Immutable.Map()
