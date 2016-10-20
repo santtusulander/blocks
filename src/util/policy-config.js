@@ -61,8 +61,8 @@ export function policyContainsSetComponent(policy, setComponent) {
 }
 
 export function matchIsContentTargeting(match) {
-  return match.get('field') === 'request_host'
-          && match.getIn(["cases", 0, 1, 0, "script_lua"])
+  return !!(match.get('field') === 'request_host'
+          && match.getIn(["cases", 0, 1, 0, "script_lua"]))
 }
 
 export function parsePolicy(policy, path) {
