@@ -66,7 +66,7 @@ class Matcher extends React.Component {
         case 'exists':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              ['.*', children]
+              [WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
@@ -80,7 +80,7 @@ class Matcher extends React.Component {
         case 'does_not_exist':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              ['.*', []]
+              [WILDCARD_REGEXP, []]
             ]))
             .set('default', children)
           break
@@ -88,7 +88,7 @@ class Matcher extends React.Component {
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
               [this.state.containsVal, []],
-              ['.*', children]
+              [WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
@@ -101,14 +101,14 @@ class Matcher extends React.Component {
         case 'exists':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              [this.state.val, children]
+              [this.state.val || WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
         case 'does_not_exist':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              [this.state.val, []]
+              [this.state.val || WILDCARD_REGEXP, []]
             ]))
             .set('default', children)
           break
