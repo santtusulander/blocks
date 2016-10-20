@@ -143,3 +143,16 @@ export function parsePolicy(policy, path) {
     }
   }
 }
+
+/**
+ *
+ * @param config
+ * @returns {number|*}
+ */
+export const getVaryHeaderRuleId = ( config ) => {
+  const path = config.getIn(['response_policy', 'policy_rules'])
+
+  return path.findIndex( rule => {
+    return 'Vary' === rule.getIn(['set', 'header','header'])
+  })
+}
