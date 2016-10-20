@@ -2,14 +2,11 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.autoMockOff()
-jest.dontMock('../helpers.js')
-jest.dontMock('../defaults.jsx')
-jest.dontMock('../actions/cache-key-query-string-form.jsx')
-jest.dontMock('../policy-rules.jsx')
-jest.dontMock('../../icons/icon-add.jsx')
-jest.dontMock('../../icon.jsx')
-const ConfigurationDefaults = require('../defaults.jsx')
+jest.unmock('../../layout/section-header.jsx')
+jest.unmock('../../layout/section-container.jsx')
+jest.unmock('../defaults.jsx')
+jest.unmock('../helpers.js')
+import ConfigurationDefaults from '../defaults.jsx'
 
 function intlMaker() {
   return {

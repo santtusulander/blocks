@@ -7,12 +7,15 @@ import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
-import ConfigurationSidebar from './sidebar'
 import CacheKeyQueryStringForm from './actions/cache-key-query-string-form'
-import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
+import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import IsAllowed from '../is-allowed'
+
+import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
+import { MODIFY_PROPERTY } from '../../constants/permissions'
 
 const policyPath = Immutable.List(['default_policy', 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
@@ -83,7 +86,7 @@ class ConfigurationDefaults extends React.Component {
     this.props.changeValue(policyPath.push(index,'set','cache_name'), set)
   }
   render() {
-    const {config, intl} = this.props;
+    const { config, intl, readOnly } = this.props;
     if(!config || !config.size) {
       return (
         <div className="container"><FormattedMessage id="portal.loading.text"/></div>
@@ -133,7 +136,9 @@ class ConfigurationDefaults extends React.Component {
               <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
             </Col>
             <Col lg={8} xs={6}>
-              <Toggle value={config.getIn(policyPaths.ignore_case)}
+              <Toggle
+                readonly={readOnly}
+                value={config.getIn(policyPaths.ignore_case)}
                 changeValue={this.handleChange(policyPaths.ignore_case)}/>
             </Col>
           </Row>
@@ -145,6 +150,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={5} xs={6}>
               <Select className="input-select"
+                disabled={readOnly}
                 onSelect={this.handleEtagChange(policyPaths.honor_etags)}
                 value={config.getIn(policyPaths.honor_etags)}
                 options={[
@@ -161,6 +167,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={8} xs={6}>
               <Toggle
+                readonly={readOnly}
                 value={config.getIn(policyPaths.honor_origin_cache_policies)}
                 changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
             </Col>
@@ -174,6 +181,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={2} xs={3}>
               <Input type="text"
+                disabled={readOnly}
                 className="ttl-value"
                 placeholder={intl.formatMessage({
                   id: 'portal.policy.edit.defaults.timeToLive.text'
@@ -183,6 +191,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col xs={3}>
               <Select className="input-select"
+                disabled={readOnly}
                 onSelect={this.changeTTLUnit(policyPaths.max_age)}
                 value={this.state.ttlUnit}
                 options={[
@@ -198,6 +207,7 @@ class ConfigurationDefaults extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/>} />
         <SectionContainer>
           <CacheKeyQueryStringForm
+            disabled={readOnly}
             horizontal={true}
             intl={intl}
             set={config.getIn(policyPaths.cache_name)}
@@ -206,10 +216,12 @@ class ConfigurationDefaults extends React.Component {
 
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>}>
-          <Button bsStyle="success" className="btn-icon"
-            onClick={this.addRule}>
-            <IconAdd />
-          </Button>
+          <IsAllowed to={MODIFY_PROPERTY}>
+            <Button bsStyle="success" className="btn-icon"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
+          </IsAllowed>
         </SectionHeader>
 
         <SectionContainer>
@@ -258,4 +270,4 @@ ConfigurationDefaults.defaultProps = {
   config: Immutable.Map()
 }
 
-module.exports = injectIntl(ConfigurationDefaults)
+export default injectIntl(ConfigurationDefaults)
