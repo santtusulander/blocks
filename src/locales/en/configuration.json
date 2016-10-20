@@ -1,4 +1,5 @@
 {
+
   "portal.configuration.security.enable.text": "Enable HTTPS",
   "portal.configuration.security.sslCertificate.text": "SSL Certificate",
 
@@ -22,6 +23,16 @@
   "portal.policy.edit.matchesSelection.contentTargeting.text": "Content Targeting",
   "portal.policy.edit.policies.matchContentTargeting.text": "Define conditions.",
   "portal.policy.edit.policies.matchContentTargeting.include.text": "Include Areas",
+  "portal.policy.edit.policies.matchContentTargeting.title.text": "Content Targeting",
+  "portal.policy.edit.policies.matchContentTargeting.description.text": "Define content targeting action.",
+  "portal.policy.edit.policies.matchContentTargeting.action.text": "Action",
+  "portal.policy.edit.policies.matchContentTargeting.action.allow": "Allow",
+  "portal.policy.edit.policies.matchContentTargeting.action.redirect": "Redirect",
+  "portal.policy.edit.policies.matchContentTargeting.action.deny": "Deny",
+  "portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom": "Users from",
+  "portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom": "Users NOT from",
+  "portal.policy.edit.policies.matchContentTargeting.redirect.to.text": "to",
+  "portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text": "and present",
   "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
   "portal.policy.edit.policies.contentTargeting.from.text": "Users from",
   "portal.policy.edit.policies.contentTargeting.notFrom.text": "Users NOT from",
