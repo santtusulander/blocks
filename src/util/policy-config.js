@@ -130,7 +130,7 @@ export function parsePolicy(policy, path) {
         const actions = policy.getIn(searchPath).toJS().map((action, index) => {
           return {
             setkey: index,
-            name: setContentTargetingActionName(action), // TODO: localize this
+            name: setContentTargetingActionName(action),
             path: path.concat(searchPath).concat([index])
           }
         })
