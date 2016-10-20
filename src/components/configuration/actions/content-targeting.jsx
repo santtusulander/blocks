@@ -15,7 +15,6 @@ class ContentTargeting extends React.Component {
 
     this.handleCountryChange = this.handleCountryChange.bind(this)
     this.handleTypeChange = this.handleTypeChange.bind(this)
-    this.filterCountries = this.filterCountries.bind(this)
     this.handleInclusionChange = this.handleInclusionChange.bind(this)
     this.handleRedirectURLChange = this.handleRedirectURLChange.bind(this)
     this.disableSaveButton = this.disableSaveButton.bind(this)
@@ -30,11 +29,12 @@ class ContentTargeting extends React.Component {
     const inclusion = props.set.keySeq().toArray().filter(key => key !== 'response')[0]
     const countryCodes = props.set.get(inclusion)
     const countries = countryCodes.map(countryCode => country_list.find(country => country.id === countryCode))
+    const countryOptions = country_list.filter(country => countries.indexOf(country) < 0)
     const type = this.getTypeFromStatusCode(props.set.getIn(['response', 'code']))
     const status_code = props.set.getIn(['response', 'code'])
     const redirectURL = props.set.getIn(['response', 'headers', 'Location'])
 
-    return { inclusion, countries, type, status_code, redirectURL }
+    return { inclusion, countries, countryOptions, type, status_code, redirectURL }
   }
   getTypeFromStatusCode(status_code) {
     if (status_code >= 200 && status_code <= 299) {
@@ -60,8 +60,10 @@ class ContentTargeting extends React.Component {
   }
   handleCountryChange() {
     return countries => {
+      const countryOptions = country_list.filter(country => countries.indexOf(country) < 0)
       this.setState({
-        countries
+        countries,
+        countryOptions
       })
     }
   }
@@ -75,9 +77,6 @@ class ContentTargeting extends React.Component {
         redirectURL
       })
     }
-  }
-  filterCountries(data){
-    return !this.state.countries.includes(data) ? data : null
   }
   handleInclusionChange() {
     return inclusion => {
@@ -153,9 +152,8 @@ class ContentTargeting extends React.Component {
               className={this.state.type === 'deny' ? 'exclude' : null}
               multiple={true}
               selected={this.state.countries}
-              filterBy={this.filterCountries}
               onChange={this.handleCountryChange()}
-              options={country_list}/>
+              options={this.state.countryOptions}/>
           </div>
 
           {this.state.type === 'redirect' && // REDIRECT FORM
