@@ -4,11 +4,13 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
+import { getUserUrlFromParams } from '../../util/routes.js'
+
 import Select from '../select'
 
 import IconUser from '../icons/icon-user.jsx'
 
-const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
+const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, params}) => {
   return (
     <Dropdown id="user-menu" pullRight={true}
               open={open}
@@ -55,7 +57,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user}) => {
             </li>
 
             <li className="no-helper-header" >
-              <Link to={'/user'} onClick={onToggle}>
+              <Link to={getUserUrlFromParams(params)} onClick={onToggle}>
                 <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
               </Link>
             </li>
@@ -77,6 +79,7 @@ UserMenu.propTypes = {
   logout: React.PropTypes.func,
   onToggle: React.PropTypes.func,
   open: React.PropTypes.bool,
+  params: React.PropTypes.object,
   theme: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map)
 }

@@ -49,6 +49,12 @@ $token-horizontal-padding: em(12px, $form-font-size);
     }
   }
 
+  &.exclude {
+    .token {
+      background-color: $red;
+    }
+  }
+
   .token-removeable {
     padding-right: em(26px, $form-font-size);
     cursor: pointer;
