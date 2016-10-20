@@ -57,6 +57,8 @@
   "portal.account.groupForm.charge_id.label": "Billing ID",
   "portal.account.groupForm.charge_id.text": "Enter Billing ID",
   "portal.account.groupForm.charge_model.label": "Billing Mode",
+  "portal.account.groupForm.charge_model.option.bytesDelivered": "Bytes Delivered",
+  "portal.account.groupForm.charge_model.option.percentile": "95/5",
   "portal.account.groupForm.editGroup.title": "Edit Group",
   "portal.account.groupForm.newGroup.title": "Add new group",
 
