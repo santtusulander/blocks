@@ -56,3 +56,13 @@ export const CREATE_RECORD = 'CREATE_RECORD'
 export const VIEW_DNS = 'VIEW_DNS'
 export const CREATE_ZONE = 'CREATE_ZONE'
 export const MODIFY_ZONE = 'MODIFY_ZONE'
+
+//Security Permissions
+export const CREATE_CERTIFICATE = 'CREATE_CERTIFICATE'
+export const MODIFY_CERTIFICATE = 'MODIFY_CERTIFICATE'
+export const DELETE_CERTIFICATE = 'DELETE_CERTIFICATE'
+
+//Published Host permissions
+export const CREATE_PROPERTY = 'CREATE_CERTIFICATE'
+export const MODIFY_PROPERTY = 'MODIFY_CERTIFICATE'
+export const DELETE_PROPERTY = 'DELETE_CERTIFICATE'

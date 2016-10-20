@@ -2,12 +2,12 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
-import {parsePolicy, matchIsContentTargeting,parseCountriesByResponseCodes, ALLOW_RESPONSE_CODES, DENY_RESPONSE_CODES, REDIRECT_RESPONSE_CODES} from '../../util/policy-config'
-
-import {FormattedMessage, injectIntl} from 'react-intl'
+import {parsePolicy, matchIsContentTargeting, parseCountriesByResponseCodes, ALLOW_RESPONSE_CODES, DENY_RESPONSE_CODES, REDIRECT_RESPONSE_CODES} from '../../util/policy-config'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -80,12 +80,13 @@ class ConfigurationPolicyRules extends React.Component {
         actionsLabel = sets.map(set => set.setkey).join(', ')
       }
       return (
-        <tr key={i}>
+        <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
             <ActionButtons
+              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
               onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
               onDelete={this.showConfirmation(`${type}_policy`, i)} />
             {this.state[`${type}_policy`] !== false &&
@@ -160,4 +161,4 @@ ConfigurationPolicyRules.defaultProps = {
   responsePolicies: Immutable.List()
 }
 
-module.exports = injectIntl(ConfigurationPolicyRules)
+export default injectIntl(ConfigurationPolicyRules)
