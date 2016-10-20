@@ -31,7 +31,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
+    this.deleteContentTargetingSet = this.deleteContentTargetingSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
+    this.moveContentTargetingSet = this.moveContentTargetingSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
     this.cancelChanges = this.cancelChanges.bind(this)
@@ -114,6 +116,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   deleteSet(path) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.deleteContentTargetingSet(path)
+    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
@@ -124,7 +130,22 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
+  deleteContentTargetingSet(path) {
+    return e => {
+      e.preventDefault()
+      e.stopPropagation()
+      const setIndex = path.last()
+      const setContainerPath = path.slice(0, -1)
+      const filtered = this.props.config.getIn(setContainerPath).delete(setIndex)
+      this.props.changeValue(setContainerPath, filtered)
+      this.props.activateSet(null)
+    }
+  }
   moveSet(path, newIndex) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.moveContentTargetingSet(path, newIndex)
+    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
@@ -134,6 +155,21 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         .filterNot((val, i) => i === path.get(path.size-3))
         .insert(newIndex, set)
       this.props.changeValue(path.slice(0, -3), updated)
+      this.props.activateSet(null)
+    }
+  }
+  moveContentTargetingSet(path, newIndex) {
+    return e => {
+      e.preventDefault()
+      e.stopPropagation()
+      const currentIndex = path.last()
+      const containerPath = path.slice(0, -1)
+      const set = this.props.config.getIn(path)
+      const updated = this.props.config
+        .getIn(containerPath)
+        .filterNot((val, i) => i === currentIndex)
+        .insert(newIndex, set)
+      this.props.changeValue(containerPath, updated)
       this.props.activateSet(null)
     }
   }
