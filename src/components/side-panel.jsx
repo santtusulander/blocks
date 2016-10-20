@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-const SidePanel = ({ account, cancel, cancelButton, children, className, group, invalid, show, submit, submitButton, subTitle, title }) => {
+export const SidePanel = ({ account, cancel, cancelButton, children, className, group, invalid, show, submit, submitButton, subTitle, title }) => {
   let dialogClassName = 'side-panel';
   if(className) {
     dialogClassName = dialogClassName + ' ' + className
@@ -52,7 +52,7 @@ SidePanel.propTypes = {
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
-  className: React.PropTypes.string,
+  className: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   invalid: PropTypes.bool,
   show: PropTypes.bool,
