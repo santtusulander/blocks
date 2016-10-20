@@ -2,11 +2,16 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-// import keyStrokeSupport from '../decorators/key-stroke-decorator'
+import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-const SidePanel = ({ account, cancel, cancelButton, children, group, invalid, show, submit, submitButton, subTitle, title }) => {
+const SidePanel = ({ account, cancel, cancelButton, children, className, group, invalid, show, submit, submitButton, subTitle, title }) => {
+  let dialogClassName = 'side-panel';
+  if(className) {
+    dialogClassName = dialogClassName + ' ' + className
+  }
+
   return (
-    <Modal show={show} dialogClassName="side-panel">
+    <Modal show={show} dialogClassName={dialogClassName}>
       <Modal.Header>
         <h1>{title}</h1>
         {subTitle && <p>{subTitle}</p>}
@@ -47,6 +52,7 @@ SidePanel.propTypes = {
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
+  className: React.PropTypes.string,
   group: PropTypes.instanceOf(Map),
   invalid: PropTypes.bool,
   show: PropTypes.bool,
@@ -62,4 +68,4 @@ SidePanel.propTypes = {
   ])
 }
 
-export default SidePanel
+export default keyStrokeSupport(SidePanel)
