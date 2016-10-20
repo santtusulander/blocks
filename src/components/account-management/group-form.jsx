@@ -13,7 +13,7 @@ import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
 
-import { checkForErrors } from '../../util/helpers'
+import { checkForErrors, userIsContentProvider, userIsCloudProvider } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
@@ -111,7 +111,10 @@ class GroupForm extends React.Component {
       onCancel,
       groupId,
       account,
-      intl } = this.props
+      intl: { formatMessage } } = this.props
+    /**
+     * This logic is for handling members of a group. Not yet supported in the API.
+     */
     // const currentMembers = this.props.users.reduce((members, user) => {
     //   if (this.state.usersToAdd.includes(user.get('email'))) {
     //     return [user.set('toAdd', true), ...members]
@@ -254,14 +257,23 @@ GroupForm.defaultProps = {
   users: List()
 }
 
+const determineInitialValues = (groupId, activeGroup) => {
+  let initialValues = {}
+  if (groupId) {
+    const { charge_model, ...rest } = activeGroup.toJS()
+    initialValues = charge_model ? { charge_model, ...rest } : { ...rest }
+  }
+  return initialValues
+}
+
 function mapStateToProps({ user, group, account, form }, { groupId }) {
-  const isContentProviderAdmin = user.get('currentUser').get('roles').includes(2)
+  const currentUser = user.get('currentUser')
   return {
     formValues: getValues(form.groupEdit),
     users: user.get('allUsers'),
     account: account.get('activeAccount'),
-    fields: isContentProviderAdmin ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
-    initialValues: groupId ? group.get('activeGroup').toJS() : {}
+    fields: userIsContentProvider(currentUser) || userIsCloudProvider(currentUser) ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
+    initialValues: determineInitialValues(groupId, group.get('activeGroup'))
   }
 }
 
