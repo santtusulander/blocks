@@ -18,6 +18,7 @@ class ContentTargeting extends React.Component {
     this.filterCountries = this.filterCountries.bind(this)
     this.handleInclusionChange = this.handleInclusionChange.bind(this)
     this.handleRedirectURLChange = this.handleRedirectURLChange.bind(this)
+    this.disableSaveButton = this.disableSaveButton.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -87,10 +88,15 @@ class ContentTargeting extends React.Component {
   }
   handleRedirectURLChange() {
     return e => {
+      const redirectURL = e.target.value === "" ? null : e.target.value
       this.setState({
-        redirectURL: e.target.value
+        redirectURL
       })
     }
+  }
+  disableSaveButton() {
+    return this.state.countries.count() === 0
+            || (this.state.type === 'redirect' && !this.state.redirectURL)
   }
   saveChanges() {
     const countries = this.state.countries.map(country => country.id)
@@ -187,7 +193,11 @@ class ContentTargeting extends React.Component {
             <Button bsStyle="default" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary" id="save-button" onClick={this.saveChanges}>
+            <Button
+              bsStyle="primary"
+              id="save-button"
+              disabled={this.disableSaveButton()}
+              onClick={this.saveChanges}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>

@@ -93,6 +93,27 @@ permissionMapping[PERMISSIONS.MODIFY_ZONE] =
 permissionMapping[PERMISSIONS.CREATE_RECORD] =
   (role) => role.getIn(['permissions', 'north', 'rr', 'create', 'allowed'])
 
+//Security permissions
+permissionMapping[PERMISSIONS.DELETE_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'modify', 'allowed'])
+
+//Published Host permissions
+permissionMapping[PERMISSIONS.DELETE_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'modify', 'allowed'])
+
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.
