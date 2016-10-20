@@ -5,7 +5,8 @@ import { shallow } from 'enzyme'
 jest.mock('../../util/helpers', () => {
   return {
     getContentUrl: jest.genMockFunction()
-      .mockImplementation(val => '/path/after/login')
+      .mockImplementation(val => '/path/after/login'),
+    matchesRegexp: jest.fn()
   }
 })
 

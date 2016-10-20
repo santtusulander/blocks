@@ -20,7 +20,7 @@ class ConfigurationSidebar extends React.Component {
           <div className="sidebar-right-col">
             <a className="sidebar-right-col-close btn-icon"
               onClick={this.props.handleRightColClose}>
-              <IconClose width="20" height="20"/>
+              <IconClose width={20} height={20}/>
             </a>
             {this.props.rightColContent}
           </div>
