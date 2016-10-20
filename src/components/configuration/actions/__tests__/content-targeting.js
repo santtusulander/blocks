@@ -4,7 +4,14 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
+jest.unmock('../../../../util/status-codes');
 import ContentTargeting from '../content-targeting.jsx'
+
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 describe('ContentTargeting', () => {
   let subject = null
@@ -22,7 +29,8 @@ describe('ContentTargeting', () => {
         set: fakeConfig,
         path: fakePath,
         changeValue,
-        close
+        close,
+        intl: intlMaker()
       }
       return shallow(<ContentTargeting {...props}/>)
     }

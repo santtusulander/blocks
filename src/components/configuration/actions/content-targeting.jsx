@@ -1,11 +1,12 @@
 import React from 'react'
 import { Input, Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Typeahead from 'react-bootstrap-typeahead'
 
-import SelectWrapper from '../../../components/select-wrapper'
+import Select from '../../../components/select'
 import country_list from '../../../constants/country-list'
+import * as StatusCodes from '../../../util/status-codes'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ContentTargeting extends React.Component {
     this.handleTypeChange = this.handleTypeChange.bind(this)
     this.handleInclusionChange = this.handleInclusionChange.bind(this)
     this.handleRedirectURLChange = this.handleRedirectURLChange.bind(this)
+    this.handleStatusCodeChange = this.handleStatusCodeChange.bind(this)
     this.disableSaveButton = this.disableSaveButton.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
@@ -93,6 +95,13 @@ class ContentTargeting extends React.Component {
       })
     }
   }
+  handleStatusCodeChange() {
+    return status_code => {
+      this.setState({
+        status_code
+      })
+    }
+  }
   disableSaveButton() {
     return this.state.countries.count() === 0
             || (this.state.type === 'redirect' && !this.state.redirectURL)
@@ -115,6 +124,10 @@ class ContentTargeting extends React.Component {
     this.props.close()
   }
   render() {
+    const statusCodeOptions = StatusCodes
+                                .getPickedResponseCodes([401, 403, 404], false)
+                                .map(code => { return { value: code.code, label: code.message } })
+
     return (
       <div>
         <Modal.Header>
@@ -125,25 +138,25 @@ class ContentTargeting extends React.Component {
 
           <div className="form-group">
             <label className="control-label"><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text"/></label>
-            <SelectWrapper
+            <Select
               className="input-select"
-              onChange={this.handleTypeChange()}
+              onSelect={this.handleTypeChange()}
               value={this.state.type}
               options={[
-                ['allow', <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.allow"/>],
-                ['redirect', <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.redirect"/>],
-                ['deny', <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.deny"/>]
+                {value: 'allow', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.action.allow'})},
+                {value: 'redirect', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.action.redirect'})},
+                {value: 'deny', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.action.deny'})}
               ]}/>
           </div>
 
           <div className="form-group">
-            <SelectWrapper
+            <Select
               className="input-select"
-              onChange={this.handleInclusionChange()}
+              onSelect={this.handleInclusionChange()}
               value={this.state.inclusion}
               options={[
-                ['in', <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom"/>],
-                ['not_in', <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom"/>]
+                {value: 'in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom'})},
+                {value: 'not_in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom'})}
               ]}/>
           </div>
 
@@ -174,15 +187,12 @@ class ContentTargeting extends React.Component {
               <p><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text"/></p>
 
               <div className="form-group">
-                <SelectWrapper
+                <Select
                   className="input-select"
-                  onChange={() => null}
+                  onSelect={this.handleStatusCodeChange()}
+                  numericValues={true}
                   value={this.state.status_code}
-                  options={[
-                    [401, '401'],
-                    [403, '403'],
-                    [404, '404']
-                  ]}/>
+                  options={statusCodeOptions}/>
               </div>
             </div>
           }
@@ -210,8 +220,9 @@ ContentTargeting.displayName = 'ContentTargetingAction'
 ContentTargeting.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  intl: React.PropTypes.object,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-export default ContentTargeting
+export default injectIntl(ContentTargeting)
