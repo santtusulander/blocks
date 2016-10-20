@@ -99,7 +99,8 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+            cancel: this.props.hideInfoDialog,
+            okButton: true
           })
         } else if(item && name) {
           this.hideModal()
@@ -117,7 +118,8 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            buttons:  <Button onClick={this.props.hideInfoDialog} bsStyle="primary" >OK</Button>
+            cancel: this.props.hideInfoDialog,
+            okButton: true
           })
         } else if(item && name) {
           this.hideModal()
@@ -174,6 +176,34 @@ class ContentItems extends React.Component {
       showModal: false,
       itemToEdit: undefined
     })
+  }
+  renderAccountSelector(props, itemSelectorTopBarAction) {
+    if (props.selectionDisabled === true) {
+      return (
+        <div className="dropdown-toggle header-toggle">
+          <h1>
+            <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
+          </h1>
+        </div>
+      )
+    }
+
+    return (
+      <AccountSelector
+        as="content"
+        params={props.params}
+        startTier={props.selectionStartTier}
+        topBarTexts={itemSelectorTexts}
+        topBarAction={itemSelectorTopBarAction}
+        onSelect={(...params) => props.router.push(getContentUrl(...params))}>
+        <div className="btn btn-link dropdown-toggle header-toggle">
+          <h1>
+            <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
+          </h1>
+          <span className="caret"></span>
+        </div>
+      </AccountSelector>
+    )
   }
   render() {
     const {
@@ -232,20 +262,7 @@ class ContentItems extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
-          <AccountSelector
-            as="content"
-            params={this.props.params}
-            startTier={this.props.selectionStartTier}
-            topBarTexts={itemSelectorTexts}
-            topBarAction={this.itemSelectorTopBarAction}
-            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-            <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1>
-                <TruncatedTitle content={headerText.label} tooltipPlacement="bottom"/>
-              </h1>
-              <span className="caret"></span>
-            </div>
-          </AccountSelector>
+          {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)}
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
@@ -426,6 +443,7 @@ ContentItems.propTypes = {
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
+  selectionDisabled: React.PropTypes.bool,
   selectionStartTier: React.PropTypes.string,
   showAnalyticsLink: React.PropTypes.bool,
   showInfoDialog: React.PropTypes.func,

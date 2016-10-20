@@ -30,6 +30,7 @@ describe('ContentItemList', () => {
     const contentItem = shallow(
       <ContentItemList
         configurationLink={'foo'}
+        isAllowedToConfigure={true}
         linkTo={'/'}
         analyticsLink={'/'}/>
     )
@@ -41,6 +42,7 @@ describe('ContentItemList', () => {
     const contentItem = shallow(
       <ContentItemList
     onConfiguration={() => {}}
+    isAllowedToConfigure={true}
     linkTo={'/'}
     analyticsLink={'/'}/>
     )

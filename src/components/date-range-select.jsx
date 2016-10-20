@@ -16,6 +16,8 @@ const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
+const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
+const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
 const startOfThisWeek = () => moment().utc().startOf('isoWeek')
 const endOfThisWeek = () => moment().utc().endOf('isoWeek')
 
@@ -46,14 +48,17 @@ export class DateRangeSelect extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // This is used when filters are resetted and this component re-mounted and
+    // the filters prop might get updated after the mount with a delay
+    // TODO: This is not now working on property summary page
     const nextState = {}
     let dateChanged = false
-    if(!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day')) {
-      nextState.startDate = nextProps.startDate
+    if (nextProps.startDate && (!this.props.startDate || !this.props.startDate.isSame(nextProps.startDate, 'day'))) {
+      nextState.startDate = nextProps.startDate || startOfThisMonth()
       dateChanged = true
     }
-    if(!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day')) {
-      nextState.endDate = nextProps.endDate
+    if (nextProps.endDate && (!this.props.endDate || !this.props.endDate.isSame(nextProps.endDate, 'day'))) {
+      nextState.endDate = nextProps.endDate || endOfThisDay()
       dateChanged = true
     }
     if(dateChanged) {
@@ -84,6 +89,10 @@ export class DateRangeSelect extends React.Component {
     if(this.props.availableRanges.indexOf(DateRanges.LAST_MONTH) !== -1 &&
       startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
       return DateRanges.LAST_MONTH
+    }
+    if(this.props.availableRanges.indexOf(DateRanges.LAST_WEEK) !== -1 &&
+      startOfLastWeek().isSame(start, 'hour') && endOfLastWeek().isSame(end, 'hour')) {
+      return DateRanges.LAST_WEEK
     }
     if(this.props.availableRanges.indexOf(DateRanges.LAST_28) !== -1 &&
       startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
@@ -146,6 +155,10 @@ export class DateRangeSelect extends React.Component {
     else if(value === DateRanges.THIS_WEEK) {
       startDate = startOfThisWeek()
       endDate   = endOfThisWeek()
+    }
+    else if(value === DateRanges.LAST_WEEK) {
+      startDate = startOfLastWeek()
+      endDate   = endOfLastWeek()
     }
     else if(value === DateRanges.LAST_MONTH) {
       startDate = startOfLastMonth()

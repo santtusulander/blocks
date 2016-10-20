@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 // import { Provider } from 'react-redux'
 // import { createStore } from 'redux'
 
+jest.unmock('../../util/status-codes')
 jest.unmock('../security.jsx')
 import { Security } from '../security.jsx'
 
@@ -66,6 +67,7 @@ describe('Security', () => {
     props = {
       fetchAccountData: jest.genMockFunction(),
       activeAccount: Immutable.Map({name: 'foo'}),
+      groups: Immutable.List([Immutable.Map({id: 1})]),
       params: { subPage: 'a' },
       location: {pathname: 'bar'},
       securityActions: {

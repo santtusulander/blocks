@@ -1,31 +1,19 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-// Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
-const momentFormatMock = jest.genMockFunction()
-const momentStartOfMock = jest.genMockFunction()
-const momentEndOfMock = jest.genMockFunction()
-const momentUtcMock = jest.genMockFunction()
-moment.mockReturnValue({
-  format: momentFormatMock,
-  startOf: momentStartOfMock,
-  endOf: momentEndOfMock,
-  utc: momentUtcMock
-})
-
-jest.dontMock('../date-range-select.jsx')
-const DateRange = require('../date-range-select.jsx')
+jest.unmock('../date-range-select.jsx')
+import DateRange from '../date-range-select.jsx'
+import moment from 'moment'
 
 describe('DateRangeSelect', () => {
   it('should exist', () => {
-    const filter = TestUtils.renderIntoDocument(
+    const filter = shallow(
       <DateRange
         startDate={moment()}
         endDate={moment()}
         availableRanges={[1]}/>
     )
-    expect(TestUtils.isCompositeComponent(filter)).toBeTruthy()
+    expect(filter).toBeDefined()
   })
 
   // TODO: Need to figure out how to mock moment values
@@ -55,17 +43,17 @@ describe('DateRangeSelect', () => {
   // });
 
   it('should handle datepicker focus and blur', () => {
-    const filter = TestUtils.renderIntoDocument(
+    const filter = shallow(
       <DateRange
         startDate={moment()}
         endDate={moment()}
         availableRanges={[1]}/>
     )
-    expect(filter.state.datepickerOpen).toBe(false)
-    filter.handleOnFocus()
-    expect(filter.state.datepickerOpen).toBe(true)
-    filter.handleOnBlur()
-    expect(filter.state.datepickerOpen).toBe(false)
+    expect(filter.state('datepickerOpen')).toBe(false)
+    filter.instance().handleOnFocus()
+    expect(filter.state('datepickerOpen')).toBe(true)
+    filter.instance().handleOnBlur()
+    expect(filter.state('datepickerOpen')).toBe(false)
   })
 
   // TODO: Need to figure out how to mock moment values

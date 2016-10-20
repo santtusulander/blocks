@@ -1,22 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import jsdom from 'jsdom'
-
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
 
 jest.mock('../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
-    removeProps: jest.fn()
+    removeProps: jest.fn(),
+    userIsServiceProvider: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
+jest.unmock('../../util/status-codes')
 jest.unmock('../groups.jsx')
+
 import { Groups } from '../groups.jsx'
 
 function groupActionsMaker() {

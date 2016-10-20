@@ -44,7 +44,7 @@ describe('Group Module', () => {
       allGroups: [1]
     });
     const newState = deleteFailure(state, {payload: {id: 1}});
-    expect(newState.get('allGroups')).toContain(1);
+    expect(newState.get('allGroups').toJS()).toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 

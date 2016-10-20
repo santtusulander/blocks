@@ -4,10 +4,11 @@ import TestUtils from 'react-addons-test-utils'
 
 jest.mock('../../util/helpers', () => {
   return {
-    formatBitsPerSecond: jest.genMockFunction(),
-    getAnalyticsUrl: jest.genMockFunction(),
-    getContentUrl: jest.genMockFunction(),
-    removeProps: jest.genMockFunction()
+    formatBitsPerSecond: jest.fn(),
+    getAnalyticsUrl: jest.fn(),
+    getContentUrl: jest.fn(),
+    removeProps: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
@@ -18,58 +19,58 @@ const Property = require('../property.jsx').Property
 
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
   }
 }
 
 function groupActionsMaker() {
   return {
-    fetchGroup: jest.genMockFunction()
+    fetchGroup: jest.fn()
   }
 }
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction(),
-    fetchHosts: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchHost: jest.fn(),
+    fetchHosts: jest.fn()
   }
 }
 
 function metricsActionsMaker() {
   return {
-    fetchDailyHostTraffic: jest.genMockFunction(),
-    fetchHostMetrics: jest.genMockFunction(),
-    fetchHourlyHostTraffic: jest.genMockFunction()
+    fetchDailyHostTraffic: jest.fn(),
+    fetchHostMetrics: jest.fn(),
+    fetchHourlyHostTraffic: jest.fn()
   }
 }
 
 function purgeActionsMaker() {
   return {
-    resetActivePurge: jest.genMockFunction()
+    resetActivePurge: jest.fn()
   }
 }
 
 function trafficActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchByTime: jest.genMockFunction(),
-    finishFetching: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchByTime: jest.fn(),
+    finishFetching: jest.fn()
   }
 }
 
 function uiActionsMaker() {
   return {
-    changeNotification: jest.genMockFunction()
+    changeNotification: jest.fn()
   }
 }
 
 function visitorsActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchByCountry: jest.genMockFunction(),
-    finishFetching: jest.genMockFunction(),
-    visitorsReset: jest.genMockFunction()
+    startFetching: jest.fn(),
+    fetchByCountry: jest.fn(),
+    finishFetching: jest.fn(),
+    visitorsReset: jest.fn()
   }
 }
 
@@ -354,25 +355,6 @@ describe('Property', () => {
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.fetchHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.fetchHost.mock.calls[0][2]).toBe('2')
-  });
-
-  it('should display the property name', () => {
-    const property = TestUtils.renderIntoDocument(
-      <Property hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        metricsActions={metricsActionsMaker()}
-        params={urlParams} location={fakeLocation}
-        activeHost={fakeHost}
-        trafficActions={trafficActionsMaker()}
-        properties={Immutable.List(['www.abc.com'])}
-        metrics={fakeMetrics}
-        trafficByTime={Immutable.List()}
-        visitorsByCountry={fakeVisitors}
-        visitorsActions={visitorsActionsMaker()}/>
-    )
-    let header = TestUtils.findRenderedDOMComponentWithClass(property, 'page-header-container')
-    expect(header.textContent).toContain('www.abc.com')
   });
 
   it('should toggle property menu', () => {

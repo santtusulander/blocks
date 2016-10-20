@@ -27,14 +27,19 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond} from '../util/helpers'
-import {getContentUrl} from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
-import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
-import DeleteModal from '../components/delete-modal'
+import IsAllowed from '../components/is-allowed'
+import ModalWindow from '../components/modal'
+
+import { formatBitsPerSecond } from '../util/helpers'
+import { getContentUrl, getAnalyticsUrl } from '../util/routes'
+
+import DateRanges from '../constants/date-ranges'
+
 import { paleblue } from '../constants/colors'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -83,6 +88,8 @@ export class Property extends React.Component {
     this.changeDateRange = this.changeDateRange.bind(this)
     this.hoverSlice = this.hoverSlice.bind(this)
     this.selectSlice = this.selectSlice.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
@@ -94,7 +101,8 @@ export class Property extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {
@@ -127,6 +135,7 @@ export class Property extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   getEmptyHourlyTraffic(startDate, endDate) {
     let hourlyTraffic = [];
@@ -280,7 +289,10 @@ export class Property extends React.Component {
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
-    const dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    let dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+    if (dateRange < moment.duration(28, 'days')) {
+      dateRange = moment.duration(28, 'days')
+    }
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
@@ -359,18 +371,22 @@ export class Property extends React.Component {
             </div>
           </AccountSelector>
           <ButtonToolbar>
-            <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            <IsAllowed to={MODIFY_PROPERTY}>
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            </IsAllowed>
             <Link className="btn btn-success btn-icon"
-                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/analytics`}>
+                  to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
               <IconChart/>
             </Link>
             <Link className="btn btn-success btn-icon"
                   to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
               <IconConfiguration/>
             </Link>
-            <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-              <IconTrash/>
-            </Button>
+            <IsAllowed to={DELETE_PROPERTY}>
+              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+            </IsAllowed>
           </ButtonToolbar>
         </PageHeader>
 
@@ -387,10 +403,6 @@ export class Property extends React.Component {
               <h3>
                 {activeConfig.get('edge_configuration').get('published_name')}
               </h3>
-            </Col>
-            <Col xs={2} className="kpi">
-              Current Version
-              <h3>{activeConfig.get('config_name')}</h3>
             </Col>
             <Col xs={4} className="kpi">
               Deployed
@@ -493,13 +505,22 @@ export class Property extends React.Component {
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
           showNotification={this.showNotification}/>}
-        {this.state.deleteModal && <DeleteModal
-          itemToDelete="Property"
+        {this.state.deleteModal &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          cancelButton={true}
+          deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>}
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+          </p>
+        </ModalWindow>
+        }
       </Content>
     )
   }

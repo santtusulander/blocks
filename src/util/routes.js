@@ -1,6 +1,7 @@
 import { getRoute } from '../routes.jsx'
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
 import checkPermissions from './permissions'
+import VIEW_CONTENT_PROPERTIES from '../constants/permissions'
 
 export function getUrl(baseUrl, linkType, val, params) {
   const { brand, account, group } = params;
@@ -80,16 +81,17 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
     roles, currentUser, tab.get('permission')
   ))
-  const landingTab = allowedTab ? `/${allowedTab.get('key')}` : ''
+  const landingTab = allowedTab ? allowedTab.get('key') : ''
   const { brand, account, group, property } = params,
     baseUrl = getRoute('analytics')
 
+
   if (property) {
-    return `${baseUrl}/${brand}/${account}/${group}/${property}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${group}/${property}/${landingTab}`
   } else if (group) {
-    return `${baseUrl}/${brand}/${account}/${group}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${group}/${landingTab}`
   } else if (account) {
-    return `${baseUrl}/${brand}/${account}${landingTab}`
+    return `${baseUrl}/${brand}/${account}/${landingTab}`
   } else if (brand) {
     return `${baseUrl}/${brand}`
   } else {
@@ -97,13 +99,14 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   }
 }
 
-export function getContentUrlFromParams(params) {
+export function getContentUrlFromParams(params, currentUser, roles) {
   const { brand, account, group, property } = params,
-    baseUrl = getRoute('content')
+    baseUrl = getRoute('content'),
+    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES)
 
   if (property) {
     return `${baseUrl}/${brand}/${account}/${group}/${property}`
-  } else if (group) {
+  } else if (group && canListProperties) {
     return `${baseUrl}/${brand}/${account}/${group}`
   } else if (account) {
     return `${baseUrl}/${brand}/${account}`
@@ -175,5 +178,41 @@ export function getSecurityUrlFromParams(params) {
     return getRoute('securityBrand', params)
   } else {
     return getRoute('securityBrand', { brand: 'udn' })
+  }
+}
+
+export function getDashboardUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('dashboardAccount', params)
+  } else if (brand) {
+    return getRoute('dashboardBrand', params)
+  } else {
+    return getRoute('dashboardBrand', { brand: 'udn' })
+  }
+}
+
+export function getNetworkUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('networkAccount', params)
+  } else if (brand) {
+    return getRoute('networkBrand', params)
+  } else {
+    return getRoute('networkBrand', { brand: 'udn' })
+  }
+}
+
+export function getUserUrlFromParams(params) {
+  const { brand, account } = params
+
+  if (account) {
+    return getRoute('userAccount', params)
+  } else if (brand) {
+    return getRoute('userBrand', params)
+  } else {
+    return getRoute('userBrand', { brand: 'udn' })
   }
 }

@@ -1,4 +1,41 @@
 {
+
   "portal.configuration.security.enable.text": "Enable HTTPS",
-  "portal.configuration.security.sslCertificate.text": "SSL Certificate"
+  "portal.configuration.security.sslCertificate.text": "SSL Certificate",
+
+  "portal.policy.edit.tokenauth.header": "Token Authentication",
+  "portal.policy.edit.tokenauth.subheader": "Define token authentication action.",
+  "portal.policy.edit.tokenauth.encryption.text": "Encryption",
+  "portal.policy.edit.tokenauth.schema.text": "Schema",
+  "portal.policy.edit.tokenauth.secret.text": "Shared Secret Value",
+  "portal.policy.edit.tokenauth.secret.placeholder": "Please enter shared secret value",
+  "portal.policy.edit.policies.header.text": "Header",
+  "portal.policy.edit.matchesSelection.url.text": "URL",
+  "portal.policy.edit.policies.matchURL.text": "Match a URL like www.test.com",
+  "portal.policy.edit.policies.url.text": "URL",
+  "portal.policy.edit.policies.header.placeholder": "Enter Header Name",
+  "portal.policy.edit.policies.directoryPath.placeholder": "Enter Directory Path Name",
+  "portal.policy.edit.policies.hostname.placeholder": "Enter Hostname",
+  "portal.policy.edit.policies.url.placeholder": "Enter URL",
+  "portal.policy.edit.policies.url.validation.base64": "is not a base64-encoded string",
+  "portal.policy.edit.policies.cookie.placeholder": "Enter Cookie Name",
+  "portal.policy.edit.policies.queryString.placeholder": "Enter Query String Name",
+  "portal.policy.edit.matchesSelection.contentTargeting.text": "Content Targeting",
+  "portal.policy.edit.policies.matchContentTargeting.text": "Define conditions.",
+  "portal.policy.edit.policies.matchContentTargeting.include.text": "Include Areas",
+  "portal.policy.edit.policies.matchContentTargeting.title.text": "Content Targeting",
+  "portal.policy.edit.policies.matchContentTargeting.description.text": "Define content targeting action.",
+  "portal.policy.edit.policies.matchContentTargeting.action.text": "Action",
+  "portal.policy.edit.policies.matchContentTargeting.action.allow": "Allow",
+  "portal.policy.edit.policies.matchContentTargeting.action.redirect": "Redirect",
+  "portal.policy.edit.policies.matchContentTargeting.action.deny": "Deny",
+  "portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom": "Users from",
+  "portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom": "Users NOT from",
+  "portal.policy.edit.policies.matchContentTargeting.redirect.to.text": "to",
+  "portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text": "and present",
+  "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
+  "portal.policy.edit.policies.cancel.text": "Cancel",
+  "portal.policy.edit.policies.saveMatch.text": "Save Match",
+
+  "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication"
 }

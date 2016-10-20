@@ -211,13 +211,13 @@ export const fetchHourlyAccountTraffic = createAction(ACCOUNT_HOURLY_TRAFFIC_FET
 })
 
 export const fetchDailyAccountTraffic = createAction(ACCOUNT_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
+  const extendedOpts = Object.assign({resolution: 'hour'}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })
 
 export const fetchDailyGroupTraffic = createAction(GROUP_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
+  const extendedOpts = Object.assign({resolution: 'hour'}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })
@@ -226,7 +226,11 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
   const nowOpts = Object.assign({}, {
     granularity: 'hour'
   }, opts)
-  const dateRange = moment.duration(opts.endDate - opts.startDate, 'seconds').add(1, 's').asDays()
+
+  let dateRange = moment.duration(opts.endDate - opts.startDate, 'seconds').add(1, 's').asDays()
+  // use minimun of 28days
+  if (dateRange < 28)  dateRange = 28
+
   const historyOpts = Object.assign({}, nowOpts, {
     startDate: moment(opts.startDate, 'X').subtract(dateRange, 'days').format('X'),
     endDate: moment(opts.endDate, 'X').subtract(dateRange, 'days').format('X')
@@ -243,7 +247,7 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
 })
 
 export const fetchDailyHostTraffic = createAction(HOST_DAILY_TRAFFIC_FETCHED, opts => {
-  const extendedOpts = Object.assign({}, dailyTrafficOpts, opts)
+  const extendedOpts = Object.assign({resolution: 'hour'}, dailyTrafficOpts, opts)
   return axios.get(`${analyticsBase()}/traffic${qsBuilder(extendedOpts)}`)
   .then(parseResponseData)
 })

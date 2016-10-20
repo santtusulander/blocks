@@ -27,20 +27,27 @@ class AnalysisTraffic extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort        = this.changeSort.bind(this)
     this.sortedData        = this.sortedData.bind(this)
+
+    this.measureContainersTimeout = null
   }
 
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
 
   componentWillReceiveProps() {
-    setTimeout(() => {this.measureContainers()}, 500)
+    if (this.measureContainersTimeout) {
+      clearTimeout(this.measureContainersTimeout)
+    }
+
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
 
   measureContainers() {
@@ -166,7 +173,6 @@ class AnalysisTraffic extends React.Component {
         })
       }
     }
-
     return (
       <div className="analysis-traffic">
         {/*<div className="analysis-data-box">
@@ -207,7 +213,8 @@ class AnalysisTraffic extends React.Component {
                 showLegend={true}
                 showTooltip={false}
                 yAxisCustomFormat={byTimeYAxisFormat}
-                width={this.state.byTimeWidth} height={this.state.byTimeWidth / 2.5}/>
+                width={this.state.byTimeWidth}
+                height={this.state.byTimeWidth / 2.5}/>
             }
           </div>
         </SectionContainer>
