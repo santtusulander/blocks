@@ -267,48 +267,74 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
   .then(parseResponseData);
 })
 
-export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
-  let data = {}
+export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts, accounts) => {
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
-  .then(parseResponseData)
-  .then(action => Promise.all(action.data.map(datum => {
-    const account = Number(datum.sp_account)
-    const group = Number(datum.sp_group)
+    .then(parseResponseData)
+    .then(action => {
+      if (opts.sp_group_ids) {
+        const account = accounts.find(account => account.id === Number(opts.sp_account_ids))
 
-    if (opts.sp_group_ids && group) {
-      data[group] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
-    } else {
-      data[account] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
-    }
-  })))
-  .then(resp => resp.map(resp => {
-    let name = resp.data.name || `ID: ${resp.data.id}`
-    return Object.assign({}, data[resp.data.id], {name: name})
-  }))
+        if (account) {
+          return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account.id}/groups`)
+          .then(resp => {
+            const groups = resp.data.data
+            const dataWithNames = action.data.map((datum) => {
+              const group = groups.find((group) => { return group.id === datum.sp_group })
+              const info = {name: (group && group.name) ? group.name : `ID: ${datum.sp_group}`}
+              return Object.assign({}, datum, info)
+            })
+            return dataWithNames
+          })
+        } else {
+          return action.data.map((datum) => {
+            const info = { name: `ID: ${datum.sp_group}` }
+            return Object.assign({}, datum, info)
+          })
+        }
+      } else {
+        const dataWithNames = action.data.map((datum) => {
+          const account = accounts.find(account => { return account.id === datum.sp_account })
+          const info = {name: (account && account.name) ? account.name : `ID: ${datum.sp_account}`}
+          return Object.assign({}, datum, info)
+        })
+        return dataWithNames
+      }
+    })
 })
 
-export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
-  let data = {}
+export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts, accounts) => {
   return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
-  .then(parseResponseData)
-  .then(action => Promise.all(action.data.map(datum => {
-    const account = Number(datum.account)
-    const group = Number(datum.group)
+    .then(parseResponseData)
+    .then(action => {
+      if (opts.group_ids) {
+        const account = accounts.find(account => account.id === Number(opts.account_ids))
 
-    if (opts.group_ids && group) {
-      data[group] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
-    } else {
-      data[account] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
-    }
-  })))
-  .then(resp => resp.map(resp => {
-    let name = resp.data.name || `ID: ${resp.data.id}`
-    return Object.assign({}, data[resp.data.id], {name: name})
-  }))
+        if (account) {
+          return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account.id}/groups`)
+            .then(resp => {
+              const groups = resp.data.data
+              const dataWithNames = action.data.map((datum) => {
+                const group = groups.find((group) => { return group.id === datum.group })
+                const info = {name: (group && group.name) ? group.name : `ID: ${datum.group}`}
+                return Object.assign({}, datum, info)
+              })
+              return dataWithNames
+            })
+        } else {
+          return action.data.map((datum) => {
+            const info = { name: `ID: ${datum.group}` }
+            return Object.assign({}, datum, info)
+          })
+        }
+      } else {
+        const dataWithNames = action.data.map((datum) => {
+          const account = accounts.find((account) => { return account.id === datum.account })
+          const info = {name: (account && account.name) ? account.name : `ID: ${datum.account}`}
+          return Object.assign({}, datum, info)
+        })
+        return dataWithNames
+      }
+    })
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

@@ -36,7 +36,7 @@ class AnalyticsContainer extends React.Component {
   componentWillMount(){
     //Reset filters to default when entering analytics page
     this.props.filtersActions.resetFilters();
-    this.fetchData(this.props.params, true)
+    this.fetchData(this.props.params, this.props.accounts, true)
     this.fetchActiveItems(this.props)
   }
 
@@ -44,9 +44,10 @@ class AnalyticsContainer extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (params !== prevParams) {
+    if (params !== prevParams
+        || this.props.accounts !== nextProps.accounts) {
       this.fetchActiveItems(nextProps)
-      this.fetchData(nextProps.params)
+      this.fetchData(nextProps.params, nextProps.accounts)
     }
   }
 
@@ -63,7 +64,7 @@ class AnalyticsContainer extends React.Component {
     ])
   }
 
-  fetchData(params, refresh){
+  fetchData(params, accounts, refresh){
     const brandChanged = params.brand !== this.props.params.brand
     const accountChanged = params.account !== this.props.params.account
     const groupChanged = params.group !== this.props.params.group
@@ -71,7 +72,7 @@ class AnalyticsContainer extends React.Component {
       this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
-      this.props.filtersActions.fetchServiceProviders(params.brand)
+      this.props.filtersActions.fetchServiceProviders(params.brand, accounts)
     }
 
     if((brandChanged || accountChanged || refresh) && params.account) {
