@@ -194,7 +194,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
     );
       let conditions = TestUtils.scryRenderedDOMComponentsWithClass(policyRule, 'conditions');
       let btns = TestUtils.scryRenderedDOMComponentsWithClass(policyRule, 'btn');
-      TestUtils.Simulate.click(btns[5])
+      TestUtils.Simulate.click(btns[2])
       expect(changeValue.mock.calls.length).toBe(1)
       expect(activateSet.mock.calls.length).toBe(1)
   });

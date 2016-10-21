@@ -68,15 +68,21 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, deleteDisabled, onA
 }
 
 ActionButtons.propTypes = {
-  arrowDownDisabled: PropTypes.String,
-  arrowUpDisabled: PropTypes.String,
-  deleteDisabled: PropTypes.func,
-  onArrowDown: PropTypes.func,
-  onArrowUp: PropTypes.func,
+  arrowDownDisabled: PropTypes.bool,
+  arrowUpDisabled: PropTypes.bool,
+  deleteDisabled: PropTypes.bool,
+  onArrowDown: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.function
+  ]),
+  onArrowUp: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.function
+  ]),
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   permissions: PropTypes.object,
-  secondaryBtn: PropTypes.string
+  secondaryBtn: PropTypes.bool
 }
 
 export default ActionButtons
