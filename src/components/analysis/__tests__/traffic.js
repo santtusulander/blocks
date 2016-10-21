@@ -3,19 +3,19 @@ import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
 // This component has a child that connects to redux, so mock that
-const reactRedux = require('react-redux')
+import reactRedux from 'react-redux'
 reactRedux.connect = jest.genMockFunction()
 reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
 
 jest.autoMockOff()
-jest.dontMock('../traffic.jsx')
-jest.dontMock('../../table-sorter.jsx')
+jest.unmock('../traffic.jsx')
+jest.unmock('../../table-sorter.jsx')
 
-const AnalysisTraffic = require('../traffic.jsx')
+import AnalysisTraffic from '../traffic.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
-const numeral = require('numeral')
+import moment from 'moment'
+import numeral from 'numeral'
 
 moment.format = jest.fn()
 numeral.format = jest.fn()

@@ -2,8 +2,8 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff()
-jest.dontMock('../starburst-help.jsx')
-const StarburstHelp = require('../starburst-help.jsx')
+jest.unmock('../starburst-help.jsx')
+import StarburstHelp from '../starburst-help.jsx'
 
 const fakeHistory = {
   goBack: jest.genMockFunction()

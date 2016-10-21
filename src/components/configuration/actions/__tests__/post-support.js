@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../post-support.jsx')
-const PostSupport = require('../post-support.jsx')
+jest.unmock('../post-support.jsx')
+import PostSupport from '../post-support.jsx'
 
 describe('PostSupport', () => {
   it('should exist', () => {

@@ -1,7 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
 import { Navbar } from 'react-bootstrap'
 
@@ -22,11 +20,11 @@ jest.mock('../../routes', () => {
 
 // Mock out router
 jest.mock('react-router')
-const reactRouter = require('react-router')
+import reactRouter from 'react-router'
 reactRouter.withRouter = jest.fn(wrappedClass => wrappedClass)
 
-jest.dontMock('../header/header.jsx')
-const Header = require('../header/header.jsx').default
+jest.unmock('../header/header.jsx')
+import Header from '../header/header.jsx'
 
 function fakeRouterMaker() {
   return {
@@ -35,9 +33,10 @@ function fakeRouterMaker() {
   }
 }
 
-const handleThemeChange = jest.fn()
-const logOut = jest.fn()
-const activatePurge = jest.fn()
+// Not used at the moment
+// const handleThemeChange = jest.fn()
+// const logOut = jest.fn()
+// const activatePurge = jest.fn()
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
 

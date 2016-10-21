@@ -1,10 +1,9 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import { Input } from 'react-bootstrap'
 
 jest.autoMockOff()
-jest.dontMock('../login.jsx')
-const Login = require('../login.jsx').Login
+jest.unmock('../login.jsx')
+import { Login } from '../login.jsx'
 
 function intlMaker() {
   return {
@@ -81,7 +80,6 @@ describe('Login', () => {
     usernameHolder.simulate('blur')
     expect(login.state('usernameActive')).toBe(false)
 
-    const passwordHolder = login.find('.login-label-password')
     expect(login.state('passwordActive')).toBe(false)
     inputs.at(1).simulate('focus')
     expect(login.state('passwordActive')).toBe(true)

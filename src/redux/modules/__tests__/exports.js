@@ -1,13 +1,11 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable'
 
-jest.dontMock('../exports.js')
+jest.unmock('../exports.js')
 
-const {
+import {
   showDialog,
-  hideDialog,
-  downloadFile,
-  sendEmail,
-} = require('../exports.js');
+  hideDialog
+} from '../exports.js'
 
 describe('Exports Module', () => {
   it('should show dialog', () => {
@@ -23,7 +21,7 @@ describe('Exports Module', () => {
   it('should download', ()=> {
 
   });
-  
+
   it('should send email', ()=> {
 
   });
