@@ -1,7 +1,11 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.autoMockOff()
+jest.mock('../../util/routes', () => {
+  return {
+    getContentUrl: jest.fn()
+  }
+})
 jest.unmock('../login.jsx')
 import { Login } from '../login.jsx'
 
@@ -13,22 +17,22 @@ function intlMaker() {
 
 function userActionsMaker(cbResponse) {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchUser: jest.genMockFunction().mockImplementation(() => Promise.resolve()),
-    logIn: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchUser: jest.fn().mockImplementation(() => Promise.resolve()),
+    logIn: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     }),
-    checkToken: jest.genMockFunction().mockImplementation(() => {
+    checkToken: jest.fn().mockImplementation(() => {
       return {payload: {token:null}}
     }),
-    saveName: jest.genMockFunction()
+    saveName: jest.fn()
   }
 }
 
 function accountActionsMaker(cbResponse) {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchAccounts: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchAccounts: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     })
   }
@@ -36,7 +40,7 @@ function accountActionsMaker(cbResponse) {
 
 function rolesActionsMaker() {
   return {
-    fetchRoles: jest.genMockFunction().mockImplementation(() => Promise.resolve())
+    fetchRoles: jest.fn().mockImplementation(() => Promise.resolve())
   }
 }
 
