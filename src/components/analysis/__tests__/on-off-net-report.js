@@ -6,6 +6,8 @@ jest.autoMockOff()
 jest.unmock('../on-off-net-report.jsx')
 jest.unmock('../../table-sorter.jsx')
 
+jest.mock('../../../util/helpers', () => ({ formatBytes: bytes => bytes }))
+
 import AnalysisOnOffNetReport from '../on-off-net-report.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
@@ -77,7 +79,7 @@ describe('AnalysisOnOffNetReport', () => {
         intl={intlMaker()}/>
     );
     let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
-    expect(summaryBoxes.at(0).text()).toContain('123 KB')
-    expect(summaryBoxes.at(1).text()).toContain('31 MB')
+    expect(summaryBoxes.at(0).text()).toContain('123456')
+    expect(summaryBoxes.at(1).text()).toContain('31000000')
   });
 })
