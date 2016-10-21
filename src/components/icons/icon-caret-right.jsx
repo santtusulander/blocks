@@ -1,7 +1,7 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
-const IconCaretDown = (props) => {
+const IconCaretRight = (props) => {
   const {className, height, width} = props
   let classNames = 'two-tone';
   if(className) {
@@ -11,17 +11,17 @@ const IconCaretDown = (props) => {
     <Icon className={classNames} width={width} height={height} viewbox="0 0 36 36">
       <g>
         <circle cx="18" cy="18" r="12" className="base"/>
-        <polygon fill="#FFFFFF" points="12,15.9 18,21.9 24,15.9" className="primary"/>
+        <polygon fill="#FFFFFF" points="15.9,24 21.9,18 15.9,12" className="primary"/>
       </g>
     </Icon>
   )
 }
 
-IconCaretDown.propTypes = {
+IconCaretRight.propTypes = {
   className: React.PropTypes.string,
   count: React.PropTypes.string,
   height: React.PropTypes.number,
   width: React.PropTypes.number
 }
 
-export default IconCaretDown
+export default IconCaretRight

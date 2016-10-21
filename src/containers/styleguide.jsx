@@ -34,10 +34,11 @@ import IconAlerts        from '../components/icons/icon-alerts'
 import IconAnalytics     from '../components/icons/icon-analytics'
 import IconArrowDown     from '../components/icons/icon-arrow-down'
 import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
-import IconArrowRight    from '../components/icons/icon-arrow-right'
+import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
 import IconArrowLeft     from '../components/icons/icon-arrow-left'
 import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
 import IconArrowUp       from '../components/icons/icon-arrow-up'
+import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
 import IconClose         from '../components/icons/icon-close'
@@ -418,11 +419,6 @@ class Styleguide extends React.Component {
             IconArrowDown
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
-            <IconArrowRight />
-            <br />
-            IconArrowRight
-          </span>
-          <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowLeft />
             <br />
             IconArrowLeft
@@ -433,9 +429,19 @@ class Styleguide extends React.Component {
             IconArrowUp
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCaretRight />
+            <br />
+            IconCaretRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconCaretDown />
             <br />
             IconCaretDown
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowLgRight />
+            <br />
+            IconArrowLgRight
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowLgDown />
