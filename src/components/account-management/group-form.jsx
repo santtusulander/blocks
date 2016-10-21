@@ -106,6 +106,7 @@ class GroupForm extends React.Component {
       },
       invalid,
       show,
+      canEditBilling,
       onCancel,
       groupId,
       account,
@@ -160,8 +161,9 @@ class GroupForm extends React.Component {
                 <div>
                   <Input
                     {...charge_id}
+                    disabled={canEditBilling}
                     type="text"
-                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_id.label'})}
+                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
                     placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
                   {charge_id.touched && charge_id.error &&
                   <div className='error-msg'>{charge_id.error}</div>}
@@ -172,6 +174,7 @@ class GroupForm extends React.Component {
                 <div>
                   <SelectWrapper
                     {...charge_model}
+                    disabled={canEditBilling}
                     numericValues={true}
                     options={[
                       [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
@@ -271,12 +274,15 @@ const determineInitialValues = (groupId, activeGroup) => {
 }
 
 function mapStateToProps({ user, group, account, form }, { groupId }) {
+  const canEditBilling = userIsCloudProvider(currentUser)
+  const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
   const currentUser = user.get('currentUser')
   return {
+    canEditBilling,
     formValues: getValues(form.groupEdit),
     users: user.get('allUsers'),
     account: account.get('activeAccount'),
-    fields: userIsContentProvider(currentUser) || userIsCloudProvider(currentUser) ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
+    fields: canSeeBilling ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
     initialValues: determineInitialValues(groupId, group.get('activeGroup'))
   }
 }
