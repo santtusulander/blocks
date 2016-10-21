@@ -34,6 +34,7 @@ import IconAlerts        from '../components/icons/icon-alerts'
 import IconAnalytics     from '../components/icons/icon-analytics'
 import IconArrowDown     from '../components/icons/icon-arrow-down'
 import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
+import IconArrowRight     from '../components/icons/icon-arrow-right'
 import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
 import IconArrowLeft     from '../components/icons/icon-arrow-left'
 import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
@@ -422,6 +423,11 @@ class Styleguide extends React.Component {
             <IconArrowLeft />
             <br />
             IconArrowLeft
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowRight />
+            <br />
+            IconArrowRight
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowUp />
