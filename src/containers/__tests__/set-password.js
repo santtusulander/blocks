@@ -1,25 +1,24 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../util/routes', () => {
   return {
-    getContentUrl: jest.genMockFunction()
-      .mockImplementation(() => '/path/after/login'),
+    getContentUrl: jest.fn(),
     matchesRegexp: jest.fn()
   }
 })
 
-jest.autoMockOff()
 jest.unmock('../set-password.jsx')
+jest.unmock('../../redux/modules/filters')
 import { SetPassword } from '../set-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
-    startFetching: jest.genMockFunction(),
-    logIn: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    logIn: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     }),
-    checkToken: jest.genMockFunction().mockImplementation(() => {
+    checkToken: jest.fn().mockImplementation(() => {
       return {payload: {token:null}}
     })
   }

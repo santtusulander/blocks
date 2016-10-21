@@ -18,14 +18,9 @@ jest.mock('../../routes', () => {
   }
 })
 
-// Mock out router
-jest.mock('react-router')
-import reactRouter from 'react-router'
-reactRouter.withRouter = jest.fn(wrappedClass => wrappedClass)
-
 jest.unmock('../header/header.jsx')
-import Header from '../header/header.jsx'
 
+import Header from '../header/header.jsx'
 function fakeRouterMaker() {
   return {
     createHref: jest.fn(),
