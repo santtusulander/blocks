@@ -5,11 +5,12 @@ jest.mock('../../util/helpers', () => {
   return {
     formatBitsPerSecond: jest.fn(),
     getAnalyticsUrl: jest.fn(),
-    getContentUrl: jest.fn(),
     removeProps: jest.fn(),
     matchesRegexp: jest.fn()
   }
 })
+
+jest.mock('../../util/routes', () => ({ getContentUrl: jest.fn() }))
 
 jest.autoMockOff()
 
