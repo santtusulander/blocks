@@ -325,34 +325,60 @@ export const fetchContentProviderGroups = createAction(CONTENT_PROVIDER_GROUPS_F
   .then(parseResponseData);
 })
 
-export const fetchServiceProvidersWithTrafficForCP = createAction(SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, opts) => {
+export const fetchServiceProvidersWithTrafficForCP = createAction(SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, accounts, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=accounts`)
-    .then(action => Promise.all(action.data.data.map(
-      account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
-    )))
-    .then(resp => resp.map(resp => resp.data))
+    .then(action => {
+      const accountIds = action.data.data
+      return getDataForAccountsWithProviderType(brand, accounts, accountIds, ACCOUNT_TYPE_SERVICE_PROVIDER)
+    })
 })
 
-export const fetchContentProvidersWithTrafficForSP = createAction(CONTENT_PROVIDERS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, opts) => {
+export const fetchContentProvidersWithTrafficForSP = createAction(CONTENT_PROVIDERS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, accounts, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=accounts`)
-  .then(action => Promise.all(action.data.data.map(
-    account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
-  )))
-  .then(resp => resp.map(resp => resp.data))
+    .then(action => {
+      const accountIds = action.data.data
+      return getDataForAccountsWithProviderType(brand, accounts, accountIds, ACCOUNT_TYPE_CONTENT_PROVIDER)
+    })
 })
 
-export const fetchServiceProviderGroupsWithTrafficForCP = createAction(SERVICE_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, sp_account, opts) => {
+export const fetchServiceProviderGroupsWithTrafficForCP = createAction(SERVICE_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, accounts, sp_account, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=groups&sp_account=${sp_account}`)
-    .then(action => Promise.all(action.data.data.map(
-      group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${sp_account}/groups/${group}`)
-    )))
-    .then(resp => resp.map(resp => resp.data))
+    .then(action => {
+      const groupIds = action.data.data
+      return getDataForGroups(brand, accounts, sp_account, groupIds)
+    })
 })
 
-export const fetchContentProviderGroupsWithTrafficForSP = createAction(CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, cp_account, opts) => {
+export const fetchContentProviderGroupsWithTrafficForSP = createAction(CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, accounts, cp_account, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=groups&account=${cp_account}`)
-  .then(action => Promise.all(action.data.data.map(
-    group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${cp_account}/groups/${group}`)
-  )))
-  .then(resp => resp.map(resp => resp.data))
+    .then(action => {
+      const groupIds = action.data.data
+      return getDataForGroups(brand, accounts, cp_account, groupIds)
+    })
 })
+
+const getDataForAccountsWithProviderType = (brand, accounts, accountIds, providerType) => {
+  return accountIds.map(accountId => {
+    const account = accounts.find(account => account.id === accountId)
+    return account ? account : { id: accountId, name: `ID: ${accountId}`, provider_type: providerType }
+  })
+}
+
+const getDataForGroups = (brand, accounts, accountId, groupIds) => {
+  const account = accounts.find(account => account.id === accountId)
+
+  if (account) {
+    return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account.id}/groups`)
+      .then(resp => {
+        const groups = resp.data.data
+        return groupIds.map(groupId => {
+          const group = groups.find(group => group.id === groupId)
+          return group ? group : { id: groupId, name: `ID: ${groupId}` }
+        })
+      })
+  } else {
+    return groupIds.map(groupId => {
+      return { id: groupId, name: `ID: ${groupId}` }
+    })
+  }
+}
