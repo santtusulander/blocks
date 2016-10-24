@@ -55,10 +55,9 @@ $header-seach-left-padding: rem(30px);
     min-width: 0;
 
     .active-account-name {
-      padding: 0 20px 0 30px;
-      margin: 11.5px 20px 11.5px 0;
+      padding: 0 16px 0 30px;
+      margin: 6px 20px 6px 0;
       font-weight: bold;
-      border-right: 1px solid $silver-80;
     }
   }
 
@@ -82,10 +81,9 @@ $header-seach-left-padding: rem(30px);
     &__toggle {
       display: flex;
       width: 100%;
-      padding: 0 20px 0 30px;
-      margin: 11.5px 20px 11.5px 0;
+      padding: 0 16px 0 30px;
+      margin: 6px 0;
       overflow: hidden;
-      border-right: 1px solid $silver-80;
 
       .dropdown-toggle {
         font-weight: bold;
@@ -423,7 +421,7 @@ $header-seach-left-padding: rem(30px);
   position: relative;
   height: auto;
   min-width: 0;
-  padding: 0 30px 0 0;
+  padding: 0;
   line-height: inherit;
   text-align: left;
 
@@ -434,7 +432,6 @@ $header-seach-left-padding: rem(30px);
 
   .icon {
     display: inline-block;
-    margin-left: 10px;
     vertical-align: middle;
     border-width: 0;
   }

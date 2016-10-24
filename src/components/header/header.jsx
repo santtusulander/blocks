@@ -9,6 +9,7 @@ import TruncatedTitle from '../truncated-title'
 // import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 // import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IconCaretDown from '../icons/icon-caret-down'
 import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
@@ -232,7 +233,7 @@ class Header extends React.Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                    <span className="caret"></span>
+                    <IconCaretDown />
                   </div>
                 </AccountSelector>
               </IsAllowed>

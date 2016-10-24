@@ -36,7 +36,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   }
 
   .dropdown-menu {
-    top: calc(100% + 1px);
+    top: 100%;
     width: $dropdown-selector-width;
     max-height: none;
     overflow-y: auto !important;
