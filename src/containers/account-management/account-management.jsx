@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Nav, Button } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -26,6 +26,7 @@ import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
+import IconCaretDown from '../../components/icons/icon-caret-down'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -379,7 +380,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret"></span>
+                <IconCaretDown />
               </div>
             </AccountSelector>
           </IsAllowed>

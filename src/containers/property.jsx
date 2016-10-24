@@ -32,6 +32,7 @@ import Tooltip from '../components/tooltip'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
+import IconCaretDown from '../components/icons/icon-caret-down'
 
 import { formatBitsPerSecond } from '../util/helpers'
 import { getContentUrl, getAnalyticsUrl } from '../util/routes'
@@ -367,7 +368,7 @@ export class Property extends React.Component {
             onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret"></span>
+              <IconCaretDown />
             </div>
           </AccountSelector>
           <ButtonToolbar>

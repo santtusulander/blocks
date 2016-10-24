@@ -8,6 +8,7 @@ import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import IconTrash from '../components/icons/icon-trash.jsx'
+import IconCaretDown from '../components/icons/icon-caret-down.jsx'
 
 import '../assets/img/temp-network-start.png'
 import '../assets/img/temp-network.png'
@@ -33,7 +34,7 @@ export class Network extends React.Component {
           :
             <div className="header-toggle">
               <h1>ASN1.SYD.Tel.foothill</h1>
-              <span className="caret"></span>
+              <IconCaretDown />
             </div>
           }
           {this.state.page === 3 &&

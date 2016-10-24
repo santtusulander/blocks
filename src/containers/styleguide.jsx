@@ -190,7 +190,7 @@ class Styleguide extends React.Component {
               <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1>Select Account</h1>
-                  <span className="caret"/>
+                  <IconCaretDown />
                 </div>
               </AccountSelector>
             </div>

@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import PageHeader from '../layout/page-header'
 import TruncatedTitle from '../truncated-title'
+import IconCaretDown from '../icons/icon-caret-down'
 
 const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc, params }) => {
   const { account, group } = params
@@ -30,7 +31,7 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
 
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" className="account-management-title"/></h1>
-          <span className="caret"></span>
+          <IconCaretDown />
         </div>
       </AccountSelector>
      </PageHeader>
