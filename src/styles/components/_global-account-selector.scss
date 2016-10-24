@@ -5,7 +5,7 @@ $dd-font-size: 14px;
 $dropdown-selector-width: rem(320px);
 $dropdown-selector-max-height: rem(480px);
 $dd-horizontal-padding: em(18px, $dd-font-size);
-$dd-caret-width: em(8px, $dd-font-size);
+$dd-caret-padding: em(6px, $dd-font-size);
 $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
 .selector-component {
@@ -49,7 +49,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
       a {
         position: relative;
         display: flex;
-        width: calc(100% - #{($dd-horizontal-padding * 2) + $dd-caret-width});
+        width: calc(100% - #{($dd-horizontal-padding * 2) + ($dd-caret-padding * 2)});
         align-items: center;
         flex-direction: row;
         flex-grow: 1;
@@ -57,40 +57,38 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
       .caret-container {
         width: auto;
+        padding: $dd-caret-padding;
         flex-shrink: 1;
 
-        .caret-selector {
-          border-top: $caret-width-base solid transparent;
-          border-bottom: $caret-width-base solid transparent;
-          border-width: $caret-width-base;
-          border-right-width: 0;
-
-          .dark-theme & {
-            border-left: $caret-width-base solid $dt-text-color;
+        .dark-theme & {
+          .icon {
+            fill: $dt-text-color;
           }
+        }
 
-          .light-theme & {
-            border-left: $caret-width-base solid $silver-60;
+        .light-theme & {
+          .icon {
+            fill: $lt-text-color;
           }
         }
 
         &:hover {
           .dark-theme & {
-            .caret-selector {
-              border-left-color: $white;
+            .icon {
+              fill: $white;
             }
           }
 
           .light-theme & {
-            .caret-selector {
-              border-left-color: $black;
+            .icon {
+              fill: $black;
             }
           }
         }
 
         &:focus {
-          .caret-selector {
-            border-left-color: $pale-blue;
+          .icon {
+            fill: $pale-blue;
           }
         }
       }
@@ -106,14 +104,6 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   /*
   .back-text {
     font-weight: bold;
-
-    .caret {
-      margin-right: 10px;
-      margin-left: -10px;
-      border-top: 5px solid transparent;
-      border-right: 5px solid $pale-blue;
-      border-bottom: 5px solid transparent;
-    }
   }
   */
 

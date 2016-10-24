@@ -238,14 +238,6 @@ $lt-caret-color: $silver-60;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-
-      .caret {
-        position: absolute;
-        top: 50%;
-        right: $dd-horizontal-padding;
-        border-width: $caret-width-base;
-        transform: translateY(-50%);
-      }
     }
 
     &.open .dropdown-toggle {

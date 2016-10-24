@@ -370,7 +370,6 @@ $header-seach-left-padding: rem(30px);
     }
 
     .dropdown-toggle {
-
       &,
       &:focus {
         position: absolute;
@@ -387,10 +386,6 @@ $header-seach-left-padding: rem(30px);
           width: $md-bar-height;
           height: $md-bar-height;
         }
-      }
-
-      &:hover .caret {
-        color: $white;
       }
     }
 
