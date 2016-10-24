@@ -55,7 +55,7 @@
   "portal.account.groupForm.name.label": "Group Name",
   "portal.account.groupForm.name.text": "Enter Group Name",
   "portal.account.groupForm.charge_number.label": "Billing Number",
-  "portal.account.groupForm.charge_id.text": "Enter Billing ID",
+  "portal.account.groupForm.charge_id.text": "Enter Billing Number",
   "portal.account.groupForm.charge_model.label": "Billing Mode",
   "portal.account.groupForm.charge_model.option.bytesDelivered": "Bytes Delivered",
   "portal.account.groupForm.charge_model.option.percentile": "95/5",

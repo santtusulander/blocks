@@ -161,7 +161,7 @@ class GroupForm extends React.Component {
                 <div>
                   <Input
                     {...charge_id}
-                    disabled={canEditBilling}
+                    disabled={!canEditBilling}
                     type="text"
                     label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
                     placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
@@ -174,7 +174,7 @@ class GroupForm extends React.Component {
                 <div>
                   <SelectWrapper
                     {...charge_model}
-                    disabled={canEditBilling}
+                    disabled={!canEditBilling}
                     numericValues={true}
                     options={[
                       [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
@@ -274,9 +274,9 @@ const determineInitialValues = (groupId, activeGroup) => {
 }
 
 function mapStateToProps({ user, group, account, form }, { groupId }) {
+  const currentUser = user.get('currentUser')
   const canEditBilling = userIsCloudProvider(currentUser)
   const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
-  const currentUser = user.get('currentUser')
   return {
     canEditBilling,
     formValues: getValues(form.groupEdit),
