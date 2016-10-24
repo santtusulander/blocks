@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
 import { Nav, Navbar } from 'react-bootstrap' // Button, Input
+import { FormattedMessage } from 'react-intl'
 
 import UserMenu from './user-menu'
 import TruncatedTitle from '../truncated-title'
@@ -13,10 +14,8 @@ import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
-import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
-  getUrl } from '../../util/routes.js'
+import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl, getUrl } from '../../util/routes.js'
 
-import { FormattedMessage } from 'react-intl'
 
 import { userIsServiceProvider } from '../../util/helpers.js'
 

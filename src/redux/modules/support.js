@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { createAction } from 'redux-actions'
 import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
@@ -107,7 +108,6 @@ export default handleActions({
 // ACTIONS
 
 export const createTicket = createAction(TICKET_CREATED, (data) => {
-  //noinspection Eslint
   console.log('createTicket', data)
 
   return new Promise((resolve) => {
@@ -129,7 +129,6 @@ export const createTicket = createAction(TICKET_CREATED, (data) => {
 })
 
 export const deleteTicket = createAction(TICKET_DELETED, (id) => {
-  //noinspection Eslint
   return console.log('deleteTicket', id);
 })
 
@@ -219,7 +218,6 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
 })
 
 export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
-  //noinspection Eslint
   console.log('updateTicket', id, data);
 
   return new Promise((resolve) => {

@@ -1,5 +1,6 @@
-import {createAction} from 'redux-actions'
-import {handleActions} from 'redux-actions'
+/* eslint-disable no-console */
+import { createAction } from 'redux-actions'
+import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
 //import { BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
