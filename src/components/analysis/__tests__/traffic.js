@@ -2,23 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-// This component has a child that connects to redux, so mock that
-import reactRedux from 'react-redux'
-reactRedux.connect = jest.genMockFunction()
-reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
-
-jest.autoMockOff()
 jest.unmock('../traffic.jsx')
-jest.unmock('../../table-sorter.jsx')
-
 import AnalysisTraffic from '../traffic.jsx'
-
-// Set up mocks to make sure formatting libs are used correctly
-import moment from 'moment'
-import numeral from 'numeral'
-
-moment.format = jest.fn()
-numeral.format = jest.fn()
 
 const fakeCountryData = Immutable.fromJS([
   {
