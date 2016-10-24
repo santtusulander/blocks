@@ -39,12 +39,12 @@
     position: relative;
     display: block;
     height: 100%;
-    padding: ($bar-height / 4) 0 ($bar-height / 4) $btn-height / 2 + 20px;
+    padding: ($bar-height / 2) 0;
     line-height: $bar-height / 2;
     text-decoration: none;
 
-    @include md {
-      padding: ($md-bar-height / 4) 0 ($md-bar-height / 4) $md-btn-height / 2 + 20px;
+    > span {
+      padding-left: 12px;
     }
 
     .dark-theme & {
