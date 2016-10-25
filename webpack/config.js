@@ -40,7 +40,7 @@ module.exports = {
         loader: 'json'
       },
       {
-        test: /\.scss$/,
+        test: /\.?css$/,
         loader:
           isProductionBuild() ?
             ExtractTextPlugin.extract(
@@ -56,7 +56,7 @@ module.exports = {
       },
       {
         test: /\.(jpg|jpeg|gif|png)$/,
-        exclude: /node_modules/,
+        //exclude: /node_modules/,
         loader: 'file?name=assets/img/[name].[ext]'
       },
       {
