@@ -111,7 +111,7 @@ class AccountForm extends React.Component {
         invalid={this.props.invalid}
         cancelButton={true}
         submitButton={true}
-        submitText={this.props.account}
+        submitText={this.props.account ? this.props.intl.formatMessage({id: 'portal.button.save'}) : null}
         cancel={onCancel}
         submit={this.save}>
         <form>

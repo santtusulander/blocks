@@ -136,7 +136,7 @@ class GroupForm extends React.Component {
         subTitle={subTitle}
         cancelButton={true}
         submitButton={true}
-        submitText={!this.props.group.isEmpty()}
+        submitText={!this.props.group.isEmpty() ? this.props.intl.formatMessage({id: 'portal.button.save'}) : null}
         cancel={onCancel}
         submit={this.save}
         invalid={!!Object.keys(errors).length || !this.isEdited()}>

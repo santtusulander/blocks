@@ -36,9 +36,7 @@ export const SidePanel = ({ cancel, cancelButton, children, className, invalid, 
             bsStyle="primary"
             onClick={submit}
             disabled={invalid}>
-            {submitText ?
-            <FormattedMessage id="portal.button.save" /> :
-            <FormattedMessage id="portal.button.add" />}
+            {submitText || <FormattedMessage id="portal.button.add" />}
           </Button>}
         </ButtonToolbar>
       </Modal.Footer>
@@ -60,7 +58,7 @@ SidePanel.propTypes = {
   ]),
   submit: PropTypes.func,
   submitButton: PropTypes.bool,
-  submitText: PropTypes.bool,
+  submitText: PropTypes.string,
   title: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
