@@ -134,9 +134,9 @@ class GroupForm extends React.Component {
         show={show}
         title={title}
         subTitle={subTitle}
-        group={this.props.group}
         cancelButton={true}
         submitButton={true}
+        submitText={!this.props.group.isEmpty()}
         cancel={onCancel}
         submit={this.save}
         invalid={!!Object.keys(errors).length || !this.isEdited()}>

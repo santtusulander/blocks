@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-export const SidePanel = ({ account, cancel, cancelButton, children, className, group, invalid, show, submit, submitButton, subTitle, title }) => {
+export const SidePanel = ({ cancel, cancelButton, children, className, invalid, show, submit, submitButton, submitText, subTitle, title }) => {
   let dialogClassName = 'side-panel';
   if(className) {
     dialogClassName = dialogClassName + ' ' + className
@@ -36,7 +36,7 @@ export const SidePanel = ({ account, cancel, cancelButton, children, className, 
             bsStyle="primary"
             onClick={submit}
             disabled={invalid}>
-            {account || group ?
+            {submitText ?
             <FormattedMessage id="portal.button.save" /> :
             <FormattedMessage id="portal.button.add" />}
           </Button>}
@@ -48,12 +48,10 @@ export const SidePanel = ({ account, cancel, cancelButton, children, className, 
 
 SidePanel.displayName = 'SidePanel'
 SidePanel.propTypes = {
-  account: React.PropTypes.instanceOf(Map),
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
   className: PropTypes.string,
-  group: PropTypes.instanceOf(Map),
   invalid: PropTypes.bool,
   show: PropTypes.bool,
   subTitle: PropTypes.oneOfType([
@@ -62,6 +60,7 @@ SidePanel.propTypes = {
   ]),
   submit: PropTypes.func,
   submitButton: PropTypes.bool,
+  submitText: PropTypes.bool,
   title: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node

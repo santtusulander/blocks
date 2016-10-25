@@ -109,9 +109,9 @@ class AccountForm extends React.Component {
         title={title}
         subTitle={subTitle}
         invalid={this.props.invalid}
-        account={this.props.account}
         cancelButton={true}
         submitButton={true}
+        submitText={this.props.account}
         cancel={onCancel}
         submit={this.save}>
         <form>
