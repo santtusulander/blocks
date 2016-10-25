@@ -431,8 +431,8 @@ $header-seach-left-padding: rem(30px);
     border-width: 0;
   }
 
-  &:hover .icon,
-  &:focus .icon {
+  &:hover .icon:not(.caret-icon),
+  &:focus .icon:not(.caret-icon) {
 
     .dark-theme &,
     .light-theme & {
