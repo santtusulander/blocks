@@ -30,7 +30,7 @@ class ActionsSelection extends React.Component {
     const enableTokenAuth = policyIsCompatibleWithAction(flattenedPolicy, 'tokenauth')
     const tokenAuthClassName = enableTokenAuth ? null : "inactive"
     const tokenAuthOnClick = enableTokenAuth ? this.setSetKey('tokenauth') : this.setSetKey(null)
-    const iconCaretRight = <IconCaretRight width="28" height="28" />
+    const iconCaretRight = <IconCaretRight width={28} height={28} />
 
     return (
       <div>

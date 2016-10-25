@@ -43,7 +43,7 @@ class MatchesSelection extends React.Component {
     const contentTargetingOnClick = enableContentTargeting ?
                                       this.setMatchFieldForContentTargeting()
                                       : this.setMatchField(null)
-    const iconCaretRight = <IconCaretRight width="28" height="28" />
+    const iconCaretRight = <IconCaretRight width={28} height={28} />
 
     return (
       <div>
