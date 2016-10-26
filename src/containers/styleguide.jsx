@@ -27,6 +27,7 @@ import {
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
+import SPOnOffNetTraffic from '../components/dashboard/on-off-net-traffic'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -384,10 +385,11 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">SP On/Off Net Traffic Component</h1>
+          <SPOnOffNetTraffic />
+
           <h1 className="page-header">Pagination</h1>
-
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
-
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
