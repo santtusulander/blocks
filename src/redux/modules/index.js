@@ -30,7 +30,7 @@ export const security = require('./security').default;
 
 // Account Selectors
 export const accountSelectors = multireducer({
-  header: accountSelector,
+    header: accountSelector,
   support: accountSelector,
   accountManagement: accountSelector,
   configuration: accountSelector,
