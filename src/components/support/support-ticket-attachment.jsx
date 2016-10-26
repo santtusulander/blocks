@@ -27,8 +27,8 @@ class SupportTicketAttachment extends React.Component {
 }
 
 SupportTicketAttachment.propTypes = {
-  className: PropTypes.string,
   attachment: PropTypes.instanceOf(Map),
+  className: PropTypes.string,
   onDelete: PropTypes.func
 }
 

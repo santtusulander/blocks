@@ -3,15 +3,16 @@ import React, { PropTypes } from 'react';
 import Select from './select.jsx'
 
 const SelectWrapper = ({ numericValues, className, onChange, disabled, options, value, label }) => {
-  const select = <Select
-    numericValues={numericValues}
-    disabled={disabled || false}
-    className={className}
-    onSelect={e => onChange(e)}
-    options={options}
-    value={value}
-  />
-  
+  const select = (
+    <Select
+      numericValues={numericValues}
+      disabled={disabled || false}
+      className={className}
+      onSelect={e => onChange(e)}
+      options={options}
+      value={value} />
+  )
+
   if (label && label != '') return (
     <div className='form-group'>
       <label className='control-label dropdown-label'>{label}</label>
