@@ -1,15 +1,10 @@
 import React from 'react'
 import { fromJS } from 'immutable'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 
-jest.unmock('../../confirmation')
 jest.unmock('../policy-rules')
-jest.unmock('../../../util/policy-config')
-jest.unmock('../../../components/action-buttons')
-jest.unmock('../../../components/icon')
-jest.unmock('../../../components/icons/icon-edit')
-jest.unmock('../../../components/icons/icon-trash')
-const ConfigurationPolicyRules = require('../policy-rules')
+
+import ConfigurationPolicyRules from '../policy-rules'
 
 const requestPolicies = fromJS(
   [{
@@ -132,7 +127,7 @@ describe('ConfigurationPolicyRules', () => {
       let defaultProps = Object.assign({}, {
         intl: intlMaker()
       }, props)
-      return shallow(<ConfigurationPolicyRules {...defaultProps}/>)
+      return mount(<ConfigurationPolicyRules {...defaultProps}/>)
     }
   })
 
@@ -143,7 +138,6 @@ describe('ConfigurationPolicyRules', () => {
 
   it('should set and reset policy types', () => {
     let policyRules = subject()
-
     expect(policyRules.state().request_policy).toBe(null);
 
     policyRules.instance().showConfirmation('request_policy', 'foo')();

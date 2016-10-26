@@ -35,6 +35,7 @@ class ConfigurationDetails extends React.Component {
         <div className="container">Loading...</div>
       )
     }
+    const { readOnly } = this.props
     const isOtherHostHeader = ['option_origin_host_name', 'option_published_name'].indexOf(
         this.props.edgeConfiguration.get('host_header')
       ) === -1;
@@ -47,6 +48,7 @@ class ConfigurationDetails extends React.Component {
 
         <Input type="text" label="Customer Origin"
           id="origin_host_name"
+          disabled={readOnly}
           labelClassName="col-xs-3"
           wrapperClassName="col-xs-9"
           addonAfter={
@@ -76,6 +78,7 @@ class ConfigurationDetails extends React.Component {
 
         <Input type="text" label="Origin Port"
           id="origin_host_port"
+          disabled={readOnly}
           labelClassName="col-xs-3"
           wrapperClassName="col-xs-9"
           addonAfter={
@@ -111,6 +114,7 @@ class ConfigurationDetails extends React.Component {
             <Col xs={9} xsOffset={3}>
               <div className="input-group">
                 <Select className="input-select"
+                  disabled={readOnly}
                   onSelect={this.handleSelectChange(
                     ['edge_configuration', 'host_header'])}
                   value={this.props.edgeConfiguration.get('host_header')}
@@ -146,6 +150,7 @@ class ConfigurationDetails extends React.Component {
           <Panel collapsible={true} expanded={isOtherHostHeader}>
             <Input type="text" placeholder="Enter Other Hostname Value"
               wrapperClassName="col-xs-9 col-xs-offset-3"
+              disabled={readOnly}
               addonAfter=' '
               value={this.props.edgeConfiguration.get('host_header')}
               onChange={this.handleChange(
@@ -159,6 +164,7 @@ class ConfigurationDetails extends React.Component {
 
         <Input type="text" label="Origin Forward Path (optional)"
           id="origin_path_append"
+          disabled={readOnly}
           labelClassName="col-xs-3"
           wrapperClassName="col-xs-9"
           addonAfter={
