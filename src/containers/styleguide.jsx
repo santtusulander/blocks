@@ -402,7 +402,8 @@ export default class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]}
-                kpi={['80', 'Gbps']}
+                kpiValue={80}
+                kpiUnit="Gbps"
                 label="Avg Bandwidth" />
             </Col>
             <Col xs={3}>
@@ -419,7 +420,8 @@ export default class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]}
-                kpi={['47.56', '%']} />
+                kpiValue="47.56"
+                kpiUnit="%" />
             </Col>
             <Col xs={3}>
               <label>Right aligned KPI</label>
@@ -435,7 +437,8 @@ export default class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]}
-                kpi={['80', 'Gbps']}
+                kpiValue={80}
+                kpiUnit="Gbps"
                 kpiRight={true} />
             </Col>
             <Col xs={3}>

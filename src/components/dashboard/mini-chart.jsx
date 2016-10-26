@@ -33,7 +33,7 @@ class MiniChart extends React.Component {
     })
   }
   render() {
-    const { className, data, dataKey, kpi, label } = this.props
+    const { className, data, dataKey, kpiRight, kpiUnit, kpiValue, label } = this.props
     const dataSets = [{
       area: true,
       comparisonData: false,
@@ -53,14 +53,14 @@ class MiniChart extends React.Component {
           <div className="mini-chart-label">{label}</div>
         : null}
         <div className="mini-chart-container">
-          {kpi && kpi.length === 2 ?
+          {kpiValue ?
             <div className={classNames({
               'mini-chart-col': true,
               'mini-chart-kpi': true,
-              'text-right': this.props.kpiRight
+              'text-right': kpiRight
             })}>
-              <span className="value">{kpi[0]}</span>
-              <span className="suffix">{kpi[1]}</span>
+              <span className="value">{kpiValue}</span>
+              <span className="suffix">{kpiUnit}</span>
             </div>
           : null}
           <div ref="byTimeHolder" className="mini-chart-col mini-chart-graph">
@@ -86,8 +86,9 @@ MiniChart.propTypes = {
   className: PropTypes.string,
   data: PropTypes.array.isRequired,
   dataKey: PropTypes.string.isRequired,
-  kpi: PropTypes.array,
   kpiRight: PropTypes.bool,
+  kpiUnit: PropTypes.string,
+  kpiValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string
 }
 
