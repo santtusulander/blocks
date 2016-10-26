@@ -77,7 +77,7 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
-class Styleguide extends React.Component {
+export default class Styleguide extends React.Component {
   render() {
     return (
       <div className="styleguide-page">
@@ -580,5 +580,3 @@ class Styleguide extends React.Component {
 
 Styleguide.displayName = 'Styleguide'
 Styleguide.propTypes = {}
-
-module.exports = Styleguide
