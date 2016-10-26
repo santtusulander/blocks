@@ -14,7 +14,12 @@ import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
-import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl, getUrl } from '../../util/routes.js'
+import {
+  getAccountManagementUrlFromParams,
+  getAnalyticsUrl,
+  getContentUrl,
+  getUrl
+} from '../../util/routes.js'
 
 
 import { userIsServiceProvider } from '../../util/helpers.js'
