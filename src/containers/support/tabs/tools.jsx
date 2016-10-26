@@ -5,7 +5,7 @@ import ModalDig from '../tools/modals/dig.jsx'
 import ModalGeoLookup from '../tools/modals/geo-lookup.jsx'
 import ModalMtr from '../tools/modals/mtr.jsx'
 import ModalServerValidation from '../tools/modals/server-validation.jsx'
-import { injectIntl, FormattedMessage, formatMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 
 import IconDig from '../../../components/icons/icon-dig'
 import IconContent from '../../../components/icons/icon-content'
@@ -122,6 +122,7 @@ class SupportTabTools extends React.Component {
 
 SupportTabTools.displayName = 'SupportTabTools'
 SupportTabTools.propTypes = {
+  intl: React.PropTypes.object
 }
 
 export default injectIntl(SupportTabTools);

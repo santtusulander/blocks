@@ -1,14 +1,13 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import { fromJS } from 'immutable'
 import {shallow} from 'enzyme'
 
-jest.dontMock('../roles-list.jsx')
-jest.dontMock('../../../components/action-buttons.jsx')
-jest.dontMock('../../table-sorter.jsx')
-jest.dontMock('../account-management-header.jsx')
-jest.dontMock('../../array-td/array-td.jsx')
-const RolesList = require('../roles-list.jsx')
+jest.unmock('../roles-list.jsx')
+jest.unmock('../../../components/action-buttons.jsx')
+jest.unmock('../../table-sorter.jsx')
+jest.unmock('../account-management-header.jsx')
+jest.unmock('../../array-td/array-td.jsx')
+import RolesList from '../roles-list.jsx'
 
 const fakeRoles = fromJS([
   {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {

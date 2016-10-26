@@ -4,7 +4,7 @@ import { Modal, Tabs, Tab } from 'react-bootstrap'
 import ExportEmailForm from './export-email-form.jsx'
 import { ExportFileForm } from './export-file-form.jsx'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const EXPORT_FILE_TAB = 1
 const EXPORT_EMAIL_TAB = 2
@@ -51,5 +51,6 @@ ExportPanel.propTypes = {
   onCancel: React.PropTypes.func,
   onDownload: React.PropTypes.func,
   onSend: React.PropTypes.func,
+  panelTitle: React.PropTypes.func,
   show: React.PropTypes.bool
 }

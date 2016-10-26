@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../icon.jsx')
-const Icon = require('../icon.jsx').default
+jest.unmock('../icon.jsx')
+import Icon from '../icon.jsx'
 
 describe('Icon', () => {
   it('should exist', () => {

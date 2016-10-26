@@ -1,9 +1,8 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../certificates.jsx')
-const ConfigurationCertificates = require('../certificates.jsx')
+jest.unmock('../certificates.jsx')
+import ConfigurationCertificates from '../certificates.jsx'
 
 describe('ConfigurationCertificates', () => {
   it('should exist', () => {

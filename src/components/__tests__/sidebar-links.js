@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import { fromJS } from 'immutable'
 
-jest.dontMock('../sidebar-links.jsx')
-const SidebarLinks = require('../sidebar-links.jsx').SidebarLinks
+jest.unmock('../sidebar-links.jsx')
+import { SidebarLinks } from '../sidebar-links.jsx'
 
 const accounts = fromJS([
   {account_name: 'UDN Admin Account', active: false, account_id: 1},
