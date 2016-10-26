@@ -36,13 +36,13 @@ const getCountryStyle = ( median, feature ) => {
   const trafficHeat = trafficCountry && getScore(median, trafficCountry.total_traffic)
   const countryColor = trafficCountry ? heatMapColors[ trafficHeat - 1] : '#00a9d4'
 
-  const fillOpacity =  trafficCountry ? 0.5 : 0.2
+  const fillOpacity =  trafficCountry ? 0.5 : 0
 
   return {
     color: countryColor,
     fillOpacity: fillOpacity,
-    opacity: 0.5,
-    weight: 1
+    opacity: 0,
+    weight: 2
   }
 }
 
@@ -82,13 +82,13 @@ const handleFeature = ( feature, layer) => {
   layer.on({
     mouseover: () => {
       layer.setStyle({
-        weight:2
+        weight:2.5,
+        opacity: 0.5
       });
     },
     mouseout: () => {
       layer.setStyle({
-        weight:1,
-        opacity: 0.2
+        weight:0,
       });
     }
   })
@@ -131,11 +131,13 @@ class MapPoc extends React.Component {
         onZoomEnd={(e)=>this.zoomEnd(e)}
       >
         <TileLayer
-          url='https://api.mapbox.com/styles/v1/ericssonudn/ciuiy8uym006y2jml6xizki1p/tiles/256/{z}/{x}/{y}?access_token={accessToken}'
+          url='https://api.mapbox.com/styles/v1/sampoj/ciq3vp5n3004sbwkx8b1b7fym/tiles/256/{z}/{x}/{y}?access_token={accessToken}'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'
+          accessToken='pk.eyJ1Ijoic2FtcG9qIiwiYSI6ImNpandieDZjdDA4OHd2Ymx6MmN4OGczemUifQ.0tIX1nbH6oCHeVMfZjb1bw'
         />
 
+          {/*url='https://api.mapbox.com/styles/v1/ericssonudn/ciuiy8uym006y2jml6xizki1p/tiles/256/{z}/{x}/{y}?access_token={accessToken}'*/}
+          {/*accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'*/}
         {cityCircles}
 
         {this.state.zoom < 6 &&
