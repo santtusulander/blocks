@@ -1,8 +1,8 @@
 const Immutable = require('immutable');
 
-jest.dontMock('../purge.js')
+jest.unmock('../purge.js')
 
-const {
+import {
   createRequestSuccess,
   createFailure,
   fetchSuccess,
@@ -14,7 +14,7 @@ const {
   resetActive,
   emptyPurges,
   emptyPurge
-} = require('../purge.js');
+} from '../purge.js'
 
 describe('Purge Module', () => {
 
