@@ -226,6 +226,7 @@ ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
+  readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func
 }
 

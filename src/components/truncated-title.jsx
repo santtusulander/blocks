@@ -1,6 +1,5 @@
 import React from 'react';
 import { Overlay, Tooltip } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
 
 class TruncatedTitle extends React.Component {
   constructor(props) {

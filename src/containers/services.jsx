@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
 
-import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import ServicesPageHeader from '../components/services/services-page-header'
 
@@ -42,7 +41,7 @@ Services.propTypes = {
   params: PropTypes.object
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     accounts: state.account.get ('allAccounts'),
     activeAccount: state.account.get ('activeAccount') || Map ({}),
