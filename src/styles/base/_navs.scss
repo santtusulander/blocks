@@ -74,7 +74,7 @@ $lt-tab-color: $lt-text-color;
     }
 
     > a,
-    .btn-link {
+    .tabs-dropdown-toggle {
       padding: $nav-tab-vertical-padding $nav-tab-horizontal-padding;
       margin: 0;
       font-weight: 500;
@@ -124,17 +124,23 @@ $lt-tab-color: $lt-text-color;
       }
     }
 
-    .btn-link {
+    .tabs-dropdown-toggle {
       padding-top: em(5px, $btn-font-size);
       padding-bottom: 0;
+      background: none;
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
-    .open .btn-link {
+    .open .tabs-dropdown-toggle {
 
       .dark-theme &,
       .light-theme & {
         font-weight: 700;
         color: $pale-blue;
+        background: none;
 
         .icon {
           fill: $pale-blue;

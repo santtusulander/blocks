@@ -79,7 +79,7 @@ class Tabs extends React.Component {
         <li ref="hiddenTabs">
           {this.state.hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
-              <Dropdown.Toggle bsStyle="link" noCaret={true}>
+              <Dropdown.Toggle className="tabs-dropdown-toggle" noCaret={true}>
                 <FormattedMessage id="portal.common.MORE.text"/>
                 <IconSelectCaret/>
               </Dropdown.Toggle>
