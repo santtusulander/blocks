@@ -1,12 +1,11 @@
 import React from 'react'
 import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
-
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class Cors extends React.Component {
   constructor(props) {
@@ -232,6 +231,7 @@ class Cors extends React.Component {
 Cors.displayName = 'Cors'
 Cors.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

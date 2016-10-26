@@ -1,9 +1,9 @@
-import {createAction} from 'redux-actions'
+import { createAction } from 'redux-actions'
 import axios from 'axios'
-import {handleActions} from 'redux-actions'
+import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
-import {BASE_URL_NORTH, mapReducers} from '../util'
+import { BASE_URL_NORTH, mapReducers } from '../util'
 
 const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'

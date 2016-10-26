@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../origin-hostname.jsx')
-const OriginHostname = require('../origin-hostname.jsx')
+jest.unmock('../origin-hostname.jsx')
+import OriginHostname from '../origin-hostname.jsx'
 
 function intlMaker() {
   return {

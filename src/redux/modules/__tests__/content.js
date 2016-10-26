@@ -1,13 +1,13 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable'
 
-jest.dontMock('../content.js')
+jest.unmock('../content.js')
 
-const {
+import {
   emptyContent,
   fetchSuccess,
   fetchFailed,
   startFetch
-} = require('../content.js');
+} from '../content.js'
 
 describe('Content Module', () => {
 

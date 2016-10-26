@@ -286,6 +286,7 @@ class ModalDig extends React.Component {
 ModalDig.displayName = 'ModalDig'
 ModalDig.propTypes = {
   handleCloseModal: React.PropTypes.func,
+  intl: React.PropTypes.object,
   showDetails: React.PropTypes.bool,
   toggleShowDetails: React.PropTypes.func
 }

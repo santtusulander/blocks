@@ -43,13 +43,13 @@ const FilterServiceProvider = (props) => {
 
 FilterServiceProvider.displayName = 'FilterServiceProvider'
 FilterServiceProvider.propTypes = {
-  visibleFields: React.PropTypes.array,
   changeServiceProvider: React.PropTypes.func,
   changeServiceProviderGroup: React.PropTypes.func,
   serviceProviderGroupOptions: React.PropTypes.instanceOf(List),
   serviceProviderGroupValue: React.PropTypes.instanceOf(List),
   serviceProviderOptions: React.PropTypes.instanceOf(List),
-  serviceProviderValue: React.PropTypes.instanceOf(List)
+  serviceProviderValue: React.PropTypes.instanceOf(List),
+  visibleFields: React.PropTypes.array
 }
 FilterServiceProvider.defaultProps = {
   serviceProviderGroupOptions: List(),
